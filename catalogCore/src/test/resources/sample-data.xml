@@ -15,4 +15,41 @@
             <value description="slug">test store 2</value>
         </row>
 	</table>
+	<table name="accounts_client">
+		<column>id</column>
+		<column>name</column>
+		<column>confirmed_order_email</column>
+		<column>pending_order_email</column>
+		<column>share_product_email</column>
+		<column>signature</column>
+		<column>pending_order_helpline</column>
+		<column>confirmed_order_helpline</column>
+		<column>sms_mask</column>
+		<column>noreply_email</column>
+		<column>feedback_email</column>
+		<column>promotions_email</column>
+		<column>sale_pricelist</column>
+		<column>list_pricelist</column>
+		<column>clientdomain_name</column>
+		<column>slug</column>
+        <row>
+        	<value description="id">-1</value>
+        	<value description="name">Test Client 1</value>
+            <value description="confirmed_order_email">test confirmed_order_email 1</value>
+        	<value description="pending_order_email">test pending_order_email 1</value>
+            <value description="share_product_email">test share_product_email 1</value>
+            <value description="signature">test signature 1</value>
+        	<value description="pending_order_helpline">1111111111</value>
+            <value description="confirmed_order_helpline">12121212</value>
+        	<value description="sms_mask">test sms_mask 1</value>
+            <value description="noreply_email">test noreply_email 1</value>
+        	<value description="feedback_email">test feedback_email 1</value>
+            <value description="promotions_email">test promotions_email 1</value>
+        	<value description="sale_pricelist">12345678</value>
+            <value description="list_pricelist">123456789</value>
+        	<value description="clientdomain_name">test clientdomain_name 1</value>
+        	<value description="slug">test slug 1</value>
+        </row>
+	</table>
+
 </dataset>

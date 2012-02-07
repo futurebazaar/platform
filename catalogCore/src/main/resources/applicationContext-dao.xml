@@ -18,4 +18,8 @@
 	<bean id="storeDao" class="com.fb.platform.dao.catagory.impl.StoreDaoJdbcImpl">
 		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
 	</bean>
+
+	<bean id="clientDao" class="com.fb.platform.dao.account.impl.ClientDaoJdbcImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
 </beans>

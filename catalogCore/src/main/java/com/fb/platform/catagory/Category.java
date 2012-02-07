@@ -12,7 +12,7 @@ public class Category {
 	private int id;
 	private int name;
 	//referes to parent category id
-	private int parentId;
+	//private int parentId;
 	private String tagline;
 	private String description;
 	private int extId;
@@ -35,12 +35,12 @@ public class Category {
 	public void setName(int name) {
 		this.name = name;
 	}
-	public int getParentId() {
+	/*public int getParentId() {
 		return parentId;
 	}
 	public void setParentId(int parentId) {
 		this.parentId = parentId;
-	}
+	}*/
 	public String getTagline() {
 		return tagline;
 	}
