@@ -280,7 +280,9 @@
 		<module>catalogCore</module>
     	<module>orderCore</module>
         <module>orderWS</module>
-    </modules>
+        <module>userCore</module>
+    	<module>userWS</module>
+   </modules>
 
     <reporting>
         <plugins>
