@@ -212,6 +212,8 @@ public class UserDaoImpl implements UserDao {
 		List<UserPhoneBo> userPhoneBo = jdbcTemplate.query(qry, new UserPhoneMapper());
 		return userPhoneBo;
 	}
+	
+	
 
 	
 }
