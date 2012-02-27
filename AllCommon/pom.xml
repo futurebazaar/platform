@@ -5,16 +5,16 @@
 
     <parent>
         <groupId>com.fb</groupId>
-        <artifactId>colada</artifactId>
+        <artifactId>platform</artifactId>
         <version>1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-	<artifactId>coladaCommons</artifactId>
+	<artifactId>AllCommons</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	
-	<name>Future Colada Common Classes</name>
+	<name>Common Classes</name>
 	<url>http://maven.apache.org</url>
 	
 	<dependencies>

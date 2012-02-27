@@ -211,6 +211,11 @@
 			</exclusions>
         </dependency>
 		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.6.4</version>
+		</dependency>
+		<dependency>
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-test</artifactId>
 		    <version>${spring.version}</version>
@@ -276,12 +281,15 @@
     </dependencies>
     
     <modules>
+    	<module>AllCommon</module>
+    	<module>platformCaching</module>
     	<module>catalogCommons</module>
 		<module>catalogCore</module>
     	<module>orderCore</module>
         <module>orderWS</module>
         <module>userCore</module>
         <module>userWS</module>
+        <module>authenticationCore</module>
     </modules>
 
     <reporting>

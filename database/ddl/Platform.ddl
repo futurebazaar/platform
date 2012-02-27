@@ -2,17 +2,41 @@
 
 CREATE TABLE categories_store
 (
-	id integer NOT NULL,
+	id integer NOT NULL AUTO_INCREMENT,
 	name VARCHAR(50) NOT NULL,
 	slug VARCHAR(50),
 	UNIQUE(name),
 	PRIMARY KEY(id)
 )
 
---Users Related tables --
+CREATE TABLE sso_session
+(
+	id integer NOT NULL AUTO_INCREMENT,
+	ip_address VARCHAR(25),
+	user_id integer NOT NULL,
+	timestamp_login DATETIME NOT NULL, 
+	timestamp_logout DATETIME,
+	timestamp_lastTransaction DATETIME NOT NULL,
+	session_id VARCHAR(100) NOT NULL,
+	app_data VARCHAR(200),
+	UNIQUE(session_id),
+	PRIMARY KEY (id)
+)
+
+CREATE TABLE crypto_key
+(
+	id integer NOT NULL AUTO_INCREMENT,
+	cryptokey_current VARCHAR(200) NOT NULL,
+	cryptokey_last  VARCHAR(200),
+	cryptokey_next VARCHAR(200),
+	UNIQUE(cryptokey_current),
+	PRIMARY KEY (id)
+)
+
+-- Users Related tables --
 
 CREATE TABLE auth_user (
-  id int(11) NOT NULL AUTO_INCREMENT,
+  id integer(11) NOT NULL AUTO_INCREMENT,
   username varchar(30) NOT NULL,
   first_name varchar(30) NOT NULL,
   last_name varchar(30) NOT NULL,
