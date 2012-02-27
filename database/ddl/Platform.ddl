@@ -41,6 +41,7 @@ CREATE TABLE users_profile (
   secondary_phone varchar(15) NOT NULL,
   buyer_or_seller varchar(100) NOT NULL DEFAULT 'Buyer',
   acquired_through_account_id int(11) DEFAULT NULL,
+  password varchar(200) NOT NULL,
   full_name varchar(150) NOT NULL,
   primary_email varchar(75) NOT NULL,
   secondary_email varchar(75) DEFAULT NULL,
