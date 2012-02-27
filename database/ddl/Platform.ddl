@@ -7,7 +7,7 @@ CREATE TABLE categories_store
 	slug VARCHAR(50),
 	UNIQUE(name),
 	PRIMARY KEY(id)
-)
+);
 
 CREATE TABLE sso_session
 (
@@ -21,7 +21,7 @@ CREATE TABLE sso_session
 	app_data VARCHAR(200),
 	UNIQUE(session_id),
 	PRIMARY KEY (id)
-)
+);
 
 CREATE TABLE crypto_key
 (
@@ -31,7 +31,7 @@ CREATE TABLE crypto_key
 	cryptokey_next VARCHAR(200),
 	UNIQUE(cryptokey_current),
 	PRIMARY KEY (id)
-)
+);
 
 -- Users Related tables --
 
@@ -57,8 +57,8 @@ CREATE TABLE users_profile (
   sms_alert tinyint(1) NOT NULL,
   profession varchar(200) DEFAULT NULL,
   user_photo varchar(100) DEFAULT NULL,
-  PRIMARY KEY (id),
-  )DEFAULT CHARSET=utf8
+  PRIMARY KEY (id)
+  ) DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE locations_city (
@@ -68,8 +68,8 @@ CREATE TABLE locations_city (
   type varchar(15) NOT NULL,
   normalized_id int(11) DEFAULT NULL,
   user_created tinyint(1) NOT NULL,
-  PRIMARY KEY (id),
-  ) DEFAULT CHARSET=utf8
+  PRIMARY KEY (id)
+  ) DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE locations_state (
@@ -80,8 +80,8 @@ CREATE TABLE locations_state (
   normalized_id int(11) DEFAULT NULL,
   user_created tinyint(1) NOT NULL,
   sap_code varchar(4) DEFAULT NULL,
-  PRIMARY KEY (id),
-) DEFAULT CHARSET=utf8
+  PRIMARY KEY (id)
+) DEFAULT CHARSET=utf8;
 
 CREATE TABLE locations_country (
   id int(11) NOT NULL AUTO_INCREMENT,
@@ -89,8 +89,8 @@ CREATE TABLE locations_country (
   type varchar(15) NOT NULL,
   normalized_id int(11) DEFAULT NULL,
   user_created tinyint(1) NOT NULL,
-  PRIMARY KEY (id),
-) DEFAULT CHARSET=utf8
+  PRIMARY KEY (id)
+) DEFAULT CHARSET=utf8;
 
 CREATE TABLE users_email (
   id int(11) NOT NULL AUTO_INCREMENT,
@@ -98,8 +98,8 @@ CREATE TABLE users_email (
   type varchar(15) NOT NULL,
   user_id int(11) NOT NULL,
   PRIMARY KEY (id),
-  UNIQUE KEY users_email_email_uniq (email),
-) DEFAULT CHARSET=utf8
+  UNIQUE KEY users_email_email_uniq (email)
+) DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE users_phone (
@@ -108,8 +108,8 @@ CREATE TABLE users_phone (
   user_id int(11) NOT NULL,
   type varchar(15) NOT NULL,
   PRIMARY KEY (id),
-  UNIQUE KEY users_phone_phone_uniq (phone),
-) DEFAULT CHARSET=utf8
+  UNIQUE KEY users_phone_phone_uniq (phone)
+) DEFAULT CHARSET=utf8;
 
 
 
