@@ -32,5 +32,14 @@ public interface UserDao {
 	 * Update an existing user
 	 * @param userBo
 	 */
-	public void update(UserBo userBo);
+	public UserBo update(UserBo userBo);
+	
+	public UserBo login(String username , String password);
+	
+	public UserBo logout(UserBo userBo);
+	
+	public UserBo  changepassword(UserBo userBo,String newpassword);
+	
+	
+	
 }

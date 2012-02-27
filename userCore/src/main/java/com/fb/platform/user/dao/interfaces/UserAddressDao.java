@@ -21,7 +21,7 @@ public interface UserAddressDao {
 	 * @param userAddressBo
 	 * @throws Exception
 	 */
-	void add(UserAddressBo userAddressBo) throws Exception;
+	void add(UserAddressBo userAddressBo);
 	
 	/**
 	 * updates a users address

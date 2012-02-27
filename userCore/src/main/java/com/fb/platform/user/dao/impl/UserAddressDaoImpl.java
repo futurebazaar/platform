@@ -41,7 +41,7 @@ public class UserAddressDaoImpl implements UserAddressDao {
 	 * @see com.fb.platform.user.dao.interfaces.UserAddressDao#add(com.fb.platform.user.domain.UserAddressBo)
 	 */
 	@Override
-	public void add(UserAddressBo userAddressBo) throws Exception {
+	public void add(UserAddressBo userAddressBo) {
 		String sql = "Insert into locations_address (pincode,city_id,state_id,country_id,type,address,profile_id,account_id,uses,name,phone,email,defaddress,first_name,last_name)"
 				+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		Object objs[] = new Object[15];

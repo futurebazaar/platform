@@ -23,8 +23,13 @@ public class UserMapper implements RowMapper<UserBo>{
 	public UserBo mapRow(ResultSet rs, int rowNum) throws SQLException {
 		try{
 			UserBo user = new UserBo();
-			user.setUserid(rs.getInt("user_id"));
+			user.setUserid(rs.getInt("id"));
 			user.setName(rs.getString("full_name"));
+			user.setGender(rs.getString("gender"));
+			user.setDateofbirth(rs.getDate("date_of_birth"));
+			user.setPassword(rs.getString("password"));
+			user.setSalutation(rs.getString("salutation"));
+			
 			return user;
 		}catch (Exception e) {
 			e.printStackTrace();

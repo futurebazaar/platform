@@ -5,7 +5,7 @@ import java.util.List;
 
 public class UserBo {
 	
-	private int userid;
+	private long userid;
 	private String password;
 	private List<UserPhoneBo> userPhone;
 	private List<UserEmailBo> userEmail;
@@ -14,6 +14,7 @@ public class UserBo {
 	private String firstname ;
 	private String lastname;
 	private String gender;
+	private String salutation;
 	private Date dateofbirth;
 	
 	
@@ -25,13 +26,13 @@ public class UserBo {
 	/**
 	 * @return the userid
 	 */
-	public int getUserid() {
+	public long getUserid() {
 		return userid;
 	}
 	/**
 	 * @param userid the userid to set
 	 */
-	public void setUserid(int userid) {
+	public void setUserid(long userid) {
 		this.userid = userid;
 	}
 	
@@ -145,6 +146,20 @@ public class UserBo {
 	public void setDateofbirth(Date dateofbirth) {
 		this.dateofbirth = dateofbirth;
 	}
+	/**
+	 * @return the salutation
+	 */
+	public String getSalutation() {
+		return salutation;
+	}
+	/**
+	 * @param salutation the salutation to set
+	 */
+	public void setSalutation(String salutation) {
+		this.salutation = salutation;
+	}
+	
+	
 	
 	
 	
