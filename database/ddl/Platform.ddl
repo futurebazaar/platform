@@ -188,6 +188,27 @@ CREATE TABLE usage_history(id INTEGER ,
 	promo_id INTEGER, 
 	disc_value_claimed INTEGER, 
 	PRIMARY KEY(id) );
+	
+	
+CREATE TABLE accounts_client (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  name varchar(100) NOT NULL,
+  confirmed_order_email varchar(500) NOT NULL DEFAULT '<Chaupaati Bazaar> order@chaupaati.com',
+  pending_order_email varchar(500) NOT NULL DEFAULT '<Chaupaati Bazaar> lead@chaupaati.com',
+  share_product_email varchar(500) NOT NULL DEFAULT '<Chaupaati Bazaar> share@chaupaati.com',
+  signature longtext NOT NULL,
+  pending_order_helpline varchar(25) NOT NULL DEFAULT '0-922-222-1947',
+  confirmed_order_helpline varchar(25) NOT NULL DEFAULT '0-922-222-1947',
+  sms_mask longtext NOT NULL,
+  noreply_email varchar(200) NOT NULL,
+  feedback_email varchar(200) NOT NULL,
+  promotions_email varchar(200) NOT NULL,
+  sale_pricelist varchar(15) NOT NULL,
+  list_pricelist varchar(15) NOT NULL,
+  clientdomain_name varchar(100) DEFAULT NULL,
+  slug varchar(100) DEFAULT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 --  **************  Constraints   **********************
