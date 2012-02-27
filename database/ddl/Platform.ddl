@@ -1,3 +1,12 @@
+-- ******************** DROP TABLE AND CONSTRANTS **********
+
+
+DROP TABLE IF EXISTS categories_store,sso_session, crypto_key,users_profile,locations_city,locations_state,locations_country,users_email,users_phone,client_master,
+promotion,promotion_uses,promotion_type,promo_values,rules,promotion_bundle_product,promotion_coupon,promotion_user,usage_history,accounts_client;
+
+
+
+
 --  ******************** CREATE TABLE *****************
 
 CREATE TABLE categories_store
@@ -113,7 +122,13 @@ CREATE TABLE users_phone (
 ) DEFAULT CHARSET=utf8;
 
 
-
+CREATE TABLE client_master (
+  id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  client_name varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  created_on datetime NOT NULL,
+  is_active bit(1) NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 -- Promotion Related Tables
