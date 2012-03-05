@@ -10,7 +10,7 @@ import java.security.Key;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.fb.platform.dao.BaseTestCase;
+import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.sso.CryptoKeysTO;
 
 /**
