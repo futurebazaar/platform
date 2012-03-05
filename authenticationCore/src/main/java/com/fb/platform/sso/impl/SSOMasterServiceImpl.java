@@ -82,7 +82,7 @@ public class SSOMasterServiceImpl implements SSOMasterService {
         // retrieve the session information from the cache
         SSOSessionTO session = sessionCacheAccess.get(sessionId);
 
-        // no cache hit - ask the master server
+        // no cache hit - ask the master copy
         if (session == null) {
             try {
                 session = this.authenticate(sessionId);

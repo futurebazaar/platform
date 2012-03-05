@@ -26,6 +26,6 @@ public interface AuthenticationService {
      * @throws PlatformException
      */
     @Transactional(propagation=Propagation.SUPPORTS)
-    public AuthenticationTO	 authenticate(String token) throws RemoteException, PlatformException;
+    public AuthenticationTO	 authenticate(String token) throws PlatformException;
 
 }

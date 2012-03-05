@@ -3,6 +3,7 @@ package com.fb.platform.user.dao.impl;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
@@ -11,6 +12,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
@@ -18,44 +20,159 @@ import com.fb.platform.user.dao.interfaces.UserDao;
 import com.fb.platform.user.domain.UserBo;
 import com.fb.platform.user.domain.UserEmailBo;
 import com.fb.platform.user.domain.UserPhoneBo;
-import com.fb.platform.user.mapper.UserEmailMapper;
-import com.fb.platform.user.mapper.UserMapper;
-import com.fb.platform.user.mapper.UserPhoneMapper;
-import com.fb.platform.user.service.PasswordService;
+import com.fb.platform.user.util.PasswordUtil;
 
 /**
  * @author kumar
  *
  */
 public class UserDaoImpl implements UserDao {
-	
-	private JdbcTemplate jdbcTemplate;
-	private PasswordService passwordService = PasswordService.getInstance();
 
-    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
-	}
-    
+	private static final String CHECK_EMAIL_IS_USERNAME_QUERY = "SELECT count(0) from users_email WHERE email = ?";
+	private static final String CHECK_PHONE_IS_USERNAME_QUERY = "SELECT count(0) from users_phone WHERE phone = ?";
+	private static final String CHECK_USERID_IS_USERNAME_QUERY = "SELECT count(0) from users_profile WHERE id = ?";
+
+	private static final String SELECT_USER_FIELDS = "SELECT " +
+			"up.id as id, " +
+			"up.primary_phone, " +
+			"up.secondary_phone, " +
+			"up.buyer_or_seller, " +
+			"up.acquired_through_account_id, " +
+			"up.password, " +
+			"up.full_name, " +
+			"up.primary_email, " +
+			"up.gender, " +
+			"up.salutation, " +
+			"up.marketing_alerts, " +
+			"up.created_on, " +
+			"up.date_of_birth, " +
+			"up.is_agent, " +
+			"up.webpage, " +
+			"up.facebook, " +
+			"up.twitter, " +
+			"up.email_notification, " +
+			"up.sms_alert, " +
+			"up.profession, " +
+			"up.user_photo ";
+
+	private static final String SELECT_USER_BY_EMAIL_QUERY = 
+			SELECT_USER_FIELDS + 
+			" FROM users_profile up, users_email ue WHERE up.id = ue.user_id AND ue.email = ?";
+
+	private static final String SELECT_USER_BY_PHONE_QUERY = 
+			SELECT_USER_FIELDS +
+			" FROM users_profile up, users_phone uph WHERE up.id = uph.user_id AND uph.phone = ?";
+
+	private static final String SELECT_USER_BY_USER_ID = 
+			SELECT_USER_FIELDS +
+			" FROM users_profile up WHERE up.id = ?";
+
+	private static final String SELECT_EMAILS_BY_USER_ID = "SELECT email, type FROM users_email WHERE user_id = ?";
+
+	private static final String SELECT_PHONES_BY_USER_ID = "SELECT phone, type FROM users_phone WHERE user_id = ?";
+
+	private JdbcTemplate jdbcTemplate;
+
     /* (non-Javadoc)
      * @see com.fb.platform.user.dao.interfaces.UserDao#load(java.lang.String)
      */
     @Override
 	public UserBo load(String key) {
-		boolean isemail = (this.jdbcTemplate.queryForInt("select count(0) from users_email WHERE email = '" + key + "'") > 0)  ? true : false;
-		boolean isphone = (this.jdbcTemplate.queryForInt("select count(0) from users_phone WHERE phone = '" + key + "'") > 0)  ? true : false;
-		boolean isuserid = (this.jdbcTemplate.queryForInt("select count(0) from users_profile WHERE id = " + key ) > 0)  ? true : false;
-		if (isemail)
-			return getUserByEmail(key);
-		else if (isphone)
-			return getUserByPhone(key);
-		else if (isuserid)
-			return getUserByUserId(key);
-		else 
-			return null;
-	}
-    
+    	boolean isEmail = isUsernameEmail(key);
+    	if (isEmail) {
+    		return getUserByEmail(key);
+    	}
 
-	/* (non-Javadoc)
+    	boolean isPhone = isUsernamePhone(key);
+    	if (isPhone) {
+    		return getUserByPhone(key);
+    	}
+
+    	boolean isUserId = isUsernameUserId(key);
+    	if (isUserId) {
+    		return getUserByUserId(Integer.parseInt(key));
+    	}
+
+    	return null;
+	}
+
+    private boolean isUsernameEmail(String username) {
+    	int emailCount = this.jdbcTemplate.queryForInt(CHECK_EMAIL_IS_USERNAME_QUERY, username);
+    	if (emailCount > 0) {
+    		return true;
+    	}
+    	return false;
+    }
+
+    private boolean isUsernamePhone(String username) {
+    	int phoneCount = this.jdbcTemplate.queryForInt(CHECK_PHONE_IS_USERNAME_QUERY, username);
+    	if (phoneCount > 0) {
+    		return true;
+    	}
+    	return false;
+    }
+
+    private boolean isUsernameUserId(String username) {
+    	int userIdCount = this.jdbcTemplate.queryForInt(CHECK_USERID_IS_USERNAME_QUERY, username);
+    	if (userIdCount > 0) {
+    		return true;
+    	}
+    	return false;
+    }
+
+	private UserBo getUserByEmail(String email) {
+
+		UserBo user = jdbcTemplate.queryForObject(SELECT_USER_BY_EMAIL_QUERY, 
+				new Object[] {email},
+				new UserMapper());
+		user.setUserEmail(getEmailByUserid(user.getUserid()));
+		user.setUserPhone(getPhoneByUserid(user.getUserid()));
+		return user;
+	}
+
+	private UserBo getUserByPhone(String phone) {
+
+		UserBo user = jdbcTemplate.queryForObject(SELECT_USER_BY_PHONE_QUERY, 
+				new Object[] {phone},
+				new UserMapper());
+		user.setUserEmail(getEmailByUserid(user.getUserid()));
+		user.setUserPhone(getPhoneByUserid(user.getUserid()));
+		return user;
+	}
+
+	@Override
+	public UserBo loadByUserId(int userId) {
+		return getUserByUserId(userId);
+	}
+
+	private UserBo getUserByUserId(int userId) {
+
+		UserBo user = jdbcTemplate.queryForObject(SELECT_USER_BY_USER_ID, 
+				new Object[] {userId},
+				new UserMapper());
+		user.setUserEmail(getEmailByUserid(user.getUserid()));
+		user.setUserPhone(getPhoneByUserid(user.getUserid()));
+		return user;
+	}
+
+	private List<UserEmailBo> getEmailByUserid(long userId){
+
+		List<UserEmailBo> userEmailBo = jdbcTemplate.query(SELECT_EMAILS_BY_USER_ID,
+				new Object[] {userId},
+				new UserEmailMapper());
+		return userEmailBo;
+	}
+
+	private List<UserPhoneBo> getPhoneByUserid(long userId){
+
+		List<UserPhoneBo> userPhoneBo = jdbcTemplate.query(SELECT_PHONES_BY_USER_ID, 
+				new Object[] {userId}, 
+				new UserPhoneMapper());
+		return userPhoneBo;
+	}
+
+
+    /* (non-Javadoc)
 	 * @see com.fb.platform.user.dao.interfaces.UserDao#getUsers()
 	 */
 	@Override
@@ -70,7 +187,6 @@ public class UserDaoImpl implements UserDao {
 		
 	}
 	
-
 	/* (non-Javadoc)
 	 * @see com.fb.platform.user.dao.interfaces.UserDao#add(com.fb.platform.user.domain.UserBo)
 	 */
@@ -95,7 +211,7 @@ public class UserDaoImpl implements UserDao {
 					ps.setString(2, "");
 					ps.setString(3, "buyer");
 					ps.setString(4, null);
-					ps.setString(5, passwordService.getencrypt(userbo.getPassword()));
+					ps.setString(5, PasswordUtil.getEncryptedPassword(userbo.getPassword()));
 					ps.setString(6, userbo.getFirstname() + " " +  userbo.getLastname());
 					ps.setString(7, "");
 					ps.setString(8, "");
@@ -169,7 +285,7 @@ public class UserDaoImpl implements UserDao {
 				ps.setString(2, "");
 				ps.setString(3, "buyer");
 				ps.setString(4, null);
-				ps.setString(5, passwordService.getencrypt(userbo.getPassword()));
+				ps.setString(5, PasswordUtil.getEncryptedPassword(userbo.getPassword()));
 				ps.setString(6, userbo.getFirstname() + " " +  userbo.getLastname());
 				ps.setString(7, "");
 				ps.setString(8, "");
@@ -195,96 +311,56 @@ public class UserDaoImpl implements UserDao {
 		
 	}
 
-	/**
-	 * @param email
-	 * @return
-	 */
-	private UserBo getUserByEmail(String email) {
-		
-		try {
-			String sql = "select ue.user_id,up.full_name from tinla.users_email ue left join tinla.users_profile up "
-					+ "on ue.user_id = up.id where ue.email = '" + email + "'";
-			UserBo user = jdbcTemplate.queryForObject(sql, new UserMapper());
-			user.setUserEmail(getEmailByUserid(user.getUserid()));
-			user.setUserPhone(getPhoneByUserid(user.getUserid()));
-			return user;
+	@Override
+	public boolean changePassword(UserBo userBo,String newPassword) {
+		userBo.setPassword(newPassword); //the update statement does the encryption
+		update(userBo);
+		//TODO find a way to ensure the update actually worked, only then return true, else return false
+		return true;
+	}
+	
+    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
+
+    private static class UserMapper implements RowMapper<UserBo> {
+
+    	@Override
+    	public UserBo mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+    		UserBo user = new UserBo();
+			user.setUserid(rs.getInt("id"));
+			user.setName(rs.getString("full_name"));
+			user.setGender(rs.getString("gender"));
+			user.setDateofbirth(rs.getDate("date_of_birth"));
+			user.setPassword(rs.getString("password"));
+			user.setSalutation(rs.getString("salutation"));
 			
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	
-	private UserBo getUserByPhone(String phone) {
-		try {
-			String sql = "select uph.user_id,up.full_name from users_phone uph left join tinla.users_profile up "
-					+ "on uph.user_id = up.id where uph.phone = '" + phone + "'";
-			UserBo user = jdbcTemplate.queryForObject(sql, new UserMapper());
-			user.setUserEmail(getEmailByUserid(user.getUserid()));
-			user.setUserPhone(getPhoneByUserid(user.getUserid()));
 			return user;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
-	private UserBo getUserByUserId(String Userid){
-		try {
-			String sql = "select up.id,up.full_name from users_profile up "
-					+ "up.id = " + Userid ;
-			UserBo user = jdbcTemplate.queryForObject(sql, new UserMapper());
-			user.setUserEmail(getEmailByUserid(user.getUserid()));
-			user.setUserPhone(getPhoneByUserid(user.getUserid()));
-			return user;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
-	private List<UserEmailBo> getEmailByUserid(long userid){
-		String qry = "Select email,type from tinla.users_email where user_id = " + userid ;
-		List<UserEmailBo> userEmailBo = jdbcTemplate.query(qry, new UserEmailMapper());
-		return userEmailBo;
-	}
-	private List<UserPhoneBo> getPhoneByUserid(long userid){
-		String qry = "Select phone,type from tinla.users_phone where user_id = " + userid ;
-		List<UserPhoneBo> userPhoneBo = jdbcTemplate.query(qry, new UserPhoneMapper());
-		return userPhoneBo;
-	}
+    	}
+    }
 
-	@Override
-	public UserBo login(String username ,String password) {
-		UserBo userBo = load(username);
-		if (passwordService.compareencrypt(password, userBo.getPassword())){
-			// TO DO atfter signin ing
-			return userBo;
-		}else {
-			return null;
+    private static class UserEmailMapper implements RowMapper<UserEmailBo> {
+
+		@Override
+		public UserEmailBo mapRow(ResultSet rs, int rowNum) throws SQLException {
+			UserEmailBo userEmailBo = new UserEmailBo();
+			userEmailBo.setEmail(rs.getString("email"));
+			userEmailBo.setType(rs.getString("type"));
+
+			return userEmailBo;
 		}
-	}
+    }
 
-	@Override
-	public UserBo logout(UserBo userBo) {
-		// TO Call authentication layer to invalidate session
-		return null;
-	}
+    private static class UserPhoneMapper implements RowMapper<UserPhoneBo> {
 
-	@Override
-	public UserBo changepassword(UserBo userBo,String newpassword) {
-		UserBo userbo = load(Long.toString(userBo.getUserid()));
-		if (passwordService.compareencrypt(userBo.getPassword(), userbo.getPassword())){
-			userBo.setPassword(passwordService.getencrypt(newpassword));
-			return update(userBo);			
-			
-		}else {
-			return null;
-		}
-	}
-	
-	
+    	@Override
+    	public UserPhoneBo mapRow(ResultSet rs, int rowNum) throws SQLException {
+			UserPhoneBo userPhoneBo = new UserPhoneBo();
+			userPhoneBo.setPhoneno(rs.getString("phone"));
+			userPhoneBo.setType(rs.getString("type"));
 
-	
+			return userPhoneBo;
+    	}
+    }
 }

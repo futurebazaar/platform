@@ -5,7 +5,7 @@ import java.util.List;
 
 public class UserBo {
 	
-	private long userid;
+	private int userid;
 	private String password;
 	private List<UserPhoneBo> userPhone;
 	private List<UserEmailBo> userEmail;
@@ -17,22 +17,16 @@ public class UserBo {
 	private String salutation;
 	private Date dateofbirth;
 	
-	
-	
-	
-	
-
-	
 	/**
 	 * @return the userid
 	 */
-	public long getUserid() {
+	public int getUserid() {
 		return userid;
 	}
 	/**
 	 * @param userid the userid to set
 	 */
-	public void setUserid(long userid) {
+	public void setUserid(int userid) {
 		this.userid = userid;
 	}
 	

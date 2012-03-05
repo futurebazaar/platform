@@ -66,14 +66,14 @@ public class AppTest extends TestCase {
 	    System.out.println("Test is running for user DAO user email::::: " + record.getUserEmail().get(0).getEmail());
 	    System.out.println("Test is running for user DAO user phone::::: " + record.getUserPhone().get(0).getPhoneno());
     }
-    public void testUserManager()
+    /*public void testUserManager()
     {
 	    UserTO record = new UserTO();
 	    record = userManager.getuser(key);
 	    System.out.println("Test is running for user Manager ::::: " + record.getName());
 	    System.out.println("Test is running for user Manager user email::::: " + record.getUserEmail().get(0).getEmail());
 	    System.out.println("Test is running for user Manager user phone::::: " + record.getUserPhone().get(0).getPhoneno());
-    }
+    }*/
 
 
 }

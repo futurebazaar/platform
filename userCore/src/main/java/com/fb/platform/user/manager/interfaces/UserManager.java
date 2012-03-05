@@ -1,33 +1,30 @@
 package com.fb.platform.user.manager.interfaces;
 
-import java.util.Collection;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.fb.platform.user.domain.UserBo;
-import com.fb.platform.user.manager.model.UserTO;
-
+import com.fb.platform.user.manager.model.auth.ChangePasswordRequest;
+import com.fb.platform.user.manager.model.auth.ChangePasswordResponse;
+import com.fb.platform.user.manager.model.auth.LoginRequest;
+import com.fb.platform.user.manager.model.auth.LoginResponse;
+import com.fb.platform.user.manager.model.auth.LogoutRequest;
+import com.fb.platform.user.manager.model.auth.LogoutResponse;
 
 
 /**
  * @author kumar
+ * @author vinayak
  *
  */
+@Transactional
 public interface UserManager {
-	/**
-	 * @param key
-	 * @return
-	 */
-	UserTO getuser(String key);
-	
-	Collection<UserTO> getUsers();
-	
-	void adduser(UserTO userTO);
-	
-	UserTO updateuser (UserTO userTO);
 
-	public UserTO login(String username , String password);
-	
-	public UserTO logout(UserTO userTO);
-	
-	public UserTO  changepassword(UserTO userTO,String newpassword);
-	
+	@Transactional(propagation=Propagation.REQUIRED)
+	public LoginResponse login(LoginRequest loginRequest);
+
+	@Transactional(propagation=Propagation.REQUIRED)
+	public LogoutResponse logout(LogoutRequest logoutRequest);
+
+	@Transactional(propagation=Propagation.REQUIRED)
+	public ChangePasswordResponse changePassword(ChangePasswordRequest request);
 }

@@ -17,6 +17,8 @@ public interface UserDao {
 	 */
 	public UserBo load(String key);
 
+	public UserBo loadByUserId(int userId);
+
 	/**
 	 * @return the complete list of users in the database
 	 */
@@ -34,12 +36,9 @@ public interface UserDao {
 	 */
 	public UserBo update(UserBo userBo);
 	
-	public UserBo login(String username , String password);
+	//public UserBo login(String username , String password);
 	
-	public UserBo logout(UserBo userBo);
+	//public UserBo logout(UserBo userBo);
 	
-	public UserBo  changepassword(UserBo userBo,String newpassword);
-	
-	
-	
+	public boolean changePassword(UserBo userBo,String newPassword);
 }

@@ -44,13 +44,13 @@ public class UserResource {
 		return "<user>" + userModel.getEmail() + "</user>";
 	}
 
-	@GET
+	/*@GET
 	@Path ("{key}")
 	@Produces("text/xml")
 	public Object getUser(@PathParam("key") String key) {
 		 StringBuffer buffer = new StringBuffer();
 	     buffer.append("Hello ").append(key);
 	     return "<user>" + userManager.getuser(key).getName() + "</user>";
-	}
+	}*/
 
 }

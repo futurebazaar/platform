@@ -42,11 +42,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	 * @see com.fb.platform.auth.AuthenticationService#authenticate(java.lang.String)
 	 */
 	@Override
-	public AuthenticationTO authenticate(String token) throws RemoteException,
-			PlatformException {
+	public AuthenticationTO authenticate(String token) throws PlatformException {
     	if (logger.isDebugEnabled()) {
     		//logger.debug(Log.entry("authenticate ").append(token));
     	}
+    	if (token == null) {
+    		return null;
+    	}
+
     	boolean tokenCached = true;
         
     	CryptoKeysTO keys = cryptoKeyManager.loadKeys();
