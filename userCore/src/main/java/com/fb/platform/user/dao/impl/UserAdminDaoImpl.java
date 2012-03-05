@@ -67,9 +67,9 @@ public class UserAdminDaoImpl implements UserAdminDao {
 
 	private static final String SELECT_PHONES_BY_USER_ID = "SELECT phone, type FROM users_phone WHERE user_id = ?";
 	
-	private static final String SELECT_ALL_USERS = "SELECT up.id,up.full_name,up.salutation,up.date_of_birth,up.password from tinla.users_profile up " ;
+	private static final String SELECT_ALL_USERS = "SELECT up.id,up.full_name,up.salutation,up.date_of_birth,up.password from users_profile up " ;
 	
-	private static final String INSERT_NEW_USER = "INSERT" +
+	private static final String INSERT_NEW_USER = "INSERT " +
 			"into users_profile (" +
 			"primary_phone," +
 			"secondary_phone," +

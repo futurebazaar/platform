@@ -6,6 +6,8 @@ package com.fb.platform.user.manager.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.log4j.Logger;
+
 import com.fb.platform.user.dao.interfaces.UserAdminDao;
 import com.fb.platform.user.dao.interfaces.UserDao;
 import com.fb.platform.user.domain.UserBo;
@@ -18,12 +20,14 @@ import com.fb.platform.user.manager.model.UserTO;
  *
  */
 public class UserAdminManagerImpl implements UserAdminManager {
+	
+	private static Logger logger = Logger.getLogger(UserAdminManagerImpl.class);
 
 	private UserAdminDao userAdminDao;
 	private UserBoToMapper userMapper = new UserBoToMapper();
 
 	/* (non-Javadoc)
-	 * @see com.fb.platform.user.manager.interfaces.UserAdminManager#getUser(java.lang.String)
+	 * @see com.fb.platform.user.manager.interfaces #getUser(java.lang.String)
 	 */
 	@Override
 	public UserTO getUser(String key) {

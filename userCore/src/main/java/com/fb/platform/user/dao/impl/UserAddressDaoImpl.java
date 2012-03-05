@@ -1,12 +1,14 @@
 package com.fb.platform.user.dao.impl;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Collection;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
 import com.fb.platform.user.dao.interfaces.UserAddressDao;
 import com.fb.platform.user.domain.UserAddressBo;
-import com.fb.platform.user.mapper.UserAddressMapper;
 
 /**
  * @author kumar
@@ -14,13 +16,23 @@ import com.fb.platform.user.mapper.UserAddressMapper;
  */
 public class UserAddressDaoImpl implements UserAddressDao {
 	
-	private static final String SELECT_USER_ADDRESS = "SELECT la.id as addressid,la.profile_id as userid,la.address,ua.type,lc.name as city"
-			+ ",lcoun.name as country,ls.name as state,la.pincode from"
-			+ "tinla.locations_address la join "
-			+ "tinla.locations_state ls on la.state_id = ls.id"
-			+ "tinla.locations_city lc on la.city_id = lc.id"
-			+ "tinla.locations_country lcoun on la.country_id = lcoun.id"
-			+ "where la.profile_id = ?";
+	private static final String SELECT_USER_ADDRESS = "SELECT " +
+			"la.id as addressid," +
+			"la.profile_id as userid," +
+			"la.address," +
+			"ua.type," +
+			"lc.name as city"
+			+ ",lcoun.name as country," +
+			"ls.name as state," +
+			"la.pincode from" + 
+			"locations_address la join " + 
+			"locations_state ls " +
+			"on la.state_id = ls.id" +
+			"locations_city lc " +
+			"on la.city_id = lc.id" +
+			"locations_country lcoun " +
+			"on la.country_id = lcoun.id" + 
+			"where la.profile_id = ?";
 	
 	private static final String INSERT_NEW_ADDRESS = "INSERT into locations_address " +
 			"(pincode," +
@@ -30,12 +42,31 @@ public class UserAddressDaoImpl implements UserAddressDao {
 			"type,address," +
 			"profile_id," +
 			"account_id," +
-			"uses,name," +
-			"phone,email," +
+			"uses," +
+			"name," +
+			"phone," +
+			"email," +
 			"defaddress," +
 			"first_name," +
 			"last_name)" +
 			"values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	
+	private static final String UPDATE_ADDRESS = "UPDATE locations_address set " +
+			"pincode = ? ," +
+			"city_id = ? ," +
+			"state_id = ? ," +
+			"country_id = ? ," +
+			"type,address = ? ," +
+			"profile_id = ? ," +
+			"account_id = ? ," +
+			"uses = ? ," +
+			"name = ? ," +
+			"phone = ? ," +
+			"email = ? ," +
+			"defaddress = ? ," +
+			"first_name = ? ," +
+			"last_name = ? " +
+			"where addressid = ?";
 	
 	private static final String SELECT_CITYID_BYNAME = "Select id from locations_city where name = '?'";
 	private static final String SELECT_STATEID_BYNAME = "Select id from locations_state where name = '?'";
@@ -87,8 +118,24 @@ public class UserAddressDaoImpl implements UserAddressDao {
 	 */
 	@Override
 	public void update(UserAddressBo userAddressBo) {
-		// TODO Auto-generated method stub
-
+		Object objs[] = new Object[15];
+		objs[0]=userAddressBo.getPincode();
+		objs[1]=getcityidbyname(userAddressBo.getCity());
+		objs[2]=getstateidbyname(userAddressBo.getState());
+		objs[3]=getcountryidbyname(userAddressBo.getCountry());
+		objs[4]=userAddressBo.getAddresstype();
+		objs[5]=userAddressBo.getAddress();
+		objs[6]=userAddressBo.getUserid();
+		objs[7]=null;
+		objs[8]=0;
+		objs[9]="";
+		objs[10]="";
+		objs[11]="";
+		objs[12]=0;
+		objs[13]="";
+		objs[14]="";
+		objs[15]=userAddressBo.getAddressid();
+		jdbcTemplate.update(UPDATE_ADDRESS, objs);
 	}
 
 	private int getcityidbyname(String city){
@@ -107,5 +154,29 @@ public class UserAddressDaoImpl implements UserAddressDao {
 		int stateid = jdbcTemplate.queryForInt(SELECT_STATEID_BYNAME , new Object[] {state});
 		return stateid;
 	}
+	
+	private static class UserAddressMapper implements RowMapper<UserAddressBo>{
 
+		@Override
+		public UserAddressBo mapRow(ResultSet rs, int rowNum)
+				throws SQLException {
+			try{
+				UserAddressBo useraddress = new UserAddressBo();
+				useraddress.setAddressid(rs.getLong("addressid"));
+				useraddress.setUserid(rs.getInt("userid"));
+				useraddress.setAddress(rs.getString("address"));
+				useraddress.setAddresstype(rs.getString("type"));
+				useraddress.setCity(rs.getString("city"));
+				useraddress.setCountry(rs.getString("country"));
+				useraddress.setState(rs.getString("state"));
+				useraddress.setPincode(rs.getString("pincode"));
+				return useraddress;
+			}catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+		
+	}
+	
 }

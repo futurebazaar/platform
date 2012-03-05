@@ -8,8 +8,11 @@ import com.fb.platform.user.domain.UserAddressBo;
 import com.fb.platform.user.manager.interfaces.UserAddressManager;
 import com.fb.platform.user.manager.mapper.UserAddressBoToMapper;
 import com.fb.platform.user.manager.model.UserAddressTO;
+import com.sun.istack.logging.Logger;
 
 public class UserAddressManagerImpl implements UserAddressManager {
+	
+	private static Logger logger = Logger.getLogger(UserAddressManagerImpl.class);
 
 	private UserAddressDao userAddressDao;
 	private UserAddressBoToMapper userAddressBoToMapper;
