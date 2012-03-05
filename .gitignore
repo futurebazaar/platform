@@ -5,12 +5,16 @@ authenticationCore/.classpath
 authenticationCore/.project
 authenticationCore/.settings/
 catalogCommons/.classpath
+catalogCommons/.project
 catalogCommons/.settings/
 catalogCore/.classpath
+catalogCore/.project
 catalogCore/.settings/
 orderCore/.classpath
+orderCore/.project
 orderCore/.settings/
 orderWS/.classpath
+orderWS/.project
 orderWS/.settings/
 platformCaching/.classpath
 platformCaching/.project
