@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.fb.platform.dao.BaseTestCase;
+import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.sso.CryptoKeyManager;
 import com.fb.platform.sso.CryptoKeysTO;
 
