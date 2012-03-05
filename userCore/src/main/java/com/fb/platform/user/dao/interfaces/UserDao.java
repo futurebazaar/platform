@@ -11,31 +11,6 @@ import com.fb.platform.user.domain.UserBo;
  */ 
 public interface UserDao {
 	
-	/**
-	 * @param key elther the phone number or the emailid of the user
-	 * @return the user object
-	 */
-	public UserBo load(String key);
-
-	public UserBo loadByUserId(int userId);
-
-	/**
-	 * @return the complete list of users in the database
-	 */
-	public Collection<UserBo> getUsers();
-
-	/**
-	 * Add a new user
-	 * @param userBo
-	 */
-	public void add(UserBo userBo);
-	
-	/**
-	 * Update an existing user
-	 * @param userBo
-	 */
-	public UserBo update(UserBo userBo);
-	
 	//public UserBo login(String username , String password);
 	
 	//public UserBo logout(UserBo userBo);

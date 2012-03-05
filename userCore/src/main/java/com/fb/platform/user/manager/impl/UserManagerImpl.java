@@ -12,6 +12,7 @@ import com.fb.platform.sso.SSOSessionId;
 import com.fb.platform.sso.SSOSessionTO;
 import com.fb.platform.sso.SSOToken;
 import com.fb.platform.sso.caching.SessionTokenCacheAccess;
+import com.fb.platform.user.dao.interfaces.UserAdminDao;
 import com.fb.platform.user.dao.interfaces.UserDao;
 import com.fb.platform.user.domain.UserBo;
 import com.fb.platform.user.manager.interfaces.UserManager;
@@ -36,6 +37,7 @@ public class UserManagerImpl implements UserManager {
 	private static Logger logger = Logger.getLogger(UserManagerImpl.class);
 
 	private UserDao userDao = null;
+	private UserAdminDao userAdminDao = null;
 	private SSOMasterService ssoMasterService = null;
 	private AuthenticationService authenticationService;
 
@@ -51,7 +53,7 @@ public class UserManagerImpl implements UserManager {
 			return loginResponse;
 		}
 
-		UserBo user = userDao.load(loginRequest.getUsername());
+		UserBo user = userAdminDao.load(loginRequest.getUsername());
 		if (user == null) {
 			loginResponse.setLoginStatus(LoginStatusEnum.INVALID_USERNAME_PASSWORD);
 			return loginResponse;
@@ -127,7 +129,7 @@ public class UserManagerImpl implements UserManager {
 				return response;
 			}
 
-			UserBo user = userDao.loadByUserId(authentication.getUserID());
+			UserBo user = userAdminDao.loadByUserId(authentication.getUserID());
 			boolean success = userDao.changePassword(user, request.getNewPassword());
 
 			if (!success) {

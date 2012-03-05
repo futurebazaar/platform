@@ -3,8 +3,10 @@ package com.fb.platform.user;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.fb.platform.user.dao.interfaces.UserAdminDao;
 import com.fb.platform.user.dao.interfaces.UserDao;
 import com.fb.platform.user.domain.UserBo;
+import com.fb.platform.user.manager.interfaces.UserAdminManager;
 import com.fb.platform.user.manager.interfaces.UserManager;
 import com.fb.platform.user.manager.model.UserTO;
 
@@ -15,8 +17,8 @@ import junit.framework.TestSuite;
 public class AppTest extends TestCase {
 	
 	private static final String key  = "jasvipul@gmail.com";
-	private UserDao userDao;
-	private UserManager userManager;
+	private UserAdminDao userAdminDao;
+	private UserAdminManager userAdminManager;
 	protected static ApplicationContext appContext;
 
 
@@ -39,8 +41,8 @@ public class AppTest extends TestCase {
     }
     public void setUp() throws Exception
     {
-    	userDao = (UserDao) getBean("userDao");
-    	userManager = (UserManager) getBean("userManager");
+    	userAdminDao = (UserAdminDao) getBean("userAdminDao");
+    	userAdminManager = (UserAdminManager) getBean("userAdminManager");
     }
     public static void main(String[] args) {
     	junit.textui.TestRunner.run(suite());
@@ -61,7 +63,7 @@ public class AppTest extends TestCase {
     public void testUserDAO()
     {
 	    UserBo record = new UserBo();
-	    record = userDao.load(key);
+	    record = userAdminDao.load(key);
 	    System.out.println("Test is running for user DAO ::::: " + record.getName());
 	    System.out.println("Test is running for user DAO user email::::: " + record.getUserEmail().get(0).getEmail());
 	    System.out.println("Test is running for user DAO user phone::::: " + record.getUserPhone().get(0).getPhoneno());
