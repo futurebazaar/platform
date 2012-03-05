@@ -14,6 +14,33 @@ import com.fb.platform.user.mapper.UserAddressMapper;
  */
 public class UserAddressDaoImpl implements UserAddressDao {
 	
+	private static final String SELECT_USER_ADDRESS = "SELECT la.id as addressid,la.profile_id as userid,la.address,ua.type,lc.name as city"
+			+ ",lcoun.name as country,ls.name as state,la.pincode from"
+			+ "tinla.locations_address la join "
+			+ "tinla.locations_state ls on la.state_id = ls.id"
+			+ "tinla.locations_city lc on la.city_id = lc.id"
+			+ "tinla.locations_country lcoun on la.country_id = lcoun.id"
+			+ "where la.profile_id = ?";
+	
+	private static final String INSERT_NEW_ADDRESS = "INSERT into locations_address " +
+			"(pincode," +
+			"city_id," +
+			"state_id," +
+			"country_id," +
+			"type,address," +
+			"profile_id," +
+			"account_id," +
+			"uses,name," +
+			"phone,email," +
+			"defaddress," +
+			"first_name," +
+			"last_name)" +
+			"values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	
+	private static final String SELECT_CITYID_BYNAME = "Select id from locations_city where name = '?'";
+	private static final String SELECT_STATEID_BYNAME = "Select id from locations_state where name = '?'";
+	private static final String SELECT_COUNTRYID_BYNAME = "Select id from locations_country where name = '?'";
+	
 	private JdbcTemplate jdbcTemplate;
 
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
@@ -25,14 +52,7 @@ public class UserAddressDaoImpl implements UserAddressDao {
 	 */
 	@Override
 	public Collection<UserAddressBo> load(int userid) {
-		String sql = "select la.id as addressid,la.profile_id as userid,la.address,ua.type,lc.name as city"
-				+ ",lcoun.name as country,ls.name as state,la.pincode from"
-				+ "tinla.locations_address la join "
-				+ "tinla.locations_state ls on la.state_id = ls.id"
-				+ "tinla.locations_city lc on la.city_id = lc.id"
-				+ "tinla.locations_country lcoun on la.country_id = lcoun.id"
-				+ "where la.profile_id = " + userid;
-		Collection<UserAddressBo> userAddressBos = jdbcTemplate.query(sql, new UserAddressMapper());
+		Collection<UserAddressBo> userAddressBos = jdbcTemplate.query(SELECT_USER_ADDRESS,new Object[]{userid} ,new UserAddressMapper());
 		return userAddressBos;
 		
 	}
@@ -42,8 +62,6 @@ public class UserAddressDaoImpl implements UserAddressDao {
 	 */
 	@Override
 	public void add(UserAddressBo userAddressBo) {
-		String sql = "Insert into locations_address (pincode,city_id,state_id,country_id,type,address,profile_id,account_id,uses,name,phone,email,defaddress,first_name,last_name)"
-				+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		Object objs[] = new Object[15];
 		objs[0]=userAddressBo.getPincode();
 		objs[1]=getcityidbyname(userAddressBo.getCity());
@@ -60,7 +78,7 @@ public class UserAddressDaoImpl implements UserAddressDao {
 		objs[12]=0;
 		objs[13]="";
 		objs[14]="";				
-		jdbcTemplate.update(sql, objs);
+		jdbcTemplate.update(INSERT_NEW_ADDRESS, objs);
 
 	}
 
@@ -74,22 +92,19 @@ public class UserAddressDaoImpl implements UserAddressDao {
 	}
 
 	private int getcityidbyname(String city){
-		String sql = "Select id from locations_city where name = '" + city + "'";
-		int cityid = jdbcTemplate.queryForInt(sql);
+		int cityid = jdbcTemplate.queryForInt(SELECT_CITYID_BYNAME , new Object[] {city});
 		return cityid;
 	}
 	
 
 	private int getcountryidbyname(String country){
-		String sql = "Select id from locations_country where name = '" + country + "'";
-		int countryid = jdbcTemplate.queryForInt(sql);
+		int countryid = jdbcTemplate.queryForInt(SELECT_COUNTRYID_BYNAME , new Object[] {country});
 		return countryid;
 	}
 
 
 	private int getstateidbyname(String state){
-		String sql = "Select id from locations_state where name = '" + state + "'";
-		int stateid = jdbcTemplate.queryForInt(sql);
+		int stateid = jdbcTemplate.queryForInt(SELECT_STATEID_BYNAME , new Object[] {state});
 		return stateid;
 	}
 

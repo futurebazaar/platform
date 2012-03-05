@@ -6,6 +6,7 @@ package com.fb.platform.user.manager.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.fb.platform.user.dao.interfaces.UserAdminDao;
 import com.fb.platform.user.dao.interfaces.UserDao;
 import com.fb.platform.user.domain.UserBo;
 import com.fb.platform.user.manager.interfaces.UserAdminManager;
@@ -18,7 +19,7 @@ import com.fb.platform.user.manager.model.UserTO;
  */
 public class UserAdminManagerImpl implements UserAdminManager {
 
-	private UserDao userDao;
+	private UserAdminDao userAdminDao;
 	private UserBoToMapper userMapper = new UserBoToMapper();
 
 	/* (non-Javadoc)
@@ -26,7 +27,7 @@ public class UserAdminManagerImpl implements UserAdminManager {
 	 */
 	@Override
 	public UserTO getUser(String key) {
-		UserBo userBo = getUserDao().load(key);
+		UserBo userBo = getUserAdminDao().load(key);
 		if(userBo != null) {
 			return userMapper.fromBOtoTO(userBo);
 		} 
@@ -40,7 +41,7 @@ public class UserAdminManagerImpl implements UserAdminManager {
 	 */
 	@Override
 	public void addUser(UserTO user) {
-		userDao.add(userMapper.fromTOtoBO(user));
+		userAdminDao.add(userMapper.fromTOtoBO(user));
 	}
 
 	/* (non-Javadoc)
@@ -48,12 +49,12 @@ public class UserAdminManagerImpl implements UserAdminManager {
 	 */
 	@Override
 	public UserTO updateUser(UserTO user) {
-		return userMapper.fromBOtoTO(userDao.update(userMapper.fromTOtoBO(user)));
+		return userMapper.fromBOtoTO(userAdminDao.update(userMapper.fromTOtoBO(user)));
 	}
 
 	@Override
 	public Collection<UserTO> getUsers() {
-		Collection<UserBo> userBolst = userDao.getUsers();
+		Collection<UserBo> userBolst = userAdminDao.getUsers();
 		Collection<UserTO> userTOlst = new ArrayList<UserTO>() ;
 		for(UserBo user : userBolst){
 			userTOlst.add(userMapper.fromBOtoTO(user));
@@ -61,12 +62,12 @@ public class UserAdminManagerImpl implements UserAdminManager {
 		return userTOlst;
 	}
 
-	public UserDao getUserDao() {
-		return userDao;
+	public UserAdminDao getUserAdminDao() {
+		return userAdminDao;
 	}
 
-	public void setUserDao(UserDao userDao) {
-		this.userDao = userDao;
+	public void setUserDao(UserAdminDao userAdminDao) {
+		this.userAdminDao = userAdminDao;
 	}
 
 }

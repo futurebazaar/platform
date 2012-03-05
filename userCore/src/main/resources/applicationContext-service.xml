@@ -21,6 +21,9 @@
         <property name="ssoMasterService" ref="ssoMasterService"></property>
         <property name="authenticationService" ref="authenticationService"></property>
     </bean>
+    <bean id="userAdminManager" class="com.fb.platform.user.manager.impl.UserAdminManagerImpl">
+        <property name="userAdminDao" ref="userAdminDao"/>
+    </bean>
     <bean id="userAddressManager" class="com.fb.platform.user.manager.impl.UserAddressManagerImpl">
         <property name="userAddressDao" ref="userAddressDao"/>
     </bean>
