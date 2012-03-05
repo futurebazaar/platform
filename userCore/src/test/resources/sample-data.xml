@@ -30,7 +30,7 @@
             <value description="secondary_phone"></value>
             <value description="buyer_or_seller">buyer</value>
             <null />
-            <value description="password" ></value>
+            <value description="password" >sha1$526aa$dSrE+t3dJd3LxYGT8FkRt1p2iiI=</value>
             <value description="full_name">jas</value>
             <value description="primary_email">jasvipul@gmail.com</value>
             <value description="secondary_email"></value>
@@ -54,7 +54,7 @@
             <value description="secondary_phone">9850587074</value>
             <value description="buyer_or_seller">buyer</value>
             <null />
-            <value description="password" ></value>
+            <value description="password" >sha1$526aa$dSrE+t3dJd3LxYGT8FkRt1p2iiI=</value>
             <value description="full_name">Testing test</value>
             <value description="primary_email">test@test.com</value>
             <value description="secondary_email"></value>
