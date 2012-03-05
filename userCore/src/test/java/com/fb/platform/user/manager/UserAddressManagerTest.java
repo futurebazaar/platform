@@ -1,4 +1,4 @@
-package com.fb.platform.user.dao;
+package com.fb.platform.user.manager;
 
 import static org.junit.Assert.assertTrue;
 
@@ -6,16 +6,18 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.test.BaseTestCase;
-import com.fb.platform.user.dao.interfaces.UserAddressDao;
+import com.fb.platform.user.manager.interfaces.UserAddressManager;
 
-public class UserAddressDaoTest extends BaseTestCase {
+public class UserAddressManagerTest extends BaseTestCase {
 	
 	@Autowired
-	private UserAddressDao userAddressDao;
+	private UserAddressManager userAddressManager;
 	
 	@Test
 	public void testGetAddress(){
 		assertTrue(true);
 	}
+	
+	
 
 }
