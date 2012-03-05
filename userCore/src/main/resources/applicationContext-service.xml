@@ -18,6 +18,8 @@
     <!-- Add new Managers here -->
     <bean id="userManager" class="com.fb.platform.user.manager.impl.UserManagerImpl">
         <property name="userDao" ref="userDao"/>
+        <property name="ssoMasterService" ref="ssoMasterService"></property>
+        <property name="authenticationService" ref="authenticationService"></property>
     </bean>
     <bean id="userAddressManager" class="com.fb.platform.user.manager.impl.UserAddressManagerImpl">
         <property name="userAddressDao" ref="userAddressDao"/>

@@ -51,33 +51,38 @@ public class UserManagerImpl implements UserManager {
 			return loginResponse;
 		}
 
-		UserBo user = userDao.load(loginRequest.getUsername());
-		if (user == null) {
-			loginResponse.setLoginStatus(LoginStatusEnum.INVALID_USERNAME_PASSWORD);
-			return loginResponse;
+		try {
+			UserBo user = userDao.load(loginRequest.getUsername());
+			if (user == null) {
+				loginResponse.setLoginStatus(LoginStatusEnum.INVALID_USERNAME_PASSWORD);
+				return loginResponse;
+			}
+
+			boolean passwordMatch = PasswordUtil.checkPassword(loginRequest.getPassword(), user.getPassword());
+			if (!passwordMatch) {
+				loginResponse.setLoginStatus(LoginStatusEnum.INVALID_USERNAME_PASSWORD);
+				return loginResponse;
+			}
+
+			SSOSessionTO ssoSession = new SSOSessionTO();
+			ssoSession.setUserId(user.getUserid());
+			ssoSession.setIpAddress(loginRequest.getIpAddress());
+
+			//create the global sso session
+			SSOSessionId ssoSessionId = ssoMasterService.createSSOSession(ssoSession);
+
+			//create the session token to be included in the response and cache it for the use of next request
+			SSOToken ssoToken = ssoMasterService.createSessionToken(ssoSessionId);
+
+			sessionTokenCacheAccess.put(ssoToken, ssoSessionId);
+
+			loginResponse.setLoginStatus(LoginStatusEnum.LOGIN_SUCCESS);
+			loginResponse.setSessionToken(ssoToken.getToken());
+			loginResponse.setUserId(user.getUserid());
+		} catch (PlatformException e) {
+			logger.error("Error while login the user : " + loginRequest.getUsername(), e);
+			loginResponse.setLoginStatus(LoginStatusEnum.LOGIN_FAILURE);
 		}
-
-		boolean passwordMatch = PasswordUtil.checkPassword(loginRequest.getPassword(), user.getPassword());
-		if (!passwordMatch) {
-			loginResponse.setLoginStatus(LoginStatusEnum.INVALID_USERNAME_PASSWORD);
-			return loginResponse;
-		}
-
-		SSOSessionTO ssoSession = new SSOSessionTO();
-		ssoSession.setUserId(user.getUserid());
-		ssoSession.setIpAddress(loginRequest.getIpAddress());
-
-		//create the global sso session
-		SSOSessionId ssoSessionId = ssoMasterService.createSSOSession(ssoSession);
-
-		//create the session token to be included in the response and cache it for the use of next request
-		SSOToken ssoToken = ssoMasterService.createSessionToken(ssoSessionId);
-
-		sessionTokenCacheAccess.put(ssoToken, ssoSessionId);
-
-		loginResponse.setLoginStatus(LoginStatusEnum.LOGIN_SUCCESS);
-		loginResponse.setSessionToken(ssoToken.getToken());
-		loginResponse.setUserId(user.getUserid());
 		return loginResponse;
 	}
 
