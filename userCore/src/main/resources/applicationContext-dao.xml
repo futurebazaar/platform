@@ -15,7 +15,7 @@
 
     <!-- Add new DAOs here -->
     <bean id="userDao" class="com.fb.platform.user.dao.impl.UserDaoImpl">
-		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+		
 	</bean>
 	<bean id="userAdminDao" class="com.fb.platform.user.dao.impl.UserAdminDaoImpl">
 		<property name="jdbcTemplate" ref="jdbcTemplate"/>

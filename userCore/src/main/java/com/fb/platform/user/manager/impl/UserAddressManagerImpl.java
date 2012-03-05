@@ -17,24 +17,33 @@ public class UserAddressManagerImpl implements UserAddressManager {
 	
 	@Override
 	public void addAddress(UserAddressTO userAddressTO) {
-		userAddressDao.add(userAddressBoToMapper.userAddressTOtoBo(userAddressTO));
+		getUserAddressDao().add(userAddressBoToMapper.userAddressTOtoBo(userAddressTO));
 
 	}
 
 	@Override
 	public void updateAddress(UserAddressTO userAddressTO) {
-		userAddressDao.update(userAddressBoToMapper.userAddressTOtoBo(userAddressTO));
+		getUserAddressDao().update(userAddressBoToMapper.userAddressTOtoBo(userAddressTO));
 
 	}
 
 	@Override
 	public Collection<UserAddressTO> getAddress(int userid) {
-		Collection<UserAddressBo> userAddressBos = userAddressDao.load(userid);
+		Collection<UserAddressBo> userAddressBos = getUserAddressDao().load(userid);
 		Collection<UserAddressTO> userAddressTOs = new ArrayList<UserAddressTO>();
 		for (UserAddressBo userAddressBo : userAddressBos){
 			userAddressTOs.add(userAddressBoToMapper.userAddressBotoTo(userAddressBo));
 		}
 		return userAddressTOs;
+	}
+	
+	
+	public UserAddressDao getUserAddressDao() {
+		return userAddressDao;
+	}
+
+	public void setUserAddressDao(UserAddressDao userAddressDao) {
+		this.userAddressDao = userAddressDao;
 	}
 
 }

@@ -66,7 +66,7 @@ public class UserAdminManagerImpl implements UserAdminManager {
 		return userAdminDao;
 	}
 
-	public void setUserDao(UserAdminDao userAdminDao) {
+	public void setUserAdminDao(UserAdminDao userAdminDao) {
 		this.userAdminDao = userAdminDao;
 	}
 

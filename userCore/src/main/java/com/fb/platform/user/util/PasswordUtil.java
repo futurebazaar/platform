@@ -64,4 +64,10 @@ public class PasswordUtil {
 	    String hash = (new BASE64Encoder()).encode(raw); //step 5
 	    return (storedPasswordHash.equals(hash)); //step 6
 	}
+	public static void main (String[] args){
+		String passwordEncrypt = "testpass";
+		System.out.println(getEncryptedPassword(passwordEncrypt));
+			
+		
+	}
 }
