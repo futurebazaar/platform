@@ -5,7 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.user.manager.interfaces.UserAdminManager;
-import com.fb.platform.user.manager.model.UserTO;
+import com.fb.platform.user.manager.model.admin.GetUserRequest;
+import com.fb.platform.user.manager.model.admin.GetUserResponse;
 
 public class UserAdminManagerTest extends BaseTestCase {
 	
@@ -17,11 +18,13 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testUserManager()
     {
-	    UserTO record = new UserTO();
-	    record = userAdminManager.getUser(key);
-	    System.out.println("Test is running for user Manager ::::: " + record.getName());
-	    System.out.println("Test is running for user Manager user email::::: " + record.getUserEmail().get(0).getEmail());
-	    System.out.println("Test is running for user Manager user phone::::: " + record.getUserPhone().get(0).getPhoneno());
+	    GetUserResponse record = new GetUserResponse();
+	    GetUserRequest putreq = new GetUserRequest();
+	    putreq.setKey(key);
+	    record = userAdminManager.getUser(putreq);
+	    System.out.println("Test is running for user Manager ::::: " + record.getUsername());
+	    System.out.println("Test is running for user Manager getuserstatus::::: " + record.getStatus());
+	    System.out.println("Test is running for user Manager getusersession::::: " + record.getSessionToken());
     }
 
 }
