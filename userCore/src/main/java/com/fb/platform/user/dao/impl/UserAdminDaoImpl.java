@@ -250,10 +250,9 @@ public class UserAdminDaoImpl implements UserAdminDao {
 	 * @see com.fb.platform.user.dao.interfaces.UserDao#add(com.fb.platform.user.domain.UserBo)
 	 */
 	@Override
-	public void add(UserBo userBo) {
+	public void add(final UserBo userBo) {
 		
 		try {
-			final UserBo userbo = userBo;
 			final java.util.Date today = new java.util.Date();
 			KeyHolder keyHolderprofile = new GeneratedKeyHolder();
 			jdbcTemplate.update(new PreparedStatementCreator() {
@@ -265,15 +264,15 @@ public class UserAdminDaoImpl implements UserAdminDao {
 					ps.setString(2, "");
 					ps.setString(3, "buyer");
 					ps.setString(4, null);
-					ps.setString(5, PasswordUtil.getEncryptedPassword(userbo.getPassword()));
-					ps.setString(6, userbo.getFirstname() + " " +  userbo.getLastname());
+					ps.setString(5, PasswordUtil.getEncryptedPassword(userBo.getPassword()));
+					ps.setString(6, userBo.getFirstname() + " " +  userBo.getLastname());
 					ps.setString(7, "");
 					ps.setString(8, "");
-					ps.setString(9, userbo.getGender());
-					ps.setString(10, userbo.getSalutation());
+					ps.setString(9, userBo.getGender());
+					ps.setString(10, userBo.getSalutation());
 					ps.setString(11, "neutral");
 					ps.setDate(12, new Date(today.getTime()));
-					ps.setDate(13, (Date)userbo.getDateofbirth());
+					ps.setDate(13, (Date)userBo.getDateofbirth());
 					ps.setBoolean(14, false);
 					ps.setString(15, "");
 					ps.setString(16, "");
