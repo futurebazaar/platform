@@ -42,7 +42,7 @@ public class PasswordUtil {
 	}
 
 	public static boolean checkPassword(String plainPassword, String hashedData) {
-		//String algo = hashedPassword.split("$")[0];
+		String algo = hashedData.split("$")[0];
 		String randomStr = hashedData.split("$")[1] ;
 		String storedPasswordHash = hashedData.split("$")[2];
 

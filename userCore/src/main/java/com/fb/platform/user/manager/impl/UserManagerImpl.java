@@ -169,4 +169,12 @@ public class UserManagerImpl implements UserManager {
 	public void setAuthenticationService(AuthenticationService authenticationService) {
 		this.authenticationService = authenticationService;
 	}
+
+	public UserAdminDao getUserAdminDao() {
+		return userAdminDao;
+	}
+
+	public void setUserAdminDao(UserAdminDao userAdminDao) {
+		this.userAdminDao = userAdminDao;
+	}
 }
