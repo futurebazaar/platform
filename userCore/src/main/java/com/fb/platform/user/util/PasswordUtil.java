@@ -42,9 +42,10 @@ public class PasswordUtil {
 	}
 
 	public static boolean checkPassword(String plainPassword, String hashedData) {
-		String algo = hashedData.split("$")[0];
-		String randomStr = hashedData.split("$")[1] ;
-		String storedPasswordHash = hashedData.split("$")[2];
+		//String algo = hashedPassword.split("$")[0];
+		
+		String randomStr = hashedData.split("\\$")[1] ;
+		String storedPasswordHash = hashedData.split("\\$")[2];
 
 		MessageDigest md = null;
 
@@ -52,7 +53,7 @@ public class PasswordUtil {
 	    	md = MessageDigest.getInstance("SHA-1"); //step 2
 	    } catch(NoSuchAlgorithmException e) {
 	    	throw new PlatformException(e);
-	    }
+	    } 
 
 	    try {
 	    	md.update((randomStr + plainPassword).getBytes("UTF-8")); //step 3
@@ -66,8 +67,10 @@ public class PasswordUtil {
 	}
 	public static void main (String[] args){
 		String passwordEncrypt = "testpass";
-		System.out.println(getEncryptedPassword(passwordEncrypt));
-			
+		
+		String hashedData = getEncryptedPassword(passwordEncrypt);
+		System.out.println(hashedData);
+		System.out.println(checkPassword(passwordEncrypt, hashedData));	
 		
 	}
 }
