@@ -9,8 +9,16 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fb.platform.user.manager.model.UserTO;
+import com.fb.platform.user.manager.model.admin.AddUserRequest;
+import com.fb.platform.user.manager.model.admin.AddUserResponse;
+import com.fb.platform.user.manager.model.admin.GetUserRequest;
+import com.fb.platform.user.manager.model.admin.GetUserResponse;
+import com.fb.platform.user.manager.model.admin.UpdateUserReponse;
+import com.fb.platform.user.manager.model.admin.UpdateUserRequest;
 
 /**
+ * @author kumar
+ * 
  * @author vinayak
  *
  */
@@ -18,15 +26,15 @@ import com.fb.platform.user.manager.model.UserTO;
 public interface UserAdminManager {
 
 	@Transactional(propagation=Propagation.SUPPORTS)
-	public UserTO getUser(String key);
+	public GetUserResponse getUser(GetUserRequest getUserRequest);
 
 	@Transactional(propagation=Propagation.REQUIRED)
-	public void addUser(UserTO user);
+	public AddUserResponse addUser(AddUserRequest addUserRequest);
 
 	@Transactional(propagation=Propagation.REQUIRED)
-	public UserTO updateUser(UserTO user);
+	public UpdateUserReponse updateUser(UpdateUserRequest updateUserRequest);
 
-	@Transactional(propagation=Propagation.SUPPORTS)
-	public Collection<UserTO> getUsers();
+	/*@Transactional(propagation=Propagation.SUPPORTS)
+	public GetUsersReponse getUsers(GetUsersRequest getUsersRequest);*/
 
 }
