@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.user.manager.interfaces.UserManager;
+import com.fb.platform.user.manager.model.auth.ChangePasswordRequest;
+import com.fb.platform.user.manager.model.auth.ChangePasswordResponse;
+import com.fb.platform.user.manager.model.auth.ChangePasswordStatusEnum;
 import com.fb.platform.user.manager.model.auth.LoginRequest;
 import com.fb.platform.user.manager.model.auth.LoginResponse;
 import com.fb.platform.user.manager.model.auth.LoginStatusEnum;
@@ -156,5 +159,51 @@ public class UserManagerTest extends BaseTestCase {
 
 		assertNotNull(logoutResponse);
 		assertEquals(LogoutStatusEnum.NO_SESSION, logoutResponse.getStatus());
+	}
+
+	@Test
+	public void testChangePassword() {
+		LoginRequest request = new LoginRequest();
+		request.setUsername("9326164025");
+		request.setPassword("testpass");
+
+		LoginResponse response = userManager.login(request);
+
+		assertNotNull(response);
+		assertEquals(LoginStatusEnum.LOGIN_SUCCESS, response.getLoginStatus());
+		assertNotNull(response.getSessionToken());
+
+		ChangePasswordRequest cpRequest = new ChangePasswordRequest();
+		cpRequest.setNewPassword("newPassword");
+		cpRequest.setOldPassword("testpass");
+		cpRequest.setSessionToken(response.getSessionToken());
+
+		ChangePasswordResponse cpResponse = userManager.changePassword(cpRequest);
+
+		assertNotNull(cpResponse);
+		//assertNotNull(cpResponse.getSessionToken()); TODO
+		assertEquals(ChangePasswordStatusEnum.SUCCESS, cpResponse.getStatus());
+
+		//now try login with the new password
+		request = new LoginRequest();
+		request.setUsername("9326164025");
+		request.setPassword("newPassword");
+
+		response = userManager.login(request);
+
+		assertNotNull(response);
+		assertEquals(LoginStatusEnum.LOGIN_SUCCESS, response.getLoginStatus());
+		assertNotNull(response.getSessionToken());
+
+		//try login with old password
+		request = new LoginRequest();
+		request.setUsername("9326164025");
+		request.setPassword("testpass");
+
+		response = userManager.login(request);
+
+		assertNotNull(response);
+		assertEquals(LoginStatusEnum.INVALID_USERNAME_PASSWORD, response.getLoginStatus());
+		assertNull(response.getSessionToken());
 	}
 }

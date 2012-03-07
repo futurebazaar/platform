@@ -3,9 +3,6 @@
  */
 package com.fb.platform.user.manager.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -13,13 +10,9 @@ import com.fb.commons.PlatformException;
 import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
 import com.fb.platform.user.dao.interfaces.UserAdminDao;
-import com.fb.platform.user.dao.interfaces.UserDao;
 import com.fb.platform.user.domain.UserBo;
-import com.fb.platform.user.domain.UserEmailBo;
 import com.fb.platform.user.manager.interfaces.UserAdminManager;
 import com.fb.platform.user.manager.mapper.UserBoToMapper;
-import com.fb.platform.user.manager.model.UserTO;
-
 import com.fb.platform.user.manager.model.admin.AddUserRequest;
 import com.fb.platform.user.manager.model.admin.AddUserResponse;
 import com.fb.platform.user.manager.model.admin.AddUserStatusEnum;
@@ -29,8 +22,6 @@ import com.fb.platform.user.manager.model.admin.GetUserStatusEnum;
 import com.fb.platform.user.manager.model.admin.UpdateUserReponse;
 import com.fb.platform.user.manager.model.admin.UpdateUserRequest;
 import com.fb.platform.user.manager.model.admin.UpdateUserStatusEnum;
-import com.fb.platform.user.manager.model.auth.LoginStatusEnum;
-import com.fb.platform.user.manager.model.auth.LogoutStatusEnum;
 
 /**
  * @author vinayak
