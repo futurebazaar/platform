@@ -37,7 +37,6 @@ public class UserManagerTest extends BaseTestCase {
 		assertNotNull(response);
 		assertEquals(LoginStatusEnum.LOGIN_SUCCESS, response.getLoginStatus());
 		assertNotNull(response.getSessionToken());
-		System.out.println("SessionToken is : " + response.getSessionToken());
 		assertEquals(1, response.getUserId().intValue());
 	}
 
@@ -53,7 +52,20 @@ public class UserManagerTest extends BaseTestCase {
 		assertEquals(LoginStatusEnum.INVALID_USERNAME_PASSWORD, response.getLoginStatus());
 		assertNull(response.getSessionToken());
 		assertNull(response.getUserId());
-		
+	}
+
+	@Test
+	public void testLoginInvalidUser() {
+		LoginRequest request = new LoginRequest();
+		request.setUsername("iAmNotThere@gmail.com");
+		request.setPassword("testpass");
+
+		LoginResponse response = userManager.login(request);
+
+		assertNotNull(response);
+		assertEquals(LoginStatusEnum.INVALID_USERNAME_PASSWORD, response.getLoginStatus());
+		assertNull(response.getSessionToken());
+		assertNull(response.getUserId());
 	}
 
 	@Test
@@ -67,7 +79,6 @@ public class UserManagerTest extends BaseTestCase {
 		assertNotNull(response);
 		assertEquals(LoginStatusEnum.LOGIN_SUCCESS, response.getLoginStatus());
 		assertNotNull(response.getSessionToken());
-		System.out.println("SessionToken is : " + response.getSessionToken());
 		assertEquals(1, response.getUserId().intValue());
 	}
 
@@ -82,7 +93,6 @@ public class UserManagerTest extends BaseTestCase {
 		assertNotNull(response);
 		assertEquals(LoginStatusEnum.LOGIN_SUCCESS, response.getLoginStatus());
 		assertNotNull(response.getSessionToken());
-		System.out.println("SessionToken is : " + response.getSessionToken());
 		assertEquals(2, response.getUserId().intValue());
 	}
 
@@ -98,13 +108,53 @@ public class UserManagerTest extends BaseTestCase {
 		assertEquals(LoginStatusEnum.LOGIN_SUCCESS, response.getLoginStatus());
 		assertNotNull(response.getSessionToken());
 
-		/*LogoutRequest logoutRequest = new LogoutRequest();
+		LogoutRequest logoutRequest = new LogoutRequest();
 		logoutRequest.setSessionToken(response.getSessionToken());
 
 		LogoutResponse logoutResponse = userManager.logout(logoutRequest);
 
 		assertNotNull(logoutResponse);
-		assertEquals(LogoutStatusEnum.LOGOUT_SUCCESS, logoutResponse.getStatus());*/
+		assertEquals(LogoutStatusEnum.LOGOUT_SUCCESS, logoutResponse.getStatus());
 	}
 
+	@Test
+	public void testLogoutInvalidSessionToken() {
+		LogoutRequest logoutRequest = new LogoutRequest();
+		logoutRequest.setSessionToken("InvalidToken");
+
+		LogoutResponse logoutResponse = userManager.logout(logoutRequest);
+
+		assertNotNull(logoutResponse);
+		assertEquals(LogoutStatusEnum.NO_SESSION, logoutResponse.getStatus());
+	}
+
+	@Test
+	public void testDoubleLogout() {
+		LoginRequest request = new LoginRequest();
+		request.setUsername("9326164025");
+		request.setPassword("testpass");
+
+		LoginResponse response = userManager.login(request);
+
+		assertNotNull(response);
+		assertEquals(LoginStatusEnum.LOGIN_SUCCESS, response.getLoginStatus());
+		assertNotNull(response.getSessionToken());
+
+		LogoutRequest logoutRequest = new LogoutRequest();
+		logoutRequest.setSessionToken(response.getSessionToken());
+
+		LogoutResponse logoutResponse = userManager.logout(logoutRequest);
+
+		assertNotNull(logoutResponse);
+		assertEquals(LogoutStatusEnum.LOGOUT_SUCCESS, logoutResponse.getStatus());
+
+		//now try logout with logged out session, should not work.
+		logoutRequest = new LogoutRequest();
+		logoutRequest.setSessionToken(response.getSessionToken());
+
+		logoutResponse = userManager.logout(logoutRequest);
+
+		assertNotNull(logoutResponse);
+		assertEquals(LogoutStatusEnum.NO_SESSION, logoutResponse.getStatus());
+	}
 }
