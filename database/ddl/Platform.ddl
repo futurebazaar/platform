@@ -46,25 +46,25 @@ CREATE TABLE crypto_key
 
 CREATE TABLE users_profile (
   id int(11) NOT NULL AUTO_INCREMENT,
-  primary_phone varchar(15) NOT NULL,
-  secondary_phone varchar(15) NOT NULL,
+  primary_phone varchar(15) NULL,
+  secondary_phone varchar(15) NULL,
   buyer_or_seller varchar(100) NOT NULL DEFAULT 'Buyer',
   acquired_through_account_id int(11) DEFAULT NULL,
   password varchar(200) NOT NULL,
   full_name varchar(150) NOT NULL,
   primary_email varchar(75) NOT NULL,
   secondary_email varchar(75) DEFAULT NULL,
-  gender varchar(1) NOT NULL,
-  salutation varchar(15) NOT NULL,
+  gender varchar(1) NULL,
+  salutation varchar(15) NULL,
   marketing_alerts varchar(25) NOT NULL,
   created_on datetime NOT NULL,
   date_of_birth date DEFAULT NULL,
   is_agent tinyint(1) NOT NULL,
-  webpage varchar(200) NOT NULL,
-  facebook varchar(200) NOT NULL,
-  twitter varchar(200) NOT NULL,
-  email_notification tinyint(1) NOT NULL,
-  sms_alert tinyint(1) NOT NULL,
+  webpage varchar(200) NULL,
+  facebook varchar(200) NULL,
+  twitter varchar(200) NULL,
+  email_notification tinyint(1) NULL,
+  sms_alert tinyint(1) NULL,
   profession varchar(200) DEFAULT NULL,
   user_photo varchar(100) DEFAULT NULL,
   PRIMARY KEY (id)
@@ -179,7 +179,6 @@ CREATE TABLE rules ( id INTEGER ,
 	rule_function VARCHAR(50),
 	priority INTEGER, 
 	PRIMARY KEY(id) );
--- PRIORITY : 0-5 (Enum)
 
 CREATE TABLE promotion_bundle_product( id INTEGER ,
 	promo_bundle_id INTEGER,
@@ -197,7 +196,6 @@ CREATE TABLE promotion_user( id INTEGER ,
 	times_used TIMESTAMP, 
 	PRIMARY KEY(id) );
 
---Priority - Use Enum
 CREATE TABLE usage_history(id INTEGER ,	
 	used_on TIMESTAMP,
 	used_by INTEGER, 
@@ -248,7 +246,7 @@ ALTER TABLE usage_history ADD CONSTRAINT fk_uh_promo_id FOREIGN KEY(promo_id) RE
 
 ALTER TABLE usage_history ADD CONSTRAINT fk_uh_used_by FOREIGN KEY(used_by) REFERENCES user_profile(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
---Insert Dummy Values
+
 insert into promotion(applies_on,created_on,created_by,valid_from,valid_till,last_modified_on,promotion_name,display_text,promotion_description,last_used_on,promotion_type,promotion_uses,rule_id,is_coupon,amount_type,is_active,priority) 
 values("order",null,null,"1-1-12","3-3-12",null,"try1","try1_disp","try1_desc",null,1,null,1,0,1,1,2);
 insert into promotion(applies_on,created_on,created_by,valid_from,valid_till,last_modified_on,promotion_name,display_text,promotion_description,last_used_on,promotion_type,promotion_uses,rule_id,is_coupon,amount_type,is_active,priority) 
