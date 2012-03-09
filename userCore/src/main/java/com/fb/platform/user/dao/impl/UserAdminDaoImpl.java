@@ -130,6 +130,10 @@ public class UserAdminDaoImpl implements UserAdminDao {
 			"user_photo = ? " +
 			"where id = ?" ;
 
+	private static final String UPDATE_PASSWORD_SQL = "UPDATE users_profile SET " +
+			"password = ? " +
+			"WHERE id = ?";
+
 	private JdbcTemplate jdbcTemplate;
 
     /* (non-Javadoc)
@@ -405,4 +409,15 @@ public class UserAdminDaoImpl implements UserAdminDao {
 			return userPhoneBo;
     	}
     }
+
+	@Override
+	public boolean changePassword(int userId, String newPassword) {
+		int update = jdbcTemplate.update(UPDATE_PASSWORD_SQL, new Object[] {newPassword, userId});
+		if (update > 0) {
+			//update indicate number of rows affected by the above sql query. 
+			//if we have managed to change data in a row means we have successfully updated the password.
+			return true;
+		}
+		return false;
+	}
 }

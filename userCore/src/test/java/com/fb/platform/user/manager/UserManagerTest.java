@@ -10,9 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.user.manager.interfaces.UserManager;
+import com.fb.platform.user.manager.model.auth.ChangePasswordRequest;
+import com.fb.platform.user.manager.model.auth.ChangePasswordResponse;
+import com.fb.platform.user.manager.model.auth.ChangePasswordStatusEnum;
 import com.fb.platform.user.manager.model.auth.LoginRequest;
 import com.fb.platform.user.manager.model.auth.LoginResponse;
 import com.fb.platform.user.manager.model.auth.LoginStatusEnum;
+import com.fb.platform.user.manager.model.auth.LogoutRequest;
+import com.fb.platform.user.manager.model.auth.LogoutResponse;
+import com.fb.platform.user.manager.model.auth.LogoutStatusEnum;
 
 /**
  * @author vinayak
@@ -20,8 +26,8 @@ import com.fb.platform.user.manager.model.auth.LoginStatusEnum;
  */
 public class UserManagerTest extends BaseTestCase {
 
-	/*@Autowired
-	private UserManager userManager = null;*/
+	@Autowired
+	private UserManager userManager = null;
 
 	@Test
 	public void testLoginWithEmail() {
@@ -29,11 +35,175 @@ public class UserManagerTest extends BaseTestCase {
 		request.setUsername("jasvipul@gmail.com");
 		request.setPassword("testpass");
 
-		/*LoginResponse response = userManager.login(request);
+		LoginResponse response = userManager.login(request);
 
 		assertNotNull(response);
 		assertEquals(LoginStatusEnum.LOGIN_SUCCESS, response.getLoginStatus());
 		assertNotNull(response.getSessionToken());
-		assertEquals(1, response.getUserId().intValue());*/
+		assertEquals(1, response.getUserId().intValue());
+	}
+
+	@Test
+	public void testLoginInvalidPassword() {
+		LoginRequest request = new LoginRequest();
+		request.setUsername("jasvipul@gmail.com");
+		request.setPassword("invalid");
+
+		LoginResponse response = userManager.login(request);
+
+		assertNotNull(response);
+		assertEquals(LoginStatusEnum.INVALID_USERNAME_PASSWORD, response.getLoginStatus());
+		assertNull(response.getSessionToken());
+		assertNull(response.getUserId());
+	}
+
+	@Test
+	public void testLoginInvalidUser() {
+		LoginRequest request = new LoginRequest();
+		request.setUsername("iAmNotThere@gmail.com");
+		request.setPassword("testpass");
+
+		LoginResponse response = userManager.login(request);
+
+		assertNotNull(response);
+		assertEquals(LoginStatusEnum.INVALID_USERNAME_PASSWORD, response.getLoginStatus());
+		assertNull(response.getSessionToken());
+		assertNull(response.getUserId());
+	}
+
+	@Test
+	public void testLoginWithPhone() {
+		LoginRequest request = new LoginRequest();
+		request.setUsername("9326164025");
+		request.setPassword("testpass");
+
+		LoginResponse response = userManager.login(request);
+
+		assertNotNull(response);
+		assertEquals(LoginStatusEnum.LOGIN_SUCCESS, response.getLoginStatus());
+		assertNotNull(response.getSessionToken());
+		assertEquals(1, response.getUserId().intValue());
+	}
+
+	@Test
+	public void testLoginWithSecondPhone() {
+		LoginRequest request = new LoginRequest();
+		request.setUsername("9870587074");
+		request.setPassword("testpass");
+
+		LoginResponse response = userManager.login(request);
+
+		assertNotNull(response);
+		assertEquals(LoginStatusEnum.LOGIN_SUCCESS, response.getLoginStatus());
+		assertNotNull(response.getSessionToken());
+		assertEquals(2, response.getUserId().intValue());
+	}
+
+	@Test
+	public void testLogout() {
+		LoginRequest request = new LoginRequest();
+		request.setUsername("9326164025");
+		request.setPassword("testpass");
+
+		LoginResponse response = userManager.login(request);
+
+		assertNotNull(response);
+		assertEquals(LoginStatusEnum.LOGIN_SUCCESS, response.getLoginStatus());
+		assertNotNull(response.getSessionToken());
+
+		LogoutRequest logoutRequest = new LogoutRequest();
+		logoutRequest.setSessionToken(response.getSessionToken());
+
+		LogoutResponse logoutResponse = userManager.logout(logoutRequest);
+
+		assertNotNull(logoutResponse);
+		assertEquals(LogoutStatusEnum.LOGOUT_SUCCESS, logoutResponse.getStatus());
+	}
+
+	@Test
+	public void testLogoutInvalidSessionToken() {
+		LogoutRequest logoutRequest = new LogoutRequest();
+		logoutRequest.setSessionToken("InvalidToken");
+
+		LogoutResponse logoutResponse = userManager.logout(logoutRequest);
+
+		assertNotNull(logoutResponse);
+		assertEquals(LogoutStatusEnum.NO_SESSION, logoutResponse.getStatus());
+	}
+
+	@Test
+	public void testDoubleLogout() {
+		LoginRequest request = new LoginRequest();
+		request.setUsername("9326164025");
+		request.setPassword("testpass");
+
+		LoginResponse response = userManager.login(request);
+
+		assertNotNull(response);
+		assertEquals(LoginStatusEnum.LOGIN_SUCCESS, response.getLoginStatus());
+		assertNotNull(response.getSessionToken());
+
+		LogoutRequest logoutRequest = new LogoutRequest();
+		logoutRequest.setSessionToken(response.getSessionToken());
+
+		LogoutResponse logoutResponse = userManager.logout(logoutRequest);
+
+		assertNotNull(logoutResponse);
+		assertEquals(LogoutStatusEnum.LOGOUT_SUCCESS, logoutResponse.getStatus());
+
+		//now try logout with logged out session, should not work.
+		logoutRequest = new LogoutRequest();
+		logoutRequest.setSessionToken(response.getSessionToken());
+
+		logoutResponse = userManager.logout(logoutRequest);
+
+		assertNotNull(logoutResponse);
+		assertEquals(LogoutStatusEnum.NO_SESSION, logoutResponse.getStatus());
+	}
+
+	@Test
+	public void testChangePassword() {
+		LoginRequest request = new LoginRequest();
+		request.setUsername("9326164025");
+		request.setPassword("testpass");
+
+		LoginResponse response = userManager.login(request);
+
+		assertNotNull(response);
+		assertEquals(LoginStatusEnum.LOGIN_SUCCESS, response.getLoginStatus());
+		assertNotNull(response.getSessionToken());
+
+		ChangePasswordRequest cpRequest = new ChangePasswordRequest();
+		cpRequest.setNewPassword("newPassword");
+		cpRequest.setOldPassword("testpass");
+		cpRequest.setSessionToken(response.getSessionToken());
+
+		ChangePasswordResponse cpResponse = userManager.changePassword(cpRequest);
+
+		assertNotNull(cpResponse);
+		//assertNotNull(cpResponse.getSessionToken()); TODO
+		assertEquals(ChangePasswordStatusEnum.SUCCESS, cpResponse.getStatus());
+
+		//now try login with the new password
+		request = new LoginRequest();
+		request.setUsername("9326164025");
+		request.setPassword("newPassword");
+
+		response = userManager.login(request);
+
+		assertNotNull(response);
+		assertEquals(LoginStatusEnum.LOGIN_SUCCESS, response.getLoginStatus());
+		assertNotNull(response.getSessionToken());
+
+		//try login with old password
+		request = new LoginRequest();
+		request.setUsername("9326164025");
+		request.setPassword("testpass");
+
+		response = userManager.login(request);
+
+		assertNotNull(response);
+		assertEquals(LoginStatusEnum.INVALID_USERNAME_PASSWORD, response.getLoginStatus());
+		assertNull(response.getSessionToken());
 	}
 }

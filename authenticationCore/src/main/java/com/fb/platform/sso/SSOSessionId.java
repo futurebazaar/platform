@@ -20,7 +20,7 @@ import com.fb.platform.sso.util.CryptoKeyUtils;
  */
 public class SSOSessionId implements Serializable {
 
-	private static final Pattern VALID_SESSION_CHARS = Pattern.compile("[0-9A-F]+");
+	private static final Pattern VALID_SESSION_CHARS = Pattern.compile("[0-9A-Fa-f/-]+");
 
 	private String _sessionId = null;
 	

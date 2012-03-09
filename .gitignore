@@ -25,4 +25,13 @@ userCore/.settings/
 userWS/.classpath
 userWS/.project
 userWS/.settings/
+AllCommon/bin/
+catalogCommons/bin/
+catalogCore/bin/
+orderCore/bin/
+orderWS/bin/
+platformCaching/bin/
+platformCommons/bin/
+userCore/bin/
+userWS/bin/
 

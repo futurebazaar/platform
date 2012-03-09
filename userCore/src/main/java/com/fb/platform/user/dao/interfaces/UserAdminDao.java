@@ -31,4 +31,5 @@ public interface UserAdminDao {
 	 */
 	public UserBo update(UserBo userBo);
 
+	public boolean changePassword(int userId, String newPassword);
 }

@@ -13,7 +13,6 @@ import com.fb.platform.sso.SSOSessionTO;
 import com.fb.platform.sso.SSOToken;
 import com.fb.platform.sso.caching.SessionTokenCacheAccess;
 import com.fb.platform.user.dao.interfaces.UserAdminDao;
-import com.fb.platform.user.dao.interfaces.UserDao;
 import com.fb.platform.user.domain.UserBo;
 import com.fb.platform.user.manager.interfaces.UserManager;
 import com.fb.platform.user.manager.model.auth.ChangePasswordRequest;
@@ -36,7 +35,6 @@ public class UserManagerImpl implements UserManager {
 	
 	private static Logger logger = Logger.getLogger(UserManagerImpl.class);
 
-	private UserDao userDao = null;
 	private UserAdminDao userAdminDao = null;
 	private SSOMasterService ssoMasterService = null;
 	private AuthenticationService authenticationService;
@@ -134,8 +132,8 @@ public class UserManagerImpl implements UserManager {
 				return response;
 			}
 
-			UserBo user = userAdminDao.loadByUserId(authentication.getUserID());
-			boolean success = userDao.changePassword(user, request.getNewPassword());
+			String hashedNewPassword = PasswordUtil.getEncryptedPassword(request.getNewPassword());
+			boolean success = userAdminDao.changePassword(authentication.getUserID(), hashedNewPassword);
 
 			if (!success) {
 				response.setStatus(ChangePasswordStatusEnum.CHANGE_PASSWORD_FAILED);
@@ -148,10 +146,6 @@ public class UserManagerImpl implements UserManager {
 			response.setStatus(ChangePasswordStatusEnum.CHANGE_PASSWORD_FAILED);
 		}
 		return response;
-	}
-
-	public void setUserDao(UserDao userDao) {
-		this.userDao = userDao;
 	}
 
 	public SSOMasterService getSsoMasterService() {
