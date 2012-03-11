@@ -11,13 +11,14 @@ import java.io.Serializable;
  */
 public class LogoutResponse implements Serializable {
 
-	private LogoutStatusEnum status = null;
+	private LogoutStatusEnum logoutStatus = null;
 
-	public LogoutStatusEnum getStatus() {
-		return status;
+	public LogoutStatusEnum getLogoutStatus() {
+		return logoutStatus;
 	}
 
-	public void setStatus(LogoutStatusEnum status) {
-		this.status = status;
+	public void setLogoutStatus(LogoutStatusEnum logoutStatus) {
+		this.logoutStatus = logoutStatus;
 	}
+
 }

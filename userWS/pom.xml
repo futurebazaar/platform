@@ -28,9 +28,52 @@
 		        <artifactId>maven-jetty-plugin</artifactId>
 		        <version>6.0.1</version>
      	 	</plugin> 
+			<plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>dbunit-maven-plugin</artifactId>
+                <version>1.0-beta-3</version>
+                <configuration>
+                    <dataTypeFactoryName>${dbunit.dataTypeFactoryName}</dataTypeFactoryName>
+                    <driver>${jdbc.driverClassName}</driver>
+                    <username>${jdbc.username}</username>
+                    <password>${jdbc.password}</password>
+                    <url>${jdbc.url}</url>
+                    <src>src/test/resources/sample-data.xml</src>
+                    <type>${dbunit.operation.type}</type>
+                    <schema>${dbunit.schema}</schema>
+                    <skip>${skipTests}</skip>
+                    <transaction>true</transaction>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>test-compile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>operation</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <!-- Runs before integration tests and jetty:run-war -->
+                        <id>test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>operation</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>${jdbc.groupId}</groupId>
+                        <artifactId>${jdbc.artifactId}</artifactId>
+                        <version>${jdbc.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
         </plugins>
     </build>
     <dependencies>
+    	<!-- 
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-server</artifactId>
@@ -41,6 +84,7 @@
             <artifactId>jersey-spring</artifactId>
             <version>${jersey.version}</version>
         </dependency>
+        -->
 		<dependency>
 			<groupId>com.fb</groupId>
 			<artifactId>userCore</artifactId>

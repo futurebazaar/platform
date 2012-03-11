@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<elements>
+	<loginRequest>
+		<username>vinayak</username>
+		<password>testPassword</password>
+		<ipAddress></ipAddress>
+	</loginRequest>
+
+	<loginResponse>
+		<userId>1</userId>
+		<loginStatus>OK</loginStatus>
+		<sessionToken>xxxx1111yyyy-ee-02==</sessionToken>
+	</loginResponse>
+</elements>

@@ -117,7 +117,7 @@ public class UserManagerTest extends BaseTestCase {
 		LogoutResponse logoutResponse = userManager.logout(logoutRequest);
 
 		assertNotNull(logoutResponse);
-		assertEquals(LogoutStatusEnum.LOGOUT_SUCCESS, logoutResponse.getStatus());
+		assertEquals(LogoutStatusEnum.LOGOUT_SUCCESS, logoutResponse.getLogoutStatus());
 	}
 
 	@Test
@@ -128,7 +128,7 @@ public class UserManagerTest extends BaseTestCase {
 		LogoutResponse logoutResponse = userManager.logout(logoutRequest);
 
 		assertNotNull(logoutResponse);
-		assertEquals(LogoutStatusEnum.NO_SESSION, logoutResponse.getStatus());
+		assertEquals(LogoutStatusEnum.NO_SESSION, logoutResponse.getLogoutStatus());
 	}
 
 	@Test
@@ -149,7 +149,7 @@ public class UserManagerTest extends BaseTestCase {
 		LogoutResponse logoutResponse = userManager.logout(logoutRequest);
 
 		assertNotNull(logoutResponse);
-		assertEquals(LogoutStatusEnum.LOGOUT_SUCCESS, logoutResponse.getStatus());
+		assertEquals(LogoutStatusEnum.LOGOUT_SUCCESS, logoutResponse.getLogoutStatus());
 
 		//now try logout with logged out session, should not work.
 		logoutRequest = new LogoutRequest();
@@ -158,7 +158,7 @@ public class UserManagerTest extends BaseTestCase {
 		logoutResponse = userManager.logout(logoutRequest);
 
 		assertNotNull(logoutResponse);
-		assertEquals(LogoutStatusEnum.NO_SESSION, logoutResponse.getStatus());
+		assertEquals(LogoutStatusEnum.NO_SESSION, logoutResponse.getLogoutStatus());
 	}
 
 	@Test
@@ -200,10 +200,57 @@ public class UserManagerTest extends BaseTestCase {
 		request.setUsername("9326164025");
 		request.setPassword("testpass");
 
-		response = userManager.login(request);
+		LoginResponse invalidResponse = userManager.login(request);
+
+		assertNotNull(invalidResponse);
+		assertEquals(LoginStatusEnum.INVALID_USERNAME_PASSWORD, invalidResponse.getLoginStatus());
+		assertNull(invalidResponse.getSessionToken());
+
+		//reset password to original value so that other junit tests run through eclipse can work
+		cpRequest = new ChangePasswordRequest();
+		cpRequest.setNewPassword("testpass");
+		cpRequest.setOldPassword("newPassword");
+		cpRequest.setSessionToken(response.getSessionToken());
+
+		cpResponse = userManager.changePassword(cpRequest);
+
+		assertNotNull(cpResponse);
+		//assertNotNull(cpResponse.getSessionToken()); TODO
+		assertEquals(ChangePasswordStatusEnum.SUCCESS, cpResponse.getStatus());
+	}
+
+	@Test
+	public void testChangePasswordNoSession() {
+		ChangePasswordRequest cpRequest = new ChangePasswordRequest();
+		cpRequest.setNewPassword("newPassword");
+		cpRequest.setOldPassword("testpass");
+
+		ChangePasswordResponse cpResponse = userManager.changePassword(cpRequest);
+
+		assertNotNull(cpResponse);
+		assertEquals(ChangePasswordStatusEnum.NO_SESSION, cpResponse.getStatus());
+	}
+
+	@Test
+	public void testInvalidOldPassword() {
+		LoginRequest request = new LoginRequest();
+		request.setUsername("9326164025");
+		request.setPassword("testpass");
+
+		LoginResponse response = userManager.login(request);
 
 		assertNotNull(response);
-		assertEquals(LoginStatusEnum.INVALID_USERNAME_PASSWORD, response.getLoginStatus());
-		assertNull(response.getSessionToken());
+		assertEquals(LoginStatusEnum.LOGIN_SUCCESS, response.getLoginStatus());
+		assertNotNull(response.getSessionToken());
+
+		ChangePasswordRequest cpRequest = new ChangePasswordRequest();
+		cpRequest.setNewPassword("newPassword");
+		cpRequest.setOldPassword("invalidOldPassword");
+		cpRequest.setSessionToken(response.getSessionToken());
+
+		ChangePasswordResponse cpResponse = userManager.changePassword(cpRequest);
+
+		assertNotNull(cpResponse);
+		assertEquals(ChangePasswordStatusEnum.CHANGE_PASSWORD_FAILED, cpResponse.getStatus());
 	}
 }

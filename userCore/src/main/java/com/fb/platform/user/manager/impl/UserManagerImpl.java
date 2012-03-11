@@ -35,8 +35,11 @@ public class UserManagerImpl implements UserManager {
 	
 	private static Logger logger = Logger.getLogger(UserManagerImpl.class);
 
+	@Autowired
 	private UserAdminDao userAdminDao = null;
+	@Autowired
 	private SSOMasterService ssoMasterService = null;
+	@Autowired
 	private AuthenticationService authenticationService;
 
 	@Autowired
@@ -91,22 +94,22 @@ public class UserManagerImpl implements UserManager {
 		LogoutResponse response = new LogoutResponse();
 
 		if (logoutRequest == null || StringUtils.isBlank(logoutRequest.getSessionToken())) {
-			response.setStatus(LogoutStatusEnum.NO_SESSION);
+			response.setLogoutStatus(LogoutStatusEnum.NO_SESSION);
 			return response;
 		}
 
 		try {
 			AuthenticationTO authentication = authenticationService.authenticate(logoutRequest.getSessionToken());
 			if (authentication == null) {
-				response.setStatus(LogoutStatusEnum.NO_SESSION);
+				response.setLogoutStatus(LogoutStatusEnum.NO_SESSION);
 				return response;
 			}
 
 			ssoMasterService.removeSSOSession(authentication.getSessionId());
-			response.setStatus(LogoutStatusEnum.LOGOUT_SUCCESS);
+			response.setLogoutStatus(LogoutStatusEnum.LOGOUT_SUCCESS);
 		} catch (PlatformException e) {
 			logger.error("Error while logging out user.", e);
-			response.setStatus(LogoutStatusEnum.LOGOUT_FAILED);
+			response.setLogoutStatus(LogoutStatusEnum.LOGOUT_FAILED);
 		}
 		return response;
 	}
@@ -129,6 +132,14 @@ public class UserManagerImpl implements UserManager {
 			AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
 			if (authentication == null) {
 				response.setStatus(ChangePasswordStatusEnum.NO_SESSION);
+				return response;
+			}
+
+			//validate that the user has provided correct old password
+			UserBo user = userAdminDao.loadByUserId(authentication.getUserID());
+			boolean validOldPassword = PasswordUtil.checkPassword(request.getOldPassword(), user.getPassword());
+			if (!validOldPassword) {
+				response.setStatus(ChangePasswordStatusEnum.CHANGE_PASSWORD_FAILED);
 				return response;
 			}
 

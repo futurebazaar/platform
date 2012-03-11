@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	targetNamespace="http://www.fb.com/platform/auth/1.0.0" xmlns:tns="http://www.fb.com/platform/auth/1.0.0" 
+	elementFormDefault="qualified">
+
+  <xs:element name="loginRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:username"/>
+        <xs:element ref="tns:password"/>
+        <xs:element ref="tns:ipAddress"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="username" type="xs:string" nillable="false"/>
+  <xs:element name="password" type="xs:string" nillable="false"/>
+  <xs:element name="ipAddress" type="xs:string"/>
+
+  <xs:element name="loginResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:userId"/>
+        <xs:element ref="tns:loginStatus"/>
+        <xs:element ref="tns:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="userId" type="xs:int"/>
+  <xs:element name="loginStatus" type="tns:loginStatus"/>
+  <xs:element name="sessionToken" type="xs:string"/>
+
+  <xs:simpleType name="loginStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="LOGIN_SUCCESS"/>
+      <xs:enumeration value="INVALID_USERNAME_PASSWORD"/>
+      <xs:enumeration value="LOGIN_FAILURE"/>
+      <xs:enumeration value="LOGIN_ACCOUNT_LOCKED"/>
+      <xs:enumeration value="LOGIN_ACCOUNT_CLOSED"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="logoutRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="logoutResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:logoutStatus"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="logoutStatus" type="tns:logoutStatus"/>
+  <xs:simpleType name="logoutStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="LOGOUT_SUCCESS"/>
+      <xs:enumeration value="LOGOUT_FAILED"/>
+      <xs:enumeration value="NO_SESSION"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>

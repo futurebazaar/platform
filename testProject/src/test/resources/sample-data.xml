@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<table name="crypto_key">
+		<column>id</column>
+		<column>cryptokey_current</column>
+        <column>cryptokey_last</column>
+        <column>cryptokey_next</column>
+        <row>
+        	<value description="id">-1</value>
+        	<value description="cryptokey_current">5A5FB40D45E4968BF883163919B0DC9CD751DAB709EC43B1</value>
+            <value description="cryptokey_last">5A5FB40D45E4968BF883163919B0DC9CD751DAB709EC43B2</value>
+            <value description="cryptokey_next">5A5FB40D45E4968BF883163919B0DC9CD751DAB709EC43B3</value>
+        </row>
+	</table>
+</dataset>
