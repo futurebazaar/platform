@@ -1,10 +1,14 @@
 package com.fb.platform.user.manager;
 
+import static org.junit.Assert.*;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.user.manager.interfaces.UserAdminManager;
+import com.fb.platform.user.manager.model.admin.AddUserRequest;
+import com.fb.platform.user.manager.model.admin.AddUserResponse;
 import com.fb.platform.user.manager.model.admin.GetUserRequest;
 import com.fb.platform.user.manager.model.admin.GetUserResponse;
 
@@ -26,5 +30,16 @@ public class UserAdminManagerTest extends BaseTestCase {
 	    System.out.println("Test is running for user Manager getuserstatus::::: " + record.getStatus());
 	    System.out.println("Test is running for user Manager getusersession::::: " + record.getSessionToken());
     }
+	
+	@Test
+	public void testAddUserManager(){
+		AddUserRequest putreq = new AddUserRequest();
+		AddUserResponse res = new AddUserResponse();
+		putreq.setUsername("test@test.com");
+		putreq.setPassword("testpass");
+		res = userAdminManager.addUser(putreq);
+		assertNotNull(res);
+		assertNotNull(res.getStatus());
+	}
 
 }

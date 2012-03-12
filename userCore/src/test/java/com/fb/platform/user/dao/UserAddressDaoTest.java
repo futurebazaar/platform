@@ -15,6 +15,7 @@ public class UserAddressDaoTest extends BaseTestCase {
 	
 	@Test
 	public void testGetAddress(){
+		
 		assertTrue(true);
 	}
 

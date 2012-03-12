@@ -80,8 +80,8 @@ public class UserAdminDaoImpl implements UserAdminDao {
 			"primary_email," +
 			"secondary_email," +
 			"gender," +
-			"salutation," 
-			+ "marketing_alerts," +
+			"salutation," +
+			"marketing_alerts," +
 			"created_on," +
 			"date_of_birth," +
 			"is_agent,webpage," +
@@ -89,15 +89,14 @@ public class UserAdminDaoImpl implements UserAdminDao {
 			"twitter," +
 			"email_notification," +
 			"sms_alert," +
-			"verify_code," + 
 			"profession," +
 			"user_photo)" +
-			" values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ";
+			" values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ";
 	
 	private static final String INSERT_NEW_EMAIL = "INSERT into users_email (" +
 			"email," +
 			"type," +
-			"userid) " +
+			"user_id) " +
 			"values (?,?,?)"; 
 	
 	private static final String INSERT_NEW_PHONE = "INSERT into users_phone (" +
@@ -283,29 +282,30 @@ public class UserAdminDaoImpl implements UserAdminDao {
 					ps.setString(17, "");
 					ps.setBoolean(18, false);
 					ps.setBoolean(19, false);
-					ps.setInt(21, 0);
-					ps.setString(22, null);
-					ps.setString(23, null);
+					ps.setString(20, null);
+					ps.setString(21, null);
 					return ps;
 				}
 			}, keyHolderprofile);
 			 
-			int userid = (Integer)keyHolderprofile.getKey();
-			
-			for(UserEmailBo userEmailBo : userBo.getUserEmail()){
-				Object objs[] = new Object[3];
-				objs[0] = userEmailBo.getEmail();
-				objs[1] = userEmailBo.getType();
-				objs[2] = userid ;
-				jdbcTemplate.update(INSERT_NEW_EMAIL, objs);
+			long userid = (Long)keyHolderprofile.getKey();
+			if (userBo.getUserEmail() != null) {
+				for(UserEmailBo userEmailBo : userBo.getUserEmail()){
+					Object objs[] = new Object[3];
+					objs[0] = userEmailBo.getEmail();
+					objs[1] = userEmailBo.getType();
+					objs[2] = userid ;
+					jdbcTemplate.update(INSERT_NEW_EMAIL, objs);
+				}
 			}
-			
-			for(UserPhoneBo userPhoneBo : userBo.getUserPhone()){
-				Object objs[] = new Object[3];
-				objs[0] = userPhoneBo.getPhoneno();
-				objs[1] = userPhoneBo.getType();
-				objs[2] = userid ;
-				jdbcTemplate.update(INSERT_NEW_PHONE, objs);
+			if (userBo.getUserPhone() != null) {
+				for(UserPhoneBo userPhoneBo : userBo.getUserPhone()){
+					Object objs[] = new Object[3];
+					objs[0] = userPhoneBo.getPhoneno();
+					objs[1] = userPhoneBo.getType();
+					objs[2] = userid ;
+					jdbcTemplate.update(INSERT_NEW_PHONE, objs);
+				}
 			}
 		} catch (InvalidDataAccessApiUsageException e) {
 			// TODO Auto-generated catch block
