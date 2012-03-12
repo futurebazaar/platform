@@ -22,9 +22,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.fb.commons.PlatformException;
 import com.fb.platform.auth._1_0.LoginRequest;
+import com.fb.platform.auth._1_0.LoginResponse;
+import com.fb.platform.auth._1_0.LoginStatus;
+import com.fb.platform.auth._1_0.LogoutRequest;
+import com.fb.platform.auth._1_0.LogoutResponse;
+import com.fb.platform.auth._1_0.LogoutStatus;
 import com.fb.platform.user.manager.interfaces.UserManager;
-import com.fb.platform.user.manager.model.auth.LoginResponse;
 
 /**
  * @author vinayak
@@ -37,18 +42,31 @@ public class AuthResource {
 
 	private static Logger logger = Logger.getLogger(AuthResource.class);
 
+	//JAXBContext class is thread safe and can be shared
+	private static final JAXBContext context = initContext();
+	
 	@Autowired
 	private UserManager userManager = null;
+
+	private static JAXBContext initContext() {
+		try {
+			return JAXBContext.newInstance("com.fb.platform.auth._1_0");
+		} catch (JAXBException e) {
+			logger.error("Error Initializing the JAXBContext to bind the schema classes", e);
+			throw new PlatformException("Error Initializing the JAXBContext to bind the schema classes", e);
+		}
+	}
 
 	@POST
 	@Path("/login")
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String login(String loginXml) {
-		logger.info("LoginXML : \n" + loginXml);
+		if (logger.isDebugEnabled()) {
+			logger.debug("LoginXML request: \n" + loginXml);
+		}
 
 		try {
-			JAXBContext context = JAXBContext.newInstance("com.fb.platform.auth._1_0");
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 
 			LoginRequest xmlLoginReq = (LoginRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(loginXml)));
@@ -58,27 +76,69 @@ public class AuthResource {
 			apiLoginReq.setPassword(xmlLoginReq.getPassword());
 			apiLoginReq.setUsername(xmlLoginReq.getUsername());
 
-			LoginResponse apiLoginResp = userManager.login(apiLoginReq);
+			com.fb.platform.user.manager.model.auth.LoginResponse apiLoginResp = userManager.login(apiLoginReq);
 
-			com.fb.platform.auth._1_0.LoginResponse xmlLoginResp = new com.fb.platform.auth._1_0.LoginResponse();
+			LoginResponse xmlLoginResp = new LoginResponse();
 			xmlLoginResp.setSessionToken(apiLoginResp.getSessionToken());
 			xmlLoginResp.setUserId(apiLoginResp.getUserId());
+			xmlLoginResp.setLoginStatus(LoginStatus.fromValue(apiLoginResp.getLoginStatus().name()));
 
 			StringWriter outStringWriter = new StringWriter();
 			Marshaller marsheller = context.createMarshaller();
 			marsheller.marshal(xmlLoginResp, outStringWriter);
 
-			logger.info("Got the login Response :\n" + outStringWriter.toString());
-			return outStringWriter.toString();
-		} catch (JAXBException e) {
-			e.printStackTrace();
-		}
+			String xmlResponse = outStringWriter.toString();
+			if (logger.isDebugEnabled()) {
+				logger.info("LoginXML response :\n" + xmlResponse);
+			}
+			return xmlResponse;
 
-		return "error"; //TODO return proper error response
+		} catch (JAXBException e) {
+			logger.error("Error in the login call.", e);
+			return "error"; //TODO return proper error response
+		}
+	}
+
+	@POST
+	@Path("/logout")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String logout(String logoutXml) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("LogoutXML request :\n" + logoutXml);
+		}
+		
+		try {
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+
+			LogoutRequest xmlLogoutReq = (LogoutRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(logoutXml)));
+
+			com.fb.platform.user.manager.model.auth.LogoutRequest apiLogoutReq = new com.fb.platform.user.manager.model.auth.LogoutRequest();
+			apiLogoutReq.setSessionToken(xmlLogoutReq.getSessionToken());
+
+			com.fb.platform.user.manager.model.auth.LogoutResponse apiLogoutResp = userManager.logout(apiLogoutReq);
+
+			LogoutResponse xmlLogoutResp = new LogoutResponse();
+			xmlLogoutResp.setLogoutStatus(LogoutStatus.fromValue(apiLogoutResp.getLogoutStatus().name()));
+
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marsheller = context.createMarshaller();
+			marsheller.marshal(xmlLogoutResp, outStringWriter);
+
+			String xmlResponse = outStringWriter.toString();
+			if (logger.isDebugEnabled()) {
+				logger.info("LogoutXML response :\n" + xmlResponse);
+			}
+			return xmlResponse;
+
+		} catch (JAXBException e) {
+			logger.error("Error in the logout call.", e);
+			return "error"; //TODO return proper error response
+		}
 	}
 
 	@GET
-	public String test() {
+	public String ping() {
 		return "hello";
 	}
 }

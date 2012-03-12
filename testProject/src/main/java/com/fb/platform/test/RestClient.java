@@ -3,20 +3,26 @@
  */
 package com.fb.platform.test;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.Validator;
+import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 
 import com.fb.platform.auth._1_0.LoginRequest;
+import com.fb.platform.auth._1_0.LoginResponse;
+import com.fb.platform.auth._1_0.LogoutRequest;
+import com.fb.platform.auth._1_0.LogoutResponse;
 
 /**
  * @author vinayak
@@ -28,6 +34,13 @@ public class RestClient {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
+		//test login
+		String sessionToken = login();
+		//test logout
+		logout(sessionToken);
+	}
+
+	private static String login() throws Exception {
 		HttpClient httpClient = new HttpClient();
 
 		PostMethod loginMethod = new PostMethod("http://localhost:8080/userWS/auth/login");
@@ -47,10 +60,42 @@ public class RestClient {
 		int statusCode = httpClient.executeMethod(loginMethod);
 		if (statusCode != HttpStatus.SC_OK) {
 			System.out.println("unable to execute the login method : " + statusCode);
-			return;
+			return null;
 		}
 		String loginResponseStr = loginMethod.getResponseBodyAsString();
 		System.out.println("Got the login Response : \n" + loginResponseStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		LoginResponse loginResponse = (LoginResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(loginResponseStr)));
+
+		return loginResponse.getSessionToken();
 	}
 
+	private static void logout(String sessionToken) throws Exception {
+		HttpClient httpClient = new HttpClient();
+
+		PostMethod logoutMethod = new PostMethod("http://localhost:8080/userWS/auth/logout");
+
+		LogoutRequest logoutReq = new LogoutRequest();
+		logoutReq.setSessionToken(sessionToken);
+		
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.auth._1_0");
+
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(logoutReq, sw);
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		logoutMethod.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(logoutMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the logout method : " + statusCode);
+			return;
+		}
+		String logoutResponseStr = logoutMethod.getResponseBodyAsString();
+		System.out.println("Got the logout Response : \n" + logoutResponseStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		LogoutResponse logoutResponse = (LogoutResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(logoutResponseStr)));
+		System.out.println(logoutResponse.getLogoutStatus());
+	}
 }
