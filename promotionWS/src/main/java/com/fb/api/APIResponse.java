@@ -3,7 +3,6 @@ package com.fb.api;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fb.api.interfaces.Jsonizable;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -20,7 +19,7 @@ public class APIResponse {
 	private long numFound;
 	private long numReturned = APIConstants.DEFAULT_COUNT;
 	private long startIndex = 0;
-	private List<Jsonizable> objects = new ArrayList<Jsonizable>();
+//	private List<Jsonizable> objects = new ArrayList<Jsonizable>();
 	
 
 	/**
@@ -176,50 +175,50 @@ public class APIResponse {
 	 * Get the objects being returned
 	 * @return the jsoinzable objects being returned
 	 */
-	public List<Jsonizable> getObjects() {
-		return objects;
-	}
+//	public List<Jsonizable> getObjects() {
+//		return objects;
+//	}
 
 	/**
 	 * The objects to be returned as part of response
 	 * @param objects The objects to be returned as part of response
 	 */
-	public void setObjects(List<Jsonizable> objects) {
-		this.objects = objects;
-	}
-
-	public void addObject(Jsonizable object) {
-		this.objects.add(object);
-	}
-
-	public String toJsonString() throws Exception{
-		JsonObject jsonObject = new JsonObject();
-		JsonArray jsonArray = new JsonArray();
-		
-
-		for(Jsonizable jObj : objects){
-			jsonArray.add((JsonElement) jObj.toJson());
-		}
-		jsonObject.add("objects",jsonArray);
-		jsonObject.addProperty("status", status);
-		jsonObject.addProperty("status_code", statusCode);
-		jsonObject.addProperty("status_message", statusMessage);
-		jsonObject.addProperty("num_found", numFound);
-		jsonObject.addProperty("num_returned",numReturned);
-		jsonObject.addProperty("startIndex", startIndex);
-		
-		
-		JsonArray jsonErrorArray = new JsonArray();
-		if(errors != null){
-			for(String error : errors){
-				jsonErrorArray.add(new JsonPrimitive(error));
-			}
-		}
-		
-		jsonObject.add("errors",jsonErrorArray);
-
-		String result = jsonObject.toString(); 
-		
-		return result;
-	}
+//	public void setObjects(List<Jsonizable> objects) {
+//		this.objects = objects;
+//	}
+//
+//	public void addObject(Jsonizable object) {
+//		this.objects.add(object);
+//	}
+//
+//	public String toJsonString() throws Exception{
+//		JsonObject jsonObject = new JsonObject();
+//		JsonArray jsonArray = new JsonArray();
+//		
+//
+//		for(Jsonizable jObj : objects){
+//			jsonArray.add((JsonElement) jObj.toJson());
+//		}
+//		jsonObject.add("objects",jsonArray);
+//		jsonObject.addProperty("status", status);
+//		jsonObject.addProperty("status_code", statusCode);
+//		jsonObject.addProperty("status_message", statusMessage);
+//		jsonObject.addProperty("num_found", numFound);
+//		jsonObject.addProperty("num_returned",numReturned);
+//		jsonObject.addProperty("startIndex", startIndex);
+//		
+//		
+//		JsonArray jsonErrorArray = new JsonArray();
+//		if(errors != null){
+//			for(String error : errors){
+//				jsonErrorArray.add(new JsonPrimitive(error));
+//			}
+//		}
+//		
+//		jsonObject.add("errors",jsonErrorArray);
+//
+//		String result = jsonObject.toString(); 
+//		
+//		return result;
+//	}
 }

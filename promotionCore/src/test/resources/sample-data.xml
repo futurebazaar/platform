@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<table name="promotion">
+		<column>id</column>
+		<column>created_on</column>
+		<column>valid_from</column>
+		<column>valid_till</column>
+		<column>promotion_name</column>
+		<column>display_text</column>
+		<column>promotion_description</column>
+		<column>last_used_on</column>
+		<column>promotion_type</column>
+		<column>promotion_uses</column>
+		<column>rule_id</column>
+		<column>is_coupon</column>
+		<column>amount_type</column>
+		<column>applies_on</column>
+		<column>created_by</column>
+		<column>last_modified_on</column>
+		<column>is_active</column>
+		<column>priority</column>
+        <row>
+			<value name="id">1</value>
+			<value name="created_on">2012-02-09 19:53:14</value>
+			<value name="valid_from">2012-01-01 00:00:00</value>
+			<value name="valid_till">2012-05-31 00:00:00</value>
+			<value name="promotion_name">try1</value>
+			<value name="display_text">try1_disp</value>
+			<value name="promotion_description">try1_desc</value>
+			<value name="last_used_on">2012-02-09 19:53:14</value>
+			<value name="promotion_type">1</value>
+			<value name="promotion_uses" xsi:nil="true" />
+			<value name="rule_id">1</value>
+			<value name="is_coupon">0</value>
+			<value name="amount_type">1</value>
+			<value name="applies_on">order</value>
+			<value name="created_by" xsi:nil="true" />
+			<value name="last_modified_on">2012-02-09 19:53:14</value>
+			<value name="is_active">1</value>
+			<value name="priority">2</value>
+        </row>
+        <row>
+			<value name="id">2</value>
+			<value name="created_on">2012-02-09 19:53:14</value>
+			<value name="valid_from">2012-01-01 00:00:00</value>
+			<value name="valid_till">2012-05-31 00:00:00</value>
+			<value name="promotion_name">try2</value>
+			<value name="display_text">try2_disp</value>
+			<value name="promotion_description">try2_desc</value>
+			<value name="last_used_on">2012-02-09 19:53:14</value>
+			<value name="promotion_type">1</value>
+			<value name="promotion_uses" xsi:nil="true" />
+			<value name="rule_id">1</value>
+			<value name="is_coupon">0</value>
+			<value name="amount_type">1</value>
+			<value name="applies_on">order</value>
+			<value name="created_by" xsi:nil="true" />
+			<value name="last_modified_on">2012-02-09 19:53:14</value>
+			<value name="is_active">1</value>
+			<value name="priority">2</value>
+        </row>
+	</table>
+	
+	<table name="promotion_coupon">
+		<column>id</column>
+		<column>promo_bundle_id</column>
+		<column>product_id</column>
+		<row>
+			<value name="id">1</value>
+			<value name="promo_bundle_id">1</value>
+			<value name="product_id">1</value>
+		</row>
+		<row>
+			<value name="id">2</value>
+			<value name="promo_bundle_id">1</value>
+			<value name="product_id">2</value>
+		</row>
+	</table>
+</dataset>

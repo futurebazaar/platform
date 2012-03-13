@@ -1,23 +1,37 @@
 package com.fb.api.promotion;
 
+import java.io.StringReader;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
 
+import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.fb.api.APIRequest;
-import com.fb.api.APIResponse;
-import com.fb.api.promotion.impl.PromotionManagerImpl;
-import com.fb.commons.promotion.to.PromotionTO;
+import com.fb.commons.PlatformException;
+import com.fb.commons.promotion.to.OrderTO;
+import com.fb.platform.promotion.impl.PromotionManagerImpl;
+import com.fb.platform.promotion.interfaces.PromotionManager;
+import com.fb.platform.promotion.to.PromotionTO;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.sun.jersey.api.core.InjectParam;
 
 
 /**
@@ -27,11 +41,26 @@ import com.google.gson.JsonParser;
  */
 
 @Path("/promotions/")
+@Component
+@Scope("request")
 public class PromotionAPIResource {
  
-	@Context HttpServletRequest servletRequest;
+	private static Logger logger = Logger.getLogger(PromotionAPIResource.class);
 	
+	 @InjectParam
 	private PromotionManager promotionManager;
+	 
+	//JAXBContext class is thread safe and can be shared
+		private static final JAXBContext context = initContext();
+		
+		private static JAXBContext initContext() {
+			try {
+				return JAXBContext.newInstance("com.fb.platform.auth._1_0");
+			} catch (JAXBException e) {
+				logger.error("Error Initializing the JAXBContext to bind the schema classes", e);
+				throw new PlatformException("Error Initializing the JAXBContext to bind the schema classes", e);
+			}
+		}
 
 	public void setPromotionManager(PromotionManager promotionManager) {
 		this.promotionManager = promotionManager;
@@ -39,15 +68,20 @@ public class PromotionAPIResource {
 
 	private static final JsonParser jsonParser = new JsonParser();
 
+	@Context
+    UriInfo uriInfo;
+
+ 
 	@GET
+	@Produces("text/xml")
 	@Path("/getActivePromotions/")
 	public String getActivePromotions() throws Exception {
-		APIRequest request = APIRequest.createAPIRequest(servletRequest);
-		request.setHttpMethod(APIRequest.HTTP_METHOD_GET);
+//		APIRequest request = APIRequest.createAPIRequest(servletRequest);
+//		request.setHttpMethod(APIRequest.HTTP_METHOD_GET);
 		/*APIResponse response = promotionManager.getActivePromotions(request);
 		String res = response.toJsonString();
 		return res;*/
-		return "{key=vaue}";
+		return "<promotion>" + ""+ "</promotion>";
 		//return null;
 	}
 	
@@ -69,11 +103,17 @@ public class PromotionAPIResource {
 		return promotion.toString();
 	}
 
-	@GET
+	@POST
+	@Consumes("application/xml")
+	@Produces("application/xml")
 	@Path("/getbyorderid/")
-	public String getPromotionsByOrderId() throws Exception {
-		APIRequest request = APIRequest.createAPIRequest(servletRequest);
-		request.setHttpMethod(APIRequest.HTTP_METHOD_GET);
+	public String getPromotionsByOrderId(String orderDetailsXml) throws Exception {
+//		APIRequest request = APIRequest.createAPIRequest(servletRequest);
+//		request.setHttpMethod(APIRequest.HTTP_METHOD_GET);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+
+		OrderTO xmlLogoutReq = (OrderTO) unmarshaller.unmarshal(new StreamSource(new StringReader(orderDetailsXml)));
+
 		/*APIResponse response = promotionManager.getPromotionsByOrderId(request);
 		String res = response.toJsonString();
 		return res;*/
@@ -83,8 +123,8 @@ public class PromotionAPIResource {
 	@DELETE 
 	@Path("/deletebyid/")
 	public String deleteById() throws Exception {
-		APIRequest request = APIRequest.createAPIRequest(servletRequest);
-		request.setHttpMethod(APIRequest.HTTP_METHOD_DELETE);
+//		APIRequest request = APIRequest.createAPIRequest(servletRequest);
+//		request.setHttpMethod(APIRequest.HTTP_METHOD_DELETE);
 		
 		/*APIResponse response = promotionManager.deleteById(request);
 		String res = response.toJsonString();
@@ -96,10 +136,10 @@ public class PromotionAPIResource {
 	@Path("/add/")
 	public String add(String postData) throws Exception{
 		
-		JsonObject jsonObject = (JsonObject)jsonParser.parse(postData);
-		APIRequest request = APIRequest.createAPIRequest(servletRequest);
-		request.setPostData(jsonObject);
-		request.setHttpMethod(APIRequest.HTTP_METHOD_POST);
+//		JsonObject jsonObject = (JsonObject)jsonParser.parse(postData);
+//		APIRequest request = APIRequest.createAPIRequest(servletRequest);
+//		request.setPostData(jsonObject);
+//		request.setHttpMethod(APIRequest.HTTP_METHOD_POST);
 		
 		/*APIResponse response = promotionManager.add(request);
 		String res = response.toJsonString();
@@ -110,7 +150,7 @@ public class PromotionAPIResource {
 	@POST
 	@Path("/update/")
 	public String update(String postData) throws Exception{
-		APIRequest request = APIRequest.createAPIRequest(servletRequest,postData);
+//		APIRequest request = APIRequest.createAPIRequest(servletRequest,postData);
 		/*APIResponse response = promotionManager.update(request);
 		String res = response.toJsonString();
 		return res;*/
@@ -120,7 +160,7 @@ public class PromotionAPIResource {
 	@POST
 	@Path("/getApplicablePromotionsForOrder/")
 	public String getApplicablePromotionsForOrder(String postData) throws Exception{
-		APIRequest request = APIRequest.createAPIRequest(servletRequest,postData);
+//		APIRequest request = APIRequest.createAPIRequest(servletRequest,postData);
 		/*APIResponse response = promotionManager.getApplicablePromotionsForOrder(request);
 		String res = response.toJsonString();
 		return res;*/
@@ -130,7 +170,7 @@ public class PromotionAPIResource {
 	@POST
 	@Path("/applyPromotionOnOrder/")
 	public String applyPromotionOnOrder(String postData) throws Exception{
-		APIRequest request = APIRequest.createAPIRequest(servletRequest,postData);
+//		APIRequest request = APIRequest.createAPIRequest(servletRequest,postData);
 		/*APIResponse response = promotionManager.applyPromotionOnOrder(request);
 		String res = response.toJsonString();
 		return res;*/

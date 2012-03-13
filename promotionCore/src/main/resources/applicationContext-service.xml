@@ -14,7 +14,7 @@
     <!-- =================================================================== -->
     <!-- Managers: For accessing DAOs                                        -->
     <!-- =================================================================== -->
-    <bean id="promotionManager" class="com.fb.api.promotion.impl.PromotionManagerImpl">
+    <bean id="promotionManager" class="com.fb.platform.promotion.impl.PromotionManagerImpl">
         <property name="promotionDao" ref="promotionDao"/>
     </bean>
     
