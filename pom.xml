@@ -328,6 +328,8 @@
         <module>userCore</module>
         <module>userWS</module>
         <module>authenticationCore</module>
+	<module>promotionCore</module>
+	<module>promotionWS</module>
     </modules>
 
     <reporting>
