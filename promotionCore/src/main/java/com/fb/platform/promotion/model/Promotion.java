@@ -7,19 +7,11 @@ package com.fb.platform.promotion.model;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
 /**
  * 
  * @author Keith Fernandez
  */
 public class Promotion {
-	private static final Gson gson = new Gson();
     private int promotionId;    
     private String appliesOn;
     
@@ -33,7 +25,6 @@ public class Promotion {
 	private String displayText;
 	private String promotionDescription;	
 	private Timestamp lastUsedOn;
-	private int ruleId;
 	private boolean isCoupon;
 	private AmountType amountType;
     
@@ -42,17 +33,17 @@ public class Promotion {
     private boolean isActive;
     
 	private String promotionName;
-	private PromotionUses promotionUses;
+	private CouponUses promotionUses;
 
     private Priority priority;
     
-	private ArrayList<PromoValues> promoValues;
+	private ArrayList<PromotionValue> promoValues;
 	 
-	public ArrayList<PromoValues> getPromoValues() {
+	public ArrayList<PromotionValue> getPromoValues() {
 		return promoValues;
 	}
 
-	public void setPromoValues(ArrayList<PromoValues> promoValues) {
+	public void setPromoValues(ArrayList<PromotionValue> promoValues) {
 		this.promoValues = promoValues;
 	}
 
@@ -95,14 +86,6 @@ public class Promotion {
 
 	public void setLastUsedOn(Timestamp lastUsed) {
 		this.lastUsedOn = lastUsed;
-	}
-
-	public int getRuleId() {
-		return ruleId;
-	}
-
-	public void setRuleId(int ruleId) {
-		this.ruleId = ruleId;
 	}
 
 	public boolean isCoupon() {
@@ -200,11 +183,11 @@ public class Promotion {
 //		.toString();
 //	}
 
-	public PromotionUses getPromotionUses() {
+	public CouponUses getPromotionUses() {
 		return promotionUses;
 	}
 
-	public void setPromotionUses(PromotionUses promotionUses) {
+	public void setPromotionUses(CouponUses promotionUses) {
 		this.promotionUses = promotionUses;
 	}
 

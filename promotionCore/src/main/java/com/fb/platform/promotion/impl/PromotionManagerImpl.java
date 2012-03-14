@@ -29,11 +29,12 @@ public class PromotionManagerImpl implements PromotionManager {
 	 */
 	@Override
 	public PromotionTO getPromotion(Integer promotionId) throws PlatformException {
-		logger.info("In PromotionManagerImpl.getPromotion()");
-		Promotion promotionBo = promotionDao.get(promotionId);
-		PromotionTO pto = new PromotionTO();
-		pto.setPromotionId(promotionBo.getPromotionId());
-		return pto;
+		
+//		Promotion promotionBo = promotionDao.get(promotionId);
+//		PromotionTO pto = new PromotionTO();
+//		pto.setPromotionId(promotionBo.getPromotionId());
+//		return pto;
+		return null;
 	}
 
 	/* (non-Javadoc)

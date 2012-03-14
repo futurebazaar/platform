@@ -1,17 +1,35 @@
 package com.fb.platform.promotion.model;
 
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+
 public enum PromotionType {
-	GLOBAL,
-	ON_PRODUCT,
-	ON_CATEGORY,
-	ON_USER
-	/*BUY_ONE_GET_ONE_FREE, 
-	BUY_TWO_GET_ONE_FREE,
-	BUY_BUNDLE_GET_BUNDLE_FREE,
-	BUY_BUNDLE_GET_CHEAPEST_FREE,
 	
-	BUY_WORTH_X_GET_BUNDLE_FREE,
-	BUY_WORTH_X_GET_BUNDLE_FOR_VALUE,
-	GLOBAL_COUPON*/
+	ON_PRODUCT(1),
+	ON_CATEGORY(2),
+	ON_USER(3),
+	ON_ORDER(4);
+
+
+	private static final Map<Integer,PromotionType> lookup 
+    = new HashMap<Integer,PromotionType>();
+
+static {
+    for(PromotionType s : EnumSet.allOf(PromotionType.class))
+         lookup.put(s.getCode(), s);
+}
+
+private int code;
+
+private PromotionType(int code) {
+    this.code = code;
+}
+
+public int getCode() { return code; }
+
+public static PromotionType get(int code) { 
+    return lookup.get(code); 
+}
 	
 }

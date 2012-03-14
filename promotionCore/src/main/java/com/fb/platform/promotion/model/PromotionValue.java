@@ -1,12 +1,14 @@
 package com.fb.platform.promotion.model;
 
-import com.fb.commons.promotion.to.ValueType;
 
-public class PromoValues {
+public class PromotionValue {
 	private int id;
 	private String valueName;
 	private String valueDesc;
 	private String valueData;
+	private int promoId;
+	private PromotionType valueType; /*direct/bundle*/
+	
 	public int getId() {
 		return id;
 	}
@@ -37,12 +39,11 @@ public class PromoValues {
 	public void setPromoId(int promoId) {
 		this.promoId = promoId;
 	}
-	public ValueType getValueType() {
+	public PromotionType getValueType() {
 		return valueType;
 	}
-	public void setValueType(ValueType valueType) {
+	public void setValueType(PromotionType valueType) {
 		this.valueType = valueType;
 	}
-	private int promoId;
-	private ValueType valueType; /*direct/bundle*/
+
 }
