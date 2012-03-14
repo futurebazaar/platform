@@ -89,7 +89,7 @@ public class AuthResource {
 
 			String xmlResponse = outStringWriter.toString();
 			if (logger.isDebugEnabled()) {
-				logger.info("LoginXML response :\n" + xmlResponse);
+				logger.debug("LoginXML response :\n" + xmlResponse);
 			}
 			return xmlResponse;
 
@@ -127,7 +127,7 @@ public class AuthResource {
 
 			String xmlResponse = outStringWriter.toString();
 			if (logger.isDebugEnabled()) {
-				logger.info("LogoutXML response :\n" + xmlResponse);
+				logger.debug("LogoutXML response :\n" + xmlResponse);
 			}
 			return xmlResponse;
 
