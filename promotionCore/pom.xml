@@ -3,24 +3,24 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>com.fb</groupId>
-        <artifactId>colada</artifactId>
-        <version>1.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
-    </parent>
+  <parent>
+    <artifactId>platform</artifactId>
+    <groupId>com.fb</groupId>
+    <version>1.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
 
-	<artifactId>coladaCore</artifactId>
+	<artifactId>promotionCore</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	
-	<name>Future Colada Core application</name>
+	<name>Core Promotion Module of the E Commerce platform</name>
 	<url>http://maven.apache.org</url>
 	
 	<dependencies>
 	  	<dependency>
 	  		<groupId>com.fb</groupId>
-			<artifactId>coladaCommons</artifactId>
+			<artifactId>platformCommons</artifactId>
 			<version>1.0-SNAPSHOT</version>
 	  	</dependency>
 	</dependencies>

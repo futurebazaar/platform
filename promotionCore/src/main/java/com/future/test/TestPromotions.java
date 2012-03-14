@@ -6,7 +6,7 @@ package com.future.test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.fb.dao.promotion.PromotionDao;
+import com.fb.platform.promotion.dao.PromotionDao;
 
 /**
  * @author Keith Fernandez
