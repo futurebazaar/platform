@@ -61,7 +61,7 @@ public class UserAdminManagerImpl implements UserAdminManager {
 				return getUserResponse;
 			}
 			getUserResponse.setStatus(GetUserStatusEnum.SUCCESS);
-			getUserResponse.setUsername(user.getName());
+			getUserResponse.setUserName(user.getName());
 			return getUserResponse;
 			
 		}catch(PlatformException pe){

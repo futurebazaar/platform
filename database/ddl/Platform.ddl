@@ -1,7 +1,7 @@
 -- ******************** DROP TABLE AND CONSTRANTS **********
 
 
-DROP TABLE IF EXISTS categories_store,sso_session, crypto_key,users_profile,locations_city,locations_state,locations_country,users_email,users_phone,client_master,
+DROP TABLE IF EXISTS categories_store,sso_session, crypto_key,auth_user,users_profile,locations_city,locations_state,locations_country,users_email,users_phone,client_master,
 promotion,promotion_uses,promotion_type,promo_values,rules,promotion_bundle_product,promotion_coupon,promotion_user,usage_history,accounts_client;
 
 
@@ -44,31 +44,59 @@ CREATE TABLE crypto_key
 
 -- Users Related tables --
 
+
+CREATE TABLE auth_user (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  username varchar(30) NOT NULL,
+  first_name varchar(30) NOT NULL,
+  last_name varchar(30) NOT NULL,
+  email varchar(75) NOT NULL,
+  password varchar(128) NOT NULL,
+  is_staff tinyint(1) NOT NULL,
+  is_active tinyint(1) NOT NULL,
+  is_superuser tinyint(1) NOT NULL,
+  last_login datetime NOT NULL,
+  date_joined datetime NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY username (username)
+) ENGINE=InnoDB;
+
 CREATE TABLE users_profile (
   id int(11) NOT NULL AUTO_INCREMENT,
-  primary_phone varchar(15) NULL,
-  secondary_phone varchar(15) NULL,
+  user_id int(11) NOT NULL,
+  primary_phone varchar(15) NOT NULL,
+  secondary_phone varchar(15) NOT NULL,
   buyer_or_seller varchar(100) NOT NULL DEFAULT 'Buyer',
   acquired_through_account_id int(11) DEFAULT NULL,
-  password varchar(200) NOT NULL,
   full_name varchar(150) NOT NULL,
   primary_email varchar(75) NOT NULL,
   secondary_email varchar(75) DEFAULT NULL,
-  gender varchar(1) NULL,
-  salutation varchar(15) NULL,
+  gender varchar(1) NOT NULL,
+  salutation varchar(15) NOT NULL,
+  salt varchar(36) NOT NULL,
+  passcode varchar(36) NOT NULL,
   marketing_alerts varchar(25) NOT NULL,
   created_on datetime NOT NULL,
   date_of_birth date DEFAULT NULL,
   is_agent tinyint(1) NOT NULL,
-  webpage varchar(200) NULL,
-  facebook varchar(200) NULL,
-  twitter varchar(200) NULL,
-  email_notification tinyint(1) NULL,
-  sms_alert tinyint(1) NULL,
+  webpage varchar(200) NOT NULL,
+  facebook varchar(200) NOT NULL,
+  twitter varchar(200) NOT NULL,
+  email_notification tinyint(1) NOT NULL,
+  sms_alert tinyint(1) NOT NULL,
+  verify_code int(11) DEFAULT NULL,
   profession varchar(200) DEFAULT NULL,
   user_photo varchar(100) DEFAULT NULL,
-  PRIMARY KEY (id)
-  ) DEFAULT CHARSET=utf8;
+  atg_username varchar(200) DEFAULT NULL,
+  transaction_password varchar(15) DEFAULT NULL,
+  atg_login varchar(40) DEFAULT NULL,
+  atg_password varchar(35) DEFAULT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY atg_username (atg_username),
+  UNIQUE KEY atg_login (atg_login),
+  KEY users_profile_403f60f (user_id),
+  KEY users_profile_8602572 (acquired_through_account_id)
+) ENGINE=InnoDB;
 
 
 CREATE TABLE locations_city (

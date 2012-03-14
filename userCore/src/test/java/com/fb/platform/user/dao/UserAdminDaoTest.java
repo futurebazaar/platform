@@ -43,7 +43,7 @@ public class UserAdminDaoTest extends BaseTestCase {
 		assertEquals(true, PasswordUtil.checkPassword("testpass", user.getPassword()));
 	}
 	
-	@Test
+	/**@Test
 	public void testAddUser() {
 		UserBo user = new UserBo();
 		List<UserEmailBo> emailLst = new ArrayList<UserEmailBo>();
@@ -63,5 +63,5 @@ public class UserAdminDaoTest extends BaseTestCase {
 		assertNotNull(usettest.getPassword());
 		assertEquals(true, PasswordUtil.checkPassword("testpass", usettest.getPassword()));
 				
-	}
+	}**/
 }

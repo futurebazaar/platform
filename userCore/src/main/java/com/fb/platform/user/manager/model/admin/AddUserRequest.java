@@ -4,21 +4,23 @@ import java.io.Serializable;
 
 public class AddUserRequest implements Serializable {
 	
-	private String sessionToken = null;
+	//private String sessionToken = null;
 	private String username = null;
 	private String password = null;
 	/**
 	 * @return the sessionToken
 	 */
-	public String getSessionToken() {
+	/**public String getSessionToken() {
 		return sessionToken;
-	}
+	}**/
+	
 	/**
 	 * @param sessionToken the sessionToken to set
 	 */
-	public void setSessionToken(String sessionToken) {
+	
+	/**public void setSessionToken(String sessionToken) {
 		this.sessionToken = sessionToken;
-	}
+	}**/
 	/**
 	 * @return the username
 	 */

@@ -1,17 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
+	<table name="auth_user"> 
+  		<column>id</column>
+  		<column>username</column>
+  		<column>first_name</column>
+  		<column>last_name</column>
+  		<column>email</column>
+  		<column>password</column>
+  		<column>is_staff</column>
+  		<column>is_active</column>
+  		<column>is_superuser</column>
+  		<column>last_login</column>
+  		<column>date_joined</column>
+  
+        <row>
+        	<value description="id">162811</value>
+           	<value description="username">9916737322</value>
+            <value description="first_name"></value>
+            <value description="last_name"></value>
+            <value description="email"></value>
+            <value description="password" >sha1$526aa$dSrE+t3dJd3LxYGT8FkRt1p2iiI=</value>
+            <value description="is_staff">0</value>
+            <value description="is_active">1</value>
+            <value description="is_superuser">0</value>
+            <value description="last_login">2012-02-26 22:37:14</value>
+            <value description="date_joined">2010-01-01 22:37:14</value>
+        </row>
+        <row>
+        	<value description="id">162812</value>
+           	<value description="username">test@test.com</value>
+            <value description="first_name">test</value>
+            <value description="last_name">datatest</value>
+            <value description="email">test@test.com</value>
+            <value description="password" >sha1$526aa$dSrE+t3dJd3LxYGT8FkRt1p2iiI=</value>
+            <value description="is_staff">0</value>
+            <value description="is_active">1</value>
+            <value description="is_superuser">0</value>
+            <value description="last_login">2012-02-26 22:37:14</value>
+            <value description="date_joined">2010-01-01 22:37:14</value>
+        </row>
+    </table>
+  
 	<table name="users_profile">
-	    <column>id</column>
+ 	    <column>id</column>
+	    <column>user_id</column>
 		<column>primary_phone</column>
         <column>secondary_phone</column>
         <column>buyer_or_seller</column>
         <column>acquired_through_account_id</column>
-        <column>password</column>
         <column>full_name</column>
         <column>primary_email</column>
         <column>secondary_email</column>
         <column>gender</column>
         <column>salutation</column>
+        <column>salt</column>
+        <column>passcode</column>
         <column>marketing_alerts</column>
         <column>created_on</column>
         <column>date_of_birth</column>
@@ -21,21 +64,27 @@
         <column>twitter</column>
         <column>email_notification</column>
         <column>sms_alert</column>
+        <column>verify_code</column>
         <column>profession</column>
         <column>user_photo</column>
-        
+        <column>atg_username</column>
+        <column>transaction_password</column>
+        <column>atg_login</column>
+        <column>atg_password</column>        
         <row>
         	<value description="id">1</value>
+        	<value description="user_id">162811</value>
            	<value description="primary_phone">9916737322</value>
             <value description="secondary_phone"></value>
             <value description="buyer_or_seller">buyer</value>
             <null />
-            <value description="password" >sha1$526aa$dSrE+t3dJd3LxYGT8FkRt1p2iiI=</value>
             <value description="full_name">jas</value>
             <value description="primary_email">jasvipul@gmail.com</value>
             <value description="secondary_email"></value>
             <value description="gender"></value>
             <value description="salutation"></value>
+            <value description="salt"></value>
+            <value description="passcode"></value>
         	<value description="marketing_alerts">no</value>
         	<value description="created_on">2009-06-12 10:06:01</value>
             <null/>
@@ -47,22 +96,29 @@
             <value description="sms_alert">0</value>
             <null/>
         	<null/>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<null/>
         </row>
         <row>
         	<value description="id">2</value>
-        	<value description="primary_phone">9870587074</value>
-            <value description="secondary_phone">9850587074</value>
+        	<value description="user_id">162812</value>
+           	<value description="primary_phone">9916737323</value>
+            <value description="secondary_phone"></value>
             <value description="buyer_or_seller">buyer</value>
             <null />
-            <value description="password" >sha1$526aa$dSrE+t3dJd3LxYGT8FkRt1p2iiI=</value>
-            <value description="full_name">Testing test</value>
+            <value description="full_name">dbunit test</value>
             <value description="primary_email">test@test.com</value>
             <value description="secondary_email"></value>
             <value description="gender"></value>
             <value description="salutation"></value>
+            <value description="salt"></value>
+            <value description="passcode"></value>
         	<value description="marketing_alerts">no</value>
         	<value description="created_on">2009-06-12 10:06:01</value>
-            <value description="date_of_birth">1979-04-02</value>
+            <null/>
             <value description="is_agent">0</value>
             <value description="webpage"></value>
             <value description="facebook"></value>
@@ -70,7 +126,12 @@
             <value description="email_notification">0</value>
             <value description="sms_alert">0</value>
             <null/>
-            <null/>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<null/>
         </row>
 	</table>
 	<table name="users_phone">

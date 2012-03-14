@@ -34,7 +34,7 @@ public class UserAdminDaoImpl implements UserAdminDao {
 			"up.secondary_phone, " +
 			"up.buyer_or_seller, " +
 			"up.acquired_through_account_id, " +
-			"up.password, " +
+			"au.password, " +
 			"up.full_name, " +
 			"up.primary_email, " +
 			"up.gender, " +
@@ -53,45 +53,67 @@ public class UserAdminDaoImpl implements UserAdminDao {
 
 	private static final String SELECT_USER_BY_EMAIL_QUERY = 
 			SELECT_USER_FIELDS + 
-			" FROM users_profile up, users_email ue WHERE up.id = ue.user_id AND ue.email = ?";
+			" FROM users_profile up, users_email ue , auth_user au WHERE au.id = up.user_id AND up.id = ue.user_id AND ue.email = ?";
 
 	private static final String SELECT_USER_BY_PHONE_QUERY = 
 			SELECT_USER_FIELDS +
-			" FROM users_profile up, users_phone uph WHERE up.id = uph.user_id AND uph.phone = ?";
+			" FROM users_profile up, users_phone uph , auth_user au WHERE au.id = up.user_id AND up.id = uph.user_id AND uph.phone = ?";
 
 	private static final String SELECT_USER_BY_USER_ID = 
 			SELECT_USER_FIELDS +
-			" FROM users_profile up WHERE up.id = ?";
+			" FROM users_profile up , auth_user au WHERE au.id = up.user_id AND up.id = ?";
 
 	private static final String SELECT_EMAILS_BY_USER_ID = "SELECT email, type FROM users_email WHERE user_id = ?";
 
 	private static final String SELECT_PHONES_BY_USER_ID = "SELECT phone, type FROM users_phone WHERE user_id = ?";
 	
-	private static final String SELECT_ALL_USERS = "SELECT up.id,up.full_name,up.salutation,up.date_of_birth,up.password from users_profile up " ;
+	private static final String SELECT_ALL_USERS = SELECT_USER_FIELDS + "from users_profile up , auth_user au WHERE au.id = up.user_id" ;
+	
+	private static final String INSERT_NEW_USER_AUTH = "INSERT " + 
+			"into auth_user (" +
+			"username," +
+			"first_name," +
+			"last_name," +
+			"email," +
+			"password ," +
+			"is_staff," +
+			"is_active," + 
+			"is_superuser," +
+			"last_login," +
+			"date_joined ) values" +
+			"(?,?,?,?,?,?,?,?,?,?)";
 	
 	private static final String INSERT_NEW_USER = "INSERT " +
 			"into users_profile (" +
-			"primary_phone," +
-			"secondary_phone," +
-			"buyer_or_seller," +
+			"user_id," +
+			"primary_phone ," +
+			"secondary_phone ," +
+			"buyer_or_seller ," +
 			"acquired_through_account_id," +
-			"password," +
 			"full_name," +
 			"primary_email," +
 			"secondary_email," +
 			"gender," +
-			"salutation," +
+			"salutation ," +
+			"salt," +
+			"passcode," +
 			"marketing_alerts," +
 			"created_on," +
-			"date_of_birth," +
-			"is_agent,webpage," +
-			"facebook," +
-			"twitter," +
-			"email_notification," +
-			"sms_alert," +
-			"profession," +
-			"user_photo)" +
-			" values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ";
+			"date_of_birth ," +
+			"is_agent ," +
+			"webpage ," +
+			"facebook ," +
+			"twitter ," +
+			"email_notification ," +
+			"sms_alert ," +
+			"verify_code ," +
+			"profession ," +
+			"user_photo ," +
+			"atg_username ," +
+			"transaction_password ," +
+			"atg_login," +
+			"atg_password )" +
+			" values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ";
 	
 	private static final String INSERT_NEW_EMAIL = "INSERT into users_email (" +
 			"email," +
@@ -106,33 +128,41 @@ public class UserAdminDaoImpl implements UserAdminDao {
 			"values (?,?,?)";
 	
 	private static final String UPDATE_USER = "UPDATE users_profile set " +
-			"primary_phone = ? , " +
-			"secondary_phone = ? ," +
-			"buyer_or_seller = ? ," +
-			"acquired_through_account_id = ? ," +
-			"password = ? ," +
-			"full_name= ? ," +
-			"primary_email= ? ," +
-			"secondary_email= ? ," +
-			"gender= ? ," +
+			"primary_phone = ?," +
+			"secondary_phone = ?," +
+			"buyer_or_seller = ?," +
+			"acquired_through_account_id= ?," +
+			"full_name= ?," +
+			"primary_email= ?," +
+			"secondary_email= ?," +
+			"gender= ?," +
 			"salutation= ? ," +
-			"marketing_alerts= ? ," +
-			"created_on= ? ," +
+			"salt= ?," +
+			"passcode= ?," +
+			"marketing_alerts= ?," +
+			"created_on= ?," +
 			"date_of_birth= ? ," +
 			"is_agent= ? ," +
-			"webpage= ? ," +
-			"facebook= ? ," +
-			"twitter= ? ," +
-			"email_notification= ? ," +
-			"sms_alert= ? ," +
-			"verify_code= ? ," +
-			"profession= ? ," +
-			"user_photo = ? " +
+			"webpage = ?," +
+			"facebook = ?," +
+			"twitter = ?," +
+			"email_notification = ?," +
+			"sms_alert = ?," +
+			"verify_code = ?," +
+			"profession = ?," +
+			"user_photo = ?," +
+			"atg_username = ?," +
+			"transaction_password = ?," +
+			"atg_login= ?," +
+			"atg_password= ? " +
 			"where id = ?" ;
+	
+	private static final String SELECT_AUTH_USER_ID = "SELECT user_id from users_profile where" +
+			"id=?";
 
-	private static final String UPDATE_PASSWORD_SQL = "UPDATE users_profile SET " +
+	private static final String UPDATE_PASSWORD_SQL = "UPDATE auth_user SET " +
 			"password = ? " +
-			"WHERE id = ?";
+			"WHERE user_id = ?";
 
 	private JdbcTemplate jdbcTemplate;
 
@@ -256,34 +286,62 @@ public class UserAdminDaoImpl implements UserAdminDao {
 	public void add(final UserBo userBo) {
 		
 		try {
+			final KeyHolder keyHolderAuthUser = new GeneratedKeyHolder();
 			final java.util.Date today = new java.util.Date();
+			jdbcTemplate.update(new PreparedStatementCreator() {
+				
+				@Override
+				public PreparedStatement createPreparedStatement(Connection con)
+						throws SQLException {
+					PreparedStatement ps = con.prepareStatement(INSERT_NEW_USER_AUTH,new String[]{"id"});
+					ps.setString(1, userBo.getUsername());
+					ps.setString(2, userBo.getFirstname());
+					ps.setString(3, userBo.getLastname());
+					ps.setString(4,"");
+					ps.setString(5, PasswordUtil.getEncryptedPassword(userBo.getPassword()));
+					ps.setInt(6, 0);
+					ps.setInt(7, 1);
+					ps.setInt(8, 0);
+					ps.setDate(9, new Date(today.getTime()));
+					ps.setDate(10, new Date(today.getTime()));
+					return ps;
+				}
+			},keyHolderAuthUser);
+			
 			KeyHolder keyHolderprofile = new GeneratedKeyHolder();
 			jdbcTemplate.update(new PreparedStatementCreator() {
 				@Override
 				public PreparedStatement createPreparedStatement(Connection con)
 						throws SQLException {
 					PreparedStatement ps = con.prepareStatement(INSERT_NEW_USER,new String[]{"id"});
-					ps.setString(1, "");
+					ps.setInt(1, (Integer)keyHolderAuthUser.getKey());
 					ps.setString(2, "");
-					ps.setString(3, "buyer");
-					ps.setString(4, null);
-					ps.setString(5, PasswordUtil.getEncryptedPassword(userBo.getPassword()));
+					ps.setString(3, "");
+					ps.setString(4, "buyer");
+					ps.setString(5, null);
 					ps.setString(6, userBo.getFirstname() + " " +  userBo.getLastname());
 					ps.setString(7, "");
 					ps.setString(8, "");
 					ps.setString(9, userBo.getGender());
 					ps.setString(10, userBo.getSalutation());
-					ps.setString(11, "neutral");
-					ps.setDate(12, new Date(today.getTime()));
-					ps.setDate(13, (Date)userBo.getDateofbirth());
-					ps.setBoolean(14, false);
-					ps.setString(15, "");
-					ps.setString(16, "");
+					ps.setString(11, "");
+					ps.setString(12, "");
+					ps.setString(13, "neutral");
+					ps.setDate(14, new Date(today.getTime()));
+					ps.setDate(15, (Date)userBo.getDateofbirth());
+					ps.setBoolean(16, false);
 					ps.setString(17, "");
-					ps.setBoolean(18, false);
-					ps.setBoolean(19, false);
-					ps.setString(20, null);
-					ps.setString(21, null);
+					ps.setString(18, "");
+					ps.setString(19, "");
+					ps.setBoolean(20, false);
+					ps.setBoolean(21, false);
+					ps.setInt(22, 0);
+					ps.setString(23, null);
+					ps.setString(24, null);
+					ps.setString(25, null);
+					ps.setString(26, null);
+					ps.setString(27, null);
+					ps.setString(28, null);
 					return ps;
 				}
 			}, keyHolderprofile);
@@ -321,9 +379,8 @@ public class UserAdminDaoImpl implements UserAdminDao {
 	 * @see com.fb.platform.user.dao.interfaces.UserDao#update(com.fb.platform.user.domain.UserBo)
 	 */
 	@Override
-	public UserBo update(UserBo userBo) {
+	public UserBo update(final UserBo userBo) {
 		
-		final UserBo userbo = userBo;
 		final java.util.Date today = new java.util.Date();
 		KeyHolder keyHolderprofile = new GeneratedKeyHolder();
 				
@@ -336,25 +393,30 @@ public class UserAdminDaoImpl implements UserAdminDao {
 				ps.setString(2, "");
 				ps.setString(3, "buyer");
 				ps.setString(4, null);
-				ps.setString(5, PasswordUtil.getEncryptedPassword(userbo.getPassword()));
-				ps.setString(6, userbo.getFirstname() + " " +  userbo.getLastname());
+				ps.setString(5, userBo.getFirstname() + " " +  userBo.getLastname());
+				ps.setString(6, "");
 				ps.setString(7, "");
-				ps.setString(8, "");
-				ps.setString(9, userbo.getGender());
-				ps.setString(10, userbo.getSalutation());
-				ps.setString(11, "neutral");
-				ps.setDate(12, new Date(today.getTime()));
-				ps.setDate(13, (Date)userbo.getDateofbirth());
-				ps.setBoolean(14, false);
-				ps.setString(15, "");
+				ps.setString(8, userBo.getGender());
+				ps.setString(9, userBo.getSalutation());
+				ps.setString(10, "");
+				ps.setString(11, "");
+				ps.setString(12, "neutral");
+				ps.setDate(13, new Date(today.getTime()));
+				ps.setDate(14, (Date)userBo.getDateofbirth());
+				ps.setBoolean(15, false);
 				ps.setString(16, "");
 				ps.setString(17, "");
-				ps.setBoolean(18, false);
+				ps.setString(18, "");
 				ps.setBoolean(19, false);
+				ps.setBoolean(20, false);
 				ps.setInt(21, 0);
 				ps.setString(22, null);
 				ps.setString(23, null);
-				ps.setLong(24, userbo.getUserid());
+				ps.setString(24, null);
+				ps.setString(25, null);
+				ps.setString(26, null);
+				ps.setString(27, null);
+				ps.setLong(28, userBo.getUserid());
 				return ps;
 			}
 		}, keyHolderprofile);
@@ -412,7 +474,8 @@ public class UserAdminDaoImpl implements UserAdminDao {
 
 	@Override
 	public boolean changePassword(int userId, String newPassword) {
-		int update = jdbcTemplate.update(UPDATE_PASSWORD_SQL, new Object[] {newPassword, userId});
+		int user_id = jdbcTemplate.queryForInt(SELECT_AUTH_USER_ID);
+		int update = jdbcTemplate.update(UPDATE_PASSWORD_SQL, new Object[] {newPassword, user_id});
 		if (update > 0) {
 			//update indicate number of rows affected by the above sql query. 
 			//if we have managed to change data in a row means we have successfully updated the password.
