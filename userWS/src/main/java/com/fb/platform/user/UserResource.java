@@ -27,9 +27,15 @@ import org.springframework.stereotype.Component;
 
 
 import com.fb.commons.PlatformException;
+import com.fb.platform.auth._1_0.GetUserRequest;
+import com.fb.platform.auth._1_0.GetUserResponse;
+import com.fb.platform.auth._1_0.GetUserStatus;
 import com.fb.platform.user.manager.interfaces.UserAdminManager;
 import com.fb.platform.user.manager.interfaces.UserManager;
 import com.sun.jersey.api.core.InjectParam;
+
+
+
 
 
 
@@ -81,7 +87,7 @@ public class UserResource {
 			GetUserResponse xmlGetUserRes = new GetUserResponse();
 			xmlGetUserRes.setUserName(apiGetUserRes.getUserName());
 			xmlGetUserRes.setSessionToken(apiGetUserRes.getSessionToken());
-			xmlGetUserRes.setStatus(apiGetUserRes.getStatus());
+			xmlGetUserRes.setGetUserStatus(GetUserStatus.fromValue(apiGetUserRes.getStatus().name()));
 			
 			StringWriter outStringWriter = new StringWriter();
 			Marshaller marsheller = context.createMarshaller();

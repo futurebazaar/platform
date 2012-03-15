@@ -62,5 +62,39 @@
       <xs:enumeration value="NO_SESSION"/>
     </xs:restriction>
   </xs:simpleType>
+  
+  
+  <xs:element name="getUserRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:key"/>
+        <xs:element ref="tns:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="key" type="xs:string" nillable="false"/>
+    
+  <xs:element name="getUserResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:userName"/>
+        <xs:element ref="tns:getUserStatus"/>
+        <xs:element ref="tns:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="userName" type="xs:string"/>  
+  <xs:element name="getUserStatus" type="tns:getUserStatus"/>  
+  <xs:simpleType name="getUserStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="NO_USER_KEY"/>
+      <xs:enumeration value="INVALID_USER"/>
+      <xs:enumeration value="ERROR_RETRIVING_USER"/>
+      <xs:enumeration value="NO_SESSION"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
 
 </xs:schema>

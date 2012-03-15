@@ -157,12 +157,12 @@ public class UserAdminDaoImpl implements UserAdminDao {
 			"atg_password= ? " +
 			"where id = ?" ;
 	
-	private static final String SELECT_AUTH_USER_ID = "SELECT user_id from users_profile where" +
+	private static final String SELECT_AUTH_USER_ID = "SELECT user_id from users_profile where " +
 			"id=?";
 
 	private static final String UPDATE_PASSWORD_SQL = "UPDATE auth_user SET " +
 			"password = ? " +
-			"WHERE user_id = ?";
+			"WHERE id = ?";
 
 	private JdbcTemplate jdbcTemplate;
 
@@ -474,7 +474,7 @@ public class UserAdminDaoImpl implements UserAdminDao {
 
 	@Override
 	public boolean changePassword(int userId, String newPassword) {
-		int user_id = jdbcTemplate.queryForInt(SELECT_AUTH_USER_ID);
+		int user_id = jdbcTemplate.queryForInt(SELECT_AUTH_USER_ID , new Object[]{userId});
 		int update = jdbcTemplate.update(UPDATE_PASSWORD_SQL, new Object[] {newPassword, user_id});
 		if (update > 0) {
 			//update indicate number of rows affected by the above sql query. 
