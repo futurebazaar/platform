@@ -6,8 +6,12 @@ import java.util.Collection;
 import com.fb.platform.user.dao.interfaces.UserAddressDao;
 import com.fb.platform.user.domain.UserAddressBo;
 import com.fb.platform.user.manager.interfaces.UserAddressManager;
-import com.fb.platform.user.manager.mapper.UserAddressBoToMapper;
-import com.fb.platform.user.manager.model.UserAddressTO;
+import com.fb.platform.user.manager.model.address.AddAddressRequest;
+import com.fb.platform.user.manager.model.address.AddAddressResponse;
+import com.fb.platform.user.manager.model.address.GetAddressRequest;
+import com.fb.platform.user.manager.model.address.GetAddressResponse;
+import com.fb.platform.user.manager.model.address.UpdateAddressRequest;
+import com.fb.platform.user.manager.model.address.UpdateAddressResponse;
 import com.sun.istack.logging.Logger;
 
 public class UserAddressManagerImpl implements UserAddressManager {

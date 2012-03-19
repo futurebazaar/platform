@@ -123,14 +123,14 @@ public class UserResource {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			AddUserRequest xmlGetUserReq = (AddUserRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(addUserXml)));
 			com.fb.platform.user.manager.model.admin.AddUserRequest apiAddUserReq = new com.fb.platform.user.manager.model.admin.AddUserRequest();
-			apiAddUserReq.setUsername(xmlGetUserReq.getUsername());
+			apiAddUserReq.setUserName(xmlGetUserReq.getUserName());
 			apiAddUserReq.setPassword(xmlGetUserReq.getPassword());
 			
 			com.fb.platform.user.manager.model.admin.AddUserResponse apiAddUserRes = userAdminManager.addUser(apiAddUserReq);
 			
 			AddUserResponse xmlAddUserRes = new AddUserResponse();
 			xmlAddUserRes.setSessionToken(apiAddUserRes.getSessionToken());
-			xmlAddUserRes.setGetUserStatus(AddUserStatus.fromValue(apiAddUserRes.getStatus().name()));
+			xmlAddUserRes.setAddUserStatus(AddUserStatus.fromValue(apiAddUserRes.getStatus().name()));
 			
 			StringWriter outStringWriter = new StringWriter();
 			Marshaller marsheller = context.createMarshaller();

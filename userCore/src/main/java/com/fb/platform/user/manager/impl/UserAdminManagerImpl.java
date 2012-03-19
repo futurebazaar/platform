@@ -79,20 +79,20 @@ public class UserAdminManagerImpl implements UserAdminManager {
 	public AddUserResponse addUser(AddUserRequest addUserRequest) {
 		AddUserResponse addUserResponse = new AddUserResponse();
 		
-		if (addUserRequest == null || StringUtils.isBlank(addUserRequest.getUsername()) ) {
+		if (addUserRequest == null || StringUtils.isBlank(addUserRequest.getUserName()) ) {
 			addUserResponse.setStatus(AddUserStatusEnum.NO_USER_PROVIDED);
 			return addUserResponse;
 		}
 		try{
 			UserBo userBo = new UserBo();
-			userBo.setUsername(addUserRequest.getUsername());
+			userBo.setUsername(addUserRequest.getUserName());
 			userBo.setPassword(addUserRequest.getPassword());
 			userAdminDao.add(userBo);			
 			addUserResponse.setStatus(AddUserStatusEnum.SUCCESS);			
 			return addUserResponse;
 			
 		}catch(PlatformException pe){
-			logger.error("Error while adding the user : " + addUserRequest.getUsername(), pe);
+			logger.error("Error while adding the user : " + addUserRequest.getUserName(), pe);
 			addUserResponse.setStatus(AddUserStatusEnum.ADD_USER_FAILED);
 		}
 		
