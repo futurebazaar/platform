@@ -20,7 +20,10 @@ import com.fb.platform.auth._1_0.LoginRequest;
 import com.fb.platform.auth._1_0.LoginResponse;
 import com.fb.platform.auth._1_0.LogoutRequest;
 import com.fb.platform.auth._1_0.LogoutResponse;
-
+import com.fb.platform.auth._1_0.AddUserRequest;
+import com.fb.platform.auth._1_0.AddUserResponse;
+import com.fb.platform.auth._1_0.GetUserRequest;
+import com.fb.platform.auth._1_0.GetUserResponse; 
 /**
  * @author vinayak
  *
@@ -95,4 +98,62 @@ public class RestClient {
 		LogoutResponse logoutResponse = (LogoutResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(logoutResponseStr)));
 		System.out.println(logoutResponse.getLogoutStatus());
 	}
-}
+	
+	private static String getUser() throws Exception{
+		
+		HttpClient httpClient = new HttpClient();
+
+		PostMethod getUserMethod = new PostMethod("http://localhost:8080/userWS/user/get");
+		GetUserRequest getUserRequest = new GetUserRequest();
+		getUserRequest.setKey("jasvipul@gmail.com");
+		getUserRequest.setSessionToken("");
+
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.auth._1_0");
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(getUserRequest, sw);
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		getUserMethod.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(getUserMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the get user method : " + statusCode);
+			return null;
+		}
+		String getUserResponseStr = getUserMethod.getResponseBodyAsString();
+		System.out.println("Got the get user Response : \n" + getUserResponseStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		GetUserResponse getUserResponse = (GetUserResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(getUserResponseStr)));
+		return getUserResponse.getUserName();		
+	}
+	
+	private static String addUser() throws Exception{
+		HttpClient httpClient = new HttpClient();
+
+		PostMethod addUserMethod = new PostMethod("http://localhost:8080/userWS/user/add");
+		AddUserRequest addUserRequest = new AddUserRequest();
+		addUserRequest.setUserName("newtestuserviaclient@test.com");
+		addUserRequest.setPassword("testpass");
+
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.auth._1_0");
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(addUserRequest, sw);
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		addUserMethod.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(addUserMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the add user method : " + statusCode);
+			return null;
+		}
+		String addUserResponseStr = addUserMethod.getResponseBodyAsString();
+		System.out.println("Got the add user Response : \n" + addUserResponseStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		AddUserResponse addUserResponse = (AddUserResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(addUserResponseStr)));
+		return addUserResponse.getSessionToken();	
+	}
+	
+	}
