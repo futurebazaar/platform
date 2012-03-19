@@ -30,6 +30,9 @@ import com.fb.commons.PlatformException;
 import com.fb.platform.auth._1_0.GetUserRequest;
 import com.fb.platform.auth._1_0.GetUserResponse;
 import com.fb.platform.auth._1_0.GetUserStatus;
+import com.fb.platform.auth._1_0.AddUserRequest;
+import com.fb.platform.auth._1_0.AddUserResponse;
+import com.fb.platform.auth._1_0.AddUserStatus;
 import com.fb.platform.user.manager.interfaces.UserAdminManager;
 import com.fb.platform.user.manager.interfaces.UserManager;
 import com.sun.jersey.api.core.InjectParam;
@@ -96,6 +99,46 @@ public class UserResource {
 			String xmlResponse = outStringWriter.toString();
 			if (logger.isDebugEnabled()) {
 				logger.info("Get USER XMl response :\n" + xmlGetUserRes);
+			}
+			return xmlResponse;
+
+			
+			
+		}catch(JAXBException e) {
+			logger.error("Error in the login call.", e);
+			return "error"; //TODO return proper error response
+		}
+			
+	}
+	@POST
+	@Path("/add")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String addUser(String addUserXml){
+		if (logger.isDebugEnabled()) {
+			logger.debug("ADD USER XML request: \n" + addUserXml);
+		}
+		
+		try {
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			AddUserRequest xmlGetUserReq = (AddUserRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(addUserXml)));
+			com.fb.platform.user.manager.model.admin.AddUserRequest apiAddUserReq = new com.fb.platform.user.manager.model.admin.AddUserRequest();
+			apiAddUserReq.setUsername(xmlGetUserReq.getUsername());
+			apiAddUserReq.setPassword(xmlGetUserReq.getPassword());
+			
+			com.fb.platform.user.manager.model.admin.AddUserResponse apiAddUserRes = userAdminManager.addUser(apiAddUserReq);
+			
+			AddUserResponse xmlAddUserRes = new AddUserResponse();
+			xmlAddUserRes.setSessionToken(apiAddUserRes.getSessionToken());
+			xmlAddUserRes.setGetUserStatus(AddUserStatus.fromValue(apiAddUserRes.getStatus().name()));
+			
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marsheller = context.createMarshaller();
+			marsheller.marshal(xmlAddUserRes, outStringWriter);
+
+			String xmlResponse = outStringWriter.toString();
+			if (logger.isDebugEnabled()) {
+				logger.info("Add USER XMl response :\n" + xmlAddUserRes);
 			}
 			return xmlResponse;
 

@@ -314,7 +314,7 @@ public class UserAdminDaoImpl implements UserAdminDao {
 				public PreparedStatement createPreparedStatement(Connection con)
 						throws SQLException {
 					PreparedStatement ps = con.prepareStatement(INSERT_NEW_USER,new String[]{"id"});
-					ps.setInt(1, (Integer)keyHolderAuthUser.getKey());
+					ps.setLong(1, (Long)keyHolderAuthUser.getKey());
 					ps.setString(2, "");
 					ps.setString(3, "");
 					ps.setString(4, "buyer");
@@ -322,8 +322,8 @@ public class UserAdminDaoImpl implements UserAdminDao {
 					ps.setString(6, userBo.getFirstname() + " " +  userBo.getLastname());
 					ps.setString(7, "");
 					ps.setString(8, "");
-					ps.setString(9, userBo.getGender());
-					ps.setString(10, userBo.getSalutation());
+					ps.setString(9, (userBo.getGender() == null ? "" : userBo.getGender()));
+					ps.setString(10, (userBo.getSalutation() == null ? "" : userBo.getSalutation()));
 					ps.setString(11, "");
 					ps.setString(12, "");
 					ps.setString(13, "neutral");

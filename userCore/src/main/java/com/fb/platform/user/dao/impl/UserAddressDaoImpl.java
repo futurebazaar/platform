@@ -17,21 +17,21 @@ import com.fb.platform.user.domain.UserAddressBo;
 public class UserAddressDaoImpl implements UserAddressDao {
 	
 	private static final String SELECT_USER_ADDRESS = "SELECT " +
-			"la.id as addressid," +
-			"la.profile_id as userid," +
-			"la.address," +
-			"ua.type," +
-			"lc.name as city"
-			+ ",lcoun.name as country," +
-			"ls.name as state," +
-			"la.pincode from" + 
+			"la.id as addressid, " +
+			"la.profile_id as userid, " +
+			"la.address, " +
+			"la.type, " +
+			"lc.name as city, " +
+			"lcoun.name as country, " +
+			"ls.name as state, " +
+			"la.pincode from " + 
 			"locations_address la join " + 
 			"locations_state ls " +
-			"on la.state_id = ls.id" +
-			"locations_city lc " +
-			"on la.city_id = lc.id" +
-			"locations_country lcoun " +
-			"on la.country_id = lcoun.id" + 
+			"on la.state_id = ls.id " +
+			"join locations_city lc " +
+			"on la.city_id = lc.id " +
+			"join locations_country lcoun " +
+			"on la.country_id = lcoun.id " + 
 			"where la.profile_id = ?";
 	
 	private static final String INSERT_NEW_ADDRESS = "INSERT into locations_address " +

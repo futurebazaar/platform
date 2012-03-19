@@ -1,7 +1,7 @@
 -- ******************** DROP TABLE AND CONSTRANTS **********
 
 
-DROP TABLE IF EXISTS categories_store,sso_session, crypto_key,auth_user,users_profile,locations_city,locations_state,locations_country,users_email,users_phone,client_master,
+DROP TABLE IF EXISTS categories_store,sso_session, crypto_key,auth_user,users_profile,locations_address ,locations_city,locations_state,locations_country,users_email,users_phone,client_master,
 promotion,promotion_uses,promotion_type,promo_values,rules,promotion_bundle_product,promotion_coupon,promotion_user,usage_history,accounts_client;
 
 
@@ -94,10 +94,29 @@ CREATE TABLE users_profile (
   PRIMARY KEY (id),
   UNIQUE KEY atg_username (atg_username),
   UNIQUE KEY atg_login (atg_login),
-  KEY users_profile_403f60f (user_id),
-  KEY users_profile_8602572 (acquired_through_account_id)
-) ENGINE=InnoDB;
+  KEY users_profile_403f60f (user_id)
+  ) ENGINE=InnoDB;
 
+CREATE TABLE locations_address (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  pincode varchar(10) NOT NULL,
+  city_id int(11) DEFAULT NULL,
+  state_id int(11) DEFAULT NULL,
+  country_id int(11) DEFAULT NULL,
+  type varchar(50) NOT NULL,
+  address longtext NOT NULL,
+  profile_id int(11) DEFAULT NULL,
+  account_id int(11) DEFAULT NULL,
+  created_on datetime NOT NULL,
+  uses int(10) unsigned NOT NULL,
+  name varchar(200) NOT NULL,
+  phone varchar(100) NOT NULL,
+  email varchar(75) NOT NULL,
+  defaddress tinyint(1) NOT NULL,
+  first_name varchar(200) NOT NULL,
+  last_name varchar(200) NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB ;
 
 CREATE TABLE locations_city (
   id int(11) NOT NULL AUTO_INCREMENT,
@@ -252,6 +271,14 @@ CREATE TABLE accounts_client (
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--  **************  Constraints Users  **********************
+ALTER TABLE users_profile ADD CONSTRAINT fk_up_user_id FOREIGN KEY(user_id) REFERENCES auth_user(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE  locations_address  ADD CONSTRAINT fk_la_city_id FOREIGN KEY(city_id) REFERENCES locations_city(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE  locations_address  ADD CONSTRAINT fk_la_state_id FOREIGN KEY(state_id) REFERENCES locations_state(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE  locations_address  ADD CONSTRAINT fk_la_country_id FOREIGN KEY(country_id) REFERENCES locations_country(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 --  **************  Constraints   **********************
 ALTER TABLE promotion ADD CONSTRAINT fk_pr_created_by FOREIGN KEY(created_by) REFERENCES user_profile(id) ON UPDATE CASCADE ON DELETE CASCADE;
@@ -275,7 +302,11 @@ ALTER TABLE usage_history ADD CONSTRAINT fk_uh_promo_id FOREIGN KEY(promo_id) RE
 ALTER TABLE usage_history ADD CONSTRAINT fk_uh_used_by FOREIGN KEY(used_by) REFERENCES user_profile(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
+
+
 insert into promotion(applies_on,created_on,created_by,valid_from,valid_till,last_modified_on,promotion_name,display_text,promotion_description,last_used_on,promotion_type,promotion_uses,rule_id,is_coupon,amount_type,is_active,priority) 
 values("order",null,null,"1-1-12","3-3-12",null,"try1","try1_disp","try1_desc",null,1,null,1,0,1,1,2);
 insert into promotion(applies_on,created_on,created_by,valid_from,valid_till,last_modified_on,promotion_name,display_text,promotion_description,last_used_on,promotion_type,promotion_uses,rule_id,is_coupon,amount_type,is_active,priority) 
 values("order",null,null,"1-1-12","3-3-12",null,"try2","try2_disp","try2_desc",null,1,null,1,0,1,1,2);
+
+

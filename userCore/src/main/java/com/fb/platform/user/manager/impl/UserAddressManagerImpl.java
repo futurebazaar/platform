@@ -15,30 +15,26 @@ public class UserAddressManagerImpl implements UserAddressManager {
 	private static Logger logger = Logger.getLogger(UserAddressManagerImpl.class);
 
 	private UserAddressDao userAddressDao;
-	private UserAddressBoToMapper userAddressBoToMapper;
+		
+	@Override
+	public GetAddressResponse getAddress(GetAddressRequest getAddressRequest) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public AddAddressResponse addAddress(AddAddressRequest addAddressRequest) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public UpdateAddressResponse updateAddress(
+			UpdateAddressRequest updateAddressRequest) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
-	
-	@Override
-	public void addAddress(UserAddressTO userAddressTO) {
-		getUserAddressDao().add(userAddressBoToMapper.userAddressTOtoBo(userAddressTO));
-
-	}
-
-	@Override
-	public void updateAddress(UserAddressTO userAddressTO) {
-		getUserAddressDao().update(userAddressBoToMapper.userAddressTOtoBo(userAddressTO));
-
-	}
-
-	@Override
-	public Collection<UserAddressTO> getAddress(int userid) {
-		Collection<UserAddressBo> userAddressBos = getUserAddressDao().load(userid);
-		Collection<UserAddressTO> userAddressTOs = new ArrayList<UserAddressTO>();
-		for (UserAddressBo userAddressBo : userAddressBos){
-			userAddressTOs.add(userAddressBoToMapper.userAddressBotoTo(userAddressBo));
-		}
-		return userAddressTOs;
-	}
 	
 	
 	public UserAddressDao getUserAddressDao() {
@@ -48,5 +44,7 @@ public class UserAddressManagerImpl implements UserAddressManager {
 	public void setUserAddressDao(UserAddressDao userAddressDao) {
 		this.userAddressDao = userAddressDao;
 	}
+
+
 
 }
