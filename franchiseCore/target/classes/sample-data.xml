@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<table name="franchise_franchise">
+		<column>id</column>
+		<column>user_id</column>
+        <column>is_active</column>
+        <column>network_id</column>
+        <column>role</column>
+        <row>
+        	<value description="id">-1</value>
+        	<value description="user_id">-2</value>
+            <value description="is_active">12</value>
+            <value description="network_id">-3</value>
+            <value description="role">test role</value>
+        </row>
+        <row>
+        	<value description="id">-2</value>
+        	<value description="user_id">-3</value>
+            <value description="is_active">-12</value>
+            <value description="network_id">-4</value>
+            <value description="role">test role two</value>
+        </row>
+	</table>
+</dataset>
