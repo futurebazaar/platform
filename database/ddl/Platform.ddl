@@ -126,7 +126,7 @@ CREATE TABLE locations_city (
   normalized_id int(11) DEFAULT NULL,
   user_created tinyint(1) NOT NULL,
   PRIMARY KEY (id)
-  ) DEFAULT CHARSET=utf8;
+  ) ENGINE=InnoDB;
 
 
 CREATE TABLE locations_state (
@@ -138,7 +138,7 @@ CREATE TABLE locations_state (
   user_created tinyint(1) NOT NULL,
   sap_code varchar(4) DEFAULT NULL,
   PRIMARY KEY (id)
-) DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB;
 
 CREATE TABLE locations_country (
   id int(11) NOT NULL AUTO_INCREMENT,
@@ -147,7 +147,7 @@ CREATE TABLE locations_country (
   normalized_id int(11) DEFAULT NULL,
   user_created tinyint(1) NOT NULL,
   PRIMARY KEY (id)
-) DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB;
 
 CREATE TABLE users_email (
   id int(11) NOT NULL AUTO_INCREMENT,
@@ -304,9 +304,9 @@ ALTER TABLE usage_history ADD CONSTRAINT fk_uh_used_by FOREIGN KEY(used_by) REFE
 
 
 
-insert into promotion(applies_on,created_on,created_by,valid_from,valid_till,last_modified_on,promotion_name,display_text,promotion_description,last_used_on,promotion_type,promotion_uses,rule_id,is_coupon,amount_type,is_active,priority) 
-values("order",null,null,"1-1-12","3-3-12",null,"try1","try1_disp","try1_desc",null,1,null,1,0,1,1,2);
-insert into promotion(applies_on,created_on,created_by,valid_from,valid_till,last_modified_on,promotion_name,display_text,promotion_description,last_used_on,promotion_type,promotion_uses,rule_id,is_coupon,amount_type,is_active,priority) 
-values("order",null,null,"1-1-12","3-3-12",null,"try2","try2_disp","try2_desc",null,1,null,1,0,1,1,2);
+--insert into promotion(applies_on,created_on,created_by,valid_from,valid_till,last_modified_on,promotion_name,display_text,promotion_description,last_used_on,promotion_type,promotion_uses,rule_id,is_coupon,amount_type,is_active,priority) 
+--values("order",null,null,"1-1-12","3-3-12",null,"try1","try1_disp","try1_desc",null,1,null,1,0,1,1,2);
+--insert into promotion(applies_on,created_on,created_by,valid_from,valid_till,last_modified_on,promotion_name,display_text,promotion_description,last_used_on,promotion_type,promotion_uses,rule_id,is_coupon,amount_type,is_active,priority) 
+--values("order",null,null,"1-1-12","3-3-12",null,"try2","try2_disp","try2_desc",null,1,null,1,0,1,1,2);
 
 
