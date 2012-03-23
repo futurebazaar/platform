@@ -7,7 +7,7 @@ public class GetUserResponse implements Serializable {
 	
 	private String sessionToken = null;
 	private GetUserStatusEnum status = null ;
-	private String username;
+	private String userName;
 	/**
 	 * @return the sessionToken
 	 */
@@ -35,14 +35,14 @@ public class GetUserResponse implements Serializable {
 	/**
 	 * @return the username
 	 */
-	public String getUsername() {
-		return username;
+	public String getUserName() {
+		return userName;
 	}
 	/**
 	 * @param username the username to set
 	 */
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 	
 	

@@ -17,21 +17,21 @@ import com.fb.platform.user.domain.UserAddressBo;
 public class UserAddressDaoImpl implements UserAddressDao {
 	
 	private static final String SELECT_USER_ADDRESS = "SELECT " +
-			"la.id as addressid," +
-			"la.profile_id as userid," +
-			"la.address," +
-			"ua.type," +
-			"lc.name as city"
-			+ ",lcoun.name as country," +
-			"ls.name as state," +
-			"la.pincode from" + 
+			"la.id as addressid, " +
+			"la.profile_id as userid, " +
+			"la.address, " +
+			"la.type, " +
+			"lc.name as city, " +
+			"lcoun.name as country, " +
+			"ls.name as state, " +
+			"la.pincode from " + 
 			"locations_address la join " + 
 			"locations_state ls " +
-			"on la.state_id = ls.id" +
-			"locations_city lc " +
-			"on la.city_id = lc.id" +
-			"locations_country lcoun " +
-			"on la.country_id = lcoun.id" + 
+			"on la.state_id = ls.id " +
+			"join locations_city lc " +
+			"on la.city_id = lc.id " +
+			"join locations_country lcoun " +
+			"on la.country_id = lcoun.id " + 
 			"where la.profile_id = ?";
 	
 	private static final String INSERT_NEW_ADDRESS = "INSERT into locations_address " +
@@ -39,9 +39,11 @@ public class UserAddressDaoImpl implements UserAddressDao {
 			"city_id," +
 			"state_id," +
 			"country_id," +
-			"type,address," +
+			"type," +
+			"address," +
 			"profile_id," +
 			"account_id," +
+			"created_on, " +
 			"uses," +
 			"name," +
 			"phone," +
@@ -49,7 +51,7 @@ public class UserAddressDaoImpl implements UserAddressDao {
 			"defaddress," +
 			"first_name," +
 			"last_name)" +
-			"values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			"values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	
 	private static final String UPDATE_ADDRESS = "UPDATE locations_address set " +
 			"pincode = ? ," +
@@ -68,9 +70,9 @@ public class UserAddressDaoImpl implements UserAddressDao {
 			"last_name = ? " +
 			"where addressid = ?";
 	
-	private static final String SELECT_CITYID_BYNAME = "Select id from locations_city where name = '?'";
-	private static final String SELECT_STATEID_BYNAME = "Select id from locations_state where name = '?'";
-	private static final String SELECT_COUNTRYID_BYNAME = "Select id from locations_country where name = '?'";
+	private static final String SELECT_CITYID_BYNAME = "Select id from locations_city where name = ? LIMIT 0,1";
+	private static final String SELECT_STATEID_BYNAME = "Select id from locations_state where name = ? LIMIT 0,1";
+	private static final String SELECT_COUNTRYID_BYNAME = "Select id from locations_country where name = ? LIMIT 0,1";
 	
 	private JdbcTemplate jdbcTemplate;
 
@@ -93,7 +95,7 @@ public class UserAddressDaoImpl implements UserAddressDao {
 	 */
 	@Override
 	public void add(UserAddressBo userAddressBo) {
-		Object objs[] = new Object[15];
+		Object objs[] = new Object[16];
 		objs[0]=userAddressBo.getPincode();
 		objs[1]=getcityidbyname(userAddressBo.getCity());
 		objs[2]=getstateidbyname(userAddressBo.getState());
@@ -102,13 +104,14 @@ public class UserAddressDaoImpl implements UserAddressDao {
 		objs[5]=userAddressBo.getAddress();
 		objs[6]=userAddressBo.getUserid();
 		objs[7]=null;
-		objs[8]=0;
-		objs[9]="";
+		objs[8] = "2012-03-19 17:16:16";
+		objs[9]=0;
 		objs[10]="";
 		objs[11]="";
-		objs[12]=0;
-		objs[13]="";
-		objs[14]="";				
+		objs[12]="";
+		objs[13]=0;
+		objs[14]="";
+		objs[15]="";				
 		jdbcTemplate.update(INSERT_NEW_ADDRESS, objs);
 
 	}

@@ -6,8 +6,12 @@ import java.util.Collection;
 import com.fb.platform.user.dao.interfaces.UserAddressDao;
 import com.fb.platform.user.domain.UserAddressBo;
 import com.fb.platform.user.manager.interfaces.UserAddressManager;
-import com.fb.platform.user.manager.mapper.UserAddressBoToMapper;
-import com.fb.platform.user.manager.model.UserAddressTO;
+import com.fb.platform.user.manager.model.address.AddAddressRequest;
+import com.fb.platform.user.manager.model.address.AddAddressResponse;
+import com.fb.platform.user.manager.model.address.GetAddressRequest;
+import com.fb.platform.user.manager.model.address.GetAddressResponse;
+import com.fb.platform.user.manager.model.address.UpdateAddressRequest;
+import com.fb.platform.user.manager.model.address.UpdateAddressResponse;
 import com.sun.istack.logging.Logger;
 
 public class UserAddressManagerImpl implements UserAddressManager {
@@ -15,30 +19,26 @@ public class UserAddressManagerImpl implements UserAddressManager {
 	private static Logger logger = Logger.getLogger(UserAddressManagerImpl.class);
 
 	private UserAddressDao userAddressDao;
-	private UserAddressBoToMapper userAddressBoToMapper;
+		
+	@Override
+	public GetAddressResponse getAddress(GetAddressRequest getAddressRequest) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public AddAddressResponse addAddress(AddAddressRequest addAddressRequest) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public UpdateAddressResponse updateAddress(
+			UpdateAddressRequest updateAddressRequest) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
-	
-	@Override
-	public void addAddress(UserAddressTO userAddressTO) {
-		getUserAddressDao().add(userAddressBoToMapper.userAddressTOtoBo(userAddressTO));
-
-	}
-
-	@Override
-	public void updateAddress(UserAddressTO userAddressTO) {
-		getUserAddressDao().update(userAddressBoToMapper.userAddressTOtoBo(userAddressTO));
-
-	}
-
-	@Override
-	public Collection<UserAddressTO> getAddress(int userid) {
-		Collection<UserAddressBo> userAddressBos = getUserAddressDao().load(userid);
-		Collection<UserAddressTO> userAddressTOs = new ArrayList<UserAddressTO>();
-		for (UserAddressBo userAddressBo : userAddressBos){
-			userAddressTOs.add(userAddressBoToMapper.userAddressBotoTo(userAddressBo));
-		}
-		return userAddressTOs;
-	}
 	
 	
 	public UserAddressDao getUserAddressDao() {
@@ -48,5 +48,7 @@ public class UserAddressManagerImpl implements UserAddressManager {
 	public void setUserAddressDao(UserAddressDao userAddressDao) {
 		this.userAddressDao = userAddressDao;
 	}
+
+
 
 }
