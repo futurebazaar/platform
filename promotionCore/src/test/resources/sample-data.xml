@@ -19,10 +19,10 @@
         </row>
         <row>
 			<value name="id">-2</value>
-			<value name="valid_from">2012-02-02 00:00:00</value>
-			<value name="valid_till">2012-06-11 00:00:00</value>
-			<value name="name">Test Promotion 2</value>
-			<value name="promotion_description">try2_desc</value>
+			<value name="valid_from">2013-02-02 00:00:00</value>
+			<value name="valid_till">2013-06-11 00:00:00</value>
+			<value name="name">Not yet Valid</value>
+			<value name="promotion_description">This promotion is valid in future</value>
 			<value name="is_coupon">0</value>
 			<value name="is_active">1</value>
         </row>
@@ -38,7 +38,7 @@
         <row>
 			<value name="id">-4</value>
 			<null/>
-			<value name="valid_till">2012-06-31 00:00:00</value>
+			<value name="valid_till">2012-06-30 00:00:00</value>
 			<value name="name">No Valid From Promotion</value>
 			<value name="description">This promotion has not valid from date</value>
 			<value name="is_coupon">0</value>
@@ -94,6 +94,42 @@
 			<value name="max_amount">10000</value>
 			<null/>
 			<null/>
+		</row>
+		<row>
+			<value name="id">-4</value>
+			<value name="promotion_id">-3</value>
+			<value name="max_uses">10</value>
+			<value name="max_amount">10000</value>
+			<value name="max_uses_per_user">2</value>
+			<value name="max_amount_per_user">1000</value>
+		</row>
+		<row>
+			<value name="id">-5</value>
+			<value name="promotion_id">-5</value>
+			<value name="max_uses">10</value>
+			<value name="max_amount">10000</value>
+			<value name="max_uses_per_user">2</value>
+			<value name="max_amount_per_user">1000</value>
+		</row>
+		<row>
+			<value name="id">-6</value>
+			<value name="promotion_id">-6</value>
+			<value name="max_uses">10</value>
+			<value name="max_amount">10000</value>
+			<value name="max_uses_per_user">2</value>
+			<value name="max_amount_per_user">1000</value>
+		</row>
+	</table>
+	<table name="global_promotion_uses">
+		<column>id</column>
+		<column>promotion_id</column>
+		<column>current_count</column>
+		<column>current_amount</column>
+		<row>
+			<value name="id">-1</value>
+			<value name="promotion_id">-1</value>
+			<value name="current_count">10</value>
+			<value name="current_amount">10000</value>
 		</row>
 	</table>
 </dataset>
