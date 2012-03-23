@@ -11,7 +11,9 @@ public enum NamedCachesEnum {
 
 	SSO_SESSION_CACHE("ssoSessionCache"),
 	SESSION_CACHE("sessionCache"),
-	CRYPTO_KEY_CACHE("cryptoKeyCache");
+	CRYPTO_KEY_CACHE("cryptoKeyCache"),
+	PROMOTION_CACHE("promotionCache"),
+	COUPON_CACHE("couponCache");
 
 	private String name = null;
 

@@ -28,6 +28,14 @@
     	overflowToDisk="true" diskSpoolBufferSizeMB="20" timeToIdleSeconds="3000" timeToLiveSeconds="6000" 
     	memoryStoreEvictionPolicy="LFU" transactionalMode="off"/>
 
+	<cache name="promotionCache" maxElementsInMemory="1000" maxElementsOnDisk="1000" eternal="false" 
+    	overflowToDisk="true" diskSpoolBufferSizeMB="20" timeToIdleSeconds="3000" timeToLiveSeconds="6000" 
+    	memoryStoreEvictionPolicy="LFU" transactionalMode="off"/>
+
+	<cache name="couponCache" maxElementsInMemory="1000" maxElementsOnDisk="1000" eternal="false" 
+    	overflowToDisk="true" diskSpoolBufferSizeMB="20" timeToIdleSeconds="3000" timeToLiveSeconds="6000" 
+    	memoryStoreEvictionPolicy="LFU" transactionalMode="off"/>
+
     <!--
     Default Cache configuration. These settings will be applied to caches
     created programmatically using CacheManager.add(String cacheName).

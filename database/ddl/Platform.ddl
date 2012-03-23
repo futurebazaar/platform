@@ -2,7 +2,7 @@
 
 
 DROP TABLE IF EXISTS categories_store,sso_session, crypto_key,users_profile,locations_city,locations_state,locations_country,users_email,users_phone,client_master,
-promotion,promotion_uses,promotion_type,promo_values,rules,promotion_bundle_product,promotion_coupon,promotion_user,usage_history,accounts_client;
+promotion,coupon,coupon_limits_config,global_coupon_uses,global_promotion_uses,promotion_limits_config,user_coupon_uses,user_promotion_uses,accounts_client;
 
 
 
@@ -131,78 +131,96 @@ CREATE TABLE client_master (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
--- Promotion Related Tables
-CREATE TABLE promotion(id INTEGER ,
-	applies_on VARCHAR(30), 
-	created_by INTEGER, 
-	created_on TIMESTAMP,
-	valid_from TIMESTAMP,
-	valid_till TIMESTAMP, 
-	last_modified_on TIMESTAMP, 
-	promotion_name VARCHAR(50),
-	display_text VARCHAR(300), 
-	promotion_description VARCHAR(100),
-	last_used_on TIMESTAMP,
-	promotion_type INTEGER,
-	promotion_uses INTEGER,
-	rule_id INTEGER,
-	is_coupon INTEGER(1), 
-	amount_type INTEGER(1),
+-- Promotions and Coupons Related Tables
+
+CREATE TABLE promotion (
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	valid_from DATETIME,
+	valid_till DATETIME, 
+	name VARCHAR(50),
+	description VARCHAR(100),
+	is_coupon INTEGER(1),
 	is_active INTEGER(1),
-	priority INTEGER(2),
-	PRIMARY KEY(id));
+	PRIMARY KEY(id)
+);
 
+CREATE TABLE promotion_limits_config (
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	promotion_id INTEGER,
+	max_uses INTEGER,
+	max_amount DECIMAL(18,2),
+	max_uses_per_user INTEGER,
+	max_amount_per_user DECIMAL(18,2),
+	PRIMARY KEY(id),
+	UNIQUE(promotion_id),
+	FOREIGN KEY (promotion_id) REFERENCES promotion(id) ON DELETE CASCADE
+);
 
-CREATE TABLE promotion_uses ( id INTEGER ,
-	no_of_uses INTEGER,
-	max_per_user INTEGER,
-	max_total_usages_allowed INTEGER, 
-	PRIMARY KEY(id) );
+CREATE TABLE global_promotion_uses (
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	promotion_id INTEGER,
+	current_count INTEGER,
+	current_amount DECIMAL(18,2),
+	PRIMARY KEY(id),
+	UNIQUE(promotion_id),
+	FOREIGN KEY (promotion_id) REFERENCES promotion(id) ON DELETE CASCADE
+);
 
-CREATE TABLE promotion_type ( id INTEGER ,
-	type_desc VARCHAR(100), 
-	priority INTEGER(2),
-	PRIMARY KEY(id) );
--- priority = 1-5
+CREATE TABLE user_promotion_uses (
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	promotion_id INTEGER,
+	user_id INTEGER,
+	current_count INTEGER,
+	current_amount DECIMAL(18,2),
+	PRIMARY KEY(id),
+	UNIQUE(promotion_id),
+	FOREIGN KEY (promotion_id) REFERENCES promotion(id) ON DELETE CASCADE,
+	FOREIGN KEY (user_id) REFERENCES users_profile(id) ON DELETE CASCADE
+);
 
-CREATE TABLE promo_values ( id INTEGER ,
-	value_name VARCHAR(30), 
-	value_desc VARCHAR(50), 
-	value_data VARCHAR(500),
-	promo_id INTEGER, 
-	value_type INTEGER(1), 
-	PRIMARY KEY(id) );
--- valueTye = direct/bundle
+CREATE TABLE coupon (
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	coupon_code VARCHAR(30),
+	promotion_id INTEGER,
+	coupon_type VARCHAR(10),
+	PRIMARY KEY(id),
+	FOREIGN KEY (promotion_id) REFERENCES promotion(id) ON DELETE CASCADE
+);
 
-CREATE TABLE rules ( id INTEGER ,
-	rule_desc VARCHAR(100),
-	rule_function VARCHAR(50),
-	priority INTEGER, 
-	PRIMARY KEY(id) );
+CREATE TABLE coupon_limits_config (
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	coupon_id INTEGER,
+	max_uses INTEGER,
+	max_amount DECIMAL(18,2),
+	max_uses_per_user INTEGER,
+	max_amount_per_user DECIMAL(18,2),
+	PRIMARY KEY(id),
+	UNIQUE(coupon_id),
+	FOREIGN KEY (coupon_id) REFERENCES coupon(id) ON DELETE CASCADE
+);
 
-CREATE TABLE promotion_bundle_product( id INTEGER ,
-	promo_bundle_id INTEGER,
-	product_id INTEGER, 
-	PRIMARY KEY(id) );
+CREATE TABLE global_coupon_uses (
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	coupon_id INTEGER,
+	current_count INTEGER,
+	current_amount DECIMAL(18,2),
+	PRIMARY KEY(id),
+	UNIQUE(coupon_id),
+	FOREIGN KEY (coupon_id) REFERENCES coupon(id) ON DELETE CASCADE
+);
 
-CREATE TABLE promotion_coupon(id INTEGER , 
-	coupon_code VARCHAR(50),
-	promo_id INTEGER,
-	PRIMARY KEY(id) );
+CREATE TABLE user_coupon_uses (
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	coupon_id INTEGER,
+	user_id INTEGER,
+	current_count INTEGER,
+	current_amount DECIMAL(18,2),
+	PRIMARY KEY(id),
+	UNIQUE(coupon_id),
+	FOREIGN KEY (coupon_id) REFERENCES coupon(id) ON DELETE CASCADE,
+	FOREIGN KEY (user_id) REFERENCES users_profile(id) ON DELETE CASCADE
+);
 
-CREATE TABLE promotion_user( id INTEGER ,
-	promo_id INTEGER,
-	promo_user_id INTEGER, 
-	times_used TIMESTAMP, 
-	PRIMARY KEY(id) );
-
-CREATE TABLE usage_history(id INTEGER ,	
-	used_on TIMESTAMP,
-	used_by INTEGER, 
-	promo_id INTEGER, 
-	disc_value_claimed INTEGER, 
-	PRIMARY KEY(id) );
-	
 	
 CREATE TABLE accounts_client (
   id int(11) NOT NULL AUTO_INCREMENT,
@@ -225,29 +243,3 @@ CREATE TABLE accounts_client (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
---  **************  Constraints   **********************
-ALTER TABLE promotion ADD CONSTRAINT fk_pr_created_by FOREIGN KEY(created_by) REFERENCES user_profile(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-ALTER TABLE promotion ADD CONSTRAINT fk_pr_promotion_uses FOREIGN KEY(promotion_uses) REFERENCES promotion_uses(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-ALTER TABLE promotion ADD CONSTRAINT fk_pr_rule_id FOREIGN KEY(rule_id) REFERENCES rules(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-ALTER TABLE promo_values ADD CONSTRAINT fk_pv_promo_id FOREIGN KEY(promo_id) REFERENCES promotion(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-ALTER TABLE promotion_bundle_product ADD CONSTRAINT fk_pbp_product_id FOREIGN KEY(product_id) REFERENCES product(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-ALTER TABLE promotion_coupon ADD CONSTRAINT fk_pc_promo_id FOREIGN KEY(promo_id) REFERENCES promotion(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-ALTER TABLE promotion_user ADD CONSTRAINT fk_pu_promo_id FOREIGN KEY(promo_id) REFERENCES promotion(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-ALTER TABLE promotion_user ADD CONSTRAINT fk_pu_promo_user_id FOREIGN KEY(promo_user_id) REFERENCES user_profile(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-ALTER TABLE usage_history ADD CONSTRAINT fk_uh_promo_id FOREIGN KEY(promo_id) REFERENCES promotion(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-ALTER TABLE usage_history ADD CONSTRAINT fk_uh_used_by FOREIGN KEY(used_by) REFERENCES user_profile(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
-insert into promotion(applies_on,created_on,created_by,valid_from,valid_till,last_modified_on,promotion_name,display_text,promotion_description,last_used_on,promotion_type,promotion_uses,rule_id,is_coupon,amount_type,is_active,priority) 
-values("order",null,null,"1-1-12","3-3-12",null,"try1","try1_disp","try1_desc",null,1,null,1,0,1,1,2);
-insert into promotion(applies_on,created_on,created_by,valid_from,valid_till,last_modified_on,promotion_name,display_text,promotion_description,last_used_on,promotion_type,promotion_uses,rule_id,is_coupon,amount_type,is_active,priority) 
-values("order",null,null,"1-1-12","3-3-12",null,"try2","try2_disp","try2_desc",null,1,null,1,0,1,1,2);

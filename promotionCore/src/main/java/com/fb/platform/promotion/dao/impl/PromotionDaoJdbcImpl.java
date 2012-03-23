@@ -3,183 +3,200 @@
  */
 package com.fb.platform.promotion.dao.impl;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
+import java.sql.Timestamp;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTime;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
-//import com.fb.bo.promotion.PromotionBundle;
-import com.fb.platform.promotion.dao.PromotionBundleDao;
+import com.fb.commons.to.Money;
 import com.fb.platform.promotion.dao.PromotionDao;
-import com.fb.platform.promotion.model.Priority;
-import com.fb.platform.promotion.model.PromotionLimit;
-import com.fb.platform.promotion.model.PromotionType;
-import com.fb.platform.promotion.model.PromotionValue;
+import com.fb.platform.promotion.model.GlobalPromotioUses;
 import com.fb.platform.promotion.model.Promotion;
-import com.fb.platform.promotion.model.Rule;
+import com.fb.platform.promotion.model.PromotionDates;
+import com.fb.platform.promotion.model.PromotionLimitsConfig;
+import com.fb.platform.promotion.model.UserPromotionUses;
+import com.fb.platform.promotion.rule.RuleConfiguration;
 
 /**
- * @author Keith Fernandez
+ * @author vinayak
  *
  */
 public class PromotionDaoJdbcImpl implements PromotionDao {
 
 	private JdbcTemplate jdbcTemplate;
 
-	private PromotionBundleDao promotionBundleDao;
+	private Log log = LogFactory.getLog(PromotionDaoJdbcImpl.class);
 
-	private static final String GET_PROMOTION_QUERY = "SELECT " +
-			"id," +
-			"applies_on," +
-			"created_on," +
-			"created_by," +
-			"valid_from," +
-			"valid_till," +
-			"last_modified_on," +
-			"promotion_name," +
-			"display_text," +
-			"promotion_description," +
-			"last_used_on," +
-			"promotion_type," +
-			"promotion_uses," +
-			"rule_id," +
-			"is_coupon," +
-			"amount_type," +
-			"is_active," +
-			"priority" +
-			" FROM promotion WHERE id = ?";
+	private static final String GET_PROMOTION_QUERY = 
+			"SELECT " +
+			"id, " +
+			"valid_from, " +
+			"valid_till, " +
+			"name, " +
+			"description, " +
+			"is_coupon, " +
+			"is_active " +
+			"FROM promotion where id = ?";
 
-	private static final String DELETE_PROMOTION_QUERY = "DELETE FROM promotion  WHERE promotion_id = ?";
+	private static final String GET_PROMOTION_LIMITS_QUERY = 
+			"SELECT " +
+			"id, " +
+			"promotion_id, " +
+			"max_uses, " +
+			"max_amount, " +
+			"max_uses_per_user, " +
+			"max_amount_per_user " +
+			"FROM promotion_limits_config where promotion_id = ?";
 
-	private static final String UPDATE_PROMOTION_QUERY = "UPDATE promotion SET " +
-			"applies_on=?," +
-			"created_on=?," +
-			"created_by=?," +
-			"valid_from=?," +
-			"valid_till=?," +
-			"last_modified_on=?," +
-			"promotion_name=?," +
-			"display_text=?," +
-			"promotion_description=?," +
-			"last_used_on=?," +
-			"promotion_type=?," +
-			"promotion_uses=?," +
-			"rule_id=?," +
-			"is_coupon=?," +
-			"amount_type=?," +
-			"is_active=?," +
-			"priority=?," +
-			" WHERE id = ?";
+	private static final String LOAD_GLOABL_PROMOTION_USES_QUERY = 
+			"SELECT " +
+			"id, " +
+			"promotion_id, " +
+			"current_count, " +
+			"current_amount " +
+			"FROM global_promotion_uses WHERE promotion_id = ?";
+
+	private static final String LOAD_USER_PROMOTION_USES_QUERY = 
+			"SELECT " +
+			"id, " +
+			"promotion_id, " +
+			"user_id, " +
+			"current_count, " +
+			"current_amount " +
+			"FROM user_promotion_uses WHERE promotion_id = ?";
 
 	/* (non-Javadoc)
-	 * @see com.fb.platform.promotion.dao.PromotionDao#update(com.fb.bo.promotion.PromotionBo)
+	 * @see com.fb.platform.promotion.dao.PromotionDao#load(int)
 	 */
 	@Override
-	public void update(Promotion promotion) {
-//		this.jdbcTemplate.update(UPDATE_PROMOTION_QUERY,
-//				promotion.getAppliesOn(),
-//				promotion.getCreatedOn(),
-//				promotion.getCreatedBy(),
-//				promotion.getValidFrom(),
-//				promotion.getValidTill(),
-//				promotion.getLastModifiedOn(),
-//				promotion.getPromotionName(),
-//				promotion.getDisplayText(),
-//				promotion.getPromotionDescription(),
-//				promotion.getLastUsedOn(),
-//				promotion.getPromotionType(),
-//				promotion.getPromotionUses(),
-//				promotion.getRule(),
-//				promotion.isCoupon(),
-//				promotion.getAmountType(),
-//				promotion.isActive(),
-//				promotion.getPriority()
-//				);
+	public Promotion load(int promotionId) {
+		Promotion promotion = jdbcTemplate.queryForObject(GET_PROMOTION_QUERY, new Object [] {promotionId}, new PromotionMapper());
 
+		PromotionLimitsConfig limits = jdbcTemplate.queryForObject(GET_PROMOTION_LIMITS_QUERY, new Object [] {promotionId}, new PromotionLimitsConfigMapper());
+		promotion.setLimitsConfig(limits);
+
+		return promotion;
 	}
 
 	/* (non-Javadoc)
-	 * @see com.fb.platform.promotion.dao.PromotionDao#get(java.lang.Integer)
+	 * @see com.fb.platform.promotion.dao.PromotionDao#loadGlobalUses(int)
 	 */
 	@Override
-	public Promotion loadPromotionById(Integer promotionId) {
-		return null;
+	public GlobalPromotioUses loadGlobalUses(int promotionId) {
+		GlobalPromotioUses globalPromotioUses = jdbcTemplate.queryForObject(LOAD_GLOABL_PROMOTION_USES_QUERY, new Object [] {promotionId}, new GlobalPromotionUsesMapper());
+		return globalPromotioUses;
 	}
-	
-	@Override
-	public Promotion loadPromotionByCouponCode(String couponCode) {
-		return null;
-	}
-	
 
+	/* (non-Javadoc)
+	 * @see com.fb.platform.promotion.dao.PromotionDao#loadUserUses(int, int)
+	 */
 	@Override
-	public List<Promotion> getAllGlobalCoupons() {
+	public UserPromotionUses loadUserUses(int promotionId, int userId) {
+		UserPromotionUses userPromotionUses = jdbcTemplate.queryForObject(LOAD_USER_PROMOTION_USES_QUERY, new Object[] {promotionId}, new UserPromotionUsesMapper());
+		return userPromotionUses;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.fb.platform.promotion.dao.PromotionDao#loadRuleConfiguration(int)
+	 */
+	@Override
+	public RuleConfiguration loadRuleConfiguration(int promotionId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
-	public List<Promotion> getAllCouponsOnCategory(Integer categoryId) {
-		// TODO Auto-generated method stub
-		return null;
+	private static class PromotionMapper implements RowMapper<Promotion> {
+
+		@Override
+		public Promotion mapRow(ResultSet rs, int rowNum) throws SQLException {
+			Promotion promotion = new Promotion();
+			promotion.setDescription(rs.getString("description"));
+			promotion.setId(rs.getInt("id"));
+			promotion.setName(rs.getString("name"));
+			promotion.setActive(rs.getBoolean("is_active"));
+
+			PromotionDates dates = new PromotionDates();
+			Timestamp validFromTS = rs.getTimestamp("valid_from");
+			if (validFromTS != null) {
+				dates.setValidFrom(new DateTime(validFromTS));
+			}
+			Timestamp validTillTS = rs.getTimestamp("valid_till");
+			if (validTillTS != null) {
+				dates.setValidTill(new DateTime(validTillTS));
+			}
+			promotion.setDates(dates);
+			
+			return promotion;
+		}
 	}
-	
-	
-	private static class RuleMapper implements RowMapper<Rule> {
 
-    	@Override
-    	public Rule mapRow(ResultSet rs, int rowNum) throws SQLException {
+	private static class PromotionLimitsConfigMapper implements RowMapper<PromotionLimitsConfig> {
 
-    		Rule rule = new Rule();
-    		rule.setRuleId(rs.getInt("id"));
-			rule.setRuleDescription(rs.getString("rule_desc"));
-			rule.setRuleFunctionName(rs.getString("rule_function"));
-			rule.setRulePriority(Priority.get(rs.getInt("priority")));
-    		
-			return rule;
-    	}
-    }
-	
-	private static class PromotionValueMapper implements RowMapper<PromotionValue> {
+		@Override
+		public PromotionLimitsConfig mapRow(ResultSet rs, int rowNum) throws SQLException {
+			PromotionLimitsConfig config = new PromotionLimitsConfig();
 
-    	@Override
-    	public PromotionValue mapRow(ResultSet rs, int rowNum) throws SQLException {
+			BigDecimal maxAmountBD = rs.getBigDecimal("max_amount");
+			if (maxAmountBD != null) {
+				config.setMaxAmount(new Money(maxAmountBD));
+			}
 
-    		PromotionValue promoValue = new PromotionValue();
-    		promoValue.setId(rs.getInt("id"));
-    		promoValue.setPromoId(rs.getInt(rs.getInt("promo_id")));
-    		promoValue.setValueData(rs.getString("value_data"));
-    		promoValue.setValueDesc(rs.getString("value_desc"));
-    		promoValue.setValueName(rs.getString("value_name"));
-    		promoValue.setValueType(PromotionType.get(rs.getInt("value_type")));
-    		
-			return promoValue;
-    	}
-    }
-	
+			BigDecimal maxAmountPerUserBD = rs.getBigDecimal("max_amount_per_user");
+			if (maxAmountPerUserBD != null) {
+				config.setMaxAmountPerUser(new Money(maxAmountPerUserBD));
+			}
 
-	private static class PromotionLimitMapper implements RowMapper<PromotionLimit> {
+			config.setMaxUses(rs.getInt("max_uses"));
+			config.setMaxUsesPerUser(rs.getInt("max_uses_per_user"));
 
-    	@Override
-    	public PromotionLimit mapRow(ResultSet rs, int rowNum) throws SQLException {
+			return config;
+		}
+	}
 
-    		PromotionLimit promoLimit = new PromotionLimit();
-    		promoLimit.setId(rs.getInt("id"));
-    		promoLimit.setPromoId(rs.getInt(rs.getInt("promo_id")));
-    		promoLimit.setMaxBudget(rs.getLong("max_budget"));
-    		promoLimit.setValueClaimedTillNow(rs.getLong("value_claimed_till_now"));
-    		promoLimit.setMaxPerUser(rs.getInt("max_per_user"));
-    		promoLimit.setMaxTotalUsagesAllowed(rs.getInt("max_total_usages_allowed"));
-    		promoLimit.setNoOfUsesTillNow(rs.getInt("no_of_uses_till_now"));
-    		promoLimit.setPaymentModeToBeUsed(rs.getInt("payment_mode_to_be_used"));
-    		promoLimit.setViaChannel(rs.getInt("via_channel"));
-    		
-			return promoLimit;
-    	}
-    }
+	private static class GlobalPromotionUsesMapper implements RowMapper<GlobalPromotioUses> {
 
-	
+		@Override
+		public GlobalPromotioUses mapRow(ResultSet rs, int rowNum) throws SQLException {
+			GlobalPromotioUses globalUses = new GlobalPromotioUses();
+			globalUses.setPromotionId(rs.getInt("promotion_id"));
+			globalUses.setCurrentCount(rs.getInt("current_count"));
 
+			BigDecimal currentAmount = rs.getBigDecimal("current_amount");
+			if (currentAmount == null) {
+				currentAmount = BigDecimal.ZERO;
+			}
+			globalUses.setCurrentAmount(new Money(currentAmount));
+
+			return globalUses;
+		}
+	}
+
+	private static final class UserPromotionUsesMapper implements RowMapper<UserPromotionUses> {
+
+		@Override
+		public UserPromotionUses mapRow(ResultSet rs, int rowNum) throws SQLException {
+			UserPromotionUses userUses = new UserPromotionUses();
+			userUses.setPromotionId(rs.getInt("promotion_id"));
+			userUses.setUserId(rs.getInt("user_id"));
+			userUses.setCurrentCount(rs.getInt("current_count"));
+
+			BigDecimal currentAmount = rs.getBigDecimal("current_amount");
+			if (currentAmount == null) {
+				currentAmount = BigDecimal.ZERO;
+			}
+			userUses.setCurrentAmount(new Money(currentAmount));
+
+			return userUses;
+		}
+	}
+
+    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
 }
