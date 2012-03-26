@@ -3,7 +3,11 @@
  */
 package com.fb.platform.promotion.dao;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 
@@ -15,6 +19,8 @@ import com.fb.commons.test.BaseTestCase;
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.model.GlobalPromotioUses;
 import com.fb.platform.promotion.model.Promotion;
+import com.fb.platform.promotion.model.PromotionLimitsConfig;
+import com.fb.platform.promotion.model.UserPromotionUses;
 
 /**
  * @author vinayak
@@ -26,7 +32,7 @@ public class PromotionDaoTest extends BaseTestCase {
 	private PromotionDao promotionDao;
 
 	@Test
-	public void testGet() {
+	public void get() {
 		Promotion promotion = promotionDao.load(-1);
 
 		assertNotNull(promotion);
@@ -36,10 +42,18 @@ public class PromotionDaoTest extends BaseTestCase {
 		assertEquals("Test Promotion 1", promotion.getName());
 		assertEquals("try1_desc", promotion.getDescription());
 		assertTrue(promotion.isActive());
+
+		PromotionLimitsConfig limitsConfig = promotion.getLimitsConfig();
+
+		assertNotNull(limitsConfig);
+		assertEquals(10, limitsConfig.getMaxUses());
+		assertEquals(2, limitsConfig.getMaxUsesPerUser());
+		assertTrue(limitsConfig.getMaxAmount().eq(new Money(new BigDecimal(10000))));
+		assertTrue(limitsConfig.getMaxAmountPerUser().eq(new Money(new BigDecimal(1000))));
 	}
 
 	@Test
-	public void testGetValidInFuture() {
+	public void getValidInFuture() {
 		Promotion promotion = promotionDao.load(-2);
 
 		assertNotNull(promotion);
@@ -49,10 +63,18 @@ public class PromotionDaoTest extends BaseTestCase {
 		assertEquals("Not yet Valid", promotion.getName());
 		assertEquals("This promotion is valid in future", promotion.getDescription());
 		assertTrue(promotion.isActive());
+
+		PromotionLimitsConfig limitsConfig = promotion.getLimitsConfig();
+
+		assertNotNull(limitsConfig);
+		assertEquals(0, limitsConfig.getMaxUses());
+		assertEquals(1, limitsConfig.getMaxUsesPerUser());
+		assertNull(limitsConfig.getMaxAmount());
+		assertTrue(limitsConfig.getMaxAmountPerUser().eq(new Money(new BigDecimal(2000))));
 	}
 
 	@Test
-	public void testGetExpired() {
+	public void getExpired() {
 		Promotion promotion = promotionDao.load(-3);
 
 		assertNotNull(promotion);
@@ -65,7 +87,7 @@ public class PromotionDaoTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testNullValidFrom() {
+	public void nullValidFrom() {
 		Promotion promotion = promotionDao.load(-4);
 
 		assertNotNull(promotion);
@@ -78,7 +100,7 @@ public class PromotionDaoTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testNullValidTill() {
+	public void nullValidTill() {
 		Promotion promotion = promotionDao.load(-5);
 
 		assertNotNull(promotion);
@@ -91,7 +113,7 @@ public class PromotionDaoTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testGetInactive() {
+	public void getInactive() {
 		Promotion promotion = promotionDao.load(-6);
 
 		assertNotNull(promotion);
@@ -100,12 +122,18 @@ public class PromotionDaoTest extends BaseTestCase {
 	}
 
 	@Test
+	public void getNonExistent() {
+		Promotion promotion = promotionDao.load(100000);
+		assertNull(promotion);
+	}
+
+	@Test
 	public void loadGlobalUses() {
 		GlobalPromotioUses globalUses = promotionDao.loadGlobalUses(-1);
 
 		assertNotNull(globalUses);
 		assertEquals(10, globalUses.getCurrentCount());
-		assertEquals(true, globalUses.getCurrentAmount().eq(new Money(new BigDecimal(10000))));
+		assertTrue(globalUses.getCurrentAmount().eq(new Money(new BigDecimal(10000))));
 	}
 
 	@Test
@@ -113,5 +141,23 @@ public class PromotionDaoTest extends BaseTestCase {
 		GlobalPromotioUses globalUses = promotionDao.loadGlobalUses(-2);
 
 		assertNull(globalUses);
+	}
+
+	@Test
+	public void loadUserUses() {
+		UserPromotionUses userUses = promotionDao.loadUserUses(-1, 1);
+
+		assertNotNull(userUses);
+		assertEquals(50, userUses.getCurrentCount());
+		assertTrue(userUses.getCurrentAmount().eq(new Money(new BigDecimal(2000))));
+	}
+
+	@Test
+	public void loadEmpyUserUses() {
+		UserPromotionUses userUses = promotionDao.loadUserUses(-2, 2);
+
+		assertNotNull(userUses);
+		assertEquals(0, userUses.getCurrentCount());
+		assertTrue(userUses.getCurrentAmount().eq(new Money(BigDecimal.ZERO)));
 	}
 }

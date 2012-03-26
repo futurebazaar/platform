@@ -46,4 +46,20 @@ public class PromotionLimitsConfig implements Serializable {
 	public void setMaxAmountPerUser(Money maxAmountPerUser) {
 		this.maxAmountPerUser = maxAmountPerUser;
 	}
+
+	public int getMaxUses() {
+		return maxUses;
+	}
+
+	public Money getMaxAmount() {
+		return maxAmount;
+	}
+
+	public int getMaxUsesPerUser() {
+		return maxUsesPerUser;
+	}
+
+	public Money getMaxAmountPerUser() {
+		return maxAmountPerUser;
+	}
 }

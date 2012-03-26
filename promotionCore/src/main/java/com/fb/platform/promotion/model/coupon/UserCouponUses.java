@@ -16,7 +16,7 @@ public class UserCouponUses implements Serializable {
 	private int userId;
 	private int currentCount;
 	private Money currentAmount;
-	private String couponCode;
+	private int couponId;
 
 	public int getUserId() {
 		return userId;
@@ -36,10 +36,10 @@ public class UserCouponUses implements Serializable {
 	public void setCurrentAmount(Money currentAmount) {
 		this.currentAmount = currentAmount;
 	}
-	public String getCouponCode() {
-		return couponCode;
+	public int getCouponId() {
+		return couponId;
 	}
-	public void setCouponCode(String couponCode) {
-		this.couponCode = couponCode;
+	public void setCouponId(int couponId) {
+		this.couponId = couponId;
 	}
 }

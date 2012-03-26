@@ -13,8 +13,9 @@ import com.fb.commons.to.Money;
  */
 public class GlobalCouponUses implements Serializable {
 
-	private int currentCount;
-	private Money currentAmount;
+	private int couponId = 0;
+	private int currentCount = 0;
+	private Money currentAmount = null;
 
 	public int getCurrentCount() {
 		return currentCount;
@@ -27,5 +28,11 @@ public class GlobalCouponUses implements Serializable {
 	}
 	public void setCurrentAmount(Money currentAmount) {
 		this.currentAmount = currentAmount;
+	}
+	public int getCouponId() {
+		return couponId;
+	}
+	public void setCouponId(int couponId) {
+		this.couponId = couponId;
 	}
 }

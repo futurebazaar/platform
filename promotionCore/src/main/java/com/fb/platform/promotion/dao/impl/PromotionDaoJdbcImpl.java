@@ -11,7 +11,6 @@ import java.sql.Timestamp;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -79,13 +78,21 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 	 */
 	@Override
 	public Promotion load(int promotionId) {
-		Promotion promotion = jdbcTemplate.queryForObject(GET_PROMOTION_QUERY, new Object [] {promotionId}, new PromotionMapper());
+		
+		Promotion promotion = null;
+		try {
+			promotion = jdbcTemplate.queryForObject(GET_PROMOTION_QUERY, new Object [] {promotionId}, new PromotionMapper());
+		} catch (IncorrectResultSizeDataAccessException e) {
+			//this means there is no promotion in the database for this id, fine
+			log.error("No Promotion found for the id - " + promotionId);
+			return null;
+		}
 
 		PromotionLimitsConfig limits = null;
 		try {
 			limits = jdbcTemplate.queryForObject(GET_PROMOTION_LIMITS_QUERY, new Object [] {promotionId}, new PromotionLimitsConfigMapper());
-		} catch (EmptyResultDataAccessException e) {
-			log.error("Promotion Limits are not configured for the promotion id - " + promotionId, e);
+		} catch (IncorrectResultSizeDataAccessException e) {
+			log.error("Promotion Limits are not configured for the promotion id - " + promotionId);
 			throw new PlatformException("Promotion Limits are not configured for the promotion id - " + promotionId, e);
 		}
 		promotion.setLimitsConfig(limits);
@@ -102,10 +109,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		try {
 			globalPromotioUses = jdbcTemplate.queryForObject(LOAD_GLOABL_PROMOTION_USES_QUERY, new Object [] {promotionId}, new GlobalPromotionUsesMapper());
 		} catch (IncorrectResultSizeDataAccessException e) {
-			//no default global uses set, that means this is first time use of this promotion
-			/*globalPromotioUses = new GlobalPromotioUses();
-			globalPromotioUses.setPromotionId(promotionId);
-			globalPromotioUses.setCurrentAmount(new Money(BigDecimal.ZERO));*/
+			//no global uses set, that means this is first time use of this promotion
 		}
 		return globalPromotioUses;
 	}
@@ -119,11 +123,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		try {
 			userPromotionUses = jdbcTemplate.queryForObject(LOAD_USER_PROMOTION_USES_QUERY, new Object[] {promotionId, userId}, new UserPromotionUsesMapper());
 		} catch (IncorrectResultSizeDataAccessException e) {
-			//no default user uses set, that means this is first time use of this promotion
-			/*userPromotionUses = new UserPromotionUses();
-			userPromotionUses.setCurrentAmount(new Money(BigDecimal.ZERO));
-			userPromotionUses.setPromotionId(promotionId);
-			userPromotionUses.setUserId(userId);*/
+			//no user uses set, that means this is first time use of this promotion
 		}
 		return userPromotionUses;
 	}
@@ -203,7 +203,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		}
 	}
 
-	private static final class UserPromotionUsesMapper implements RowMapper<UserPromotionUses> {
+	private static class UserPromotionUsesMapper implements RowMapper<UserPromotionUses> {
 
 		@Override
 		public UserPromotionUses mapRow(ResultSet rs, int rowNum) throws SQLException {

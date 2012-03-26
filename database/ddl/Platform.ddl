@@ -2,7 +2,8 @@
 
 
 DROP TABLE IF EXISTS categories_store,sso_session, crypto_key,auth_user,users_profile,locations_address ,locations_city,locations_state,locations_country,users_email,users_phone,client_master,
-promotion,coupon,coupon_limits_config,global_coupon_uses,global_promotion_uses,promotion_limits_config,user_coupon_uses,user_promotion_uses,accounts_client;
+promotion,coupon,coupon_limits_config,global_coupon_uses,global_promotion_uses,promotion_limits_config,user_coupon_uses,user_promotion_uses,promotion_rule,promotion_rule_config,
+accounts_client;
 
 
 --  ******************** CREATE TABLE *****************
@@ -178,15 +179,36 @@ CREATE TABLE client_master (
 
 -- Promotions and Coupons Related Tables
 
+CREATE TABLE promotion_rule (
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	name VARCHAR(100) NOT NULL,
+	description VARCHAR(300),
+	PRIMARY KEY(id),
+	UNIQUE(name)
+);
+
 CREATE TABLE promotion (
 	id INTEGER NOT NULL AUTO_INCREMENT,
+	rule_id INTEGER,
 	valid_from DATETIME,
 	valid_till DATETIME, 
 	name VARCHAR(50),
 	description VARCHAR(100),
 	is_coupon INTEGER(1),
 	is_active INTEGER(1),
-	PRIMARY KEY(id)
+	PRIMARY KEY(id),
+	FOREIGN KEY (rule_id) REFERENCES promotion_rule(id)
+);
+
+CREATE TABLE promotion_rule_config (
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	name VARCHAR(50),
+	value VARCHAR(100),
+	promotion_id INTEGER,
+	rule_id INTEGER ,
+	PRIMARY KEY(id),
+	FOREIGN KEY (promotion_id) REFERENCES promotion(id),
+	FOREIGN KEY (rule_id) REFERENCES promotion_rule(id)
 );
 
 CREATE TABLE promotion_limits_config (
@@ -266,7 +288,8 @@ CREATE TABLE user_coupon_uses (
 	FOREIGN KEY (user_id) REFERENCES users_profile(id) ON DELETE CASCADE
 );
 
-	
+-- end of promotion tables 
+
 CREATE TABLE accounts_client (
   id int(11) NOT NULL AUTO_INCREMENT,
   name varchar(100) NOT NULL,

@@ -3,7 +3,6 @@
  */
 package com.fb.platform.auth.impl;
 
-import java.rmi.RemoteException;
 import java.security.Key;
 
 import org.apache.commons.logging.Log;

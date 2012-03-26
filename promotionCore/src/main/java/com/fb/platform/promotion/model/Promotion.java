@@ -18,6 +18,8 @@ public class Promotion implements Serializable {
 	private PromotionDates dates;
 	private PromotionLimitsConfig limitsConfig;
 
+	private int ruleId;
+
 	public void setId(int id) {
 		this.id = id;
 	}

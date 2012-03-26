@@ -12,9 +12,4 @@ public enum RulesEnum {
 
 	BUY_X_GET_Y_FREE;
 
-	private String className;
-
-	public String getImplementationClassName() {
-		return className;
-	}
 }

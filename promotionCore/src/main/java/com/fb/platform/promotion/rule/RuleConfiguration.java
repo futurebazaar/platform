@@ -3,7 +3,6 @@
  */
 package com.fb.platform.promotion.rule;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -11,11 +10,19 @@ import java.util.List;
  * @author vinayak
  *
  */
-public abstract class RuleConfiguration {
+public class RuleConfiguration {
 
-	protected List<RuleConfigItem> configItems = new ArrayList<RuleConfigItem>();
+	private List<RuleConfigItem> configItems = null;
 
-	public void add(RuleConfigItem item) {
-		configItems.add(item);
+	public RuleConfiguration(List<RuleConfigItem> configItems) {
+		this.configItems = configItems;
+	}
+
+	public List<RuleConfigItem> getConfigItems() {
+		return configItems;
+	}
+
+	public void setConfigItems(List<RuleConfigItem> configItems) {
+		this.configItems = configItems;
 	}
 }

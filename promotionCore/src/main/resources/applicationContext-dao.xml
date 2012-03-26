@@ -17,6 +17,14 @@
 		<property name="jdbcTemplate" ref="jdbcTemplate"/>
 	</bean>
 
+	<bean id="couponDao" class="com.fb.platform.promotion.dao.impl.CouponDaoJdbcImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+
+	<bean id="ruleDao" class="com.fb.platform.promotion.dao.impl.RuleDaoJdbcImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+
     <!-- Add new DAOs here -->
 
 </beans>

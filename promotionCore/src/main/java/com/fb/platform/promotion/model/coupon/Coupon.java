@@ -12,7 +12,7 @@ import java.io.Serializable;
 public class Coupon implements Serializable {
 
 	private int id;
-	private String couponCode;
+	private String code;
 	private int promotionId;
 	private CouponType type;
 	private CouponLimitsConfig limitsConfig;
@@ -20,14 +20,8 @@ public class Coupon implements Serializable {
 	public int getId() {
 		return id;
 	}
-	public String getCouponCode() {
-		return couponCode;
-	}
 	public CouponType getType() {
 		return type;
-	}
-	public void setCouponCode(String couponCode) {
-		this.couponCode = couponCode;
 	}
 	public void setId(int id) {
 		this.id = id;
@@ -40,5 +34,17 @@ public class Coupon implements Serializable {
 	}
 	public void setLimitsConfig(CouponLimitsConfig limitsConfig) {
 		this.limitsConfig = limitsConfig;
+	}
+	public int getPromotionId() {
+		return promotionId;
+	}
+	public CouponLimitsConfig getLimitsConfig() {
+		return limitsConfig;
+	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
 	}
 }
