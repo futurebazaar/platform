@@ -11,13 +11,6 @@
     <!-- Enable @Transactional support -->
     <tx:annotation-driven/>
     
-    <!-- =================================================================== -->
-    <!-- Managers: For accessing DAOs                                        -->
-    <!-- =================================================================== -->
-    <bean id="promotionManager" class="com.fb.platform.promotion.impl.PromotionManagerImpl">
-        <property name="promotionDao" ref="promotionDao"/>
-    </bean>
-    
     <!-- Add new Managers here -->
 
 </beans>

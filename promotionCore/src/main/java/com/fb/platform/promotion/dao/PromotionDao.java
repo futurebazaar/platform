@@ -3,63 +3,19 @@
  */
 package com.fb.platform.promotion.dao;
 
-import java.util.List;
-
+import com.fb.platform.promotion.model.GlobalPromotioUses;
 import com.fb.platform.promotion.model.Promotion;
+import com.fb.platform.promotion.model.UserPromotionUses;
 
 /**
- * @author Keith Fernandez
+ * @author vinayak
  *
  */
 public interface PromotionDao {
 
-	
-	public Promotion loadPromotionById(Integer promotionId);
-	
-	public Promotion loadPromotionByCouponCode(String couponCode);
-	
-//	/**
-//	 * @param promotionId promotion Id of the promotion
-//	 * @return the promotion object
-//	 */
-//	public Promotion get(Integer promotionId);
-//
-//	/**
-//	 * @param promotionId promotion Id of the promotion
-//	 */
-//	public void delete(Integer promotionId);
-//
-//	/**
-//	 * @param promotion promotion object
-//	 */
-	public void update(Promotion promotion);
-//
-//	/**
-//	 * @param promotion promotion object
-//	 */
-//	public void create(Promotion promotion);
-//
-//	/**
-//	 * @param couponCode CouponCode to be applied
-//	 * @return the promotion object
-//	 */
-//	public Promotion getPromotionByCouponCode(String couponCode);
-//
-//	public Integer getPreviousUsesForUser(Integer userId, Integer promotionId);
-//
-//	public void updatePreviousUsesForUser(Integer userId, Integer promotionId, Integer uses);
-//
-//	public List<Promotion> getByOrderID(Integer orderId);
-//
-//	public Promotion getByProductId(Integer productId);
-//
-//	public List<Promotion> getByMinAmount(Double orderTotal);
-//
-//	public List<Promotion> getAll();
-//
-//	public List<Promotion> getAllActive();
-//
-	public List<Promotion> getAllGlobalCoupons();
-//	
-	public List<Promotion> getAllCouponsOnCategory(Integer categoryId);
+	public Promotion load(int promotionId);
+
+	public GlobalPromotioUses loadGlobalUses(int promotionId);
+
+	public UserPromotionUses loadUserUses(int promotionId, int userId);
 }

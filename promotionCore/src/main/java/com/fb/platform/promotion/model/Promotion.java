@@ -1,219 +1,80 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * 
  */
 package com.fb.platform.promotion.model;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
+import java.io.Serializable;
+
+import com.fb.platform.promotion.rule.PromotionRule;
+import com.fb.platform.promotion.to.PromotionRequest;
 
 /**
- * 
- * @author Keith Fernandez
+ * @author vinayak
+ *
  */
-public class Promotion {
-    private int promotionId;    
-    private String appliesOn;
-    
-	private String createdBy;
-    private Timestamp createdOn;
-    
-	private Timestamp validFrom;
-    private Timestamp validTill;
-    private Timestamp lastModifiedOn;
+public class Promotion implements Serializable {
 
-	private String displayText;
-	private String promotionDescription;	
-	private Timestamp lastUsedOn;
-	private boolean isCoupon;
-	private AmountType amountType;
-    
-    private PromotionType promotionType; 
-    
-    private boolean isActive;
-    
-	private String promotionName;
-	private CouponUses promotionUses;
+	private int id;
+	private String name;
+	private String description;
+	private boolean isActive;
+	private PromotionDates dates;
+	private PromotionLimitsConfig limitsConfig;
 
-    private Priority priority;
-    
-	private ArrayList<PromotionValue> promoValues;
-	 
-	public ArrayList<PromotionValue> getPromoValues() {
-		return promoValues;
+	private PromotionRule rule;
+
+	public boolean isApplicable(PromotionRequest request) {
+		boolean withinDates = dates.isWithinDates();
+		if (!withinDates) {
+			return false;
+		}
+		if (!isActive) {
+			return false;
+		}
+		boolean ruleApplicable = rule.isApplicable(request);
+		if (!ruleApplicable) {
+			return false;
+		}
+		return true;
 	}
 
-	public void setPromoValues(ArrayList<PromotionValue> promoValues) {
-		this.promoValues = promoValues;
+	public void setId(int id) {
+		this.id = id;
 	}
-
-	
-    public Timestamp getValidFrom() {
-		return validFrom;
+	public void setName(String name) {
+		this.name = name;
 	}
-
-	public void setValidFrom(Timestamp validFrom) {
-		this.validFrom = validFrom;
+	public void setDescription(String description) {
+		this.description = description;
 	}
-
-	public Timestamp getValidTill() {
-		return validTill;
+	public void setDates(PromotionDates dates) {
+		this.dates = dates;
 	}
-
-	public void setValidTill(Timestamp validTill) {
-		this.validTill = validTill;
+	public void setLimitsConfig(PromotionLimitsConfig limitsConfig) {
+		this.limitsConfig = limitsConfig;
 	}
-
-	public String getDisplayText() {
-		return displayText;
-	}
-
-	public void setDisplayText(String displayText) {
-		this.displayText = displayText;
-	}
-
-	public String getPromotionDescription() {
-		return promotionDescription;
-	}
-
-	public void setPromotionDescription(String description) {
-		this.promotionDescription = description;
-	}
-
-	public Timestamp getLastUsedOn() {
-		return lastUsedOn;
-	}
-
-	public void setLastUsedOn(Timestamp lastUsed) {
-		this.lastUsedOn = lastUsed;
-	}
-
-	public boolean isCoupon() {
-		return isCoupon;
-	}
-
-	public void setCoupon(boolean isCoupon) {
-		this.isCoupon = isCoupon;
-	}
-
-	public AmountType getAmountType() {
-		return amountType;
-	}
-
-	public void setAmountType(AmountType amtType) {
-		this.amountType = amtType;
-	}
-
-	public PromotionType getPromotionType() {
-		return promotionType;
-	}
-
-	public void setPromotionType(PromotionType promotionType) {
-		this.promotionType = promotionType;
-	}
-
-	public boolean isActive() {
-		return isActive;
-	}
-	
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
 	}
-
-	public Timestamp getCreatedOn() {
-		return createdOn;
+	public int getId() {
+		return id;
 	}
-
-	public void setCreatedOn(Timestamp createdOn) {
-		this.createdOn = createdOn;
+	public String getName() {
+		return name;
 	}
-
-	public Timestamp getLastModifiedOn() {
-		return lastModifiedOn;
+	public String getDescription() {
+		return description;
 	}
-
-	public void setLastModifiedOn(Timestamp lastModifedOn) {
-		this.lastModifiedOn = lastModifedOn;
+	public boolean isActive() {
+		return isActive;
 	}
-	
-	public String getPromotionName() {
-		return promotionName;
+	public PromotionDates getDates() {
+		return dates;
 	}
-
-	public void setPromotionName(String promotionName) {
-		this.promotionName = promotionName;
+	public PromotionLimitsConfig getLimitsConfig() {
+		return limitsConfig;
 	}
-
-    public int getPromotionId() {
-        return promotionId;
-    }
-
-    public void setPromotionId(int promotionId) {
-        this.promotionId = promotionId;
-    }
-
-
-//	@Override
-//	/**
-//	 * Convert object into json
-//	 */
-//	public JsonObject toJson() throws Exception {
-//
-//		String jsonString = gson.toJson(this);
-//		JsonParser parser = new JsonParser();
-//		JsonObject jsonObject = (JsonObject) parser.parse(jsonString);
-//		return jsonObject;
-//	}
-	/**
-	 * Converts json into object
-	 * @param postData
-	 * @return
-	 */
-//	public static PromotionBO fromJson(JsonObject postData) {
-//		PromotionBO promotionBo = gson.fromJson(postData, PromotionBO.class);
-//		return promotionBo;
-//
-//	}
-
-//	@Override
-//	public String toString() {
-//		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
-//		.append("promotionId", promotionId)
-//		//.append("appliesOn", this.appliesOn)
-//		.toString();
-//	}
-
-	public CouponUses getPromotionUses() {
-		return promotionUses;
+	public void setRule(PromotionRule rule) {
+		this.rule = rule;
 	}
-
-	public void setPromotionUses(CouponUses promotionUses) {
-		this.promotionUses = promotionUses;
-	}
-
-	public Priority getPriority() {
-		return priority;
-	}
-
-	public void setPriority(Priority promotionPriority) {
-		this.priority = promotionPriority;
-	}
-	
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-    public String getAppliesOn() {
-		return appliesOn;
-	}
-
-	public void setAppliesOn(String appliesOn) {
-		this.appliesOn = appliesOn;
-	}
-
-	
 }

@@ -3,17 +3,14 @@
  */
 package com.fb.platform.caching.impl;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-
-import com.fb.platform.caching.NamedCachesEnum;
-import com.fb.platform.caching.PlatformCachingManager;
 
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
+
+import com.fb.platform.caching.NamedCachesEnum;
+import com.fb.platform.caching.PlatformCachingManager;
 
 /**
  * @author vinayak
