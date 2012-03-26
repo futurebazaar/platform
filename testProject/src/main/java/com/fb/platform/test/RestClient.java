@@ -42,7 +42,6 @@ public class RestClient {
 
 	private static String login() throws Exception {
 		HttpClient httpClient = new HttpClient();
-
 		PostMethod loginMethod = new PostMethod("http://10.0.101.32:8082/userWS/auth/login");
 		//StringRequestEntity requestEntity = new StringRequestEntity("<loginRequest><username>vinayak</username><password>password</password></loginRequest>", "application/xml", null);
 		LoginRequest loginRequest = new LoginRequest();
@@ -74,7 +73,6 @@ public class RestClient {
 		HttpClient httpClient = new HttpClient();
 
 		PostMethod logoutMethod = new PostMethod("http://10.0.101.32:8082/userWS/auth/logout");
-
 		LogoutRequest logoutReq = new LogoutRequest();
 		logoutReq.setSessionToken(sessionToken);
 		

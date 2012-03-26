@@ -13,13 +13,8 @@
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
 
-	<bean id="promotionBundleDao" class="com.fb.platform.promotion.dao.impl.PromotionBundleDaoJdbcImpl">
-		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
-	</bean>
-
 	<bean id="promotionDao" class="com.fb.platform.promotion.dao.impl.PromotionDaoJdbcImpl">
 		<property name="jdbcTemplate" ref="jdbcTemplate"/>
-		<property name="promotionBundleDao" ref="promotionBundleDao"></property>
 	</bean>
 
     <!-- Add new DAOs here -->

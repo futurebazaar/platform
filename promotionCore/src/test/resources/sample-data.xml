@@ -2,78 +2,134 @@
 <dataset>
 	<table name="promotion">
 		<column>id</column>
-		<column>created_on</column>
 		<column>valid_from</column>
 		<column>valid_till</column>
-		<column>promotion_name</column>
-		<column>display_text</column>
-		<column>promotion_description</column>
-		<column>last_used_on</column>
-		<column>promotion_type</column>
-		<column>promotion_uses</column>
-		<column>rule_id</column>
+		<column>name</column>
+		<column>description</column>
 		<column>is_coupon</column>
-		<column>amount_type</column>
-		<column>applies_on</column>
-		<column>created_by</column>
-		<column>last_modified_on</column>
 		<column>is_active</column>
-		<column>priority</column>
         <row>
-			<value name="id">1</value>
-			<value name="created_on">2012-02-09 19:53:14</value>
+			<value name="id">-1</value>
 			<value name="valid_from">2012-01-01 00:00:00</value>
 			<value name="valid_till">2012-05-31 00:00:00</value>
-			<value name="promotion_name">try1</value>
-			<value name="display_text">try1_disp</value>
-			<value name="promotion_description">try1_desc</value>
-			<value name="last_used_on">2012-02-09 19:53:14</value>
-			<value name="promotion_type">1</value>
-			<value name="promotion_uses" xsi:nil="true" />
-			<value name="rule_id">1</value>
+			<value name="name">Test Promotion 1</value>
+			<value name="description">try1_desc</value>
 			<value name="is_coupon">0</value>
-			<value name="amount_type">1</value>
-			<value name="applies_on">order</value>
-			<value name="created_by" xsi:nil="true" />
-			<value name="last_modified_on">2012-02-09 19:53:14</value>
 			<value name="is_active">1</value>
-			<value name="priority">2</value>
         </row>
         <row>
-			<value name="id">2</value>
-			<value name="created_on">2012-02-09 19:53:14</value>
+			<value name="id">-2</value>
+			<value name="valid_from">2013-02-02 00:00:00</value>
+			<value name="valid_till">2013-06-11 00:00:00</value>
+			<value name="name">Not yet Valid</value>
+			<value name="promotion_description">This promotion is valid in future</value>
+			<value name="is_coupon">0</value>
+			<value name="is_active">1</value>
+        </row>
+        <row>
+			<value name="id">-3</value>
+			<value name="valid_from">2012-01-01 00:00:00</value>
+			<value name="valid_till">2012-01-31 00:00:00</value>
+			<value name="name">Expired Promotion</value>
+			<value name="description">This promotion is expired</value>
+			<value name="is_coupon">0</value>
+			<value name="is_active">1</value>
+        </row>
+        <row>
+			<value name="id">-4</value>
+			<null/>
+			<value name="valid_till">2012-06-30 00:00:00</value>
+			<value name="name">No Valid From Promotion</value>
+			<value name="description">This promotion has not valid from date</value>
+			<value name="is_coupon">0</value>
+			<value name="is_active">1</value>
+        </row>
+        <row>
+			<value name="id">-5</value>
+			<value name="valid_from">2012-03-02 00:00:00</value>
+			<null/>
+			<value name="name">No Valid Till Promotion</value>
+			<value name="promotion_description">This promotion has not valid till date</value>
+			<value name="is_coupon">0</value>
+			<value name="is_active">1</value>
+        </row>
+        <row>
+			<value name="id">-6</value>
 			<value name="valid_from">2012-01-01 00:00:00</value>
 			<value name="valid_till">2012-05-31 00:00:00</value>
-			<value name="promotion_name">try2</value>
-			<value name="display_text">try2_disp</value>
-			<value name="promotion_description">try2_desc</value>
-			<value name="last_used_on">2012-02-09 19:53:14</value>
-			<value name="promotion_type">1</value>
-			<value name="promotion_uses" xsi:nil="true" />
-			<value name="rule_id">1</value>
+			<value name="name">Inactive Promotion</value>
+			<value name="description">This promotion is not active</value>
 			<value name="is_coupon">0</value>
-			<value name="amount_type">1</value>
-			<value name="applies_on">order</value>
-			<value name="created_by" xsi:nil="true" />
-			<value name="last_modified_on">2012-02-09 19:53:14</value>
-			<value name="is_active">1</value>
-			<value name="priority">2</value>
+			<value name="is_active">0</value>
         </row>
 	</table>
-	
-	<table name="promotion_coupon">
+
+	<table name="promotion_limits_config">
 		<column>id</column>
-		<column>promo_bundle_id</column>
-		<column>product_id</column>
+		<column>promotion_id</column>
+		<column>max_uses</column>
+		<column>max_amount</column>
+		<column>max_uses_per_user</column>
+		<column>max_amount_per_user</column>
 		<row>
-			<value name="id">1</value>
-			<value name="promo_bundle_id">1</value>
-			<value name="product_id">1</value>
+			<value name="id">-1</value>
+			<value name="promotion_id">-1</value>
+			<value name="max_uses">10</value>
+			<value name="max_amount">10000</value>
+			<value name="max_uses_per_user">2</value>
+			<value name="max_amount_per_user">1000</value>
 		</row>
 		<row>
-			<value name="id">2</value>
-			<value name="promo_bundle_id">1</value>
-			<value name="product_id">2</value>
+			<value name="id">-2</value>
+			<value name="promotion_id">-2</value>
+			<value name="max_uses">0</value>
+			<null/>
+			<value name="max_uses_per_user">1</value>
+			<value name="max_amount_per_user">2000</value>
+		</row>
+		<row>
+			<value name="id">-3</value>
+			<value name="promotion_id">-4</value>
+			<value name="max_uses">10</value>
+			<value name="max_amount">10000</value>
+			<null/>
+			<null/>
+		</row>
+		<row>
+			<value name="id">-4</value>
+			<value name="promotion_id">-3</value>
+			<value name="max_uses">10</value>
+			<value name="max_amount">10000</value>
+			<value name="max_uses_per_user">2</value>
+			<value name="max_amount_per_user">1000</value>
+		</row>
+		<row>
+			<value name="id">-5</value>
+			<value name="promotion_id">-5</value>
+			<value name="max_uses">10</value>
+			<value name="max_amount">10000</value>
+			<value name="max_uses_per_user">2</value>
+			<value name="max_amount_per_user">1000</value>
+		</row>
+		<row>
+			<value name="id">-6</value>
+			<value name="promotion_id">-6</value>
+			<value name="max_uses">10</value>
+			<value name="max_amount">10000</value>
+			<value name="max_uses_per_user">2</value>
+			<value name="max_amount_per_user">1000</value>
+		</row>
+	</table>
+	<table name="global_promotion_uses">
+		<column>id</column>
+		<column>promotion_id</column>
+		<column>current_count</column>
+		<column>current_amount</column>
+		<row>
+			<value name="id">-1</value>
+			<value name="promotion_id">-1</value>
+			<value name="current_count">10</value>
+			<value name="current_amount">10000</value>
 		</row>
 	</table>
 </dataset>
