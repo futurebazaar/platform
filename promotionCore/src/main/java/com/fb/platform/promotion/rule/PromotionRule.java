@@ -3,6 +3,8 @@
  */
 package com.fb.platform.promotion.rule;
 
+import com.fb.platform.promotion.to.PromotionRequest;
+
 /**
  * @author vinayak
  *
@@ -16,9 +18,13 @@ public interface PromotionRule {
 	public void init(RuleConfiguration ruleConfig);
 
 	/**
-	 * 
-	 * @return
+	 * @return true if the rule is applicable on the request
 	 */
-	public boolean isApplicable();
-	public void execute();
+	public boolean isApplicable(PromotionRequest request);
+
+	/**
+	 * Applies the rule on the request.
+	 * @param request
+	 */
+	public Object execute(PromotionRequest request);
 }

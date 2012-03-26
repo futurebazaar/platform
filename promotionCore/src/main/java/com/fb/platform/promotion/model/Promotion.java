@@ -5,6 +5,9 @@ package com.fb.platform.promotion.model;
 
 import java.io.Serializable;
 
+import com.fb.platform.promotion.rule.PromotionRule;
+import com.fb.platform.promotion.to.PromotionRequest;
+
 /**
  * @author vinayak
  *
@@ -18,7 +21,22 @@ public class Promotion implements Serializable {
 	private PromotionDates dates;
 	private PromotionLimitsConfig limitsConfig;
 
-	private int ruleId;
+	private PromotionRule rule;
+
+	public boolean isApplicable(PromotionRequest request) {
+		boolean withinDates = dates.isWithinDates();
+		if (!withinDates) {
+			return false;
+		}
+		if (!isActive) {
+			return false;
+		}
+		boolean ruleApplicable = rule.isApplicable(request);
+		if (!ruleApplicable) {
+			return false;
+		}
+		return true;
+	}
 
 	public void setId(int id) {
 		this.id = id;
@@ -56,5 +74,7 @@ public class Promotion implements Serializable {
 	public PromotionLimitsConfig getLimitsConfig() {
 		return limitsConfig;
 	}
-
+	public void setRule(PromotionRule rule) {
+		this.rule = rule;
+	}
 }

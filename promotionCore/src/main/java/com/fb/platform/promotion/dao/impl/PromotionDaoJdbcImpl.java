@@ -13,17 +13,19 @@ import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.dao.PromotionDao;
+import com.fb.platform.promotion.dao.RuleDao;
 import com.fb.platform.promotion.model.GlobalPromotioUses;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.PromotionDates;
 import com.fb.platform.promotion.model.PromotionLimitsConfig;
 import com.fb.platform.promotion.model.UserPromotionUses;
-import com.fb.platform.promotion.rule.RuleConfiguration;
+import com.fb.platform.promotion.rule.PromotionRule;
 
 /**
  * @author vinayak
@@ -35,15 +37,18 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 
 	private Log log = LogFactory.getLog(PromotionDaoJdbcImpl.class);
 
+	private RuleDao ruleDao = null;
+
 	private static final String GET_PROMOTION_QUERY = 
 			"SELECT " +
-			"id, " +
-			"valid_from, " +
-			"valid_till, " +
-			"name, " +
-			"description, " +
-			"is_coupon, " +
-			"is_active " +
+			"	id, " +
+			"	valid_from, " +
+			"	valid_till, " +
+			"	name, " +
+			"	description, " +
+			"	is_coupon, " +
+			"	is_active," +
+			"	rule_id " +
 			"FROM promotion where id = ?";
 
 	private static final String GET_PROMOTION_LIMITS_QUERY = 
@@ -80,13 +85,15 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 	public Promotion load(int promotionId) {
 		
 		Promotion promotion = null;
-		try {
-			promotion = jdbcTemplate.queryForObject(GET_PROMOTION_QUERY, new Object [] {promotionId}, new PromotionMapper());
-		} catch (IncorrectResultSizeDataAccessException e) {
+
+		PromotionRowCallBackHandler prcbh = new PromotionRowCallBackHandler(); 
+		jdbcTemplate.query(GET_PROMOTION_QUERY, prcbh, promotionId);
+		if (prcbh.promotion == null) {
 			//this means there is no promotion in the database for this id, fine
 			log.error("No Promotion found for the id - " + promotionId);
 			return null;
 		}
+		promotion = prcbh.promotion;
 
 		PromotionLimitsConfig limits = null;
 		try {
@@ -96,6 +103,10 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			throw new PlatformException("Promotion Limits are not configured for the promotion id - " + promotionId, e);
 		}
 		promotion.setLimitsConfig(limits);
+
+		PromotionRule rule = ruleDao.load(promotionId, prcbh.ruleId);
+
+		promotion.setRule(rule);
 
 		return promotion;
 	}
@@ -128,20 +139,14 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		return userPromotionUses;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.fb.platform.promotion.dao.PromotionDao#loadRuleConfiguration(int)
-	 */
-	@Override
-	public RuleConfiguration loadRuleConfiguration(int promotionId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	private static class PromotionRowCallBackHandler implements RowCallbackHandler {
 
-	private static class PromotionMapper implements RowMapper<Promotion> {
+		private int ruleId;
+		private Promotion promotion;
 
 		@Override
-		public Promotion mapRow(ResultSet rs, int rowNum) throws SQLException {
-			Promotion promotion = new Promotion();
+		public void processRow(ResultSet rs) throws SQLException {
+			promotion = new Promotion();
 			promotion.setDescription(rs.getString("description"));
 			promotion.setId(rs.getInt("id"));
 			promotion.setName(rs.getString("name"));
@@ -157,8 +162,8 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 				dates.setValidTill(new DateTime(validTillTS));
 			}
 			promotion.setDates(dates);
-			
-			return promotion;
+
+			ruleId = rs.getInt("rule_id");
 		}
 	}
 
@@ -224,5 +229,9 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
+	}
+
+	public void setRuleDao(RuleDao ruleDao) {
+		this.ruleDao = ruleDao;
 	}
 }

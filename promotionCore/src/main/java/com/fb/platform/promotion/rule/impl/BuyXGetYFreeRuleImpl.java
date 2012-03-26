@@ -5,6 +5,7 @@ package com.fb.platform.promotion.rule.impl;
 
 import com.fb.platform.promotion.rule.PromotionRule;
 import com.fb.platform.promotion.rule.RuleConfiguration;
+import com.fb.platform.promotion.to.PromotionRequest;
 
 /**
  * @author vinayak
@@ -19,13 +20,12 @@ public class BuyXGetYFreeRuleImpl implements PromotionRule {
 	}
 
 	@Override
-	public void execute() {
-		// TODO Auto-generated method stub
-
+	public boolean isApplicable(PromotionRequest request) {
+		return false;
 	}
 
 	@Override
-	public boolean isApplicable() {
-		return false;
+	public Object execute(PromotionRequest request) {
+		return null;
 	}
 }
