@@ -41,14 +41,15 @@ public class UserAdminManagerImpl implements UserAdminManager {
 	@Override
 	public GetUserResponse getUser(GetUserRequest getUserRequest) {
 		GetUserResponse getUserResponse = new GetUserResponse();
-		if (StringUtils.isBlank(getUserRequest.getSessionToken())){
-			getUserResponse.setStatus(GetUserStatusEnum.NO_SESSION);
-			return getUserResponse;
-		}
 		if (getUserRequest == null || StringUtils.isBlank(getUserRequest.getKey()) ) {
 			getUserResponse.setStatus(GetUserStatusEnum.NO_USER_KEY);
 			return getUserResponse;
 		}
+		if (StringUtils.isBlank(getUserRequest.getSessionToken())){
+			getUserResponse.setStatus(GetUserStatusEnum.NO_SESSION);
+			return getUserResponse;
+		}
+		
 		try{
 			AuthenticationTO authentication = authenticationService.authenticate(getUserRequest.getSessionToken());
 			if (authentication == null) {
@@ -106,14 +107,16 @@ public class UserAdminManagerImpl implements UserAdminManager {
 	public UpdateUserReponse updateUser(UpdateUserRequest updateUserRequest) {
 		
 		UpdateUserReponse updateUserReponse = new UpdateUserReponse();
-		if (StringUtils.isBlank(updateUserReponse.getSessionToken())){
-			updateUserReponse.setStatus(UpdateUserStatusEnum.NO_SESSION);
-			return updateUserReponse;
-		}
 		if (updateUserRequest == null ) {
 			updateUserReponse.setStatus(UpdateUserStatusEnum.NO_USER_PROVIDED);
 			return updateUserReponse;
 		}
+		
+		if (StringUtils.isBlank(updateUserReponse.getSessionToken())){
+			updateUserReponse.setStatus(UpdateUserStatusEnum.NO_SESSION);
+			return updateUserReponse;
+		}
+		
 		try{
 			AuthenticationTO authentication = authenticationService.authenticate(updateUserRequest.getSessionToken());
 			if (authentication == null) {

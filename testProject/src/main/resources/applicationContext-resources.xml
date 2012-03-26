@@ -8,14 +8,20 @@
             http://www.springframework.org/schema/jee/spring-jee-3.0.xsd">
     
     <!-- For mail settings and future properties files -->
-    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations">
-            <list>
-                <value>classpath:jdbc.properties</value>
-            </list>
-        </property>
-    </bean>
-
+    <bean id="propertiesConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="searchSystemEnvironment" value="true" />
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value>
+				<!-- this happens to override previous properties due to the implementation... -->
+				<value>file:/${app.config.dir}/*.properties</value>
+			</list>
+		</property>
+	</bean>
+	
     <!-- JNDI DataSource for J2EE environments -->
     <!--<jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jdbc/colada"/>-->
 
