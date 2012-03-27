@@ -8,6 +8,7 @@ public class AddUserResponse implements Serializable {
 	
 	private AddUserStatusEnum status = null;
 	private String sessionToken = null;
+	private Integer userId;
 	/**
 	 * @return the status
 	 */
@@ -32,6 +33,22 @@ public class AddUserResponse implements Serializable {
 	public void setSessionToken(String sessionToken) {
 		this.sessionToken = sessionToken;
 	}
+	/**
+	 * @return the userid
+	 */
+	public Integer getUserId() {
+		return userId;
+	}
+	/**
+	 * @param userid the userid to set
+	 */
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+	
+	
+	
+	
 	
 	
 

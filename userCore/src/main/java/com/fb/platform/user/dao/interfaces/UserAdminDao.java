@@ -23,7 +23,7 @@ public interface UserAdminDao {
 	 * Add a new user
 	 * @param userBo
 	 */
-	public void add(UserBo userBo);
+	public UserBo add(UserBo userBo);
 	
 	/**
 	 * Update an existing user

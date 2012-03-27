@@ -283,7 +283,7 @@ public class UserAdminDaoImpl implements UserAdminDao {
 	 * @see com.fb.platform.user.dao.interfaces.UserDao#add(com.fb.platform.user.domain.UserBo)
 	 */
 	@Override
-	public void add(final UserBo userBo) {
+	public UserBo add(final UserBo userBo) {
 		
 		try {
 			final KeyHolder keyHolderAuthUser = new GeneratedKeyHolder();
@@ -365,14 +365,17 @@ public class UserAdminDaoImpl implements UserAdminDao {
 					jdbcTemplate.update(INSERT_NEW_PHONE, objs);
 				}
 			}
+			return load(Long.toString(userid));
 		} catch (InvalidDataAccessApiUsageException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		} catch (DataAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
-		
+				
 	}
 
 	/* (non-Javadoc)

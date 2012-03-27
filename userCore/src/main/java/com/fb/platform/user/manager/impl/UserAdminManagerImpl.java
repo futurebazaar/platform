@@ -5,10 +5,16 @@ package com.fb.platform.user.manager.impl;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.PlatformException;
 import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
+import com.fb.platform.sso.SSOMasterService;
+import com.fb.platform.sso.SSOSessionId;
+import com.fb.platform.sso.SSOSessionTO;
+import com.fb.platform.sso.SSOToken;
+import com.fb.platform.sso.caching.SessionTokenCacheAccess;
 import com.fb.platform.user.dao.interfaces.UserAdminDao;
 import com.fb.platform.user.domain.UserBo;
 import com.fb.platform.user.manager.interfaces.UserAdminManager;
@@ -36,7 +42,16 @@ public class UserAdminManagerImpl implements UserAdminManager {
 
 	private UserAdminDao userAdminDao;
 	private UserBoToMapper userMapper = new UserBoToMapper();
+	
+	@Autowired
 	private AuthenticationService authenticationService;
+	
+	@Autowired
+	private SSOMasterService ssoMasterService = null;
+	
+	@Autowired
+	private SessionTokenCacheAccess sessionTokenCacheAccess = null;
+
 
 	/* (non-Javadoc)
 	 * @see com.fb.platform.user.manager.interfaces #getUser(java.lang.String)
@@ -91,8 +106,23 @@ public class UserAdminManagerImpl implements UserAdminManager {
 			UserBo userBo = new UserBo();
 			userBo.setUsername(addUserRequest.getUserName());
 			userBo.setPassword(addUserRequest.getPassword());
-			userAdminDao.add(userBo);			
-			addUserResponse.setStatus(AddUserStatusEnum.SUCCESS);			
+			UserBo user = userAdminDao.add(userBo);			
+			addUserResponse.setStatus(AddUserStatusEnum.SUCCESS);
+			
+			SSOSessionTO ssoSession = new SSOSessionTO();
+			ssoSession.setUserId(user.getUserid());
+			
+			//create the global sso session
+			SSOSessionId ssoSessionId = ssoMasterService.createSSOSession(ssoSession);
+
+			//create the session token to be included in the response and cache it for the use of next request
+			SSOToken ssoToken = ssoMasterService.createSessionToken(ssoSessionId);
+
+			sessionTokenCacheAccess.put(ssoToken, ssoSessionId);
+
+			addUserResponse.setSessionToken(ssoToken.getToken());
+			addUserResponse.setUserId(user.getUserid());
+			
 			return addUserResponse;
 			
 		}catch(PlatformException pe){
