@@ -19,6 +19,9 @@ import com.fb.platform.user.manager.model.admin.AddUserStatusEnum;
 import com.fb.platform.user.manager.model.admin.GetUserRequest;
 import com.fb.platform.user.manager.model.admin.GetUserResponse;
 import com.fb.platform.user.manager.model.admin.GetUserStatusEnum;
+import com.fb.platform.user.manager.model.admin.IsValidUserEnum;
+import com.fb.platform.user.manager.model.admin.IsValidUserRequest;
+import com.fb.platform.user.manager.model.admin.IsValidUserResponse;
 import com.fb.platform.user.manager.model.admin.UpdateUserReponse;
 import com.fb.platform.user.manager.model.admin.UpdateUserRequest;
 import com.fb.platform.user.manager.model.admin.UpdateUserStatusEnum;
@@ -150,6 +153,32 @@ public class UserAdminManagerImpl implements UserAdminManager {
 
 	public void setUserAdminDao(UserAdminDao userAdminDao) {
 		this.userAdminDao = userAdminDao;
+	}
+
+	@Override
+	public IsValidUserResponse isValidUser(IsValidUserRequest isValidUserRequest) {
+		IsValidUserResponse isValidUserResponse = new IsValidUserResponse();
+		if (isValidUserRequest == null || StringUtils.isBlank(isValidUserRequest.getUserName()) ) {
+			isValidUserResponse.setIsValidUserStatus(IsValidUserEnum.INVALID_USER);
+			return isValidUserResponse;
+		}
+		
+		try{
+		
+			UserBo user = userAdminDao.load(isValidUserRequest.getUserName());
+			if (user == null) {
+				isValidUserResponse.setIsValidUserStatus(IsValidUserEnum.INVALID_USER);
+				return isValidUserResponse;
+			}
+			isValidUserResponse.setIsValidUserStatus(IsValidUserEnum.VALID_USER);
+			return isValidUserResponse;
+			
+		}catch(PlatformException pe){
+			logger.error("Error while getting the user : " + isValidUserRequest.getUserName(), pe);
+			isValidUserResponse.setIsValidUserStatus(IsValidUserEnum.ERROR);
+		}
+		
+		return isValidUserResponse;
 	}
 
 }

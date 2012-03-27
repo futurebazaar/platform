@@ -13,6 +13,8 @@ import com.fb.platform.user.manager.model.admin.AddUserRequest;
 import com.fb.platform.user.manager.model.admin.AddUserResponse;
 import com.fb.platform.user.manager.model.admin.GetUserRequest;
 import com.fb.platform.user.manager.model.admin.GetUserResponse;
+import com.fb.platform.user.manager.model.admin.IsValidUserRequest;
+import com.fb.platform.user.manager.model.admin.IsValidUserResponse;
 import com.fb.platform.user.manager.model.admin.UpdateUserReponse;
 import com.fb.platform.user.manager.model.admin.UpdateUserRequest;
 
@@ -33,6 +35,9 @@ public interface UserAdminManager {
 
 	@Transactional(propagation=Propagation.REQUIRED)
 	public UpdateUserReponse updateUser(UpdateUserRequest updateUserRequest);
+	
+	@Transactional(propagation=Propagation.REQUIRED)
+	public IsValidUserResponse isValidUser(IsValidUserRequest isValidUserRequest);
 
 	/*@Transactional(propagation=Propagation.SUPPORTS)
 	public GetUsersReponse getUsers(GetUsersRequest getUsersRequest);*/
