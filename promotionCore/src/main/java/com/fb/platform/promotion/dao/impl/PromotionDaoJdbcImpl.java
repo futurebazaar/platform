@@ -20,7 +20,7 @@ import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.dao.PromotionDao;
 import com.fb.platform.promotion.dao.RuleDao;
-import com.fb.platform.promotion.model.GlobalPromotioUses;
+import com.fb.platform.promotion.model.GlobalPromotionUses;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.PromotionDates;
 import com.fb.platform.promotion.model.PromotionLimitsConfig;
@@ -115,14 +115,14 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 	 * @see com.fb.platform.promotion.dao.PromotionDao#loadGlobalUses(int)
 	 */
 	@Override
-	public GlobalPromotioUses loadGlobalUses(int promotionId) {
-		GlobalPromotioUses globalPromotioUses = null;
+	public GlobalPromotionUses loadGlobalUses(int promotionId) {
+		GlobalPromotionUses globalPromotionUses = null;
 		try {
-			globalPromotioUses = jdbcTemplate.queryForObject(LOAD_GLOABL_PROMOTION_USES_QUERY, new Object [] {promotionId}, new GlobalPromotionUsesMapper());
+			globalPromotionUses = jdbcTemplate.queryForObject(LOAD_GLOABL_PROMOTION_USES_QUERY, new Object [] {promotionId}, new GlobalPromotionUsesMapper());
 		} catch (IncorrectResultSizeDataAccessException e) {
 			//no global uses set, that means this is first time use of this promotion
 		}
-		return globalPromotioUses;
+		return globalPromotionUses;
 	}
 
 	/* (non-Javadoc)
@@ -190,11 +190,11 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		}
 	}
 
-	private static class GlobalPromotionUsesMapper implements RowMapper<GlobalPromotioUses> {
+	private static class GlobalPromotionUsesMapper implements RowMapper<GlobalPromotionUses> {
 
 		@Override
-		public GlobalPromotioUses mapRow(ResultSet rs, int rowNum) throws SQLException {
-			GlobalPromotioUses globalUses = new GlobalPromotioUses();
+		public GlobalPromotionUses mapRow(ResultSet rs, int rowNum) throws SQLException {
+			GlobalPromotionUses globalUses = new GlobalPromotionUses();
 			globalUses.setPromotionId(rs.getInt("promotion_id"));
 			globalUses.setCurrentCount(rs.getInt("current_count"));
 
