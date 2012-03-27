@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<promotion>
+<promotionRequest>
+	<couponCode></couponCode>
+	<order>
+		<orderValue></orderValue>
+		<productList>
+			<product>
+				<id></id>
+				<name></name>
+				<categoryList>
+					<category></category>
+				</categoryList>
+			</product>
+			<product>
+				<id></id>
+				<name></name>
+				<categoryList>
+					<category></category>
+				</categoryList>
+				<brand></brand>
+			</product>
+		</productList>
+	</order>
+	<userId></userId>
+	<client></client>
+</promotionRequest>
+
+
+
+<promotionResponse>
+	<couponCode></couponCode>
+	<discountValue></discountValue>
+	<statusCode></statusCode>
+	<statusMessage></statusMessage>
+	<statusDescription></statusDescription>
+</promotionResponse>
+
+
+</promotion>
