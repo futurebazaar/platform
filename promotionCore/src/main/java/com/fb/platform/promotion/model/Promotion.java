@@ -38,7 +38,7 @@ public class Promotion implements Serializable {
 		return true;
 	}
 
-	public boolean isWithinLimits(GlobalPromotioUses globalUses, UserPromotionUses userUses) {
+	public boolean isWithinLimits(GlobalPromotionUses globalUses, UserPromotionUses userUses) {
 		return limitsConfig.isWithinLimit(globalUses, userUses);
 	}
 

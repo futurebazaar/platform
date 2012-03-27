@@ -3,7 +3,7 @@
  */
 package com.fb.platform.promotion.service;
 
-import com.fb.platform.promotion.to.OrderCouponRequest;
+import com.fb.platform.promotion.to.CouponRequest;
 
 /**
  * @author vinayak
@@ -11,5 +11,5 @@ import com.fb.platform.promotion.to.OrderCouponRequest;
  */
 public interface PromotionManager {
 
-	public Object applyCoupon(OrderCouponRequest request);
+	public Object applyCoupon(CouponRequest request);
 }

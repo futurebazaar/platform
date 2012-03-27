@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.test.BaseTestCase;
 import com.fb.commons.to.Money;
-import com.fb.platform.promotion.model.GlobalPromotioUses;
+import com.fb.platform.promotion.model.GlobalPromotionUses;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.PromotionLimitsConfig;
 import com.fb.platform.promotion.model.UserPromotionUses;
@@ -129,7 +129,7 @@ public class PromotionDaoTest extends BaseTestCase {
 
 	@Test
 	public void loadGlobalUses() {
-		GlobalPromotioUses globalUses = promotionDao.loadGlobalUses(-1);
+		GlobalPromotionUses globalUses = promotionDao.loadGlobalUses(-1);
 
 		assertNotNull(globalUses);
 		assertEquals(10, globalUses.getCurrentCount());
@@ -138,7 +138,7 @@ public class PromotionDaoTest extends BaseTestCase {
 
 	@Test
 	public void loadNonExistantGlobalUses() {
-		GlobalPromotioUses globalUses = promotionDao.loadGlobalUses(-2);
+		GlobalPromotionUses globalUses = promotionDao.loadGlobalUses(-2);
 
 		assertNull(globalUses);
 	}

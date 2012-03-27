@@ -12,14 +12,14 @@ import com.fb.platform.promotion.cache.CouponCacheAccess;
 import com.fb.platform.promotion.cache.PromotionCacheAccess;
 import com.fb.platform.promotion.dao.CouponDao;
 import com.fb.platform.promotion.dao.PromotionDao;
-import com.fb.platform.promotion.model.GlobalPromotioUses;
+import com.fb.platform.promotion.model.GlobalPromotionUses;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.UserPromotionUses;
 import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.coupon.GlobalCouponUses;
 import com.fb.platform.promotion.model.coupon.UserCouponUses;
 import com.fb.platform.promotion.service.PromotionManager;
-import com.fb.platform.promotion.to.OrderCouponRequest;
+import com.fb.platform.promotion.to.CouponRequest;
 
 /**
  * @author vinayak
@@ -43,7 +43,7 @@ public class PromotionManagerImpl implements PromotionManager {
 	private PromotionDao promotionDao = null;
 
 	@Override
-	public Object applyCoupon(OrderCouponRequest request) {
+	public Object applyCoupon(CouponRequest request) {
 		if (request == null) {
 			return null; //TODO
 		}
@@ -90,7 +90,7 @@ public class PromotionManagerImpl implements PromotionManager {
 	}
 
 	private boolean validatePromotionUses(Promotion promotion, int userId) {
-		GlobalPromotioUses globalUses = promotionDao.loadGlobalUses(promotion.getId());
+		GlobalPromotionUses globalUses = promotionDao.loadGlobalUses(promotion.getId());
 		UserPromotionUses userUses = promotionDao.loadUserUses(promotion.getId(), userId);
 		return promotion.isWithinLimits(globalUses, userUses);
 	}
