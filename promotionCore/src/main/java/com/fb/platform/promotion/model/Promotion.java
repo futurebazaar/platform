@@ -38,6 +38,14 @@ public class Promotion implements Serializable {
 		return true;
 	}
 
+	public boolean isWithinLimits(GlobalPromotioUses globalUses, UserPromotionUses userUses) {
+		return limitsConfig.isWithinLimit(globalUses, userUses);
+	}
+
+	public Object apply(PromotionRequest request) {
+		return rule.execute(request);
+	}
+
 	public void setId(int id) {
 		this.id = id;
 	}

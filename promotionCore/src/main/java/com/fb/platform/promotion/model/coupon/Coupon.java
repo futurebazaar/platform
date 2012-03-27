@@ -17,6 +17,11 @@ public class Coupon implements Serializable {
 	private CouponType type;
 	private CouponLimitsConfig limitsConfig;
 
+	public boolean isWithinLimits(GlobalCouponUses globalUses, UserCouponUses userUses) {
+		//TODO change the behaviour for different coupon types
+		return limitsConfig.isWithinLimits(globalUses, userUses);
+	}
+
 	public int getId() {
 		return id;
 	}

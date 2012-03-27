@@ -13,6 +13,7 @@ public class OrderCouponRequest implements PromotionRequest, Serializable {
 
 	private String couponCode = null;
 	private OrderRequest orderRequest = null;
+	private String sessionToken = null;
 
 	public String getCouponCode() {
 		return couponCode;
@@ -25,5 +26,11 @@ public class OrderCouponRequest implements PromotionRequest, Serializable {
 	}
 	public void setOrderRequest(OrderRequest orderRequest) {
 		this.orderRequest = orderRequest;
+	}
+	public String getSessionToken() {
+		return sessionToken;
+	}
+	public void setSessionToken(String sessionToken) {
+		this.sessionToken = sessionToken;
 	}
 }
