@@ -1,12 +1,14 @@
 /**
  * 
  */
+
 package com.fb.platform.promotion.model;
 
 import java.io.Serializable;
 
 import com.fb.platform.promotion.rule.PromotionRule;
 import com.fb.platform.promotion.to.PromotionRequest;
+import com.fb.platform.promotion.util.PromotionRuleMapper;
 
 /**
  * @author vinayak
@@ -31,7 +33,7 @@ public class Promotion implements Serializable {
 		if (!isActive) {
 			return false;
 		}
-		boolean ruleApplicable = rule.isApplicable(request);
+		boolean ruleApplicable = rule.isApplicable(PromotionRuleMapper.promotionToRuleRequest(request));
 		if (!ruleApplicable) {
 			return false;
 		}
@@ -43,7 +45,7 @@ public class Promotion implements Serializable {
 	}
 
 	public Object apply(PromotionRequest request) {
-		return rule.execute(request);
+		return rule.execute(PromotionRuleMapper.promotionToRuleRequest(request));
 	}
 
 	public void setId(int id) {
