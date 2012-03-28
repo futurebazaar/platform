@@ -3,15 +3,19 @@ package com.fb.platform.promotion.to;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-@SuppressWarnings("serial")
-public class CouponResponse implements Serializable {
+/**
+ * 
+ * @author keith
+ *
+ */
+public class CouponResponse implements Serializable, PromotionResponse {
 
 	private String couponCode;
 	private BigDecimal discountValue;
-	private PromotionResponseStatusCode statusCode;
+	private CouponResponseStatusEnum couponStatus;
 	private String statusMessage;
 	private String statusDescription;
-	
+
 	/**
 	 * @return the couponCode
 	 */
@@ -37,18 +41,6 @@ public class CouponResponse implements Serializable {
 		this.discountValue = discountValue;
 	}
 	/**
-	 * @return the statusCode
-	 */
-	public PromotionResponseStatusCode getStatusCode() {
-		return statusCode;
-	}
-	/**
-	 * @param statusCode the statusCode to set
-	 */
-	public void setStatusCode(PromotionResponseStatusCode statusCode) {
-		this.statusCode = statusCode;
-	}
-	/**
 	 * @return the statusMessage
 	 */
 	public String getStatusMessage() {
@@ -72,7 +64,10 @@ public class CouponResponse implements Serializable {
 	public void setStatusDescription(String statusDescription) {
 		this.statusDescription = statusDescription;
 	}
-	
-	
-	
+	public CouponResponseStatusEnum getCouponStatus() {
+		return couponStatus;
+	}
+	public void setCouponStatus(CouponResponseStatusEnum couponStatus) {
+		this.couponStatus = couponStatus;
+	}
 }

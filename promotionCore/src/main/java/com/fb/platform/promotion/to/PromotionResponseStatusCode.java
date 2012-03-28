@@ -17,17 +17,15 @@ public enum PromotionResponseStatusCode {
 	NOT_APPLICABLE_ON_PRODUCT("NOT_APPLICABLE_ON_PRODUCT"),
 	NOT_APPLICABLE_ON_CATEGORY("NOT_APPLICABLE_ON_CATEGORY"),
 	LESS_ORDER_AMOUNT("LESS_ORDER_AMOUNT");
-
-		private String status = null;
-
-		private PromotionResponseStatusCode(String status) {
-			this.status = status;
-		}
-
-		@Override
-		public String toString() {
-			return this.status;
-		}
-
 	
+	private String status = null;
+	
+	private PromotionResponseStatusCode(String status) {
+		this.status = status;
+	}
+	
+	@Override
+	public String toString() {
+		return this.status;
+	}
 }

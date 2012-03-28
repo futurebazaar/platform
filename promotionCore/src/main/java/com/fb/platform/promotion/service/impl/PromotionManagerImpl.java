@@ -4,6 +4,8 @@
 package com.fb.platform.promotion.service.impl;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.platform.auth.AuthenticationService;
@@ -16,16 +18,21 @@ import com.fb.platform.promotion.model.GlobalPromotionUses;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.UserPromotionUses;
 import com.fb.platform.promotion.model.coupon.Coupon;
+import com.fb.platform.promotion.model.coupon.CouponType;
 import com.fb.platform.promotion.model.coupon.GlobalCouponUses;
 import com.fb.platform.promotion.model.coupon.UserCouponUses;
 import com.fb.platform.promotion.service.PromotionManager;
 import com.fb.platform.promotion.to.CouponRequest;
+import com.fb.platform.promotion.to.CouponResponse;
+import com.fb.platform.promotion.to.CouponResponseStatusEnum;
 
 /**
  * @author vinayak
  *
  */
 public class PromotionManagerImpl implements PromotionManager {
+
+	private static Log logger = LogFactory.getLog(PromotionManagerImpl.class);
 
 	@Autowired
 	private AuthenticationService authenticationService;
@@ -43,50 +50,70 @@ public class PromotionManagerImpl implements PromotionManager {
 	private PromotionDao promotionDao = null;
 
 	@Override
-	public Object applyCoupon(CouponRequest request) {
-		if (request == null) {
-			return null; //TODO
+	public CouponResponse applyCoupon(CouponRequest request) {
+		CouponResponse response = new CouponResponse();
+
+		if (request == null || StringUtils.isBlank(request.getSessionToken())) {
+			response.setCouponStatus(CouponResponseStatusEnum.NO_SESSION);
+			return response;
 		}
-		if (StringUtils.isBlank(request.getSessionToken())) {
-			//TODO return no session error 
-		}
+
 		//authenticate the session token and find out the userId
 		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
 		if (authentication == null) {
 			//invalid session token
-			//TODO return no session error
+			response.setCouponStatus(CouponResponseStatusEnum.NO_SESSION);
+			return response;
 		}
+
 		int userId = authentication.getUserID();
 
-		//check if we have coupon cached.
+		//find the coupon.
 		Coupon coupon = getCoupon(request.getCouponCode());
 		if (coupon == null) {
 			//we dont recognise this coupon code, bye bye
-			//TODO return error
-			return null;
+			response.setCouponStatus(CouponResponseStatusEnum.INVALID_COUPON_CODE);
+			return response;
 		}
 
 		//find the associated promotion
 		Promotion promotion = getPromotion(coupon.getPromotionId());
 		if (promotion == null) {
 			//problem.
-			//TODO return error
-			return null;
+			logger.error("No Promotion Found for Coupon code : " + coupon.getCode());
+			response.setCouponStatus(CouponResponseStatusEnum.INTERNAL_ERROR);
+			return response;
 		}
 
 		boolean withinCouponUsesLimits = validateCouponUses(coupon, userId);
 		if (!withinCouponUsesLimits) {
-			//TODO return error
-			return null;
+			logger.warn("Coupon exceeded limit. Coupon code : " + coupon.getCode());
+			response.setCouponStatus(CouponResponseStatusEnum.NUMBER_OF_USES_EXCEEDED);
+			return response;
 		}
 
 		boolean withinPromotionUsesLimits = validatePromotionUses(promotion, userId);
 		if (!withinPromotionUsesLimits) {
-			//TODO return error
-			return null;
+			logger.warn("Coupon exceeded limit. Coupon code : " + coupon.getCode());
+			response.setCouponStatus(CouponResponseStatusEnum.NUMBER_OF_USES_EXCEEDED);
+			return response;
 		}
 
-		return promotion.apply(request);
+		//check if the promotion is applicable on this request.
+		boolean applicable = promotion.isApplicable(request);
+		if (!applicable) {
+			logger.warn("Coupon code used when not applicable. Coupon code : " + coupon.getCode());
+			response.setCouponStatus(CouponResponseStatusEnum.NOT_APPLICABLE);
+			return response;
+		}
+		//return promotion.apply(request);
+		return null;
+	}
+
+	@Override
+	public Object commitCouponUse(CouponRequest request) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private boolean validatePromotionUses(Promotion promotion, int userId) {
@@ -108,8 +135,27 @@ public class PromotionManagerImpl implements PromotionManager {
 		if (coupon == null) {
 			//load it using dao
 			coupon = couponDao.load(couponCode);
+
+			if (coupon != null) {
+				cacheCoupon(couponCode, coupon);
+			}
 		}
+
 		return coupon;
+	}
+
+	private void cacheCoupon(String couponCode, Coupon coupon) {
+		//cache the global coupon
+		if (coupon.getType() == CouponType.GLOBAL) {
+			try {
+				couponCache.lock(couponCode);
+				if (couponCache.get(couponCode) == null) {
+					couponCache.put(couponCode, coupon);
+				}
+			} finally {
+				couponCache.unlock(couponCode);
+			}
+		}
 	}
 
 	private Promotion getPromotion(int promotionId) {
@@ -117,7 +163,23 @@ public class PromotionManagerImpl implements PromotionManager {
 		if (promotion == null) {
 			//its not cached, load it
 			promotion = promotionDao.load(promotionId);
+
+			if (promotion != null) {
+				cachePromotion(promotionId, promotion);
+			}
 		}
 		return promotion;
+	}
+
+	private void cachePromotion(Integer promotionId, Promotion promotion) {
+		//TODO need to figure out which promotions to cache
+		try {
+			promotionCache.lock(promotionId);
+			if (promotionCache.get(promotionId) == null) {
+				promotionCache.put(promotionId, promotion);
+			}
+		} finally {
+			promotionCache.unlock(promotionId);
+		}
 	}
 }
