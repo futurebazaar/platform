@@ -12,6 +12,7 @@ import com.fb.platform.promotion.rule.PromotionRule;
 import com.fb.platform.promotion.rule.RuleConfiguration;
 import com.fb.platform.promotion.rule.RuleRequest;
 import com.fb.commons.to.Money;
+import org.apache.commons.lang.text.StrTokenizer;
 
 /**
  * @author vinayak
@@ -21,12 +22,14 @@ public class OnCategoryMinimumOrderFixedDiscountRuleImpl implements PromotionRul
 
 	private Money minOrderValue;
 	private Money fixedRsOff;
-	private List<Integer> categories;
+	private List<String> categories;
 	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
 		minOrderValue = new Money(BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue("minOrderVal"))));
 		fixedRsOff = new Money (BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue("fixedRsOff"))));
+		StrTokenizer strTok = new StrTokenizer(ruleConfig.getConfigItemValue("categoryList"),",");
+		categories = strTok.getTokenList();
 	}
 
 	@Override
