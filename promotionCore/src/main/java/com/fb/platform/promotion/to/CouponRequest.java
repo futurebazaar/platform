@@ -1,6 +1,7 @@
 package com.fb.platform.promotion.to;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @SuppressWarnings("serial")
 public class CouponRequest implements Serializable,PromotionRequest {
@@ -47,4 +48,8 @@ public class CouponRequest implements Serializable,PromotionRequest {
 		this.sessionToken = sessionToken;
 	}
 	
+	public BigDecimal getOrderValue()
+	{
+		return orderReq.getOrderValue();
+	}
 }

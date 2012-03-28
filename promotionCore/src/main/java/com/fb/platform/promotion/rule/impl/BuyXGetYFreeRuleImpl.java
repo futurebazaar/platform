@@ -5,7 +5,9 @@ package com.fb.platform.promotion.rule.impl;
 
 import com.fb.platform.promotion.rule.PromotionRule;
 import com.fb.platform.promotion.rule.RuleConfiguration;
-import com.fb.platform.promotion.to.PromotionRequest;
+import com.fb.platform.promotion.rule.RuleRequest;
+import com.fb.platform.promotion.rule.RuleResponse;
+import com.fb.platform.promotion.to.Product;
 
 /**
  * @author vinayak
@@ -13,19 +15,22 @@ import com.fb.platform.promotion.to.PromotionRequest;
  */
 public class BuyXGetYFreeRuleImpl implements PromotionRule {
 
+	private Product xProduct;
+	private Product yProduct;
+	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
-		// TODO Auto-generated method stub
-		
+		String xProductId = ruleConfig.getConfigItemValue("xProd");
+		String yProductId = ruleConfig.getConfigItemValue("yProd");
 	}
 
 	@Override
-	public boolean isApplicable(PromotionRequest request) {
+	public boolean isApplicable(RuleRequest request) {
 		return false;
 	}
 
 	@Override
-	public Object execute(PromotionRequest request) {
+	public RuleResponse execute(RuleRequest request) {
 		return null;
 	}
 }
