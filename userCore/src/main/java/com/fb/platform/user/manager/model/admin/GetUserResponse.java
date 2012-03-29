@@ -39,7 +39,7 @@ public class GetUserResponse implements Serializable {
 		return userName;
 	}
 	/**
-	 * @param username the username to set
+	 * @param userName the userName to set
 	 */
 	public void setUserName(String userName) {
 		this.userName = userName;

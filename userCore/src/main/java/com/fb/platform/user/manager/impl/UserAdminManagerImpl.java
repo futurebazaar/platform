@@ -18,7 +18,6 @@ import com.fb.platform.sso.caching.SessionTokenCacheAccess;
 import com.fb.platform.user.dao.interfaces.UserAdminDao;
 import com.fb.platform.user.domain.UserBo;
 import com.fb.platform.user.manager.interfaces.UserAdminManager;
-import com.fb.platform.user.manager.mapper.UserBoToMapper;
 import com.fb.platform.user.manager.model.admin.AddUserRequest;
 import com.fb.platform.user.manager.model.admin.AddUserResponse;
 import com.fb.platform.user.manager.model.admin.AddUserStatusEnum;
@@ -41,8 +40,7 @@ public class UserAdminManagerImpl implements UserAdminManager {
 	private static Logger logger = Logger.getLogger(UserAdminManagerImpl.class);
 
 	private UserAdminDao userAdminDao;
-	private UserBoToMapper userMapper = new UserBoToMapper();
-
+	
 	@Autowired
 	private AuthenticationService authenticationService;
 
@@ -200,6 +198,7 @@ public class UserAdminManagerImpl implements UserAdminManager {
 				isValidUserResponse.setIsValidUserStatus(IsValidUserEnum.INVALID_USER);
 				return isValidUserResponse;
 			}
+			isValidUserResponse.setUserId(user.getUserid());
 			isValidUserResponse.setIsValidUserStatus(IsValidUserEnum.VALID_USER);
 			return isValidUserResponse;
 

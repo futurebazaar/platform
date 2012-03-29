@@ -115,7 +115,7 @@ public class UserAdminDaoImpl implements UserAdminDao {
 			+ "atg_password )"
 			+ " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ";
 
-	private static final String INSERT_NEW_EMAIL = "INSERT into users_email (" 
+	private static final String INSERT_NEW_EMAIL = "INSERT into users_email ("
 			+ "email,"
 			+ "type,"
 			+ "user_id) "
