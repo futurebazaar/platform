@@ -18,7 +18,7 @@ public class PromotionLimitsConfig implements Serializable {
 	private int maxUsesPerUser = 0;
 	private Money maxAmountPerUser = null;
 
-	public boolean isWithinLimit(GlobalPromotioUses globalUses, UserPromotionUses userUses) {
+	public boolean isWithinLimit(GlobalPromotionUses globalUses, UserPromotionUses userUses) {
 		if (maxUses <= globalUses.getCurrentCount()) {
 			return false;
 		}

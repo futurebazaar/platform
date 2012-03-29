@@ -11,7 +11,7 @@ import com.fb.commons.to.Money;
  * @author vinayak
  *
  */
-public class GlobalPromotioUses implements Serializable {
+public class GlobalPromotionUses implements Serializable {
 
 	private int promotionId = 0;
 	private int currentCount = 0;
