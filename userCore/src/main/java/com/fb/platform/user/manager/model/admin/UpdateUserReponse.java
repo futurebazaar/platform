@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 
 public class UpdateUserReponse implements Serializable {
-	
+
 	private UpdateUserStatusEnum status = null;
 	private String sessionToken = null;
 	/**
@@ -32,7 +32,4 @@ public class UpdateUserReponse implements Serializable {
 	public void setSessionToken(String sessionToken) {
 		this.sessionToken = sessionToken;
 	}
-	
-	
-
 }

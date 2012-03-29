@@ -5,15 +5,15 @@ package com.fb.platform.user.domain;
  *
  */
 public class UserAddressBo {
-	
-	long userid;
-	long addressid;
-	String addresstype;
-	String address;
-	String pincode;
-	String city;
-	String state;
-	String country;
+
+	private long userid;
+	private long addressid;
+	private String addresstype;
+	private String address;
+	private String pincode;
+	private String city;
+	private String state;
+	private String country;
 	/**
 	 * @return the userid
 	 */
@@ -26,8 +26,7 @@ public class UserAddressBo {
 	public void setUserid(long userid) {
 		this.userid = userid;
 	}
-	
-	
+
 	/**
 	 * @return the addressid
 	 */
@@ -135,47 +134,64 @@ public class UserAddressBo {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		UserAddressBo other = (UserAddressBo) obj;
 		if (address == null) {
-			if (other.address != null)
+			if (other.address != null) {
 				return false;
-		} else if (!address.equals(other.address))
+			}
+		} else if (!address.equals(other.address)) {
 			return false;
-		if (addressid != other.addressid)
+		}
+		if (addressid != other.addressid) {
 			return false;
+		}
 		if (addresstype == null) {
-			if (other.addresstype != null)
+			if (other.addresstype != null) {
 				return false;
-		} else if (!addresstype.equals(other.addresstype))
+			}
+		} else if (!addresstype.equals(other.addresstype)) {
 			return false;
+		}
 		if (city == null) {
-			if (other.city != null)
+			if (other.city != null) {
 				return false;
-		} else if (!city.equals(other.city))
+			}
+		} else if (!city.equals(other.city)) {
 			return false;
+		}
 		if (country == null) {
-			if (other.country != null)
+			if (other.country != null) {
 				return false;
-		} else if (!country.equals(other.country))
+			}
+		} else if (!country.equals(other.country)) {
 			return false;
+		}
 		if (pincode == null) {
-			if (other.pincode != null)
+			if (other.pincode != null) {
 				return false;
-		} else if (!pincode.equals(other.pincode))
+			}
+		} else if (!pincode.equals(other.pincode)) {
 			return false;
+		}
 		if (state == null) {
-			if (other.state != null)
+			if (other.state != null) {
 				return false;
-		} else if (!state.equals(other.state))
+			}
+		} else if (!state.equals(other.state)) {
 			return false;
-		if (userid != other.userid)
+		}
+		if (userid != other.userid) {
 			return false;
+		}
 		return true;
 	}
 	/* (non-Javadoc)
@@ -203,5 +219,5 @@ public class UserAddressBo {
 		builder.append("]");
 		return builder.toString();
 	}
-	
+
 }

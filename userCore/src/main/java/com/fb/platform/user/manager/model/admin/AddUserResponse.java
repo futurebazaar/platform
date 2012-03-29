@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 
 public class AddUserResponse implements Serializable {
-	
+
 	private AddUserStatusEnum status = null;
 	private String sessionToken = null;
 	private Integer userId;
@@ -34,22 +34,15 @@ public class AddUserResponse implements Serializable {
 		this.sessionToken = sessionToken;
 	}
 	/**
-	 * @return the userid
+	 * @return the userId
 	 */
 	public Integer getUserId() {
 		return userId;
 	}
 	/**
-	 * @param userid the userid to set
+	 * @param userId the userid to set
 	 */
 	public void setUserId(Integer userId) {
 		this.userId = userId;
 	}
-	
-	
-	
-	
-	
-	
-
 }

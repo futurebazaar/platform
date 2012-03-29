@@ -4,7 +4,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
 public class UserPhoneTO {
-	
+
 	private String phoneno;
 	private String type;
 	/**
@@ -47,23 +47,30 @@ public class UserPhoneTO {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		UserPhoneTO other = (UserPhoneTO) obj;
 		if (phoneno == null) {
-			if (other.phoneno != null)
+			if (other.phoneno != null) {
 				return false;
-		} else if (!phoneno.equals(other.phoneno))
+			}
+		} else if (!phoneno.equals(other.phoneno)) {
 			return false;
+		}
 		if (type == null) {
-			if (other.type != null)
+			if (other.type != null) {
 				return false;
-		} else if (!type.equals(other.type))
+			}
+		} else if (!type.equals(other.type)) {
 			return false;
+		}
 		return true;
 	}
 	/* (non-Javadoc)
@@ -76,9 +83,4 @@ public class UserPhoneTO {
 		.append("type", this.getType())
 		.toString();
 	}
-	
-	
-
-	
-
 }

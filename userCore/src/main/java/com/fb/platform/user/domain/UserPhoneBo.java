@@ -1,7 +1,7 @@
 package com.fb.platform.user.domain;
 
 public class UserPhoneBo {
-	
+
 	private String phoneno;
 	private String type;
 	/**
@@ -44,23 +44,30 @@ public class UserPhoneBo {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		UserPhoneBo other = (UserPhoneBo) obj;
 		if (phoneno == null) {
-			if (other.phoneno != null)
+			if (other.phoneno != null) {
 				return false;
-		} else if (!phoneno.equals(other.phoneno))
+			}
+		} else if (!phoneno.equals(other.phoneno)) {
 			return false;
+		}
 		if (type == null) {
-			if (other.type != null)
+			if (other.type != null) {
 				return false;
-		} else if (!type.equals(other.type))
+			}
+		} else if (!type.equals(other.type)) {
 			return false;
+		}
 		return true;
 	}
 	/* (non-Javadoc)
@@ -76,9 +83,4 @@ public class UserPhoneBo {
 		builder.append("]");
 		return builder.toString();
 	}
-	
-	
-	
-	
-
 }

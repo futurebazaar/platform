@@ -1,7 +1,7 @@
 package com.fb.platform.user.manager.model.admin;
 
 public class IsValidUserRequest {
-	
+
 	private String userName;
 
 	/**
@@ -17,7 +17,4 @@ public class IsValidUserRequest {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	
-	
-
 }

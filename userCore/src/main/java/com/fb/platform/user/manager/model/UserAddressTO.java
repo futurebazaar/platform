@@ -1,15 +1,15 @@
 package com.fb.platform.user.manager.model;
 
 public class UserAddressTO {
-	
-		long userid;
-		long addressid;
-		String addresstype;
-		String address;
-		String pincode;
-		String city;
-		String state;
-		String country;
+
+		private long userid;
+		private long addressid;
+		private String addresstype;
+		private String address;
+		private String pincode;
+		private String city;
+		private String state;
+		private String country;
 		/**
 		 * @return the userid
 		 */
@@ -22,8 +22,7 @@ public class UserAddressTO {
 		public void setUserid(long userid) {
 			this.userid = userid;
 		}
-		
-		
+
 		/**
 		 * @return the addressid
 		 */

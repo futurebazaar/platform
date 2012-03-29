@@ -9,7 +9,7 @@ import com.fb.platform.user.domain.UserAddressBo;
  *
  */
 public interface UserAddressDao {
-	
+
 	/**
 	 * @param userid
 	 * @return collection of address beloging to the user
@@ -22,7 +22,7 @@ public interface UserAddressDao {
 	 * @throws Exception
 	 */
 	public void add(UserAddressBo userAddressBo);
-	
+
 	/**
 	 * updates a users address
 	 * @param userAddressBo

@@ -1,7 +1,7 @@
 package com.fb.platform.user.manager.model.admin;
 
 public enum GetUserStatusEnum {
-	
+
 	SUCCESS("SUCCESS"),
 	NO_USER_KEY("NO USER KEY PROVIDED"),
 	INVALID_USER ("INVALID USER"),

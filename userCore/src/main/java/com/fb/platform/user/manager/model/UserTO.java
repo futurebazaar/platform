@@ -8,7 +8,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
 
 
 public class UserTO {
-	
+
 	private List<UserPhoneTO> userPhone;
 	private List<UserEmailTO> userEmail;
 	private String name;
@@ -67,28 +67,37 @@ public class UserTO {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		UserTO other = (UserTO) obj;
 		if (name == null) {
-			if (other.name != null)
+			if (other.name != null) {
 				return false;
-		} else if (!name.equals(other.name))
+			}
+		} else if (!name.equals(other.name)) {
 			return false;
+		}
 		if (userEmail == null) {
-			if (other.userEmail != null)
+			if (other.userEmail != null) {
 				return false;
-		} else if (!userEmail.equals(other.userEmail))
+			}
+		} else if (!userEmail.equals(other.userEmail)) {
 			return false;
+		}
 		if (userPhone == null) {
-			if (other.userPhone != null)
+			if (other.userPhone != null) {
 				return false;
-		} else if (!userPhone.equals(other.userPhone))
+			}
+		} else if (!userPhone.equals(other.userPhone)) {
 			return false;
+		}
 		return true;
 	}
 	/* (non-Javadoc)
@@ -102,9 +111,4 @@ public class UserTO {
 		.append("phone", this.getUserPhone())
 		.toString();
 	}
-	
-	
-	
-	
-
 }

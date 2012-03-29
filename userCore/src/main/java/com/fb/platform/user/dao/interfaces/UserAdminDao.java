@@ -5,7 +5,7 @@ import java.util.Collection;
 import com.fb.platform.user.domain.UserBo;
 
 public interface UserAdminDao {
-	
+
 	/**
 	 * @param key elther the phone number or the emailid of the user
 	 * @return the user object
@@ -24,7 +24,7 @@ public interface UserAdminDao {
 	 * @param userBo
 	 */
 	public UserBo add(UserBo userBo);
-	
+
 	/**
 	 * Update an existing user
 	 * @param userBo

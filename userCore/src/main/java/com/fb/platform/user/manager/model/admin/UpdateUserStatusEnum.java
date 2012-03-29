@@ -1,7 +1,7 @@
 package com.fb.platform.user.manager.model.admin;
 
 public enum UpdateUserStatusEnum {
-	
+
 	SUCCESS("SUCCESS"),
 	INVALID_USER("INVALID USER"),
 	NO_USER_PROVIDED("NO USER TO UPDATE"),
