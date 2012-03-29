@@ -28,11 +28,11 @@ public class Promotion implements Serializable {
 	private PromotionRule rule;
 
 	public boolean isApplicable(PromotionRequest request) {
-		boolean withinDates = dates.isWithinDates();
-		if (!withinDates) {
+		if (!isActive) {
 			return false;
 		}
-		if (!isActive) {
+		boolean withinDates = dates.isWithinDates();
+		if (!withinDates) {
 			return false;
 		}
 		boolean ruleApplicable = rule.isApplicable(PromotionRuleMapper.promotionToRuleRequest(request));

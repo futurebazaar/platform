@@ -67,9 +67,6 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			"	current_amount " +
 			"FROM user_coupon_uses WHERE coupon_id = ? AND user_id = ?";
 
-	/* (non-Javadoc)
-	 * @see com.fb.platform.promotion.dao.CouponDao#load(java.lang.String)
-	 */
 	@Override
 	public Coupon load(String couponCode) {
 		Coupon coupon = null;
@@ -93,9 +90,6 @@ public class CouponDaoJdbcImpl implements CouponDao {
 		return coupon;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.fb.platform.promotion.dao.CouponDao#loadGlobalUses(int)
-	 */
 	@Override
 	public GlobalCouponUses loadGlobalUses(int couponId) {
 		GlobalCouponUses globalCouponUses = null;
@@ -107,9 +101,6 @@ public class CouponDaoJdbcImpl implements CouponDao {
 		return globalCouponUses;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.fb.platform.promotion.dao.CouponDao#loadUserUses(int, int)
-	 */
 	@Override
 	public UserCouponUses loadUserUses(int couponId, int userId) {
 		UserCouponUses userCouponUses = null;
@@ -119,6 +110,18 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			//no user uses set, that means this is first time use of this promotion
 		}
 		return userCouponUses;
+	}
+
+	@Override
+	public boolean updateGlobalUses(int couponId, BigDecimal valueApplied) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean updateUserUses(int couponId, int userId, BigDecimal valueApplied) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	private static class CouponMapper implements RowMapper<Coupon> {

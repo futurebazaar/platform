@@ -22,6 +22,9 @@ import com.fb.platform.promotion.model.coupon.CouponType;
 import com.fb.platform.promotion.model.coupon.GlobalCouponUses;
 import com.fb.platform.promotion.model.coupon.UserCouponUses;
 import com.fb.platform.promotion.service.PromotionManager;
+import com.fb.platform.promotion.to.CommitCouponRequest;
+import com.fb.platform.promotion.to.CommitCouponResponse;
+import com.fb.platform.promotion.to.CommitCouponStatusEnum;
 import com.fb.platform.promotion.to.CouponRequest;
 import com.fb.platform.promotion.to.CouponResponse;
 import com.fb.platform.promotion.to.CouponResponseStatusEnum;
@@ -94,7 +97,7 @@ public class PromotionManagerImpl implements PromotionManager {
 
 		boolean withinPromotionUsesLimits = validatePromotionUses(promotion, userId);
 		if (!withinPromotionUsesLimits) {
-			logger.warn("Coupon exceeded limit. Coupon code : " + coupon.getCode());
+			logger.warn("Coupon exceeded Promotions limit. Coupon code : " + coupon.getCode());
 			response.setCouponStatus(CouponResponseStatusEnum.NUMBER_OF_USES_EXCEEDED);
 			return response;
 		}
@@ -111,9 +114,47 @@ public class PromotionManagerImpl implements PromotionManager {
 	}
 
 	@Override
-	public Object commitCouponUse(CouponRequest request) {
-		// TODO Auto-generated method stub
-		return null;
+	public CommitCouponResponse commitCouponUse(CommitCouponRequest request) {
+		CommitCouponResponse response = new CommitCouponResponse();
+
+		if (request == null || StringUtils.isBlank(request.getSessionToken())) {
+			response.setCommitCouponStatus(CommitCouponStatusEnum.NO_SESSION);
+			return response;
+		}
+
+		if (StringUtils.isBlank(request.getCouponCode())) {
+			response.setCommitCouponStatus(CommitCouponStatusEnum.INVALID_COUPON_CODE);
+			return response;
+		}
+
+		//authenticate the session token and find out the userId
+		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
+		if (authentication == null) {
+			//invalid session token
+			response.setCommitCouponStatus(CommitCouponStatusEnum.NO_SESSION);
+			return response;
+		}
+
+		int userId = authentication.getUserID();
+
+		//find the coupon.
+		Coupon coupon = getCoupon(request.getCouponCode());
+		if (coupon == null) {
+			//we dont recognise this coupon code, bye bye
+			response.setCommitCouponStatus(CommitCouponStatusEnum.INVALID_COUPON_CODE);
+			return response;
+		}
+
+		//find the associated promotion
+		Promotion promotion = getPromotion(coupon.getPromotionId());
+		if (promotion == null) {
+			//problem.
+			logger.error("No Promotion Found for Coupon code : " + coupon.getCode());
+			response.setCommitCouponStatus(CommitCouponStatusEnum.INTERNAL_ERROR);
+			return response;
+		}
+
+		return response;
 	}
 
 	private boolean validatePromotionUses(Promotion promotion, int userId) {

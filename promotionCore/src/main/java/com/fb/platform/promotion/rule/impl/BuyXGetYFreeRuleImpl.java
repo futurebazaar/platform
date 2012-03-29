@@ -20,8 +20,8 @@ public class BuyXGetYFreeRuleImpl implements PromotionRule {
 	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
-		String xProductId = ruleConfig.getConfigItemValue("xProd");
-		String yProductId = ruleConfig.getConfigItemValue("yProd");
+		//String xProductId = ruleConfig.getConfigItemValue("xProd");
+		//String yProductId = ruleConfig.getConfigItemValue("yProd");
 	}
 
 	@Override

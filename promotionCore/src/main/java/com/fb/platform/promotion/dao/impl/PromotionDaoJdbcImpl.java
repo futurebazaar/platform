@@ -139,6 +139,18 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		return userPromotionUses;
 	}
 
+	@Override
+	public boolean updateGlobalUses(int promotionId, BigDecimal valueApplied) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean updateUserUses(int promotionId, int userId, BigDecimal valueApplied) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 	private static class PromotionRowCallBackHandler implements RowCallbackHandler {
 
 		private int ruleId;

@@ -95,7 +95,7 @@ public class PromotionDaoTest extends BaseTestCase {
 		assertNull(promotion.getDates().getValidFrom());
 		assertEquals(new DateTime(2012, 6, 30, 0, 0), promotion.getDates().getValidTill());
 		assertEquals("No Valid From Promotion", promotion.getName());
-		assertEquals("This promotion has not valid from date", promotion.getDescription());
+		assertEquals("This promotion has no valid from date", promotion.getDescription());
 		assertTrue(promotion.isActive());
 	}
 
@@ -108,7 +108,7 @@ public class PromotionDaoTest extends BaseTestCase {
 		assertEquals(new DateTime(2012, 3, 2, 0, 0), promotion.getDates().getValidFrom());
 		assertNull(promotion.getDates().getValidTill());
 		assertEquals("No Valid Till Promotion", promotion.getName());
-		assertEquals("This promotion has not valid till date", promotion.getDescription());
+		assertEquals("This promotion has no valid till date", promotion.getDescription());
 		assertTrue(promotion.isActive());
 	}
 

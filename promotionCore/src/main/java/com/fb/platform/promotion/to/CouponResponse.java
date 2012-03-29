@@ -15,6 +15,7 @@ public class CouponResponse implements Serializable, PromotionResponse {
 	private CouponResponseStatusEnum couponStatus;
 	private String statusMessage;
 	private String statusDescription;
+	private String sessionToken;
 
 	/**
 	 * @return the couponCode
@@ -69,5 +70,11 @@ public class CouponResponse implements Serializable, PromotionResponse {
 	}
 	public void setCouponStatus(CouponResponseStatusEnum couponStatus) {
 		this.couponStatus = couponStatus;
+	}
+	public String getSessionToken() {
+		return sessionToken;
+	}
+	public void setSessionToken(String sessionToken) {
+		this.sessionToken = sessionToken;
 	}
 }
