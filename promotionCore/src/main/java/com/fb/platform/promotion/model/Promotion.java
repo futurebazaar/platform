@@ -7,7 +7,9 @@ package com.fb.platform.promotion.model;
 import java.io.Serializable;
 
 import com.fb.platform.promotion.rule.PromotionRule;
+import com.fb.platform.promotion.rule.RuleResponse;
 import com.fb.platform.promotion.to.PromotionRequest;
+import com.fb.platform.promotion.to.PromotionResponse;
 import com.fb.platform.promotion.util.PromotionRuleMapper;
 
 /**
@@ -44,8 +46,9 @@ public class Promotion implements Serializable {
 		return limitsConfig.isWithinLimit(globalUses, userUses);
 	}
 
-	public Object apply(PromotionRequest request) {
-		return rule.execute(PromotionRuleMapper.promotionToRuleRequest(request));
+	public PromotionResponse apply(PromotionRequest request) {
+		RuleResponse ruleResponse = rule.execute(PromotionRuleMapper.promotionToRuleRequest(request));
+		return PromotionRuleMapper.toPromotionResponse(ruleResponse);
 	}
 
 	public void setId(int id) {

@@ -2,7 +2,7 @@ package com.fb.platform.promotion.rule;
 
 import com.fb.commons.to.Money;
 
-public class OrderRuleResponse {
+public class OrderRuleResponse implements RuleResponse {
 
 	private Money discountValue;
 
