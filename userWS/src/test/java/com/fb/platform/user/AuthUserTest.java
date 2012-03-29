@@ -1,5 +1,5 @@
 /**
- * 
+*
  */
 package com.fb.platform.user;
 

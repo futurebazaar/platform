@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 
 public class GetUserResponse implements Serializable {
-	
+
 	private String sessionToken = null;
-	private GetUserStatusEnum status = null ;
+	private GetUserStatusEnum status = null;
 	private String userName;
 	/**
 	 * @return the sessionToken
@@ -44,8 +44,4 @@ public class GetUserResponse implements Serializable {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	
-	
-	
-
 }

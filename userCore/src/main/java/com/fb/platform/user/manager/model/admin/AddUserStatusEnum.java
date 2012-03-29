@@ -1,7 +1,7 @@
 package com.fb.platform.user.manager.model.admin;
 
 public enum AddUserStatusEnum {
-	
+
 	SUCCESS("SUCCESS"),
 	NO_USER_PROVIDED("NO USERNAME PROVIDED"),
 	ADD_USER_FAILED("ADD USER FAILED"),

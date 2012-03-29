@@ -4,8 +4,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class UserModel {
-	
-	 	private String firstname;
+
+	private String firstname;
 	 	private String lastname;
 	    private String username; // either phone or emailid as when the user signs up ot signs in
 	    private String phonnumber;
@@ -96,10 +96,4 @@ public class UserModel {
 		public void setNewpassword(String newpassword) {
 			this.newpassword = newpassword;
 		}
-	    
-	    
-	    
-	 
-	    
-
 }

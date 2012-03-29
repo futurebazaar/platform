@@ -4,19 +4,19 @@ import java.util.Date;
 import java.util.List;
 
 public class UserBo {
-	
+
 	private int userid;
 	private String password;
 	private List<UserPhoneBo> userPhone;
 	private List<UserEmailBo> userEmail;
 	private String name;
 	private String username;
-	private String firstname ;
+	private String firstname;
 	private String lastname;
 	private String gender;
 	private String salutation;
 	private Date dateofbirth;
-	
+
 	/**
 	 * @return the userid
 	 */
@@ -29,9 +29,7 @@ public class UserBo {
 	public void setUserid(int userid) {
 		this.userid = userid;
 	}
-	
-	
-	
+
 	/**
 	 * @return the passwd
 	 */
@@ -39,7 +37,7 @@ public class UserBo {
 		return password;
 	}
 	/**
-	 * @param passwd the passwd to set
+	 * @param password the password to set
 	 */
 	public void setPassword(String password) {
 		this.password = password;
@@ -185,65 +183,89 @@ public class UserBo {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		UserBo other = (UserBo) obj;
 		if (dateofbirth == null) {
-			if (other.dateofbirth != null)
+			if (other.dateofbirth != null) {
 				return false;
-		} else if (!dateofbirth.equals(other.dateofbirth))
+			}
+		} else if (!dateofbirth.equals(other.dateofbirth)) {
 			return false;
+		}
 		if (firstname == null) {
-			if (other.firstname != null)
+			if (other.firstname != null) {
 				return false;
-		} else if (!firstname.equals(other.firstname))
+			}
+		} else if (!firstname.equals(other.firstname)) {
 			return false;
+		}
 		if (gender == null) {
-			if (other.gender != null)
+			if (other.gender != null) {
 				return false;
-		} else if (!gender.equals(other.gender))
+			}
+		} else if (!gender.equals(other.gender)) {
 			return false;
+		}
 		if (lastname == null) {
-			if (other.lastname != null)
+			if (other.lastname != null) {
 				return false;
-		} else if (!lastname.equals(other.lastname))
+			}
+		} else if (!lastname.equals(other.lastname)) {
 			return false;
+		}
 		if (name == null) {
-			if (other.name != null)
+			if (other.name != null) {
 				return false;
-		} else if (!name.equals(other.name))
+			}
+		} else if (!name.equals(other.name)) {
 			return false;
+		}
 		if (password == null) {
-			if (other.password != null)
+			if (other.password != null) {
 				return false;
-		} else if (!password.equals(other.password))
+			}
+		} else if (!password.equals(other.password)) {
 			return false;
+		}
 		if (salutation == null) {
-			if (other.salutation != null)
+			if (other.salutation != null) {
 				return false;
-		} else if (!salutation.equals(other.salutation))
+			}
+		} else if (!salutation.equals(other.salutation)) {
 			return false;
+		}
 		if (userEmail == null) {
-			if (other.userEmail != null)
+			if (other.userEmail != null) {
 				return false;
-		} else if (!userEmail.equals(other.userEmail))
+			}
+		} else if (!userEmail.equals(other.userEmail)) {
 			return false;
+		}
 		if (userPhone == null) {
-			if (other.userPhone != null)
+			if (other.userPhone != null) {
 				return false;
-		} else if (!userPhone.equals(other.userPhone))
+			}
+		} else if (!userPhone.equals(other.userPhone)) {
 			return false;
-		if (userid != other.userid)
+		}
+		if (userid != other.userid) {
 			return false;
+		}
 		if (username == null) {
-			if (other.username != null)
+			if (other.username != null) {
 				return false;
-		} else if (!username.equals(other.username))
+			}
+		} else if (!username.equals(other.username)) {
 			return false;
+		}
 		return true;
 	}
 	/* (non-Javadoc)
@@ -277,12 +299,5 @@ public class UserBo {
 		builder.append("]");
 		return builder.toString();
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+
 }

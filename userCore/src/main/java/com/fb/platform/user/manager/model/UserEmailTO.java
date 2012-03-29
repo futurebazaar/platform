@@ -4,7 +4,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
 public class UserEmailTO {
-	
+
 	private String email;
 	private String type;
 	/**
@@ -47,23 +47,30 @@ public class UserEmailTO {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		UserEmailTO other = (UserEmailTO) obj;
 		if (email == null) {
-			if (other.email != null)
+			if (other.email != null) {
 				return false;
-		} else if (!email.equals(other.email))
+			}
+		} else if (!email.equals(other.email)) {
 			return false;
+		}
 		if (type == null) {
-			if (other.type != null)
+			if (other.type != null) {
 				return false;
-		} else if (!type.equals(other.type))
+			}
+		} else if (!type.equals(other.type)) {
 			return false;
+		}
 		return true;
 	}
 	/* (non-Javadoc)
@@ -76,10 +83,4 @@ public class UserEmailTO {
 		.append("type", this.getType())
 		.toString();
 	}
-
-	
-	
-	
-	
-
 }

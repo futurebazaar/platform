@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fb.platform.user.util;
 
 import java.io.UnsupportedEncodingException;
@@ -20,61 +17,61 @@ public class PasswordUtil {
 
 	public static String getEncryptedPassword(String plainPassword) {
 
-	    MessageDigest md = null;
-	    String randomStr =  UUID.randomUUID().toString().substring(0,5);
+		MessageDigest md = null;
+		String randomStr =  UUID.randomUUID().toString().substring(0,5);
 
-	    try {
-	    	md = MessageDigest.getInstance("SHA-1"); //step 2
-	    } catch(NoSuchAlgorithmException e) {
-	    	throw new PlatformException(e);
-	    }
+		try {
+			md = MessageDigest.getInstance("SHA-1"); //step 2
+		} catch (NoSuchAlgorithmException e) {
+			throw new PlatformException(e);
+		}
 
-	    try {
-	    	md.update((randomStr + plainPassword).getBytes("UTF-8")); //step 3
-	    } catch(UnsupportedEncodingException e) {
-	    	throw new PlatformException(e);
-	    }
+		try {
+			md.update((randomStr + plainPassword).getBytes("UTF-8")); //step 3
+		} catch (UnsupportedEncodingException e) {
+			throw new PlatformException(e);
+		}
 
-	    byte raw[] = md.digest(); //step 4
-	    String hash = (new BASE64Encoder()).encode(raw); //step 5
-	    String password = "sha1$" + randomStr + "$" + hash;
-	    return password; //step 6
+		byte[] raw = md.digest(); //step 4
+		String hash = (new BASE64Encoder()).encode(raw); //step 5
+		String password = "sha1$" + randomStr + "$" + hash;
+		return password; //step 6
 	}
 
 	public static boolean checkPassword(String plainPassword, String hashedData) {
 		//String algo = hashedPassword.split("$")[0];
-		try{
-			String randomStr = hashedData.split("\\$")[1] ;
+		try {
+			String randomStr = hashedData.split("\\$")[1];
 			String storedPasswordHash = hashedData.split("\\$")[2];
-	
+
 			MessageDigest md = null;
-	
-		    try {
-		    	md = MessageDigest.getInstance("SHA-1"); //step 2
-		    } catch(NoSuchAlgorithmException e) {
-		    	throw new PlatformException(e);
-		    } 
-	
-		    try {
-		    	md.update((randomStr + plainPassword).getBytes("UTF-8")); //step 3
-		    } catch(UnsupportedEncodingException e) {
-		    	throw new PlatformException(e);
-		    }
-	
-		    byte raw[] = md.digest(); //step 4
-		    String hash = (new BASE64Encoder()).encode(raw); //step 5
-		    return (storedPasswordHash.equals(hash)); //step 6
-		}catch(Exception e){
+
+			try {
+				md = MessageDigest.getInstance("SHA-1"); //step 2
+			} catch (NoSuchAlgorithmException e) {
+				throw new PlatformException(e);
+			}
+
+			try {
+				md.update((randomStr + plainPassword).getBytes("UTF-8")); //step 3
+			} catch (UnsupportedEncodingException e) {
+				throw new PlatformException(e);
+			}
+
+			byte[] raw = md.digest(); //step 4
+			String hash = (new BASE64Encoder()).encode(raw); //step 5
+			return (storedPasswordHash.equals(hash)); //step 6
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
 	}
-	public static void main (String[] args){
+	public static void main(String[] args) {
 		String passwordEncrypt = "testpass";
-		
+
 		String hashedData = getEncryptedPassword(passwordEncrypt);
 		System.out.println(hashedData);
-		System.out.println(checkPassword(passwordEncrypt, hashedData));	
-		
+		System.out.println(checkPassword(passwordEncrypt, hashedData));
+
 	}
 }

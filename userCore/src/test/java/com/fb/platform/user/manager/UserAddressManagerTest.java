@@ -9,15 +9,12 @@ import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.user.manager.interfaces.UserAddressManager;
 
 public class UserAddressManagerTest extends BaseTestCase {
-	
+
 	@Autowired
 	private UserAddressManager userAddressManager;
-	
+
 	@Test
-	public void testGetAddress(){
+	public void testGetAddress() {
 		assertTrue(true);
 	}
-	
-	
-
 }

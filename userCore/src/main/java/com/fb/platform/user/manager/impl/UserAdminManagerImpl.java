@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.fb.platform.user.manager.impl;
 
@@ -37,18 +37,18 @@ import com.fb.platform.user.manager.model.admin.UpdateUserStatusEnum;
  *
  */
 public class UserAdminManagerImpl implements UserAdminManager {
-	
+
 	private static Logger logger = Logger.getLogger(UserAdminManagerImpl.class);
 
 	private UserAdminDao userAdminDao;
 	private UserBoToMapper userMapper = new UserBoToMapper();
-	
+
 	@Autowired
 	private AuthenticationService authenticationService;
-	
+
 	@Autowired
 	private SSOMasterService ssoMasterService = null;
-	
+
 	@Autowired
 	private SessionTokenCacheAccess sessionTokenCacheAccess = null;
 
@@ -59,16 +59,16 @@ public class UserAdminManagerImpl implements UserAdminManager {
 	@Override
 	public GetUserResponse getUser(GetUserRequest getUserRequest) {
 		GetUserResponse getUserResponse = new GetUserResponse();
-		if (getUserRequest == null || StringUtils.isBlank(getUserRequest.getKey()) ) {
+		if (getUserRequest == null || StringUtils.isBlank(getUserRequest.getKey())) {
 			getUserResponse.setStatus(GetUserStatusEnum.NO_USER_KEY);
 			return getUserResponse;
 		}
-		if (StringUtils.isBlank(getUserRequest.getSessionToken())){
+		if (StringUtils.isBlank(getUserRequest.getSessionToken())) {
 			getUserResponse.setStatus(GetUserStatusEnum.NO_SESSION);
 			return getUserResponse;
 		}
-		
-		try{
+
+		try {
 			AuthenticationTO authentication = authenticationService.authenticate(getUserRequest.getSessionToken());
 			if (authentication == null) {
 				getUserResponse.setStatus(GetUserStatusEnum.NO_SESSION);
@@ -82,12 +82,12 @@ public class UserAdminManagerImpl implements UserAdminManager {
 			getUserResponse.setStatus(GetUserStatusEnum.SUCCESS);
 			getUserResponse.setUserName(user.getName());
 			return getUserResponse;
-			
-		}catch(PlatformException pe){
+
+		} catch (PlatformException pe) {
 			logger.error("Error while getting the user : " + getUserRequest.getKey(), pe);
 			getUserResponse.setStatus(GetUserStatusEnum.ERROR_RETRIVING_USER);
 		}
-		
+
 		return getUserResponse;
 	}
 
@@ -97,21 +97,21 @@ public class UserAdminManagerImpl implements UserAdminManager {
 	@Override
 	public AddUserResponse addUser(AddUserRequest addUserRequest) {
 		AddUserResponse addUserResponse = new AddUserResponse();
-		
-		if (addUserRequest == null || StringUtils.isBlank(addUserRequest.getUserName()) ) {
+
+		if (addUserRequest == null || StringUtils.isBlank(addUserRequest.getUserName())) {
 			addUserResponse.setStatus(AddUserStatusEnum.NO_USER_PROVIDED);
 			return addUserResponse;
 		}
-		try{
+		try {
 			UserBo userBo = new UserBo();
 			userBo.setUsername(addUserRequest.getUserName());
 			userBo.setPassword(addUserRequest.getPassword());
-			UserBo user = userAdminDao.add(userBo);			
+			UserBo user = userAdminDao.add(userBo);
 			addUserResponse.setStatus(AddUserStatusEnum.SUCCESS);
-			
+
 			SSOSessionTO ssoSession = new SSOSessionTO();
 			ssoSession.setUserId(user.getUserid());
-			
+
 			//create the global sso session
 			SSOSessionId ssoSessionId = ssoMasterService.createSSOSession(ssoSession);
 
@@ -122,14 +122,14 @@ public class UserAdminManagerImpl implements UserAdminManager {
 
 			addUserResponse.setSessionToken(ssoToken.getToken());
 			addUserResponse.setUserId(user.getUserid());
-			
+
 			return addUserResponse;
-			
-		}catch(PlatformException pe){
+
+		} catch (PlatformException pe) {
 			logger.error("Error while adding the user : " + addUserRequest.getUserName(), pe);
 			addUserResponse.setStatus(AddUserStatusEnum.ADD_USER_FAILED);
 		}
-		
+
 		return addUserResponse;
 	}
 
@@ -138,19 +138,19 @@ public class UserAdminManagerImpl implements UserAdminManager {
 	 */
 	@Override
 	public UpdateUserReponse updateUser(UpdateUserRequest updateUserRequest) {
-		
+
 		UpdateUserReponse updateUserReponse = new UpdateUserReponse();
-		if (updateUserRequest == null ) {
+		if (updateUserRequest == null) {
 			updateUserReponse.setStatus(UpdateUserStatusEnum.NO_USER_PROVIDED);
 			return updateUserReponse;
 		}
-		
-		if (StringUtils.isBlank(updateUserReponse.getSessionToken())){
+
+		if (StringUtils.isBlank(updateUserReponse.getSessionToken())) {
 			updateUserReponse.setStatus(UpdateUserStatusEnum.NO_SESSION);
 			return updateUserReponse;
 		}
-		
-		try{
+
+		try {
 			AuthenticationTO authentication = authenticationService.authenticate(updateUserRequest.getSessionToken());
 			if (authentication == null) {
 				updateUserReponse.setStatus(UpdateUserStatusEnum.NO_SESSION);
@@ -166,14 +166,14 @@ public class UserAdminManagerImpl implements UserAdminManager {
 				updateUserReponse.setStatus(UpdateUserStatusEnum.INVALID_USER);
 				return updateUserReponse;
 			}
-			updateUserReponse.setStatus(UpdateUserStatusEnum.SUCCESS);			
+			updateUserReponse.setStatus(UpdateUserStatusEnum.SUCCESS);
 			return updateUserReponse;
-			
-		}catch(PlatformException pe){
+
+		} catch (PlatformException pe) {
 			logger.error("Error while getting the user : " + updateUserRequest.getFirstName(), pe);
 			updateUserReponse.setStatus(UpdateUserStatusEnum.UPDATE_USER_FAILED);
 		}
-		
+
 		return updateUserReponse;
 	}
 
@@ -188,13 +188,13 @@ public class UserAdminManagerImpl implements UserAdminManager {
 	@Override
 	public IsValidUserResponse isValidUser(IsValidUserRequest isValidUserRequest) {
 		IsValidUserResponse isValidUserResponse = new IsValidUserResponse();
-		if (isValidUserRequest == null || StringUtils.isBlank(isValidUserRequest.getUserName()) ) {
+		if (isValidUserRequest == null || StringUtils.isBlank(isValidUserRequest.getUserName())) {
 			isValidUserResponse.setIsValidUserStatus(IsValidUserEnum.INVALID_USER);
 			return isValidUserResponse;
 		}
-		
-		try{
-		
+
+		try {
+
 			UserBo user = userAdminDao.load(isValidUserRequest.getUserName());
 			if (user == null) {
 				isValidUserResponse.setIsValidUserStatus(IsValidUserEnum.INVALID_USER);
@@ -202,12 +202,12 @@ public class UserAdminManagerImpl implements UserAdminManager {
 			}
 			isValidUserResponse.setIsValidUserStatus(IsValidUserEnum.VALID_USER);
 			return isValidUserResponse;
-			
-		}catch(PlatformException pe){
+
+		} catch (PlatformException pe) {
 			logger.error("Error while getting the user : " + isValidUserRequest.getUserName(), pe);
 			isValidUserResponse.setIsValidUserStatus(IsValidUserEnum.ERROR);
 		}
-		
+
 		return isValidUserResponse;
 	}
 

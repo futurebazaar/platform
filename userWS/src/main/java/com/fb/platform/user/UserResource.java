@@ -4,17 +4,10 @@ import java.io.StringReader;
 import java.io.StringWriter;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -34,7 +27,6 @@ import com.fb.platform.auth._1_0.AddUserRequest;
 import com.fb.platform.auth._1_0.AddUserResponse;
 import com.fb.platform.auth._1_0.AddUserStatus;
 import com.fb.platform.user.manager.interfaces.UserAdminManager;
-import com.fb.platform.user.manager.interfaces.UserManager;
 import com.sun.jersey.api.core.InjectParam;
 
 
@@ -50,16 +42,16 @@ import com.sun.jersey.api.core.InjectParam;
 @Component
 @Scope("request")
 public class UserResource {
-	
+
 	private static Logger logger = Logger.getLogger(UserResource.class);
-	
+
 
 	//JAXBContext class is thread safe and can be shared
 	private static final JAXBContext context = initContext();
-	
+
 	@Autowired
 	private UserAdminManager userAdminManager = null;
-	
+
 	private static JAXBContext initContext() {
 		try {
 			return JAXBContext.newInstance("com.fb.platform.auth._1_0");
@@ -68,30 +60,30 @@ public class UserResource {
 			throw new PlatformException("Error Initializing the JAXBContext to bind the schema classes", e);
 		}
 	}
-	 
+
 	@POST
 	@Path("/get")
 	@Consumes("application/xml")
 	@Produces("application/xml")
-	public String getUser(String getUserXml){
+	public String getUser(String getUserXml) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("GET USER XML request: \n" + getUserXml);
 		}
-		
+
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			GetUserRequest xmlGetUserReq = (GetUserRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(getUserXml)));
 			com.fb.platform.user.manager.model.admin.GetUserRequest apiGetUserReq = new com.fb.platform.user.manager.model.admin.GetUserRequest();
 			apiGetUserReq.setKey(xmlGetUserReq.getKey());
 			apiGetUserReq.setSessionToken(xmlGetUserReq.getSessionToken());
-			
+
 			com.fb.platform.user.manager.model.admin.GetUserResponse apiGetUserRes = userAdminManager.getUser(apiGetUserReq);
-			
+
 			GetUserResponse xmlGetUserRes = new GetUserResponse();
 			xmlGetUserRes.setUserName(apiGetUserRes.getUserName());
 			xmlGetUserRes.setSessionToken(apiGetUserRes.getSessionToken());
 			xmlGetUserRes.setGetUserStatus(GetUserStatus.fromValue(apiGetUserRes.getStatus().name()));
-			
+
 			StringWriter outStringWriter = new StringWriter();
 			Marshaller marsheller = context.createMarshaller();
 			marsheller.marshal(xmlGetUserRes, outStringWriter);
@@ -102,52 +94,46 @@ public class UserResource {
 			}
 			return xmlResponse;
 
-			
-			
-		}catch(JAXBException e) {
+		} catch (JAXBException e) {
 			logger.error("Error in the login call.", e);
 			return "error"; //TODO return proper error response
 		}
-			
+
 	}
 	@POST
 	@Path("/add")
 	@Consumes("application/xml")
 	@Produces("application/xml")
-	public String addUser(String addUserXml){
+	public String addUser(String addUserXml) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("ADD USER XML request: \n" + addUserXml);
 		}
-		
+
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			AddUserRequest xmlGetUserReq = (AddUserRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(addUserXml)));
 			com.fb.platform.user.manager.model.admin.AddUserRequest apiAddUserReq = new com.fb.platform.user.manager.model.admin.AddUserRequest();
 			apiAddUserReq.setUserName(xmlGetUserReq.getUserName());
 			apiAddUserReq.setPassword(xmlGetUserReq.getPassword());
-			
+
 			com.fb.platform.user.manager.model.admin.AddUserResponse apiAddUserRes = userAdminManager.addUser(apiAddUserReq);
-			
+
 			AddUserResponse xmlAddUserRes = new AddUserResponse();
 			xmlAddUserRes.setSessionToken(apiAddUserRes.getSessionToken());
 			xmlAddUserRes.setAddUserStatus(AddUserStatus.fromValue(apiAddUserRes.getStatus().name()));
-			
+
 			StringWriter outStringWriter = new StringWriter();
 			Marshaller marsheller = context.createMarshaller();
 			marsheller.marshal(xmlAddUserRes, outStringWriter);
 
 			String xmlResponse = outStringWriter.toString();
 			if (logger.isDebugEnabled()) {
-				logger.info("Add USER XMl response :\n" + xmlAddUserRes);
+			logger.info("Add USER XMl response :\n" + xmlAddUserRes);
 			}
 			return xmlResponse;
-
-			
-			
-		}catch(JAXBException e) {
+		} catch (JAXBException e) {
 			logger.error("Error in the login call.", e);
 			return "error"; //TODO return proper error response
 		}
-			
 	}
 }

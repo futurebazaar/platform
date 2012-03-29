@@ -1,5 +1,5 @@
 /**
- * 
+**
  */
 package com.fb.platform.user;
 
@@ -44,7 +44,7 @@ public class AuthResource {
 
 	//JAXBContext class is thread safe and can be shared
 	private static final JAXBContext context = initContext();
-	
+
 	@Autowired
 	private UserManager userManager = null;
 
@@ -107,7 +107,7 @@ public class AuthResource {
 		if (logger.isDebugEnabled()) {
 			logger.debug("LogoutXML request :\n" + logoutXml);
 		}
-		
+
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 

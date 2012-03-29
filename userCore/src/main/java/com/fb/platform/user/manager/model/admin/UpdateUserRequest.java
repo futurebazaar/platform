@@ -4,17 +4,17 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class UpdateUserRequest implements Serializable {
-	
-	private String sessionToken = null;	
+
+	private String sessionToken = null;
 	private String primaryPhone = null;
 	private String secondaryPhone = null;
-	private String primaryEmail =null;
-	private String secondaryEmail =null;
+	private String primaryEmail = null;
+	private String secondaryEmail = null;
 	private String firstName = null;
-	private String lastName= null;
-	private String gender= null;
-	private String salutation= null;
-	private Date dateOfBirth= null;
+	private String lastName = null;
+	private String gender = null;
+	private String salutation = null;
+	private Date dateOfBirth = null;
 	/**
 	 * @return the sessionToken
 	 */
@@ -135,9 +135,4 @@ public class UpdateUserRequest implements Serializable {
 	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
-	
-	
-	
-	
-
 }

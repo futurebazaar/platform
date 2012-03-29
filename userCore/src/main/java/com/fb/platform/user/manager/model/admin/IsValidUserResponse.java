@@ -1,7 +1,7 @@
 package com.fb.platform.user.manager.model.admin;
 
 public class IsValidUserResponse {
-	
+
 	private IsValidUserEnum isValidUserStatus;
 
 	/**
@@ -17,7 +17,4 @@ public class IsValidUserResponse {
 	public void setIsValidUserStatus(IsValidUserEnum isValidUserStatus) {
 		this.isValidUserStatus = isValidUserStatus;
 	}
-	
-	
-
 }

@@ -19,12 +19,12 @@ import com.fb.platform.user.manager.model.auth.LogoutResponse;
 @Transactional
 public interface UserManager {
 
-	@Transactional(propagation=Propagation.REQUIRED)
+	@Transactional(propagation = Propagation.REQUIRED)
 	public LoginResponse login(LoginRequest loginRequest);
 
-	@Transactional(propagation=Propagation.REQUIRED)
+	@Transactional(propagation = Propagation.REQUIRED)
 	public LogoutResponse logout(LogoutRequest logoutRequest);
 
-	@Transactional(propagation=Propagation.REQUIRED)
+	@Transactional(propagation = Propagation.REQUIRED)
 	public ChangePasswordResponse changePassword(ChangePasswordRequest request);
 }

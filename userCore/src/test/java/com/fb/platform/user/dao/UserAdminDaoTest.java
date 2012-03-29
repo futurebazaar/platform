@@ -1,7 +1,5 @@
 package com.fb.platform.user.dao;
 
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,14 +14,14 @@ import com.fb.platform.user.util.PasswordUtil;
 
 
 public class UserAdminDaoTest extends BaseTestCase {
-	
+
 	@Autowired
 	private UserAdminDao userAdminDao;
 
 	private static final String key  = "jasvipul@gmail.com";
 
 	@Test
-	public void testload(){
+	public void testload() {
 		UserBo record = new UserBo();
 		record = userAdminDao.load(key);
 		assertNotNull(record);
@@ -42,7 +40,7 @@ public class UserAdminDaoTest extends BaseTestCase {
 		assertEquals("sha1$526aa$dSrE+t3dJd3LxYGT8FkRt1p2iiI=", user.getPassword());
 		assertEquals(true, PasswordUtil.checkPassword("testpass", user.getPassword()));
 	}
-	
+
 	@Test
 	public void testAddUser() {
 		UserBo user = new UserBo();
@@ -58,10 +56,9 @@ public class UserAdminDaoTest extends BaseTestCase {
 		user.setUserEmail(emailLst);
 		userAdminDao.add(user);
 		UserBo usettest = userAdminDao.load("test@test.com");
-		
+
 		assertNotNull(usettest);
 		assertNotNull(usettest.getPassword());
 		assertEquals(true, PasswordUtil.checkPassword("testpass", usettest.getPassword()));
-				
 	}
 }

@@ -3,7 +3,7 @@ package com.fb.platform.user.manager.model.admin;
 import java.io.Serializable;
 
 public class GetUserRequest implements Serializable {
-	
+
 	private String sessionToken = null;
 	private String key = null; // can be userid,phoneno,emailid of the user
 	/**
@@ -30,9 +30,4 @@ public class GetUserRequest implements Serializable {
 	public void setKey(String key) {
 		this.key = key;
 	}
-	
-	
-	
-	
-
 }
