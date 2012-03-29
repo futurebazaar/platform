@@ -4,6 +4,10 @@
 package com.fb.platform.user.manager;
 
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
