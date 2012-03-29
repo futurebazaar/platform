@@ -4,6 +4,7 @@
 package com.fb.platform.promotion.rule.impl;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.fb.platform.promotion.rule.OrderRuleRequest;
 import com.fb.platform.promotion.rule.OrderRuleResponse;
@@ -11,20 +12,24 @@ import com.fb.platform.promotion.rule.PromotionRule;
 import com.fb.platform.promotion.rule.RuleConfiguration;
 import com.fb.platform.promotion.rule.RuleRequest;
 import com.fb.commons.to.Money;
+import org.apache.commons.lang.text.StrTokenizer;
 
 /**
  * @author vinayak
  *
  */
-public class MinimumOrderFixedDiscountRuleImpl implements PromotionRule {
+public class BuyWorthXGetYRsOffOnZCategoryRuleImpl implements PromotionRule {
 
 	private Money minOrderValue;
 	private Money fixedRsOff;
+	private List<String> categories;
 	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
 		minOrderValue = new Money(BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue("minOrderVal"))));
 		fixedRsOff = new Money (BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue("fixedRsOff"))));
+		StrTokenizer strTok = new StrTokenizer(ruleConfig.getConfigItemValue("categoryList"),",");
+		categories = strTok.getTokenList();
 	}
 
 	@Override

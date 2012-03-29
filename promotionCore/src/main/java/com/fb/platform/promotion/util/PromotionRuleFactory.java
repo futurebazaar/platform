@@ -7,9 +7,9 @@ import com.fb.platform.promotion.rule.PromotionRule;
 import com.fb.platform.promotion.rule.RuleConfiguration;
 import com.fb.platform.promotion.rule.RulesEnum;
 import com.fb.platform.promotion.rule.impl.BuyXGetYFreeRuleImpl;
-import com.fb.platform.promotion.rule.impl.MinimumOrderFixedDiscountRuleImpl;
-import com.fb.platform.promotion.rule.impl.MinimumOrderPercentageDiscountRuleImpl;
-import com.fb.platform.promotion.rule.impl.OnCategoryMinimumOrderFixedDiscountRuleImpl;
+import com.fb.platform.promotion.rule.impl.BuyWorthXGetYRsOffRuleImpl;
+import com.fb.platform.promotion.rule.impl.BuyWorthXGetYPercentOffRuleImpl;
+import com.fb.platform.promotion.rule.impl.BuyWorthXGetYRsOffOnZCategoryRuleImpl;
 
 /**
  * @author vinayak
@@ -28,17 +28,17 @@ public class PromotionRuleFactory {
 			break;
 
 		case BUY_WORTH_X_GET_Y_RS_OFF:
-			rule = new MinimumOrderFixedDiscountRuleImpl();
+			rule = new BuyWorthXGetYRsOffRuleImpl();
 			rule.init(ruleConfig);
 			break;
 			
 		case BUY_WORTH_X_GET_Y_PERCENT_OFF:
-			rule = new MinimumOrderPercentageDiscountRuleImpl();
+			rule = new BuyWorthXGetYPercentOffRuleImpl();
 			rule.init(ruleConfig);
 			break;
 			
-		case BUY_WORTH_X_GET_Y_RS_OFF_ON_CATEGORY_Z:
-			rule = new OnCategoryMinimumOrderFixedDiscountRuleImpl();
+		case BUY_WORTH_X_GET_Y_RS_OFF_ON_Z_CATEGORY:
+			rule = new BuyWorthXGetYRsOffOnZCategoryRuleImpl();
 			rule.init(ruleConfig);
 			break;
 			

@@ -16,17 +16,15 @@ import com.fb.commons.to.Money;
  * @author vinayak
  *
  */
-public class MinimumOrderPercentageDiscountRuleImpl implements PromotionRule {
+public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule {
 
 	private Money minOrderValue;
-	private BigDecimal discountPercentage;
-	private Money maxDiscountPerUse;
+	private Money fixedRsOff;
 	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
-		minOrderValue = new Money(BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue("minOrderVal"))));
-		discountPercentage = BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue("discountPercentage")));
-		maxDiscountPerUse = new Money (BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue("maxDiscountPerUse"))));
+		minOrderValue = new Money(BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue("MIN_ORDER_VALUE"))));
+		fixedRsOff = new Money (BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue("FIXED_DISCOUNT_RS_OFF"))));
 	}
 
 	@Override
@@ -42,15 +40,8 @@ public class MinimumOrderPercentageDiscountRuleImpl implements PromotionRule {
 	public OrderRuleResponse execute(RuleRequest request) {
 		OrderRuleResponse ruleResp = new OrderRuleResponse();
 		OrderRuleRequest ruleReq = (OrderRuleRequest) request;
-		Money orderVal = ruleReq.getOrderValue();
-		Money discountAmount = (orderVal.times(discountPercentage.doubleValue())).div(100); 
-		Money calcDiscValue = ruleReq.getOrderValue().minus(discountAmount);
-		if(calcDiscValue.gteq(maxDiscountPerUse)){
-			ruleResp.setDiscountValue(maxDiscountPerUse);
-		}
-		else{
-			ruleResp.setDiscountValue(calcDiscValue);
-		}
+		Money calcDiscValue = ruleReq.getOrderValue().minus(fixedRsOff);
+		ruleResp.setDiscountValue(calcDiscValue);
 		return ruleResp;
 	}
 }
