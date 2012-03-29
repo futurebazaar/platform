@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import com.fb.platform.promotion.rule.OrderRuleRequest;
 import com.fb.platform.promotion.rule.OrderRuleResponse;
 import com.fb.platform.promotion.rule.PromotionRule;
+import com.fb.platform.promotion.rule.RuleConfigConstants;
 import com.fb.platform.promotion.rule.RuleConfiguration;
 import com.fb.platform.promotion.rule.RuleRequest;
 import com.fb.commons.to.Money;
@@ -24,9 +25,9 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule {
 	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
-		minOrderValue = new Money(BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue("minOrderVal"))));
-		discountPercentage = BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue("discountPercentage")));
-		maxDiscountPerUse = new Money (BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue("maxDiscountPerUse"))));
+		minOrderValue = new Money(BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigConstants.MIN_ORDER_VALUE))));
+		discountPercentage = BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigConstants.DISCOUNT_PERCENTAGE)));
+		maxDiscountPerUse = new Money (BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigConstants.MAX_DISCOUNT_CEIL_IN_VALUE))));
 	}
 
 	@Override

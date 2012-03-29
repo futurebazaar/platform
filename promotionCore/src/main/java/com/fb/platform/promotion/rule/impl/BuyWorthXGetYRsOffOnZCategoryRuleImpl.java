@@ -9,6 +9,7 @@ import java.util.List;
 import com.fb.platform.promotion.rule.OrderRuleRequest;
 import com.fb.platform.promotion.rule.OrderRuleResponse;
 import com.fb.platform.promotion.rule.PromotionRule;
+import com.fb.platform.promotion.rule.RuleConfigConstants;
 import com.fb.platform.promotion.rule.RuleConfiguration;
 import com.fb.platform.promotion.rule.RuleRequest;
 import com.fb.commons.to.Money;
@@ -26,9 +27,9 @@ public class BuyWorthXGetYRsOffOnZCategoryRuleImpl implements PromotionRule {
 	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
-		minOrderValue = new Money(BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue("minOrderVal"))));
-		fixedRsOff = new Money (BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue("fixedRsOff"))));
-		StrTokenizer strTok = new StrTokenizer(ruleConfig.getConfigItemValue("categoryList"),",");
+		minOrderValue = new Money(BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigConstants.MIN_ORDER_VALUE))));
+		fixedRsOff = new Money (BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigConstants.FIXED_DISCOUNT_RS_OFF))));
+		StrTokenizer strTok = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigConstants.CATEGORY_LIST),",");
 		categories = strTok.getTokenList();
 	}
 
