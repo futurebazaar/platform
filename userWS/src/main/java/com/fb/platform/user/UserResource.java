@@ -27,12 +27,6 @@ import com.fb.platform.auth._1_0.AddUserRequest;
 import com.fb.platform.auth._1_0.AddUserResponse;
 import com.fb.platform.auth._1_0.AddUserStatus;
 import com.fb.platform.user.manager.interfaces.UserAdminManager;
-import com.sun.jersey.api.core.InjectParam;
-
-
-
-
-
 
 /**
  * @author kislaya

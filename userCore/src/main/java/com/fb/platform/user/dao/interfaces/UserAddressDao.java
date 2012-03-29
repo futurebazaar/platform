@@ -11,7 +11,7 @@ import com.fb.platform.user.domain.UserAddressBo;
 public interface UserAddressDao {
 
 	/**
-	 * @param userid
+	 * @param int userid
 	 * @return collection of address beloging to the user
 	 */
 	public Collection<UserAddressBo> load(int userid);

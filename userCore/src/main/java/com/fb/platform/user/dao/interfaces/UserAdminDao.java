@@ -21,13 +21,15 @@ public interface UserAdminDao {
 
 	/**
 	 * Add a new user
-	 * @param userBo
+	 * @param UserBo
+	 * @return UserBo
 	 */
 	public UserBo add(UserBo userBo);
 
 	/**
 	 * Update an existing user
-	 * @param userBo
+	 * @param UserBo
+	 * @return UserBo
 	 */
 	public UserBo update(UserBo userBo);
 
