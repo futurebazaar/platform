@@ -175,6 +175,30 @@
 			<value name="max_uses_per_user">2</value>
 			<value name="max_amount_per_user">1000</value>
 		</row>
+		<row>
+			<value name="id">-7</value>
+			<value name="promotion_id">-7</value>
+			<value name="max_uses">10</value>
+			<value name="max_amount">10000</value>
+			<value name="max_uses_per_user">2</value>
+			<value name="max_amount_per_user">1000</value>
+		</row>
+		<row>
+			<value name="id">-8</value>
+			<value name="promotion_id">-8</value>
+			<value name="max_uses">10</value>
+			<value name="max_amount">10000</value>
+			<value name="max_uses_per_user">2</value>
+			<value name="max_amount_per_user">1000</value>
+		</row>
+		<row>
+			<value name="id">-9</value>
+			<value name="promotion_id">-9</value>
+			<value name="max_uses">10</value>
+			<value name="max_amount">10000</value>
+			<value name="max_uses_per_user">2</value>
+			<value name="max_amount_per_user">1000</value>
+		</row>
 	</table>
 	<table name="global_promotion_uses">
 		<column>id</column>
@@ -311,13 +335,6 @@
 			<value name="current_count">50</value>
 			<value name="current_amount">2000</value>
 		</row>
-	</table>
-	<table name="user_coupon_uses">
-		<column>id</column>
-		<column>coupon_id</column>
-		<column>user_id</column>
-		<column>current_count</column>
-		<column>current_amount</column>
 		<row>
 			<value name="id">-2</value>
 			<value name="coupon_id">-2</value>
@@ -348,7 +365,7 @@
         </row>
         <row>
 			<value name="id">-3</value>
-			<value name="name">CATEGORY_ID</value>
+			<value name="name">CATEGORY_LIST</value>
 			<value name="value">1</value>
 			<value name="promotion_id">-2</value>
 			<value name="rule_id">-1</value>
