@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 public class CommitCouponRequest implements Serializable {
 
 	private String couponCode;
+	private int orderId;
 	private BigDecimal discountValue;
 	private String sessionToken;
 
@@ -33,5 +34,11 @@ public class CommitCouponRequest implements Serializable {
 	}
 	public void setSessionToken(String sessionToken) {
 		this.sessionToken = sessionToken;
+	}
+	public int getOrderId() {
+		return orderId;
+	}
+	public void setOrderId(int orderId) {
+		this.orderId = orderId;
 	}
 }

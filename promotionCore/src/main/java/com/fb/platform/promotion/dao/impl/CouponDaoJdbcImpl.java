@@ -4,6 +4,8 @@
 package com.fb.platform.promotion.dao.impl;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -11,7 +13,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
@@ -67,6 +72,35 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			"	current_amount " +
 			"FROM user_coupon_uses WHERE coupon_id = ? AND user_id = ?";
 
+	private static final String INCREASE_GLOBAL_USES = 
+			"UPDATE global_coupon_uses " +
+			"SET " +
+			"	current_count = current_count + 1, " +
+			"	current_amount = current_amount + ? " +
+			"WHERE coupon_id = ?";
+
+	private static final String CREATE_GLOBAL_USES = 
+			"INSERT INTO global_coupon_uses " +
+			"	(coupon_id, " +
+			"	current_count, " +
+			"	current_amount) " +
+			"VALUES (?, 1, ?)";
+
+	private static final String INCREASE_USER_USES = 
+			"UPDATE user_coupon_uses " +
+			"SET " +
+			"	current_count = current_count + 1, " +
+			"	current_amount = current_amount + ? " +
+			"WHERE coupon_id = ? AND user_id = ?";
+
+	private static final String CREATE_USER_USES = 
+			"INSERT INTO user_coupon_uses " +
+			"	(coupon_id, " +
+			"	user_id, " +
+			"	current_count, " +
+			"	current_amount) " +
+			"VALUES (?, ?, ?, ?)";
+
 	@Override
 	public Coupon load(String couponCode) {
 		Coupon coupon = null;
@@ -114,14 +148,70 @@ public class CouponDaoJdbcImpl implements CouponDao {
 
 	@Override
 	public boolean updateGlobalUses(int couponId, BigDecimal valueApplied) {
-		// TODO Auto-generated method stub
-		return false;
+		GlobalCouponUses globalUses = loadGlobalUses(couponId);
+		if (globalUses == null) {
+			//first time use of the coupon, create a new object
+			createGlobalUses(couponId, valueApplied);
+		} else {
+			incrementGlobalUses(couponId, valueApplied);
+		}
+		return true;
+	}
+
+	private void incrementGlobalUses(int couponId, BigDecimal valueApplied) {
+		int update = jdbcTemplate.update(INCREASE_GLOBAL_USES, valueApplied, couponId);
+		if (update != 1) {
+			throw new PlatformException("Unable to update the global coupon uses for couponId : " + couponId);
+		}
+	}
+
+	private void createGlobalUses(final int couponId, final BigDecimal valueApplied) {
+		KeyHolder globalUsesKeyHolder = new GeneratedKeyHolder();
+		jdbcTemplate.update(new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+				PreparedStatement ps = con.prepareStatement(CREATE_GLOBAL_USES, new String [] {"id"});
+				ps.setInt(1, couponId);
+				ps.setInt(2, 1);
+				ps.setBigDecimal(3, valueApplied);
+				return ps;
+			}
+		}, globalUsesKeyHolder);
 	}
 
 	@Override
 	public boolean updateUserUses(int couponId, int userId, BigDecimal valueApplied) {
-		// TODO Auto-generated method stub
-		return false;
+		UserCouponUses userUses = loadUserUses(couponId, userId);
+		if (userUses == null) {
+			//first time use of the coupon, create a new object
+			createUserUses(couponId, userId, valueApplied);
+		} else {
+			incrementUserUses(couponId, userId, valueApplied);
+		}
+		return true;
+	}
+
+	private void incrementUserUses(int couponId, int userId, BigDecimal valueApplied) {
+		int update = jdbcTemplate.update(INCREASE_USER_USES, valueApplied, couponId, userId);
+		if (update != 1) {
+			throw new PlatformException("Unable to update the user coupon uses for couponId : " + couponId + " and userId : " + userId);
+		}
+	}
+
+	private void createUserUses(final int couponId, final int userId, final BigDecimal valueApplied) {
+		KeyHolder userUsesKeyHolder = new GeneratedKeyHolder();
+		jdbcTemplate.update(new PreparedStatementCreator() {
+			
+			@Override
+			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+				PreparedStatement ps = con.prepareStatement(CREATE_USER_USES, new String [] {"id"});
+				ps.setInt(1, couponId);
+				ps.setInt(2, userId);
+				ps.setInt(3, 1);
+				ps.setBigDecimal(4, valueApplied);
+				return ps;
+			}
+		}, userUsesKeyHolder);
 	}
 
 	private static class CouponMapper implements RowMapper<Coupon> {

@@ -4,6 +4,8 @@
 package com.fb.platform.promotion.dao.impl;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -13,8 +15,11 @@ import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
@@ -77,6 +82,35 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			"current_count, " +
 			"current_amount " +
 			"FROM user_promotion_uses WHERE promotion_id = ? AND user_id = ?";
+
+	private static final String INCREASE_GLOBAL_USES = 
+			"UPDATE global_promotion_uses " +
+			"SET " +
+			"	current_count = current_count + 1, " +
+			"	current_amount = current_amount + ? " +
+			"WHERE promotion_id = ?";
+
+	private static final String CREATE_GLOBAL_USES = 
+			"INSERT INTO global_promotion_uses " +
+			"	(promotion_id, " +
+			"	current_count, " +
+			"	current_amount) " +
+			"VALUES (?, 1, ?)";
+
+	private static final String INCREASE_USER_USES = 
+			"UPDATE user_promotion_uses " +
+			"SET " +
+			"	current_count = current_count + 1, " +
+			"	current_amount = current_amount + ? " +
+			"WHERE promotion_id = ? AND user_id = ?";
+
+	private static final String CREATE_USER_USES = 
+			"INSERT INTO user_promotion_uses " +
+			"	(promotion_id, " +
+			"	user_id, " +
+			"	current_count, " +
+			"	current_amount) " +
+			"VALUES (?, ?, ?, ?)";
 
 	/* (non-Javadoc)
 	 * @see com.fb.platform.promotion.dao.PromotionDao#load(int)
@@ -141,15 +175,72 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 
 	@Override
 	public boolean updateGlobalUses(int promotionId, BigDecimal valueApplied) {
-		// TODO Auto-generated method stub
-		return false;
+		GlobalPromotionUses globalUses = loadGlobalUses(promotionId);
+		if (globalUses == null) {
+			//first time use of the coupon, create a new object
+			createGlobalUses(promotionId, valueApplied);
+		} else {
+			incrementGlobalUses(promotionId, valueApplied);
+		}
+		return true;
+	}
+
+	private void incrementGlobalUses(int promotionId, BigDecimal valueApplied) {
+		int update = jdbcTemplate.update(INCREASE_GLOBAL_USES, valueApplied, promotionId);
+		if (update != 1) {
+			throw new PlatformException("Unable to update the global promotion uses for promotionId : " + promotionId);
+		}
+	}
+
+	private void createGlobalUses(final int promotionId, final BigDecimal valueApplied) {
+		KeyHolder globalUsesKeyHolder = new GeneratedKeyHolder();
+		jdbcTemplate.update(new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+				PreparedStatement ps = con.prepareStatement(CREATE_GLOBAL_USES, new String [] {"id"});
+				ps.setInt(1, promotionId);
+				ps.setInt(2, 1);
+				ps.setBigDecimal(3, valueApplied);
+				return ps;
+			}
+		}, globalUsesKeyHolder);
 	}
 
 	@Override
 	public boolean updateUserUses(int promotionId, int userId, BigDecimal valueApplied) {
-		// TODO Auto-generated method stub
-		return false;
+		UserPromotionUses userUses = loadUserUses(promotionId, userId);
+		if (userUses == null) {
+			//first time use of the coupon, create a new object
+			createUserUses(promotionId, userId, valueApplied);
+		} else {
+			incrementUserUses(promotionId, userId, valueApplied);
+		}
+		return true;
 	}
+
+	private void incrementUserUses(int promotionId, int userId, BigDecimal valueApplied) {
+		int update = jdbcTemplate.update(INCREASE_USER_USES, valueApplied, promotionId, userId);
+		if (update != 1) {
+			throw new PlatformException("Unable to update the user coupon uses for couponId : " + promotionId + " and userId : " + userId);
+		}
+	}
+
+	private void createUserUses(final int promotionId, final int userId, final BigDecimal valueApplied) {
+		KeyHolder userUsesKeyHolder = new GeneratedKeyHolder();
+		jdbcTemplate.update(new PreparedStatementCreator() {
+			
+			@Override
+			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+				PreparedStatement ps = con.prepareStatement(CREATE_USER_USES, new String [] {"id"});
+				ps.setInt(1, promotionId);
+				ps.setInt(2, userId);
+				ps.setInt(3, 1);
+				ps.setBigDecimal(4, valueApplied);
+				return ps;
+			}
+		}, userUsesKeyHolder);
+	}
+
 
 	private static class PromotionRowCallBackHandler implements RowCallbackHandler {
 

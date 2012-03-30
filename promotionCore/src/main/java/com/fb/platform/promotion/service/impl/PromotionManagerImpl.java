@@ -154,6 +154,35 @@ public class PromotionManagerImpl implements PromotionManager {
 			return response;
 		}
 
+		boolean globalCuponUpdateSuccess = couponDao.updateGlobalUses(coupon.getId(), request.getDiscountValue());
+		if (!globalCuponUpdateSuccess) {
+			logger.error("Unable to update the global uses for coupon code : " + coupon.getCode());
+			response.setCommitCouponStatus(CommitCouponStatusEnum.INTERNAL_ERROR);
+			return response;
+		}
+
+		boolean userCuponUpdateStatus = couponDao.updateUserUses(coupon.getId(), userId, request.getDiscountValue());
+		if (!userCuponUpdateStatus) {
+			logger.error("Unable to update the user uses for coupon code : " + coupon.getCode());
+			response.setCommitCouponStatus(CommitCouponStatusEnum.INTERNAL_ERROR);
+			return response;
+		}
+
+		boolean globalPromotionUpdateSuccess = promotionDao.updateGlobalUses(promotion.getId(), request.getDiscountValue());
+		if (!globalPromotionUpdateSuccess) {
+			logger.error("Unable to update global promotion uses for Coupon code : " + coupon.getCode());
+			response.setCommitCouponStatus(CommitCouponStatusEnum.INTERNAL_ERROR);
+			return response;
+		}
+
+		boolean userPromotionUpdateStatus = promotionDao.updateUserUses(promotion.getId(), userId, request.getDiscountValue());
+		if (!userPromotionUpdateStatus) {
+			logger.error("Unable to update user promotion uses for Coupon code : " + coupon.getCode());
+			response.setCommitCouponStatus(CommitCouponStatusEnum.INTERNAL_ERROR);
+			return response;
+		}
+
+		response.setCommitCouponStatus(CommitCouponStatusEnum.SUCCESS);
 		return response;
 	}
 
