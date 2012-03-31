@@ -13,10 +13,14 @@ import org.springframework.stereotype.Component;
  *
  */
 
-@Path("/promotions/")
+@Path("/promotion/")
 @Component
 @Scope("request")
 public class PromotionAPIResource {
  
 	private static Logger logger = Logger.getLogger(PromotionAPIResource.class);
+
+	public String applyCoupon() {
+		return null;
+	}
 }

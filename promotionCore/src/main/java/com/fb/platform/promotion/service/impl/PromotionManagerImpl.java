@@ -8,6 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fb.commons.to.Money;
 import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
 import com.fb.platform.promotion.cache.CouponCacheAccess;
@@ -109,8 +110,14 @@ public class PromotionManagerImpl implements PromotionManager {
 			response.setCouponStatus(CouponResponseStatusEnum.NOT_APPLICABLE);
 			return response;
 		}
-		//return promotion.apply(request);
-		return null;
+		Money discount = promotion.apply(request.getOrderReq());
+		if (discount != null) {
+			response.setCouponStatus(CouponResponseStatusEnum.SUCCESS);
+			response.setDiscountValue(discount.getAmount());
+			response.setCouponCode(request.getCouponCode());
+			response.setSessionToken(request.getSessionToken());
+		}
+		return response;
 	}
 
 	@Override

@@ -75,4 +75,35 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:element name="commitCouponRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:orderId"/>
+        <xs:element ref="promotion:couponCode"/>
+        <xs:element ref="promotion:discountValue"/>
+        <xs:element ref="promotion:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="commitCouponResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:commitCouponStatus"/>
+        <xs:element ref="promotion:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="commitCouponStatus" type="promotion:commitCouponStatus"/>
+
+  <xs:simpleType name="commitCouponStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INVALID_COUPON_CODE"/>
+      <xs:enumeration value="NUMBER_OF_USES_EXCEEDED"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+      <xs:enumeration value="NO_SESSION"/>
+    </xs:restriction>
+  </xs:simpleType>
+
 </xs:schema>
