@@ -22,6 +22,7 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
+import org.joda.time.DateTime;
 import com.fb.platform.promotion.dao.PromotionDao;
 import com.fb.platform.promotion.dao.RuleDao;
 import com.fb.platform.promotion.model.GlobalPromotionUses;
@@ -78,7 +79,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			"	count(*) as current_count, " +
 			"	sum(upu.discount_amount) as current_amount, " +
 			"	promotion_id, " +
-			"	user_id, " +
+			"	user_id " +
 			"FROM user_promotion_uses upu WHERE promotion_id = ? AND user_id = ?";
 
 	private static final String INCREASE_GLOBAL_USES = 

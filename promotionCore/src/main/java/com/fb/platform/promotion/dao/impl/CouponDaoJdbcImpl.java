@@ -68,7 +68,7 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			"	count(*) as current_count, " +
 			"	sum(ucu.discount_amount) as current_amount, " +
 			"	coupon_id, " +
-			"	user_id, " +
+			"	user_id " +
 			"FROM user_coupon_uses ucu WHERE coupon_id = ? AND user_id = ?";
 
 	private static final String INCREASE_GLOBAL_USES = 

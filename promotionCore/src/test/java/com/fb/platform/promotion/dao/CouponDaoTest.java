@@ -134,7 +134,7 @@ public class CouponDaoTest extends BaseTestCase {
 		UserCouponUses userUses = couponDao.loadUserUses(-1, 1);
 
 		assertNotNull(userUses);
-		assertEquals(50, userUses.getCurrentCount());
+		assertEquals(1, userUses.getCurrentCount());
 		assertTrue(userUses.getCurrentAmount().eq(new Money(new BigDecimal(2000))));
 	}
 
@@ -143,7 +143,7 @@ public class CouponDaoTest extends BaseTestCase {
 		UserCouponUses userUses = couponDao.loadUserUses(-2, 2);
 
 		assertNotNull(userUses);
-		assertEquals(0, userUses.getCurrentCount());
+		assertEquals(1, userUses.getCurrentCount());
 		assertTrue(userUses.getCurrentAmount().eq(new Money(BigDecimal.ZERO)));
 	}
 }
