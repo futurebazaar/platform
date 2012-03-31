@@ -112,20 +112,27 @@ public class UserAdminDaoImpl implements UserAdminDao {
 			+ "atg_username ,"
 			+ "transaction_password ,"
 			+ "atg_login,"
-			+ "atg_password )"
-			+ " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ";
+			+ "atg_password ," 
+			+ "cod_status ,"
+			+ "is_verified ,"
+			+ "verification_code )"
+			+ " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ";
 
 	private static final String INSERT_NEW_EMAIL = "INSERT into users_email ("
 			+ "email,"
 			+ "type,"
-			+ "user_id) "
-			+ "values (?,?,?)";
+			+ "user_id,"
+			+ "cleaned_email ) "
+			+ "values (?,?,?,?)";
 
 	private static final String INSERT_NEW_PHONE = "INSERT into users_phone ("
 			+ "phone,"
 			+ "type,"
-			+ "userid) "
-			+ "values (?,?,?)";
+			+ "userid,"
+			+ "is_verified,"
+			+ "verified_on ,"
+			+ "verification_code) "
+			+ "values (?,?,?,?,?,?)";
 
 	private static final String UPDATE_USER = "UPDATE users_profile set "
 			+ "primary_phone = ?,"
@@ -340,6 +347,9 @@ public class UserAdminDaoImpl implements UserAdminDao {
 					ps.setString(26, null);
 					ps.setString(27, null);
 					ps.setString(28, null);
+					ps.setString(29, "neutral");
+					ps.setInt(30, 0);
+					ps.setString(31, null);
 					return ps;
 				}
 			}, keyHolderprofile);
@@ -347,19 +357,23 @@ public class UserAdminDaoImpl implements UserAdminDao {
 			long userid = (Long) keyHolderprofile.getKey();
 			if (userBo.getUserEmail() != null) {
 				for (UserEmailBo userEmailBo : userBo.getUserEmail()) {
-					Object[] objs = new Object[3];
+					Object[] objs = new Object[5];
 					objs[0] = userEmailBo.getEmail();
 					objs[1] = userEmailBo.getType();
 					objs[2] = userid;
+					objs[4] = userEmailBo.getEmail();
 					jdbcTemplate.update(INSERT_NEW_EMAIL, objs);
 				}
 			}
 			if (userBo.getUserPhone() != null) {
 				for (UserPhoneBo userPhoneBo : userBo.getUserPhone()) {
-					Object[] objs = new Object[3];
+					Object[] objs = new Object[6];
 					objs[0] = userPhoneBo.getPhoneno();
 					objs[1] = userPhoneBo.getType();
 					objs[2] = userid;
+					objs[3] = 0;
+					objs[4] = null;
+					objs[5] = null;
 					jdbcTemplate.update(INSERT_NEW_PHONE, objs);
 				}
 			}

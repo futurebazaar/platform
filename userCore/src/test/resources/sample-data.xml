@@ -172,6 +172,71 @@
         </row>
      
 	</table>
+	<table name="locations_country">
+	 	<column>id</column>
+  		<column>name</column>
+  		<column>type</column>
+  		<column>normalized_id</column>
+  		<column>user_created</column>
+  		<row>
+  			<value description="id">1</value>
+  			<value description="name">India</value>
+  			<value description="type">primary</value>
+  			<null/>
+  			<value description="user_created">0</value>
+  		</row>
+  	</table>
+  	<table name="locations_state">
+	 	<column>id</column>
+  		<column>name</column>
+  		<column>country_id</column>
+  		<column>type</column>
+  		<column>normalized_id</column>
+  		<column>user_created</column>
+  		<column>sap_code</column>
+  		<row> 
+  			<value description="id">1</value>
+  			<value description="name">Maharastra</value>
+  			<value description="country_id">1</value>
+  			<value description="type">primary</value>
+  			<null/>
+  			<value description="user_created">1</value>
+  			<null></null>
+  		</row>
+  		<row> 
+  			<value description="id">2</value>
+  			<value description="name">Gujarat</value>
+  			<value description="country_id">1</value>
+  			<value description="type">primary</value>
+  			<null/>
+  			<value description="user_created">1</value>
+  			<null></null>
+  		</row>
+  	</table>
+  	<table name="locations_city">
+	 	<column>id</column>
+  		<column>name</column>
+  		<column>state_id</column>
+  		<column>type</column>
+  		<column>normalized_id</column>
+  		<column>user_created</column>
+  		<row>
+  			<value description="id">1</value>
+  			<value description="name">Mumbai</value>
+  			<value description="state_id">1</value>
+  			<value description="type">primary</value>
+  			<null/>
+  			<value description="user_created">1</value>
+  		</row>
+  		<row>
+  			<value description="id">2</value>
+  			<value description="name">Ahemdabad</value>
+  			<value description="state_id">2</value>
+  			<value description="type">primary</value>
+  			<null/>
+  			<value description="user_created">1</value>
+  		</row>
+  	</table>
 	<table name="locations_address">
 	    <column>id</column>
 		<column>pincode</column>
@@ -195,9 +260,9 @@
         <row>
         	<value description="id">1</value>
         	<value description="pincode">400001</value>
-			<value description="city_id">3090</value>
-	        <value description="state_id">67</value>
-	        <value description="country_id">276</value>
+			<value description="city_id">1</value>
+	        <value description="state_id">1</value>
+	        <value description="country_id">1</value>
 	        <value description="type">delivery</value>
 	        <value description="address">mydelivery test add</value>
 	        <value description="profile_id">1</value>
@@ -214,9 +279,9 @@
         <row>
         	<value description="id">2</value>
         	<value description="pincode">110005</value>
-			<value description="city_id">3092</value>
-	        <value description="state_id">69</value>
-	        <value description="country_id">276</value>
+			<value description="city_id">2</value>
+	        <value description="state_id">2</value>
+	        <value description="country_id">1</value>
 	        <value description="type">delivery</value>
 	        <value description="address">my delivery test add</value>
 	        <value description="profile_id">2</value>

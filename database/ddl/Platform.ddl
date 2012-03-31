@@ -90,6 +90,9 @@ CREATE TABLE users_profile (
   transaction_password varchar(15) DEFAULT NULL,
   atg_login varchar(40) DEFAULT NULL,
   atg_password varchar(35) DEFAULT NULL,
+  cod_status varchar(25) NOT NULL DEFAULT 'neutral',
+  is_verified tinyint(1) NOT NULL DEFAULT '0',
+  verification_code varchar(50) DEFAULT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY atg_username (atg_username),
   UNIQUE KEY atg_login (atg_login),
@@ -153,6 +156,7 @@ CREATE TABLE users_email (
   email varchar(75) NOT NULL,
   type varchar(15) NOT NULL,
   user_id int(11) NOT NULL,
+  cleaned_email varchar(100) DEFAULT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY users_email_email_uniq (email)
 ) DEFAULT CHARSET=utf8;
@@ -163,6 +167,9 @@ CREATE TABLE users_phone (
   phone varchar(15) NOT NULL,
   user_id int(11) NOT NULL,
   type varchar(15) NOT NULL,
+  is_verified tinyint(1) NOT NULL DEFAULT '0',
+  verified_on datetime DEFAULT NULL,
+  verification_code varchar(50) DEFAULT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY users_phone_phone_uniq (phone)
 ) DEFAULT CHARSET=utf8;
