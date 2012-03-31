@@ -161,7 +161,7 @@ public class PromotionManagerImpl implements PromotionManager {
 			return response;
 		}
 
-		boolean userCuponUpdateStatus = couponDao.updateUserUses(coupon.getId(), userId, request.getDiscountValue());
+		boolean userCuponUpdateStatus = couponDao.updateUserUses(coupon.getId(), userId, request.getDiscountValue(), request.getOrderId());
 		if (!userCuponUpdateStatus) {
 			logger.error("Unable to update the user uses for coupon code : " + coupon.getCode());
 			response.setCommitCouponStatus(CommitCouponStatusEnum.INTERNAL_ERROR);
@@ -175,7 +175,7 @@ public class PromotionManagerImpl implements PromotionManager {
 			return response;
 		}
 
-		boolean userPromotionUpdateStatus = promotionDao.updateUserUses(promotion.getId(), userId, request.getDiscountValue());
+		boolean userPromotionUpdateStatus = promotionDao.updateUserUses(promotion.getId(), userId, request.getDiscountValue(), request.getOrderId());
 		if (!userPromotionUpdateStatus) {
 			logger.error("Unable to update user promotion uses for Coupon code : " + coupon.getCode());
 			response.setCommitCouponStatus(CommitCouponStatusEnum.INTERNAL_ERROR);

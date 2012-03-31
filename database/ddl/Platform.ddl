@@ -244,10 +244,10 @@ CREATE TABLE user_promotion_uses (
 	id INTEGER NOT NULL AUTO_INCREMENT,
 	promotion_id INTEGER,
 	user_id INTEGER,
-	current_count INTEGER,
-	current_amount DECIMAL(18,2),
+	order_id INTEGER,
+	discount_amount DECIMAL(18,2),
 	PRIMARY KEY(id),
-	UNIQUE(promotion_id),
+	UNIQUE(promotion_id, order_id, user_id),
 	FOREIGN KEY (promotion_id) REFERENCES promotion(id) ON DELETE CASCADE,
 	FOREIGN KEY (user_id) REFERENCES users_profile(id) ON DELETE CASCADE
 );
@@ -287,10 +287,10 @@ CREATE TABLE user_coupon_uses (
 	id INTEGER NOT NULL AUTO_INCREMENT,
 	coupon_id INTEGER,
 	user_id INTEGER,
-	current_count INTEGER,
-	current_amount DECIMAL(18,2),
+	order_id INTEGER,
+	discount_amount DECIMAL(18,2),
 	PRIMARY KEY(id),
-	UNIQUE(coupon_id),
+	UNIQUE(coupon_id,user_id,order_id),
 	FOREIGN KEY (coupon_id) REFERENCES coupon(id) ON DELETE CASCADE,
 	FOREIGN KEY (user_id) REFERENCES users_profile(id) ON DELETE CASCADE
 );
