@@ -57,7 +57,7 @@ public class UserManagerTest extends BaseTestCase {
 		assertNotNull(response);
 		assertEquals(LoginStatusEnum.INVALID_USERNAME_PASSWORD, response.getLoginStatus());
 		assertNull(response.getSessionToken());
-		assertNull(response.getUserId());
+		assertEquals(0,response.getUserId().intValue());
 	}
 
 	@Test
@@ -71,7 +71,7 @@ public class UserManagerTest extends BaseTestCase {
 		assertNotNull(response);
 		assertEquals(LoginStatusEnum.INVALID_USERNAME_PASSWORD, response.getLoginStatus());
 		assertNull(response.getSessionToken());
-		assertNull(response.getUserId());
+		assertEquals(0,response.getUserId().intValue());
 	}
 
 	@Test

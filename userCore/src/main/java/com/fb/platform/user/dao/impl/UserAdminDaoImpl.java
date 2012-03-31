@@ -357,11 +357,11 @@ public class UserAdminDaoImpl implements UserAdminDao {
 			long userid = (Long) keyHolderprofile.getKey();
 			if (userBo.getUserEmail() != null) {
 				for (UserEmailBo userEmailBo : userBo.getUserEmail()) {
-					Object[] objs = new Object[5];
+					Object[] objs = new Object[4];
 					objs[0] = userEmailBo.getEmail();
 					objs[1] = userEmailBo.getType();
 					objs[2] = userid;
-					objs[4] = userEmailBo.getEmail();
+					objs[3] = userEmailBo.getEmail();
 					jdbcTemplate.update(INSERT_NEW_EMAIL, objs);
 				}
 			}
