@@ -55,7 +55,7 @@ CREATE TABLE promotion_rule_config (
 	promotion_id INTEGER,
 	rule_id INTEGER ,
 	PRIMARY KEY(id),
-	FOREIGN KEY (promotion_id) REFERENCES promotion(id),
+	FOREIGN KEY (promotion_id) REFERENCES platform_promotion(id),
 	FOREIGN KEY (rule_id) REFERENCES promotion_rule(id)
 );
 
@@ -68,7 +68,7 @@ CREATE TABLE promotion_limits_config (
 	max_amount_per_user DECIMAL(18,2),
 	PRIMARY KEY(id),
 	UNIQUE(promotion_id),
-	FOREIGN KEY (promotion_id) REFERENCES promotion(id) ON DELETE CASCADE
+	FOREIGN KEY (promotion_id) REFERENCES platform_promotion(id) ON DELETE CASCADE
 );
 
 CREATE TABLE global_promotion_uses (
@@ -78,7 +78,7 @@ CREATE TABLE global_promotion_uses (
 	current_amount DECIMAL(18,2),
 	PRIMARY KEY(id),
 	UNIQUE(promotion_id),
-	FOREIGN KEY (promotion_id) REFERENCES promotion(id) ON DELETE CASCADE
+	FOREIGN KEY (promotion_id) REFERENCES platform_promotion(id) ON DELETE CASCADE
 );
 
 CREATE TABLE user_promotion_uses (
@@ -89,7 +89,7 @@ CREATE TABLE user_promotion_uses (
 	discount_amount DECIMAL(18,2),
 	PRIMARY KEY(id),
 	UNIQUE(promotion_id, order_id, user_id),
-	FOREIGN KEY (promotion_id) REFERENCES promotion(id) ON DELETE CASCADE,
+	FOREIGN KEY (promotion_id) REFERENCES platform_promotion(id) ON DELETE CASCADE,
 	FOREIGN KEY (user_id) REFERENCES users_profile(id) ON DELETE CASCADE
 );
 
@@ -99,7 +99,7 @@ CREATE TABLE coupon (
 	promotion_id INTEGER,
 	coupon_type VARCHAR(10),
 	PRIMARY KEY(id),
-	FOREIGN KEY (promotion_id) REFERENCES promotion(id) ON DELETE CASCADE
+	FOREIGN KEY (promotion_id) REFERENCES platform_promotion(id) ON DELETE CASCADE
 );
 
 CREATE TABLE coupon_limits_config (

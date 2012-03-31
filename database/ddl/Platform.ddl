@@ -1,9 +1,8 @@
 -- ******************** DROP TABLE AND CONSTRANTS **********
 
 
-DROP TABLE IF EXISTS categories_store,sso_session, crypto_key,auth_user,users_profile,locations_address ,locations_city,locations_state,locations_country,users_email,users_phone,client_master,
-promotion,coupon,coupon_limits_config,global_coupon_uses,global_promotion_uses,promotion_limits_config,user_coupon_uses,user_promotion_uses,promotion_rule,promotion_rule_config,
-accounts_client;
+DROP TABLE IF EXISTS categories_store,sso_session, crypto_key,users_email,users_phone ,user_promotion_uses , user_coupon_uses , users_profile , auth_user,locations_address ,locations_city,locations_state,locations_country,client_master,
+promotion_rule_config,promotion_limits_config,global_promotion_uses ,coupon_limits_config ,global_coupon_uses ,coupon ,promotion,promotion_rule , accounts_client;
 
 
 --  ******************** CREATE TABLE *****************
