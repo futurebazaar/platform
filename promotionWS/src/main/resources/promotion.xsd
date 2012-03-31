@@ -1,75 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-	targetNamespace="http://www.fb.com/platform/promotion/1.0.0" xmlns:tns="http://www.fb.com/platform/promotion/1.0.0" 
-	elementFormDefault="qualified">
-  <xs:element name="promotion">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.fb.com/platform/promotion/1.0.0" xmlns:promotion="http://www.fb.com/platform/promotion/1.0.0">
+  <xs:element name="couponRequest">
     <xs:complexType>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="promotionRequest">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element name="couponCode" type="xs:string" minOccurs="1" />
-              <xs:element name="userId" type="xs:string" minOccurs="1" />
-              <xs:element name="client" type="xs:string" minOccurs="0" />
-              <xs:element name="order" minOccurs="1" maxOccurs="1">
-                <xs:complexType>
-                  <xs:sequence>
-                    <xs:element name="orderValue" type="xs:string" minOccurs="1" />
-                    <xs:element name="productList" minOccurs="1" maxOccurs="unbounded">
-                      <xs:complexType>
-                        <xs:sequence>
-                          <xs:element name="product" minOccurs="1" maxOccurs="unbounded">
-                            <xs:complexType>
-                              <xs:sequence>
-                                <xs:element name="id" type="xs:string" minOccurs="0" />
-                                <xs:element name="name" type="xs:string" minOccurs="0" />
-                                <xs:element name="categoryList" minOccurs="0" maxOccurs="unbounded">
-                                  <xs:complexType>
-                                    <xs:sequence>
-                                      <xs:element name="category" type="xs:string" minOccurs="0" />
-                                    </xs:sequence>
-                                  </xs:complexType>
-                                </xs:element>
-                                <xs:element name="brand" type="xs:string" minOccurs="0" />
-                              </xs:sequence>
-                            </xs:complexType>
-                          </xs:element>
-                        </xs:sequence>
-                      </xs:complexType>
-                    </xs:element>
-                  </xs:sequence>
-                </xs:complexType>
-              </xs:element>
-            </xs:sequence>
-          </xs:complexType>
-        </xs:element>
-        
-        <xs:element name="promotionResponse">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element name="couponCode" type="xs:string" minOccurs="1" />
-              <xs:element name="discountValue" type="xs:string" minOccurs="0" />
-              <xs:element name="Status" type="tns:statusCode" minOccurs="1" />
-              <xs:element name="statusMessage" type="xs:string" minOccurs="1" />
-              <xs:element name="statusDescription" type="xs:string" minOccurs="0" />
-            </xs:sequence>
-          </xs:complexType>
-        </xs:element>
-      </xs:choice>
+      <xs:sequence>
+        <xs:element ref="promotion:couponCode"/>
+        <xs:element ref="promotion:orderRequest"/>
+        <xs:element ref="promotion:clientId"/>
+        <xs:element ref="promotion:sessionToken"/>
+      </xs:sequence>
     </xs:complexType>
   </xs:element>
-  
-    <xs:simpleType name="statusCode">
+  <xs:element name="couponCode" type="xs:string"/>
+  <xs:element name="orderRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:orderId"/>
+        <xs:element ref="promotion:orderValue"/>
+        <xs:element maxOccurs="unbounded" ref="promotion:orderItem"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="orderId" type="xs:int"/>
+  <xs:element name="orderValue" type="xs:decimal"/>
+  <xs:element name="orderItem">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:product"/>
+        <xs:element ref="promotion:quantity"/>
+        <xs:element ref="promotion:price"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="product">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:productId"/>
+        <xs:element maxOccurs="unbounded" ref="promotion:category"/>
+        <xs:element maxOccurs="unbounded" ref="promotion:brand"/>
+        <xs:element ref="promotion:price"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="productId" type="xs:int"/>
+  <xs:element name="category" type="xs:int"/>
+  <xs:element name="brand" type="xs:int"/>
+  <xs:element name="quantity" type="xs:int"/>
+  <xs:element name="clientId" type="xs:int"/>
+  <xs:element name="sessionToken" type="xs:string"/>
+  <xs:element name="price" type="xs:decimal"/>
+
+  <xs:element name="couponResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:couponCode"/>
+        <xs:element ref="promotion:discountValue"/>
+        <xs:element ref="promotion:couponStatus"/>
+        <xs:element ref="promotion:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="discountValue" type="xs:decimal"/>
+  <xs:element name="couponStatus" type="promotion:couponStatus"/>
+
+  <xs:simpleType name="couponStatus">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="VALID_SUCCESS"/>
+      <xs:enumeration value="SUCCESS"/>
       <xs:enumeration value="INVALID_COUPON_CODE"/>
       <xs:enumeration value="COUPON_CODE_EXPIRED"/>
       <xs:enumeration value="NOT_AUTHORIZED_USER"/>
       <xs:enumeration value="NUMBER_OF_USES_EXCEEDED"/>
-      <xs:enumeration value="NOT_APPLICABLE_ON_PRODUCT"/>
-      <xs:enumeration value="NOT_APPLICABLE_ON_CATEGORY"/>
+      <xs:enumeration value="NOT_APPLICABLE"/>
       <xs:enumeration value="LESS_ORDER_AMOUNT"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
     </xs:restriction>
   </xs:simpleType>
-  
+
 </xs:schema>
