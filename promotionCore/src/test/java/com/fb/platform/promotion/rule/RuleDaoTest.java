@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.fb.platform.promotion.dao.impl;
+package com.fb.platform.promotion.rule;
 
 import static org.junit.Assert.*;
 

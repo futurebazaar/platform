@@ -3,10 +3,10 @@
  */
 package com.fb.platform.promotion.rule.impl;
 
+import com.fb.commons.to.Money;
 import com.fb.platform.promotion.rule.PromotionRule;
 import com.fb.platform.promotion.rule.RuleConfiguration;
-import com.fb.platform.promotion.rule.RuleRequest;
-import com.fb.platform.promotion.rule.RuleResponse;
+import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.Product;
 
 /**
@@ -25,12 +25,12 @@ public class BuyXGetYFreeRuleImpl implements PromotionRule {
 	}
 
 	@Override
-	public boolean isApplicable(RuleRequest request) {
+	public boolean isApplicable(OrderRequest request) {
 		return false;
 	}
 
 	@Override
-	public RuleResponse execute(RuleRequest request) {
+	public Money execute(OrderRequest request) {
 		return null;
 	}
 }

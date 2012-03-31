@@ -3,6 +3,9 @@
  */
 package com.fb.platform.promotion.rule;
 
+import com.fb.commons.to.Money;
+import com.fb.platform.promotion.to.OrderRequest;
+
 
 /**
  * @author vinayak
@@ -19,11 +22,11 @@ public interface PromotionRule {
 	/**
 	 * @return true if the rule is applicable on the request
 	 */
-	public boolean isApplicable(RuleRequest request);
+	public boolean isApplicable(OrderRequest request);
 
 	/**
 	 * Applies the rule on the request.
 	 * @param request
 	 */
-	public RuleResponse execute(RuleRequest request);
+	public Money execute(OrderRequest request);
 }
