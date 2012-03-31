@@ -23,5 +23,5 @@ public interface CouponDao {
 
 	public boolean updateGlobalUses(int couponId, BigDecimal valueApplied);
 
-	public boolean updateUserUses(int couponId, int userId, BigDecimal valueApplied);
+	public boolean updateUserUses(int couponId, int userId, BigDecimal valueApplied, int orderId);
 }

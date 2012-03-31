@@ -65,12 +65,11 @@ public class CouponDaoJdbcImpl implements CouponDao {
 
 	private static final String LOAD_USER_COUPON_USES_QUERY = 
 			"SELECT " +
-			"	id, " +
+			"	count(*) as current_count, " +
+			"	sum(ucu.discount_amount) as current_amount, " +
 			"	coupon_id, " +
 			"	user_id, " +
-			"	current_count, " +
-			"	current_amount " +
-			"FROM user_coupon_uses WHERE coupon_id = ? AND user_id = ?";
+			"FROM user_coupon_uses ucu WHERE coupon_id = ? AND user_id = ?";
 
 	private static final String INCREASE_GLOBAL_USES = 
 			"UPDATE global_coupon_uses " +
@@ -86,19 +85,19 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			"	current_amount) " +
 			"VALUES (?, 1, ?)";
 
-	private static final String INCREASE_USER_USES = 
+/*	private static final String INCREASE_USER_USES = 
 			"UPDATE user_coupon_uses " +
 			"SET " +
 			"	current_count = current_count + 1, " +
 			"	current_amount = current_amount + ? " +
-			"WHERE coupon_id = ? AND user_id = ?";
+			"WHERE coupon_id = ? AND user_id = ?";*/
 
 	private static final String CREATE_USER_USES = 
 			"INSERT INTO user_coupon_uses " +
 			"	(coupon_id, " +
 			"	user_id, " +
-			"	current_count, " +
-			"	current_amount) " +
+			"	order_id, " +
+			"	discount_amount) " +
 			"VALUES (?, ?, ?, ?)";
 
 	@Override
@@ -180,25 +179,21 @@ public class CouponDaoJdbcImpl implements CouponDao {
 	}
 
 	@Override
-	public boolean updateUserUses(int couponId, int userId, BigDecimal valueApplied) {
-		UserCouponUses userUses = loadUserUses(couponId, userId);
-		if (userUses == null) {
-			//first time use of the coupon, create a new object
-			createUserUses(couponId, userId, valueApplied);
-		} else {
-			incrementUserUses(couponId, userId, valueApplied);
-		}
+	public boolean updateUserUses(int couponId, int userId, BigDecimal valueApplied, int orderId) {
+		
+		//for every use of coupon a new entry is created
+		createUserUses(couponId, userId, valueApplied, orderId);
 		return true;
 	}
 
-	private void incrementUserUses(int couponId, int userId, BigDecimal valueApplied) {
+	/*private void incrementUserUses(int couponId, int userId, BigDecimal valueApplied) {
 		int update = jdbcTemplate.update(INCREASE_USER_USES, valueApplied, couponId, userId);
 		if (update != 1) {
 			throw new PlatformException("Unable to update the user coupon uses for couponId : " + couponId + " and userId : " + userId);
 		}
-	}
+	}*/
 
-	private void createUserUses(final int couponId, final int userId, final BigDecimal valueApplied) {
+	private void createUserUses(final int couponId, final int userId, final BigDecimal valueApplied, final int orderId) {
 		KeyHolder userUsesKeyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			
@@ -207,7 +202,7 @@ public class CouponDaoJdbcImpl implements CouponDao {
 				PreparedStatement ps = con.prepareStatement(CREATE_USER_USES, new String [] {"id"});
 				ps.setInt(1, couponId);
 				ps.setInt(2, userId);
-				ps.setInt(3, 1);
+				ps.setInt(3, orderId);
 				ps.setBigDecimal(4, valueApplied);
 				return ps;
 			}

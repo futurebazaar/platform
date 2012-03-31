@@ -12,7 +12,6 @@ import java.sql.Timestamp;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.joda.time.DateTime;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -76,12 +75,11 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 
 	private static final String LOAD_USER_PROMOTION_USES_QUERY = 
 			"SELECT " +
-			"id, " +
-			"promotion_id, " +
-			"user_id, " +
-			"current_count, " +
-			"current_amount " +
-			"FROM user_promotion_uses WHERE promotion_id = ? AND user_id = ?";
+			"	count(*) as current_count, " +
+			"	sum(upu.discount_amount) as current_amount, " +
+			"	promotion_id, " +
+			"	user_id, " +
+			"FROM user_promotion_uses upu WHERE promotion_id = ? AND user_id = ?";
 
 	private static final String INCREASE_GLOBAL_USES = 
 			"UPDATE global_promotion_uses " +
@@ -97,19 +95,19 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			"	current_amount) " +
 			"VALUES (?, 1, ?)";
 
-	private static final String INCREASE_USER_USES = 
+	/*private static final String INCREASE_USER_USES = 
 			"UPDATE user_promotion_uses " +
 			"SET " +
 			"	current_count = current_count + 1, " +
 			"	current_amount = current_amount + ? " +
-			"WHERE promotion_id = ? AND user_id = ?";
+			"WHERE promotion_id = ? AND user_id = ?";*/
 
 	private static final String CREATE_USER_USES = 
 			"INSERT INTO user_promotion_uses " +
 			"	(promotion_id, " +
 			"	user_id, " +
-			"	current_count, " +
-			"	current_amount) " +
+			"	order_id, " +
+			"	discount_amount) " +
 			"VALUES (?, ?, ?, ?)";
 
 	/* (non-Javadoc)
@@ -207,25 +205,29 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 	}
 
 	@Override
-	public boolean updateUserUses(int promotionId, int userId, BigDecimal valueApplied) {
-		UserPromotionUses userUses = loadUserUses(promotionId, userId);
+	public boolean updateUserUses(int promotionId, int userId, BigDecimal valueApplied, int orderId) {
+		
+		//for every use of the coupon, create a new object
+		createUserUses(promotionId, userId, valueApplied, orderId);
+		
+		/*UserPromotionUses userUses = loadUserUses(promotionId, userId);
 		if (userUses == null) {
 			//first time use of the coupon, create a new object
-			createUserUses(promotionId, userId, valueApplied);
+			createUserUses(promotionId, userId, valueApplied, orderId);
 		} else {
 			incrementUserUses(promotionId, userId, valueApplied);
-		}
+		}*/
 		return true;
 	}
 
-	private void incrementUserUses(int promotionId, int userId, BigDecimal valueApplied) {
+/*	private void incrementUserUses(int promotionId, int userId, BigDecimal valueApplied) {
 		int update = jdbcTemplate.update(INCREASE_USER_USES, valueApplied, promotionId, userId);
 		if (update != 1) {
 			throw new PlatformException("Unable to update the user coupon uses for couponId : " + promotionId + " and userId : " + userId);
 		}
-	}
+	}*/
 
-	private void createUserUses(final int promotionId, final int userId, final BigDecimal valueApplied) {
+	private void createUserUses(final int promotionId, final int userId, final BigDecimal valueApplied, final int orderId) {
 		KeyHolder userUsesKeyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			
@@ -234,7 +236,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 				PreparedStatement ps = con.prepareStatement(CREATE_USER_USES, new String [] {"id"});
 				ps.setInt(1, promotionId);
 				ps.setInt(2, userId);
-				ps.setInt(3, 1);
+				ps.setInt(3, orderId);
 				ps.setBigDecimal(4, valueApplied);
 				return ps;
 			}

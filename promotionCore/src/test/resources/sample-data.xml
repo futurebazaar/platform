@@ -216,22 +216,22 @@
 		<column>id</column>
 		<column>promotion_id</column>
 		<column>user_id</column>
-		<column>current_count</column>
-		<column>current_amount</column>
+		<column>order_id</column>
+		<column>discount_amount</column>
 		<row>
 			<value name="id">-1</value>
 			<value name="promotion_id">-1</value>
 			<value name="user_id">1</value>
-			<value name="current_count">50</value>
-			<value name="current_amount">2000</value>
+			<value name="order_id">50</value>
+			<value name="discount_amount">2000</value>
 		</row>
 	</table>
 	<table name="user_promotion_uses">
 		<column>id</column>
 		<column>promotion_id</column>
 		<column>user_id</column>
-		<column>current_count</column>
-		<column>current_amount</column>
+		<column>order_id</column>
+		<column>discount_amount</column>
 		<row>
 			<value name="id">-2</value>
 			<value name="promotion_id">-2</value>
@@ -326,14 +326,14 @@
 		<column>id</column>
 		<column>coupon_id</column>
 		<column>user_id</column>
-		<column>current_count</column>
-		<column>current_amount</column>
+		<column>order_id</column>
+		<column>discount_amount</column>
 		<row>
 			<value name="id">-1</value>
 			<value name="coupon_id">-1</value>
 			<value name="user_id">1</value>
-			<value name="current_count">50</value>
-			<value name="current_amount">2000</value>
+			<value name="order_id">50</value>
+			<value name="discount_amount">2000</value>
 		</row>
 		<row>
 			<value name="id">-2</value>
