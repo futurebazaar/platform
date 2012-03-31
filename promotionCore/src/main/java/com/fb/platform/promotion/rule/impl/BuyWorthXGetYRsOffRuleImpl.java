@@ -5,11 +5,9 @@ package com.fb.platform.promotion.rule.impl;
 
 import java.math.BigDecimal;
 
-import com.fb.platform.promotion.rule.OrderRuleRequest;
-import com.fb.platform.promotion.rule.OrderRuleResponse;
 import com.fb.platform.promotion.rule.PromotionRule;
 import com.fb.platform.promotion.rule.RuleConfiguration;
-import com.fb.platform.promotion.rule.RuleRequest;
+import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.commons.to.Money;
 
 /**
@@ -28,8 +26,8 @@ public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule {
 	}
 
 	@Override
-	public boolean isApplicable(RuleRequest request) {
-		Money orderValue = ((OrderRuleRequest)request).getOrderValue();
+	public boolean isApplicable(OrderRequest request) {
+		Money orderValue = new Money(request.getOrderValue());
 		if(orderValue.gteq(minOrderValue)){
 			return true;
 		}
@@ -37,11 +35,9 @@ public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule {
 	}
 
 	@Override
-	public OrderRuleResponse execute(RuleRequest request) {
-		OrderRuleResponse ruleResp = new OrderRuleResponse();
-		OrderRuleRequest ruleReq = (OrderRuleRequest) request;
-		Money calcDiscValue = ruleReq.getOrderValue().minus(fixedRsOff);
-		ruleResp.setDiscountValue(calcDiscValue);
-		return ruleResp;
+	public Money execute(OrderRequest request) {
+		Money orderValue = new Money(request.getOrderValue());
+		Money calcDiscValue = orderValue.minus(fixedRsOff);
+		return calcDiscValue;
 	}
 }

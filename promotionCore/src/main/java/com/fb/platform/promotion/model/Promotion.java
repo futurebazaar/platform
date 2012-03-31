@@ -6,11 +6,10 @@ package com.fb.platform.promotion.model;
 
 import java.io.Serializable;
 
+import com.fb.commons.to.Money;
 import com.fb.platform.promotion.rule.PromotionRule;
-import com.fb.platform.promotion.rule.RuleResponse;
-import com.fb.platform.promotion.to.PromotionRequest;
-import com.fb.platform.promotion.to.PromotionResponse;
-import com.fb.platform.promotion.util.PromotionRuleMapper;
+import com.fb.platform.promotion.to.CouponRequest;
+import com.fb.platform.promotion.to.OrderRequest;
 
 /**
  * @author vinayak
@@ -27,7 +26,7 @@ public class Promotion implements Serializable {
 
 	private PromotionRule rule;
 
-	public boolean isApplicable(PromotionRequest request) {
+	public boolean isApplicable(OrderRequest request) {
 		if (!isActive) {
 			return false;
 		}
@@ -35,7 +34,7 @@ public class Promotion implements Serializable {
 		if (!withinDates) {
 			return false;
 		}
-		boolean ruleApplicable = rule.isApplicable(PromotionRuleMapper.promotionToRuleRequest(request));
+		boolean ruleApplicable = rule.isApplicable(request);
 		if (!ruleApplicable) {
 			return false;
 		}
@@ -46,9 +45,8 @@ public class Promotion implements Serializable {
 		return limitsConfig.isWithinLimit(globalUses, userUses);
 	}
 
-	public PromotionResponse apply(PromotionRequest request) {
-		RuleResponse ruleResponse = rule.execute(PromotionRuleMapper.promotionToRuleRequest(request));
-		return PromotionRuleMapper.toPromotionResponse(ruleResponse);
+	public Money apply(OrderRequest request) {
+		return rule.execute(request);
 	}
 
 	public void setId(int id) {

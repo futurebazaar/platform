@@ -5,7 +5,7 @@ import java.io.Serializable;
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.to.OrderRequest;
 
-public class OrderRuleRequest implements Serializable,RuleRequest{
+public class OrderRuleRequest implements Serializable{
 	
 	private OrderRequest orderReq;
 

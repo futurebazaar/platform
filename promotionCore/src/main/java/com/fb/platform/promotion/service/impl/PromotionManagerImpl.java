@@ -103,7 +103,7 @@ public class PromotionManagerImpl implements PromotionManager {
 		}
 
 		//check if the promotion is applicable on this request.
-		boolean applicable = promotion.isApplicable(request);
+		boolean applicable = promotion.isApplicable(request.getOrderReq());
 		if (!applicable) {
 			logger.warn("Coupon code used when not applicable. Coupon code : " + coupon.getCode());
 			response.setCouponStatus(CouponResponseStatusEnum.NOT_APPLICABLE);

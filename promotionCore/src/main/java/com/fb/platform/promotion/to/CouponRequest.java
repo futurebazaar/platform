@@ -8,7 +8,7 @@ import java.math.BigDecimal;
  * @author vinayak
  *
  */
-public class CouponRequest implements Serializable, PromotionRequest {
+public class CouponRequest implements Serializable {
 
 	private String couponCode;
 	private OrderRequest orderReq;

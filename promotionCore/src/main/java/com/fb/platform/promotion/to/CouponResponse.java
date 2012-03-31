@@ -8,7 +8,7 @@ import java.math.BigDecimal;
  * @author keith
  *
  */
-public class CouponResponse implements Serializable, PromotionResponse {
+public class CouponResponse implements Serializable{
 
 	private String couponCode;
 	private BigDecimal discountValue;
