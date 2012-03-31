@@ -57,12 +57,14 @@ public class UserManagerImpl implements UserManager {
 		try {
 			UserBo user = userAdminDao.load(loginRequest.getUsername());
 			if (user == null) {
+				loginResponse.setUserId(0);
 				loginResponse.setLoginStatus(LoginStatusEnum.INVALID_USERNAME_PASSWORD);
 				return loginResponse;
 			}
 
 			boolean passwordMatch = PasswordUtil.checkPassword(loginRequest.getPassword(), user.getPassword());
 			if (!passwordMatch) {
+				loginResponse.setUserId(0);
 				loginResponse.setLoginStatus(LoginStatusEnum.INVALID_USERNAME_PASSWORD);
 				return loginResponse;
 			}
