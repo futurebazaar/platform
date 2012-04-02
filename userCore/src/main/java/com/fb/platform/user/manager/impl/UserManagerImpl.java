@@ -18,6 +18,9 @@ import com.fb.platform.user.manager.interfaces.UserManager;
 import com.fb.platform.user.manager.model.auth.ChangePasswordRequest;
 import com.fb.platform.user.manager.model.auth.ChangePasswordResponse;
 import com.fb.platform.user.manager.model.auth.ChangePasswordStatusEnum;
+import com.fb.platform.user.manager.model.auth.KeepAliveRequest;
+import com.fb.platform.user.manager.model.auth.KeepAliveResponse;
+import com.fb.platform.user.manager.model.auth.KeepAliveStatusEnum;
 import com.fb.platform.user.manager.model.auth.LoginRequest;
 import com.fb.platform.user.manager.model.auth.LoginResponse;
 import com.fb.platform.user.manager.model.auth.LoginStatusEnum;
@@ -183,5 +186,29 @@ public class UserManagerImpl implements UserManager {
 
 	public void setUserAdminDao(UserAdminDao userAdminDao) {
 		this.userAdminDao = userAdminDao;
+	}
+
+	@Override
+	public KeepAliveResponse keepAlive(KeepAliveRequest keepAliveRequest) {
+		KeepAliveResponse keepAliveResponse = new KeepAliveResponse();
+		if (keepAliveRequest == null || StringUtils.isBlank(keepAliveRequest.getSessionToken())) {
+			keepAliveResponse.setKeepAliveStatus(KeepAliveStatusEnum.NO_SESSION);
+			return keepAliveResponse;
+		}
+		try {
+			AuthenticationTO authentication = authenticationService.authenticate(keepAliveRequest.getSessionToken());
+			if (authentication == null) {
+				keepAliveResponse.setKeepAliveStatus(KeepAliveStatusEnum.NO_SESSION);
+				return keepAliveResponse;
+			}
+			ssoMasterService.keepAlive(authentication.getSessionId());
+			keepAliveResponse.setSessionToken(authentication.getToken());
+			keepAliveResponse.setKeepAliveStatus(KeepAliveStatusEnum.KEEPALIVE_SUCCESS);
+			
+		} catch (PlatformException e) {
+			logger.error("Error while keep alive session.", e);
+			keepAliveResponse.setKeepAliveStatus(KeepAliveStatusEnum.KEEPALIVE_FAILED);
+		}
+		return keepAliveResponse;
 	}
 }
