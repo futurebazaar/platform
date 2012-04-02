@@ -4,6 +4,7 @@
 package com.fb.platform.promotion.to;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author vinayak
@@ -33,4 +34,9 @@ public class OrderItem {
 	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
+	
+	public boolean isOrderItemInCategory(List<Integer> categories){
+		return product.isProductOfCategory(categories);
+	}
+	
 }

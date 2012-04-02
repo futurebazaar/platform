@@ -36,5 +36,19 @@ public class OrderRequest implements Serializable {
 	public void setOrderItems(List<OrderItem> orderItems) {
 		this.orderItems = orderItems;
 	}
+	
+	public boolean isAllProductsInCategory(List<Integer> categories){
+		for(OrderItem o:orderItems){
+			if(!o.isOrderItemInCategory(categories)){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean isCategoryInAnyProduct(){
+		return false;
+	}
+	
 
 }
