@@ -29,6 +29,9 @@ import com.fb.platform.auth._1_0.LoginStatus;
 import com.fb.platform.auth._1_0.LogoutRequest;
 import com.fb.platform.auth._1_0.LogoutResponse;
 import com.fb.platform.auth._1_0.LogoutStatus;
+import com.fb.platform.auth._1_0.KeepAliveRequest;
+import com.fb.platform.auth._1_0.KeepAliveResponse;
+import com.fb.platform.auth._1_0.KeepAliveStatus;
 import com.fb.platform.user.manager.interfaces.UserManager;
 
 /**
@@ -140,5 +143,43 @@ public class AuthResource {
 	@GET
 	public String ping() {
 		return "hello";
+	}
+	
+	@POST
+	@Path("/keepAlive")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String keepAlive(String keepAliveXml){
+		if (logger.isDebugEnabled()) {
+			logger.debug("KeepAliveXml request :\n" + keepAliveXml);
+		}
+		try {
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+
+			KeepAliveRequest xmlkeepAliveReq = (KeepAliveRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(keepAliveXml)));
+
+			com.fb.platform.user.manager.model.auth.KeepAliveRequest apiKeepAliveReq = new com.fb.platform.user.manager.model.auth.KeepAliveRequest();
+			apiKeepAliveReq.setSessionToken(xmlkeepAliveReq.getSessionToken());
+
+			com.fb.platform.user.manager.model.auth.KeepAliveResponse apiKeepAliveResp = userManager.keepAlive(apiKeepAliveReq);
+
+			KeepAliveResponse xmlKeepAliveResp = new KeepAliveResponse();
+			xmlKeepAliveResp.setKeepAliveStatus(KeepAliveStatus.fromValue(apiKeepAliveResp.getKeepAliveStatus().name()));
+
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marsheller = context.createMarshaller();
+			marsheller.marshal(xmlKeepAliveResp, outStringWriter);
+
+			String xmlResponse = outStringWriter.toString();
+			if (logger.isDebugEnabled()) {
+				logger.debug("KeepAliveXML response :\n" + xmlResponse);
+			}
+			return xmlResponse;
+
+		} catch (JAXBException e) {
+			logger.error("Error in the keep alive call.", e);
+			return "error"; //TODO return proper error response
+		}
+		
 	}
 }

@@ -124,5 +124,27 @@
     </xs:restriction>
   </xs:simpleType>
   
+  <xs:element name="keepAliveRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="keepAliveResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:keepAliveStatus"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="keepAliveStatus" type="tns:keepAliveStatus"/>
+  <xs:simpleType name="keepAliveStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="KEEPALIVE_SUCCESS"/>
+      <xs:enumeration value="KEEPALIVE_FAILED"/>
+      <xs:enumeration value="NO_SESSION"/>
+    </xs:restriction>
+  </xs:simpleType> 
 
 </xs:schema>
