@@ -13,7 +13,9 @@ import java.math.BigDecimal;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
+import org.junit.experimental.theories.Theory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 
 import com.fb.commons.test.BaseTestCase;
 import com.fb.commons.to.Money;
@@ -138,7 +140,7 @@ public class PromotionDaoTest extends BaseTestCase {
 
 	@Test
 	public void loadNonExistantGlobalUses() {
-		GlobalPromotionUses globalUses = promotionDao.loadGlobalUses(-2);
+		GlobalPromotionUses globalUses = promotionDao.loadGlobalUses(-12);
 
 		assertNull(globalUses);
 	}
@@ -159,5 +161,53 @@ public class PromotionDaoTest extends BaseTestCase {
 		assertNotNull(userUses);
 		assertEquals(1, userUses.getCurrentCount());
 		assertTrue(userUses.getCurrentAmount().eq(new Money(BigDecimal.ZERO)));
+	}
+	
+	@Test
+	public void updateGlobalUsesIncrementUseCase() {
+		boolean isUpdatedSuccessfully = promotionDao.updateGlobalUses(-2, new BigDecimal(4321));
+
+		GlobalPromotionUses globalPromotionUses = promotionDao.loadGlobalUses(-2);
+		
+		assertTrue(isUpdatedSuccessfully);
+		assertNotNull(globalPromotionUses);
+		assertEquals(13, globalPromotionUses.getCurrentCount());
+		assertTrue(new Money(new BigDecimal(5555)).eq(globalPromotionUses.getCurrentAmount()));
+	}
+	
+	@Test
+	public void updateGlobalUsesCreateNew() {
+		boolean isCreatededSuccessfully = promotionDao.updateGlobalUses(-3, new BigDecimal(1111));
+
+		GlobalPromotionUses globalPromotionUses = promotionDao.loadGlobalUses(-3);
+		
+		assertTrue(isCreatededSuccessfully);
+		assertNotNull(globalPromotionUses);
+		assertEquals(1, globalPromotionUses.getCurrentCount());
+		assertTrue(new Money(new BigDecimal(1111)).eq(globalPromotionUses.getCurrentAmount()));
+	}
+	
+	@Test
+	public void updateUserUsessCreateNew() {
+		boolean isCreatededSuccessfully = promotionDao.updateUserUses(-3, 3, new BigDecimal(222),42);
+
+		UserPromotionUses userPromotionUses = promotionDao.loadUserUses(-3, 3);
+		
+		assertTrue(isCreatededSuccessfully);
+		assertNotNull(userPromotionUses);
+		assertEquals(2, userPromotionUses.getCurrentCount());
+		assertTrue(new Money(new BigDecimal(422)).eq(userPromotionUses.getCurrentAmount()));
+	}
+	
+	@Test(expected=DuplicateKeyException.class)
+	public void updateUserUsesFailed() {
+		boolean isUpdatedSuccessfully = promotionDao.updateUserUses(-3, 3, new BigDecimal(100), 40);
+
+		UserPromotionUses userPromotionUses = promotionDao.loadUserUses(-3, 3);
+		
+		assertFalse(isUpdatedSuccessfully);
+		assertNotNull(userPromotionUses);
+		assertEquals(3, userPromotionUses.getUserId());
+		assertEquals(-3, userPromotionUses.getPromotionId());
 	}
 }

@@ -94,7 +94,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			"	(promotion_id, " +
 			"	current_count, " +
 			"	current_amount) " +
-			"VALUES (?, 1, ?)";
+			"VALUES (?, ?, ?)";
 
 	/*private static final String INCREASE_USER_USES = 
 			"UPDATE user_promotion_uses " +
@@ -196,11 +196,11 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				PreparedStatement ps = con.prepareStatement(CREATE_GLOBAL_USES, new String [] {"id"});
-				ps.setInt(1, promotionId);
-				ps.setInt(2, 1);
-				ps.setBigDecimal(3, valueApplied);
-				return ps;
+				PreparedStatement psgu = con.prepareStatement(CREATE_GLOBAL_USES, new String [] {"id"});
+				psgu.setInt(1, promotionId);
+				psgu.setInt(2, 1);
+				psgu.setBigDecimal(3, valueApplied);
+				return psgu;
 			}
 		}, globalUsesKeyHolder);
 	}
