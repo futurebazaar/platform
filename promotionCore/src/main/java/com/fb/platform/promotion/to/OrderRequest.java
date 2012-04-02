@@ -5,6 +5,7 @@ package com.fb.platform.promotion.to;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ public class OrderRequest implements Serializable {
  
 	private int orderId = 0;
 	private BigDecimal orderValue = null;
-	private List<OrderItem> orderItems = null;
+	private List<OrderItem> orderItems = new ArrayList<OrderItem>();
 
 	public int getOrderId() {
 		return orderId;
