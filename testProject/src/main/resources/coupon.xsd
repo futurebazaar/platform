@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.fb.com/platform/promotion/1.0.0" xmlns:promotion="http://www.fb.com/platform/promotion/1.0.0">
+  <xs:element name="couponRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:couponCode"/>
+        <xs:element ref="promotion:orderRequest"/>
+        <xs:element ref="promotion:clientId"/>
+        <xs:element ref="promotion:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="couponCode" type="xs:string"/>
+  <xs:element name="orderRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:orderId"/>
+        <xs:element ref="promotion:orderValue"/>
+        <xs:element maxOccurs="unbounded" ref="promotion:orderItem"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="orderId" type="xs:int"/>
+  <xs:element name="orderValue" type="xs:decimal"/>
+  <xs:element name="orderItem">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:product"/>
+        <xs:element ref="promotion:quantity"/>
+        <xs:element ref="promotion:price"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="product">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:productId"/>
+        <xs:element maxOccurs="unbounded" ref="promotion:category"/>
+        <xs:element maxOccurs="unbounded" ref="promotion:brand"/>
+        <xs:element ref="promotion:price"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="productId" type="xs:int"/>
+  <xs:element name="category" type="xs:int"/>
+  <xs:element name="brand" type="xs:int"/>
+  <xs:element name="quantity" type="xs:int"/>
+  <xs:element name="clientId" type="xs:int"/>
+  <xs:element name="sessionToken" type="xs:string"/>
+  <xs:element name="price" type="xs:decimal"/>
+
+  <xs:element name="couponResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:couponCode"/>
+        <xs:element ref="promotion:discountValue"/>
+        <xs:element ref="promotion:couponStatus"/>
+        <xs:element ref="promotion:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="discountValue" type="xs:decimal"/>
+  <xs:element name="couponStatus" type="promotion:couponStatus"/>
+
+  <xs:simpleType name="couponStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INVALID_COUPON_CODE"/>
+      <xs:enumeration value="COUPON_CODE_EXPIRED"/>
+      <xs:enumeration value="NOT_AUTHORIZED_USER"/>
+      <xs:enumeration value="NUMBER_OF_USES_EXCEEDED"/>
+      <xs:enumeration value="NOT_APPLICABLE"/>
+      <xs:enumeration value="LESS_ORDER_AMOUNT"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+      <xs:enumeration value="NO_SESSION"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="commitCouponRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:orderId"/>
+        <xs:element ref="promotion:couponCode"/>
+        <xs:element ref="promotion:discountValue"/>
+        <xs:element ref="promotion:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="commitCouponResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:commitCouponStatus"/>
+        <xs:element ref="promotion:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="commitCouponStatus" type="promotion:commitCouponStatus"/>
+
+  <xs:simpleType name="commitCouponStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INVALID_COUPON_CODE"/>
+      <xs:enumeration value="NUMBER_OF_USES_EXCEEDED"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+      <xs:enumeration value="NO_SESSION"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<couponRequest xmlns="http://www.fb.com/platform/promotion/1.0.0">
+	<couponCode>Axb0ndyy</couponCode>
+	<orderRequest>
+		<orderId>10</orderId>
+		<orderValue>10.00</orderValue>
+		<orderItem>
+			<product>
+				<productId>200</productId>
+				<category>10</category>
+				<category>20</category>
+				<brand>110</brand>
+				<brand>120</brand>
+				<price>0.50</price>
+			</product>
+			<quantity>4</quantity>
+			<price>2.00</price>
+		</orderItem>
+		<orderItem>
+			<product>
+				<productId>200</productId>
+				<category>10</category>
+				<category>20</category>
+				<brand>110</brand>
+				<brand>120</brand>
+				<price>0.50</price>
+			</product>
+			<quantity>4</quantity>
+			<price>2.00</price>
+		</orderItem>
+	</orderRequest>
+	<clientId>100</clientId>
+	<sessionToken>xxxx1111yyyy-ee-02==</sessionToken>
+</couponRequest>

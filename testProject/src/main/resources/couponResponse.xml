@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<couponResponse xmlns="http://www.fb.com/platform/promotion/1.0.0">
+	<couponCode>Axb0ndyy</couponCode>
+	<discountValue>10.00</discountValue>
+	<couponStatus>NO_SESSION</couponStatus>
+	<sessionToken>xxxx1111yyyy-ee-02==</sessionToken>
+</couponResponse>

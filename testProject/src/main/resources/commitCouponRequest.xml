@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<commitCouponRequest xmlns="http://www.fb.com/platform/promotion/1.0.0">
+	<orderId>10</orderId>
+	<couponCode>xxxx10</couponCode>
+	<discountValue>10.00</discountValue>
+	<sessionToken>xxxx1111yyyy-ee-02==</sessionToken>
+</commitCouponRequest>

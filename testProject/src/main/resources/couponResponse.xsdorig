@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.fb.com/platform/promotion/1.0.0" xmlns:promotion="http://www.fb.com/platform/promotion/1.0.0">
+  <xs:element name="couponResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:couponCode"/>
+        <xs:element ref="promotion:discountValue"/>
+        <xs:element ref="promotion:couponStatus"/>
+        <xs:element ref="promotion:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="couponCode" type="xs:string"/>
+  <xs:element name="discountValue" type="xs:decimal"/>
+  <xs:element name="couponStatus" type="promotion:couponStatus"/>
+
+  <xs:simpleType name="couponStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INVALID_COUPON_CODE"/>
+      <xs:enumeration value="COUPON_CODE_EXPIRED"/>
+      <xs:enumeration value="NOT_AUTHORIZED_USER"/>
+      <xs:enumeration value="NUMBER_OF_USES_EXCEEDED"/>
+      <xs:enumeration value="NOT_APPLICABLE"/>
+      <xs:enumeration value="LESS_ORDER_AMOUNT"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>
