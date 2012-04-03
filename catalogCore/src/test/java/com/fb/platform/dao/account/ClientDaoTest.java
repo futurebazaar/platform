@@ -9,6 +9,7 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.account.Client;
 import com.fb.platform.dao.BasedaoTestCase;
 
@@ -16,7 +17,7 @@ import com.fb.platform.dao.BasedaoTestCase;
  * @author vinayak
  *
  */
-public class ClientDaoTest extends BasedaoTestCase {
+public class ClientDaoTest extends BaseTestCase {
 
 	@Autowired
 	private ClientDao clientDao;
