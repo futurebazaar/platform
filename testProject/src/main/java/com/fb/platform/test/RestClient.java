@@ -36,13 +36,13 @@ public class RestClient {
 	public static void main(String[] args) throws Exception {
 		//test login
 		String sessionToken = login();
-		//test logout
+		String username = getUser(sessionToken);
 		logout(sessionToken);
 	}
 
 	private static String login() throws Exception {
 		HttpClient httpClient = new HttpClient();
-		PostMethod loginMethod = new PostMethod("http://10.0.101.32:8082/userWS/auth/login");
+		PostMethod loginMethod = new PostMethod("http://localhost:8080/userWS/auth/login");
 		//StringRequestEntity requestEntity = new StringRequestEntity("<loginRequest><username>vinayak</username><password>password</password></loginRequest>", "application/xml", null);
 		LoginRequest loginRequest = new LoginRequest();
 		loginRequest.setUsername("jasvipul@gmail.com");
@@ -72,7 +72,7 @@ public class RestClient {
 	private static void logout(String sessionToken) throws Exception {
 		HttpClient httpClient = new HttpClient();
 
-		PostMethod logoutMethod = new PostMethod("http://10.0.101.32:8082/userWS/auth/logout");
+		PostMethod logoutMethod = new PostMethod("http://localhost:8080/userWS/auth/logout");
 		LogoutRequest logoutReq = new LogoutRequest();
 		logoutReq.setSessionToken(sessionToken);
 		
@@ -97,14 +97,14 @@ public class RestClient {
 		System.out.println(logoutResponse.getLogoutStatus());
 	}
 	
-	private static String getUser() throws Exception{
+	private static String getUser(String sessionToken) throws Exception{
 		
 		HttpClient httpClient = new HttpClient();
 
 		PostMethod getUserMethod = new PostMethod("http://localhost:8080/userWS/user/get");
 		GetUserRequest getUserRequest = new GetUserRequest();
 		getUserRequest.setKey("jasvipul@gmail.com");
-		getUserRequest.setSessionToken("");
+		getUserRequest.setSessionToken(sessionToken);
 
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.auth._1_0");
 		Marshaller marshaller = context.createMarshaller();

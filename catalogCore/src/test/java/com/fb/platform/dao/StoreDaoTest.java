@@ -7,6 +7,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.catagory.Store;
 import com.fb.platform.dao.catagory.StoreDao;
 
@@ -14,7 +15,7 @@ import com.fb.platform.dao.catagory.StoreDao;
  * @author vinayak
  *
  */
-public class StoreDaoTest extends BasedaoTestCase {
+public class StoreDaoTest extends BaseTestCase {
 
 	@Autowired
 	private StoreDao storeDao;
