@@ -287,6 +287,14 @@
 			<value name="promotion_id">-5</value>
 			<value name="promotion_id">POST_ISSUE</value>
 		</row>
+		<row>
+			<value name="id">-5</value>
+			<value name="created_on">2012-01-01 00:00:00</value>
+			<value name="last_modified_on">2012-05-31 00:00:00</value>
+			<value name="coupon_code">preIssuedNoCouponUserEntry</value>
+			<value name="promotion_id">-5</value>
+			<value name="promotion_id">PRE_ISSUE</value>
+		</row>
 	</table>
 	<table name="coupon_limits_config">
 		<column>id</column>
@@ -326,6 +334,14 @@
 			<value name="max_amount">10000</value>
 			<value name="max_uses_per_user">2</value>
 			<value name="max_amount_per_user">1000</value>
+		</row>
+		<row>
+			<value name="id">-5</value>
+			<value name="coupon_id">-5</value>
+			<value name="max_uses">17</value>
+			<value name="max_amount">17000</value>
+			<value name="max_uses_per_user">6</value>
+			<value name="max_amount_per_user">6000</value>
 		</row>
 	</table>
 	<table name="user_coupon_uses">

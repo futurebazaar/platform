@@ -69,6 +69,13 @@ public class CouponDaoTest extends BaseTestCase {
 	}
 
 	@Test
+	public void loadPreIssueNoCouponUserEntry() {
+		Coupon coupon = couponDao.load("preIssuedNoCouponUserEntry", -2);
+
+		assertNull(coupon);
+	}
+
+	@Test
 	public void loadPostIssueFirst() {
 		Coupon coupon = couponDao.load("post_issued_1", 22);
 
