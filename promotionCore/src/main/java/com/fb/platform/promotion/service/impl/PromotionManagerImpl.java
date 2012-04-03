@@ -89,14 +89,18 @@ public class PromotionManagerImpl implements PromotionManager {
 			return response;
 		}
 
-		boolean withinCouponUsesLimits = validateCouponUses(coupon, userId);
+		GlobalCouponUses globalCouponUses = couponDao.loadGlobalUses(coupon.getId());
+		UserCouponUses userCouponUses = couponDao.loadUserUses(coupon.getId(), userId);
+		boolean withinCouponUsesLimits = validateCouponUses(coupon, globalCouponUses, userCouponUses);
 		if (!withinCouponUsesLimits) {
 			logger.warn("Coupon exceeded limit. Coupon code : " + coupon.getCode());
 			response.setCouponStatus(CouponResponseStatusEnum.NUMBER_OF_USES_EXCEEDED);
 			return response;
 		}
 
-		boolean withinPromotionUsesLimits = validatePromotionUses(promotion, userId);
+		GlobalPromotionUses globalPromotionUses = promotionDao.loadGlobalUses(promotion.getId());
+		UserPromotionUses userPromotionUses = promotionDao.loadUserUses(promotion.getId(), userId);
+		boolean withinPromotionUsesLimits = validatePromotionUses(promotion, globalPromotionUses, userPromotionUses);
 		if (!withinPromotionUsesLimits) {
 			logger.warn("Coupon exceeded Promotions limit. Coupon code : " + coupon.getCode());
 			response.setCouponStatus(CouponResponseStatusEnum.NUMBER_OF_USES_EXCEEDED);
@@ -112,6 +116,24 @@ public class PromotionManagerImpl implements PromotionManager {
 		}
 		Money discount = promotion.apply(request.getOrderReq());
 		if (discount != null) {
+			globalCouponUses.increment(discount);
+			userCouponUses.increment(discount);
+			boolean withinCouponUsesLimitsAfterApplying = validateCouponUses(coupon, globalCouponUses, userCouponUses);
+			if (!withinCouponUsesLimitsAfterApplying) {
+				logger.warn("Coupon exceeded limit. Coupon code : " + coupon.getCode());
+				response.setCouponStatus(CouponResponseStatusEnum.NUMBER_OF_USES_EXCEEDED);
+				return response;
+			}
+			
+			globalPromotionUses.increment(discount);
+			userPromotionUses.increment(discount);
+			boolean withinPromotionUsesLimitsAfterApplying = validatePromotionUses(promotion, globalPromotionUses, userPromotionUses);
+			if (!withinPromotionUsesLimitsAfterApplying) {
+				logger.warn("Coupon exceeded Promotions limit. Coupon code : " + coupon.getCode());
+				response.setCouponStatus(CouponResponseStatusEnum.NUMBER_OF_USES_EXCEEDED);
+				return response;
+			}
+			
 			response.setCouponStatus(CouponResponseStatusEnum.SUCCESS);
 			response.setDiscountValue(discount.getAmount());
 			response.setCouponCode(request.getCouponCode());
@@ -161,12 +183,12 @@ public class PromotionManagerImpl implements PromotionManager {
 			return response;
 		}
 
-		boolean globalCuponUpdateSuccess = couponDao.updateGlobalUses(coupon.getId(), request.getDiscountValue());
+		/*boolean globalCuponUpdateSuccess = couponDao.updateGlobalUses(coupon.getId(), request.getDiscountValue());
 		if (!globalCuponUpdateSuccess) {
 			logger.error("Unable to update the global uses for coupon code : " + coupon.getCode());
 			response.setCommitCouponStatus(CommitCouponStatusEnum.INTERNAL_ERROR);
 			return response;
-		}
+		}*/
 
 		boolean userCuponUpdateStatus = couponDao.updateUserUses(coupon.getId(), userId, request.getDiscountValue(), request.getOrderId());
 		if (!userCuponUpdateStatus) {
@@ -175,12 +197,12 @@ public class PromotionManagerImpl implements PromotionManager {
 			return response;
 		}
 
-		boolean globalPromotionUpdateSuccess = promotionDao.updateGlobalUses(promotion.getId(), request.getDiscountValue());
+		/*boolean globalPromotionUpdateSuccess = promotionDao.updateGlobalUses(promotion.getId(), request.getDiscountValue());
 		if (!globalPromotionUpdateSuccess) {
 			logger.error("Unable to update global promotion uses for Coupon code : " + coupon.getCode());
 			response.setCommitCouponStatus(CommitCouponStatusEnum.INTERNAL_ERROR);
 			return response;
-		}
+		}*/
 
 		boolean userPromotionUpdateStatus = promotionDao.updateUserUses(promotion.getId(), userId, request.getDiscountValue(), request.getOrderId());
 		if (!userPromotionUpdateStatus) {
@@ -193,16 +215,11 @@ public class PromotionManagerImpl implements PromotionManager {
 		return response;
 	}
 
-	private boolean validatePromotionUses(Promotion promotion, int userId) {
-		GlobalPromotionUses globalUses = promotionDao.loadGlobalUses(promotion.getId());
-		UserPromotionUses userUses = promotionDao.loadUserUses(promotion.getId(), userId);
-		return promotion.isWithinLimits(globalUses, userUses);
+	private boolean validatePromotionUses(Promotion promotion, GlobalPromotionUses globalPromotionUses, UserPromotionUses userPromotionUses) {
+		return promotion.isWithinLimits(globalPromotionUses, userPromotionUses);
 	}
 
-	private boolean validateCouponUses(Coupon coupon, int userId) {
-		GlobalCouponUses globalUses = couponDao.loadGlobalUses(coupon.getId());
-		UserCouponUses userUses = couponDao.loadUserUses(coupon.getId(), userId);
-
+	private boolean validateCouponUses(Coupon coupon, GlobalCouponUses globalUses, UserCouponUses userUses) {
 		return coupon.isWithinLimits(globalUses, userUses);
 	}
 

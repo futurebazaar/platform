@@ -66,14 +66,21 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			"max_amount_per_user " +
 			"FROM promotion_limits_config where promotion_id = ?";
 
-	private static final String LOAD_GLOABL_PROMOTION_USES_QUERY = 
+/*	private static final String LOAD_GLOABL_PROMOTION_USES_QUERY_old = 
 			"SELECT " +
 			"id, " +
 			"promotion_id, " +
 			"current_count, " +
 			"current_amount " +
-			"FROM global_promotion_uses WHERE promotion_id = ?";
+			"FROM global_promotion_uses WHERE promotion_id = ?";*/
 
+	private static final String LOAD_GLOABL_PROMOTION_USES_QUERY = 
+			"SELECT " +
+			"	count(*) as current_count, " +
+			"	sum(upu.discount_amount) as current_amount, " +
+			"	promotion_id " +
+			"FROM user_promotion_uses upu WHERE promotion_id = ?";
+	
 	private static final String LOAD_USER_PROMOTION_USES_QUERY = 
 			"SELECT " +
 			"	count(*) as current_count, " +
@@ -82,7 +89,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			"	user_id " +
 			"FROM user_promotion_uses upu WHERE promotion_id = ? AND user_id = ?";
 
-	private static final String INCREASE_GLOBAL_USES = 
+/*	private static final String INCREASE_GLOBAL_USES = 
 			"UPDATE global_promotion_uses " +
 			"SET " +
 			"	current_count = current_count + 1, " +
@@ -94,7 +101,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			"	(promotion_id, " +
 			"	current_count, " +
 			"	current_amount) " +
-			"VALUES (?, ?, ?)";
+			"VALUES (?, ?, ?)";*/
 
 	/*private static final String INCREASE_USER_USES = 
 			"UPDATE user_promotion_uses " +
@@ -172,7 +179,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		return userPromotionUses;
 	}
 
-	@Override
+/*	@Override
 	public boolean updateGlobalUses(int promotionId, BigDecimal valueApplied) {
 		GlobalPromotionUses globalUses = loadGlobalUses(promotionId);
 		if (globalUses == null) {
@@ -182,9 +189,9 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			incrementGlobalUses(promotionId, valueApplied);
 		}
 		return true;
-	}
+	}*/
 
-	private void incrementGlobalUses(int promotionId, BigDecimal valueApplied) {
+/*	private void incrementGlobalUses(int promotionId, BigDecimal valueApplied) {
 		int update = jdbcTemplate.update(INCREASE_GLOBAL_USES, valueApplied, promotionId);
 		if (update != 1) {
 			throw new PlatformException("Unable to update the global promotion uses for promotionId : " + promotionId);
@@ -203,7 +210,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 				return psgu;
 			}
 		}, globalUsesKeyHolder);
-	}
+	}*/
 
 	@Override
 	public boolean updateUserUses(int promotionId, int userId, BigDecimal valueApplied, int orderId) {

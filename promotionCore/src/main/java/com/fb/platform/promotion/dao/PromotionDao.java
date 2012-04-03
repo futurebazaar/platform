@@ -21,7 +21,7 @@ public interface PromotionDao {
 
 	public UserPromotionUses loadUserUses(int promotionId, int userId);
 
-	public boolean updateGlobalUses(int promotionId, BigDecimal valueApplied);
+	//public boolean updateGlobalUses(int promotionId, BigDecimal valueApplied);
 
 	public boolean updateUserUses(int promotionId, int userId, BigDecimal valueApplied, int orderId);
 }
