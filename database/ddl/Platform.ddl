@@ -268,9 +268,9 @@ CREATE TABLE coupon_limits_config (
 
 CREATE TABLE user_coupon_uses (
 	id INTEGER NOT NULL AUTO_INCREMENT,
-	coupon_id INTEGER,
-	user_id INTEGER,
-	order_id INTEGER,
+	coupon_id INTEGER NOT NULL,
+	user_id INTEGER NOT NULL,
+	order_id INTEGER NOT NULL,
 	discount_amount DECIMAL(18,2),
 	PRIMARY KEY(id),
 	UNIQUE(coupon_id,user_id,order_id),
@@ -280,9 +280,9 @@ CREATE TABLE user_coupon_uses (
 
 CREATE TABLE coupon_user (
 	id INTEGER NOT NULL AUTO_INCREMENT,
-	coupon_id int(11) NOT NULL,
-	user_id int(11) NOT NULL,
-	over_ride_user_limit int(11) NOT NULL,
+	coupon_id INTEGER  NOT NULL,
+	user_id INTEGER  NOT NULL,
+	over_ride_user_limit INTEGER NOT NULL,
 	PRIMARY KEY(id),
 	UNIQUE(coupon_id,user_id),
 	FOREIGN KEY (coupon_id) REFERENCES coupon (id) ON DELETE CASCADE,
