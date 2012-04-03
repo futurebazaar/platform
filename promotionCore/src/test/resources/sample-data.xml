@@ -437,30 +437,30 @@
 		<column>id</column>
 		<column>coupon_id</column>
 		<column>user_id</column>
-		<column>over_ride_user_limit</column>
+		<column>override_user_uses_limit</column>
 		<row>
 			<value name="id">-1</value>
 			<value name="coupon_id">-1</value>
 			<value name="user_id">-1</value>
-			<value name="over_ride_user_limit">2</value>
+			<value name="override_user_uses_limit">2</value>
 		</row>
 		<row>
 			<value name="id">-2</value>
 			<value name="coupon_id">-1</value>
 			<value name="user_id">-2</value>
-			<value name="over_ride_user_limit">2</value>
+			<value name="override_user_uses_limit">2</value>
 		</row>
 		<row>
-			<value name="id">-2</value>
+			<value name="id">-3</value>
 			<value name="coupon_id">-2</value>
 			<value name="user_id">-1</value>
-			<value name="over_ride_user_limit">2</value>
+			<value name="override_user_uses_limit">2</value>
 		</row>
 		<row>
-			<value name="id">-2</value>
+			<value name="id">-4</value>
 			<value name="coupon_id">-2</value>
 			<value name="user_id">-2</value>
-			<value name="over_ride_user_limit">2</value>
+			<value name="override_user_uses_limit">2</value>
 		</row>
 	</table>
 </dataset>
