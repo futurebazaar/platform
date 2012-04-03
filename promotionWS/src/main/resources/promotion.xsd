@@ -15,7 +15,6 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="promotion:orderId"/>
-        <xs:element ref="promotion:orderValue"/>
         <xs:element maxOccurs="unbounded" ref="promotion:orderItem"/>
       </xs:sequence>
     </xs:complexType>
@@ -27,7 +26,6 @@
       <xs:sequence>
         <xs:element ref="promotion:product"/>
         <xs:element ref="promotion:quantity"/>
-        <xs:element ref="promotion:price"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
