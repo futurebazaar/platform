@@ -32,7 +32,7 @@ public class CouponDaoTest extends BaseTestCase {
 
 	@Test
 	public void loadGlobal() {
-		Coupon coupon = couponDao.load("global_coupon_1");
+		Coupon coupon = couponDao.load("global_coupon_1", 0);
 
 		assertNotNull(coupon);
 
@@ -51,7 +51,7 @@ public class CouponDaoTest extends BaseTestCase {
 
 	@Test
 	public void loadPreIssue() {
-		Coupon coupon = couponDao.load("pre_issued_1");
+		Coupon coupon = couponDao.load("pre_issued_1", -1);
 
 		assertNotNull(coupon);
 
@@ -63,14 +63,14 @@ public class CouponDaoTest extends BaseTestCase {
 		CouponLimitsConfig limitsConfig = coupon.getLimitsConfig();
 		assertNotNull(limitsConfig);
 		assertEquals(0, limitsConfig.getMaxUses());
-		assertEquals(1, limitsConfig.getMaxUsesPerUser());
+		assertEquals(3, limitsConfig.getMaxUsesPerUser()); //the value is updated from the coupon_user table for user -1
 		assertNull(limitsConfig.getMaxAmount());
 		assertTrue(limitsConfig.getMaxAmountPerUser().eq(new Money(new BigDecimal(2000))));
 	}
 
 	@Test
 	public void loadPostIssueFirst() {
-		Coupon coupon = couponDao.load("post_issued_1");
+		Coupon coupon = couponDao.load("post_issued_1", 22);
 
 		assertNotNull(coupon);
 
@@ -89,7 +89,7 @@ public class CouponDaoTest extends BaseTestCase {
 
 	@Test
 	public void loadPostIssueSecond() {
-		Coupon coupon = couponDao.load("post_issued_2");
+		Coupon coupon = couponDao.load("post_issued_2", 0);
 
 		assertNotNull(coupon);
 
@@ -108,7 +108,7 @@ public class CouponDaoTest extends BaseTestCase {
 
 	@Test
 	public void loadNoxExistent() {
-		Coupon coupon = couponDao.load("i_dont_exists");
+		Coupon coupon = couponDao.load("i_dont_exists", -1);
 
 		assertNull(coupon);
 	}

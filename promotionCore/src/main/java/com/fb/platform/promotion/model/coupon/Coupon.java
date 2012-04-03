@@ -16,6 +16,8 @@ public class Coupon implements Serializable {
 	private int promotionId;
 	private CouponType type;
 	private CouponLimitsConfig limitsConfig;
+	//if it is a preIssue coupon, then find the user associated with this coupon
+	private int userId;
 
 	public boolean isWithinLimits(GlobalCouponUses globalUses, UserCouponUses userUses) {
 		//TODO change the behaviour for different coupon types

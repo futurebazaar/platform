@@ -14,6 +14,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowCountCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -87,7 +88,7 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			"FROM coupon_user WHERE coupon_id = ? AND user_id = ?";
 
 	@Override
-	public Coupon load(String couponCode) {
+	public Coupon load(String couponCode, int userId) {
 		Coupon coupon = null;
 		try {
 			coupon = jdbcTemplate.queryForObject(LOAD_COUPON_QUERY, new Object [] {couponCode}, new CouponMapper());
@@ -105,6 +106,24 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			throw new PlatformException("Coupon Limits are not configured for the coupon code - " + couponCode, e);
 		}
 		coupon.setLimitsConfig(limitsConfig);
+
+		if (coupon.getType() == CouponType.PRE_ISSUE) {
+			//PRE_ISSUE coupons are issued to a particular user.
+			//find out the user associated with this coupon
+			CouponUserRowCallbackHandler curch = new CouponUserRowCallbackHandler();
+			jdbcTemplate.query(LOAD_COUPON_USER_QUERY, curch, coupon.getId(), userId);
+
+			if (curch.getColumnCount() == 0) {
+				//this coupon does not belong to this user. sorry bye
+				//TODO return a proper error or throw correct exectption. for the time being return null coupon which will map to no coupon found message.
+				log.error("Coupon code : " + couponCode + " does not belong to userId : " + userId);
+				return null;
+			}
+			//see if the user uses limit is overridden for this user. if so update our limits objects
+			if (curch.userUsesLimitOverride != 0) {
+				limitsConfig.setMaxUsesPerUser(curch.userUsesLimitOverride);
+			}
+		}
 
 		return coupon;
 	}
@@ -131,39 +150,6 @@ public class CouponDaoJdbcImpl implements CouponDao {
 		return userCouponUses;
 	}
 
-	/*@Override
-	public boolean updateGlobalUses(int couponId, BigDecimal valueApplied) {
-		GlobalCouponUses globalUses = loadGlobalUses(couponId);
-		if (globalUses == null) {
-			//first time use of the coupon, create a new object
-			createGlobalUses(couponId, valueApplied);
-		} else {
-			incrementGlobalUses(couponId, valueApplied);
-		}
-		return true;
-	}*/
-
-/*	private void incrementGlobalUses(int couponId, BigDecimal valueApplied) {
-		int update = jdbcTemplate.update(INCREASE_GLOBAL_USES, valueApplied, couponId);
-		if (update != 1) {
-			throw new PlatformException("Unable to update the global coupon uses for couponId : " + couponId);
-		}
-	}*/
-
-	/*private void createGlobalUses(final int couponId, final BigDecimal valueApplied) {
-		KeyHolder globalUsesKeyHolder = new GeneratedKeyHolder();
-		jdbcTemplate.update(new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				PreparedStatement ps = con.prepareStatement(CREATE_GLOBAL_USES, new String [] {"id"});
-				ps.setInt(1, couponId);
-				ps.setInt(2, 1);
-				ps.setBigDecimal(3, valueApplied);
-				return ps;
-			}
-		}, globalUsesKeyHolder);
-	}*/
-
 	@Override
 	public boolean updateUserUses(int couponId, int userId, BigDecimal valueApplied, int orderId) {
 		
@@ -171,13 +157,6 @@ public class CouponDaoJdbcImpl implements CouponDao {
 		createUserUses(couponId, userId, valueApplied, orderId);
 		return true;
 	}
-
-	/*private void incrementUserUses(int couponId, int userId, BigDecimal valueApplied) {
-		int update = jdbcTemplate.update(INCREASE_USER_USES, valueApplied, couponId, userId);
-		if (update != 1) {
-			throw new PlatformException("Unable to update the user coupon uses for couponId : " + couponId + " and userId : " + userId);
-		}
-	}*/
 
 	private void createUserUses(final int couponId, final int userId, final BigDecimal valueApplied, final int orderId) {
 		KeyHolder userUsesKeyHolder = new GeneratedKeyHolder();
@@ -207,6 +186,18 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			coupon.setType(CouponType.valueOf(rs.getString("coupon_type")));
 
 			return coupon;
+		}
+	}
+
+	private static class CouponUserRowCallbackHandler extends RowCountCallbackHandler {
+
+		private int userId = 0;
+		private int userUsesLimitOverride = 0;
+
+		@Override
+		public void processRow(ResultSet rs, int rowNum) throws SQLException {
+			userId = rs.getInt("user_id");
+			userUsesLimitOverride = rs.getInt("override_user_uses_limit");
 		}
 	}
 

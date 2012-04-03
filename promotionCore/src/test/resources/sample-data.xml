@@ -448,19 +448,19 @@
 			<value name="id">-2</value>
 			<value name="coupon_id">-1</value>
 			<value name="user_id">-2</value>
-			<value name="override_user_uses_limit">2</value>
+			<value name="override_user_uses_limit">0</value>
 		</row>
 		<row>
 			<value name="id">-3</value>
 			<value name="coupon_id">-2</value>
 			<value name="user_id">-1</value>
-			<value name="override_user_uses_limit">2</value>
+			<value name="override_user_uses_limit">3</value>
 		</row>
 		<row>
 			<value name="id">-4</value>
 			<value name="coupon_id">-2</value>
 			<value name="user_id">-2</value>
-			<value name="override_user_uses_limit">2</value>
+			<value name="override_user_uses_limit">4</value>
 		</row>
 	</table>
 </dataset>
