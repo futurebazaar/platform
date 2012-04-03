@@ -2,7 +2,7 @@
 
 
 DROP TABLE IF EXISTS categories_store,sso_session, crypto_key,users_email,users_phone ,user_promotion_uses , user_coupon_uses , users_profile , auth_user,locations_address ,locations_city,locations_state,locations_country,client_master,
-promotion_rule_config,promotion_limits_config,global_promotion_uses ,coupon_limits_config ,global_coupon_uses ,coupon ,promotion,promotion_rule , accounts_client;
+promotion_rule_config,promotion_limits_config,coupon_limits_config,coupon ,promotion,promotion_rule,coupon_user, accounts_client;
 
 
 --  ******************** CREATE TABLE *****************
@@ -195,6 +195,8 @@ CREATE TABLE promotion_rule (
 
 CREATE TABLE promotion (
 	id INTEGER NOT NULL AUTO_INCREMENT,
+	created_on DATETIME,
+	last_modified_on DATETIME,
 	rule_id INTEGER,
 	valid_from DATETIME,
 	valid_till DATETIME, 
@@ -229,16 +231,6 @@ CREATE TABLE promotion_limits_config (
 	FOREIGN KEY (promotion_id) REFERENCES promotion(id) ON DELETE CASCADE
 );
 
-CREATE TABLE global_promotion_uses (
-	id INTEGER NOT NULL AUTO_INCREMENT,
-	promotion_id INTEGER,
-	current_count INTEGER,
-	current_amount DECIMAL(18,2),
-	PRIMARY KEY(id),
-	UNIQUE(promotion_id),
-	FOREIGN KEY (promotion_id) REFERENCES promotion(id) ON DELETE CASCADE
-);
-
 CREATE TABLE user_promotion_uses (
 	id INTEGER NOT NULL AUTO_INCREMENT,
 	promotion_id INTEGER,
@@ -253,6 +245,8 @@ CREATE TABLE user_promotion_uses (
 
 CREATE TABLE coupon (
 	id INTEGER NOT NULL AUTO_INCREMENT,
+	created_on DATETIME,
+	last_modified_on DATETIME,
 	coupon_code VARCHAR(30),
 	promotion_id INTEGER,
 	coupon_type VARCHAR(10),
@@ -272,16 +266,6 @@ CREATE TABLE coupon_limits_config (
 	FOREIGN KEY (coupon_id) REFERENCES coupon(id) ON DELETE CASCADE
 );
 
-CREATE TABLE global_coupon_uses (
-	id INTEGER NOT NULL AUTO_INCREMENT,
-	coupon_id INTEGER,
-	current_count INTEGER,
-	current_amount DECIMAL(18,2),
-	PRIMARY KEY(id),
-	UNIQUE(coupon_id),
-	FOREIGN KEY (coupon_id) REFERENCES coupon(id) ON DELETE CASCADE
-);
-
 CREATE TABLE user_coupon_uses (
 	id INTEGER NOT NULL AUTO_INCREMENT,
 	coupon_id INTEGER,
@@ -292,6 +276,17 @@ CREATE TABLE user_coupon_uses (
 	UNIQUE(coupon_id,user_id,order_id),
 	FOREIGN KEY (coupon_id) REFERENCES coupon(id) ON DELETE CASCADE,
 	FOREIGN KEY (user_id) REFERENCES users_profile(id) ON DELETE CASCADE
+);
+
+CREATE TABLE coupon_user (
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	coupon_id int(11) NOT NULL,
+	user_id int(11) NOT NULL,
+	over_ride_user_limit int(11) NOT NULL,
+	PRIMARY KEY(id),
+	UNIQUE(coupon_id,user_id),
+	FOREIGN KEY (coupon_id) REFERENCES coupon (id) ON DELETE CASCADE,
+	FOREIGN KEY (user_id) REFERENCES users_profile (user_id) ON DELETE CASCADE
 );
 
 -- end of promotion tables 
