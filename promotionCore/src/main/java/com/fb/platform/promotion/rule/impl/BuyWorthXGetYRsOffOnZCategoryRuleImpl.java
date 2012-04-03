@@ -43,8 +43,6 @@ public class BuyWorthXGetYRsOffOnZCategoryRuleImpl implements PromotionRule {
 
 	@Override
 	public Money execute(OrderRequest request) {
-		Money orderVal = new Money(request.getOrderValue());
-		Money calcDiscValue = orderVal.minus(fixedRsOff);
-		return calcDiscValue;
+		return fixedRsOff;
 	}
 }
