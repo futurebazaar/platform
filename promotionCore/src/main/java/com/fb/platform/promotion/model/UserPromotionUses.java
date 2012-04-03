@@ -42,4 +42,9 @@ public class UserPromotionUses implements Serializable {
 	public void setPromotionId(int promotionId) {
 		this.promotionId = promotionId;
 	}
+	
+	public void increment(Money discountAmount){
+		this.currentAmount.plus(discountAmount);
+		this.currentCount++;
+	}
 }

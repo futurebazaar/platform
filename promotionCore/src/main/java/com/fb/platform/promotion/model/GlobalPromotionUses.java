@@ -36,4 +36,8 @@ public class GlobalPromotionUses implements Serializable {
 		this.promotionId = promotionId;
 	}
 
+	public void increment(Money discountAmount){
+		this.currentAmount.plus(discountAmount);
+		this.currentCount++;
+	}
 }

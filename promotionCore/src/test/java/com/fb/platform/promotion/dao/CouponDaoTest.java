@@ -118,15 +118,15 @@ public class CouponDaoTest extends BaseTestCase {
 		GlobalCouponUses globalUses = couponDao.loadGlobalUses(-1);
 
 		assertNotNull(globalUses);
-		assertEquals(10, globalUses.getCurrentCount());
-		assertTrue(globalUses.getCurrentAmount().eq(new Money(new BigDecimal(10000))));
+		assertEquals(1, globalUses.getCurrentCount());
+		assertTrue(globalUses.getCurrentAmount().eq(new Money(new BigDecimal(2000))));
 	}
 
 	@Test
 	public void loadNonExistantGlobalUses() {
 		GlobalCouponUses globalUses = couponDao.loadGlobalUses(-2);
 
-		assertNull(globalUses);
+		assertNotNull(globalUses);
 	}
 
 	@Test

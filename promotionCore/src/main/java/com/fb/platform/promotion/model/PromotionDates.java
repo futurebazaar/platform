@@ -26,14 +26,14 @@ public class PromotionDates implements Serializable {
 		if (validFrom == null) {
 			greaterThanStart = true;
 		} else {
-			if (dateComparator.compare(validFrom, null) < 0) {
+			if (dateComparator.compare(validFrom, null) <= 0) {
 				greaterThanStart = true;
 			}
 		}
 		if (validTill == null) {
 			lessThanEnd = true;
 		} else {
-			if (dateComparator.compare(validTill, null) > 0) {
+			if (dateComparator.compare(validTill, null) >= 0) {
 				lessThanEnd = true;
 			}
 		}

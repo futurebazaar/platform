@@ -94,7 +94,7 @@ public class RuleDaoJdbcImpl implements RuleDao {
 
 		@Override
 		public RuleConfigItem mapRow(ResultSet rs, int rowNum) throws SQLException {
-			RuleConfigItem configItem = new RuleConfigItem(null, null);
+			RuleConfigItem configItem = new RuleConfigItem(rs.getString("name"), rs.getString("value"));
 			return configItem;
 		}
 	}

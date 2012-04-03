@@ -161,7 +161,6 @@ public class CouponResource {
 	private com.fb.platform.promotion.to.OrderRequest getApiOrderRequest(OrderRequest xmlOrderRequest) {
 		com.fb.platform.promotion.to.OrderRequest apiOrderRequest = new com.fb.platform.promotion.to.OrderRequest();
 		apiOrderRequest.setOrderId(xmlOrderRequest.getOrderId());
-		apiOrderRequest.setOrderValue(xmlOrderRequest.getOrderValue());
 
 		for (OrderItem xmlOrderItem : xmlOrderRequest.getOrderItem()) {
 			com.fb.platform.promotion.to.OrderItem apiOrderItem = createApiOrderItem(xmlOrderItem);
@@ -172,7 +171,6 @@ public class CouponResource {
 
 	private com.fb.platform.promotion.to.OrderItem createApiOrderItem(OrderItem xmlOrderItem) {
 		com.fb.platform.promotion.to.OrderItem apiOrderItem = new com.fb.platform.promotion.to.OrderItem();
-		apiOrderItem.setPrice(xmlOrderItem.getPrice());
 		apiOrderItem.setQuantity(xmlOrderItem.getQuantity());
 
 		Product xmlProduct = xmlOrderItem.getProduct();

@@ -41,12 +41,11 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule {
 	public Money execute(OrderRequest request) {
 		Money orderVal = new Money(request.getOrderValue());
 		Money discountAmount = (orderVal.times(discountPercentage.doubleValue())).div(100); 
-		Money calcDiscValue = orderVal.minus(discountAmount);
-		if(calcDiscValue.gteq(maxDiscountPerUse)){
+		if(discountAmount.gteq(maxDiscountPerUse)){
 			return maxDiscountPerUse;
 		}
 		else{
-			return calcDiscValue;
+			return discountAmount;
 		}
 	}
 }

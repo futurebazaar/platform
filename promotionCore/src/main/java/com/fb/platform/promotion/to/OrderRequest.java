@@ -15,7 +15,6 @@ import java.util.List;
 public class OrderRequest implements Serializable {
  
 	private int orderId = 0;
-	private BigDecimal orderValue = null;
 	private List<OrderItem> orderItems = new ArrayList<OrderItem>();
 
 	public int getOrderId() {
@@ -25,10 +24,11 @@ public class OrderRequest implements Serializable {
 		this.orderId = orderId;
 	}
 	public BigDecimal getOrderValue() {
-		return orderValue;
-	}
-	public void setOrderValue(BigDecimal orderValue) {
-		this.orderValue = orderValue;
+		BigDecimal orderValue = new BigDecimal(0);
+		for(OrderItem oItem : orderItems){
+			orderValue = orderValue.add(oItem.getPrice());
+		}
+				return orderValue;
 	}
 	public List<OrderItem> getOrderItems() {
 		return orderItems;
@@ -36,5 +36,19 @@ public class OrderRequest implements Serializable {
 	public void setOrderItems(List<OrderItem> orderItems) {
 		this.orderItems = orderItems;
 	}
+	
+	public boolean isAllProductsInCategory(List<Integer> categories){
+		for(OrderItem o:orderItems){
+			if(!o.isOrderItemInCategory(categories)){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean isAnyProductInCategory(){
+		return false;
+	}
+	
 
 }

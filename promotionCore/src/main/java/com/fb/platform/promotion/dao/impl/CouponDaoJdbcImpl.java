@@ -55,14 +55,21 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			"	max_amount_per_user " +
 			"FROM coupon_limits_config WHERE coupon_id = ?";
 
-	private static final String LOAD_GLOBAL_COUPON_USES_QUERY = 
+/*	private static final String LOAD_GLOBAL_COUPON_USES_QUERY = 
 			"SELECT " +
 			"	id, " +
 			"	coupon_id, " +
 			"	current_count, " +
 			"	current_amount " +
-			"FROM global_coupon_uses WHERE coupon_id = ?";
+			"FROM global_coupon_uses WHERE coupon_id = ?";*/
 
+	private static final String LOAD_GLOBAL_COUPON_USES_QUERY = 
+			"SELECT " +
+			"	count(*) as current_count, " +
+			"	sum(ucu.discount_amount) as current_amount, " +
+			"	coupon_id " +
+			"FROM user_coupon_uses ucu WHERE coupon_id = ?";
+	
 	private static final String LOAD_USER_COUPON_USES_QUERY = 
 			"SELECT " +
 			"	count(*) as current_count, " +
@@ -71,27 +78,6 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			"	user_id " +
 			"FROM user_coupon_uses ucu WHERE coupon_id = ? AND user_id = ?";
 
-	private static final String INCREASE_GLOBAL_USES = 
-			"UPDATE global_coupon_uses " +
-			"SET " +
-			"	current_count = current_count + 1, " +
-			"	current_amount = current_amount + ? " +
-			"WHERE coupon_id = ?";
-
-	private static final String CREATE_GLOBAL_USES = 
-			"INSERT INTO global_coupon_uses " +
-			"	(coupon_id, " +
-			"	current_count, " +
-			"	current_amount) " +
-			"VALUES (?, 1, ?)";
-
-/*	private static final String INCREASE_USER_USES = 
-			"UPDATE user_coupon_uses " +
-			"SET " +
-			"	current_count = current_count + 1, " +
-			"	current_amount = current_amount + ? " +
-			"WHERE coupon_id = ? AND user_id = ?";*/
-
 	private static final String CREATE_USER_USES = 
 			"INSERT INTO user_coupon_uses " +
 			"	(coupon_id, " +
@@ -99,6 +85,27 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			"	order_id, " +
 			"	discount_amount) " +
 			"VALUES (?, ?, ?, ?)";
+	
+/*	private static final String INCREASE_GLOBAL_USES = 
+			"UPDATE global_coupon_uses " +
+			"SET " +
+			"	current_count = current_count + 1, " +
+			"	current_amount = current_amount + ? " +
+			"WHERE coupon_id = ?";*/
+
+/*	private static final String CREATE_GLOBAL_USES = 
+			"INSERT INTO global_coupon_uses " +
+			"	(coupon_id, " +
+			"	current_count, " +
+			"	current_amount) " +
+			"VALUES (?, ?, ?)";*/
+
+/*	private static final String INCREASE_USER_USES = 
+			"UPDATE user_coupon_uses " +
+			"SET " +
+			"	current_count = current_count + 1, " +
+			"	current_amount = current_amount + ? " +
+			"WHERE coupon_id = ? AND user_id = ?";*/
 
 	@Override
 	public Coupon load(String couponCode) {
@@ -145,7 +152,7 @@ public class CouponDaoJdbcImpl implements CouponDao {
 		return userCouponUses;
 	}
 
-	@Override
+	/*@Override
 	public boolean updateGlobalUses(int couponId, BigDecimal valueApplied) {
 		GlobalCouponUses globalUses = loadGlobalUses(couponId);
 		if (globalUses == null) {
@@ -155,16 +162,16 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			incrementGlobalUses(couponId, valueApplied);
 		}
 		return true;
-	}
+	}*/
 
-	private void incrementGlobalUses(int couponId, BigDecimal valueApplied) {
+/*	private void incrementGlobalUses(int couponId, BigDecimal valueApplied) {
 		int update = jdbcTemplate.update(INCREASE_GLOBAL_USES, valueApplied, couponId);
 		if (update != 1) {
 			throw new PlatformException("Unable to update the global coupon uses for couponId : " + couponId);
 		}
-	}
+	}*/
 
-	private void createGlobalUses(final int couponId, final BigDecimal valueApplied) {
+	/*private void createGlobalUses(final int couponId, final BigDecimal valueApplied) {
 		KeyHolder globalUsesKeyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			@Override
@@ -176,7 +183,7 @@ public class CouponDaoJdbcImpl implements CouponDao {
 				return ps;
 			}
 		}, globalUsesKeyHolder);
-	}
+	}*/
 
 	@Override
 	public boolean updateUserUses(int couponId, int userId, BigDecimal valueApplied, int orderId) {

@@ -35,4 +35,9 @@ public class GlobalCouponUses implements Serializable {
 	public void setCouponId(int couponId) {
 		this.couponId = couponId;
 	}
+	
+	public void increment(Money discountAmount){
+		this.currentAmount.plus(discountAmount);
+		this.currentCount++;
+	}
 }

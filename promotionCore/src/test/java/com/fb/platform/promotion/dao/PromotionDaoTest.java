@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
-import org.junit.experimental.theories.Theory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 
@@ -134,15 +133,15 @@ public class PromotionDaoTest extends BaseTestCase {
 		GlobalPromotionUses globalUses = promotionDao.loadGlobalUses(-1);
 
 		assertNotNull(globalUses);
-		assertEquals(10, globalUses.getCurrentCount());
-		assertTrue(globalUses.getCurrentAmount().eq(new Money(new BigDecimal(10000))));
+		assertEquals(1, globalUses.getCurrentCount());
+		assertTrue(globalUses.getCurrentAmount().eq(new Money(new BigDecimal(2000))));
 	}
 
 	@Test
 	public void loadNonExistantGlobalUses() {
 		GlobalPromotionUses globalUses = promotionDao.loadGlobalUses(-12);
 
-		assertNull(globalUses);
+		assertNotNull(globalUses);
 	}
 
 	@Test
@@ -161,30 +160,6 @@ public class PromotionDaoTest extends BaseTestCase {
 		assertNotNull(userUses);
 		assertEquals(1, userUses.getCurrentCount());
 		assertTrue(userUses.getCurrentAmount().eq(new Money(BigDecimal.ZERO)));
-	}
-	
-	@Test
-	public void updateGlobalUsesIncrementUseCase() {
-		boolean isUpdatedSuccessfully = promotionDao.updateGlobalUses(-2, new BigDecimal(4321));
-
-		GlobalPromotionUses globalPromotionUses = promotionDao.loadGlobalUses(-2);
-		
-		assertTrue(isUpdatedSuccessfully);
-		assertNotNull(globalPromotionUses);
-		assertEquals(13, globalPromotionUses.getCurrentCount());
-		assertTrue(new Money(new BigDecimal(5555)).eq(globalPromotionUses.getCurrentAmount()));
-	}
-	
-	@Test
-	public void updateGlobalUsesCreateNew() {
-		boolean isCreatededSuccessfully = promotionDao.updateGlobalUses(-3, new BigDecimal(1111));
-
-		GlobalPromotionUses globalPromotionUses = promotionDao.loadGlobalUses(-3);
-		
-		assertTrue(isCreatededSuccessfully);
-		assertNotNull(globalPromotionUses);
-		assertEquals(1, globalPromotionUses.getCurrentCount());
-		assertTrue(new Money(new BigDecimal(1111)).eq(globalPromotionUses.getCurrentAmount()));
 	}
 	
 	@Test

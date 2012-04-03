@@ -47,4 +47,8 @@ public class Product {
 	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
+	
+	public boolean isProductOfCategory(List<Integer> catList){
+		return catList.containsAll(this.categories);
+	}
 }
