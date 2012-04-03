@@ -14,7 +14,6 @@ public class OrderItem {
 
 	private Product product = null;
 	private int quantity = 0;
-	private BigDecimal price = null;
 
 	public Product getProduct() {
 		return product;
@@ -29,10 +28,7 @@ public class OrderItem {
 		this.quantity = quantity;
 	}
 	public BigDecimal getPrice() {
-		return price;
-	}
-	public void setPrice(BigDecimal price) {
-		this.price = price;
+		return (product.getPrice()).multiply(new BigDecimal(quantity));
 	}
 	
 	public boolean isOrderItemInCategory(List<Integer> categories){
