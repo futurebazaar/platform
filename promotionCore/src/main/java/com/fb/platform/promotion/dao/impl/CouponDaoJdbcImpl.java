@@ -55,14 +55,6 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			"	max_amount_per_user " +
 			"FROM coupon_limits_config WHERE coupon_id = ?";
 
-/*	private static final String LOAD_GLOBAL_COUPON_USES_QUERY = 
-			"SELECT " +
-			"	id, " +
-			"	coupon_id, " +
-			"	current_count, " +
-			"	current_amount " +
-			"FROM global_coupon_uses WHERE coupon_id = ?";*/
-
 	private static final String LOAD_GLOBAL_COUPON_USES_QUERY = 
 			"SELECT " +
 			"	count(*) as current_count, " +
@@ -85,27 +77,14 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			"	order_id, " +
 			"	discount_amount) " +
 			"VALUES (?, ?, ?, ?)";
-	
-/*	private static final String INCREASE_GLOBAL_USES = 
-			"UPDATE global_coupon_uses " +
-			"SET " +
-			"	current_count = current_count + 1, " +
-			"	current_amount = current_amount + ? " +
-			"WHERE coupon_id = ?";*/
 
-/*	private static final String CREATE_GLOBAL_USES = 
-			"INSERT INTO global_coupon_uses " +
-			"	(coupon_id, " +
-			"	current_count, " +
-			"	current_amount) " +
-			"VALUES (?, ?, ?)";*/
-
-/*	private static final String INCREASE_USER_USES = 
-			"UPDATE user_coupon_uses " +
-			"SET " +
-			"	current_count = current_count + 1, " +
-			"	current_amount = current_amount + ? " +
-			"WHERE coupon_id = ? AND user_id = ?";*/
+	private static final String LOAD_COUPON_USER_QUERY = 
+			"SELECT " +
+			"	id, " +
+			"	coupon_id, " +
+			"	user_id, " +
+			"	override_user_uses_limit " +
+			"FROM coupon_user WHERE coupon_id = ? AND user_id = ?";
 
 	@Override
 	public Coupon load(String couponCode) {

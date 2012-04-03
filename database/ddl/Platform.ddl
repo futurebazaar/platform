@@ -282,7 +282,7 @@ CREATE TABLE coupon_user (
 	id INTEGER NOT NULL AUTO_INCREMENT,
 	coupon_id INTEGER  NOT NULL,
 	user_id INTEGER  NOT NULL,
-	over_ride_user_limit INTEGER NOT NULL,
+	override_user_uses_limit INTEGER NOT NULL,
 	PRIMARY KEY(id),
 	UNIQUE(coupon_id,user_id),
 	FOREIGN KEY (coupon_id) REFERENCES coupon (id) ON DELETE CASCADE,

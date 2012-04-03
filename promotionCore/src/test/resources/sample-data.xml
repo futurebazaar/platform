@@ -235,7 +235,7 @@
 			<value name="id">-2</value>
 			<value name="promotion_id">-2</value>
 			<value name="user_id">2</value>
-			<null></null>
+			<value name="order_id">51</value>
 			<null></null>
 		</row>
 		<row>
@@ -345,7 +345,7 @@
 			<value name="id">-2</value>
 			<value name="coupon_id">-2</value>
 			<value name="user_id">2</value>
-			<null></null>
+			<value name="order_id">51</value>
 			<null></null>
 		</row>
 	</table>
