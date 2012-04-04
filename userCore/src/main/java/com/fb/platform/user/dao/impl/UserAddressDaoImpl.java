@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
+import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -15,7 +17,9 @@ import com.fb.platform.user.domain.UserAddressBo;
  *
  */
 public class UserAddressDaoImpl implements UserAddressDao {
-
+	
+	private static final Logger logger = Logger.getLogger(UserAddressDaoImpl.class);
+	
 	private static final String SELECT_USER_ADDRESS = "SELECT "
 			+ "la.id as addressid, "
 			+ "la.profile_id as userid, "

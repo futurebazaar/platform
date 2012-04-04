@@ -8,6 +8,9 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,6 +26,8 @@ import com.fb.platform.user.domain.UserPhoneBo;
 import com.fb.platform.user.util.PasswordUtil;
 
 public class UserAdminDaoImpl implements UserAdminDao {
+	
+	private static final Logger logger = Logger.getLogger(UserAdminDaoImpl.class);
 
 	private static final String CHECK_EMAIL_IS_USERNAME_QUERY = "SELECT count(0) from users_email WHERE email = ?";
 	private static final String CHECK_PHONE_IS_USERNAME_QUERY = "SELECT count(0) from users_phone WHERE phone = ?";
@@ -178,6 +183,7 @@ public class UserAdminDaoImpl implements UserAdminDao {
      */
     @Override
 	public UserBo load(String key) {
+    	logger.info("Getting user by the key name :::" + key);    	
     	boolean isEmail = isUsernameEmail(key);
     	if (isEmail) {
     		return getUserByEmail(key);
@@ -197,6 +203,7 @@ public class UserAdminDaoImpl implements UserAdminDao {
 	}
 
     private boolean isUsernameEmail(String username) {
+    	
     	int emailCount = this.jdbcTemplate.queryForInt(CHECK_EMAIL_IS_USERNAME_QUERY, username);
     	if (emailCount > 0) {
     		return true;
@@ -221,7 +228,8 @@ public class UserAdminDaoImpl implements UserAdminDao {
     }
 
 	private UserBo getUserByEmail(String email) {
-
+		
+		logger.info("Getting user by Emailid :::" + email);  
 		UserBo user = jdbcTemplate.queryForObject(SELECT_USER_BY_EMAIL_QUERY,
 				new Object[] {email},
 				new UserMapper());
@@ -231,7 +239,7 @@ public class UserAdminDaoImpl implements UserAdminDao {
 	}
 
 	private UserBo getUserByPhone(String phone) {
-
+		logger.info("Getting user by phone :::" + phone);  
 		UserBo user = jdbcTemplate.queryForObject(SELECT_USER_BY_PHONE_QUERY,
 				new Object[] {phone},
 				new UserMapper());

@@ -42,9 +42,12 @@ public class RestClient {
 
 	private static String login() throws Exception {
 		HttpClient httpClient = new HttpClient();
+		//PostMethod loginMethod = new PostMethod("http://10.0.102.12:8082/userWS/auth/login");
 		PostMethod loginMethod = new PostMethod("http://localhost:8080/userWS/auth/login");
 		//StringRequestEntity requestEntity = new StringRequestEntity("<loginRequest><username>vinayak</username><password>password</password></loginRequest>", "application/xml", null);
 		LoginRequest loginRequest = new LoginRequest();
+		//loginRequest.setUsername("9920694762");
+		//loginRequest.setPassword("test");
 		loginRequest.setUsername("jasvipul@gmail.com");
 		loginRequest.setPassword("testpass");
 
@@ -72,6 +75,7 @@ public class RestClient {
 	private static void logout(String sessionToken) throws Exception {
 		HttpClient httpClient = new HttpClient();
 
+		//PostMethod logoutMethod = new PostMethod("http://10.0.102.12:8082/userWS/auth/logout");
 		PostMethod logoutMethod = new PostMethod("http://localhost:8080/userWS/auth/logout");
 		LogoutRequest logoutReq = new LogoutRequest();
 		logoutReq.setSessionToken(sessionToken);
@@ -101,8 +105,10 @@ public class RestClient {
 		
 		HttpClient httpClient = new HttpClient();
 
+		//PostMethod getUserMethod = new PostMethod("http://10.0.102.12:8082/userWS/user/get");
 		PostMethod getUserMethod = new PostMethod("http://localhost:8080/userWS/user/get");
 		GetUserRequest getUserRequest = new GetUserRequest();
+		//getUserRequest.setKey("9920694762");
 		getUserRequest.setKey("jasvipul@gmail.com");
 		getUserRequest.setSessionToken(sessionToken);
 
@@ -129,7 +135,7 @@ public class RestClient {
 	private static String addUser() throws Exception{
 		HttpClient httpClient = new HttpClient();
 
-		PostMethod addUserMethod = new PostMethod("http://localhost:8080/userWS/user/add");
+		PostMethod addUserMethod = new PostMethod("http://10.0.102.12:8082/userWS/user/add");
 		AddUserRequest addUserRequest = new AddUserRequest();
 		addUserRequest.setUserName("newtestuserviaclient@test.com");
 		addUserRequest.setPassword("testpass");
@@ -153,5 +159,6 @@ public class RestClient {
 		AddUserResponse addUserResponse = (AddUserResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(addUserResponseStr)));
 		return addUserResponse.getSessionToken();	
 	}
+	
 	
 	}
