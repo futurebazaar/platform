@@ -257,6 +257,7 @@ public class APIObjectUtil {
 			Class<?>[] setParameters = new Class[] {getReturnType};
 			//get the equivalent set method. The getMethod name either begins with "get" or "is".
 			Method setMethod = null;
+			
 			if (getMethod.getName().startsWith("get")) {
 				setMethod = ctClass.getMethod("set" + getMethod.getName().substring(3), setParameters);
 			} else {
