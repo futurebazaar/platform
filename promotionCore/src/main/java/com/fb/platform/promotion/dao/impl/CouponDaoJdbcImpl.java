@@ -5,6 +5,7 @@ package com.fb.platform.promotion.dao.impl;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -61,7 +62,7 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			"	count(*) as current_count, " +
 			"	sum(ucu.discount_amount) as current_amount, " +
 			"	coupon_id " +
-			"FROM user_coupon_uses ucu WHERE coupon_id = ?";
+			"FROM user_coupon_uses ucu WHERE coupon_id = ? AND is_cancelled = 0";
 	
 	private static final String LOAD_USER_COUPON_USES_QUERY = 
 			"SELECT " +
@@ -69,15 +70,18 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			"	sum(ucu.discount_amount) as current_amount, " +
 			"	coupon_id, " +
 			"	user_id " +
-			"FROM user_coupon_uses ucu WHERE coupon_id = ? AND user_id = ?";
+			"FROM user_coupon_uses ucu WHERE coupon_id = ? AND user_id = ? AND is_cancelled = 0";
 
 	private static final String CREATE_USER_USES = 
 			"INSERT INTO user_coupon_uses " +
 			"	(coupon_id, " +
 			"	user_id, " +
 			"	order_id, " +
-			"	discount_amount) " +
-			"VALUES (?, ?, ?, ?)";
+			"	discount_amount, " +
+			"	created_on, " +
+			"	last_modified_on, " +
+			"	is_cancelled) " +
+			"VALUES (?, ?, ?, ?, ?, ?, ?)";
 
 	private static final String LOAD_COUPON_USER_QUERY = 
 			"SELECT " +
@@ -87,6 +91,12 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			"	override_user_uses_limit " +
 			"FROM coupon_user WHERE coupon_id = ? AND user_id = ?";
 
+	private static final String CANCEL_USER_USES = 
+			"UPDATE user_coupon_uses set " +
+			"	is_cancelled = true, " +
+			"	last_modified_on = ? " +
+			"where coupon_id = ? AND user_id = ? AND order_id = ?";
+	
 	@Override
 	public Coupon load(String couponCode, int userId) {
 		Coupon coupon = null;
@@ -151,6 +161,30 @@ public class CouponDaoJdbcImpl implements CouponDao {
 	}
 
 	@Override
+	public boolean cancelUserUses(final int couponId, final int userId, final int orderId){
+		int rowAffected = -1;
+		final java.util.Date today = new java.util.Date();
+		try {
+			rowAffected = jdbcTemplate.update(new PreparedStatementCreator() {
+				@Override
+				public PreparedStatement createPreparedStatement(Connection con)
+						throws SQLException {
+					PreparedStatement ps = con.prepareStatement(CANCEL_USER_USES);
+					ps.setDate(1, new Date(today.getTime()));
+					ps.setInt(2, couponId);
+					ps.setInt(3, userId);
+					ps.setInt(4, orderId);
+					return ps;
+				}
+			});
+		} catch (IncorrectResultSizeDataAccessException e) {
+			//failed to update the row
+		}
+		
+		return rowAffected>0 ? true : false;
+	}
+	
+	@Override
 	public boolean updateUserUses(int couponId, int userId, BigDecimal valueApplied, int orderId) {
 		
 		//for every use of coupon a new entry is created
@@ -160,6 +194,7 @@ public class CouponDaoJdbcImpl implements CouponDao {
 
 	private void createUserUses(final int couponId, final int userId, final BigDecimal valueApplied, final int orderId) {
 		KeyHolder userUsesKeyHolder = new GeneratedKeyHolder();
+		final java.util.Date today = new java.util.Date();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			
 			@Override
@@ -169,6 +204,9 @@ public class CouponDaoJdbcImpl implements CouponDao {
 				ps.setInt(2, userId);
 				ps.setInt(3, orderId);
 				ps.setBigDecimal(4, valueApplied);
+				ps.setDate(5, new Date(today.getTime()));
+				ps.setDate(6, new Date(today.getTime()));
+				ps.setBoolean(7, false);
 				return ps;
 			}
 		}, userUsesKeyHolder);

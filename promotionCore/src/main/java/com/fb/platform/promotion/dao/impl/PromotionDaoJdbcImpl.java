@@ -5,6 +5,7 @@ package com.fb.platform.promotion.dao.impl;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -66,20 +67,12 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			"max_amount_per_user " +
 			"FROM promotion_limits_config where promotion_id = ?";
 
-/*	private static final String LOAD_GLOABL_PROMOTION_USES_QUERY_old = 
-			"SELECT " +
-			"id, " +
-			"promotion_id, " +
-			"current_count, " +
-			"current_amount " +
-			"FROM global_promotion_uses WHERE promotion_id = ?";*/
-
 	private static final String LOAD_GLOABL_PROMOTION_USES_QUERY = 
 			"SELECT " +
 			"	count(*) as current_count, " +
 			"	sum(upu.discount_amount) as current_amount, " +
 			"	promotion_id " +
-			"FROM user_promotion_uses upu WHERE promotion_id = ?";
+			"FROM user_promotion_uses upu WHERE promotion_id = ? AND is_cancelled = 0";
 	
 	private static final String LOAD_USER_PROMOTION_USES_QUERY = 
 			"SELECT " +
@@ -87,36 +80,24 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			"	sum(upu.discount_amount) as current_amount, " +
 			"	promotion_id, " +
 			"	user_id " +
-			"FROM user_promotion_uses upu WHERE promotion_id = ? AND user_id = ?";
-
-/*	private static final String INCREASE_GLOBAL_USES = 
-			"UPDATE global_promotion_uses " +
-			"SET " +
-			"	current_count = current_count + 1, " +
-			"	current_amount = current_amount + ? " +
-			"WHERE promotion_id = ?";
-
-	private static final String CREATE_GLOBAL_USES = 
-			"INSERT INTO global_promotion_uses " +
-			"	(promotion_id, " +
-			"	current_count, " +
-			"	current_amount) " +
-			"VALUES (?, ?, ?)";*/
-
-	/*private static final String INCREASE_USER_USES = 
-			"UPDATE user_promotion_uses " +
-			"SET " +
-			"	current_count = current_count + 1, " +
-			"	current_amount = current_amount + ? " +
-			"WHERE promotion_id = ? AND user_id = ?";*/
+			"FROM user_promotion_uses upu WHERE promotion_id = ? AND user_id = ? AND is_cancelled = 0";
 
 	private static final String CREATE_USER_USES = 
 			"INSERT INTO user_promotion_uses " +
 			"	(promotion_id, " +
 			"	user_id, " +
 			"	order_id, " +
-			"	discount_amount) " +
-			"VALUES (?, ?, ?, ?)";
+			"	discount_amount, " +
+			"	created_on, " +
+			"	last_modified_on, " +
+			"	is_cancelled) " +
+			"VALUES (?, ?, ?, ?, ?, ?, ?)";
+	
+	private static final String CANCEL_USER_USES = 
+			"UPDATE user_promotion_uses set " +
+			"	is_cancelled = true, " +
+			"	last_modified_on = ? " +
+			"where promotion_id = ? AND user_id = ? AND order_id = ?";
 
 	/* (non-Javadoc)
 	 * @see com.fb.platform.promotion.dao.PromotionDao#load(int)
@@ -237,6 +218,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 
 	private void createUserUses(final int promotionId, final int userId, final BigDecimal valueApplied, final int orderId) {
 		KeyHolder userUsesKeyHolder = new GeneratedKeyHolder();
+		final java.util.Date today = new java.util.Date();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			
 			@Override
@@ -246,11 +228,37 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 				ps.setInt(2, userId);
 				ps.setInt(3, orderId);
 				ps.setBigDecimal(4, valueApplied);
+				ps.setDate(5, new Date(today.getTime()));
+				ps.setDate(6, new Date(today.getTime()));
+				ps.setBoolean(7, false);
 				return ps;
 			}
 		}, userUsesKeyHolder);
 	}
 
+	@Override
+	public boolean cancelUserUses(final int promotionId, final int userId, final int orderId){
+		int rowAffected = -1;
+		final java.util.Date today = new java.util.Date();
+		try {
+			rowAffected = jdbcTemplate.update(new PreparedStatementCreator() {
+				@Override
+				public PreparedStatement createPreparedStatement(Connection con)
+						throws SQLException {
+					PreparedStatement ps = con.prepareStatement(CANCEL_USER_USES);
+					ps.setDate(1, new Date(today.getTime()));
+					ps.setInt(2, promotionId);
+					ps.setInt(3, userId);
+					ps.setInt(4, orderId);
+					return ps;
+				}
+			});
+		} catch (IncorrectResultSizeDataAccessException e) {
+			//failed to update the row
+		}
+		
+		return rowAffected>0 ? true : false;
+	}
 
 	private static class PromotionRowCallBackHandler implements RowCallbackHandler {
 
