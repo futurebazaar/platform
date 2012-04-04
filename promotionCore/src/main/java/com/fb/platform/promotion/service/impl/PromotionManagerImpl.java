@@ -73,7 +73,7 @@ public class PromotionManagerImpl implements PromotionManager {
 		int userId = authentication.getUserID();
 
 		//find the coupon.
-		Coupon coupon = getCoupon(request.getCouponCode());
+		Coupon coupon = getCoupon(request.getCouponCode(), userId);
 		if (coupon == null) {
 			//we dont recognise this coupon code, bye bye
 			response.setCouponStatus(CouponResponseStatusEnum.INVALID_COUPON_CODE);
@@ -167,7 +167,7 @@ public class PromotionManagerImpl implements PromotionManager {
 		int userId = authentication.getUserID();
 
 		//find the coupon.
-		Coupon coupon = getCoupon(request.getCouponCode());
+		Coupon coupon = getCoupon(request.getCouponCode(), userId);
 		if (coupon == null) {
 			//we dont recognise this coupon code, bye bye
 			response.setCommitCouponStatus(CommitCouponStatusEnum.INVALID_COUPON_CODE);
@@ -183,26 +183,12 @@ public class PromotionManagerImpl implements PromotionManager {
 			return response;
 		}
 
-		/*boolean globalCuponUpdateSuccess = couponDao.updateGlobalUses(coupon.getId(), request.getDiscountValue());
-		if (!globalCuponUpdateSuccess) {
-			logger.error("Unable to update the global uses for coupon code : " + coupon.getCode());
-			response.setCommitCouponStatus(CommitCouponStatusEnum.INTERNAL_ERROR);
-			return response;
-		}*/
-
 		boolean userCuponUpdateStatus = couponDao.updateUserUses(coupon.getId(), userId, request.getDiscountValue(), request.getOrderId());
 		if (!userCuponUpdateStatus) {
 			logger.error("Unable to update the user uses for coupon code : " + coupon.getCode());
 			response.setCommitCouponStatus(CommitCouponStatusEnum.INTERNAL_ERROR);
 			return response;
 		}
-
-		/*boolean globalPromotionUpdateSuccess = promotionDao.updateGlobalUses(promotion.getId(), request.getDiscountValue());
-		if (!globalPromotionUpdateSuccess) {
-			logger.error("Unable to update global promotion uses for Coupon code : " + coupon.getCode());
-			response.setCommitCouponStatus(CommitCouponStatusEnum.INTERNAL_ERROR);
-			return response;
-		}*/
 
 		boolean userPromotionUpdateStatus = promotionDao.updateUserUses(promotion.getId(), userId, request.getDiscountValue(), request.getOrderId());
 		if (!userPromotionUpdateStatus) {
@@ -223,18 +209,17 @@ public class PromotionManagerImpl implements PromotionManager {
 		return coupon.isWithinLimits(globalUses, userUses);
 	}
 
-	private Coupon getCoupon(String couponCode) {
+	private Coupon getCoupon(String couponCode, int userId) {
 		//check if we have coupon cached.
 		Coupon coupon = couponCache.get(couponCode);
 		if (coupon == null) {
 			//load it using dao
-			coupon = couponDao.load(couponCode);
+			coupon = couponDao.load(couponCode, userId);
 
 			if (coupon != null) {
 				cacheCoupon(couponCode, coupon);
 			}
 		}
-
 		return coupon;
 	}
 

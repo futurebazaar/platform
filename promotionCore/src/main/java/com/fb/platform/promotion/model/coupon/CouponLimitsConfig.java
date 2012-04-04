@@ -19,16 +19,16 @@ public class CouponLimitsConfig implements Serializable {
 	private Money maxAmountPerUser;
 
 	public boolean isWithinLimits(GlobalCouponUses globalUses, UserCouponUses userUses) {
-		if (maxUses <= globalUses.getCurrentCount()) {
+		if (maxUses < globalUses.getCurrentCount()) {
 			return false;
 		}
-		if (maxAmount.lteq(globalUses.getCurrentAmount())) {
+		if (maxAmount.lt(globalUses.getCurrentAmount())) {
 			return false;
 		}
-		if (maxUsesPerUser <= userUses.getCurrentCount()) {
+		if (maxUsesPerUser < userUses.getCurrentCount()) {
 			return false;
 		}
-		if (maxAmountPerUser.lteq(userUses.getCurrentAmount())) {
+		if (maxAmountPerUser.lt(userUses.getCurrentAmount())) {
 			return false;
 		}
 		return true;

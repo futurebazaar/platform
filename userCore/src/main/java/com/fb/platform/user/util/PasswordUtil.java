@@ -21,7 +21,7 @@ public class PasswordUtil {
 		String randomStr =  UUID.randomUUID().toString().substring(0,5);
 
 		try {
-			md = MessageDigest.getInstance("SHA-1"); //step 2
+			md = MessageDigest.getInstance("sha1"); //step 2
 		} catch (NoSuchAlgorithmException e) {
 			throw new PlatformException(e);
 		}
@@ -33,7 +33,16 @@ public class PasswordUtil {
 		}
 
 		byte[] raw = md.digest(); //step 4
-		String hash = (new BASE64Encoder()).encode(raw); //step 5
+		String hash = "" ;
+		for (int i = 0; i < raw.length; i++)
+		 {
+			String hex = Integer.toHexString(raw[i]);
+			 if (hex.length() == 1) {
+				 	hex = "0" + hex;
+			 }
+			 hex = hex.substring(hex.length() - 2);
+			 hash += hex;
+	     }
 		String password = "sha1$" + randomStr + "$" + hash;
 		return password; //step 6
 	}
@@ -47,31 +56,33 @@ public class PasswordUtil {
 			MessageDigest md = null;
 
 			try {
-				md = MessageDigest.getInstance("SHA-1"); //step 2
+				md = MessageDigest.getInstance("sha1"); //step 2
 			} catch (NoSuchAlgorithmException e) {
 				throw new PlatformException(e);
 			}
 
 			try {
-				md.update((randomStr + plainPassword).getBytes("UTF-8")); //step 3
+				md.update((randomStr + plainPassword).getBytes("UTF-8")); //step 3				
 			} catch (UnsupportedEncodingException e) {
 				throw new PlatformException(e);
 			}
 
 			byte[] raw = md.digest(); //step 4
-			String hash = (new BASE64Encoder()).encode(raw); //step 5
+			String hash = "" ;
+			for (int i = 0; i < raw.length; i++)
+			 {
+				String hex = Integer.toHexString(raw[i]);
+				 if (hex.length() == 1) {
+					 	hex = "0" + hex;
+				 }
+				 hex = hex.substring(hex.length() - 2);
+				 hash += hex;
+		     }
+			
 			return (storedPasswordHash.equals(hash)); //step 6
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
-	}
-	public static void main(String[] args) {
-		String passwordEncrypt = "testpass";
-
-		String hashedData = getEncryptedPassword(passwordEncrypt);
-		System.out.println(hashedData);
-		System.out.println(checkPassword(passwordEncrypt, hashedData));
-
 	}
 }

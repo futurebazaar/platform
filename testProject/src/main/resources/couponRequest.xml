@@ -3,7 +3,6 @@
 	<couponCode>Axb0ndyy</couponCode>
 	<orderRequest>
 		<orderId>10</orderId>
-		<orderValue>10.00</orderValue>
 		<orderItem>
 			<product>
 				<productId>200</productId>
@@ -14,7 +13,6 @@
 				<price>0.50</price>
 			</product>
 			<quantity>4</quantity>
-			<price>2.00</price>
 		</orderItem>
 		<orderItem>
 			<product>
@@ -26,7 +24,6 @@
 				<price>0.50</price>
 			</product>
 			<quantity>4</quantity>
-			<price>2.00</price>
 		</orderItem>
 	</orderRequest>
 	<clientId>100</clientId>
