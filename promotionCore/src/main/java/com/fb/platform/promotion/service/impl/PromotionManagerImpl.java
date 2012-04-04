@@ -29,6 +29,9 @@ import com.fb.platform.promotion.to.CommitCouponStatusEnum;
 import com.fb.platform.promotion.to.CouponRequest;
 import com.fb.platform.promotion.to.CouponResponse;
 import com.fb.platform.promotion.to.CouponResponseStatusEnum;
+import com.fb.platform.promotion.to.ReleaseCouponRequest;
+import com.fb.platform.promotion.to.ReleaseCouponResponse;
+import com.fb.platform.promotion.to.ReleaseCouponStatusEnum;
 
 /**
  * @author vinayak
@@ -198,6 +201,65 @@ public class PromotionManagerImpl implements PromotionManager {
 		}
 
 		response.setCommitCouponStatus(CommitCouponStatusEnum.SUCCESS);
+		return response;
+	}
+	
+	@Override
+	public ReleaseCouponResponse releaseCoupon(ReleaseCouponRequest request){
+		ReleaseCouponResponse response = new ReleaseCouponResponse();
+
+		if (request == null || StringUtils.isBlank(request.getSessionToken())) {
+			response.setReleaseCouponStatus(ReleaseCouponStatusEnum.NO_SESSION);
+			return response;
+		}
+
+		if (StringUtils.isBlank(request.getCouponCode())) {
+			response.setReleaseCouponStatus(ReleaseCouponStatusEnum.INVALID_COUPON_CODE);
+			return response;
+		}
+
+		//authenticate the session token and find out the userId
+		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
+		if (authentication == null) {
+			//invalid session token
+			response.setReleaseCouponStatus(ReleaseCouponStatusEnum.NO_SESSION);
+			return response;
+		}
+
+		int userId = authentication.getUserID();
+
+		//find the coupon.
+		Coupon coupon = getCoupon(request.getCouponCode(), userId);
+		if (coupon == null) {
+			//we dont recognise this coupon code, bye bye
+			response.setReleaseCouponStatus(ReleaseCouponStatusEnum.INVALID_COUPON_CODE);
+			return response;
+		}
+
+		//find the associated promotion
+		Promotion promotion = getPromotion(coupon.getPromotionId());
+		if (promotion == null) {
+			//problem.
+			logger.error("No Promotion Found for Coupon code : " + coupon.getCode());
+			response.setReleaseCouponStatus(ReleaseCouponStatusEnum.INTERNAL_ERROR);
+			return response;
+		}
+
+		boolean userCuponUpdateStatus = couponDao.cancelUserUses(coupon.getId(), userId, request.getOrderId());
+		if (!userCuponUpdateStatus) {
+			logger.error("Unable to update the user uses for coupon code : " + coupon.getCode());
+			response.setReleaseCouponStatus(ReleaseCouponStatusEnum.INTERNAL_ERROR);
+			return response;
+		}
+
+		boolean userPromotionUpdateStatus = couponDao.cancelUserUses(coupon.getId(), userId, request.getOrderId());
+		if (!userPromotionUpdateStatus) {
+			logger.error("Unable to update user promotion uses for Coupon code : " + coupon.getCode());
+			response.setReleaseCouponStatus(ReleaseCouponStatusEnum.INTERNAL_ERROR);
+			return response;
+		}
+
+		response.setReleaseCouponStatus(ReleaseCouponStatusEnum.SUCCESS);
 		return response;
 	}
 
