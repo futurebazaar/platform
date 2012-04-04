@@ -245,15 +245,15 @@ public class PromotionManagerImpl implements PromotionManager {
 			return response;
 		}
 
-		boolean userCuponUpdateStatus = couponDao.cancelUserUses(coupon.getId(), userId, request.getOrderId());
-		if (!userCuponUpdateStatus) {
+		boolean userCouponCancelStatus = couponDao.cancelUserUses(coupon.getId(), userId, request.getOrderId());
+		if (!userCouponCancelStatus) {
 			logger.error("Unable to update the user uses for coupon code : " + coupon.getCode());
 			response.setReleaseCouponStatus(ReleaseCouponStatusEnum.INTERNAL_ERROR);
 			return response;
 		}
 
-		boolean userPromotionUpdateStatus = couponDao.cancelUserUses(coupon.getId(), userId, request.getOrderId());
-		if (!userPromotionUpdateStatus) {
+		boolean userPromotionCancelStatus = promotionDao.cancelUserUses(coupon.getId(), userId, request.getOrderId());
+		if (!userPromotionCancelStatus) {
 			logger.error("Unable to update user promotion uses for Coupon code : " + coupon.getCode());
 			response.setReleaseCouponStatus(ReleaseCouponStatusEnum.INTERNAL_ERROR);
 			return response;
