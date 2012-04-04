@@ -45,10 +45,10 @@ public class PromotionManagerImpl implements PromotionManager {
 	private AuthenticationService authenticationService;
 
 	@Autowired
-	private CouponCacheAccess couponCache = null;
+	private CouponCacheAccess couponCacheAccess = null;
 
 	@Autowired
-	private PromotionCacheAccess promotionCache = null;
+	private PromotionCacheAccess promotionCacheAccess = null;
 
 	@Autowired
 	private CouponDao couponDao = null;
@@ -273,7 +273,7 @@ public class PromotionManagerImpl implements PromotionManager {
 
 	private Coupon getCoupon(String couponCode, int userId) {
 		//check if we have coupon cached.
-		Coupon coupon = couponCache.get(couponCode);
+		Coupon coupon = couponCacheAccess.get(couponCode);
 		if (coupon == null) {
 			//load it using dao
 			coupon = couponDao.load(couponCode, userId);
@@ -289,18 +289,18 @@ public class PromotionManagerImpl implements PromotionManager {
 		//cache the global coupon
 		if (coupon.getType() == CouponType.GLOBAL) {
 			try {
-				couponCache.lock(couponCode);
-				if (couponCache.get(couponCode) == null) {
-					couponCache.put(couponCode, coupon);
+				couponCacheAccess.lock(couponCode);
+				if (couponCacheAccess.get(couponCode) == null) {
+					couponCacheAccess.put(couponCode, coupon);
 				}
 			} finally {
-				couponCache.unlock(couponCode);
+				couponCacheAccess.unlock(couponCode);
 			}
 		}
 	}
 
 	private Promotion getPromotion(int promotionId) {
-		Promotion promotion = promotionCache.get(promotionId);
+		Promotion promotion = promotionCacheAccess.get(promotionId);
 		if (promotion == null) {
 			//its not cached, load it
 			promotion = promotionDao.load(promotionId);
@@ -315,12 +315,24 @@ public class PromotionManagerImpl implements PromotionManager {
 	private void cachePromotion(Integer promotionId, Promotion promotion) {
 		//TODO need to figure out which promotions to cache
 		try {
-			promotionCache.lock(promotionId);
-			if (promotionCache.get(promotionId) == null) {
-				promotionCache.put(promotionId, promotion);
+			promotionCacheAccess.lock(promotionId);
+			if (promotionCacheAccess.get(promotionId) == null) {
+				promotionCacheAccess.put(promotionId, promotion);
 			}
 		} finally {
-			promotionCache.unlock(promotionId);
+			promotionCacheAccess.unlock(promotionId);
 		}
+	}
+
+	public void setAuthenticationService(AuthenticationService authenticationService) {
+		this.authenticationService = authenticationService;
+	}
+
+	public void setCouponDao(CouponDao couponDao) {
+		this.couponDao = couponDao;
+	}
+
+	public void setPromotionDao(PromotionDao promotionDao) {
+		this.promotionDao = promotionDao;
 	}
 }
