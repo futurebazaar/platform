@@ -163,7 +163,7 @@ public class PromotionDaoTest extends BaseTestCase {
 	}
 	
 	@Test
-	public void updateUserUsessCreateNew() {
+	public void updateUserUsesCreateNew() {
 		boolean isCreatededSuccessfully = promotionDao.updateUserUses(-3, 3, new BigDecimal(222),42);
 
 		UserPromotionUses userPromotionUses = promotionDao.loadUserUses(-3, 3);
@@ -184,5 +184,12 @@ public class PromotionDaoTest extends BaseTestCase {
 		assertNotNull(userPromotionUses);
 		assertEquals(3, userPromotionUses.getUserId());
 		assertEquals(-3, userPromotionUses.getPromotionId());
+	}
+	
+	@Test
+	public void cancelUserUses(){
+		boolean isCancelled = promotionDao.cancelUserUses(-4, -4, -5);
+		
+		assertTrue(isCancelled);
 	}
 }

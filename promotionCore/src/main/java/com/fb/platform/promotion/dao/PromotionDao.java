@@ -24,4 +24,6 @@ public interface PromotionDao {
 	//public boolean updateGlobalUses(int promotionId, BigDecimal valueApplied);
 
 	public boolean updateUserUses(int promotionId, int userId, BigDecimal valueApplied, int orderId);
+	
+	public boolean cancelUserUses(int promotionId, int userId, int orderId);
 }
