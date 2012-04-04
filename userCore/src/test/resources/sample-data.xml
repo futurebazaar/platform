@@ -19,7 +19,7 @@
             <value description="first_name"></value>
             <value description="last_name"></value>
             <value description="email"></value>
-            <value description="password" >sha1$526aa$dSrE+t3dJd3LxYGT8FkRt1p2iiI=</value>
+            <value description="password" >sha1$da42a$46b44c51df06fcfdf3eda17286ed98b34bfb4917</value>
             <value description="is_staff">0</value>
             <value description="is_active">1</value>
             <value description="is_superuser">0</value>
@@ -32,7 +32,7 @@
             <value description="first_name">test</value>
             <value description="last_name">datatest</value>
             <value description="email">test@test.com</value>
-            <value description="password" >sha1$526aa$dSrE+t3dJd3LxYGT8FkRt1p2iiI=</value>
+            <value description="password" >sha1$da42a$46b44c51df06fcfdf3eda17286ed98b34bfb4917</value>
             <value description="is_staff">0</value>
             <value description="is_active">1</value>
             <value description="is_superuser">0</value>

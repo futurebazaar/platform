@@ -40,7 +40,7 @@ public class UserAdminDaoTest extends BaseTestCase {
 		assertNotNull(user);
 
 		assertNotNull(user.getPassword());
-		assertEquals("sha1$526aa$dSrE+t3dJd3LxYGT8FkRt1p2iiI=", user.getPassword());
+		assertEquals("sha1$da42a$46b44c51df06fcfdf3eda17286ed98b34bfb4917", user.getPassword());
 		assertEquals(true, PasswordUtil.checkPassword("testpass", user.getPassword()));
 	}
 
