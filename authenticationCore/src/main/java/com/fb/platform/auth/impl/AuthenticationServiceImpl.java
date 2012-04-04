@@ -113,7 +113,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         authTO.setToken(token);
         authTO.setAppData(session.getAppData());
         authTO.setSessionId(sessionId);
-        
+
         // keys have changed - re-encrypt and store in cache
         if (tokenCached == false) {
             SSOToken newToken = sessionId.getSessionToken(keys);
@@ -134,7 +134,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         
         return authTO;
 	}
-
 
 	public CryptoKeyManager getCryptoKeyManager() {
 		return cryptoKeyManager;

@@ -9,6 +9,8 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+import com.fb.commons.to.LoginType;
+import com.fb.platform.sso.SSOSessionAppData;
 import com.fb.platform.sso.SSOSessionId;
 
 /**
@@ -21,7 +23,7 @@ public class AuthenticationTO implements Serializable {
     private String token;
     private String appData;
     private SSOSessionId sessionId = null;
-    
+    private LoginType loginType = null;
     
     /**
      * Get the authentication token to be used for the next time.
@@ -58,6 +60,10 @@ public class AuthenticationTO implements Serializable {
 
 	public void setAppData(String appData) {
 		this.appData = appData;
+		SSOSessionAppData sessionData = SSOSessionAppData.parse(appData);
+		if (sessionData != null) {
+			this.loginType = sessionData.getLoginType();
+		}
 	}
 
 	/**
@@ -103,4 +109,12 @@ public class AuthenticationTO implements Serializable {
     public SSOSessionId getSessionId() {
         return sessionId;
     }
+
+	public LoginType getLoginType() {
+		return loginType;
+	}
+
+	public void setLoginType(LoginType loginType) {
+		this.loginType = loginType;
+	}
 }

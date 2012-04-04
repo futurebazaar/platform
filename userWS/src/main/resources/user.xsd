@@ -14,7 +14,7 @@
   </xs:element>
 
   <xs:element name="username" type="xs:string" nillable="false"/>
-  <xs:element name="password" type="xs:string" nillable="false"/>
+  <xs:element name="password" type="xs:string"/>
   <xs:element name="ipAddress" type="xs:string"/>
 
   <xs:element name="loginResponse">
@@ -33,6 +33,7 @@
   <xs:simpleType name="loginStatus">
     <xs:restriction base="xs:string">
       <xs:enumeration value="LOGIN_SUCCESS"/>
+      <xs:enumeration value="GUEST_LOGIN_SUCCESS"/>
       <xs:enumeration value="INVALID_USERNAME_PASSWORD"/>
       <xs:enumeration value="LOGIN_FAILURE"/>
       <xs:enumeration value="LOGIN_ACCOUNT_LOCKED"/>

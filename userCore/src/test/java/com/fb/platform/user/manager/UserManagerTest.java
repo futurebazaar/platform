@@ -256,4 +256,17 @@ public class UserManagerTest extends BaseTestCase {
 		assertNotNull(cpResponse);
 		assertEquals(ChangePasswordStatusEnum.CHANGE_PASSWORD_FAILED, cpResponse.getStatus());
 	}
+
+	@Test
+	public void testLoginWithoutPassword() {
+		LoginRequest request = new LoginRequest();
+		request.setUsername("jasvipul@gmail.com");
+
+		LoginResponse response = userManager.login(request);
+
+		assertNotNull(response);
+		assertEquals(LoginStatusEnum.GUEST_LOGIN_SUCCESS, response.getLoginStatus());
+		assertNotNull(response.getSessionToken());
+		assertEquals(1, response.getUserId().intValue());
+	}
 }

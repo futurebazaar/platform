@@ -5,9 +5,11 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.PlatformException;
+import com.fb.commons.to.LoginType;
 import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
 import com.fb.platform.sso.SSOMasterService;
+import com.fb.platform.sso.SSOSessionAppData;
 import com.fb.platform.sso.SSOSessionId;
 import com.fb.platform.sso.SSOSessionTO;
 import com.fb.platform.sso.SSOToken;
@@ -52,7 +54,7 @@ public class UserManagerImpl implements UserManager {
 	public LoginResponse login(LoginRequest loginRequest) {
 		LoginResponse loginResponse = new LoginResponse();
 
-		if (loginRequest == null || StringUtils.isBlank(loginRequest.getUsername()) || StringUtils.isBlank(loginRequest.getPassword())) {
+		if (loginRequest == null || StringUtils.isBlank(loginRequest.getUsername())) {
 			loginResponse.setLoginStatus(LoginStatusEnum.INVALID_USERNAME_PASSWORD);
 			return loginResponse;
 		}
@@ -65,16 +67,28 @@ public class UserManagerImpl implements UserManager {
 				return loginResponse;
 			}
 
-			boolean passwordMatch = PasswordUtil.checkPassword(loginRequest.getPassword(), user.getPassword());
-			if (!passwordMatch) {
-				loginResponse.setUserId(0);
-				loginResponse.setLoginStatus(LoginStatusEnum.INVALID_USERNAME_PASSWORD);
-				return loginResponse;
+			LoginType loginType = null;
+
+			if (StringUtils.isBlank(loginRequest.getPassword())) {
+				//this is login without password, guest login
+				loginType = LoginType.GUEST_LOGIN;
+			} else {
+				boolean passwordMatch = PasswordUtil.checkPassword(loginRequest.getPassword(), user.getPassword());
+				if (!passwordMatch) {
+					loginResponse.setUserId(0);
+					loginResponse.setLoginStatus(LoginStatusEnum.INVALID_USERNAME_PASSWORD);
+					return loginResponse;
+				}
+				loginType = LoginType.REGULAR_LOGIN;
 			}
+
+			SSOSessionAppData sessionAppData = new SSOSessionAppData();
+			sessionAppData.setLoginType(loginType);
 
 			SSOSessionTO ssoSession = new SSOSessionTO();
 			ssoSession.setUserId(user.getUserid());
 			ssoSession.setIpAddress(loginRequest.getIpAddress());
+			ssoSession.setAppData(sessionAppData.getSSOAppDataString());
 
 			//create the global sso session
 			SSOSessionId ssoSessionId = ssoMasterService.createSSOSession(ssoSession);
@@ -84,7 +98,12 @@ public class UserManagerImpl implements UserManager {
 
 			sessionTokenCacheAccess.put(ssoToken, ssoSessionId);
 
-			loginResponse.setLoginStatus(LoginStatusEnum.LOGIN_SUCCESS);
+			if (loginType == LoginType.GUEST_LOGIN) {
+				loginResponse.setLoginStatus(LoginStatusEnum.GUEST_LOGIN_SUCCESS);
+			} else {
+				loginResponse.setLoginStatus(LoginStatusEnum.LOGIN_SUCCESS);
+			}
+
 			loginResponse.setSessionToken(ssoToken.getToken());
 			loginResponse.setUserId(user.getUserid());
 		} catch (PlatformException e) {
