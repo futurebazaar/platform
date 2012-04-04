@@ -103,5 +103,34 @@
       <xs:enumeration value="NO_SESSION"/>
     </xs:restriction>
   </xs:simpleType>
+  
+  <xs:element name="releaseCouponRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:orderId"/>
+        <xs:element ref="promotion:couponCode"/>
+        <xs:element ref="promotion:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+    
+  <xs:element name="releaseCouponResponse">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element ref="promotion:releaseCouponStatus"/>
+      <xs:element ref="promotion:sessionToken"/>
+    </xs:sequence>
+  </xs:complexType>
+  </xs:element>
+  <xs:element name="releaseCouponStatus" type="promotion:releaseCouponStatus"/>
+
+  <xs:simpleType name="releaseCouponStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INVALID_COUPON_CODE"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+      <xs:enumeration value="NO_SESSION"/>
+    </xs:restriction>
+  </xs:simpleType>
 
 </xs:schema>
