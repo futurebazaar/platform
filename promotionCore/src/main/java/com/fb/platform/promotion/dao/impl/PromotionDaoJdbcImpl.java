@@ -55,7 +55,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			"	is_coupon, " +
 			"	is_active," +
 			"	rule_id " +
-			"FROM promotion where id = ?";
+			"FROM platform_promotion where id = ?";
 
 	private static final String GET_PROMOTION_LIMITS_QUERY = 
 			"SELECT " +
