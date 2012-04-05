@@ -14,7 +14,7 @@ CREATE TABLE categories_store
 	slug VARCHAR(50),
 	UNIQUE(name),
 	PRIMARY KEY(id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE sso_session
 (
@@ -28,7 +28,7 @@ CREATE TABLE sso_session
 	app_data VARCHAR(200),
 	UNIQUE(session_id),
 	PRIMARY KEY (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE crypto_key
 (
@@ -38,7 +38,7 @@ CREATE TABLE crypto_key
 	cryptokey_next VARCHAR(200),
 	UNIQUE(cryptokey_current),
 	PRIMARY KEY (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Users Related tables --
 
@@ -191,7 +191,7 @@ CREATE TABLE promotion_rule (
 	description VARCHAR(300),
 	PRIMARY KEY(id),
 	UNIQUE(name)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE platform_promotion (
 	id INTEGER NOT NULL AUTO_INCREMENT,
@@ -205,8 +205,8 @@ CREATE TABLE platform_promotion (
 	is_coupon INTEGER(1),
 	is_active INTEGER(1),
 	PRIMARY KEY(id),
-	FOREIGN KEY (rule_id) REFERENCES promotion_rule(id)
-);
+	CONSTRAINT platform_promotion_fk1 FOREIGN KEY (rule_id) REFERENCES promotion_rule(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE promotion_rule_config (
 	id INTEGER NOT NULL AUTO_INCREMENT,
@@ -215,9 +215,9 @@ CREATE TABLE promotion_rule_config (
 	promotion_id INTEGER,
 	rule_id INTEGER ,
 	PRIMARY KEY(id),
-	FOREIGN KEY (promotion_id) REFERENCES platform_promotion(id),
-	FOREIGN KEY (rule_id) REFERENCES promotion_rule(id)
-);
+	CONSTRAINT promotion_rule_config_fk1 FOREIGN KEY (promotion_id) REFERENCES platform_promotion(id),
+	CONSTRAINT promotion_rule_config_fk2 FOREIGN KEY (rule_id) REFERENCES promotion_rule(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE promotion_limits_config (
 	id INTEGER NOT NULL AUTO_INCREMENT,
@@ -228,8 +228,8 @@ CREATE TABLE promotion_limits_config (
 	max_amount_per_user DECIMAL(18,2),
 	PRIMARY KEY(id),
 	UNIQUE(promotion_id),
-	FOREIGN KEY (promotion_id) REFERENCES platform_promotion(id) ON DELETE CASCADE
-);
+	CONSTRAINT promotion_limits_config_fk1 FOREIGN KEY (promotion_id) REFERENCES platform_promotion(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE user_promotion_uses (
 	id INTEGER NOT NULL AUTO_INCREMENT,
@@ -242,9 +242,9 @@ CREATE TABLE user_promotion_uses (
 	is_cancelled bool NOT NULL,
 	PRIMARY KEY(id),
 	UNIQUE(promotion_id, order_id, user_id),
-	FOREIGN KEY (promotion_id) REFERENCES platform_promotion(id) ON DELETE CASCADE,
-	FOREIGN KEY (user_id) REFERENCES users_profile(id) ON DELETE CASCADE
-);
+	CONSTRAINT user_promotion_uses_fk1 FOREIGN KEY (promotion_id) REFERENCES platform_promotion(id) ON DELETE CASCADE,
+	CONSTRAINT user_promotion_uses_fk2 FOREIGN KEY (user_id) REFERENCES users_profile(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE coupon (
 	id INTEGER NOT NULL AUTO_INCREMENT,
@@ -254,8 +254,8 @@ CREATE TABLE coupon (
 	promotion_id INTEGER,
 	coupon_type VARCHAR(10),
 	PRIMARY KEY(id),
-	FOREIGN KEY (promotion_id) REFERENCES platform_promotion(id) ON DELETE CASCADE
-);
+	CONSTRAINT coupon_fk1 FOREIGN KEY (promotion_id) REFERENCES platform_promotion(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE coupon_limits_config (
 	id INTEGER NOT NULL AUTO_INCREMENT,
@@ -266,8 +266,8 @@ CREATE TABLE coupon_limits_config (
 	max_amount_per_user DECIMAL(18,2),
 	PRIMARY KEY(id),
 	UNIQUE(coupon_id),
-	FOREIGN KEY (coupon_id) REFERENCES coupon(id) ON DELETE CASCADE
-);
+	CONSTRAINT coupon_limits_config_fk1 FOREIGN KEY (coupon_id) REFERENCES coupon(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE user_coupon_uses (
 	id INTEGER NOT NULL AUTO_INCREMENT,
@@ -280,9 +280,9 @@ CREATE TABLE user_coupon_uses (
 	is_cancelled bool NOT NULL,
 	PRIMARY KEY(id),
 	UNIQUE(coupon_id,user_id,order_id),
-	FOREIGN KEY (coupon_id) REFERENCES coupon(id) ON DELETE CASCADE,
-	FOREIGN KEY (user_id) REFERENCES users_profile(id) ON DELETE CASCADE
-);
+	CONSTRAINT user_coupon_uses_fk1 FOREIGN KEY (coupon_id) REFERENCES coupon(id) ON DELETE CASCADE,
+	CONSTRAINT user_coupon_uses_fk2 FOREIGN KEY (user_id) REFERENCES users_profile(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE platform_coupon_user (
 	id INTEGER NOT NULL AUTO_INCREMENT,
@@ -291,9 +291,9 @@ CREATE TABLE platform_coupon_user (
 	override_user_uses_limit INTEGER NOT NULL,
 	PRIMARY KEY(id),
 	UNIQUE(coupon_id,user_id),
-	FOREIGN KEY (coupon_id) REFERENCES coupon (id) ON DELETE CASCADE,
-	FOREIGN KEY (user_id) REFERENCES users_profile (id) ON DELETE CASCADE
-);
+	CONSTRAINT platform_coupon_user_fk1 FOREIGN KEY (coupon_id) REFERENCES coupon (id) ON DELETE CASCADE,
+	CONSTRAINT platform_coupon_user_fk2 FOREIGN KEY (user_id) REFERENCES users_profile (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- end of promotion tables 
 
