@@ -3,6 +3,7 @@
  */
 package com.fb.platform.promotion.rule.impl;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -15,10 +16,10 @@ import com.fb.commons.to.Money;
 import org.apache.commons.lang.text.StrTokenizer;
 
 /**
- * @author vinayak
+ * @author keith
  *
  */
-public class BuyWorthXGetYRsOffOnZCategoryRuleImpl implements PromotionRule {
+public class BuyWorthXGetYRsOffOnZCategoryRuleImpl implements PromotionRule, Serializable {
 
 	private Money minOrderValue;
 	private Money fixedRsOff;

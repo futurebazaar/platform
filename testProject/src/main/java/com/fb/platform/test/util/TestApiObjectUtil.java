@@ -26,7 +26,6 @@ public class TestApiObjectUtil {
 		cr.setSessionToken("xxxxyyyy0000==");
 		OrderRequest or = new OrderRequest();
 		OrderItem oi1 = new OrderItem();
-		oi1.setPrice(new BigDecimal("14.15"));
 		oi1.setQuantity(10);
 		Product pr1 = new Product();
 		//pr1.g

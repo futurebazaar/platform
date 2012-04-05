@@ -33,6 +33,9 @@ import com.fb.platform.promotion._1_0.CouponStatus;
 import com.fb.platform.promotion._1_0.OrderItem;
 import com.fb.platform.promotion._1_0.OrderRequest;
 import com.fb.platform.promotion._1_0.Product;
+import com.fb.platform.promotion._1_0.ReleaseCouponRequest;
+import com.fb.platform.promotion._1_0.ReleaseCouponResponse;
+import com.fb.platform.promotion._1_0.ReleaseCouponStatus;
 import com.fb.platform.promotion.service.PromotionManager;
 
 /**
@@ -114,7 +117,7 @@ public class CouponResource {
 	@Produces("application/xml")
 	public String commitCoupon(String commitCouponXml) {
 		if (logger.isDebugEnabled()) {
-			logger.debug("commitCouponRequestXML : \n" + commitCouponXml);
+			logger.debug("CommitCouponRequestXML : \n" + commitCouponXml);
 		}
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
@@ -139,12 +142,53 @@ public class CouponResource {
 
 			String xmlResponse = outStringWriter.toString();
 			if (logger.isDebugEnabled()) {
-				logger.debug("CouponXML response :\n" + xmlResponse);
+				logger.debug("CommitCouponXML response :\n" + xmlResponse);
 			}
 			return xmlResponse;
 			
 		} catch (JAXBException e) {
 			logger.error("Error in the commitCoupon call.", e);
+			return "error"; //TODO return proper error response
+		}
+	}
+
+	@POST
+	@Path("/release")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String releaseCoupon(String releaseCouponXml) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("ReleaseCouponRequestXML : \n" + releaseCouponXml);
+		}
+		try {
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+
+			ReleaseCouponRequest xmlReleaseCouponRequest = (ReleaseCouponRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(releaseCouponXml)));
+
+			com.fb.platform.promotion.to.ReleaseCouponRequest apiReleaseCouponRequest = new com.fb.platform.promotion.to.ReleaseCouponRequest();
+			apiReleaseCouponRequest.setCouponCode(xmlReleaseCouponRequest.getCouponCode());
+			apiReleaseCouponRequest.setOrderId(xmlReleaseCouponRequest.getOrderId());
+			apiReleaseCouponRequest.setSessionToken(xmlReleaseCouponRequest.getSessionToken());
+
+			com.fb.platform.promotion.to.ReleaseCouponResponse apiReleaseCouponResponse = promotionManager.releaseCoupon(apiReleaseCouponRequest);
+
+			ReleaseCouponResponse xmlReleaseCouponResponse = new ReleaseCouponResponse();
+			
+			xmlReleaseCouponResponse.setReleaseCouponStatus(ReleaseCouponStatus.fromValue(apiReleaseCouponResponse.getReleaseCouponStatus().toString()));
+			xmlReleaseCouponResponse.setSessionToken(apiReleaseCouponResponse.getSessionToken());
+
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marsheller = context.createMarshaller();
+			marsheller.marshal(xmlReleaseCouponResponse, outStringWriter);
+
+			String xmlResponse = outStringWriter.toString();
+			if (logger.isDebugEnabled()) {
+				logger.debug("ReleaseCouponXML response :\n" + xmlResponse);
+			}
+			return xmlResponse;
+
+		} catch (JAXBException e) {
+			logger.error("Error in the releaseCoupon call.", e);
 			return "error"; //TODO return proper error response
 		}
 	}

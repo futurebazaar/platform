@@ -5,6 +5,7 @@ package com.fb.platform.test;
 
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.math.BigDecimal;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -16,14 +17,20 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 
+import com.fb.platform.auth._1_0.AddUserRequest;
+import com.fb.platform.auth._1_0.AddUserResponse;
+import com.fb.platform.auth._1_0.GetUserRequest;
+import com.fb.platform.auth._1_0.GetUserResponse;
 import com.fb.platform.auth._1_0.LoginRequest;
 import com.fb.platform.auth._1_0.LoginResponse;
 import com.fb.platform.auth._1_0.LogoutRequest;
 import com.fb.platform.auth._1_0.LogoutResponse;
-import com.fb.platform.auth._1_0.AddUserRequest;
-import com.fb.platform.auth._1_0.AddUserResponse;
-import com.fb.platform.auth._1_0.GetUserRequest;
-import com.fb.platform.auth._1_0.GetUserResponse; 
+import com.fb.platform.promotion._1_0.CommitCouponRequest;
+import com.fb.platform.promotion._1_0.CommitCouponResponse;
+import com.fb.platform.promotion._1_0.CouponRequest;
+import com.fb.platform.promotion._1_0.CouponResponse;
+import com.fb.platform.promotion._1_0.ReleaseCouponRequest;
+import com.fb.platform.promotion._1_0.ReleaseCouponResponse;
 /**
  * @author vinayak
  *
@@ -36,7 +43,10 @@ public class RestClient {
 	public static void main(String[] args) throws Exception {
 		//test login
 		String sessionToken = login();
-		String username = getUser(sessionToken);
+		//String username = getUser(sessionToken);
+		//applyPromotion(sessionToken);
+		commitCouupon(sessionToken);
+		releaseCoupon(sessionToken);
 		logout(sessionToken);
 	}
 
@@ -70,6 +80,98 @@ public class RestClient {
 		LoginResponse loginResponse = (LoginResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(loginResponseStr)));
 
 		return loginResponse.getSessionToken();
+	}
+
+	private static void applyPromotion(String sessionToken) throws Exception {
+		HttpClient httpClient = new HttpClient();
+
+		PostMethod applyPromotionMethod = new PostMethod("http://localhost:8080/promotionWeb/coupon/apply");
+
+		CouponRequest couponRequest = new CouponRequest();
+		couponRequest.setSessionToken(sessionToken);
+
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion._1_0");
+
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(couponRequest, sw);
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		applyPromotionMethod.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(applyPromotionMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the applyPromotion method : " + statusCode);
+			return;
+		}
+		String applyPromotionResponseStr = applyPromotionMethod.getResponseBodyAsString();
+		System.out.println("Got the applyPromotion Response : \n" + applyPromotionResponseStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		CouponResponse couponResponse = (CouponResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(applyPromotionResponseStr)));
+		System.out.println(couponResponse.getCouponStatus());
+	}
+
+	private static void commitCouupon(String sessionToken) throws Exception {
+		HttpClient httpClient = new HttpClient();
+
+		PostMethod commitCouponMethod = new PostMethod("http://localhost:8080/promotionWeb/coupon/commit");
+
+		CommitCouponRequest commitCouponRequest = new CommitCouponRequest();
+		commitCouponRequest.setSessionToken(sessionToken);
+		commitCouponRequest.setCouponCode("global_coupon_1");
+		commitCouponRequest.setOrderId(10);
+		commitCouponRequest.setDiscountValue(new BigDecimal("100.00"));
+
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion._1_0");
+
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(commitCouponRequest, sw);
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		commitCouponMethod.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(commitCouponMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the commitCouupon method : " + statusCode);
+			return;
+		}
+		String commitCouponResponseStr = commitCouponMethod.getResponseBodyAsString();
+		System.out.println("Got the commitCoupon Response : \n" + commitCouponResponseStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		CommitCouponResponse commitCouponResponse = (CommitCouponResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(commitCouponResponseStr)));
+		System.out.println(commitCouponResponse.getCommitCouponStatus());
+	}
+
+	private static void releaseCoupon(String sessionToken) throws Exception {
+		HttpClient httpClient = new HttpClient();
+
+		PostMethod releaseCouponMethod = new PostMethod("http://localhost:8080/promotionWeb/coupon/release");
+
+		ReleaseCouponRequest releaseCouponRequest = new ReleaseCouponRequest();
+		releaseCouponRequest.setSessionToken(sessionToken);
+		releaseCouponRequest.setCouponCode("global_coupon_1");
+		releaseCouponRequest.setOrderId(10);
+
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion._1_0");
+
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(releaseCouponRequest, sw);
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		releaseCouponMethod.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(releaseCouponMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the releaseCouupon method : " + statusCode);
+			return;
+		}
+		String releaseCouponResponseStr = releaseCouponMethod.getResponseBodyAsString();
+		System.out.println("Got the releaseCoupon Response : \n" + releaseCouponResponseStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		ReleaseCouponResponse releaseCouponResponse = (ReleaseCouponResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(releaseCouponResponseStr)));
+		System.out.println(releaseCouponResponse.getReleaseCouponStatus());
 	}
 
 	private static void logout(String sessionToken) throws Exception {
@@ -159,6 +261,4 @@ public class RestClient {
 		AddUserResponse addUserResponse = (AddUserResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(addUserResponseStr)));
 		return addUserResponse.getSessionToken();	
 	}
-	
-	
-	}
+}

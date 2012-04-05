@@ -3,6 +3,7 @@
  */
 package com.fb.platform.promotion.rule.impl;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import com.fb.platform.promotion.rule.PromotionRule;
@@ -12,10 +13,10 @@ import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.commons.to.Money;
 
 /**
- * @author vinayak
+ * @author keith
  *
  */
-public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule {
+public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule, Serializable {
 
 	private Money minOrderValue;
 	private BigDecimal discountPercentage;
