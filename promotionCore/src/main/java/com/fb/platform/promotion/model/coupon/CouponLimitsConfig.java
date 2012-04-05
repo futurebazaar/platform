@@ -4,6 +4,7 @@
 package com.fb.platform.promotion.model.coupon;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import com.fb.commons.to.Money;
 
@@ -19,16 +20,18 @@ public class CouponLimitsConfig implements Serializable {
 	private Money maxAmountPerUser;
 
 	public boolean isWithinLimits(GlobalCouponUses globalUses, UserCouponUses userUses) {
-		if (maxUses < globalUses.getCurrentCount()) {
+		Money zeroMoney = new Money(BigDecimal.ZERO);
+		
+		if (maxUses > 0 && maxUses < globalUses.getCurrentCount()) {
 			return false;
 		}
-		if (maxAmount.lt(globalUses.getCurrentAmount())) {
+		if (maxAmount.gt(zeroMoney) && maxAmount.lt(globalUses.getCurrentAmount())) {
 			return false;
 		}
-		if (maxUsesPerUser < userUses.getCurrentCount()) {
+		if (maxUsesPerUser > 0 && maxUsesPerUser < userUses.getCurrentCount()) {
 			return false;
 		}
-		if (maxAmountPerUser.lt(userUses.getCurrentAmount())) {
+		if (maxAmountPerUser.gt(zeroMoney) && maxAmountPerUser.lt(userUses.getCurrentAmount())) {
 			return false;
 		}
 		return true;

@@ -5,13 +5,13 @@ package com.fb.platform.promotion.dao.impl;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -62,7 +62,8 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			"	count(*) as current_count, " +
 			"	sum(ucu.discount_amount) as current_amount, " +
 			"	coupon_id " +
-			"FROM user_coupon_uses ucu WHERE coupon_id = ? AND is_cancelled = 0";
+			"FROM user_coupon_uses ucu WHERE coupon_id = ? AND is_cancelled = 0 " +
+			"group by coupon_id";
 	
 	private static final String LOAD_USER_COUPON_USES_QUERY = 
 			"SELECT " +
@@ -70,7 +71,8 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			"	sum(ucu.discount_amount) as current_amount, " +
 			"	coupon_id, " +
 			"	user_id " +
-			"FROM user_coupon_uses ucu WHERE coupon_id = ? AND user_id = ? AND is_cancelled = 0";
+			"FROM user_coupon_uses ucu WHERE coupon_id = ? AND user_id = ? AND is_cancelled = 0 " +
+			"group by coupon_id";
 
 	private static final String CREATE_USER_USES = 
 			"INSERT INTO user_coupon_uses " +
@@ -163,14 +165,13 @@ public class CouponDaoJdbcImpl implements CouponDao {
 	@Override
 	public boolean cancelUserUses(final int couponId, final int userId, final int orderId){
 		int rowAffected = -1;
-		final java.util.Date today = new java.util.Date();
 		try {
 			rowAffected = jdbcTemplate.update(new PreparedStatementCreator() {
 				@Override
 				public PreparedStatement createPreparedStatement(Connection con)
 						throws SQLException {
 					PreparedStatement ps = con.prepareStatement(CANCEL_USER_USES);
-					ps.setDate(1, new Date(today.getTime()));
+					ps.setTimestamp(1, new java.sql.Timestamp(System.currentTimeMillis()));
 					ps.setInt(2, couponId);
 					ps.setInt(3, userId);
 					ps.setInt(4, orderId);
@@ -194,22 +195,27 @@ public class CouponDaoJdbcImpl implements CouponDao {
 
 	private void createUserUses(final int couponId, final int userId, final BigDecimal valueApplied, final int orderId) {
 		KeyHolder userUsesKeyHolder = new GeneratedKeyHolder();
-		final java.util.Date today = new java.util.Date();
-		jdbcTemplate.update(new PreparedStatementCreator() {
-			
-			@Override
-			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				PreparedStatement ps = con.prepareStatement(CREATE_USER_USES, new String [] {"id"});
-				ps.setInt(1, couponId);
-				ps.setInt(2, userId);
-				ps.setInt(3, orderId);
-				ps.setBigDecimal(4, valueApplied);
-				ps.setDate(5, new Date(today.getTime()));
-				ps.setDate(6, new Date(today.getTime()));
-				ps.setBoolean(7, false);
-				return ps;
-			}
-		}, userUsesKeyHolder);
+		
+		try {
+			jdbcTemplate.update(new PreparedStatementCreator() {
+				
+				@Override
+				public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+					PreparedStatement ps = con.prepareStatement(CREATE_USER_USES, new String [] {"id"});
+					ps.setInt(1, couponId);
+					ps.setInt(2, userId);
+					ps.setInt(3, orderId);
+					ps.setBigDecimal(4, valueApplied);
+					ps.setTimestamp(5, new java.sql.Timestamp(System.currentTimeMillis()));
+					ps.setTimestamp(6, new java.sql.Timestamp(System.currentTimeMillis()));
+					ps.setBoolean(7, false);
+					return ps;
+				}
+			}, userUsesKeyHolder);
+		} catch (DuplicateKeyException e) {
+			throw new PlatformException("Duplicate key insertion exception "+e);
+		}
+		
 	}
 
 	private static class CouponMapper implements RowMapper<Coupon> {
@@ -248,15 +254,34 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			BigDecimal maxAmountBD = rs.getBigDecimal("max_amount");
 			if (maxAmountBD != null) {
 				config.setMaxAmount(new Money(maxAmountBD));
+			}else{
+				//maxAmount cannot be null or zero in the database
+				throw new PlatformException("Max Amount cannot be null or zero. Invalid Coupon data.");
 			}
 
 			BigDecimal maxAmountPerUserBD = rs.getBigDecimal("max_amount_per_user");
 			if (maxAmountPerUserBD != null) {
 				config.setMaxAmountPerUser(new Money(maxAmountPerUserBD));
+			}else{
+				//max Amount per user cannot be null or zero in the databases
+				throw new PlatformException("Max Amount Per User cannot be null or zero. Invalid Coupon data.");
 			}
 
-			config.setMaxUses(rs.getInt("max_uses"));
-			config.setMaxUsesPerUser(rs.getInt("max_uses_per_user"));
+			int maxUses = rs.getInt("max_uses");
+			if(maxUses==0){
+				//max uses cannot be null or zero in the databases
+				throw new PlatformException("Max uses cannot be null or zero. Invalid Coupon data.");
+			}
+			maxUses = maxUses > 0 ? maxUses : -1;
+			config.setMaxUses(maxUses);
+			
+			int maxUsesPerUser = rs.getInt("max_uses_per_user");
+			if(maxUsesPerUser==0){
+				//max uses per user cannot be null or zero in the databases
+				throw new PlatformException("Max uses per user cannot be null or zero. Invalid Coupon data.");
+			}
+			maxUsesPerUser = maxUsesPerUser > 0 ? maxUsesPerUser : -1;
+			config.setMaxUsesPerUser(maxUsesPerUser);
 
 			return config;
 		}
