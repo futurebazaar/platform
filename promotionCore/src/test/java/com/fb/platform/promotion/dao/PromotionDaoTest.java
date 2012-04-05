@@ -70,7 +70,7 @@ public class PromotionDaoTest extends BaseTestCase {
 		assertNotNull(limitsConfig);
 		assertEquals(0, limitsConfig.getMaxUses());
 		assertEquals(1, limitsConfig.getMaxUsesPerUser());
-		assertNull(limitsConfig.getMaxAmount());
+		assertTrue(limitsConfig.getMaxAmount().eq(new Money(new BigDecimal(-1))));
 		assertTrue(limitsConfig.getMaxAmountPerUser().eq(new Money(new BigDecimal(2000))));
 	}
 

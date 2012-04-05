@@ -59,3 +59,8 @@ userWS/.project
 userWS/.settings/
 userWS/bin/
 userWS/target/
+.metadata/
+database/ddl/platform.err
+platformPlanning/
+promotionCore/bin/
+.gitignore

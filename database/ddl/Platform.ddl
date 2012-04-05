@@ -197,7 +197,7 @@ CREATE TABLE platform_promotion (
 	id INTEGER NOT NULL AUTO_INCREMENT,
 	created_on DATETIME,
 	last_modified_on DATETIME,
-	rule_id INTEGER,
+	rule_id INTEGER NOT NULL,
 	valid_from DATETIME,
 	valid_till DATETIME, 
 	name VARCHAR(50),
@@ -222,10 +222,10 @@ CREATE TABLE promotion_rule_config (
 CREATE TABLE promotion_limits_config (
 	id INTEGER NOT NULL AUTO_INCREMENT,
 	promotion_id INTEGER,
-	max_uses INTEGER,
-	max_amount DECIMAL(18,2),
-	max_uses_per_user INTEGER,
-	max_amount_per_user DECIMAL(18,2),
+	max_uses INTEGER NOT NULL,
+	max_amount DECIMAL(18,2) NOT NULL,
+	max_uses_per_user INTEGER NOT NULL,
+	max_amount_per_user DECIMAL(18,2) NOT NULL,
 	PRIMARY KEY(id),
 	UNIQUE(promotion_id),
 	CONSTRAINT promotion_limits_config_fk1 FOREIGN KEY (promotion_id) REFERENCES platform_promotion(id) ON DELETE CASCADE
@@ -259,11 +259,11 @@ CREATE TABLE coupon (
 
 CREATE TABLE coupon_limits_config (
 	id INTEGER NOT NULL AUTO_INCREMENT,
-	coupon_id INTEGER,
-	max_uses INTEGER,
-	max_amount DECIMAL(18,2),
-	max_uses_per_user INTEGER,
-	max_amount_per_user DECIMAL(18,2),
+	coupon_id INTEGER NOT NULL,
+	max_uses INTEGER NOT NULL,
+	max_amount DECIMAL(18,2) NOT NULL,
+	max_uses_per_user INTEGER NOT NULL,
+	max_amount_per_user DECIMAL(18,2) NOT NULL,
 	PRIMARY KEY(id),
 	UNIQUE(coupon_id),
 	CONSTRAINT coupon_limits_config_fk1 FOREIGN KEY (coupon_id) REFERENCES coupon(id) ON DELETE CASCADE
