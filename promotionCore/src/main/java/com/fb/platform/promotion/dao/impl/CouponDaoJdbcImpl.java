@@ -89,7 +89,7 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			"	coupon_id, " +
 			"	user_id, " +
 			"	override_user_uses_limit " +
-			"FROM coupon_user WHERE coupon_id = ? AND user_id = ?";
+			"FROM platform_coupon_user WHERE coupon_id = ? AND user_id = ?";
 
 	private static final String CANCEL_USER_USES = 
 			"UPDATE user_coupon_uses set " +

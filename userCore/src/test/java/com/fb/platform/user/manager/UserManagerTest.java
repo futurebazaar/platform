@@ -16,6 +16,9 @@ import com.fb.platform.user.manager.interfaces.UserManager;
 import com.fb.platform.user.manager.model.auth.ChangePasswordRequest;
 import com.fb.platform.user.manager.model.auth.ChangePasswordResponse;
 import com.fb.platform.user.manager.model.auth.ChangePasswordStatusEnum;
+import com.fb.platform.user.manager.model.auth.KeepAliveRequest;
+import com.fb.platform.user.manager.model.auth.KeepAliveResponse;
+import com.fb.platform.user.manager.model.auth.KeepAliveStatusEnum;
 import com.fb.platform.user.manager.model.auth.LoginRequest;
 import com.fb.platform.user.manager.model.auth.LoginResponse;
 import com.fb.platform.user.manager.model.auth.LoginStatusEnum;
@@ -25,7 +28,7 @@ import com.fb.platform.user.manager.model.auth.LogoutStatusEnum;
 
 /**
  * @author vinayak
- *
+ * @author kislaya
  */
 public class UserManagerTest extends BaseTestCase {
 
@@ -274,11 +277,11 @@ public class UserManagerTest extends BaseTestCase {
 	public void guestLogout() {
 		LoginRequest request = new LoginRequest();
 		request.setUsername("9326164025");
-
 		LoginResponse response = userManager.login(request);
 
 		assertNotNull(response);
 		assertEquals(LoginStatusEnum.GUEST_LOGIN_SUCCESS, response.getLoginStatus());
+
 		assertNotNull(response.getSessionToken());
 		assertEquals(1, response.getUserId().intValue());
 
@@ -289,5 +292,26 @@ public class UserManagerTest extends BaseTestCase {
 
 		assertNotNull(logoutResponse);
 		assertEquals(LogoutStatusEnum.LOGOUT_SUCCESS, logoutResponse.getLogoutStatus());
+	}
+
+	@Test 
+	public void testKeepAlive(){
+		LoginRequest request = new LoginRequest();
+		request.setUsername("9326164025");
+		request.setPassword("testpass");
+
+		LoginResponse response = userManager.login(request);
+
+		assertNotNull(response);
+		assertEquals(LoginStatusEnum.LOGIN_SUCCESS, response.getLoginStatus());
+		assertNotNull(response.getSessionToken());
+
+		KeepAliveRequest keepAliveRequest = new KeepAliveRequest();
+		keepAliveRequest.setSessionToken(response.getSessionToken());
+		
+		KeepAliveResponse keepAliveResponse = userManager.keepAlive(keepAliveRequest);
+		assertNotNull(keepAliveResponse);
+		assertEquals(KeepAliveStatusEnum.KEEPALIVE_SUCCESS, keepAliveResponse.getKeepAliveStatus());
+		assertNotNull(keepAliveResponse.getSessionToken());		
 	}
 }

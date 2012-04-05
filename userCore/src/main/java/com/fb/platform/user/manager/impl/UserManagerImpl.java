@@ -38,7 +38,7 @@ import com.fb.platform.user.util.PasswordUtil;
  */
 public class UserManagerImpl implements UserManager {
 
-	private static Logger logger = Logger.getLogger(UserManagerImpl.class);
+	private static final Logger logger = Logger.getLogger(UserManagerImpl.class);
 
 	@Autowired
 	private UserAdminDao userAdminDao = null;

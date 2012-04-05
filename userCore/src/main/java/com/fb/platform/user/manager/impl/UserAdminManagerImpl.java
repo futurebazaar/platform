@@ -4,6 +4,8 @@
 package com.fb.platform.user.manager.impl;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -37,7 +39,7 @@ import com.fb.platform.user.manager.model.admin.UpdateUserStatusEnum;
  */
 public class UserAdminManagerImpl implements UserAdminManager {
 
-	private static Logger logger = Logger.getLogger(UserAdminManagerImpl.class);
+	private static final Logger logger = Logger.getLogger(UserAdminManagerImpl.class);
 
 	private UserAdminDao userAdminDao;
 	
