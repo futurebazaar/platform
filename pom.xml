@@ -114,6 +114,7 @@
  <distributionManagement>
  <!-- Publish the versioned releases here -->
  <repository>
+ <uniqueVersion>false</uniqueVersion>
         <id>fb</id>
         <name>fb</name>
   <url>dav:http://maven.futurebazaar.com/nexus/content/repositories/releases</url>
@@ -121,6 +122,7 @@
 
  <!-- Publish the versioned releases here -->
  <snapshotRepository>
+ <uniqueVersion>false</uniqueVersion>
   <id>fb</id>
   <name>fb</name>
   <url>dav:http://maven.futurebazaar.com/nexus/content/repositories/snapshots</url>
