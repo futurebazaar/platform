@@ -105,6 +105,10 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 	@Override
 	public Promotion load(int promotionId) {
 		
+		if(log.isDebugEnabled()) {
+			log.debug("Geting the details for the promotion id : " + promotionId);
+		}
+		
 		Promotion promotion = null;
 
 		PromotionRowCallBackHandler prcbh = new PromotionRowCallBackHandler(); 
@@ -137,6 +141,10 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 	 */
 	@Override
 	public GlobalPromotionUses loadGlobalUses(int promotionId) {
+		if(log.isDebugEnabled()) {
+			log.debug("Getting the global promotion usage for the promotion id : " + promotionId );
+		}
+		
 		GlobalPromotionUses globalPromotionUses = null;
 		try {
 			globalPromotionUses = jdbcTemplate.queryForObject(LOAD_GLOABL_PROMOTION_USES_QUERY, new Object [] {promotionId}, new GlobalPromotionUsesMapper());
@@ -151,6 +159,10 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 	 */
 	@Override
 	public UserPromotionUses loadUserUses(int promotionId, int userId) {
+		if(log.isDebugEnabled()) {
+			log.debug("Getting the promotion usage for the promotion id : " + promotionId + " ,by the user : " + userId);
+		}
+		
 		UserPromotionUses userPromotionUses = null;
 		try {
 			userPromotionUses = jdbcTemplate.queryForObject(LOAD_USER_PROMOTION_USES_QUERY, new Object[] {promotionId, userId}, new UserPromotionUsesMapper());
@@ -217,6 +229,11 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 	}*/
 
 	private void createUserUses(final int promotionId, final int userId, final BigDecimal valueApplied, final int orderId) {
+		
+		if(log.isDebugEnabled()) {
+			log.debug("Insert in the user_promotion_uses table record for user : " + userId + " , applied promotion id : " + promotionId + " , on order id : " + orderId + " , discount value applied : " + valueApplied );
+		}
+		
 		KeyHolder userUsesKeyHolder = new GeneratedKeyHolder();
 		final java.util.Date today = new java.util.Date();
 		jdbcTemplate.update(new PreparedStatementCreator() {
@@ -238,6 +255,9 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 
 	@Override
 	public boolean cancelUserUses(final int promotionId, final int userId, final int orderId){
+		if(log.isDebugEnabled()) {
+			log.debug("Cancelling the promotion id : " + promotionId + ", applied on order id : " + orderId + " for user : " + userId );
+		}
 		int rowAffected = -1;
 		final java.util.Date today = new java.util.Date();
 		try {
@@ -254,6 +274,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 				}
 			});
 		} catch (IncorrectResultSizeDataAccessException e) {
+			log.warn( " Tried cancelling promotion id " + promotionId + " ,but entry not found.");
 			//failed to update the row
 		}
 		

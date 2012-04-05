@@ -100,6 +100,9 @@ public class CouponDaoJdbcImpl implements CouponDao {
 	@Override
 	public Coupon load(String couponCode, int userId) {
 		Coupon coupon = null;
+		if(log.isDebugEnabled()) {
+			log.debug("Getting the coupon details for the coupon code : " + couponCode);
+		}
 		try {
 			coupon = jdbcTemplate.queryForObject(LOAD_COUPON_QUERY, new Object [] {couponCode}, new CouponMapper());
 		} catch (IncorrectResultSizeDataAccessException e) {
@@ -109,6 +112,9 @@ public class CouponDaoJdbcImpl implements CouponDao {
 		}
 
 		CouponLimitsConfig limitsConfig = null;
+		if(log.isDebugEnabled()) {
+			log.debug("Getting the coupon maximum limit for the coupon code : " + couponCode);
+		}
 		try {
 			limitsConfig = jdbcTemplate.queryForObject(LOAD_COUPON_LIMITS_QUERY, new Object[] {coupon.getId()}, new CouponLimitsConfigMapper());
 		} catch (IncorrectResultSizeDataAccessException e) {
@@ -120,6 +126,9 @@ public class CouponDaoJdbcImpl implements CouponDao {
 		if (coupon.getType() == CouponType.PRE_ISSUE) {
 			//PRE_ISSUE coupons are issued to a particular user.
 			//find out the user associated with this coupon
+			if(log.isDebugEnabled()) {
+				log.debug("Getting the coupon details for the coupon code : " + couponCode + " ,issued to the user : " + userId);
+			}
 			CouponUserRowCallbackHandler curch = new CouponUserRowCallbackHandler();
 			jdbcTemplate.query(LOAD_COUPON_USER_QUERY, curch, coupon.getId(), userId);
 
@@ -140,6 +149,9 @@ public class CouponDaoJdbcImpl implements CouponDao {
 
 	@Override
 	public GlobalCouponUses loadGlobalUses(int couponId) {
+		if(log.isDebugEnabled()) {
+			log.debug("Getting the global coupon usage for the coupon id : " + couponId );
+		}
 		GlobalCouponUses globalCouponUses = null;
 		try {
 			globalCouponUses = jdbcTemplate.queryForObject(LOAD_GLOBAL_COUPON_USES_QUERY, new Object [] {couponId}, new GlobalCouponUsesMapper());
@@ -151,6 +163,9 @@ public class CouponDaoJdbcImpl implements CouponDao {
 
 	@Override
 	public UserCouponUses loadUserUses(int couponId, int userId) {
+		if(log.isDebugEnabled()) {
+			log.debug("Getting the coupon usage for the coupon id : " + couponId + " ,by the user : " + userId);
+		}
 		UserCouponUses userCouponUses = null;
 		try {
 			userCouponUses = jdbcTemplate.queryForObject(LOAD_USER_COUPON_USES_QUERY, new Object[] {couponId, userId}, new UserCouponUsesMapper());
@@ -162,6 +177,9 @@ public class CouponDaoJdbcImpl implements CouponDao {
 
 	@Override
 	public boolean cancelUserUses(final int couponId, final int userId, final int orderId){
+		if(log.isDebugEnabled()) {
+			log.debug("Cancelling the coupon id : " + couponId + ", applied on order id : " + orderId + " for user : " + userId );
+		}
 		int rowAffected = -1;
 		final java.util.Date today = new java.util.Date();
 		try {
@@ -178,6 +196,7 @@ public class CouponDaoJdbcImpl implements CouponDao {
 				}
 			});
 		} catch (IncorrectResultSizeDataAccessException e) {
+			log.warn( "Tried cancelling coupon id " + couponId + " ,but entry not found.");
 			//failed to update the row
 		}
 		
@@ -193,6 +212,9 @@ public class CouponDaoJdbcImpl implements CouponDao {
 	}
 
 	private void createUserUses(final int couponId, final int userId, final BigDecimal valueApplied, final int orderId) {
+		if(log.isDebugEnabled()) {
+			log.debug("Insert in the user_coupon_uses table record for user : " + userId + " , applied coupon id : " + couponId + " , on order id : " + orderId + " , discount value applied : " + valueApplied );
+		}
 		KeyHolder userUsesKeyHolder = new GeneratedKeyHolder();
 		final java.util.Date today = new java.util.Date();
 		jdbcTemplate.update(new PreparedStatementCreator() {

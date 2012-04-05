@@ -59,6 +59,9 @@ public class SingleSignonDaoJdbcImpl implements SingleSignonDao {
 	 */
 	@Override
 	public void createSSOSession(SSOSessionTO session, SSOSessionId sessionId) {
+		if(log.isDebugEnabled()) {
+			log.debug("Creating SSO session for session id : " + sessionId.getSessionId());
+		}
 		Timestamp currentTime = new java.sql.Timestamp(System.currentTimeMillis());
 		jdbcTemplate.update(CREATE_SSO_SESSION_QUERY, 
 				session.getIpAddress(),
@@ -75,6 +78,9 @@ public class SingleSignonDaoJdbcImpl implements SingleSignonDao {
 	 */
 	@Override
 	public void logoutSSOSession(SSOSessionId sessionId) {
+		if(log.isDebugEnabled()) {
+			log.debug("Logout session for session id : " + sessionId.getSessionId());
+		}
 		jdbcTemplate.update(EXPIRE_SSO_SESSION_SQL,
 				sessionId.getSessionId());
 	}
@@ -84,6 +90,9 @@ public class SingleSignonDaoJdbcImpl implements SingleSignonDao {
 	 */
 	@Override
 	public void updateSSOSession(SSOSessionId sessionId) {
+		if(log.isDebugEnabled()) {
+			log.debug("Update SSO session for session id : " + sessionId.getSessionId());
+		}
 		jdbcTemplate.update(UPDATE_SSO_SESSION_SQL,
 				sessionId.getSessionId());
 	}
@@ -93,6 +102,9 @@ public class SingleSignonDaoJdbcImpl implements SingleSignonDao {
 	 */
 	@Override
 	public SSOSessionTO loadSessionDetails(SSOSessionId sessionId) {
+		if(log.isDebugEnabled()) {
+			log.debug("Load SSO session for session id : " + sessionId.getSessionId());
+		}
 		List<SSOSessionTO> sessions = jdbcTemplate.query(RETRIEVE_SSO_SESSION_QUERY, new Object [] {sessionId.getSessionId()}, new SSOMapper());
 		if (sessions.size() == 1) {
 			return sessions.get(0);

@@ -43,7 +43,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	@Override
 	public AuthenticationTO authenticate(String token) throws PlatformException {
     	if (logger.isDebugEnabled()) {
-    		//logger.debug(Log.entry("authenticate ").append(token));
+    		logger.debug( "Authenticating user : " + token );
     	}
     	if (token == null) {
     		return null;
@@ -129,7 +129,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
         
         if (logger.isDebugEnabled()) {
-        	//logger.debug("authenticate ").append(authTO == null ? "null" : authTO.toString());
+        	//logger.debug("authenticate ".append(authTO == null ? "null" : authTO.toString());
         }
         
         return authTO;

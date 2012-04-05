@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
+import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,7 +19,7 @@ import com.fb.platform.user.domain.UserAddressBo;
  */
 public class UserAddressDaoImpl implements UserAddressDao {
 	
-	private static final Logger logger = Logger.getLogger(UserAddressDaoImpl.class);
+	private static final Log logger = LogFactory.getLog(UserAddressDaoImpl.class);
 	
 	private static final String SELECT_USER_ADDRESS = "SELECT "
 			+ "la.id as addressid, "
@@ -89,6 +90,9 @@ public class UserAddressDaoImpl implements UserAddressDao {
 	 */
 	@Override
 	public Collection<UserAddressBo> load(int userid) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("Getting address for user id : " + userid);
+		}
 		Collection<UserAddressBo> userAddressBos = jdbcTemplate.query(SELECT_USER_ADDRESS, new Object[]{userid} , new UserAddressMapper());
 		return userAddressBos;
 	}
@@ -98,6 +102,9 @@ public class UserAddressDaoImpl implements UserAddressDao {
 	 */
 	@Override
 	public void add(UserAddressBo userAddressBo) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("Insert new address : " + userAddressBo.toString());
+		}
 		Object[] objs = new Object[16];
 		objs[0] = userAddressBo.getPincode();
 		objs[1] = getcityidbyname(userAddressBo.getCity());
@@ -124,6 +131,9 @@ public class UserAddressDaoImpl implements UserAddressDao {
 	 */
 	@Override
 	public void update(UserAddressBo userAddressBo) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("Updating address with address id : " + userAddressBo.getAddressid() + " \n New Address : " + userAddressBo.toString() );
+		}
 		Object[] objs = new Object[15];
 		objs[0] = userAddressBo.getPincode();
 		objs[1] = getcityidbyname(userAddressBo.getCity());
@@ -145,16 +155,25 @@ public class UserAddressDaoImpl implements UserAddressDao {
 	}
 
 	private int getcityidbyname(String city) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("Getting the city id for the city : " + city );
+		}
 		int cityid = jdbcTemplate.queryForInt(SELECT_CITYID_BYNAME , new Object[] {city});
 		return cityid;
 	}
 
 	private int getcountryidbyname(String country) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("Getting the country id for the country : " + country );
+		}
 		int countryid = jdbcTemplate.queryForInt(SELECT_COUNTRYID_BYNAME , new Object[] {country});
 		return countryid;
 	}
 
 	private int getstateidbyname(String state) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("Getting the state id for the state : " + state );
+		}
 		int stateid = jdbcTemplate.queryForInt(SELECT_STATEID_BYNAME , new Object[] {state});
 		return stateid;
 	}

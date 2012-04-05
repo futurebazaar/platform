@@ -58,6 +58,9 @@ public class PromotionManagerImpl implements PromotionManager {
 
 	@Override
 	public CouponResponse applyCoupon(CouponRequest request) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("Applying coupon : " + request.getCouponCode());
+		}
 		CouponResponse response = new CouponResponse();
 
 		if (request == null || StringUtils.isBlank(request.getSessionToken())) {
@@ -147,6 +150,9 @@ public class PromotionManagerImpl implements PromotionManager {
 
 	@Override
 	public CommitCouponResponse commitCouponUse(CommitCouponRequest request) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("Commiting coupon usage : " + request.getCouponCode());
+		}
 		CommitCouponResponse response = new CommitCouponResponse();
 
 		if (request == null || StringUtils.isBlank(request.getSessionToken())) {
@@ -206,6 +212,9 @@ public class PromotionManagerImpl implements PromotionManager {
 	
 	@Override
 	public ReleaseCouponResponse releaseCoupon(ReleaseCouponRequest request){
+		if(logger.isDebugEnabled()) {
+			logger.debug("Release coupon : " + request.getCouponCode());
+		}
 		ReleaseCouponResponse response = new ReleaseCouponResponse();
 
 		if (request == null || StringUtils.isBlank(request.getSessionToken())) {

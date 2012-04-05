@@ -50,6 +50,9 @@ public class RuleDaoJdbcImpl implements RuleDao {
 	 */
 	@Override
 	public PromotionRule load(int promotionId, int ruleId) {
+		if(log.isDebugEnabled()) {
+			log.debug("Geting the promotion rule details for the rule id : " + ruleId );
+		}
 		PromotionRuleRowCallBackHandler rcbh = new PromotionRuleRowCallBackHandler();
 		jdbcTemplate.query(LOAD_PROMOTION_RULE_QUERY, rcbh, ruleId);
 
@@ -67,6 +70,9 @@ public class RuleDaoJdbcImpl implements RuleDao {
 	}
 
 	public RuleConfiguration loadRuleConfiguration(int promotionId, int ruleId) {
+		if(log.isDebugEnabled()) {
+			log.debug("Geting the promotion rule details for the promotion rule id : " + promotionId );
+		}
 		List<RuleConfigItem> ruleConfigItems = jdbcTemplate.query(LOAD_RULE_CONFIG_ITEMS_QUERY, new RuleConfigItemRowMapper(), promotionId);
 		RuleConfiguration ruleConfig = new RuleConfiguration(ruleConfigItems);
 		return ruleConfig;

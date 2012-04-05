@@ -1,5 +1,7 @@
 package com.fb.platform.user.manager.impl;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
 
 import com.fb.platform.user.dao.interfaces.UserAddressDao;
@@ -13,7 +15,7 @@ import com.fb.platform.user.manager.model.address.UpdateAddressResponse;
 
 public class UserAddressManagerImpl implements UserAddressManager {
 
-	private static final Logger logger = Logger.getLogger(UserAddressManagerImpl.class);
+	private static final Log logger = LogFactory.getLog(UserAddressManagerImpl.class);
 
 	private UserAddressDao userAddressDao;
 

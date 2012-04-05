@@ -39,7 +39,7 @@ import com.fb.platform.user.manager.model.admin.UpdateUserStatusEnum;
  */
 public class UserAdminManagerImpl implements UserAdminManager {
 
-	private static final Logger logger = Logger.getLogger(UserAdminManagerImpl.class);
+	private static final Log logger = LogFactory.getLog(UserAdminManagerImpl.class);
 
 	private UserAdminDao userAdminDao;
 	
@@ -58,6 +58,9 @@ public class UserAdminManagerImpl implements UserAdminManager {
 	 */
 	@Override
 	public GetUserResponse getUser(GetUserRequest getUserRequest) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("Getting user details for : " + getUserRequest.getSessionToken());
+		}
 		GetUserResponse getUserResponse = new GetUserResponse();
 		if (getUserRequest == null || StringUtils.isBlank(getUserRequest.getKey())) {
 			getUserResponse.setStatus(GetUserStatusEnum.NO_USER_KEY);
@@ -96,6 +99,9 @@ public class UserAdminManagerImpl implements UserAdminManager {
 	 */
 	@Override
 	public AddUserResponse addUser(AddUserRequest addUserRequest) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("Add user with username : " + addUserRequest.getUserName() );
+		}
 		AddUserResponse addUserResponse = new AddUserResponse();
 
 		if (addUserRequest == null || StringUtils.isBlank(addUserRequest.getUserName())) {
@@ -138,7 +144,9 @@ public class UserAdminManagerImpl implements UserAdminManager {
 	 */
 	@Override
 	public UpdateUserReponse updateUser(UpdateUserRequest updateUserRequest) {
-
+		if(logger.isDebugEnabled()) {
+			logger.debug("Update user with session token : " + updateUserRequest.getSessionToken() );
+		}
 		UpdateUserReponse updateUserReponse = new UpdateUserReponse();
 		if (updateUserRequest == null) {
 			updateUserReponse.setStatus(UpdateUserStatusEnum.NO_USER_PROVIDED);
@@ -187,6 +195,9 @@ public class UserAdminManagerImpl implements UserAdminManager {
 
 	@Override
 	public IsValidUserResponse isValidUser(IsValidUserRequest isValidUserRequest) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("Checking if user is valid : " + isValidUserRequest.getUserName() );
+		}
 		IsValidUserResponse isValidUserResponse = new IsValidUserResponse();
 		if (isValidUserRequest == null || StringUtils.isBlank(isValidUserRequest.getUserName())) {
 			isValidUserResponse.setIsValidUserStatus(IsValidUserEnum.INVALID_USER);

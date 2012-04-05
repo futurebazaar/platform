@@ -13,6 +13,8 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -37,7 +39,7 @@ import com.fb.platform.user.manager.interfaces.UserAdminManager;
 @Scope("request")
 public class UserResource {
 
-	private static Logger logger = Logger.getLogger(UserResource.class);
+	private static Log logger = LogFactory.getLog(UserResource.class);
 
 
 	//JAXBContext class is thread safe and can be shared
@@ -84,7 +86,7 @@ public class UserResource {
 
 			String xmlResponse = outStringWriter.toString();
 			if (logger.isDebugEnabled()) {
-				logger.info("Get USER XMl response :\n" + xmlGetUserRes);
+				logger.debug("Get USER XMl response :\n" + xmlGetUserRes);
 			}
 			return xmlResponse;
 
@@ -122,7 +124,7 @@ public class UserResource {
 
 			String xmlResponse = outStringWriter.toString();
 			if (logger.isDebugEnabled()) {
-			logger.info("Add USER XMl response :\n" + xmlAddUserRes);
+				logger.debug("Add USER XMl response :\n" + xmlAddUserRes);
 			}
 			return xmlResponse;
 		} catch (JAXBException e) {

@@ -43,6 +43,9 @@ public class SSOMasterServiceImpl implements SSOMasterService {
 	 */
 	@Override
 	public SSOSessionTO authenticate(SSOSessionId sessionId) throws PlatformException {
+		if(log.isDebugEnabled()) {
+			log.debug("Authenticate session : " + sessionId.getSessionId());
+		}
 		return singleSignonDao.loadSessionDetails(sessionId);
 	}
 
@@ -51,6 +54,9 @@ public class SSOMasterServiceImpl implements SSOMasterService {
 	 */
 	@Override
 	public SSOSessionTO authenticateToken(String sessionToken) throws PlatformException {
+		if(log.isDebugEnabled()) {
+			log.debug("Authenticate token : " + sessionToken);
+		}
     	boolean tokenCached = true;
 
     	CryptoKeysTO keys = cryptoKeyManager.loadKeys();
@@ -137,6 +143,9 @@ public class SSOMasterServiceImpl implements SSOMasterService {
 	 */
 	@Override
 	public SSOSessionId createSSOSession(SSOSessionTO session) throws PlatformException {
+		if(log.isDebugEnabled()) {
+			log.debug("Create session for user id : " + session.getUserId());
+		}
 		UUID uuid = UUID.randomUUID();
 		SSOSessionId sessionId = new SSOSessionId(uuid.toString());
 		singleSignonDao.createSSOSession(session, sessionId);
@@ -145,6 +154,9 @@ public class SSOMasterServiceImpl implements SSOMasterService {
 
 	@Override
 	public SSOToken createSessionToken(SSOSessionId sessionId) throws PlatformException {
+		if(log.isDebugEnabled()) {
+			log.debug("Create session token : " + sessionId.getSessionId());
+		}
 		return sessionId.getSessionToken(cryptoKeyManager.loadKeys());
 	}
 
@@ -153,6 +165,9 @@ public class SSOMasterServiceImpl implements SSOMasterService {
 	 */
 	@Override
 	public void removeSSOSession(SSOSessionId sessionId) throws PlatformException {
+		if(log.isDebugEnabled()) {
+			log.debug("Remove SSO session : " + sessionId.getSessionId());
+		}
 		singleSignonDao.logoutSSOSession(sessionId);
 		sessionCacheAccess.remove(sessionId);
 	}

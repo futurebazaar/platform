@@ -17,21 +17,22 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.fb.commons.PlatformException;
+import com.fb.platform.auth._1_0.KeepAliveRequest;
+import com.fb.platform.auth._1_0.KeepAliveResponse;
+import com.fb.platform.auth._1_0.KeepAliveStatus;
 import com.fb.platform.auth._1_0.LoginRequest;
 import com.fb.platform.auth._1_0.LoginResponse;
 import com.fb.platform.auth._1_0.LoginStatus;
 import com.fb.platform.auth._1_0.LogoutRequest;
 import com.fb.platform.auth._1_0.LogoutResponse;
 import com.fb.platform.auth._1_0.LogoutStatus;
-import com.fb.platform.auth._1_0.KeepAliveRequest;
-import com.fb.platform.auth._1_0.KeepAliveResponse;
-import com.fb.platform.auth._1_0.KeepAliveStatus;
 import com.fb.platform.user.manager.interfaces.UserManager;
 
 /**
@@ -43,7 +44,7 @@ import com.fb.platform.user.manager.interfaces.UserManager;
 @Component
 public class AuthResource {
 
-	private static Logger logger = Logger.getLogger(AuthResource.class);
+	private static Log logger = LogFactory.getLog(AuthResource.class);
 
 	//JAXBContext class is thread safe and can be shared
 	private static final JAXBContext context = initContext();

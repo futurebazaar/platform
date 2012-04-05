@@ -1,7 +1,8 @@
 package com.fb.platform.user.manager.impl;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.PlatformException;
@@ -38,7 +39,7 @@ import com.fb.platform.user.util.PasswordUtil;
  */
 public class UserManagerImpl implements UserManager {
 
-	private static final Logger logger = Logger.getLogger(UserManagerImpl.class);
+	private static Log logger = LogFactory.getLog(UserManagerImpl.class);
 
 	@Autowired
 	private UserAdminDao userAdminDao = null;
@@ -52,6 +53,9 @@ public class UserManagerImpl implements UserManager {
 
 	@Override
 	public LoginResponse login(LoginRequest loginRequest) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("Trying to login with userid : " + loginRequest.getUsername() );
+		}
 		LoginResponse loginResponse = new LoginResponse();
 
 		if (loginRequest == null || StringUtils.isBlank(loginRequest.getUsername())) {
@@ -115,6 +119,9 @@ public class UserManagerImpl implements UserManager {
 
 	@Override
 	public LogoutResponse logout(LogoutRequest logoutRequest) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("Trying to logout for user with session token : " + logoutRequest.getSessionToken() );
+		}
 		LogoutResponse response = new LogoutResponse();
 
 		if (logoutRequest == null || StringUtils.isBlank(logoutRequest.getSessionToken())) {
@@ -140,6 +147,9 @@ public class UserManagerImpl implements UserManager {
 
 	@Override
 	public ChangePasswordResponse changePassword(ChangePasswordRequest request) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("Change password for user with session token : " + request.getSessionToken() );
+		}
 		ChangePasswordResponse response = new ChangePasswordResponse();
 
 		if (request == null || StringUtils.isBlank(request.getOldPassword()) || StringUtils.isBlank(request.getNewPassword())) {

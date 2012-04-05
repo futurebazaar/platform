@@ -27,7 +27,7 @@ import com.fb.platform.user.util.PasswordUtil;
 
 public class UserAdminDaoImpl implements UserAdminDao {
 	
-	private static final Logger logger = Logger.getLogger(UserAdminDaoImpl.class);
+	private static final Log logger = LogFactory.getLog(UserAdminDaoImpl.class);
 
 	private static final String CHECK_EMAIL_IS_USERNAME_QUERY = "SELECT count(0) from users_email WHERE email = ?";
 	private static final String CHECK_PHONE_IS_USERNAME_QUERY = "SELECT count(0) from users_phone WHERE phone = ?";
@@ -183,7 +183,9 @@ public class UserAdminDaoImpl implements UserAdminDao {
      */
     @Override
 	public UserBo load(String key) {
-    	logger.info("Getting user by the key name :::" + key);    	
+    	if(logger.isDebugEnabled()) {
+    		logger.debug("Getting user information with the key : " + key );
+    	} 	
     	boolean isEmail = isUsernameEmail(key);
     	if (isEmail) {
     		return getUserByEmail(key);
@@ -203,7 +205,9 @@ public class UserAdminDaoImpl implements UserAdminDao {
 	}
 
     private boolean isUsernameEmail(String username) {
-    	
+    	if(logger.isDebugEnabled()) {
+    		logger.debug("Cheking if username is a registered email : " + username );
+    	}
     	int emailCount = this.jdbcTemplate.queryForInt(CHECK_EMAIL_IS_USERNAME_QUERY, username);
     	if (emailCount > 0) {
     		return true;
@@ -212,6 +216,9 @@ public class UserAdminDaoImpl implements UserAdminDao {
     }
 
     private boolean isUsernamePhone(String username) {
+    	if(logger.isDebugEnabled()) {
+    		logger.debug("Cheking if username is a registered phone number : " + username );
+    	}
     	int phoneCount = this.jdbcTemplate.queryForInt(CHECK_PHONE_IS_USERNAME_QUERY, username);
     	if (phoneCount > 0) {
     		return true;
@@ -220,6 +227,9 @@ public class UserAdminDaoImpl implements UserAdminDao {
     }
 
     private boolean isUsernameUserId(String username) {
+    	if(logger.isDebugEnabled()) {
+    		logger.debug("Cheking if username is a registered user id : " + username );
+    	}
     	int userIdCount = this.jdbcTemplate.queryForInt(CHECK_USERID_IS_USERNAME_QUERY, username);
     	if (userIdCount > 0) {
     		return true;
@@ -228,8 +238,9 @@ public class UserAdminDaoImpl implements UserAdminDao {
     }
 
 	private UserBo getUserByEmail(String email) {
-		
-		logger.info("Getting user by Emailid :::" + email);  
+		if(logger.isDebugEnabled()) {
+    		logger.debug("Getting user details for the registered email : " + email );
+    	}
 		UserBo user = jdbcTemplate.queryForObject(SELECT_USER_BY_EMAIL_QUERY,
 				new Object[] {email},
 				new UserMapper());
@@ -239,7 +250,9 @@ public class UserAdminDaoImpl implements UserAdminDao {
 	}
 
 	private UserBo getUserByPhone(String phone) {
-		logger.info("Getting user by phone :::" + phone);  
+		if(logger.isDebugEnabled()) {
+    		logger.debug("Getting user details for the registered phone number : " + phone );
+    	}
 		UserBo user = jdbcTemplate.queryForObject(SELECT_USER_BY_PHONE_QUERY,
 				new Object[] {phone},
 				new UserMapper());
@@ -254,7 +267,9 @@ public class UserAdminDaoImpl implements UserAdminDao {
 	}
 
 	private UserBo getUserByUserId(int userId) {
-
+		if(logger.isDebugEnabled()) {
+    		logger.debug("Getting user details for the registered user id : " + userId );
+    	}
 		UserBo user = jdbcTemplate.queryForObject(SELECT_USER_BY_USER_ID,
 				new Object[] {userId},
 				new UserMapper());
@@ -264,7 +279,9 @@ public class UserAdminDaoImpl implements UserAdminDao {
 	}
 
 	private List<UserEmailBo> getEmailByUserid(long userId) {
-
+		if(logger.isDebugEnabled()) {
+    		logger.debug("Getting list of emails for the user : " + userId );
+    	}
 		List<UserEmailBo> userEmailBo = jdbcTemplate.query(SELECT_EMAILS_BY_USER_ID,
 				new Object[] {userId},
 				new UserEmailMapper());
@@ -272,7 +289,9 @@ public class UserAdminDaoImpl implements UserAdminDao {
 	}
 
 	private List<UserPhoneBo> getPhoneByUserid(long userId) {
-
+		if(logger.isDebugEnabled()) {
+    		logger.debug("Getting list of phone numbers for the user : " + userId );
+    	}
 		List<UserPhoneBo> userPhoneBo = jdbcTemplate.query(SELECT_PHONES_BY_USER_ID,
 				new Object[] {userId},
 				new UserPhoneMapper());
@@ -285,6 +304,9 @@ public class UserAdminDaoImpl implements UserAdminDao {
 	 */
 	@Override
 	public Collection<UserBo> getUsers() {
+		if(logger.isDebugEnabled()) {
+    		logger.debug("Getting list of all users" );
+    	}
 		List<UserBo> users = jdbcTemplate.query(SELECT_ALL_USERS, new UserMapper());
 		for (UserBo user : users) {
 			user.setUserEmail(getEmailByUserid(user.getUserid()));
@@ -297,7 +319,9 @@ public class UserAdminDaoImpl implements UserAdminDao {
 	 */
 	@Override
 	public UserBo add(final UserBo userBo) {
-
+		if(logger.isDebugEnabled()) {
+    		logger.debug(" Inserting details for new user : " + userBo.toString() );
+    	}
 		try {
 			final KeyHolder keyHolderAuthUser = new GeneratedKeyHolder();
 			final java.util.Date today = new java.util.Date();
@@ -402,7 +426,9 @@ public class UserAdminDaoImpl implements UserAdminDao {
 	 */
 	@Override
 	public UserBo update(final UserBo userBo) {
-
+		if(logger.isDebugEnabled()) {
+    		logger.debug("Updating user details : " + userBo.toString() );
+    	}
 		final java.util.Date today = new java.util.Date();
 		KeyHolder keyHolderprofile = new GeneratedKeyHolder();
 
