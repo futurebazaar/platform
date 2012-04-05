@@ -258,7 +258,7 @@ public class UserManagerTest extends BaseTestCase {
 	}
 
 	@Test
-	public void testLoginWithoutPassword() {
+	public void loginWithoutPassword() {
 		LoginRequest request = new LoginRequest();
 		request.setUsername("jasvipul@gmail.com");
 
@@ -268,5 +268,26 @@ public class UserManagerTest extends BaseTestCase {
 		assertEquals(LoginStatusEnum.GUEST_LOGIN_SUCCESS, response.getLoginStatus());
 		assertNotNull(response.getSessionToken());
 		assertEquals(1, response.getUserId().intValue());
+	}
+
+	@Test
+	public void guestLogout() {
+		LoginRequest request = new LoginRequest();
+		request.setUsername("9326164025");
+
+		LoginResponse response = userManager.login(request);
+
+		assertNotNull(response);
+		assertEquals(LoginStatusEnum.GUEST_LOGIN_SUCCESS, response.getLoginStatus());
+		assertNotNull(response.getSessionToken());
+		assertEquals(1, response.getUserId().intValue());
+
+		LogoutRequest logoutRequest = new LogoutRequest();
+		logoutRequest.setSessionToken(response.getSessionToken());
+
+		LogoutResponse logoutResponse = userManager.logout(logoutRequest);
+
+		assertNotNull(logoutResponse);
+		assertEquals(LogoutStatusEnum.LOGOUT_SUCCESS, logoutResponse.getLogoutStatus());
 	}
 }
