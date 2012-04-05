@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<table name="fulfillment_articleproductgroup"> 
+		<column>id</column>
+	  	<column>article_id</column>
+	  	<column>product_group_id</column>
+		
+		<row> 
+		<value description="id">4814</value>
+		<value description="article_id">106613786</value>
+		<value description="product_group_id">2</value>
+		</row> 
+		
+		<row> 
+		<value description="id">4815</value>
+		<value description="article_id">600348432</value>
+		<value description="product_group_id">17</value>
+		</row> 
+		
+		<row> 
+		<value description="id">4816</value>
+		<value description="article_id">600320557</value>
+		<value description="product_group_id">2</value>
+		</row> 
+	</table>
+	<table name="fulfillment_dc"> 
+			<column>id</column>
+			<column>code</column>
+			<column>name</column>
+			<column>cod_flag</column>
+			<column>client_id</column>
+			<column>address</column>
+	
+			<row> 
+			<value description="id">90</value>
+			<value description="code">2315</value>
+			<value description="name">fecil-cdc-kolkata-maniktola road</value>
+			<value description="cod_flag">1</value>
+			<value description="client_id">5</value>
+			<value description="address">maa amba tower, nh-2 delhi road, chakundi, dankuni, hooghly, west bengal , kolkata - 712310</value>
+			</row> 
+	
+			<row> 
+			<value description="id">91</value>
+			<value description="code">2330</value>
+			<value description="name">fecil cdc mumbai(ray road)</value>
+			<value description="cod_flag">1</value>
+			<value description="client_id">5</value>
+			<value description="address">c/o dharambir manoharlal, 1, quay street, darukhana,mazagaon</value>
+			</row> 
+	
+	</table>
+	
+	<table name="fulfillment_dczipgroup"> 
+		<column>id</column>
+		<column>dc_id</column>
+		<column>zipgroup_id</column>
+		<column>lsp_id</column>
+	
+		<row> 
+		<value description="id">1</value>
+		<value description="dc_id">90</value>
+		<value description="zipgroup_id">691</value>
+		<value description="lsp_id">11</value>
+		</row> 
+		
+		<row> 
+		<value description="id">2</value>
+		<value description="dc_id">91</value>
+		<value description="zipgroup_id">863</value>
+		<value description="lsp_id">11</value>
+		</row>
+	
+		<row> 
+		<value description="id">3</value>
+		<value description="dc_id">92</value>
+		<value description="zipgroup_id">870</value>
+		<value description="lsp_id">11</value>
+		</row>
+	</table>
+	
+	<table name="fulfillment_lsp"> 
+		<column>id</column>
+		<column>code</column>
+		<column>name</column>
+	
+		<row> 
+		<value description="id">11</value>
+		<value description="code">306243</value>
+		<value description="name">future logistics</value>
+		</row> 
+		
+		<row> 
+		<value description="id">12</value>
+		<value description="code">306099</value>
+		<value description="name">tnt india private limited</value>
+		</row> 
+	
+		<row> 
+		<value description="id">13</value>
+		<value description="code">300413</value>
+		<value description="name">blue dart india ltd.</value>
+		</row> 
+	</table>
+	
+	<table name="fulfillment_lspdeliverychart"> 
+		<column>id</column>
+		<column>dc_id</column>
+		<column>zipgroup_id</column>
+		<column>transit_time</column>
+		<column>ship_mode</column>
+	
+		<row> 
+		<value description="id">1</value>
+		<value description="dc_id">102</value>
+		<value description="zipgroup_id">690</value>
+		<value description="transit_time">3</value>
+		<value description="ship_mode">air</value>
+		</row> 
+		
+		<row> 
+		<value description="id">2</value>
+		<value description="dc_id">102</value>
+		<value description="zipgroup_id">691</value>
+		<value description="transit_time">3</value>
+		<value description="ship_mode">air</value>
+		</row> 
+	
+		<row> 
+		<value description="id">3</value>
+		<value description="dc_id">102</value>
+		<value description="zipgroup_id">692</value>
+		<value description="transit_time">3</value>
+		<value description="ship_mode">air</value>
+		</row> 
+	</table>
+	
+	<table name="fulfillment_lspzipgroup"> 
+		<column>id</column>
+		<column>lsp_id</column>
+		<column>zipgroup_name</column>
+		<column>zipgroup_code</column>
+	
+		<row> 
+		<value description="id">690</value>
+		<value description="lsp_id">13</value>
+		<value description="zipgroup_name">mumbai</value>
+		<value description="zipgroup_code">100</value>
+		</row> 
+		
+		<row> 
+		<value description="id">691</value>
+		<value description="lsp_id">13</value>
+		<value description="zipgroup_name">navi mumbai</value>
+		<value description="zipgroup_code">101</value>
+		</row> 
+	
+		<row> 
+		<value description="id">692</value>
+		<value description="lsp_id">13</value>
+		<value description="zipgroup_name">thane</value>
+		<value description="zipgroup_code">102</value>
+		</row> 
+	</table>
+	
+	<table name="fulfillment_pincodezipgroupmap"> 
+		<column>id</column>
+		<column>zipgroup_id</column>
+		<column>pincode</column>
+		<column>cod_flag</column>
+		<column>high_value</column>
+		<column>supported_product_groups</column>
+		<column>lsp_priority</column>
+	
+		<row> 
+		<value description="id">445</value>
+		<value description="zipgroup_id">690</value>
+		<value description="pincode">400060</value>
+		<value description="cod_flag">1</value>
+		<value description="high_value">1</value>
+		<value description="supported_product_groups">C1,C2,C3,C4,C5,C6,C7,C9,C15,C16,C22,C23,C26,C27,C28,C29,C30,C31,C32,</value>
+		<value description="lsp_priority">1</value>
+		</row> 
+		
+		<row> 
+		<value description="id">446</value>
+		<value description="zipgroup_id">691</value>
+		<value description="pincode">400060</value>
+		<value description="cod_flag">1</value>
+		<value description="high_value">1</value>
+		<value description="supported_product_groups">C1,C2,C3,C4,C5,C6,C7,C9,C15,C16,C22,C23,C26,C27,C28,C29,C30,C31,C32,</value>
+		<value description="lsp_priority">2</value>
+		</row> 
+	
+		<row> 
+		<value description="id">447</value>
+		<value description="zipgroup_id">692</value>
+		<value description="pincode">400060</value>
+		<value description="cod_flag">1</value>
+		<value description="high_value">1</value>
+		<value description="supported_product_groups">C1,C2,C3,C4,C5,C6,C7,C9,C15,C16,C22,C23,C26,C27,C28,C29,C30,C31,C32,</value>
+		<value description="lsp_priority">3</value>
+		</row> 
+	</table>
+	
+	<table name="fulfillment_productgroup"> 
+		<column>id</column>
+		<column>name</column>
+		<column>local_tag</column>
+		<column>ship_mode</column>
+		<column>high_value_flag</column>
+		<column>threshold_amount</column>
+		<column>description</column>
+		<column>client_id</column>
+	
+		<row> 
+		<value description="id">1</value>
+		<value description="name">C1</value>
+		<value description="local_tag">1</value>
+		<value description="ship_mode">surface</value>
+		<value description="high_value_flag">0</value>
+		<value description="threshold_amount">0</value>
+		<value description="description">White Goods - To be shipped Localy</value>
+		<value description="client_id">5</value>
+		</row> 
+		
+		<row> 
+		<value description="id">2</value>
+		<value description="name">C2</value>
+		<value description="local_tag">1</value>
+		<value description="ship_mode">air</value>
+		<value description="high_value_flag">0</value>
+		<value description="threshold_amount">0</value>
+		<value description="description">Small Electronics</value>
+		<value description="client_id">5</value>
+		</row> 
+	
+		<row> 
+		<value description="id">3</value>
+		<value description="name">C3</value>
+		<value description="local_tag">1</value>
+		<value description="ship_mode">air</value>
+		<value description="high_value_flag">0</value>
+		<value description="threshold_amount">0</value>
+		<value description="description">Precious Jewel</value>
+		<value description="client_id">5</value>
+		</row> 
+	</table>
+	
+	<table name="inventory_inventory"> 
+		<column>id</column>
+		<column>rate_chart_id</column>
+		<column>dc_id</column>
+		<column>type</column>
+		<column>stock</column>
+		<column>starts_on</column>
+		<column>ends_on</column>
+		<column>expected_on</column>
+		<column>bookings</column>
+		<column>outward</column>
+		<column>threshold</column>
+		<column>stock_adjustment</column>
+		<column>bookings_adjustment</column>
+		<column>modified_on</column>
+		<column>is_active</column>
+		<column>expected_in</column>
+	
+		<row>
+		<value description="id">1</value>
+		<value description="rate_chart_id">49776</value>
+		<value description="dc_id">90</value>
+		<value description="type">physical</value>
+		<value description="stock">5.00</value>
+		<value description="starts_on">1001-01-01 00:00:00</value>
+		<value description="ends_on">9999-01-01 00:00:00</value>
+		<null />
+		<null />
+		<null />
+		<null />
+		<null />
+		<null />
+		<null />
+		<value description="is_active">1</value>
+		<null />
+		</row>
+		<row>
+		<value description="id">2</value>
+		<value description="rate_chart_id">49776</value>
+		<value description="dc_id">90</value>
+		<value description="type">virtual</value>
+		<value description="stock">10.00</value>
+		<value description="starts_on">2012-01-25 00:00:00</value>
+		<value description="ends_on">2012-02-28 00:00:00</value>
+		<value description="expected_on">2012-03-01 12:00:01</value>
+		<value description="bookings">2.00</value>
+		<value description="outward">2.00</value>
+		<value description="threshold">1.00</value>
+		<value description="stock_adjustment">2.00</value>
+		<value description="bookings_adjustment">1.00</value>
+		<null />
+		<value description="is_active">1</value>
+		<null />
+		</row>
+	</table>
+</dataset>
