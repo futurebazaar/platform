@@ -2,7 +2,7 @@
 
 
 DROP TABLE IF EXISTS categories_store,sso_session, crypto_key,users_email,users_phone ,user_promotion_uses , user_coupon_uses , users_profile , auth_user,locations_address ,locations_city,locations_state,locations_country,client_master,
-promotion_rule_config,promotion_limits_config,coupon_limits_config,coupon ,promotion,promotion_rule,coupon_user, accounts_client;
+promotion_rule_config,promotion_limits_config,coupon_limits_config,coupon ,platform_promotion,promotion_rule,platform_coupon_user, accounts_client;
 
 
 --  ******************** CREATE TABLE *****************
