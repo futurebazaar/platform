@@ -14,8 +14,8 @@ import java.math.BigDecimal;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 
+import com.fb.commons.PlatformException;
 import com.fb.commons.test.BaseTestCase;
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.model.GlobalPromotionUses;
@@ -68,7 +68,7 @@ public class PromotionDaoTest extends BaseTestCase {
 		PromotionLimitsConfig limitsConfig = promotion.getLimitsConfig();
 
 		assertNotNull(limitsConfig);
-		assertEquals(0, limitsConfig.getMaxUses());
+		assertEquals(2, limitsConfig.getMaxUses());
 		assertEquals(1, limitsConfig.getMaxUsesPerUser());
 		assertTrue(limitsConfig.getMaxAmount().eq(new Money(new BigDecimal(-1))));
 		assertTrue(limitsConfig.getMaxAmountPerUser().eq(new Money(new BigDecimal(2000))));
@@ -141,7 +141,7 @@ public class PromotionDaoTest extends BaseTestCase {
 	public void loadNonExistantGlobalUses() {
 		GlobalPromotionUses globalUses = promotionDao.loadGlobalUses(-12);
 
-		assertNotNull(globalUses);
+		assertNull(globalUses);
 	}
 
 	@Test
@@ -174,7 +174,7 @@ public class PromotionDaoTest extends BaseTestCase {
 		assertTrue(new Money(new BigDecimal(422)).eq(userPromotionUses.getCurrentAmount()));
 	}
 	
-	@Test(expected=DuplicateKeyException.class)
+	@Test(expected=PlatformException.class)
 	public void updateUserUsesFailed() {
 		boolean isUpdatedSuccessfully = promotionDao.updateUserUses(-3, 3, new BigDecimal(100), 40);
 

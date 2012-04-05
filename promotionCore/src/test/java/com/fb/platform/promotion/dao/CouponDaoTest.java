@@ -62,7 +62,7 @@ public class CouponDaoTest extends BaseTestCase {
 
 		CouponLimitsConfig limitsConfig = coupon.getLimitsConfig();
 		assertNotNull(limitsConfig);
-		assertEquals(0, limitsConfig.getMaxUses());
+		assertEquals(1, limitsConfig.getMaxUses());
 		assertEquals(3, limitsConfig.getMaxUsesPerUser()); //the value is updated from the coupon_user table for user -1
 		assertTrue(limitsConfig.getMaxAmount().eq(new Money(new BigDecimal(-1))));
 		assertTrue(limitsConfig.getMaxAmountPerUser().eq(new Money(new BigDecimal(2000))));
