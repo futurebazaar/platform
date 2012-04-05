@@ -41,7 +41,7 @@
 			<value name="description">try1_desc</value>
 			<value name="is_coupon">0</value>
 			<value name="is_active">1</value>
-			<value name="rule_id">-1</value>
+			<value name="rule_id">-2</value>
         </row>
         <row>
 			<value name="id">-2</value>
@@ -53,7 +53,7 @@
 			<value name="promotion_description">This promotion is valid in future</value>
 			<value name="is_coupon">0</value>
 			<value name="is_active">1</value>
-			<value name="rule_id">-1</value>
+			<value name="rule_id">-2</value>
         </row>
         <row>
 			<value name="id">-3</value>
@@ -65,7 +65,7 @@
 			<value name="description">This promotion is expired</value>
 			<value name="is_coupon">0</value>
 			<value name="is_active">1</value>
-			<value name="rule_id">-1</value>
+			<value name="rule_id">-2</value>
         </row>
         <row>
 			<value name="id">-4</value>
@@ -77,7 +77,7 @@
 			<value name="description">This promotion has no valid from date</value>
 			<value name="is_coupon">0</value>
 			<value name="is_active">1</value>
-			<value name="rule_id">-1</value>
+			<value name="rule_id">-3</value>
         </row>
         <row>
 			<value name="id">-5</value>
@@ -89,7 +89,7 @@
 			<value name="promotion_description">This promotion has no valid till date</value>
 			<value name="is_coupon">0</value>
 			<value name="is_active">1</value>
-			<value name="rule_id">-1</value>
+			<value name="rule_id">-4</value>
         </row>
         <row>
 			<value name="id">-6</value>
@@ -101,7 +101,7 @@
 			<value name="description">This promotion is not active</value>
 			<value name="is_coupon">0</value>
 			<value name="is_active">0</value>
-			<value name="rule_id">-1</value>
+			<value name="rule_id">-3</value>
         </row>
         <row>
 			<value name="id">-7</value>
@@ -525,21 +525,21 @@
 			<value name="name">PRODUCT_ID</value>
 			<value name="value">1000</value>
 			<value name="promotion_id">-1</value>
-			<value name="rule_id">-1</value>
+			<value name="rule_id">-2</value>
         </row>
         <row>
 			<value name="id">-2</value>
 			<value name="name">PRODUCT_ID</value>
 			<value name="value">1001</value>
 			<value name="promotion_id">-1</value>
-			<value name="rule_id">-1</value>
+			<value name="rule_id">-3</value>
         </row>
         <row>
 			<value name="id">-3</value>
 			<value name="name">CATEGORY_LIST</value>
 			<value name="value">1</value>
 			<value name="promotion_id">-2</value>
-			<value name="rule_id">-1</value>
+			<value name="rule_id">-4</value>
         </row>
         <row>
 			<value name="id">-4</value>
