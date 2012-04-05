@@ -110,33 +110,54 @@
         </repository>
     </repositories>
 -->
-	<repositories>
-	    <repository>
-	      <id>maven2-repository.dev.java.repositorynet</id>
-	      <name>Java.net Maven 2 Repository</name>
-	      <url>http://download.java.net/maven/2</url>
-	    </repository>
-	    <repository>
-	      <id>maven-repositoriesository.dev.java.net</id>
-	      <name>Java.net Maven 1 Repository (legacy)</name>
-	      <url>http://download.java.net/maven/1</url>
-	      <layout>legacy</layout>
-	    </repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>maven2-repository.dev.java.net</id>
-			<name>Java.net Mavenen 2 Repository</name>
-			<url>http://download.java.net/maven/2</url>
-		</pluginRepository>
-		<pluginRepository>
-			<id>maven-repository.dev.java.repositorynet</id>
-			<name>Java.net Maven 1 Repository (legacy)</name>
-			<url>http://download.java.net/maven/1</url>
-			<layout>legacy</layout>
-		</pluginRepository>
-	</pluginRepositories>
+<!-- download artifacts from this repo -->
+ <distributionManagement>
+ <!-- Publish the versioned releases here -->
+ <repository>
+ <uniqueVersion>false</uniqueVersion>
+        <id>fb</id>
+        <name>fb</name>
+  <url>dav:http://maven.futurebazaar.com/nexus/content/repositories/releases</url>
+ </repository>
 
+ <!-- Publish the versioned releases here -->
+ <snapshotRepository>
+ <uniqueVersion>false</uniqueVersion>
+  <id>fb</id>
+  <name>fb</name>
+  <url>dav:http://maven.futurebazaar.com/nexus/content/repositories/snapshots</url>
+ </snapshotRepository>
+</distributionManagement>
+
+<repositories>
+ <repository>
+  <id>fb</id>
+  <name>futurebazaar</name>
+  <url>http://maven.futurebazaar.com/nexus/content/groups/public</url>
+  <releases>
+   <enabled>true</enabled>
+  </releases>
+
+  <snapshots>
+   <enabled>true</enabled>
+  </snapshots>
+ </repository>
+</repositories>
+
+<!-- download plugins from this repo -->
+<pluginRepositories>
+ <pluginRepository>
+  <id>fb</id>
+  <name>futurebazaar</name>
+  <url>http://maven.futurebazaar.com/nexus/content/groups/public</url>
+  <releases>
+   <enabled>true</enabled>
+  </releases>
+  <snapshots>
+   <enabled>true</enabled>
+  </snapshots>
+ </pluginRepository>
+</pluginRepositories>
 
     <dependencies>
         <dependency>

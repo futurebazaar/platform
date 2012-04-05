@@ -3,6 +3,8 @@
  */
 package com.fb.platform.promotion.service.impl;
 
+import java.math.BigDecimal;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -192,6 +194,12 @@ public class PromotionManagerImpl implements PromotionManager {
 			return response;
 		}
 
+		if(request.getDiscountValue().compareTo(BigDecimal.ZERO) <= 0){
+			//discount cannot be negative or zero
+			logger.error("Discount amount for commit is invalid : " + request.getDiscountValue());
+			response.setCommitCouponStatus(CommitCouponStatusEnum.INVALID_DISCOUNT_AMOUNT);
+			return response;
+		}
 		boolean userCuponUpdateStatus = couponDao.updateUserUses(coupon.getId(), userId, request.getDiscountValue(), request.getOrderId());
 		if (!userCuponUpdateStatus) {
 			logger.error("Unable to update the user uses for coupon code : " + coupon.getCode());
