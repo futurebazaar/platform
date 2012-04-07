@@ -3,6 +3,8 @@
  */
 package com.fb.platform.promotion.rule.impl;
 
+import java.io.Serializable;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -16,9 +18,9 @@ import com.fb.platform.promotion.to.Product;
  * @author vinayak
  *
  */
-public class BuyXGetYFreeRuleImpl implements PromotionRule {
+public class BuyXGetYFreeRuleImpl implements PromotionRule, Serializable{
 
-	private Log log = LogFactory.getLog(BuyWorthXGetYRsOffRuleImpl.class);
+	private static transient Log log = LogFactory.getLog(BuyWorthXGetYRsOffRuleImpl.class);
 	private Product xProduct;
 	private Product yProduct;
 	

@@ -160,6 +160,10 @@ public class CouponDaoJdbcImpl implements CouponDao {
 		} catch (IncorrectResultSizeDataAccessException e) {
 			//no global uses set, that means this is first time use of this promotion
 			log.warn("No global uses set for coupon id " + couponId + " , that means this is first time use of this promotion");
+			globalCouponUses = new GlobalCouponUses();
+			globalCouponUses.setCouponId(couponId);
+			globalCouponUses.setCurrentAmount(new Money(BigDecimal.ZERO));
+			globalCouponUses.setCurrentCount(0);
 		}
 		return globalCouponUses;
 	}
@@ -175,6 +179,11 @@ public class CouponDaoJdbcImpl implements CouponDao {
 		} catch (IncorrectResultSizeDataAccessException e) {
 			log.warn("No user uses set for coupon id " + couponId + " , that means this is first time use of this promotion");
 			//no user uses set, that means this is first time use of this promotion
+			userCouponUses = new UserCouponUses();
+			userCouponUses.setCouponId(couponId);
+			userCouponUses.setCurrentAmount(new Money(BigDecimal.ZERO));
+			userCouponUses.setCurrentCount(0);
+			userCouponUses.setUserId(userId);
 		}
 		return userCouponUses;
 	}

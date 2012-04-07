@@ -5,6 +5,8 @@ package com.fb.platform.promotion.rule;
 
 import java.util.List;
 
+import com.fb.commons.PlatformException;
+
 
 /**
  * @author vinayak
@@ -49,6 +51,6 @@ public class RuleConfiguration {
 				return rci.getValue();
 			}
 		}
-		return null;
+		throw new PlatformException("Config Item Value not found for the key - "+key);
 	}
 }

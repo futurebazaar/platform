@@ -215,6 +215,7 @@ public class PromotionManagerImpl implements PromotionManager {
 		}
 
 		response.setCommitCouponStatus(CommitCouponStatusEnum.SUCCESS);
+		response.setSessionToken(request.getSessionToken());
 		return response;
 	}
 	
@@ -277,6 +278,7 @@ public class PromotionManagerImpl implements PromotionManager {
 		}
 
 		response.setReleaseCouponStatus(ReleaseCouponStatusEnum.SUCCESS);
+		response.setSessionToken(request.getSessionToken());
 		return response;
 	}
 

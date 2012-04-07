@@ -31,6 +31,7 @@ import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.PromotionDates;
 import com.fb.platform.promotion.model.PromotionLimitsConfig;
 import com.fb.platform.promotion.model.UserPromotionUses;
+import com.fb.platform.promotion.model.coupon.GlobalCouponUses;
 import com.fb.platform.promotion.rule.PromotionRule;
 
 /**
@@ -153,6 +154,10 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		} catch (IncorrectResultSizeDataAccessException e) {
 			//no global uses set, that means this is first time use of this promotion
 			log.warn("No global uses set for promotion id " + promotionId + " , that means this is first time use of this promotion");
+			globalPromotionUses = new GlobalPromotionUses();
+			globalPromotionUses.setPromotionId(promotionId);
+			globalPromotionUses.setCurrentAmount(new Money(BigDecimal.ZERO));
+			globalPromotionUses.setCurrentCount(0);
 		}
 		return globalPromotionUses;
 	}
@@ -172,6 +177,11 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		} catch (IncorrectResultSizeDataAccessException e) {
 			log.warn("No user uses set for promotion id " + promotionId + " , that means this is first time use of this promotion");
 			//no user uses set, that means this is first time use of this promotion
+			userPromotionUses = new UserPromotionUses();
+			userPromotionUses.setPromotionId(promotionId);
+			userPromotionUses.setCurrentAmount(new Money(BigDecimal.ZERO));
+			userPromotionUses.setCurrentCount(0);
+			userPromotionUses.setUserId(userId);
 		}
 		return userPromotionUses;
 	}
