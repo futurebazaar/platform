@@ -153,6 +153,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			globalPromotionUses = jdbcTemplate.queryForObject(LOAD_GLOABL_PROMOTION_USES_QUERY, new Object [] {promotionId}, new GlobalPromotionUsesMapper());
 		} catch (IncorrectResultSizeDataAccessException e) {
 			//no global uses set, that means this is first time use of this promotion
+			log.warn("No global uses set for promotion id " + promotionId + " , that means this is first time use of this promotion");
 			globalPromotionUses = new GlobalPromotionUses();
 			globalPromotionUses.setPromotionId(promotionId);
 			globalPromotionUses.setCurrentAmount(new Money(BigDecimal.ZERO));
@@ -174,6 +175,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		try {
 			userPromotionUses = jdbcTemplate.queryForObject(LOAD_USER_PROMOTION_USES_QUERY, new Object[] {promotionId, userId}, new UserPromotionUsesMapper());
 		} catch (IncorrectResultSizeDataAccessException e) {
+			log.warn("No user uses set for promotion id " + promotionId + " , that means this is first time use of this promotion");
 			//no user uses set, that means this is first time use of this promotion
 			userPromotionUses = new UserPromotionUses();
 			userPromotionUses.setPromotionId(promotionId);
@@ -266,6 +268,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 				}
 			}, userUsesKeyHolder);
 		} catch (DuplicateKeyException e) {
+			log.error("Duplicate key insertion exception " + e);
 			throw new PlatformException("Duplicate key insertion exception "+e);
 		}
 	}

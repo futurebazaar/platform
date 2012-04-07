@@ -159,6 +159,7 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			globalCouponUses = jdbcTemplate.queryForObject(LOAD_GLOBAL_COUPON_USES_QUERY, new Object [] {couponId}, new GlobalCouponUsesMapper());
 		} catch (IncorrectResultSizeDataAccessException e) {
 			//no global uses set, that means this is first time use of this promotion
+			log.warn("No global uses set for coupon id " + couponId + " , that means this is first time use of this promotion");
 			globalCouponUses = new GlobalCouponUses();
 			globalCouponUses.setCouponId(couponId);
 			globalCouponUses.setCurrentAmount(new Money(BigDecimal.ZERO));
@@ -176,6 +177,7 @@ public class CouponDaoJdbcImpl implements CouponDao {
 		try {
 			userCouponUses = jdbcTemplate.queryForObject(LOAD_USER_COUPON_USES_QUERY, new Object[] {couponId, userId}, new UserCouponUsesMapper());
 		} catch (IncorrectResultSizeDataAccessException e) {
+			log.warn("No user uses set for coupon id " + couponId + " , that means this is first time use of this promotion");
 			//no user uses set, that means this is first time use of this promotion
 			userCouponUses = new UserCouponUses();
 			userCouponUses.setCouponId(couponId);
@@ -244,6 +246,7 @@ public class CouponDaoJdbcImpl implements CouponDao {
 				}
 			}, userUsesKeyHolder);
 		} catch (DuplicateKeyException e) {
+			log.error("Duplicate key insertion exception " + e);
 			throw new PlatformException("Duplicate key insertion exception "+e);
 		}
 		
