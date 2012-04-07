@@ -16,6 +16,7 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.apache.commons.lang.math.RandomUtils;
 
 import com.fb.platform.auth._1_0.AddUserRequest;
 import com.fb.platform.auth._1_0.AddUserResponse;
@@ -47,9 +48,10 @@ public class RestClient {
 		//test login
 		String sessionToken = login();
 		//String username = getUser(sessionToken);
-		applyPromotion(sessionToken);
-		commitCouupon(sessionToken);
-		releaseCoupon(sessionToken);
+		int orderId = RandomUtils.nextInt();
+		BigDecimal discountValue = applyPromotion(sessionToken, orderId);
+		commitCouupon(sessionToken, orderId, discountValue);
+		releaseCoupon(sessionToken, orderId);
 		logout(sessionToken);
 	}
 
@@ -85,7 +87,7 @@ public class RestClient {
 		return loginResponse.getSessionToken();
 	}
 
-	private static void applyPromotion(String sessionToken) throws Exception {
+	private static BigDecimal applyPromotion(String sessionToken, int orderId) throws Exception {
 		HttpClient httpClient = new HttpClient();
 
 		PostMethod applyPromotionMethod = new PostMethod("http://localhost:8080/promotionWeb/coupon/apply");
@@ -95,7 +97,7 @@ public class RestClient {
 		couponRequest.setCouponCode("GlobalCoupon1000Off");
 		couponRequest.setSessionToken(sessionToken);
 
-		OrderRequest orderRequest = createSampleOrderRequest();
+		OrderRequest orderRequest = createSampleOrderRequest(orderId);
 		couponRequest.setOrderRequest(orderRequest);
 
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion._1_0");
@@ -110,18 +112,19 @@ public class RestClient {
 		int statusCode = httpClient.executeMethod(applyPromotionMethod);
 		if (statusCode != HttpStatus.SC_OK) {
 			System.out.println("unable to execute the applyPromotion method : " + statusCode);
-			return;
+			return null;
 		}
 		String applyPromotionResponseStr = applyPromotionMethod.getResponseBodyAsString();
 		System.out.println("Got the applyPromotion Response : \n" + applyPromotionResponseStr);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		CouponResponse couponResponse = (CouponResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(applyPromotionResponseStr)));
 		System.out.println(couponResponse.getCouponStatus());
+		return couponResponse.getDiscountValue();
 	}
 
-	private static OrderRequest createSampleOrderRequest() {
+	private static OrderRequest createSampleOrderRequest(int orderId) {
 		OrderRequest orderRequest = new OrderRequest();
-		orderRequest.setOrderId(2000);
+		orderRequest.setOrderId(orderId);
 		OrderItem orderItem = new OrderItem();
 		orderItem.setQuantity(2);
 
@@ -137,7 +140,7 @@ public class RestClient {
 		return orderRequest;
 	}
 
-	private static void commitCouupon(String sessionToken) throws Exception {
+	private static void commitCouupon(String sessionToken, int orderId, BigDecimal discountValue) throws Exception {
 		HttpClient httpClient = new HttpClient();
 
 		PostMethod commitCouponMethod = new PostMethod("http://localhost:8080/promotionWeb/coupon/commit");
@@ -145,8 +148,8 @@ public class RestClient {
 		CommitCouponRequest commitCouponRequest = new CommitCouponRequest();
 		commitCouponRequest.setSessionToken(sessionToken);
 		commitCouponRequest.setCouponCode("GlobalCoupon1000Off");
-		commitCouponRequest.setOrderId(2000);
-		commitCouponRequest.setDiscountValue(new BigDecimal("1000.00"));
+		commitCouponRequest.setOrderId(orderId);
+		commitCouponRequest.setDiscountValue(discountValue);
 
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion._1_0");
 
@@ -169,7 +172,7 @@ public class RestClient {
 		System.out.println(commitCouponResponse.getCommitCouponStatus());
 	}
 
-	private static void releaseCoupon(String sessionToken) throws Exception {
+	private static void releaseCoupon(String sessionToken, int orderId) throws Exception {
 		HttpClient httpClient = new HttpClient();
 
 		PostMethod releaseCouponMethod = new PostMethod("http://localhost:8080/promotionWeb/coupon/release");
@@ -177,7 +180,7 @@ public class RestClient {
 		ReleaseCouponRequest releaseCouponRequest = new ReleaseCouponRequest();
 		releaseCouponRequest.setSessionToken(sessionToken);
 		releaseCouponRequest.setCouponCode("GlobalCoupon1000Off");
-		releaseCouponRequest.setOrderId(2000);
+		releaseCouponRequest.setOrderId(orderId);
 
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion._1_0");
 
