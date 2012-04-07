@@ -23,7 +23,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class BuyWorthXGetYRsOffOnZCategoryRuleImpl implements PromotionRule, Serializable {
 
-	private Log log = LogFactory.getLog(BuyWorthXGetYRsOffOnZCategoryRuleImpl.class);
+	private static transient Log log = LogFactory.getLog(BuyWorthXGetYRsOffOnZCategoryRuleImpl.class);
 	private Money minOrderValue;
 	private Money fixedRsOff;
 	private List<Integer> categories;

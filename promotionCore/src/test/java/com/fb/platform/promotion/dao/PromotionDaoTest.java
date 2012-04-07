@@ -47,8 +47,8 @@ public class PromotionDaoTest extends BaseTestCase {
 		PromotionLimitsConfig limitsConfig = promotion.getLimitsConfig();
 
 		assertNotNull(limitsConfig);
-		assertEquals(10, limitsConfig.getMaxUses());
-		assertEquals(2, limitsConfig.getMaxUsesPerUser());
+		assertEquals(300, limitsConfig.getMaxUses());
+		assertEquals(20, limitsConfig.getMaxUsesPerUser());
 		assertTrue(limitsConfig.getMaxAmount().eq(new Money(new BigDecimal(10000))));
 		assertTrue(limitsConfig.getMaxAmountPerUser().eq(new Money(new BigDecimal(1000))));
 	}
@@ -141,7 +141,9 @@ public class PromotionDaoTest extends BaseTestCase {
 	public void loadNonExistantGlobalUses() {
 		GlobalPromotionUses globalUses = promotionDao.loadGlobalUses(-12);
 
-		assertNull(globalUses);
+		assertNotNull(globalUses);
+		assertEquals(0, globalUses.getCurrentCount());
+		assertEquals(globalUses.getCurrentAmount().getAmount().compareTo(BigDecimal.ZERO), 0);
 	}
 
 	@Test

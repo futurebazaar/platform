@@ -186,9 +186,9 @@
                 <row>
                         <value name="id">-1</value>
                         <value name="promotion_id">-1</value>
-                        <value name="max_uses">10</value>
+                        <value name="max_uses">300</value>
                         <value name="max_amount">10000</value>
-                        <value name="max_uses_per_user">2</value>
+                        <value name="max_uses_per_user">20</value>
                         <value name="max_amount_per_user">1000</value>
                 </row>
                 <row>
@@ -210,71 +210,71 @@
                 <row>
                         <value name="id">-4</value>
                         <value name="promotion_id">-3</value>
-                        <value name="max_uses">10</value>
+                        <value name="max_uses">100</value>
                         <value name="max_amount">10000</value>
-                        <value name="max_uses_per_user">2</value>
+                        <value name="max_uses_per_user">20</value>
                         <value name="max_amount_per_user">1000</value>
                 </row>
                 <row>
                         <value name="id">-5</value>
                         <value name="promotion_id">-5</value>
-                        <value name="max_uses">10</value>
+                        <value name="max_uses">100</value>
                         <value name="max_amount">10000</value>
-                        <value name="max_uses_per_user">2</value>
+                        <value name="max_uses_per_user">20</value>
                         <value name="max_amount_per_user">1000</value>
                 </row>
                 <row>
                         <value name="id">-6</value>
                         <value name="promotion_id">-6</value>
-                        <value name="max_uses">10</value>
+                        <value name="max_uses">100</value>
                         <value name="max_amount">10000</value>
-                        <value name="max_uses_per_user">2</value>
+                        <value name="max_uses_per_user">20</value>
                         <value name="max_amount_per_user">1000</value>
                 </row>
                 <row>
                         <value name="id">-7</value>
                         <value name="promotion_id">-7</value>
-                        <value name="max_uses">10</value>
+                        <value name="max_uses">100</value>
                         <value name="max_amount">10000</value>
-                        <value name="max_uses_per_user">2</value>
+                        <value name="max_uses_per_user">20</value>
                         <value name="max_amount_per_user">1000</value>
                 </row>
                 <row>
                         <value name="id">-8</value>
                         <value name="promotion_id">-8</value>
-                        <value name="max_uses">10</value>
+                        <value name="max_uses">100</value>
                         <value name="max_amount">10000</value>
-                        <value name="max_uses_per_user">2</value>
+                        <value name="max_uses_per_user">20</value>
                         <value name="max_amount_per_user">1000</value>
                 </row>
                 <row>
                         <value name="id">-9</value>
                         <value name="promotion_id">-9</value>
-                        <value name="max_uses">10</value>
+                        <value name="max_uses">100</value>
                         <value name="max_amount">10000</value>
-                        <value name="max_uses_per_user">2</value>
+                        <value name="max_uses_per_user">20</value>
                         <value name="max_amount_per_user">1000</value>
                 </row>
                 <row>
                         <value name="id">-3001</value>
                         <value name="promotion_id">-3001</value>
-                        <value name="max_uses">5</value>
+                        <value name="max_uses">500</value>
                         <value name="max_amount">1000</value>
-                        <value name="max_uses_per_user">1</value>
+                        <value name="max_uses_per_user">30</value>
                         <value name="max_amount_per_user">100</value>
                 </row>
                 <row>
                         <value name="id">-3002</value>
                         <value name="promotion_id">-3002</value>
-                        <value name="max_uses">4</value>
+                        <value name="max_uses">400</value>
                         <value name="max_amount">5000</value>
-                        <value name="max_uses_per_user">2</value>
+                        <value name="max_uses_per_user">20</value>
                         <value name="max_amount_per_user">500</value>
                 </row>
                 <row>
                         <value name="id">-3003</value>
                         <value name="promotion_id">-3003</value>
-                        <value name="max_uses">10</value>
+                        <value name="max_uses">100</value>
                         <value name="max_amount">10000</value>
                         <value name="max_uses_per_user">5</value>
                         <value name="max_amount_per_user">1000</value>
@@ -412,15 +412,15 @@
                 <row>
                         <value name="id">-1</value>
                         <value name="coupon_id">-1</value>
-                        <value name="max_uses">10</value>
+                        <value name="max_uses">100</value>
                         <value name="max_amount">10000</value>
-                        <value name="max_uses_per_user">2</value>
+                        <value name="max_uses_per_user">20</value>
                         <value name="max_amount_per_user">1000</value>
                 </row>
                 <row>
                         <value name="id">-2</value>
                         <value name="coupon_id">-2</value>
-                        <value name="max_uses">1</value>
+                        <value name="max_uses">10</value>
                         <value name="max_amount">-1</value>
                         <value name="max_uses_per_user">1</value>
                         <value name="max_amount_per_user">2000</value>
@@ -428,7 +428,7 @@
                 <row>
                         <value name="id">-3</value>
                         <value name="coupon_id">-3</value>
-                        <value name="max_uses">10</value>
+                        <value name="max_uses">100</value>
                         <value name="max_amount">10000</value>
                         <value name="max_uses_per_user">-1</value>
                         <value name="max_amount_per_user">-1</value>
@@ -436,41 +436,41 @@
                 <row>
                         <value name="id">-4</value>
                         <value name="coupon_id">-4</value>
-                        <value name="max_uses">10</value>
+                        <value name="max_uses">100</value>
                         <value name="max_amount">10000</value>
-                        <value name="max_uses_per_user">2</value>
+                        <value name="max_uses_per_user">20</value>
                         <value name="max_amount_per_user">1000</value>
                 </row>
                 <row>
                         <value name="id">-5</value>
                         <value name="coupon_id">-5</value>
-                        <value name="max_uses">17</value>
+                        <value name="max_uses">170</value>
                         <value name="max_amount">17000</value>
-                        <value name="max_uses_per_user">6</value>
+                        <value name="max_uses_per_user">20</value>
                         <value name="max_amount_per_user">6000</value>
                 </row>
                 <row>
                         <value name="id">-3001</value>
                         <value name="coupon_id">-3001</value>
-                        <value name="max_uses">10</value>
+                        <value name="max_uses">100</value>
                         <value name="max_amount">10000</value>
-                        <value name="max_uses_per_user">1</value>
+                        <value name="max_uses_per_user">10</value>
                         <value name="max_amount_per_user">1000</value>
                 </row>
                 <row>
                         <value name="id">-3002</value>
                         <value name="coupon_id">-3002</value>
-                        <value name="max_uses">20</value>
+                        <value name="max_uses">200</value>
                         <value name="max_amount">20000</value>
-                        <value name="max_uses_per_user">2</value>
+                        <value name="max_uses_per_user">20</value>
                         <value name="max_amount_per_user">2000</value>
                 </row>
                 <row>
                         <value name="id">-3003</value>
                         <value name="coupon_id">-3003</value>
-                        <value name="max_uses">30</value>
+                        <value name="max_uses">300</value>
                         <value name="max_amount">30000</value>
-                        <value name="max_uses_per_user">3</value>
+                        <value name="max_uses_per_user">30</value>
                         <value name="max_amount_per_user">3000</value>
                 </row>
         </table>

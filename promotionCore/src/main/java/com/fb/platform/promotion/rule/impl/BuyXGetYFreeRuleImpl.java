@@ -20,7 +20,7 @@ import com.fb.platform.promotion.to.Product;
  */
 public class BuyXGetYFreeRuleImpl implements PromotionRule, Serializable{
 
-	private Log log = LogFactory.getLog(BuyWorthXGetYRsOffRuleImpl.class);
+	private static transient Log log = LogFactory.getLog(BuyWorthXGetYRsOffRuleImpl.class);
 	private Product xProduct;
 	private Product yProduct;
 	
