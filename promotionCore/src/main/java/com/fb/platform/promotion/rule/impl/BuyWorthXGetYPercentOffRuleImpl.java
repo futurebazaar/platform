@@ -22,7 +22,7 @@ import com.fb.commons.to.Money;
  */
 public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule, Serializable {
 
-	private Log log = LogFactory.getLog(BuyWorthXGetYPercentOffRuleImpl.class);
+	private static transient Log log = LogFactory.getLog(BuyWorthXGetYPercentOffRuleImpl.class);
 	private Money minOrderValue;
 	private BigDecimal discountPercentage;
 	private Money maxDiscountPerUse;

@@ -29,6 +29,9 @@ import com.fb.platform.promotion._1_0.CommitCouponRequest;
 import com.fb.platform.promotion._1_0.CommitCouponResponse;
 import com.fb.platform.promotion._1_0.CouponRequest;
 import com.fb.platform.promotion._1_0.CouponResponse;
+import com.fb.platform.promotion._1_0.OrderItem;
+import com.fb.platform.promotion._1_0.OrderRequest;
+import com.fb.platform.promotion._1_0.Product;
 import com.fb.platform.promotion._1_0.ReleaseCouponRequest;
 import com.fb.platform.promotion._1_0.ReleaseCouponResponse;
 /**
@@ -44,7 +47,7 @@ public class RestClient {
 		//test login
 		String sessionToken = login();
 		//String username = getUser(sessionToken);
-		//applyPromotion(sessionToken);
+		applyPromotion(sessionToken);
 		commitCouupon(sessionToken);
 		releaseCoupon(sessionToken);
 		logout(sessionToken);
@@ -88,7 +91,12 @@ public class RestClient {
 		PostMethod applyPromotionMethod = new PostMethod("http://localhost:8080/promotionWeb/coupon/apply");
 
 		CouponRequest couponRequest = new CouponRequest();
+		couponRequest.setClientId(10);
+		couponRequest.setCouponCode("GlobalCoupon1000Off");
 		couponRequest.setSessionToken(sessionToken);
+
+		OrderRequest orderRequest = createSampleOrderRequest();
+		couponRequest.setOrderRequest(orderRequest);
 
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion._1_0");
 
@@ -111,6 +119,24 @@ public class RestClient {
 		System.out.println(couponResponse.getCouponStatus());
 	}
 
+	private static OrderRequest createSampleOrderRequest() {
+		OrderRequest orderRequest = new OrderRequest();
+		orderRequest.setOrderId(2000);
+		OrderItem orderItem = new OrderItem();
+		orderItem.setQuantity(2);
+
+		Product product = new Product();
+		product.setPrice(new BigDecimal("2000"));
+		product.setProductId(20000);
+		product.getCategory().add(2000);
+		product.getBrand().add(2000);
+
+		orderItem.setProduct(product);
+
+		orderRequest.getOrderItem().add(orderItem);
+		return orderRequest;
+	}
+
 	private static void commitCouupon(String sessionToken) throws Exception {
 		HttpClient httpClient = new HttpClient();
 
@@ -118,9 +144,9 @@ public class RestClient {
 
 		CommitCouponRequest commitCouponRequest = new CommitCouponRequest();
 		commitCouponRequest.setSessionToken(sessionToken);
-		commitCouponRequest.setCouponCode("global_coupon_1");
-		commitCouponRequest.setOrderId(10);
-		commitCouponRequest.setDiscountValue(new BigDecimal("100.00"));
+		commitCouponRequest.setCouponCode("GlobalCoupon1000Off");
+		commitCouponRequest.setOrderId(2000);
+		commitCouponRequest.setDiscountValue(new BigDecimal("1000.00"));
 
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion._1_0");
 
@@ -150,8 +176,8 @@ public class RestClient {
 
 		ReleaseCouponRequest releaseCouponRequest = new ReleaseCouponRequest();
 		releaseCouponRequest.setSessionToken(sessionToken);
-		releaseCouponRequest.setCouponCode("global_coupon_1");
-		releaseCouponRequest.setOrderId(10);
+		releaseCouponRequest.setCouponCode("GlobalCoupon1000Off");
+		releaseCouponRequest.setOrderId(2000);
 
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion._1_0");
 

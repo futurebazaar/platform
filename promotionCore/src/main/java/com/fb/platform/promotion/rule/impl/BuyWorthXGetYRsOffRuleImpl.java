@@ -20,7 +20,7 @@ import com.fb.commons.to.Money;
  */
 public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule, Serializable {
 
-	private Log log = LogFactory.getLog(BuyWorthXGetYRsOffRuleImpl.class);
+	private static transient Log log = LogFactory.getLog(BuyWorthXGetYRsOffRuleImpl.class);
 	private Money minOrderValue;
 	private Money fixedRsOff;
 	
