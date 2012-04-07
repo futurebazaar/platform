@@ -43,8 +43,8 @@ public class CouponDaoTest extends BaseTestCase {
 
 		CouponLimitsConfig limitsConfig = coupon.getLimitsConfig();
 		assertNotNull(limitsConfig);
-		assertEquals(10, limitsConfig.getMaxUses());
-		assertEquals(2, limitsConfig.getMaxUsesPerUser());
+		assertEquals(100, limitsConfig.getMaxUses());
+		assertEquals(20, limitsConfig.getMaxUsesPerUser());
 		assertTrue(limitsConfig.getMaxAmount().eq(new Money(new BigDecimal(10000))));
 		assertTrue(limitsConfig.getMaxAmountPerUser().eq(new Money(new BigDecimal(1000))));
 	}
@@ -62,7 +62,7 @@ public class CouponDaoTest extends BaseTestCase {
 
 		CouponLimitsConfig limitsConfig = coupon.getLimitsConfig();
 		assertNotNull(limitsConfig);
-		assertEquals(1, limitsConfig.getMaxUses());
+		assertEquals(10, limitsConfig.getMaxUses());
 		assertEquals(3, limitsConfig.getMaxUsesPerUser()); //the value is updated from the coupon_user table for user -1
 		assertTrue(limitsConfig.getMaxAmount().eq(new Money(new BigDecimal(-1))));
 		assertTrue(limitsConfig.getMaxAmountPerUser().eq(new Money(new BigDecimal(2000))));
@@ -88,7 +88,7 @@ public class CouponDaoTest extends BaseTestCase {
 
 		CouponLimitsConfig limitsConfig = coupon.getLimitsConfig();
 		assertNotNull(limitsConfig);
-		assertEquals(10, limitsConfig.getMaxUses());
+		assertEquals(100, limitsConfig.getMaxUses());
 		assertEquals(-1, limitsConfig.getMaxUsesPerUser());
 		assertTrue(limitsConfig.getMaxAmount().eq(new Money(new BigDecimal(10000))));
 		assertTrue(limitsConfig.getMaxAmountPerUser().eq(new Money(new BigDecimal(-1))));
@@ -107,8 +107,8 @@ public class CouponDaoTest extends BaseTestCase {
 
 		CouponLimitsConfig limitsConfig = coupon.getLimitsConfig();
 		assertNotNull(limitsConfig);
-		assertEquals(10, limitsConfig.getMaxUses());
-		assertEquals(2, limitsConfig.getMaxUsesPerUser());
+		assertEquals(100, limitsConfig.getMaxUses());
+		assertEquals(20, limitsConfig.getMaxUsesPerUser());
 		assertTrue(limitsConfig.getMaxAmount().eq(new Money(new BigDecimal(10000))));
 		assertTrue(limitsConfig.getMaxAmountPerUser().eq(new Money(new BigDecimal(1000))));
 	}
