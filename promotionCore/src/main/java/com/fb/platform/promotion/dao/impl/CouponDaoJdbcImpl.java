@@ -159,6 +159,10 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			globalCouponUses = jdbcTemplate.queryForObject(LOAD_GLOBAL_COUPON_USES_QUERY, new Object [] {couponId}, new GlobalCouponUsesMapper());
 		} catch (IncorrectResultSizeDataAccessException e) {
 			//no global uses set, that means this is first time use of this promotion
+			globalCouponUses = new GlobalCouponUses();
+			globalCouponUses.setCouponId(couponId);
+			globalCouponUses.setCurrentAmount(new Money(BigDecimal.ZERO));
+			globalCouponUses.setCurrentCount(0);
 		}
 		return globalCouponUses;
 	}
@@ -173,6 +177,11 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			userCouponUses = jdbcTemplate.queryForObject(LOAD_USER_COUPON_USES_QUERY, new Object[] {couponId, userId}, new UserCouponUsesMapper());
 		} catch (IncorrectResultSizeDataAccessException e) {
 			//no user uses set, that means this is first time use of this promotion
+			userCouponUses = new UserCouponUses();
+			userCouponUses.setCouponId(couponId);
+			userCouponUses.setCurrentAmount(new Money(BigDecimal.ZERO));
+			userCouponUses.setCurrentCount(0);
+			userCouponUses.setUserId(userId);
 		}
 		return userCouponUses;
 	}
