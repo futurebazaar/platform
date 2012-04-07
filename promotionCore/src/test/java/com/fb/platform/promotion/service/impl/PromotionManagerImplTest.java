@@ -8,11 +8,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.math.RandomUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.promotion.service.PromotionManager;
+import com.fb.platform.promotion.to.CommitCouponRequest;
+import com.fb.platform.promotion.to.CommitCouponResponse;
+import com.fb.platform.promotion.to.CommitCouponStatusEnum;
 import com.fb.platform.promotion.to.CouponRequest;
 import com.fb.platform.promotion.to.CouponResponse;
 import com.fb.platform.promotion.to.CouponResponseStatusEnum;
@@ -52,6 +56,64 @@ public class PromotionManagerImplTest extends BaseTestCase{
 		assertEquals(couponResponse.getCouponStatus(), CouponResponseStatusEnum.SUCCESS);
 		assertNotNull(couponResponse.getSessionToken());
 		assertEquals(0, new BigDecimal(120).compareTo(couponResponse.getDiscountValue()));
+	}
+	
+	@Test
+	public void testCommitCoupon(){
+		
+		LoginRequest request = new LoginRequest();
+		request.setUsername("jasvipul@gmail.com");
+		request.setPassword("testpass");
+
+		LoginResponse response = userManager.login(request);
+		
+		CommitCouponResponse commitCouponResponse = placeOrder(response.getSessionToken());
+		
+		assertNotNull(commitCouponResponse);
+		assertEquals(commitCouponResponse.getCommitCouponStatus(), CommitCouponStatusEnum.SUCCESS);
+	}
+	
+	@Test
+	public void testCouponMaxUsesPerUserLimit(){
+		
+		LoginRequest request = new LoginRequest();
+		request.setUsername("jasvipul@gmail.com");
+		request.setPassword("testpass");
+
+		LoginResponse response = userManager.login(request);
+		CommitCouponResponse commitCouponResponse = null;
+		for(int i=0; i>20; i++){
+			commitCouponResponse = placeOrder(response.getSessionToken());
+		}
+		
+		commitCouponResponse = placeOrder(response.getSessionToken());
+		
+		assertNotNull(commitCouponResponse);
+		assertEquals(commitCouponResponse.getCommitCouponStatus(), CommitCouponStatusEnum.SUCCESS);
+	}
+
+	private CommitCouponResponse placeOrder(String sessionToken) {
+		CouponRequest couponRequest = new CouponRequest();
+		couponRequest.setClientId(5);
+		couponRequest.setOrderReq(getSampleOrderRequest());
+		couponRequest.setCouponCode("END2END_POST_ISSUE");
+		couponRequest.setSessionToken(sessionToken);
+		
+		CouponResponse couponResponse = promotionManager.applyCoupon(couponRequest);
+		
+		assertNotNull(couponResponse);
+		assertEquals(couponResponse.getCouponStatus(), CouponResponseStatusEnum.SUCCESS);
+		assertNotNull(couponResponse.getSessionToken());
+		assertEquals(0, new BigDecimal(50).compareTo(couponResponse.getDiscountValue()));
+		
+		CommitCouponRequest commitCouponRequest = new CommitCouponRequest();
+		commitCouponRequest.setCouponCode("END2END_POST_ISSUE");
+		commitCouponRequest.setDiscountValue(new BigDecimal(50));
+		commitCouponRequest.setSessionToken(couponResponse.getSessionToken());
+		commitCouponRequest.setOrderId(RandomUtils.nextInt());
+		
+		CommitCouponResponse commitCouponResponse = promotionManager.commitCouponUse(commitCouponRequest);
+		return commitCouponResponse;
 	}
 	
 	private OrderRequest getSampleOrderRequest(){
