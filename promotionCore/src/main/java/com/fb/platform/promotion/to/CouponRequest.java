@@ -12,7 +12,6 @@ public class CouponRequest implements Serializable {
 
 	private String couponCode;
 	private OrderRequest orderReq;
-	private int clientId;
 	private String sessionToken = null;
 	
 	public String getCouponCode() {
@@ -26,12 +25,6 @@ public class CouponRequest implements Serializable {
 	}
 	public void setOrderReq(OrderRequest orderReq) {
 		this.orderReq = orderReq;
-	}
-	public int getClientId() {
-		return clientId;
-	}
-	public void setClientId(int clientId) {
-		this.clientId = clientId;
 	}
 	public String getSessionToken() {
 		return sessionToken;

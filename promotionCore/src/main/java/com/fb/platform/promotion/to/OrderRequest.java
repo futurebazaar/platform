@@ -16,6 +16,7 @@ public class OrderRequest implements Serializable {
  
 	private int orderId = 0;
 	private List<OrderItem> orderItems = new ArrayList<OrderItem>();
+	private int clientId = 0;
 
 	public int getOrderId() {
 		return orderId;
@@ -36,6 +37,12 @@ public class OrderRequest implements Serializable {
 	public void setOrderItems(List<OrderItem> orderItems) {
 		this.orderItems = orderItems;
 	}
+	public int getClientId() {
+		return clientId;
+	}
+	public void setClientId(int clientId) {
+		this.clientId = clientId;
+	}
 	
 	public boolean isAllProductsInCategory(List<Integer> categories){
 		for(OrderItem o:orderItems){
@@ -50,5 +57,8 @@ public class OrderRequest implements Serializable {
 		return false;
 	}
 	
-
+	public boolean isValidClient(List<Integer> client_list){
+		return client_list.contains(Integer.valueOf(clientId));
+	}
+	
 }

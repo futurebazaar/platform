@@ -45,7 +45,6 @@ public class PromotionManagerImplTest extends BaseTestCase{
 		LoginResponse response = userManager.login(request);
 		
 		CouponRequest couponRequest = new CouponRequest();
-		couponRequest.setClientId(5);
 		couponRequest.setOrderReq(getSampleOrderRequest());
 		couponRequest.setCouponCode("END2END_GLOBAL");
 		couponRequest.setSessionToken(response.getSessionToken());
@@ -96,7 +95,6 @@ public class PromotionManagerImplTest extends BaseTestCase{
 
 	private CommitCouponResponse placeOrder(String sessionToken) {
 		CouponRequest couponRequest = new CouponRequest();
-		couponRequest.setClientId(5);
 		couponRequest.setOrderReq(getSampleOrderRequest());
 		couponRequest.setCouponCode("END2END_POST_ISSUE");
 		couponRequest.setSessionToken(sessionToken);
@@ -136,6 +134,7 @@ public class PromotionManagerImplTest extends BaseTestCase{
 				List<OrderItem> oList1 = new ArrayList<OrderItem>();
 				oList1.add(oItem1);
 				orderReq1.setOrderItems(oList1);
+				orderReq1.setClientId(5);
 				
 				return orderReq1;
 				

@@ -27,13 +27,16 @@ public class BuyWorthXGetYRsOffOnZCategoryRuleImpl implements PromotionRule, Ser
 	private Money minOrderValue;
 	private Money fixedRsOff;
 	private List<Integer> categories;
+	private List<Integer> client_list;
 	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
 		minOrderValue = new Money(BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigConstants.MIN_ORDER_VALUE))));
 		fixedRsOff = new Money (BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigConstants.FIXED_DISCOUNT_RS_OFF))));
-		StrTokenizer strTok = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigConstants.CATEGORY_LIST),",");
-		categories = StringToIntegerList.convert((List<String>)strTok.getTokenList());
+		StrTokenizer strTokCategories = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigConstants.CATEGORY_LIST),",");
+		categories = StringToIntegerList.convert((List<String>)strTokCategories.getTokenList());
+		StrTokenizer strTokClients = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigConstants.CLIENT_LIST),",");
+		client_list = StringToIntegerList.convert((List<String>)strTokClients.getTokenList());
 		log.info("minOrderValue : " + minOrderValue.toString() + ", fixedRsOff : " + fixedRsOff.toString());
 	}
 
@@ -43,7 +46,7 @@ public class BuyWorthXGetYRsOffOnZCategoryRuleImpl implements PromotionRule, Ser
 			log.debug("Checking if BuyWorthXGetYRsOffOnZCategoryRuleImpl applies on order : " + request.getOrderId());
 		}
 		Money orderValue = new Money(request.getOrderValue());
-		if(orderValue.gteq(minOrderValue) && request.isAllProductsInCategory(categories)){
+		if(orderValue.gteq(minOrderValue) && request.isAllProductsInCategory(categories) && request.isValidClient(client_list)){
 			return true;
 		}
 		return false;

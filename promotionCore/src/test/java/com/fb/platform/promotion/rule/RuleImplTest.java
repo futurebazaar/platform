@@ -91,6 +91,7 @@ public class RuleImplTest extends BaseTestCase {
 		oList1.add(oItem2);
 		oList1.add(oItem3);
 		orderReq1.setOrderItems(oList1);
+		orderReq1.setClientId(5);
 		OrderRequest orderReq2 = new OrderRequest(); // 200 Rs
 		orderReq2.setOrderId(2);
 		List<OrderItem> oList2 = new ArrayList<OrderItem>();
@@ -98,6 +99,7 @@ public class RuleImplTest extends BaseTestCase {
 		oList2.add(oItem5);
 		oList2.add(oItem10);
 		orderReq2.setOrderItems(oList2);
+		orderReq2.setClientId(5);
 		OrderRequest orderReq3 = new OrderRequest(); //
 		orderReq3.setOrderId(3);
 		List<OrderItem> oList3 = new ArrayList<OrderItem>();
@@ -106,6 +108,7 @@ public class RuleImplTest extends BaseTestCase {
 		oList3.add(oItem9);
 		oList3.add(oItem10);
 		orderReq3.setOrderItems(oList3);
+		orderReq3.setClientId(5);
 		OrderRequest orderReq4 = new OrderRequest();
 		orderReq4.setOrderId(4);
 		List<OrderItem> oList4 = new ArrayList<OrderItem>();
@@ -113,7 +116,7 @@ public class RuleImplTest extends BaseTestCase {
 		oList4.add(oItem6);
 		oList4.add(oItem9);
 		orderReq4.setOrderItems(oList4);		
-		
+		orderReq4.setClientId(5);
 		
 		//BuyWorthXGetYRsOffRule
 		PromotionRule buyWorthXGetYRsOffRule = ruleDao.load(-7, -2);
@@ -124,7 +127,7 @@ public class RuleImplTest extends BaseTestCase {
 		RuleConfiguration yRsOffRuleConfiguration = ruleDao.loadRuleConfiguration(-7, -2);
 
 		assertNotNull(yRsOffRuleConfiguration);
-		assertEquals(2, yRsOffRuleConfiguration.getConfigItems().size());
+		assertEquals(3, yRsOffRuleConfiguration.getConfigItems().size());
 
 		assertTrue(buyWorthXGetYRsOffRule.isApplicable(orderReq1));
 		assertFalse(buyWorthXGetYRsOffRule.isApplicable(orderReq2));
@@ -144,7 +147,7 @@ public class RuleImplTest extends BaseTestCase {
 		RuleConfiguration yPercentOffRuleConfiguration = ruleDao.loadRuleConfiguration(-8, -3);
 
 		assertNotNull(yPercentOffRuleConfiguration);
-		assertEquals(3, yPercentOffRuleConfiguration.getConfigItems().size());
+		assertEquals(4, yPercentOffRuleConfiguration.getConfigItems().size());
 
 		assertTrue(buyWorthXGetYPercentOffRule.isApplicable(orderReq1));
 		assertFalse(buyWorthXGetYPercentOffRule.isApplicable(orderReq2));
@@ -163,7 +166,7 @@ public class RuleImplTest extends BaseTestCase {
 		RuleConfiguration yRsOffOnZCategoryRuleConfiguration = ruleDao.loadRuleConfiguration(-9, -4);
 
 		assertNotNull(yRsOffOnZCategoryRuleConfiguration);
-		assertEquals(3, yRsOffOnZCategoryRuleConfiguration.getConfigItems().size());
+		assertEquals(4, yRsOffOnZCategoryRuleConfiguration.getConfigItems().size());
 
 		assertTrue(buyWorthXGetYRsOffOnZCategoryRule.isApplicable(orderReq1));
 		assertFalse(buyWorthXGetYRsOffOnZCategoryRule.isApplicable(orderReq2));
