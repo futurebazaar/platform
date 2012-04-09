@@ -10,6 +10,7 @@ import java.util.List;
 import com.fb.platform.promotion.rule.PromotionRule;
 import com.fb.platform.promotion.rule.RuleConfigConstants;
 import com.fb.platform.promotion.rule.RuleConfiguration;
+import com.fb.platform.promotion.to.CouponResponseStatusEnum;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.util.StringToIntegerList;
 import com.fb.commons.to.Money;
@@ -41,15 +42,26 @@ public class BuyWorthXGetYRsOffOnZCategoryRuleImpl implements PromotionRule, Ser
 	}
 
 	@Override
-	public boolean isApplicable(OrderRequest request) {
+	public ApplicableResponse isApplicable(OrderRequest request) {
 		if(log.isDebugEnabled()) {
 			log.debug("Checking if BuyWorthXGetYRsOffOnZCategoryRuleImpl applies on order : " + request.getOrderId());
 		}
+		ApplicableResponse ar = new ApplicableResponse();
 		Money orderValue = new Money(request.getOrderValue());
-		if(orderValue.gteq(minOrderValue) && request.isAllProductsInCategory(categories) && request.isValidClient(client_list)){
-			return true;
+		if(request.isValidClient(client_list)){
+			if(orderValue.gteq(minOrderValue)){
+				if(request.isAllProductsInCategory(categories)){
+					ar.setStatusCode(CouponResponseStatusEnum.SUCCESS);
+					return ar;
+				}
+				ar.setStatusCode(CouponResponseStatusEnum.CATEGORY_MISMATCH);
+				return ar;
+			}
+			ar.setStatusCode(CouponResponseStatusEnum.LESS_ORDER_AMOUNT);
+			return ar;
 		}
-		return false;
+		ar.setStatusCode(CouponResponseStatusEnum.INVALID_CLIENT);
+		return ar;
 	}
 
 	@Override

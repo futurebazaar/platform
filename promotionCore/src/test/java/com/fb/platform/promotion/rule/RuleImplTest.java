@@ -20,6 +20,7 @@ import com.fb.platform.promotion.rule.impl.BuyWorthXGetYPercentOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyWorthXGetYRsOffOnZCategoryRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyWorthXGetYRsOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyXGetYFreeRuleImpl;
+import com.fb.platform.promotion.to.CouponResponseStatusEnum;
 import com.fb.platform.promotion.to.OrderItem;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.Product;
@@ -129,10 +130,10 @@ public class RuleImplTest extends BaseTestCase {
 		assertNotNull(yRsOffRuleConfiguration);
 		assertEquals(3, yRsOffRuleConfiguration.getConfigItems().size());
 
-		assertTrue(buyWorthXGetYRsOffRule.isApplicable(orderReq1));
-		assertFalse(buyWorthXGetYRsOffRule.isApplicable(orderReq2));
-		assertTrue(buyWorthXGetYRsOffRule.isApplicable(orderReq3));
-		assertTrue(buyWorthXGetYRsOffRule.isApplicable(orderReq4));
+		assertEquals(buyWorthXGetYRsOffRule.isApplicable(orderReq1).getStatusCode(),CouponResponseStatusEnum.SUCCESS);
+		assertEquals(buyWorthXGetYRsOffRule.isApplicable(orderReq2).getStatusCode(),CouponResponseStatusEnum.LESS_ORDER_AMOUNT);
+		assertEquals(buyWorthXGetYRsOffRule.isApplicable(orderReq3).getStatusCode(),CouponResponseStatusEnum.SUCCESS);;
+		assertEquals(buyWorthXGetYRsOffRule.isApplicable(orderReq4).getStatusCode(),CouponResponseStatusEnum.SUCCESS);
 		
 		assertTrue(new Money(new BigDecimal(300)).eq(buyWorthXGetYRsOffRule.execute(orderReq1)));
 //		assertTrue(new Money(new BigDecimal(300)).eq(buyWorthXGetYRsOffRule.execute(orderReq2)));
@@ -149,9 +150,9 @@ public class RuleImplTest extends BaseTestCase {
 		assertNotNull(yPercentOffRuleConfiguration);
 		assertEquals(4, yPercentOffRuleConfiguration.getConfigItems().size());
 
-		assertTrue(buyWorthXGetYPercentOffRule.isApplicable(orderReq1));
-		assertFalse(buyWorthXGetYPercentOffRule.isApplicable(orderReq2));
-		assertTrue(buyWorthXGetYPercentOffRule.isApplicable(orderReq3));
+		assertEquals(buyWorthXGetYPercentOffRule.isApplicable(orderReq1).getStatusCode(),CouponResponseStatusEnum.SUCCESS);
+		assertEquals(buyWorthXGetYPercentOffRule.isApplicable(orderReq2).getStatusCode(),CouponResponseStatusEnum.LESS_ORDER_AMOUNT);
+		assertEquals(buyWorthXGetYPercentOffRule.isApplicable(orderReq3).getStatusCode(),CouponResponseStatusEnum.SUCCESS);
 		
 		assertTrue(new Money(new BigDecimal(78)).eq(buyWorthXGetYPercentOffRule.execute(orderReq1)));
 //		assertTrue(new Money(new BigDecimal(100)).eq(buyWorthXGetYPercentOffRule.execute(orderReq2)));
@@ -168,8 +169,8 @@ public class RuleImplTest extends BaseTestCase {
 		assertNotNull(yRsOffOnZCategoryRuleConfiguration);
 		assertEquals(4, yRsOffOnZCategoryRuleConfiguration.getConfigItems().size());
 
-		assertTrue(buyWorthXGetYRsOffOnZCategoryRule.isApplicable(orderReq1));
-		assertFalse(buyWorthXGetYRsOffOnZCategoryRule.isApplicable(orderReq2));
+		assertEquals(buyWorthXGetYRsOffOnZCategoryRule.isApplicable(orderReq1).getStatusCode(),CouponResponseStatusEnum.SUCCESS);
+		assertEquals(buyWorthXGetYRsOffOnZCategoryRule.isApplicable(orderReq2).getStatusCode(),CouponResponseStatusEnum.LESS_ORDER_AMOUNT);
 		
 		assertTrue(new Money(new BigDecimal(150)).eq(buyWorthXGetYRsOffOnZCategoryRule.execute(orderReq1)));
 		

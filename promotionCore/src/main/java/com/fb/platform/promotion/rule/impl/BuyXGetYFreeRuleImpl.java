@@ -31,11 +31,11 @@ public class BuyXGetYFreeRuleImpl implements PromotionRule, Serializable{
 	}
 
 	@Override
-	public boolean isApplicable(OrderRequest request) {
+	public ApplicableResponse isApplicable(OrderRequest request) {
 		if(log.isDebugEnabled()) {
 			log.debug("Checking if BuyXGetYFreeRuleImpl applies on order : " + request.getOrderId());
 		}
-		return false;
+		return null;
 	}
 
 	@Override

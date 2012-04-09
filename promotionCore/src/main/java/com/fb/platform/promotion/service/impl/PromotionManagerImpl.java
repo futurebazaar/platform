@@ -24,6 +24,7 @@ import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.coupon.CouponType;
 import com.fb.platform.promotion.model.coupon.GlobalCouponUses;
 import com.fb.platform.promotion.model.coupon.UserCouponUses;
+import com.fb.platform.promotion.rule.impl.ApplicableResponse;
 import com.fb.platform.promotion.service.PromotionManager;
 import com.fb.platform.promotion.to.CommitCouponRequest;
 import com.fb.platform.promotion.to.CommitCouponResponse;
@@ -134,12 +135,13 @@ public class PromotionManagerImpl implements PromotionManager {
 		}
 
 		//check if the promotion is applicable on this request.
-		boolean applicable = promotion.isApplicable(request.getOrderReq());
-		if (!applicable) {
+		ApplicableResponse applicable = promotion.isApplicable(request.getOrderReq());
+		if (applicable.getStatusCode().compareTo(CouponResponseStatusEnum.SUCCESS) !=0) {
 			logger.warn("Coupon code used when not applicable. Coupon code : " + coupon.getCode());
-			response.setCouponStatus(CouponResponseStatusEnum.NOT_APPLICABLE);
+			response.setCouponStatus(applicable.getStatusCode());
 			return response;
 		}
+
 		Money discount = promotion.apply(request.getOrderReq());
 		if (discount != null) {
 			globalCouponUses.increment(discount);

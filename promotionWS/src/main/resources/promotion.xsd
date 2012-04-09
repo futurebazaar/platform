@@ -70,6 +70,12 @@
       <xs:enumeration value="NOT_APPLICABLE"/>
       <xs:enumeration value="LESS_ORDER_AMOUNT"/>
       <xs:enumeration value="INTERNAL_ERROR"/>
+      <xs:enumeration value="ALREADY_APPLIED_COUPON_ON_ORDER"/>
+      <xs:enumeration value="ALREADY_APPLIED_PROMOTION_ON_ORDER"/>
+      <xs:enumeration value="INVALID_CLIENT"/>
+      <xs:enumeration value="CATEGORY_MISMATCH"/>
+      <xs:enumeration value="BRAND_MISMATCH"/>
+      <xs:enumeration value="INACTIVE_COUPON"/>
     </xs:restriction>
   </xs:simpleType>
 
@@ -130,6 +136,7 @@
       <xs:enumeration value="INVALID_COUPON_CODE"/>
       <xs:enumeration value="INTERNAL_ERROR"/>
       <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INVALID_RELEASE_COUPON"/>
     </xs:restriction>
   </xs:simpleType>
 

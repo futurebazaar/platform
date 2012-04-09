@@ -8,7 +8,9 @@ import java.io.Serializable;
 
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.rule.PromotionRule;
+import com.fb.platform.promotion.rule.impl.ApplicableResponse;
 import com.fb.platform.promotion.to.CouponRequest;
+import com.fb.platform.promotion.to.CouponResponseStatusEnum;
 import com.fb.platform.promotion.to.OrderRequest;
 
 /**
@@ -26,19 +28,18 @@ public class Promotion implements Serializable {
 
 	private PromotionRule rule;
 
-	public boolean isApplicable(OrderRequest request) {
+	public ApplicableResponse isApplicable(OrderRequest request) {
+		ApplicableResponse ar = new ApplicableResponse();
 		if (!isActive) {
-			return false;
+			ar.setStatusCode(CouponResponseStatusEnum.INACTIVE_COUPON);
+			return ar;
 		}
 		boolean withinDates = dates.isWithinDates();
 		if (!withinDates) {
-			return false;
+			ar.setStatusCode(CouponResponseStatusEnum.COUPON_CODE_EXPIRED);
+			return ar;
 		}
-		boolean ruleApplicable = rule.isApplicable(request);
-		if (!ruleApplicable) {
-			return false;
-		}
-		return true;
+		return rule.isApplicable(request);
 	}
 
 	public boolean isWithinLimits(GlobalPromotionUses globalUses, UserPromotionUses userUses) {
