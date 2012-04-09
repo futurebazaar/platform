@@ -31,7 +31,7 @@ import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.PromotionDates;
 import com.fb.platform.promotion.model.PromotionLimitsConfig;
 import com.fb.platform.promotion.model.UserPromotionUses;
-import com.fb.platform.promotion.model.coupon.GlobalCouponUses;
+import com.fb.platform.promotion.model.UserPromotionUsesEntry;
 import com.fb.platform.promotion.rule.PromotionRule;
 
 /**
@@ -73,7 +73,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			"	count(*) as current_count, " +
 			"	sum(upu.discount_amount) as current_amount, " +
 			"	promotion_id " +
-			"FROM user_promotion_uses upu WHERE promotion_id = ? AND is_cancelled = 0 " +
+			"FROM user_promotion_uses upu WHERE promotion_id = ? " +
 			"group by promotion_id";
 	
 	private static final String LOAD_USER_PROMOTION_USES_QUERY = 
@@ -82,7 +82,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			"	sum(upu.discount_amount) as current_amount, " +
 			"	promotion_id, " +
 			"	user_id " +
-			"FROM user_promotion_uses upu WHERE promotion_id = ? AND user_id = ? AND is_cancelled = 0 " +
+			"FROM user_promotion_uses upu WHERE promotion_id = ? AND user_id = ? " +
 			"group by promotion_id";
 
 	private static final String CREATE_USER_USES = 
@@ -92,16 +92,31 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			"	order_id, " +
 			"	discount_amount, " +
 			"	created_on, " +
-			"	last_modified_on, " +
-			"	is_cancelled) " +
-			"VALUES (?, ?, ?, ?, ?, ?, ?)";
+			"	last_modified_on) " +
+			"VALUES (?, ?, ?, ?, ?, ?)";
 	
-	private static final String CANCEL_USER_USES = 
-			"UPDATE user_promotion_uses set " +
-			"	is_cancelled = true, " +
-			"	last_modified_on = ? " +
+	private static final String DELETE_USER_USES = 
+			"DELETE from user_promotion_uses " +
 			"where promotion_id = ? AND user_id = ? AND order_id = ?";
+	
+	private static final String CREATE_RELEASED_PROMOTION = 
+			"INSERT INTO released_promotion " +
+			"	(promotion_id, " +
+			"	user_id, " +
+			"	order_id, " +
+			"	discount_amount, " +
+			"	created_on) " +
+			"VALUES (?, ?, ?, ?)";
 
+	private static final String LOAD_USER_ORDER_PROMOTION_QUERY = 
+			"SELECT " +
+			"	id, " +
+			"	promotion_id, " +
+			"	user_id, " +
+			"	order_id, " +
+			"	discount_amount " +
+			"FROM user_promotion_uses WHERE promotion_id = ? AND user_id = ? AND order_id = ?";
+	
 	/* (non-Javadoc)
 	 * @see com.fb.platform.promotion.dao.PromotionDao#load(int)
 	 */
@@ -186,39 +201,6 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		return userPromotionUses;
 	}
 
-/*	@Override
-	public boolean updateGlobalUses(int promotionId, BigDecimal valueApplied) {
-		GlobalPromotionUses globalUses = loadGlobalUses(promotionId);
-		if (globalUses == null) {
-			//first time use of the coupon, create a new object
-			createGlobalUses(promotionId, valueApplied);
-		} else {
-			incrementGlobalUses(promotionId, valueApplied);
-		}
-		return true;
-	}*/
-
-/*	private void incrementGlobalUses(int promotionId, BigDecimal valueApplied) {
-		int update = jdbcTemplate.update(INCREASE_GLOBAL_USES, valueApplied, promotionId);
-		if (update != 1) {
-			throw new PlatformException("Unable to update the global promotion uses for promotionId : " + promotionId);
-		}
-	}
-
-	private void createGlobalUses(final int promotionId, final BigDecimal valueApplied) {
-		KeyHolder globalUsesKeyHolder = new GeneratedKeyHolder();
-		jdbcTemplate.update(new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				PreparedStatement psgu = con.prepareStatement(CREATE_GLOBAL_USES, new String [] {"id"});
-				psgu.setInt(1, promotionId);
-				psgu.setInt(2, 1);
-				psgu.setBigDecimal(3, valueApplied);
-				return psgu;
-			}
-		}, globalUsesKeyHolder);
-	}*/
-
 	@Override
 	public boolean updateUserUses(int promotionId, int userId, BigDecimal valueApplied, int orderId) {
 		
@@ -235,13 +217,84 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		return true;
 	}
 
-/*	private void incrementUserUses(int promotionId, int userId, BigDecimal valueApplied) {
-		int update = jdbcTemplate.update(INCREASE_USER_USES, valueApplied, promotionId, userId);
-		if (update != 1) {
-			throw new PlatformException("Unable to update the user coupon uses for couponId : " + promotionId + " and userId : " + userId);
+	@Override
+	public boolean releasePromotion(final int promotionId, final int userId, final int orderId){
+		if(log.isDebugEnabled()) {
+			log.debug("Released promotion for user : " + userId + " , applied promotion id : " + promotionId + " , on order id : " + orderId);
 		}
-	}*/
+		BigDecimal discountAmount = getDiscountValue(promotionId, userId, orderId);
+		boolean isReleasedPromotionCreated = createReleasedPromotion(promotionId, userId, discountAmount, orderId);
+		boolean isUserPromotionUsesDeleted = cancelUserUses(promotionId, userId, orderId);
+		
+		return isReleasedPromotionCreated && isUserPromotionUsesDeleted;
+	}
 
+	
+	private boolean createReleasedPromotion(final int promotionId,final int userId, final BigDecimal discountAmount,final int orderId){
+		if(log.isDebugEnabled()) {
+			log.debug("Insert in the released_promotion table record for user : " + userId + " , applied promotion id : " + promotionId + " , on order id : " + orderId);
+		}
+		KeyHolder userUsesKeyHolder = new GeneratedKeyHolder();
+		int rowAffected = 0;
+		try {
+			rowAffected = jdbcTemplate.update(new PreparedStatementCreator() {
+				
+				@Override
+				public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+					PreparedStatement ps = con.prepareStatement(CREATE_RELEASED_PROMOTION, new String [] {"id"});
+					ps.setInt(1, promotionId);
+					ps.setInt(2, userId);
+					ps.setInt(3, orderId);
+					ps.setBigDecimal(4, discountAmount);
+					ps.setTimestamp(5, new java.sql.Timestamp(System.currentTimeMillis()));
+					return ps;
+				}
+			}, userUsesKeyHolder);
+		} catch (DuplicateKeyException e) {
+			log.error("Duplicate key insertion exception " + e);
+			throw new PlatformException("Duplicate key insertion exception "+e);
+		}
+		
+		return rowAffected>0 ? true : false;
+	}
+
+	@Override
+	public boolean isPromotionApplicable(int promotionId, int userId, int orderId){
+		if(log.isDebugEnabled()) {
+			log.debug("Get from the user promotion uses table record for user : " + userId + " , applied promotion id : " + promotionId + " , on order id : " + orderId);
+		}
+		UserPromotionUsesEntry userPromotionUsesEntry = null;
+		try {
+			userPromotionUsesEntry = jdbcTemplate.queryForObject(LOAD_USER_ORDER_PROMOTION_QUERY, new Object [] {promotionId, userId, orderId}, new UserOrderPromotionMapper());
+		} catch (IncorrectResultSizeDataAccessException e) {
+			log.warn("No entry found for userId" + userId + " with promotionId "+ promotionId + " and orderId " + orderId);
+			//throw new PlatformException("No entry in user_coupon_uses found for userId" + userId + " with couponId "+ couponId + " and orderId " + orderId);
+			return true;
+		}
+		
+		return userPromotionUsesEntry==null ? false : true;
+	}
+	
+	private BigDecimal getDiscountValue(int promotionId, int userId, int orderId){
+		if(log.isDebugEnabled()) {
+			log.debug("Get from the user promotion uses table record for user : " + userId + " , applied promotion id : " + promotionId + " , on order id : " + orderId);
+		}
+		UserPromotionUsesEntry userPromotionUsesEntry = null;
+		BigDecimal discountValue = null;
+		try {
+			userPromotionUsesEntry = jdbcTemplate.queryForObject(LOAD_USER_ORDER_PROMOTION_QUERY, new Object [] {promotionId, userId, orderId}, new UserOrderPromotionMapper());
+			discountValue = userPromotionUsesEntry.getDiscountAmount().getAmount();
+		} catch (IncorrectResultSizeDataAccessException e) {
+			log.warn("No entry found for userId" + userId + " with promotionId "+ promotionId + " and orderId " + orderId);
+			throw new PlatformException("No entry in user_coupon_uses found for userId" + userId + " with promotionId "+ promotionId + " and orderId " + orderId);
+		}
+		
+		if(discountValue==null){
+			throw new PlatformException("Error while getting discount value for userId " + userId + " with promotionId "+ promotionId + " and orderId " + orderId);
+		}
+		return discountValue;
+	}
+	
 	private void createUserUses(final int promotionId, final int userId, final BigDecimal valueApplied, final int orderId) {
 		
 		if(log.isDebugEnabled()) {
@@ -263,7 +316,6 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 					Timestamp timestamp = new java.sql.Timestamp(System.currentTimeMillis());
 					ps.setTimestamp(5, timestamp);
 					ps.setTimestamp(6, timestamp);
-					ps.setBoolean(7, false);
 					return ps;
 				}
 			}, userUsesKeyHolder);
@@ -273,8 +325,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		}
 	}
 
-	@Override
-	public boolean cancelUserUses(final int promotionId, final int userId, final int orderId){
+	private boolean cancelUserUses(final int promotionId, final int userId, final int orderId){
 		if(log.isDebugEnabled()) {
 			log.debug("Cancelling the promotion id : " + promotionId + ", applied on order id : " + orderId + " for user : " + userId );
 		}
@@ -284,11 +335,10 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 				@Override
 				public PreparedStatement createPreparedStatement(Connection con)
 						throws SQLException {
-					PreparedStatement ps = con.prepareStatement(CANCEL_USER_USES);
-					ps.setTimestamp(1, new java.sql.Timestamp(System.currentTimeMillis()));
-					ps.setInt(2, promotionId);
-					ps.setInt(3, userId);
-					ps.setInt(4, orderId);
+					PreparedStatement ps = con.prepareStatement(DELETE_USER_USES);
+					ps.setInt(1, promotionId);
+					ps.setInt(2, userId);
+					ps.setInt(3, orderId);
 					return ps;
 				}
 			});
@@ -407,6 +457,27 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		}
 	}
 
+	private static class UserOrderPromotionMapper implements RowMapper<UserPromotionUsesEntry> {
+
+		@Override
+		public UserPromotionUsesEntry mapRow(ResultSet rs, int rowNum) throws SQLException {
+			UserPromotionUsesEntry releasePromotion = new UserPromotionUsesEntry();
+
+			releasePromotion.setId(rs.getInt("id"));
+			releasePromotion.setPromotionId(rs.getInt("promotion_id"));
+			releasePromotion.setUserId(rs.getInt("user_Id"));
+			releasePromotion.setOrderId(rs.getInt("order_id"));
+
+			BigDecimal discountAmount = rs.getBigDecimal("discount_amount");
+			if (discountAmount == null) {
+				discountAmount = BigDecimal.ZERO;
+			}
+			releasePromotion.setDiscountAmount(new Money(discountAmount));
+			
+			return releasePromotion;
+		}
+	}
+	
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}

@@ -306,7 +306,6 @@
                 <column>user_id</column>
                 <column>order_id</column>
                 <column>discount_amount</column>
-                <column>is_cancelled</column>
                 <column>created_on</column>
                 <column>last_modified_on</column>
                 <row>
@@ -315,7 +314,6 @@
                         <value name="user_id">1</value>
                         <value name="order_id">50</value>
                         <value name="discount_amount">2000</value>
-                        <value name="is_cancelled">false</value>
                         <value name="created_on">2012-04-04 22:37:14</value>
                         <value name="last_modified_on">2012-04-04 22:37:14</value>
                 </row>
@@ -325,7 +323,6 @@
                         <value name="user_id">2</value>
                         <value name="order_id">51</value>
                         <null></null>
-                        <value name="is_cancelled">false</value>
                         <value name="created_on">2012-04-04 23:37:14</value>
                         <value name="last_modified_on">2012-04-04 23:37:14</value>
                 </row>
@@ -335,7 +332,6 @@
                         <value name="user_id">3</value>
                         <value name="order_id">40</value>
                         <value name="discount_amount">200</value>
-                        <value name="is_cancelled">false</value>
                         <value name="created_on">2012-04-04 21:37:14</value>
                         <value name="last_modified_on">2012-04-04 21:37:14</value>
                 </row>
@@ -345,7 +341,6 @@
                         <value name="user_id">-4</value>
                         <value name="order_id">-5</value>
                         <value name="discount_amount">10</value>
-                        <value name="is_cancelled">false</value>
                         <value name="created_on">2012-04-04 21:37:14</value>
                         <value name="last_modified_on">2012-04-04 21:37:14</value>
                 </row>
@@ -516,7 +511,6 @@
                 <column>user_id</column>
                 <column>order_id</column>
                 <column>discount_amount</column>
-                <column>is_cancelled</column>
                 <column>created_on</column>
                 <column>last_modified_on</column>
                 <row>
@@ -525,7 +519,6 @@
                         <value name="user_id">1</value>
                         <value name="order_id">50</value>
                         <value name="discount_amount">2000</value>
-                        <value name="is_cancelled">false</value>
                         <value name="created_on">2012-04-04 22:37:14</value>
                         <value name="last_modified_on">2012-04-04 22:37:14</value>
                 </row>
@@ -535,7 +528,6 @@
                         <value name="user_id">2</value>
                         <value name="order_id">51</value>
                         <null></null>
-                        <value name="is_cancelled">false</value>
                         <value name="created_on">2012-04-04 12:37:14</value>
                         <value name="last_modified_on">2012-04-04 12:37:14</value>
                 </row>
@@ -545,7 +537,6 @@
                         <value name="user_id">-3</value>
                         <value name="order_id">-5</value>
                         <value name="discount_amount">20</value>
-                        <value name="is_cancelled">false</value>
                         <value name="created_on">2012-04-04 11:37:14</value>
                         <value name="last_modified_on">2012-04-04 11:37:14</value>
                 </row>

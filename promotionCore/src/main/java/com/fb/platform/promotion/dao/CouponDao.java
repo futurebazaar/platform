@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 
 import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.coupon.GlobalCouponUses;
+import com.fb.platform.promotion.model.coupon.UserCouponUsesEntry;
 import com.fb.platform.promotion.model.coupon.UserCouponUses;
 
 /**
@@ -23,5 +24,8 @@ public interface CouponDao {
 
 	public boolean updateUserUses(int couponId, int userId, BigDecimal valueApplied, int orderId);
 	
-	public boolean cancelUserUses(int couponId, int userId, int orderId);
+	public boolean releaseCoupon(int couponId, int userId, int orderId);
+	
+	public boolean isCouponApplicable(int couponId, int userId, int orderId);
+	
 }

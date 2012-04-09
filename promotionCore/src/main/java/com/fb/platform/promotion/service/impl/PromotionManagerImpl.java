@@ -97,6 +97,24 @@ public class PromotionManagerImpl implements PromotionManager {
 			return response;
 		}
 
+		//check if the couponId is already applied on the same orderId for the same user
+		//If yes, then return error
+		boolean isCouponApplicable = couponDao.isCouponApplicable(coupon.getId(), userId, request.getOrderReq().getOrderId());
+		if(!isCouponApplicable){
+			logger.error("Already an entry present for the user ="+ userId + " having couponId =" + coupon.getId() + " on the orderId = "+ request.getOrderReq().getOrderId());
+			response.setCouponStatus(CouponResponseStatusEnum.ALREADY_APPLIED_COUPON_ON_ORDER);
+			return response;
+		}
+		
+		//check if the promotionId is already applied on the same orderId for the same user
+		//If yes, then return error
+		boolean isPromotionApplicable = promotionDao.isPromotionApplicable(promotion.getId(), userId, request.getOrderReq().getOrderId());
+		if(!isPromotionApplicable){
+			logger.error("Already an entry present for the user ="+ userId + " having promotionId =" + promotion.getId() + " on the orderId = "+ request.getOrderReq().getOrderId());
+			response.setCouponStatus(CouponResponseStatusEnum.ALREADY_APPLIED_PROMOTION_ON_ORDER);
+			return response;
+		}
+		
 		GlobalCouponUses globalCouponUses = couponDao.loadGlobalUses(coupon.getId());
 		UserCouponUses userCouponUses = couponDao.loadUserUses(coupon.getId(), userId);
 		boolean withinCouponUsesLimits = validateCouponUses(coupon, globalCouponUses, userCouponUses);
@@ -263,7 +281,39 @@ public class PromotionManagerImpl implements PromotionManager {
 			return response;
 		}
 
-		boolean userCouponCancelStatus = couponDao.cancelUserUses(coupon.getId(), userId, request.getOrderId());
+		/*//check if the couponId is already applied on the same orderId for the same user
+		//If no entry, then return error
+		UserCouponUsesEntry releaseCoupon = couponDao.loadUserOrderCoupon(coupon.getId(), userId, request.getOrderId());
+		if(null==releaseCoupon){
+			logger.error("No entry present for the user ="+ userId + " having couponId =" + coupon.getId() + " on the orderId = "+ request.getOrderId());
+			response.setReleaseCouponStatus(ReleaseCouponStatusEnum.INVALID_RELEASE_COUPON);
+			return response;
+		}
+		
+		//check if the promotionId is already applied on the same orderId for the same user
+		//If no entry, then return error
+		UserPromotionUsesEntry releasePromotion = promotionDao.loadUserOrderPromotion(promotion.getId(), userId, request.getOrderId());
+		if(null==releasePromotion){
+			logger.error("Already an entry present for the user ="+ userId + " having promotionId =" + promotion.getId() + " on the orderId = "+ request.getOrderId());
+			response.setReleaseCouponStatus(ReleaseCouponStatusEnum.INVALID_RELEASE_COUPON);
+			return response;
+		}*/
+		
+		boolean releasedCouponEntry = couponDao.releaseCoupon(coupon.getId(), userId, request.getOrderId());
+		if(!releasedCouponEntry){
+			logger.error("Releasing coupon entry failed for the user ="+ userId + " having couponId =" + coupon.getId() + " on the orderId = "+ request.getOrderId());
+			response.setReleaseCouponStatus(ReleaseCouponStatusEnum.INTERNAL_ERROR);
+			return response;
+		}
+		
+		boolean releasedPromotionEntry = promotionDao.releasePromotion(promotion.getId(), userId, request.getOrderId());
+		if(!releasedPromotionEntry){
+			logger.error("Releasing promotion entry failed for the user ="+ userId + " having promotionId =" + promotion.getId() + " on the orderId = "+ request.getOrderId());
+			response.setReleaseCouponStatus(ReleaseCouponStatusEnum.INTERNAL_ERROR);
+			return response;
+		}
+		
+		/*boolean userCouponCancelStatus = couponDao.cancelUserUses(coupon.getId(), userId, request.getOrderId());
 		if (!userCouponCancelStatus) {
 			logger.error("Unable to update the user uses for coupon code : " + coupon.getCode());
 			response.setReleaseCouponStatus(ReleaseCouponStatusEnum.INTERNAL_ERROR);
@@ -275,7 +325,7 @@ public class PromotionManagerImpl implements PromotionManager {
 			logger.error("Unable to update user promotion uses for Coupon code : " + coupon.getCode());
 			response.setReleaseCouponStatus(ReleaseCouponStatusEnum.INTERNAL_ERROR);
 			return response;
-		}
+		}*/
 
 		response.setReleaseCouponStatus(ReleaseCouponStatusEnum.SUCCESS);
 		response.setSessionToken(request.getSessionToken());
