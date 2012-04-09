@@ -205,16 +205,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 	public boolean updateUserUses(int promotionId, int userId, BigDecimal valueApplied, int orderId) {
 		
 		//for every use of the coupon, create a new object
-		createUserUses(promotionId, userId, valueApplied, orderId);
-		
-		/*UserPromotionUses userUses = loadUserUses(promotionId, userId);
-		if (userUses == null) {
-			//first time use of the coupon, create a new object
-			createUserUses(promotionId, userId, valueApplied, orderId);
-		} else {
-			incrementUserUses(promotionId, userId, valueApplied);
-		}*/
-		return true;
+		return createUserUses(promotionId, userId, valueApplied, orderId);
 	}
 
 	@Override
@@ -295,16 +286,16 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		return discountValue;
 	}
 	
-	private void createUserUses(final int promotionId, final int userId, final BigDecimal valueApplied, final int orderId) {
+	private boolean createUserUses(final int promotionId, final int userId, final BigDecimal valueApplied, final int orderId) {
 		
 		if(log.isDebugEnabled()) {
 			log.debug("Insert in the user_promotion_uses table record for user : " + userId + " , applied promotion id : " + promotionId + " , on order id : " + orderId + " , discount value applied : " + valueApplied );
 		}
-		
+		int rowAffected = 0;
 		KeyHolder userUsesKeyHolder = new GeneratedKeyHolder();
 		
 		try {
-			jdbcTemplate.update(new PreparedStatementCreator() {
+			rowAffected = jdbcTemplate.update(new PreparedStatementCreator() {
 				
 				@Override
 				public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
@@ -323,6 +314,8 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			log.error("Duplicate key insertion exception " + e);
 			throw new PlatformException("Duplicate key insertion exception "+e);
 		}
+		
+		return rowAffected>0 ? true : false;
 	}
 
 	private boolean cancelUserUses(final int promotionId, final int userId, final int orderId){

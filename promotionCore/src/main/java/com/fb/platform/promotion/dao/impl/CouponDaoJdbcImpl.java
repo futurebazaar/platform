@@ -208,8 +208,7 @@ public class CouponDaoJdbcImpl implements CouponDao {
 	public boolean updateUserUses(int couponId, int userId, BigDecimal valueApplied, int orderId) {
 		
 		//for every use of coupon a new entry is created
-		createUserUses(couponId, userId, valueApplied, orderId);
-		return true;
+		return createUserUses(couponId, userId, valueApplied, orderId);
 	}
 
 	@Override
@@ -262,14 +261,14 @@ public class CouponDaoJdbcImpl implements CouponDao {
 		return discountValue;
 	}
 	
-	private void createUserUses(final int couponId, final int userId, final BigDecimal valueApplied, final int orderId) {
+	private boolean createUserUses(final int couponId, final int userId, final BigDecimal valueApplied, final int orderId) {
 		if(log.isDebugEnabled()) {
 			log.debug("Insert in the user_coupon_uses table record for user : " + userId + " , applied coupon id : " + couponId + " , on order id : " + orderId + " , discount value applied : " + valueApplied );
 		}
 		KeyHolder userUsesKeyHolder = new GeneratedKeyHolder();
-		
+		int rowAffected = 0;
 		try {
-			jdbcTemplate.update(new PreparedStatementCreator() {
+			rowAffected = jdbcTemplate.update(new PreparedStatementCreator() {
 				
 				@Override
 				public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
@@ -288,6 +287,7 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			throw new PlatformException("Duplicate key insertion exception "+e);
 		}
 		
+		return rowAffected>0 ? true : false;
 	}
 
 	private boolean createReleasedCoupon(final int couponId,final int userId,final BigDecimal discountAmount,final int orderId){

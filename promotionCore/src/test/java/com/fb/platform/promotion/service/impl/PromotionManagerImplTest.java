@@ -82,8 +82,10 @@ public class PromotionManagerImplTest extends BaseTestCase{
 
 		LoginResponse response = userManager.login(request);
 		CommitCouponResponse commitCouponResponse = null;
-		for(int i=0; i>20; i++){
+		for(int i=0; i>5; i++){
 			commitCouponResponse = placeOrder(response.getSessionToken());
+			assertNotNull(commitCouponResponse);
+			assertEquals(commitCouponResponse.getCommitCouponStatus(), CommitCouponStatusEnum.SUCCESS);
 		}
 		
 		commitCouponResponse = placeOrder(response.getSessionToken());
