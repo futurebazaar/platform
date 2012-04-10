@@ -36,7 +36,8 @@ public class UserAdminDaoImpl implements UserAdminDao {
 	private static final String CHECK_EMAIL_IS_USERNAME_QUERY = "SELECT count(0) from users_email WHERE email = ?";
 	private static final String CHECK_PHONE_IS_USERNAME_QUERY = "SELECT count(0) from users_phone WHERE phone = ?";
 	private static final String CHECK_USERID_IS_USERNAME_QUERY = "SELECT count(0) from users_profile WHERE id = ?";
-
+	private static final String CHECK_USERNAME_IS_AUTH_USERNAME_QUERY = "SELECT count(0) from auth_user WHERE username = ?";
+	
 	private static final String SELECT_USER_FIELDS = "SELECT "
 			+ "up.id as id, "
 			+ "up.primary_phone, "
@@ -71,6 +72,11 @@ public class UserAdminDaoImpl implements UserAdminDao {
 	private static final String SELECT_USER_BY_USER_ID =
 			SELECT_USER_FIELDS
 			+ " FROM users_profile up , auth_user au WHERE au.id = up.user_id AND up.id = ?";
+	
+	private static final String SELECT_USER_BY_AUTH_USER_NAME =
+			SELECT_USER_FIELDS
+			+ " FROM users_profile up , auth_user au WHERE au.id = up.user_id AND au.username = ?";
+	
 
 	private static final String SELECT_EMAILS_BY_USER_ID = "SELECT email, type FROM users_email WHERE user_id = ?";
 
@@ -215,7 +221,11 @@ public class UserAdminDaoImpl implements UserAdminDao {
     	if (isUserId) {
     		return getUserByUserId(Integer.parseInt(key));
     	}
-
+    	
+    	boolean isUserNameAuth = isUsernameAuth(key);
+    	if (isUserNameAuth) {
+    		return getUserByAuthUserName(key);
+    	}
     	return null;
 	}
 
@@ -246,6 +256,16 @@ public class UserAdminDaoImpl implements UserAdminDao {
     		logger.debug("Cheking if username is a registered user id : " + username );
     	}
     	int userIdCount = this.jdbcTemplate.queryForInt(CHECK_USERID_IS_USERNAME_QUERY, username);
+    	if (userIdCount > 0) {
+    		return true;
+    	}
+    	return false;
+    }
+    private boolean isUsernameAuth(String username) {
+    	if(logger.isDebugEnabled()) {
+    		logger.debug("Cheking if username is a registered auth user name: " + username );
+    	}
+    	int userIdCount = this.jdbcTemplate.queryForInt(CHECK_USERNAME_IS_AUTH_USERNAME_QUERY, username);
     	if (userIdCount > 0) {
     		return true;
     	}
@@ -296,6 +316,21 @@ public class UserAdminDaoImpl implements UserAdminDao {
 		try {
 			UserBo user = jdbcTemplate.queryForObject(SELECT_USER_BY_USER_ID,
 					new Object[] {userId},
+					new UserMapper());
+			user.setUserEmail(getEmailByUserid(user.getUserid()));
+			user.setUserPhone(getPhoneByUserid(user.getUserid()));
+			return user;
+		}catch (final EmptyResultDataAccessException e) {
+			return null;
+		}
+	}
+	private UserBo getUserByAuthUserName(String userName) {
+		if(logger.isDebugEnabled()) {
+    		logger.debug("Getting user details for the registered username : " + userName );
+    	}
+		try {
+			UserBo user = jdbcTemplate.queryForObject(SELECT_USER_BY_AUTH_USER_NAME,
+					new Object[] {userName},
 					new UserMapper());
 			user.setUserEmail(getEmailByUserid(user.getUserid()));
 			user.setUserPhone(getPhoneByUserid(user.getUserid()));

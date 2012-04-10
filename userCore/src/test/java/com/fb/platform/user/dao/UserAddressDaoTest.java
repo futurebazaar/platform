@@ -4,6 +4,8 @@ package com.fb.platform.user.dao;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -82,6 +84,33 @@ public class UserAddressDaoTest extends BaseTestCase {
 			}
 		}
  
+	}
+	@Test
+	public void testDeleteAddress() {
+		UserAddressBo userAddressBo = new UserAddressBo();
+		userAddressBo.setAddress("Testing delete Address");
+		userAddressBo.setAddresstype("Delivery");
+		userAddressBo.setCity("Mumbai");
+		userAddressBo.setCountry("India");
+		userAddressBo.setPincode("400001");
+		userAddressBo.setState("Maharastra");
+		userAddressBo.setUserid(2);
+		UserAddressBo usAddressBo = userAddressDao.add(userAddressBo);
+		boolean success = userAddressDao.deleteAddressById(usAddressBo.getAddressid());
+		assertTrue(success);
+		assertNull(userAddressDao.getAddressById(userAddressBo.getAddressid()));
+	}
+	@Test
+	public void testGetAddressById() {
+
+		Collection<UserAddressBo> userAddressBos = userAddressDao.load(1);
+		assertNotNull(userAddressBos);
+		Iterator<UserAddressBo> itr = userAddressBos.iterator();
+		while (itr.hasNext()) {
+			UserAddressBo userAddressBo = itr.next();
+			UserAddressBo userAddressBobyid = userAddressDao.getAddressById(userAddressBo.getAddressid());
+			assertNotNull(userAddressBobyid);
+		}
 	}
 
 }
