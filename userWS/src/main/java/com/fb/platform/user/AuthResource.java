@@ -3,6 +3,10 @@
  */
 package com.fb.platform.user;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 
@@ -22,6 +26,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import sun.misc.IOUtils;
 
 import com.fb.commons.PlatformException;
 import com.fb.platform.auth._1_0.KeepAliveRequest;
@@ -143,7 +149,37 @@ public class AuthResource {
 
 	@GET
 	public String ping() {
-		return "hello";
+		StringBuilder sb = new StringBuilder();
+		sb.append("Future Platform User Websevice.\n");
+		sb.append("To login User post to : http://hostname:port/userWS/auth/login\n");
+		sb.append("To logout User post to : http://hostname:port/userWS/auth/logout\n");
+		sb.append("To extend session User post to : http://hostname:port/userWS/auth/keepAlive\n");
+		return sb.toString();
+	}
+	
+	@GET
+	@Path("/xsd")
+	@Produces("application/xml")
+	public String getXsd() {	
+		InputStream userXsd = this.getClass().getClassLoader().getResourceAsStream("user.xsd");
+		String userXsdString = convertInputStreamToString(userXsd);
+		return userXsdString;
+	}
+	
+	private String convertInputStreamToString(InputStream inputStream) {
+		BufferedReader bufReader = new BufferedReader(new InputStreamReader(inputStream));
+		StringBuilder sb = new StringBuilder();
+		try {
+			String line = bufReader.readLine();
+			while( line != null ) {
+				sb.append( line + "\n" );
+				line = bufReader.readLine();
+			}
+			inputStream.close();
+		} catch(IOException exception) {
+			logger.error("User.xsd loading error : " + exception.getMessage() );
+		}
+		return sb.toString();
 	}
 	
 	@POST

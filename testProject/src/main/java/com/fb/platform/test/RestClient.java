@@ -91,7 +91,7 @@ public class RestClient {
 	private static BigDecimal applyPromotion(String sessionToken, int orderId) throws Exception {
 		HttpClient httpClient = new HttpClient();
 
-		PostMethod applyPromotionMethod = new PostMethod("http://localhost:9090/promotionWeb/coupon/apply");
+		PostMethod applyPromotionMethod = new PostMethod("http://localhost:9090/promotionWS/coupon/apply");
 
 		CouponRequest couponRequest = new CouponRequest();
 		couponRequest.setClientId(10);
@@ -146,7 +146,7 @@ public class RestClient {
 	private static void commitCouupon(String sessionToken, int orderId, BigDecimal discountValue) throws Exception {
 		HttpClient httpClient = new HttpClient();
 
-		PostMethod commitCouponMethod = new PostMethod("http://localhost:8080/promotionWeb/coupon/commit");
+		PostMethod commitCouponMethod = new PostMethod("http://localhost:8080/promotionWS/coupon/commit");
 
 		CommitCouponRequest commitCouponRequest = new CommitCouponRequest();
 		commitCouponRequest.setSessionToken(sessionToken);
@@ -180,7 +180,7 @@ public class RestClient {
 	private static void releaseCoupon(String sessionToken, int orderId) throws Exception {
 		HttpClient httpClient = new HttpClient();
 
-		PostMethod releaseCouponMethod = new PostMethod("http://localhost:8080/promotionWeb/coupon/release");
+		PostMethod releaseCouponMethod = new PostMethod("http://localhost:8080/promotionWS/coupon/release");
 
 		ReleaseCouponRequest releaseCouponRequest = new ReleaseCouponRequest();
 		releaseCouponRequest.setSessionToken(sessionToken);

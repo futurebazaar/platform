@@ -3,6 +3,10 @@
  */
 package com.fb.platform.promotion.coupon;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 
@@ -198,9 +202,36 @@ public class CouponResource {
 		sb.append("Future Platform Promotion Websevice.\n");
 		sb.append("To apply Coupon post to : http://hostname:port/promotionWS/coupon/apply\n");
 		sb.append("To commit Coupon post to : http://hostname:port/promotionWS/coupon/commit\n");
+		sb.append("To release Coupon post to : http://hostname:port/promotionWS/coupon/release\n");
 		return sb.toString();
 	}
+	
+	@GET
+	@Path("/xsd")
+	@Produces("application/xml")
+	public String getXsd() {	
+		InputStream userXsd = this.getClass().getClassLoader().getResourceAsStream("promotion.xsd");
+		String userXsdString = convertInputStreamToString(userXsd);
+		return userXsdString;
+	}
+	
 
+	private String convertInputStreamToString(InputStream inputStream) {
+		BufferedReader bufReader = new BufferedReader(new InputStreamReader(inputStream));
+		StringBuilder sb = new StringBuilder();
+		try {
+			String line = bufReader.readLine();
+			while( line != null ) {
+				sb.append( line + "\n" );
+				line = bufReader.readLine();
+			}
+			inputStream.close();
+		} catch(IOException exception) {
+			logger.error("User.xsd loading error : " + exception.getMessage() );
+		}
+		return sb.toString();
+	}
+	
 	private com.fb.platform.promotion.to.OrderRequest getApiOrderRequest(OrderRequest xmlOrderRequest) {
 		com.fb.platform.promotion.to.OrderRequest apiOrderRequest = new com.fb.platform.promotion.to.OrderRequest();
 		apiOrderRequest.setOrderId(xmlOrderRequest.getOrderId());
