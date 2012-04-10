@@ -106,7 +106,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			"	order_id, " +
 			"	discount_amount, " +
 			"	created_on) " +
-			"VALUES (?, ?, ?, ?)";
+			"VALUES (?, ?, ?, ?, ?)";
 
 	private static final String LOAD_USER_ORDER_PROMOTION_QUERY = 
 			"SELECT " +
