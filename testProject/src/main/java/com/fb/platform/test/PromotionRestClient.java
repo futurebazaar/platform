@@ -73,7 +73,6 @@ public class PromotionRestClient {
 		
 		CouponRequest couponRequest = new CouponRequest();
 		couponRequest.setCouponCode("global_coupon_1");
-		couponRequest.setClientId(5);
 		couponRequest.setSessionToken(sessionToken);
 //		//Create Products
 		Product p1 = new Product();

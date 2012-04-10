@@ -91,10 +91,9 @@ public class RestClient {
 	private static BigDecimal applyPromotion(String sessionToken, int orderId) throws Exception {
 		HttpClient httpClient = new HttpClient();
 
-		PostMethod applyPromotionMethod = new PostMethod("http://localhost:9090/promotionWS/coupon/apply");
+		PostMethod applyPromotionMethod = new PostMethod("http://localhost:8080/promotionWS/coupon/apply");
 
 		CouponRequest couponRequest = new CouponRequest();
-		couponRequest.setClientId(10);
 		couponRequest.setCouponCode("GlobalCoupon1000Off");
 		couponRequest.setSessionToken(sessionToken);
 
@@ -128,6 +127,7 @@ public class RestClient {
 	private static OrderRequest createSampleOrderRequest(int orderId) {
 		OrderRequest orderRequest = new OrderRequest();
 		orderRequest.setOrderId(orderId);
+		orderRequest.setClientId(5);
 		OrderItem orderItem = new OrderItem();
 		orderItem.setQuantity(2);
 
