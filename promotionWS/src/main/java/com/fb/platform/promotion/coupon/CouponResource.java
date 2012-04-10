@@ -78,7 +78,6 @@ public class CouponResource {
 			CouponRequest xmlCouponRequest = (CouponRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(applyCouponXml)));
 
 			com.fb.platform.promotion.to.CouponRequest apiCouponRequest = new com.fb.platform.promotion.to.CouponRequest();
-			apiCouponRequest.setClientId(xmlCouponRequest.getClientId());
 			apiCouponRequest.setCouponCode(xmlCouponRequest.getCouponCode());
 			apiCouponRequest.setSessionToken(xmlCouponRequest.getSessionToken());
 

@@ -36,6 +36,6 @@ public class RuleDaoTest extends BaseTestCase {
 		RuleConfiguration ruleConfiguration = ruleDao.loadRuleConfiguration(-1, -1);
 
 		assertNotNull(ruleConfiguration);
-		assertEquals(2, ruleConfiguration.getConfigItems().size());
+		assertEquals(3, ruleConfiguration.getConfigItems().size());
 	}
 }

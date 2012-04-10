@@ -10,6 +10,7 @@ import java.util.List;
 import com.fb.platform.promotion.rule.PromotionRule;
 import com.fb.platform.promotion.rule.RuleConfigConstants;
 import com.fb.platform.promotion.rule.RuleConfiguration;
+import com.fb.platform.promotion.to.CouponResponseStatusEnum;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.util.StringToIntegerList;
 import com.fb.commons.to.Money;
@@ -27,26 +28,40 @@ public class BuyWorthXGetYRsOffOnZCategoryRuleImpl implements PromotionRule, Ser
 	private Money minOrderValue;
 	private Money fixedRsOff;
 	private List<Integer> categories;
+	private List<Integer> client_list;
 	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
 		minOrderValue = new Money(BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigConstants.MIN_ORDER_VALUE))));
 		fixedRsOff = new Money (BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigConstants.FIXED_DISCOUNT_RS_OFF))));
-		StrTokenizer strTok = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigConstants.CATEGORY_LIST),",");
-		categories = StringToIntegerList.convert((List<String>)strTok.getTokenList());
+		StrTokenizer strTokCategories = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigConstants.CATEGORY_LIST),",");
+		categories = StringToIntegerList.convert((List<String>)strTokCategories.getTokenList());
+		StrTokenizer strTokClients = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigConstants.CLIENT_LIST),",");
+		client_list = StringToIntegerList.convert((List<String>)strTokClients.getTokenList());
 		log.info("minOrderValue : " + minOrderValue.toString() + ", fixedRsOff : " + fixedRsOff.toString());
 	}
 
 	@Override
-	public boolean isApplicable(OrderRequest request) {
+	public ApplicableResponse isApplicable(OrderRequest request) {
 		if(log.isDebugEnabled()) {
 			log.debug("Checking if BuyWorthXGetYRsOffOnZCategoryRuleImpl applies on order : " + request.getOrderId());
 		}
+		ApplicableResponse ar = new ApplicableResponse();
 		Money orderValue = new Money(request.getOrderValue());
-		if(orderValue.gteq(minOrderValue) && request.isAllProductsInCategory(categories)){
-			return true;
+		if(request.isValidClient(client_list)){
+			if(orderValue.gteq(minOrderValue)){
+				if(request.isAllProductsInCategory(categories)){
+					ar.setStatusCode(CouponResponseStatusEnum.SUCCESS);
+					return ar;
+				}
+				ar.setStatusCode(CouponResponseStatusEnum.CATEGORY_MISMATCH);
+				return ar;
+			}
+			ar.setStatusCode(CouponResponseStatusEnum.LESS_ORDER_AMOUNT);
+			return ar;
 		}
-		return false;
+		ar.setStatusCode(CouponResponseStatusEnum.INVALID_CLIENT);
+		return ar;
 	}
 
 	@Override

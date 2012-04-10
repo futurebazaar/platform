@@ -1,7 +1,7 @@
 -- ******************** DROP TABLE AND CONSTRANTS **********
 
 
-DROP TABLE IF EXISTS categories_store,sso_session, crypto_key,users_email,users_phone ,user_promotion_uses , user_coupon_uses , users_profile , auth_user,locations_address ,locations_city,locations_state,locations_country,client_master,
+DROP TABLE IF EXISTS categories_store,sso_session, crypto_key,users_email,users_phone ,user_promotion_uses , user_coupon_uses , users_profile , auth_user,locations_address ,locations_city,locations_state,locations_country,client_master,released_coupon,release_promotion,
 promotion_rule_config,promotion_limits_config,coupon_limits_config,coupon ,platform_promotion,promotion_rule,platform_coupon_user, accounts_client;
 
 
@@ -239,11 +239,23 @@ CREATE TABLE user_promotion_uses (
 	discount_amount DECIMAL(18,2),
         created_on datetime NOT NULL,
         last_modified_on datetime NOT NULL,
-	is_cancelled bool NOT NULL,
 	PRIMARY KEY(id),
 	UNIQUE(promotion_id, order_id, user_id),
 	CONSTRAINT user_promotion_uses_fk1 FOREIGN KEY (promotion_id) REFERENCES platform_promotion(id) ON DELETE CASCADE,
 	CONSTRAINT user_promotion_uses_fk2 FOREIGN KEY (user_id) REFERENCES users_profile(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE released_promotion (
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	promotion_id INTEGER,
+	user_id INTEGER,
+	order_id INTEGER,
+        created_on datetime NOT NULL,
+	discount_amount DECIMAL(18,2),
+	PRIMARY KEY(id),
+	UNIQUE(created_on),
+	CONSTRAINT released_promotion_fk1 FOREIGN KEY (promotion_id) REFERENCES platform_promotion(id) ON DELETE CASCADE,
+	CONSTRAINT released_promotion_fk2 FOREIGN KEY (user_id) REFERENCES users_profile(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE coupon (
@@ -255,6 +267,19 @@ CREATE TABLE coupon (
 	coupon_type VARCHAR(10),
 	PRIMARY KEY(id),
 	CONSTRAINT coupon_fk1 FOREIGN KEY (promotion_id) REFERENCES platform_promotion(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE released_coupon (
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	coupon_id INTEGER,
+	user_id INTEGER,
+	order_id INTEGER,
+	discount_amount DECIMAL(18,2),
+        created_on datetime NOT NULL,
+	PRIMARY KEY(id),
+	UNIQUE(created_on),
+	CONSTRAINT released_coupon_fk1 FOREIGN KEY (coupon_id) REFERENCES coupon(id) ON DELETE CASCADE,
+	CONSTRAINT released_coupon_fk2 FOREIGN KEY (user_id) REFERENCES users_profile(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE coupon_limits_config (
@@ -277,7 +302,6 @@ CREATE TABLE user_coupon_uses (
 	discount_amount DECIMAL(18,2),
         created_on datetime NOT NULL,
         last_modified_on datetime NOT NULL,
-	is_cancelled bool NOT NULL,
 	PRIMARY KEY(id),
 	UNIQUE(coupon_id,user_id,order_id),
 	CONSTRAINT user_coupon_uses_fk1 FOREIGN KEY (coupon_id) REFERENCES coupon(id) ON DELETE CASCADE,

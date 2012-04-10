@@ -6,6 +6,8 @@ package com.fb.platform.promotion.rule;
  **/
 public class RuleConfigConstants {
 	
+	public static final String CLIENT_LIST = "CLIENT_LIST";
+	
 	public static final String PRODUCT_ID = "PRODUCT_ID";
 	
 	public static final String CATEGORY_LIST = "CATEGORY_LIST";

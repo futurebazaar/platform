@@ -154,10 +154,10 @@ public class CouponDaoTest extends BaseTestCase {
 		assertTrue(userUses.getCurrentAmount().eq(new Money(BigDecimal.ZERO)));
 	}
 	
-	@Test
+	/*@Test
 	public void cancelUserUses(){
 		boolean isCancelled = couponDao.cancelUserUses(-3, -3, -5);
 		
 		assertTrue(isCancelled);
-	}
+	}*/
 }
