@@ -204,6 +204,7 @@ public class CouponResource {
 	private com.fb.platform.promotion.to.OrderRequest getApiOrderRequest(OrderRequest xmlOrderRequest) {
 		com.fb.platform.promotion.to.OrderRequest apiOrderRequest = new com.fb.platform.promotion.to.OrderRequest();
 		apiOrderRequest.setOrderId(xmlOrderRequest.getOrderId());
+		apiOrderRequest.setClientId(xmlOrderRequest.getClientId());
 
 		for (OrderItem xmlOrderItem : xmlOrderRequest.getOrderItem()) {
 			com.fb.platform.promotion.to.OrderItem apiOrderItem = createApiOrderItem(xmlOrderItem);
