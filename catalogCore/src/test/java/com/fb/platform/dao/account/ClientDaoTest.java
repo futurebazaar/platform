@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.account.Client;
-import com.fb.platform.dao.BasedaoTestCase;
 
 /**
  * @author vinayak

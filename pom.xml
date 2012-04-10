@@ -128,7 +128,7 @@
   <url>dav:http://maven.futurebazaar.com/nexus/content/repositories/snapshots</url>
  </snapshotRepository>
 </distributionManagement>
-
+ 
 <repositories>
  <repository>
   <id>fb</id>
