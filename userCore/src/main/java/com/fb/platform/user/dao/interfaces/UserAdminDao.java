@@ -3,6 +3,8 @@ package com.fb.platform.user.dao.interfaces;
 import java.util.Collection;
 
 import com.fb.platform.user.domain.UserBo;
+import com.fb.platform.user.domain.UserEmailBo;
+import com.fb.platform.user.domain.UserPhoneBo;
 
 public interface UserAdminDao {
 
@@ -13,11 +15,6 @@ public interface UserAdminDao {
 	public UserBo load(String key);
 
 	public UserBo loadByUserId(int userId);
-
-	/**
-	 * @return the complete list of users in the database
-	 */
-	public Collection<UserBo> getUsers();
 
 	/**
 	 * Add a new user
@@ -34,4 +31,10 @@ public interface UserAdminDao {
 	public UserBo update(UserBo userBo);
 
 	public boolean changePassword(int userId, String newPassword);
+	
+	public boolean addUserEmail(int userId,UserEmailBo userEmailBo);
+	public boolean deleteUserEmail(int userId,String emailId);
+	
+	public boolean addUserPhone(int userId,UserPhoneBo userPhoneBo);
+	public boolean deleteUserPhone(int userId,String phone);
 }

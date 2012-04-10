@@ -71,16 +71,17 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(loginRequest, sw);
 
+		System.out.println("\n\nLoginReq : \n" + sw.toString());
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
 		loginMethod.setRequestEntity(requestEntity);
 
 		int statusCode = httpClient.executeMethod(loginMethod);
 		if (statusCode != HttpStatus.SC_OK) {
-			System.out.println("unable to execute the login method : " + statusCode);
-			return null;
+			System.out.println("\n\n\nunable to execute the login method : \n\n" + statusCode);
+			System.exit(1);
 		}
 		String loginResponseStr = loginMethod.getResponseBodyAsString();
-		System.out.println("Got the login Response : \n" + loginResponseStr);
+		System.out.println("Got the login Response : \n\n" + loginResponseStr);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		LoginResponse loginResponse = (LoginResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(loginResponseStr)));
 
@@ -90,7 +91,7 @@ public class RestClient {
 	private static BigDecimal applyPromotion(String sessionToken, int orderId) throws Exception {
 		HttpClient httpClient = new HttpClient();
 
-		PostMethod applyPromotionMethod = new PostMethod("http://localhost:8080/promotionWeb/coupon/apply");
+		PostMethod applyPromotionMethod = new PostMethod("http://localhost:9090/promotionWeb/coupon/apply");
 
 		CouponRequest couponRequest = new CouponRequest();
 		couponRequest.setClientId(10);
@@ -106,16 +107,18 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(couponRequest, sw);
 
+		System.out.println("\n\napplyPromotionReq : \n" + sw.toString());
+
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
 		applyPromotionMethod.setRequestEntity(requestEntity);
 
 		int statusCode = httpClient.executeMethod(applyPromotionMethod);
 		if (statusCode != HttpStatus.SC_OK) {
-			System.out.println("unable to execute the applyPromotion method : " + statusCode);
-			return null;
+			System.out.println("\n\nunable to execute the applyPromotion method : " + statusCode);
+			System.exit(1);
 		}
 		String applyPromotionResponseStr = applyPromotionMethod.getResponseBodyAsString();
-		System.out.println("Got the applyPromotion Response : \n" + applyPromotionResponseStr);
+		System.out.println("Got the applyPromotion Response : \n\n" + applyPromotionResponseStr);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		CouponResponse couponResponse = (CouponResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(applyPromotionResponseStr)));
 		System.out.println(couponResponse.getCouponStatus());
@@ -157,16 +160,18 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(commitCouponRequest, sw);
 
+		System.out.println("\n\ncommitCouponReq : \n" + sw.toString());
+
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
 		commitCouponMethod.setRequestEntity(requestEntity);
 
 		int statusCode = httpClient.executeMethod(commitCouponMethod);
 		if (statusCode != HttpStatus.SC_OK) {
 			System.out.println("unable to execute the commitCouupon method : " + statusCode);
-			return;
+			System.exit(1);
 		}
 		String commitCouponResponseStr = commitCouponMethod.getResponseBodyAsString();
-		System.out.println("Got the commitCoupon Response : \n" + commitCouponResponseStr);
+		System.out.println("Got the commitCoupon Response : \n\n" + commitCouponResponseStr);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		CommitCouponResponse commitCouponResponse = (CommitCouponResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(commitCouponResponseStr)));
 		System.out.println(commitCouponResponse.getCommitCouponStatus());
@@ -188,13 +193,15 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(releaseCouponRequest, sw);
 
+		System.out.println("\n\nreleaseCouponReq : \n" + sw.toString());
+
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
 		releaseCouponMethod.setRequestEntity(requestEntity);
 
 		int statusCode = httpClient.executeMethod(releaseCouponMethod);
 		if (statusCode != HttpStatus.SC_OK) {
 			System.out.println("unable to execute the releaseCouupon method : " + statusCode);
-			return;
+			System.exit(1);
 		}
 		String releaseCouponResponseStr = releaseCouponMethod.getResponseBodyAsString();
 		System.out.println("Got the releaseCoupon Response : \n" + releaseCouponResponseStr);
@@ -217,6 +224,8 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(logoutReq, sw);
 
+		System.out.println("\n\nLogoutReq : \n" + sw.toString());
+
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
 		logoutMethod.setRequestEntity(requestEntity);
 
@@ -226,7 +235,7 @@ public class RestClient {
 			return;
 		}
 		String logoutResponseStr = logoutMethod.getResponseBodyAsString();
-		System.out.println("Got the logout Response : \n" + logoutResponseStr);
+		System.out.println("Got the logout Response : \n\n" + logoutResponseStr);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		LogoutResponse logoutResponse = (LogoutResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(logoutResponseStr)));
 		System.out.println(logoutResponse.getLogoutStatus());

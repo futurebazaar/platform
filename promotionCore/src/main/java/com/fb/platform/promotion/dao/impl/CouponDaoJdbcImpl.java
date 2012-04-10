@@ -27,6 +27,7 @@ import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
 import com.fb.platform.promotion.model.coupon.CouponType;
 import com.fb.platform.promotion.model.coupon.GlobalCouponUses;
+import com.fb.platform.promotion.model.coupon.UserCouponUsesEntry;
 import com.fb.platform.promotion.model.coupon.UserCouponUses;
 
 /**
@@ -62,7 +63,7 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			"	count(*) as current_count, " +
 			"	sum(ucu.discount_amount) as current_amount, " +
 			"	coupon_id " +
-			"FROM user_coupon_uses ucu WHERE coupon_id = ? AND is_cancelled = 0 " +
+			"FROM user_coupon_uses ucu WHERE coupon_id = ? " +
 			"group by coupon_id";
 	
 	private static final String LOAD_USER_COUPON_USES_QUERY = 
@@ -71,7 +72,7 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			"	sum(ucu.discount_amount) as current_amount, " +
 			"	coupon_id, " +
 			"	user_id " +
-			"FROM user_coupon_uses ucu WHERE coupon_id = ? AND user_id = ? AND is_cancelled = 0 " +
+			"FROM user_coupon_uses ucu WHERE coupon_id = ? AND user_id = ? " +
 			"group by coupon_id";
 
 	private static final String CREATE_USER_USES = 
@@ -81,10 +82,18 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			"	order_id, " +
 			"	discount_amount, " +
 			"	created_on, " +
-			"	last_modified_on, " +
-			"	is_cancelled) " +
-			"VALUES (?, ?, ?, ?, ?, ?, ?)";
+			"	last_modified_on) " +
+			"VALUES (?, ?, ?, ?, ?, ?)";
 
+	private static final String CREATE_RELEASED_COUPON = 
+			"INSERT INTO released_coupon " +
+			"	(coupon_id, " +
+			"	user_id, " +
+			"	order_id, " +
+			"	discount_amount, " +
+			"	created_on) " +
+			"VALUES (?, ?, ?, ?, ?)";
+	
 	private static final String LOAD_COUPON_USER_QUERY = 
 			"SELECT " +
 			"	id, " +
@@ -93,10 +102,17 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			"	override_user_uses_limit " +
 			"FROM platform_coupon_user WHERE coupon_id = ? AND user_id = ?";
 
-	private static final String CANCEL_USER_USES = 
-			"UPDATE user_coupon_uses set " +
-			"	is_cancelled = true, " +
-			"	last_modified_on = ? " +
+	private static final String LOAD_USER_ORDER_COUPON_QUERY = 
+			"SELECT " +
+			"	id, " +
+			"	coupon_id, " +
+			"	user_id, " +
+			"	order_id, " +
+			"	discount_amount " +
+			"FROM user_coupon_uses WHERE coupon_id = ? AND user_id = ? AND order_id = ?";
+	
+	private static final String DELETE_USER_USES = 
+			"DELETE from user_coupon_uses " +
 			"where coupon_id = ? AND user_id = ? AND order_id = ?";
 	
 	@Override
@@ -189,48 +205,70 @@ public class CouponDaoJdbcImpl implements CouponDao {
 	}
 
 	@Override
-	public boolean cancelUserUses(final int couponId, final int userId, final int orderId){
-		if(log.isDebugEnabled()) {
-			log.debug("Cancelling the coupon id : " + couponId + ", applied on order id : " + orderId + " for user : " + userId );
-		}
-		int rowAffected = -1;
-		try {
-			rowAffected = jdbcTemplate.update(new PreparedStatementCreator() {
-				@Override
-				public PreparedStatement createPreparedStatement(Connection con)
-						throws SQLException {
-					PreparedStatement ps = con.prepareStatement(CANCEL_USER_USES);
-					ps.setTimestamp(1, new java.sql.Timestamp(System.currentTimeMillis()));
-					ps.setInt(2, couponId);
-					ps.setInt(3, userId);
-					ps.setInt(4, orderId);
-					return ps;
-				}
-			});
-		} catch (IncorrectResultSizeDataAccessException e) {
-			log.warn( "Tried cancelling coupon id " + couponId + " ,but entry not found.");
-			//failed to update the row
-		}
-		
-		return rowAffected>0 ? true : false;
-	}
-	
-	@Override
 	public boolean updateUserUses(int couponId, int userId, BigDecimal valueApplied, int orderId) {
 		
 		//for every use of coupon a new entry is created
-		createUserUses(couponId, userId, valueApplied, orderId);
-		return true;
+		return createUserUses(couponId, userId, valueApplied, orderId);
 	}
 
-	private void createUserUses(final int couponId, final int userId, final BigDecimal valueApplied, final int orderId) {
+	@Override
+	public boolean releaseCoupon(final int couponId,final int userId,final int orderId){
+		if(log.isDebugEnabled()) {
+			log.debug("Released coupon for user : " + userId + " , applied coupon id : " + couponId + " , on order id : " + orderId);
+		}
+		
+		BigDecimal discountAmount = getDiscountValue(couponId, userId, orderId);
+		boolean isReleasedCouponCreated = createReleasedCoupon(couponId, userId, discountAmount, orderId);
+		boolean isUserCouponUsesDeleted = cancelUserUses(couponId, userId, orderId);
+		
+		return isReleasedCouponCreated && isUserCouponUsesDeleted;
+	}
+	
+	@Override
+	public boolean isCouponApplicable(int couponId, int userId, int orderId){
+		if(log.isDebugEnabled()) {
+			log.debug("Get from the user coupon uses table record for user : " + userId + " , applied coupon id : " + couponId + " , on order id : " + orderId);
+		}
+		UserCouponUsesEntry userCouponUsesEntry = null;
+		try {
+			userCouponUsesEntry = jdbcTemplate.queryForObject(LOAD_USER_ORDER_COUPON_QUERY, new Object [] {couponId, userId, orderId}, new UserOrderCouponMapper());
+		} catch (IncorrectResultSizeDataAccessException e) {
+			log.warn("No entry found for userId" + userId + " with couponId "+ couponId + " and orderId " + orderId);
+			//throw new PlatformException("No entry in user_coupon_uses found for userId" + userId + " with couponId "+ couponId + " and orderId " + orderId);
+			return true;
+		}
+		
+		return userCouponUsesEntry==null ? true : false;
+	}
+	
+	private BigDecimal getDiscountValue(int couponId, int userId, int orderId){
+		if(log.isDebugEnabled()) {
+			log.debug("Get from the user coupon uses table record for user : " + userId + " , applied coupon id : " + couponId + " , on order id : " + orderId);
+		}
+		UserCouponUsesEntry userCouponUsesEntry = null;
+		BigDecimal discountValue = null;
+		try {
+			userCouponUsesEntry = jdbcTemplate.queryForObject(LOAD_USER_ORDER_COUPON_QUERY, new Object [] {couponId, userId, orderId}, new UserOrderCouponMapper());
+			discountValue = userCouponUsesEntry.getDiscountAmount().getAmount();
+		} catch (IncorrectResultSizeDataAccessException e) {
+			log.warn("No entry found for userId " + userId + " with couponId "+ couponId + " and orderId " + orderId);
+			throw new PlatformException("No entry in user_coupon_uses found for userId" + userId + " with couponId "+ couponId + " and orderId " + orderId);
+		}
+		
+		if(discountValue==null){
+			throw new PlatformException("Error while getting discount value for userId " + userId + " with couponId "+ couponId + " and orderId " + orderId);
+		}
+		return discountValue;
+	}
+	
+	private boolean createUserUses(final int couponId, final int userId, final BigDecimal valueApplied, final int orderId) {
 		if(log.isDebugEnabled()) {
 			log.debug("Insert in the user_coupon_uses table record for user : " + userId + " , applied coupon id : " + couponId + " , on order id : " + orderId + " , discount value applied : " + valueApplied );
 		}
 		KeyHolder userUsesKeyHolder = new GeneratedKeyHolder();
-		
+		int rowAffected = 0;
 		try {
-			jdbcTemplate.update(new PreparedStatementCreator() {
+			rowAffected = jdbcTemplate.update(new PreparedStatementCreator() {
 				
 				@Override
 				public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
@@ -241,7 +279,6 @@ public class CouponDaoJdbcImpl implements CouponDao {
 					ps.setBigDecimal(4, valueApplied);
 					ps.setTimestamp(5, new java.sql.Timestamp(System.currentTimeMillis()));
 					ps.setTimestamp(6, new java.sql.Timestamp(System.currentTimeMillis()));
-					ps.setBoolean(7, false);
 					return ps;
 				}
 			}, userUsesKeyHolder);
@@ -250,8 +287,64 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			throw new PlatformException("Duplicate key insertion exception "+e);
 		}
 		
+		return rowAffected>0 ? true : false;
 	}
 
+	private boolean createReleasedCoupon(final int couponId,final int userId,final BigDecimal discountAmount,final int orderId){
+		if(log.isDebugEnabled()) {
+			log.debug("Insert in the released_coupon table record for user : " + userId + " , applied coupon id : " + couponId + " , on order id : " + orderId + " , discount value applied : " + discountAmount );
+		}
+		KeyHolder userUsesKeyHolder = new GeneratedKeyHolder();
+		int rowAffected = 0;
+		try {
+			rowAffected = jdbcTemplate.update(new PreparedStatementCreator() {
+				
+				@Override
+				public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+					PreparedStatement ps = con.prepareStatement(CREATE_RELEASED_COUPON, new String [] {"id"});
+					ps.setInt(1, couponId);
+					ps.setInt(2, userId);
+					ps.setInt(3, orderId);
+					ps.setBigDecimal(4, discountAmount);
+					ps.setTimestamp(5, new java.sql.Timestamp(System.currentTimeMillis()));
+					return ps;
+				}
+			}, userUsesKeyHolder);
+		} catch (DuplicateKeyException e) {
+			log.error("Duplicate key insertion exception " + e);
+			throw new PlatformException("Duplicate key insertion exception "+e);
+		}
+		
+		return rowAffected>0 ? true : false;
+	}
+	
+	private boolean cancelUserUses(final int couponId, final int userId, final int orderId){
+		if(log.isDebugEnabled()) {
+			log.debug("Deleting (cancelling) the coupon id : " + couponId + ", applied on order id : " + orderId + " for user : " + userId );
+		}
+		
+		int rowAffected = -1;
+		try {
+			rowAffected = jdbcTemplate.update(new PreparedStatementCreator() {
+				@Override
+				public PreparedStatement createPreparedStatement(Connection con)
+						throws SQLException {
+					PreparedStatement ps = con.prepareStatement(DELETE_USER_USES);
+					ps.setInt(1, couponId);
+					ps.setInt(2, userId);
+					ps.setInt(3, orderId);
+					return ps;
+				}
+			});
+		} catch (IncorrectResultSizeDataAccessException e) {
+			log.warn( "Tried cancelling coupon id " + couponId + " ,but entry not found.");
+			//failed to update the row
+			new PlatformException("Deleting user coupon uses failed : " + couponId + ", applied on order id : " + orderId + " for user : " + userId );
+		}
+		
+		return rowAffected>0 ? true : false;
+	}
+	
 	private static class CouponMapper implements RowMapper<Coupon> {
 
 		@Override
@@ -267,6 +360,27 @@ public class CouponDaoJdbcImpl implements CouponDao {
 		}
 	}
 
+	private static class UserOrderCouponMapper implements RowMapper<UserCouponUsesEntry> {
+
+		@Override
+		public UserCouponUsesEntry mapRow(ResultSet rs, int rowNum) throws SQLException {
+			UserCouponUsesEntry releaseCoupon = new UserCouponUsesEntry();
+
+			releaseCoupon.setId(rs.getInt("id"));
+			releaseCoupon.setCouponId(rs.getInt("coupon_id"));
+			releaseCoupon.setUserId(rs.getInt("user_Id"));
+			releaseCoupon.setOrderId(rs.getInt("order_id"));
+
+			BigDecimal discountAmount = rs.getBigDecimal("discount_amount");
+			if (discountAmount == null) {
+				discountAmount = BigDecimal.ZERO;
+			}
+			releaseCoupon.setDiscountAmount(new Money(discountAmount));
+			
+			return releaseCoupon;
+		}
+	}
+	
 	private static class CouponUserRowCallbackHandler extends RowCountCallbackHandler {
 
 		private int userId = 0;
@@ -278,7 +392,7 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			userUsesLimitOverride = rs.getInt("override_user_uses_limit");
 		}
 	}
-
+	
 	private static class CouponLimitsConfigMapper implements RowMapper<CouponLimitsConfig> {
 
 		@Override

@@ -166,7 +166,8 @@ public class AuthResource {
 
 			KeepAliveResponse xmlKeepAliveResp = new KeepAliveResponse();
 			xmlKeepAliveResp.setKeepAliveStatus(KeepAliveStatus.fromValue(apiKeepAliveResp.getKeepAliveStatus().name()));
-
+			xmlKeepAliveResp.setSessionToken(apiKeepAliveResp.getSessionToken());
+			
 			StringWriter outStringWriter = new StringWriter();
 			Marshaller marsheller = context.createMarshaller();
 			marsheller.marshal(xmlKeepAliveResp, outStringWriter);

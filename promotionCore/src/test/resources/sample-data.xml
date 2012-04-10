@@ -306,7 +306,6 @@
                 <column>user_id</column>
                 <column>order_id</column>
                 <column>discount_amount</column>
-                <column>is_cancelled</column>
                 <column>created_on</column>
                 <column>last_modified_on</column>
                 <row>
@@ -315,7 +314,6 @@
                         <value name="user_id">1</value>
                         <value name="order_id">50</value>
                         <value name="discount_amount">2000</value>
-                        <value name="is_cancelled">false</value>
                         <value name="created_on">2012-04-04 22:37:14</value>
                         <value name="last_modified_on">2012-04-04 22:37:14</value>
                 </row>
@@ -325,7 +323,6 @@
                         <value name="user_id">2</value>
                         <value name="order_id">51</value>
                         <null></null>
-                        <value name="is_cancelled">false</value>
                         <value name="created_on">2012-04-04 23:37:14</value>
                         <value name="last_modified_on">2012-04-04 23:37:14</value>
                 </row>
@@ -335,7 +332,6 @@
                         <value name="user_id">3</value>
                         <value name="order_id">40</value>
                         <value name="discount_amount">200</value>
-                        <value name="is_cancelled">false</value>
                         <value name="created_on">2012-04-04 21:37:14</value>
                         <value name="last_modified_on">2012-04-04 21:37:14</value>
                 </row>
@@ -345,7 +341,6 @@
                         <value name="user_id">-4</value>
                         <value name="order_id">-5</value>
                         <value name="discount_amount">10</value>
-                        <value name="is_cancelled">false</value>
                         <value name="created_on">2012-04-04 21:37:14</value>
                         <value name="last_modified_on">2012-04-04 21:37:14</value>
                 </row>
@@ -516,7 +511,6 @@
                 <column>user_id</column>
                 <column>order_id</column>
                 <column>discount_amount</column>
-                <column>is_cancelled</column>
                 <column>created_on</column>
                 <column>last_modified_on</column>
                 <row>
@@ -525,7 +519,6 @@
                         <value name="user_id">1</value>
                         <value name="order_id">50</value>
                         <value name="discount_amount">2000</value>
-                        <value name="is_cancelled">false</value>
                         <value name="created_on">2012-04-04 22:37:14</value>
                         <value name="last_modified_on">2012-04-04 22:37:14</value>
                 </row>
@@ -535,7 +528,6 @@
                         <value name="user_id">2</value>
                         <value name="order_id">51</value>
                         <null></null>
-                        <value name="is_cancelled">false</value>
                         <value name="created_on">2012-04-04 12:37:14</value>
                         <value name="last_modified_on">2012-04-04 12:37:14</value>
                 </row>
@@ -545,7 +537,6 @@
                         <value name="user_id">-3</value>
                         <value name="order_id">-5</value>
                         <value name="discount_amount">20</value>
-                        <value name="is_cancelled">false</value>
                         <value name="created_on">2012-04-04 11:37:14</value>
                         <value name="last_modified_on">2012-04-04 11:37:14</value>
                 </row>
@@ -570,6 +561,13 @@
                         <value name="promotion_id">-1</value>
                         <value name="rule_id">-2</value>
         </row>
+	<row>
+                        <value name="id">-22</value>
+                        <value name="name">CLIENT_LIST</value>
+                        <value name="value">5</value>
+                        <value name="promotion_id">-1</value>
+                        <value name="rule_id">-2</value>
+        </row>
         <row>
                         <value name="id">-4</value>
                         <value name="name">MIN_ORDER_VALUE</value>
@@ -584,6 +582,13 @@
                         <value name="promotion_id">-7</value>
                         <value name="rule_id">-2</value>
         </row>
+	        <row>
+                        <value name="id">-23</value>
+                        <value name="name">CLIENT_LIST</value>
+                        <value name="value">5,1</value>
+                        <value name="promotion_id">-7</value>
+                        <value name="rule_id">-2</value>
+        </row>
         <row>
                         <value name="id">-6</value>
                         <value name="name">MIN_ORDER_VALUE</value>
@@ -595,6 +600,20 @@
                         <value name="id">-7</value>
                         <value name="name">DISCOUNT_PERCENTAGE</value>
                         <value name="value">10</value>
+                        <value name="promotion_id">-8</value>
+                        <value name="rule_id">-3</value>
+        </row>
+        <row>
+                        <value name="id">-11</value>
+                        <value name="name">MAX_DISCOUNT_CEIL_IN_VALUE</value>
+                        <value name="value">100</value>
+                        <value name="promotion_id">-8</value>
+                        <value name="rule_id">-3</value>
+        </row>
+        <row>
+                        <value name="id">-24</value>
+                        <value name="name">CLIENT_LIST</value>
+                        <value name="value">5,1</value>
                         <value name="promotion_id">-8</value>
                         <value name="rule_id">-3</value>
         </row>
@@ -620,11 +639,11 @@
                         <value name="rule_id">-4</value>
         </row>
         <row>
-                        <value name="id">-11</value>
-                        <value name="name">MAX_DISCOUNT_CEIL_IN_VALUE</value>
-                        <value name="value">100</value>
-                        <value name="promotion_id">-8</value>
-                        <value name="rule_id">-3</value>
+                        <value name="id">-25</value>
+                        <value name="name">CLIENT_LIST</value>
+                        <value name="value">5</value>
+                        <value name="promotion_id">-9</value>
+                        <value name="rule_id">-4</value>
         </row>
         <row>
                         <value name="id">-12</value>
@@ -637,6 +656,13 @@
                         <value name="id">-13</value>
                         <value name="name">FIXED_DISCOUNT_RS_OFF</value>
                         <value name="value">240</value>
+                        <value name="promotion_id">-2</value>
+                        <value name="rule_id">-2</value>
+        </row>
+        <row>
+                        <value name="id">-26</value>
+                        <value name="name">CLIENT_LIST</value>
+                        <value name="value">5</value>
                         <value name="promotion_id">-2</value>
                         <value name="rule_id">-2</value>
         </row>
@@ -654,7 +680,13 @@
                         <value name="promotion_id">-3</value>
                         <value name="rule_id">-2</value>
         </row>
- 
+        <row>
+                        <value name="id">-27</value>
+                        <value name="name">CLIENT_LIST</value>
+                        <value name="value">5</value>
+                        <value name="promotion_id">-3</value>
+                        <value name="rule_id">-2</value>
+        </row>
         <row>
                         <value name="id">-16</value>
                         <value name="name">MIN_ORDER_VALUE</value>
@@ -669,7 +701,13 @@
                         <value name="promotion_id">-4</value>
                         <value name="rule_id">-2</value>
         </row>
- 
+        <row>
+                        <value name="id">-28</value>
+                        <value name="name">CLIENT_LIST</value>
+                        <value name="value">5</value>
+                        <value name="promotion_id">-4</value>
+                        <value name="rule_id">-2</value>
+        </row>
         <row>
                         <value name="id">-18</value>
                         <value name="name">MIN_ORDER_VALUE</value>
@@ -684,7 +722,13 @@
                         <value name="promotion_id">-5</value>
                         <value name="rule_id">-2</value>
         </row>
- 
+         <row>
+                        <value name="id">-29</value>
+                        <value name="name">CLIENT_LIST</value>
+                        <value name="value">5,1</value>
+                        <value name="promotion_id">-5</value>
+                        <value name="rule_id">-2</value>
+        </row>
         <row>
                         <value name="id">-20</value>
                         <value name="name">MIN_ORDER_VALUE</value>
@@ -693,14 +737,14 @@
                         <value name="rule_id">-2</value>
         </row>
         <row>
-                        <value name="id">-21</value>
-                        <value name="name">FIXED_DISCOUNT_RS_OFF</value>
-                        <value name="value">600</value>
+                        <value name="id">-30</value>
+                        <value name="name">CLIENT_LIST</value>
+                        <value name="value">5,1</value>
                         <value name="promotion_id">-6</value>
                         <value name="rule_id">-2</value>
         </row>
  
-                <row>
+	<row>
                         <value name="id">-3001</value>
                         <value name="name">MIN_ORDER_VALUE</value>
                         <value name="value">450</value>
@@ -711,6 +755,13 @@
                         <value name="id">-3002</value>
                         <value name="name">FIXED_DISCOUNT_RS_OFF</value>
                         <value name="value">120</value>
+                        <value name="promotion_id">-3001</value>
+                        <value name="rule_id">-2</value>
+        </row>
+	<row>
+                        <value name="id">-3009</value>
+                        <value name="name">CLIENT_LIST</value>
+                        <value name="value">5</value>
                         <value name="promotion_id">-3001</value>
                         <value name="rule_id">-2</value>
         </row>
@@ -725,6 +776,20 @@
                         <value name="id">-3004</value>
                         <value name="name">DISCOUNT_PERCENTAGE</value>
                         <value name="value">15</value>
+                        <value name="promotion_id">-3002</value>
+                        <value name="rule_id">-3</value>
+        </row>
+        <row>
+                        <value name="id">-3008</value>
+                        <value name="name">MAX_DISCOUNT_CEIL_IN_VALUE</value>
+                        <value name="value">150</value>
+                        <value name="promotion_id">-3002</value>
+                        <value name="rule_id">-3</value>
+        </row>
+	<row>
+                        <value name="id">-3010</value>
+                        <value name="name">CLIENT_LIST</value>
+                        <value name="value">5</value>
                         <value name="promotion_id">-3002</value>
                         <value name="rule_id">-3</value>
         </row>
@@ -749,12 +814,12 @@
                         <value name="promotion_id">-3003</value>
                         <value name="rule_id">-4</value>
         </row>
-        <row>
-                        <value name="id">-3008</value>
-                        <value name="name">MAX_DISCOUNT_CEIL_IN_VALUE</value>
-                        <value name="value">150</value>
-                        <value name="promotion_id">-3002</value>
-                        <value name="rule_id">-3</value>
+	<row>
+                        <value name="id">-3011</value>
+                        <value name="name">CLIENT_LIST</value>
+                        <value name="value">5</value>
+                        <value name="promotion_id">-3003</value>
+                        <value name="rule_id">-4</value>
         </row>
         <row>
                         <value name="id">-2000</value>
@@ -770,6 +835,7 @@
                         <value name="promotion_id">-2000</value>
                         <value name="rule_id">-2</value>
         </row>
+
         </table>
         <table name="platform_coupon_user">
                 <column>id</column>
