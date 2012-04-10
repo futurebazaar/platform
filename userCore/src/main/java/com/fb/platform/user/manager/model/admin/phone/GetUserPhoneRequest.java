@@ -1,6 +1,8 @@
-package com.fb.platform.user.manager.model.address;
+package com.fb.platform.user.manager.model.admin.phone;
 
-public class GetAddressRequest {
+import java.io.Serializable;
+
+public class GetUserPhoneRequest implements Serializable{
 
 	private String sessionToken = null;
 	private int userId;
@@ -27,7 +29,5 @@ public class GetAddressRequest {
 	 */
 	public void setUserId(int userId) {
 		this.userId = userId;
-	}
-	
-	
+	}	
 }

@@ -3,6 +3,7 @@ package com.fb.platform.user.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Date;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -63,7 +64,8 @@ public class UserAddressDaoImpl implements UserAddressDao {
 			+ "city_id = ? ,"
 			+ "state_id = ? ,"
 			+ "country_id = ? ,"
-			+ "type,address = ? ,"
+			+ "type = ?,"
+			+ "address = ? ,"
 			+ "profile_id = ? ,"
 			+ "account_id = ? ,"
 			+ "uses = ? ,"
@@ -73,7 +75,7 @@ public class UserAddressDaoImpl implements UserAddressDao {
 			+ "defaddress = ? ,"
 			+ "first_name = ? ,"
 			+ "last_name = ? "
-			+ "where addressid = ?";
+			+ "where id = ?";
 
 	private static final String SELECT_CITYID_BYNAME = "Select id from locations_city where name = ? LIMIT 0,1";
 	private static final String SELECT_STATEID_BYNAME = "Select id from locations_state where name = ? LIMIT 0,1";
@@ -105,6 +107,7 @@ public class UserAddressDaoImpl implements UserAddressDao {
 		if(logger.isDebugEnabled()) {
 			logger.debug("Insert new address : " + userAddressBo.toString());
 		}
+		Date today = new Date();
 		Object[] objs = new Object[16];
 		objs[0] = userAddressBo.getPincode();
 		objs[1] = getcityidbyname(userAddressBo.getCity());
@@ -114,7 +117,7 @@ public class UserAddressDaoImpl implements UserAddressDao {
 		objs[5] = userAddressBo.getAddress();
 		objs[6] = userAddressBo.getUserid();
 		objs[7] = null;
-		objs[8] = "2012-03-19 17:16:16";
+		objs[8] = new Date(today.getTime());
 		objs[9] = 0;
 		objs[10] = "";
 		objs[11] = "";
@@ -134,7 +137,7 @@ public class UserAddressDaoImpl implements UserAddressDao {
 		if(logger.isDebugEnabled()) {
 			logger.debug("Updating address with address id : " + userAddressBo.getAddressid() + " \n New Address : " + userAddressBo.toString() );
 		}
-		Object[] objs = new Object[15];
+		Object[] objs = new Object[16];
 		objs[0] = userAddressBo.getPincode();
 		objs[1] = getcityidbyname(userAddressBo.getCity());
 		objs[2] = getstateidbyname(userAddressBo.getState());

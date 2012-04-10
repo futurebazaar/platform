@@ -1,9 +1,10 @@
-package com.fb.platform.user.manager.model.address;
+package com.fb.platform.user.manager.model.admin.email;
 
-public class GetAddressRequest {
-
+public class DeleteUserEmailRequest {
+	
 	private String sessionToken = null;
 	private int userId;
+	private String emailId = null;
 	/**
 	 * @return the sessionToken
 	 */
@@ -28,6 +29,20 @@ public class GetAddressRequest {
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
+	/**
+	 * @return the emailId
+	 */
+	public String getEmailId() {
+		return emailId;
+	}
+	/**
+	 * @param emailId the emailId to set
+	 */
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
+	}
 	
 	
+	
+
 }

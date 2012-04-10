@@ -1,0 +1,56 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	targetNamespace="http://www.fb.com/platform/user/address/1.0.0" xmlns:useradd="http://www.fb.com/platform/user/address/1.0.0" 
+	elementFormDefault="qualified">
+	
+	
+	<xs:element name="userId" type="xs:int"/>
+	<xs:element name="sessionToken" type="xs:string"/>
+	
+	<xs:element name="getUserAddressRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="useradd:userId"/>
+        <xs:element ref="useradd:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getUserAddressResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="useradd:getUserAddressStatus"/>
+        <xs:element ref="useradd:sessionToken"/>
+        <xs:element maxOccurs="unbounded" ref="useradd:userAddresses"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getUserAddressStatus" type="useradd:getUserAddressStatus"/>
+  <xs:simpleType name="getUserAddressStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INVALID_USER"/>
+      <xs:enumeration value="NO_ADDRESSES"/>
+      <xs:enumeration value="ERROR_RETRIVING_ADDRESS"/>
+      <xs:enumeration value="NO_SESSION"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="userAddresses">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="useradd:addressId"/>
+        <xs:element ref="useradd:addresstype"/>
+        <xs:element ref="useradd:address"/>
+        <xs:element ref="useradd:pincode"/>
+        <xs:element ref="useradd:city"/>
+        <xs:element ref="useradd:state"/>
+        <xs:element ref="useradd:country"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="addressId" type="xs:long"/>
+  <xs:element name="addresstype" type="xs:string"/>
+  <xs:element name="address" type="xs:string"/>
+  <xs:element name="pincode" type="xs:string"/>
+  <xs:element name="city" type="xs:string"/>
+  <xs:element name="state" type="xs:string"/>
+  <xs:element name="country" type="xs:string"/> 
+</xs:schema>

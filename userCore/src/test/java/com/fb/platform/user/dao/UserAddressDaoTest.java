@@ -56,5 +56,32 @@ public class UserAddressDaoTest extends BaseTestCase {
 		}
 
 	}
+	@Test
+	public void testUpdateAddress() {
+		Collection<UserAddressBo> userAddressBos = userAddressDao.load(2);
+		assertNotNull(userAddressBos);
+		UserAddressBo userAddressBoupdate = userAddressBos.iterator().next();
+		long addressid = userAddressBoupdate.getAddressid();
+		assertNotNull(userAddressBoupdate);
+		userAddressBoupdate.setAddress("Testing Update Address");
+		userAddressBoupdate.setAddresstype("Delivery");
+		userAddressBoupdate.setCity("Mumbai");
+		userAddressBoupdate.setCountry("India");
+		userAddressBoupdate.setPincode("400002");
+		userAddressBoupdate.setState("Maharastra");
+		userAddressDao.update(userAddressBoupdate);
+		
+		Collection<UserAddressBo> userAddressBolst = userAddressDao.load(2);
+		assertNotNull(userAddressBos);
+		Iterator<UserAddressBo> itr = userAddressBolst.iterator();
+		while (itr.hasNext()) {
+			UserAddressBo userAddressBoup = itr.next();
+			assertNotNull(userAddressBoup);
+			if (userAddressBoup.getAddressid() == addressid){
+				assertEquals("Testing Update Address" , userAddressBoup.getAddress());
+			}
+		}
+ 
+	}
 
 }

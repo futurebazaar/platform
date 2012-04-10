@@ -1,0 +1,106 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	targetNamespace="http://www.fb.com/platform/user/phone/1.0.0" xmlns:userphone="http://www.fb.com/platform/user/phone/1.0.0" 
+	elementFormDefault="qualified">
+	  
+	<xs:element name="userId" type="xs:int"/>
+	<xs:element name="sessionToken" type="xs:string"/>
+	
+   <xs:element name="getUserPhoneRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="userphone:userId"/>
+        <xs:element ref="userphone:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getUserPhoneResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="userphone:userId"/>
+        <xs:element ref="userphone:getUserPhoneStatus"/>
+        <xs:element ref="userphone:sessionToken"/>
+        <xs:element maxOccurs="unbounded" ref="userphone:userPhone"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getUserPhoneStatus" type="userphone:getUserPhoneStatus"/>
+  <xs:simpleType name="getUserPhoneStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INVALID_USER"/>
+      <xs:enumeration value="NO_PHONE"/>
+      <xs:enumeration value="ERROR_RETRIVING_PHONE"/>
+      <xs:enumeration value="NO_SESSION"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="userPhone">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="userphone:phone"/>
+        <xs:element ref="userphone:type"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="phone" type="xs:string"/>
+  <xs:element name="type" type="xs:string"/> 
+  
+   
+  <xs:element name="addUserPhoneRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="userphone:userId"/>
+        <xs:element ref="userphone:userPhone"/>
+        <xs:element ref="userphone:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="addUserPhoneResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="userphone:addUserPhoneStatus"/>
+        <xs:element ref="userphone:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="addUserPhoneStatus" type="userphone:addUserPhoneStatus"/>
+  <xs:simpleType name="addUserPhoneStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INVALID_USER"/>
+      <xs:enumeration value="NO_PHONE"/>
+      <xs:enumeration value="ERROR_RETRIVING_PHONE"/>
+      <xs:enumeration value="NO_SESSION"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="deleteUserPhoneRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="userphone:userId"/>
+        <xs:element ref="userphone:phone"/>
+        <xs:element ref="userphone:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="deleteUserPhoneResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="userphone:deleteUserPhoneStatus"/>
+        <xs:element ref="userphone:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="deleteUserPhoneStatus" type="userphone:deleteUserPhoneStatus"/>
+  <xs:simpleType name="deleteUserPhoneStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INVALID_USER"/>
+      <xs:enumeration value="NO_PHONE"/>
+      <xs:enumeration value="ERROR_RETRIVING_PHONE"/>
+      <xs:enumeration value="NO_SESSION"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+
+ </xs:schema>
+  
+	

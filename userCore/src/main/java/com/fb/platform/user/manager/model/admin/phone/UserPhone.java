@@ -1,23 +1,23 @@
-package com.fb.platform.user.manager.model;
+package com.fb.platform.user.manager.model.admin.phone;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
-public class UserPhoneTO {
+public class UserPhone {
 
-	private String phoneno;
+	private String phone;
 	private String type;
 	/**
-	 * @return the phoneno
+	 * @return the email
 	 */
-	public String getPhoneno() {
-		return phoneno;
+	public String getPhone() {
+		return phone;
 	}
 	/**
-	 * @param phoneno the phoneno to set
+	 * @param email the email to set
 	 */
-	public void setPhoneno(String phoneno) {
-		this.phoneno = phoneno;
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 	/**
 	 * @return the type
@@ -38,7 +38,7 @@ public class UserPhoneTO {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((phoneno == null) ? 0 : phoneno.hashCode());
+		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
@@ -56,12 +56,12 @@ public class UserPhoneTO {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		UserPhoneTO other = (UserPhoneTO) obj;
-		if (phoneno == null) {
-			if (other.phoneno != null) {
+		UserPhone other = (UserPhone) obj;
+		if (phone == null) {
+			if (other.phone != null) {
 				return false;
 			}
-		} else if (!phoneno.equals(other.phoneno)) {
+		} else if (!phone.equals(other.phone)) {
 			return false;
 		}
 		if (type == null) {
@@ -79,7 +79,7 @@ public class UserPhoneTO {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.DEFAULT_STYLE)
-		.append("phone", this.getPhoneno())
+		.append("email", this.getPhone())
 		.append("type", this.getType())
 		.toString();
 	}

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	targetNamespace="http://www.fb.com/platform/user/1.0.0" xmlns:user="http://www.fb.com/platform/user/1.0.0" 
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0" elementFormDefault="qualified">
+
+  <xs:element name="password" type="xs:string"/>
+
+  <xs:element name="userId" type="xs:int"/>
+  <xs:element name="sessionToken" type="xs:string"/>
+
+ <xs:element name="getUserRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="user:key"/>
+        <xs:element ref="user:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="key" type="xs:string" nillable="false"/>
+    
+  <xs:element name="getUserResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="user:userName"/>
+        <xs:element ref="user:getUserStatus"/>
+        <xs:element ref="user:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="userName" type="xs:string"/>  
+  <xs:element name="getUserStatus" type="user:getUserStatus"/>  
+  <xs:simpleType name="getUserStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="NO_USER_KEY"/>
+      <xs:enumeration value="INVALID_USER"/>
+      <xs:enumeration value="ERROR_RETRIVING_USER"/>
+      <xs:enumeration value="NO_SESSION"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  
+  <xs:element name="addUserRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="user:userName"/>
+        <xs:element ref="user:password"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="addUserResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="user:addUserStatus"/>
+        <xs:element ref="user:sessionToken"/>
+        <xs:element ref="user:userId"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="addUserStatus" type="user:addUserStatus"/>  
+  <xs:simpleType name="addUserStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INVALID_USER_NAME"/>
+      <xs:enumeration value="USER_ALREADY_EXISTS" />
+      <xs:enumeration value="NO_USER_PROVIDED"/>
+      <xs:enumeration value="ADD_USER_FAILED"/>
+      <xs:enumeration value="NO_SESSION"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:element name="updateUserRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="user:sessionToken"/>
+        <xs:element ref="user:dateOfBirth"/>
+        <xs:element ref="user:firstName"/>
+        <xs:element ref="user:lastName"/>
+        <xs:element ref="user:gender"/>
+        <xs:element ref="user:salutation"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="dateOfBirth" type="xs:date" nillable="true"/>
+  <xs:element name="firstName" type="xs:string" nillable="true"/>
+  <xs:element name="lastName" type="xs:string" nillable="true"/>
+  <xs:element name="gender" type="xs:string" nillable="true"/>
+  <xs:element name="salutation" type="xs:string" nillable="true"/>
+  
+  <xs:element name="updateUserResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="user:updateUserStatus"/>
+        <xs:element ref="user:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="updateUserStatus" type="user:updateUserStatus"/>  
+  <xs:simpleType name="updateUserStatus">
+    <xs:restriction base="xs:string">
+	  <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INVALID_USER"/>
+      <xs:enumeration value="NO_USER_PROVIDED" />
+      <xs:enumeration value="UPDATE_USER_FAILED"/>
+      <xs:enumeration value="NO_SESSION"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:annotation>
+  	<xs:appinfo>
+    	<jaxb:globalBindings>
+	      	<jaxb:javaType name="java.util.Date" xmlType="xs:date"
+	        	parseMethod="com.fb.platform.user.util.DateAdapter.parseDate"
+	        	printMethod="com.fb.platform.user.util.DateAdapter.printDate"
+	        />
+   		</jaxb:globalBindings>
+  	</xs:appinfo>
+  </xs:annotation>
+</xs:schema>

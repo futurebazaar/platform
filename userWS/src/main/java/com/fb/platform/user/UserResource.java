@@ -15,19 +15,21 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 
 import com.fb.commons.PlatformException;
-import com.fb.platform.auth._1_0.GetUserRequest;
-import com.fb.platform.auth._1_0.GetUserResponse;
-import com.fb.platform.auth._1_0.GetUserStatus;
-import com.fb.platform.auth._1_0.AddUserRequest;
-import com.fb.platform.auth._1_0.AddUserResponse;
-import com.fb.platform.auth._1_0.AddUserStatus;
+import com.fb.platform.user._1_0.GetUserRequest;
+import com.fb.platform.user._1_0.GetUserResponse;
+import com.fb.platform.user._1_0.GetUserStatus;
+import com.fb.platform.user._1_0.AddUserRequest;
+import com.fb.platform.user._1_0.AddUserResponse;
+import com.fb.platform.user._1_0.AddUserStatus;
+import com.fb.platform.user._1_0.UpdateUserRequest;
+import com.fb.platform.user._1_0.UpdateUserResponse;
+import com.fb.platform.user._1_0.UpdateUserStatus;
 import com.fb.platform.user.manager.interfaces.UserAdminManager;
 
 /**
@@ -39,7 +41,7 @@ import com.fb.platform.user.manager.interfaces.UserAdminManager;
 @Scope("request")
 public class UserResource {
 
-	private static Log logger = LogFactory.getLog(UserResource.class);
+	private static final Log logger = LogFactory.getLog(UserResource.class);
 
 
 	//JAXBContext class is thread safe and can be shared
@@ -50,7 +52,7 @@ public class UserResource {
 
 	private static JAXBContext initContext() {
 		try {
-			return JAXBContext.newInstance("com.fb.platform.auth._1_0");
+			return JAXBContext.newInstance("com.fb.platform.user._1_0");
 		} catch (JAXBException e) {
 			logger.error("Error Initializing the JAXBContext to bind the schema classes", e);
 			throw new PlatformException("Error Initializing the JAXBContext to bind the schema classes", e);
@@ -110,14 +112,18 @@ public class UserResource {
 			AddUserRequest xmlGetUserReq = (AddUserRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(addUserXml)));
 			com.fb.platform.user.manager.model.admin.AddUserRequest apiAddUserReq = new com.fb.platform.user.manager.model.admin.AddUserRequest();
 			apiAddUserReq.setUserName(xmlGetUserReq.getUserName());
-			apiAddUserReq.setPassword(xmlGetUserReq.getPassword());
-
+			String password = null;
+			try {
+				password = xmlGetUserReq.getPassword();
+			}catch (Exception ex){
+				logger.debug("Adding user without Password:: " + xmlGetUserReq.getUserName());
+			}
+			apiAddUserReq.setPassword(password);
 			com.fb.platform.user.manager.model.admin.AddUserResponse apiAddUserRes = userAdminManager.addUser(apiAddUserReq);
-
 			AddUserResponse xmlAddUserRes = new AddUserResponse();
 			xmlAddUserRes.setSessionToken(apiAddUserRes.getSessionToken());
 			xmlAddUserRes.setAddUserStatus(AddUserStatus.fromValue(apiAddUserRes.getStatus().name()));
-
+			xmlAddUserRes.setUserId(apiAddUserRes.getUserId());
 			StringWriter outStringWriter = new StringWriter();
 			Marshaller marsheller = context.createMarshaller();
 			marsheller.marshal(xmlAddUserRes, outStringWriter);
@@ -129,6 +135,44 @@ public class UserResource {
 			return xmlResponse;
 		} catch (JAXBException e) {
 			logger.error("Error in the login call.", e);
+			return "error"; //TODO return proper error response
+		}
+	}
+	@POST
+	@Path("/update")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String updateUser(String updateUserXml) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("UPDATE USER XML request: \n" + updateUserXml);
+		}
+
+		try {
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			UpdateUserRequest xmlUpdateUserReq = (UpdateUserRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(updateUserXml)));
+			com.fb.platform.user.manager.model.admin.UpdateUserRequest apiUpdateUserReq = new com.fb.platform.user.manager.model.admin.UpdateUserRequest();
+			apiUpdateUserReq.setSessionToken(xmlUpdateUserReq.getSessionToken());
+			apiUpdateUserReq.setDateOfBirth(xmlUpdateUserReq.getDateOfBirth());
+			apiUpdateUserReq.setFirstName(xmlUpdateUserReq.getFirstName());
+			apiUpdateUserReq.setGender(xmlUpdateUserReq.getGender());
+			apiUpdateUserReq.setLastName(xmlUpdateUserReq.getLastName());
+			apiUpdateUserReq.setSalutation(xmlUpdateUserReq.getSalutation());
+			
+			com.fb.platform.user.manager.model.admin.UpdateUserResponse apiUpdateUserRes = userAdminManager.updateUser(apiUpdateUserReq);
+			UpdateUserResponse xmlUpdateUserRes = new UpdateUserResponse();
+			xmlUpdateUserRes.setSessionToken(apiUpdateUserRes.getSessionToken());
+			xmlUpdateUserRes.setUpdateUserStatus(UpdateUserStatus.fromValue(apiUpdateUserRes.getStatus().name()));
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marsheller = context.createMarshaller();
+			marsheller.marshal(xmlUpdateUserRes, outStringWriter);
+
+			String xmlResponse = outStringWriter.toString();
+			if (logger.isDebugEnabled()) {
+				logger.debug("Update USER XMl response :\n" + xmlUpdateUserRes);
+			}
+			return xmlResponse;
+		} catch (JAXBException e) {
+			logger.error("Error in the update call.", e);
 			return "error"; //TODO return proper error response
 		}
 	}

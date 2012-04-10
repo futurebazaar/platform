@@ -1,9 +1,10 @@
-package com.fb.platform.user.manager.model.address;
+package com.fb.platform.user.manager.model.admin.phone;
 
-public class GetAddressRequest {
-
+public class DeleteUserPhoneRequest {
+	
 	private String sessionToken = null;
 	private int userId;
+	private String phone = null;
 	/**
 	 * @return the sessionToken
 	 */
@@ -28,6 +29,20 @@ public class GetAddressRequest {
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
+	/**
+	 * @return the phone
+	 */
+	public String getPhone() {
+		return phone;
+	}
+	/**
+	 * @param phone the phone to set
+	 */
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
 	
 	
+	
+
 }
