@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.AbstractTransactionalJUnit4Spring
  *
  */
 @ContextConfiguration(
-		locations={"classpath:/applicationContext-resources-test.xml",
+		locations={"classpath:/test-applicationContext-resources.xml",
 				"classpath:/applicationContext-dao.xml",
 				"classpath:/applicationContext-service.xml",
 				"classpath*:/applicationContext.xml",
