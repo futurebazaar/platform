@@ -37,7 +37,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="useradd:addressId"/>
-        <xs:element ref="useradd:addresstype"/>
+        <xs:element ref="useradd:addressType"/>
         <xs:element ref="useradd:address"/>
         <xs:element ref="useradd:pincode"/>
         <xs:element ref="useradd:city"/>
@@ -47,10 +47,95 @@
     </xs:complexType>
   </xs:element>
   <xs:element name="addressId" type="xs:long"/>
-  <xs:element name="addresstype" type="xs:string"/>
+  <xs:element name="addressType" type="xs:string"/>
   <xs:element name="address" type="xs:string"/>
   <xs:element name="pincode" type="xs:string"/>
   <xs:element name="city" type="xs:string"/>
   <xs:element name="state" type="xs:string"/>
-  <xs:element name="country" type="xs:string"/> 
+  <xs:element name="country" type="xs:string"/>
+  
+  <xs:element name="addUserAddressRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="useradd:userId"/>
+        <xs:element ref="useradd:sessionToken"/>
+        <xs:element ref="useradd:userAddresses"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="addUserAddressResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="useradd:addUserAddressStatus"/>
+         <xs:element ref="useradd:addressId"/>
+        <xs:element ref="useradd:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element> 
+  <xs:element name="addUserAddressStatus" type="useradd:addUserAddressStatus"/>
+  <xs:simpleType name="addUserAddressStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INVALID_USER"/>
+      <xs:enumeration value="EMPTY_ADDRESS"/>
+      <xs:enumeration value="ERROR_ADDING_ADDRESS"/>
+      <xs:enumeration value="NO_SESSION"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="updateUserAddressRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="useradd:userId"/>
+        <xs:element ref="useradd:sessionToken"/>
+        <xs:element ref="useradd:userAddresses"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="updateUserAddressResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="useradd:updateUserAddressStatus"/>
+        <xs:element ref="useradd:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element> 
+  <xs:element name="updateUserAddressStatus" type="useradd:updateUserAddressStatus"/>
+  <xs:simpleType name="updateUserAddressStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INVALID_USER"/>
+      <xs:enumeration value="USER_ADDRESSID_MISMATCH"/>
+      <xs:enumeration value="ADDRESSID_ABSENT"/>
+      <xs:enumeration value="ERROR_UPDATING_ADDRESS"/>
+      <xs:enumeration value="NO_SESSION"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="deleteUserAddressRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="useradd:userId"/>
+        <xs:element ref="useradd:sessionToken"/>
+        <xs:element ref="useradd:addressId"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="deleteUserAddressResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="useradd:deleteUserAddressStatus"/>
+        <xs:element ref="useradd:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element> 
+  <xs:element name="deleteUserAddressStatus" type="useradd:deleteUserAddressStatus"/>
+  <xs:simpleType name="deleteUserAddressStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INVALID_USER"/>
+      <xs:enumeration value="USER_ADDRESSID_MISMATCH"/>
+      <xs:enumeration value="ADDRESSID_ABSENT"/>
+      <xs:enumeration value="ERROR_DELETING_ADDRESS"/>
+      <xs:enumeration value="NO_SESSION"/>
+    </xs:restriction>
+  </xs:simpleType>
 </xs:schema>

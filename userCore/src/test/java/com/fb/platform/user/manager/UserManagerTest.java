@@ -50,6 +50,19 @@ public class UserManagerTest extends BaseTestCase {
 	}
 
 	@Test
+	public void testLoginWithOnlyAtuthUsername() {
+		LoginRequest request = new LoginRequest();
+		request.setUsername("testonlyusername");
+		request.setPassword("testpass");
+
+		LoginResponse response = userManager.login(request);
+
+		assertNotNull(response);
+		assertEquals(LoginStatusEnum.LOGIN_SUCCESS, response.getLoginStatus());
+		assertNotNull(response.getSessionToken());
+		assertEquals(-5, response.getUserId().intValue());
+	}
+	@Test
 	public void testLoginInvalidPassword() {
 		LoginRequest request = new LoginRequest();
 		request.setUsername("jasvipul@gmail.com");
