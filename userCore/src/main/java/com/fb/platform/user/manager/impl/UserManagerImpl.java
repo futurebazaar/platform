@@ -57,7 +57,7 @@ public class UserManagerImpl implements UserManager {
 			logger.debug("Trying to login with userid : " + loginRequest.getUsername() );
 		}
 		LoginResponse loginResponse = new LoginResponse();
-
+		loginResponse.setUserId(0);
 		if (loginRequest == null || StringUtils.isBlank(loginRequest.getUsername())) {
 			loginResponse.setLoginStatus(LoginStatusEnum.INVALID_USERNAME_PASSWORD);
 			return loginResponse;
@@ -66,7 +66,6 @@ public class UserManagerImpl implements UserManager {
 		try {
 			UserBo user = userAdminDao.load(loginRequest.getUsername());
 			if (user == null) {
-				loginResponse.setUserId(0);
 				loginResponse.setLoginStatus(LoginStatusEnum.INVALID_USERNAME_PASSWORD);
 				return loginResponse;
 			}
@@ -79,7 +78,6 @@ public class UserManagerImpl implements UserManager {
 			} else {
 				boolean passwordMatch = PasswordUtil.checkPassword(loginRequest.getPassword(), user.getPassword());
 				if (!passwordMatch) {
-					loginResponse.setUserId(0);
 					loginResponse.setLoginStatus(LoginStatusEnum.INVALID_USERNAME_PASSWORD);
 					return loginResponse;
 				}
