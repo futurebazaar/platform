@@ -168,7 +168,7 @@ public class UserManagerImpl implements UserManager {
 				response.setStatus(ChangePasswordStatusEnum.NO_SESSION);
 				return response;
 			}
-
+			response.setSessionToken(authentication.getToken());
 			//validate that the user has provided correct old password
 			UserBo user = userAdminDao.loadByUserId(authentication.getUserID());
 			boolean validOldPassword = PasswordUtil.checkPassword(request.getOldPassword(), user.getPassword());

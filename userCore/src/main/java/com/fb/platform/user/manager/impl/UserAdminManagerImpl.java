@@ -88,9 +88,6 @@ public class UserAdminManagerImpl implements UserAdminManager {
 	 */
 	@Override
 	public GetUserResponse getUser(GetUserRequest getUserRequest) {
-		if(logger.isDebugEnabled()) {
-			logger.debug("Getting user details for : " + getUserRequest.getSessionToken());
-		}
 		GetUserResponse getUserResponse = new GetUserResponse();
 		if (getUserRequest == null || StringUtils.isBlank(getUserRequest.getKey())) {
 			getUserResponse.setStatus(GetUserStatusEnum.NO_USER_KEY);
@@ -100,13 +97,16 @@ public class UserAdminManagerImpl implements UserAdminManager {
 			getUserResponse.setStatus(GetUserStatusEnum.NO_SESSION);
 			return getUserResponse;
 		}
-
+		if(logger.isDebugEnabled()) {
+			logger.debug("Getting user details for : " + getUserRequest.getSessionToken());
+		}
 		try {
 			AuthenticationTO authentication = authenticationService.authenticate(getUserRequest.getSessionToken());
 			if (authentication == null) {
 				getUserResponse.setStatus(GetUserStatusEnum.NO_SESSION);
 				return getUserResponse;
 			}
+			getUserResponse.setSessionToken(authentication.getToken());
 			UserBo user = userAdminDao.load(getUserRequest.getKey());
 			if (user == null) {
 				getUserResponse.setStatus(GetUserStatusEnum.INVALID_USER);
@@ -129,15 +129,14 @@ public class UserAdminManagerImpl implements UserAdminManager {
 	 */
 	@Override
 	public AddUserResponse addUser(AddUserRequest addUserRequest) {
-		if(logger.isDebugEnabled()) {
-			logger.debug("Add user with username : " + addUserRequest.getUserName() );
-		}
 		AddUserResponse addUserResponse = new AddUserResponse();
-
 		if (addUserRequest == null || StringUtils.isBlank(addUserRequest.getUserName())) {
 			addUserResponse.setStatus(AddUserStatusEnum.NO_USER_PROVIDED);
 			addUserResponse.setUserId(0);
 			return addUserResponse;
+		}
+		if(logger.isDebugEnabled()) {
+			logger.debug("Add user with username : " + addUserRequest.getUserName() );
 		}
 		boolean isEmail = ValidatorUtil.isValidEmailAddress(addUserRequest.getUserName());
 		boolean isPhone = ValidatorUtil.isValidPhoneNumber(addUserRequest.getUserName());
@@ -204,9 +203,7 @@ public class UserAdminManagerImpl implements UserAdminManager {
 	 */
 	@Override
 	public UpdateUserResponse updateUser(UpdateUserRequest updateUserRequest) {
-		if(logger.isDebugEnabled()) {
-			logger.debug("Update user with session token : " + updateUserRequest.getSessionToken() );
-		}
+		
 		UpdateUserResponse updateUserReponse = new UpdateUserResponse();
 		if (updateUserRequest == null) {
 			updateUserReponse.setStatus(UpdateUserStatusEnum.NO_USER_PROVIDED);
@@ -217,6 +214,9 @@ public class UserAdminManagerImpl implements UserAdminManager {
 			updateUserReponse.setStatus(UpdateUserStatusEnum.NO_SESSION);
 			return updateUserReponse;
 		}
+		if(logger.isDebugEnabled()) {
+			logger.debug("Update user with session token : " + updateUserRequest.getSessionToken() );
+		}
 
 		try {
 			AuthenticationTO authentication = authenticationService.authenticate(updateUserRequest.getSessionToken());
@@ -225,10 +225,6 @@ public class UserAdminManagerImpl implements UserAdminManager {
 				return updateUserReponse;
 			}
 			UserBo userBo = userAdminDao.loadByUserId(authentication.getUserID());
-			if (userBo == null) {
-				updateUserReponse.setStatus(UpdateUserStatusEnum.INVALID_USER);
-				return updateUserReponse;
-			}
 			if(updateUserRequest.getDateOfBirth() != null){
 				userBo.setDateofbirth(updateUserRequest.getDateOfBirth());
 			}
@@ -267,13 +263,13 @@ public class UserAdminManagerImpl implements UserAdminManager {
 
 	@Override
 	public IsValidUserResponse isValidUser(IsValidUserRequest isValidUserRequest) {
-		if(logger.isDebugEnabled()) {
-			logger.debug("Checking if user is valid : " + isValidUserRequest.getUserName() );
-		}
 		IsValidUserResponse isValidUserResponse = new IsValidUserResponse();
 		if (isValidUserRequest == null || StringUtils.isBlank(isValidUserRequest.getUserName())) {
 			isValidUserResponse.setIsValidUserStatus(IsValidUserEnum.INVALID_USER);
 			return isValidUserResponse;
+		}
+		if(logger.isDebugEnabled()) {
+			logger.debug("Checking if user is valid : " + isValidUserRequest.getUserName() );
 		}
 
 		try {
@@ -316,9 +312,10 @@ public class UserAdminManagerImpl implements UserAdminManager {
 				getUserEmailResponse.setGetUserEmailStatus(GetUserEmailStatusEnum.NO_SESSION);
 				return getUserEmailResponse;
 			}
+			getUserEmailResponse.setUserId(getUserEmailRequest.getUserId());
+			getUserEmailResponse.setSessionToken(authentication.getToken());
 			UserBo userBo = userAdminDao.loadByUserId(getUserEmailRequest.getUserId());
-			
-			if (userBo.getUserEmail() != null){
+			if (userBo.getUserEmail() != null && userBo.getUserEmail().size() > 0){
 				List<UserEmail> userEmails = new ArrayList<UserEmail>();
 				for(UserEmailBo userEmailBo : userBo.getUserEmail()){
 					UserEmail userEmail = new UserEmail();
@@ -327,6 +324,7 @@ public class UserAdminManagerImpl implements UserAdminManager {
 					userEmails.add(userEmail);
 				}
 				getUserEmailResponse.setUserEmail(userEmails);
+				
 				getUserEmailResponse.setGetUserEmailStatus(GetUserEmailStatusEnum.SUCCESS);
 			}else{
 				getUserEmailResponse.setGetUserEmailStatus(GetUserEmailStatusEnum.NO_EMAIL_ID);
@@ -468,9 +466,11 @@ public class UserAdminManagerImpl implements UserAdminManager {
 				getUserPhoneResponse.setGetUserPhoneStatus(GetUserPhoneStatusEnum.NO_SESSION);
 				return getUserPhoneResponse;
 			}
+			getUserPhoneResponse.setSessionToken(authentication.getToken());
+			getUserPhoneResponse.setUserId(getUserPhoneRequest.getUserId());
 			UserBo userBo = userAdminDao.loadByUserId(getUserPhoneRequest.getUserId());
 			
-			if (userBo.getUserPhone() != null){
+			if (userBo.getUserPhone() != null && userBo.getUserPhone().size() > 0){
 				List<UserPhone> userPhones = new ArrayList<UserPhone>();
 				for(UserPhoneBo userPhoneBo : userBo.getUserPhone()){
 					UserPhone userPhone = new UserPhone();

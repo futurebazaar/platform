@@ -282,6 +282,7 @@ public class UserAdminDaoImpl implements UserAdminDao {
 					new UserMapper());
 			user.setUserEmail(getEmailByUserid(user.getUserid()));
 			user.setUserPhone(getPhoneByUserid(user.getUserid()));
+			logger.debug("User Returned is:" + user.toString());
 			return user;
 		}catch (final EmptyResultDataAccessException e) {
 			return null;
@@ -298,6 +299,7 @@ public class UserAdminDaoImpl implements UserAdminDao {
 					new UserMapper());
 			user.setUserEmail(getEmailByUserid(user.getUserid()));
 			user.setUserPhone(getPhoneByUserid(user.getUserid()));
+			logger.debug("User Returned is:" + user.toString());
 			return user;
 		}catch (final EmptyResultDataAccessException e) {
 			return null;
@@ -319,6 +321,7 @@ public class UserAdminDaoImpl implements UserAdminDao {
 					new UserMapper());
 			user.setUserEmail(getEmailByUserid(user.getUserid()));
 			user.setUserPhone(getPhoneByUserid(user.getUserid()));
+			logger.debug("User Returned is:" + user.toString());
 			return user;
 		}catch (final EmptyResultDataAccessException e) {
 			return null;
@@ -334,6 +337,7 @@ public class UserAdminDaoImpl implements UserAdminDao {
 					new UserMapper());
 			user.setUserEmail(getEmailByUserid(user.getUserid()));
 			user.setUserPhone(getPhoneByUserid(user.getUserid()));
+			logger.debug("User Returned is:" + user.toString());
 			return user;
 		}catch (final EmptyResultDataAccessException e) {
 			return null;
@@ -504,8 +508,8 @@ public class UserAdminDaoImpl implements UserAdminDao {
 				ps.setString(10, "");
 				ps.setString(11, "");
 				ps.setString(12, "neutral");
-				ps.setDate(13, new Date(today.getTime()));
-				ps.setDate(14, (Date) userBo.getDateofbirth());
+				ps.setDate(13, new java.sql.Date(today.getTime()));
+				ps.setObject (14, userBo.getDateofbirth());
 				ps.setBoolean(15, false);
 				ps.setString(16, "");
 				ps.setString(17, "");

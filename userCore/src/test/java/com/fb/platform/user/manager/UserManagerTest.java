@@ -200,7 +200,7 @@ public class UserManagerTest extends BaseTestCase {
 		ChangePasswordResponse cpResponse = userManager.changePassword(cpRequest);
 
 		assertNotNull(cpResponse);
-		//assertNotNull(cpResponse.getSessionToken()); TODO
+		assertNotNull(cpResponse.getSessionToken());
 		assertEquals(ChangePasswordStatusEnum.SUCCESS, cpResponse.getStatus());
 
 		//now try login with the new password

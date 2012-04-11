@@ -48,6 +48,8 @@ public class UserAddressManagerTest extends BaseTestCase {
 		getAddressRequest.setUserId(response.getUserId());
 		GetAddressResponse getAddressResponse = userAddressManager.getAddress(getAddressRequest);
 		assertNotNull(getAddressResponse);
+		assertNotNull(getAddressResponse.getSessionToken());
+		assertNotNull(getAddressResponse.getUserAddress());
 		assertEquals(GetAddressStatusEnum.SUCCESS,getAddressResponse.getGetAddressStatus());
 		LogoutRequest logoutRequest = new LogoutRequest();
 	    logoutRequest.setSessionToken(response.getSessionToken());
@@ -308,6 +310,7 @@ public class UserAddressManagerTest extends BaseTestCase {
 		updateAddressRequest.setUserAddress(userAddressUpdate);
 		UpdateAddressResponse updateAddressResponse = userAddressManager.updateAddress(updateAddressRequest);
 		assertNotNull(updateAddressResponse);
+		assertNotNull(updateAddressResponse.getSessionToken());
 		assertEquals(UpdateAddressStatusEnum.SUCCESS, updateAddressResponse.getUpdateAddressStatus());
 		LogoutRequest logoutRequest = new LogoutRequest();
 	    logoutRequest.setSessionToken(response.getSessionToken());
@@ -355,6 +358,45 @@ public class UserAddressManagerTest extends BaseTestCase {
 		UpdateAddressResponse updateAddressResponse = userAddressManager.updateAddress(updateAddressRequest);
 		assertNotNull(updateAddressResponse);
 		assertEquals(UpdateAddressStatusEnum.NO_SESSION, updateAddressResponse.getUpdateAddressStatus());
+		LogoutRequest logoutRequest = new LogoutRequest();
+	    logoutRequest.setSessionToken(response.getSessionToken());
+	    LogoutResponse logoutResponse = userManager.logout(logoutRequest);
+				
+	}
+	@Test
+	public void testUpdateAddressInvalidUser() {
+		LoginRequest request = new LoginRequest();
+		request.setUsername("jasvipul@gmail.com");
+		request.setPassword("testpass");
+
+		LoginResponse response = userManager.login(request);
+		AddAddressRequest addAddressRequest = new AddAddressRequest();
+		addAddressRequest.setSessionToken(response.getSessionToken());
+		addAddressRequest.setUserId(response.getUserId());
+		UserAddress userAddress = new UserAddress();
+		userAddress.setAddress("testing new5 test adding adderss for update");
+		userAddress.setAddressType("Delivery");
+		userAddress.setCity("Mumbai");
+		userAddress.setState("Maharastra");
+		userAddress.setCountry("India");
+		userAddress.setPinCode("400001");
+		addAddressRequest.setUserAddress(userAddress);
+		AddAddressResponse addAddressResponse = userAddressManager.addAddress(addAddressRequest);
+		assertNotNull(addAddressResponse);
+		long addressidAdd = addAddressResponse.getAddressId();
+		assertEquals(AddAddressStatusEnum.SUCCESS,addAddressResponse.getAddAddressStatus());
+		
+		
+		UpdateAddressRequest updateAddressRequest = new UpdateAddressRequest();
+		updateAddressRequest.setSessionToken(addAddressResponse.getSessionToken());
+		updateAddressRequest.setUserId(0);
+		UserAddress userAddressUpdate = new UserAddress();
+		userAddressUpdate.setAddress("testing new adding after update");
+		userAddressUpdate.setAddressId(addressidAdd);
+		updateAddressRequest.setUserAddress(userAddressUpdate);
+		UpdateAddressResponse updateAddressResponse = userAddressManager.updateAddress(updateAddressRequest);
+		assertNotNull(updateAddressResponse);
+		assertEquals(UpdateAddressStatusEnum.INVALID_USER, updateAddressResponse.getUpdateAddressStatus());
 		LogoutRequest logoutRequest = new LogoutRequest();
 	    logoutRequest.setSessionToken(response.getSessionToken());
 	    LogoutResponse logoutResponse = userManager.logout(logoutRequest);
@@ -507,6 +549,7 @@ public class UserAddressManagerTest extends BaseTestCase {
 		deleteAddressRequest.setUserId(response.getUserId());
 		DeleteAddressResponse deleteAddressResponse = userAddressManager.deleteAddress(deleteAddressRequest);
 		assertNotNull(deleteAddressResponse);
+		assertNotNull(deleteAddressResponse.getSessionToken());
 		assertEquals(DeleteAddressStatusEnum.SUCCESS,deleteAddressResponse.getDeleteAddressStatus());
 		LogoutRequest logoutRequest = new LogoutRequest();
 	    logoutRequest.setSessionToken(response.getSessionToken());
