@@ -835,6 +835,13 @@
                         <value name="promotion_id">-2000</value>
                         <value name="rule_id">-2</value>
         </row>
+		<row>
+                        <value name="id">-2002</value>
+                        <value name="name">CLIENT_LIST</value>
+                        <value name="value">5,1</value>
+                        <value name="promotion_id">-2000</value>
+                        <value name="rule_id">-2</value>
+        </row>
 
         </table>
         <table name="platform_coupon_user">

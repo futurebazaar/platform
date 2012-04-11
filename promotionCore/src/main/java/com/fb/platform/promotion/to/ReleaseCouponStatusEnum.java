@@ -14,11 +14,11 @@ public enum ReleaseCouponStatusEnum  implements Serializable {
 	SUCCESS("SUCCESS"),
 	INVALID_COUPON_CODE("INVALID_COUPON_CODE"),
 	INTERNAL_ERROR("INTERNAL_ERROR"),
-	INVALID_RELEASE_COUPON("INVALID_RELEASE_COUPON"),
+	COUPON_NOT_COMMITTED("COUPON_NOT_COMMITTED"),
 	NO_SESSION("NO_SESSION");
 
 	private String status = null;
-	
+
 	private ReleaseCouponStatusEnum(String status) {
 		this.status = status;
 	}

@@ -15,11 +15,18 @@
     
     <!-- This is to scan and load the CacheAccess classes -->
     <context:component-scan base-package="com.fb.platform.promotion.cache"></context:component-scan>
-    
+
+    <!-- Add new services here -->
+    <bean id="promotionService" class="com.fb.platform.promotion.service.impl.PromotionServiceImpl">
+        <property name="couponDao" ref="couponDao"/>
+        <property name="promotionDao" ref="promotionDao"></property>
+    </bean>
+
     <!-- Add new Managers here -->
     <bean id="promotionManager" class="com.fb.platform.promotion.service.impl.PromotionManagerImpl">
         <property name="couponDao" ref="couponDao"/>
         <property name="promotionDao" ref="promotionDao"></property>
+        <property name="promotionService" ref="promotionService"></property>
         <property name="authenticationService" ref="authenticationService"></property>
     </bean>
 </beans>

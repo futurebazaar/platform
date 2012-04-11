@@ -91,7 +91,7 @@ public class RestClient {
 	private static BigDecimal applyPromotion(String sessionToken, int orderId) throws Exception {
 		HttpClient httpClient = new HttpClient();
 
-		PostMethod applyPromotionMethod = new PostMethod("http://localhost:9090/promotionWeb/coupon/apply");
+		PostMethod applyPromotionMethod = new PostMethod("http://localhost:8080/promotionWeb/coupon/apply");
 
 		CouponRequest couponRequest = new CouponRequest();
 		couponRequest.setClientId(10);

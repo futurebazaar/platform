@@ -11,7 +11,7 @@
 	    <relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>promotionWeb</artifactId>
+	<artifactId>promotionWS</artifactId>
 	<packaging>war</packaging>
 	<version>1.0-SNAPSHOT</version>
 	<name>Promotion Web Services</name>
@@ -61,7 +61,7 @@
 				<configuration>
 					<stopPort>8005</stopPort>
 					<stopKey>stop</stopKey>
-					<contextPath>/promotionWeb</contextPath>
+					<contextPath>/promotionWS</contextPath>
 					<scanIntervalSeconds>3</scanIntervalSeconds>
 					<scanTargets>
 						<scanTarget>src/main/webapp/WEB-INF/applicationContext.xml</scanTarget>
