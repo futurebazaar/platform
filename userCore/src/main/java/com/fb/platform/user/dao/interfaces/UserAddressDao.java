@@ -21,12 +21,15 @@ public interface UserAddressDao {
 	 * @param userAddressBo
 	 * @throws Exception
 	 */
-	public void add(UserAddressBo userAddressBo);
+	public UserAddressBo add(UserAddressBo userAddressBo);
 
 	/**
 	 * updates a users address
 	 * @param userAddressBo
 	 */
-	public void update(UserAddressBo userAddressBo);
-
+	public UserAddressBo update(UserAddressBo userAddressBo);
+	
+	public boolean deleteAddressById(long addressId);
+	
+	public UserAddressBo getAddressById(long addressId);
 }

@@ -1,9 +1,9 @@
-package com.fb.platform.user.manager.model;
+package com.fb.platform.user.manager.model.admin.email;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
-public class UserEmailTO {
+public class UserEmail {
 
 	private String email;
 	private String type;
@@ -56,7 +56,7 @@ public class UserEmailTO {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		UserEmailTO other = (UserEmailTO) obj;
+		UserEmail other = (UserEmail) obj;
 		if (email == null) {
 			if (other.email != null) {
 				return false;

@@ -21,7 +21,6 @@ public class TestApiObjectUtil {
 		APIObjectUtil objectUtil = new APIObjectUtil();
 
 		CouponRequest cr = new CouponRequest();
-		cr.setClientId(10);
 		cr.setCouponCode("xxxx");
 		cr.setSessionToken("xxxxyyyy0000==");
 		OrderRequest or = new OrderRequest();

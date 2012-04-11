@@ -8,10 +8,13 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -19,6 +22,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import com.fb.commons.PlatformException;
 import com.fb.platform.user.dao.interfaces.UserAdminDao;
 import com.fb.platform.user.domain.UserBo;
 import com.fb.platform.user.domain.UserEmailBo;
@@ -32,7 +36,8 @@ public class UserAdminDaoImpl implements UserAdminDao {
 	private static final String CHECK_EMAIL_IS_USERNAME_QUERY = "SELECT count(0) from users_email WHERE email = ?";
 	private static final String CHECK_PHONE_IS_USERNAME_QUERY = "SELECT count(0) from users_phone WHERE phone = ?";
 	private static final String CHECK_USERID_IS_USERNAME_QUERY = "SELECT count(0) from users_profile WHERE id = ?";
-
+	private static final String CHECK_USERNAME_IS_AUTH_USERNAME_QUERY = "SELECT count(0) from auth_user WHERE username = ?";
+	
 	private static final String SELECT_USER_FIELDS = "SELECT "
 			+ "up.id as id, "
 			+ "up.primary_phone, "
@@ -67,6 +72,11 @@ public class UserAdminDaoImpl implements UserAdminDao {
 	private static final String SELECT_USER_BY_USER_ID =
 			SELECT_USER_FIELDS
 			+ " FROM users_profile up , auth_user au WHERE au.id = up.user_id AND up.id = ?";
+	
+	private static final String SELECT_USER_BY_AUTH_USER_NAME =
+			SELECT_USER_FIELDS
+			+ " FROM users_profile up , auth_user au WHERE au.id = up.user_id AND au.username = ?";
+	
 
 	private static final String SELECT_EMAILS_BY_USER_ID = "SELECT email, type FROM users_email WHERE user_id = ?";
 
@@ -133,7 +143,7 @@ public class UserAdminDaoImpl implements UserAdminDao {
 	private static final String INSERT_NEW_PHONE = "INSERT into users_phone ("
 			+ "phone,"
 			+ "type,"
-			+ "userid,"
+			+ "user_id,"
 			+ "is_verified,"
 			+ "verified_on ,"
 			+ "verification_code) "
@@ -175,6 +185,17 @@ public class UserAdminDaoImpl implements UserAdminDao {
 	private static final String UPDATE_PASSWORD_SQL = "UPDATE auth_user SET "
 			+ "password = ? "
 			+ "WHERE id = ?";
+	
+	private static final String DELETE_EMAIL_BY_USERID_EMAILID = "DELETE FROM users_email "
+			+ "where user_id =? and email = ?";
+	
+	private static final String DELETE_PHONE_BY_USERID_PHONE = "DELETE FROM users_phone "
+			+ "where user_id =? and phone = ?";
+
+	private static final String VERIFY_PHONE_BY_USERID_PHONE = "UPDTE users_phone "
+			+ "set is_verified=1," 
+			+ "verified_on = ? "
+			+ "where user_id =? and phone = ?";
 
 	private JdbcTemplate jdbcTemplate;
 
@@ -200,7 +221,11 @@ public class UserAdminDaoImpl implements UserAdminDao {
     	if (isUserId) {
     		return getUserByUserId(Integer.parseInt(key));
     	}
-
+    	
+    	boolean isUserNameAuth = isUsernameAuth(key);
+    	if (isUserNameAuth) {
+    		return getUserByAuthUserName(key);
+    	}
     	return null;
 	}
 
@@ -236,29 +261,49 @@ public class UserAdminDaoImpl implements UserAdminDao {
     	}
     	return false;
     }
+    private boolean isUsernameAuth(String username) {
+    	if(logger.isDebugEnabled()) {
+    		logger.debug("Cheking if username is a registered auth user name: " + username );
+    	}
+    	int userIdCount = this.jdbcTemplate.queryForInt(CHECK_USERNAME_IS_AUTH_USERNAME_QUERY, username);
+    	if (userIdCount > 0) {
+    		return true;
+    	}
+    	return false;
+    }
 
 	private UserBo getUserByEmail(String email) {
 		if(logger.isDebugEnabled()) {
     		logger.debug("Getting user details for the registered email : " + email );
     	}
-		UserBo user = jdbcTemplate.queryForObject(SELECT_USER_BY_EMAIL_QUERY,
-				new Object[] {email},
-				new UserMapper());
-		user.setUserEmail(getEmailByUserid(user.getUserid()));
-		user.setUserPhone(getPhoneByUserid(user.getUserid()));
-		return user;
+		try{
+			UserBo user = jdbcTemplate.queryForObject(SELECT_USER_BY_EMAIL_QUERY,
+					new Object[] {email},
+					new UserMapper());
+			user.setUserEmail(getEmailByUserid(user.getUserid()));
+			user.setUserPhone(getPhoneByUserid(user.getUserid()));
+			logger.debug("User Returned is:" + user.toString());
+			return user;
+		}catch (final EmptyResultDataAccessException e) {
+			return null;
+		}
 	}
 
 	private UserBo getUserByPhone(String phone) {
 		if(logger.isDebugEnabled()) {
     		logger.debug("Getting user details for the registered phone number : " + phone );
     	}
-		UserBo user = jdbcTemplate.queryForObject(SELECT_USER_BY_PHONE_QUERY,
-				new Object[] {phone},
-				new UserMapper());
-		user.setUserEmail(getEmailByUserid(user.getUserid()));
-		user.setUserPhone(getPhoneByUserid(user.getUserid()));
-		return user;
+		try{
+			UserBo user = jdbcTemplate.queryForObject(SELECT_USER_BY_PHONE_QUERY,
+					new Object[] {phone},
+					new UserMapper());
+			user.setUserEmail(getEmailByUserid(user.getUserid()));
+			user.setUserPhone(getPhoneByUserid(user.getUserid()));
+			logger.debug("User Returned is:" + user.toString());
+			return user;
+		}catch (final EmptyResultDataAccessException e) {
+			return null;
+		}
 	}
 
 	@Override
@@ -270,50 +315,64 @@ public class UserAdminDaoImpl implements UserAdminDao {
 		if(logger.isDebugEnabled()) {
     		logger.debug("Getting user details for the registered user id : " + userId );
     	}
-		UserBo user = jdbcTemplate.queryForObject(SELECT_USER_BY_USER_ID,
-				new Object[] {userId},
-				new UserMapper());
-		user.setUserEmail(getEmailByUserid(user.getUserid()));
-		user.setUserPhone(getPhoneByUserid(user.getUserid()));
-		return user;
+		try {
+			UserBo user = jdbcTemplate.queryForObject(SELECT_USER_BY_USER_ID,
+					new Object[] {userId},
+					new UserMapper());
+			user.setUserEmail(getEmailByUserid(user.getUserid()));
+			user.setUserPhone(getPhoneByUserid(user.getUserid()));
+			logger.debug("User Returned is:" + user.toString());
+			return user;
+		}catch (final EmptyResultDataAccessException e) {
+			return null;
+		}
+	}
+	private UserBo getUserByAuthUserName(String userName) {
+		if(logger.isDebugEnabled()) {
+    		logger.debug("Getting user details for the registered username : " + userName );
+    	}
+		try {
+			UserBo user = jdbcTemplate.queryForObject(SELECT_USER_BY_AUTH_USER_NAME,
+					new Object[] {userName},
+					new UserMapper());
+			user.setUserEmail(getEmailByUserid(user.getUserid()));
+			user.setUserPhone(getPhoneByUserid(user.getUserid()));
+			logger.debug("User Returned is:" + user.toString());
+			return user;
+		}catch (final EmptyResultDataAccessException e) {
+			return null;
+		}
 	}
 
 	private List<UserEmailBo> getEmailByUserid(long userId) {
 		if(logger.isDebugEnabled()) {
     		logger.debug("Getting list of emails for the user : " + userId );
     	}
-		List<UserEmailBo> userEmailBo = jdbcTemplate.query(SELECT_EMAILS_BY_USER_ID,
-				new Object[] {userId},
-				new UserEmailMapper());
-		return userEmailBo;
+		try{
+			List<UserEmailBo> userEmailBo = jdbcTemplate.query(SELECT_EMAILS_BY_USER_ID,
+					new Object[] {userId},
+					new UserEmailMapper());
+			return userEmailBo;
+		}catch (final EmptyResultDataAccessException e) {
+			return null;
+		}
 	}
 
 	private List<UserPhoneBo> getPhoneByUserid(long userId) {
 		if(logger.isDebugEnabled()) {
     		logger.debug("Getting list of phone numbers for the user : " + userId );
     	}
-		List<UserPhoneBo> userPhoneBo = jdbcTemplate.query(SELECT_PHONES_BY_USER_ID,
-				new Object[] {userId},
-				new UserPhoneMapper());
-		return userPhoneBo;
-	}
-
-
-    /* (non-Javadoc)
-	 * @see com.fb.platform.user.dao.interfaces.UserDao#getUsers()
-	 */
-	@Override
-	public Collection<UserBo> getUsers() {
-		if(logger.isDebugEnabled()) {
-    		logger.debug("Getting list of all users" );
-    	}
-		List<UserBo> users = jdbcTemplate.query(SELECT_ALL_USERS, new UserMapper());
-		for (UserBo user : users) {
-			user.setUserEmail(getEmailByUserid(user.getUserid()));
-			user.setUserPhone(getPhoneByUserid(user.getUserid()));
+		try{
+			List<UserPhoneBo> userPhoneBo = jdbcTemplate.query(SELECT_PHONES_BY_USER_ID,
+					new Object[] {userId},
+					new UserPhoneMapper());
+			return userPhoneBo;
+		}catch (final EmptyResultDataAccessException e) {
+			return null;
 		}
-		return users;
 	}
+
+
 	/* (non-Javadoc)
 	 * @see com.fb.platform.user.dao.interfaces.UserDao#add(com.fb.platform.user.domain.UserBo)
 	 */
@@ -332,10 +391,10 @@ public class UserAdminDaoImpl implements UserAdminDao {
 						throws SQLException {
 					PreparedStatement ps = con.prepareStatement(INSERT_NEW_USER_AUTH, new String[]{"id"});
 					ps.setString(1, userBo.getUsername());
-					ps.setString(2, userBo.getFirstname());
-					ps.setString(3, userBo.getLastname());
+					ps.setString(2, StringUtils.isBlank(userBo.getFirstname()) ? StringUtils.EMPTY : userBo.getFirstname());
+					ps.setString(3, StringUtils.isBlank(userBo.getLastname()) ? StringUtils.EMPTY : userBo.getLastname());
 					ps.setString(4, "");
-					ps.setString(5, PasswordUtil.getEncryptedPassword(userBo.getPassword()));
+					ps.setString(5,  StringUtils.isBlank(userBo.getPassword()) ? StringUtils.EMPTY : PasswordUtil.getEncryptedPassword(userBo.getPassword()));
 					ps.setInt(6, 0);
 					ps.setInt(7, 1);
 					ps.setInt(8, 0);
@@ -356,11 +415,11 @@ public class UserAdminDaoImpl implements UserAdminDao {
 					ps.setString(3, "");
 					ps.setString(4, "buyer");
 					ps.setString(5, null);
-					ps.setString(6, userBo.getFirstname() + " " +  userBo.getLastname());
+					ps.setString(6, (StringUtils.isBlank(userBo.getFirstname()) ? StringUtils.EMPTY : userBo.getFirstname()) + " " + (StringUtils.isBlank(userBo.getLastname()) ? StringUtils.EMPTY : userBo.getLastname()));
 					ps.setString(7, "");
 					ps.setString(8, "");
-					ps.setString(9, (userBo.getGender() == null ? "" : userBo.getGender()));
-					ps.setString(10, (userBo.getSalutation() == null ? "" : userBo.getSalutation()));
+					ps.setString(9, (StringUtils.isBlank(userBo.getGender()) ? StringUtils.EMPTY : userBo.getGender()));
+					ps.setString(10, (StringUtils.isBlank(userBo.getSalutation())? StringUtils.EMPTY : userBo.getSalutation()));
 					ps.setString(11, "");
 					ps.setString(12, "");
 					ps.setString(13, "neutral");
@@ -441,16 +500,16 @@ public class UserAdminDaoImpl implements UserAdminDao {
 				ps.setString(2, "");
 				ps.setString(3, "buyer");
 				ps.setString(4, null);
-				ps.setString(5, userBo.getFirstname() + " " +  userBo.getLastname());
+				ps.setString(5, (StringUtils.isBlank(userBo.getFirstname()) ? StringUtils.EMPTY : userBo.getFirstname()) + " " +  (StringUtils.isBlank(userBo.getLastname()) ? StringUtils.EMPTY : userBo.getLastname()));
 				ps.setString(6, "");
 				ps.setString(7, "");
-				ps.setString(8, userBo.getGender());
-				ps.setString(9, userBo.getSalutation());
+				ps.setString(8, StringUtils.isBlank(userBo.getGender()) ? StringUtils.EMPTY : userBo.getGender());
+				ps.setString(9, StringUtils.isBlank(userBo.getSalutation()) ? StringUtils.EMPTY : userBo.getSalutation());
 				ps.setString(10, "");
 				ps.setString(11, "");
 				ps.setString(12, "neutral");
-				ps.setDate(13, new Date(today.getTime()));
-				ps.setDate(14, (Date) userBo.getDateofbirth());
+				ps.setDate(13, new java.sql.Date(today.getTime()));
+				ps.setObject (14, userBo.getDateofbirth());
 				ps.setBoolean(15, false);
 				ps.setString(16, "");
 				ps.setString(17, "");
@@ -523,6 +582,72 @@ public class UserAdminDaoImpl implements UserAdminDao {
 			//update indicate number of rows affected by the above sql query.
 			//if we have managed to change data in a row means we have successfully updated the password.
 			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean addUserEmail(int userId, UserEmailBo userEmailBo) {
+		if (userEmailBo != null) {
+				Object[] objs = new Object[4];
+				objs[0] = userEmailBo.getEmail();
+				objs[1] = userEmailBo.getType();
+				objs[2] = userId;
+				objs[3] = userEmailBo.getEmail();
+				int update = jdbcTemplate.update(INSERT_NEW_EMAIL, objs);
+				if (update > 0) {
+					return true;
+				}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean deleteUserEmail(int userId, String emailId) {
+		if (emailId != null) {
+			Object[] objs = new Object[2];
+			objs[0] = userId;
+			objs[1] = emailId;
+			int update = jdbcTemplate.update(DELETE_EMAIL_BY_USERID_EMAILID, objs);
+			if (update > 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean addUserPhone(int userId, UserPhoneBo userPhoneBo) {
+		 if (userPhoneBo != null) {
+			 try{
+				Object[] objs = new Object[6];
+				objs[0] = userPhoneBo.getPhoneno();
+				objs[1] = userPhoneBo.getType();
+				objs[2] = userId;
+				objs[3] = 0;
+				objs[4] = null;
+				objs[5] = null;
+				int update = jdbcTemplate.update(INSERT_NEW_PHONE, objs);
+				if (update > 0) {
+					return true;
+				}
+			 }catch(DuplicateKeyException dke){
+				 return false;
+			}
+		}
+		return false;		
+	}
+
+	@Override
+	public boolean deleteUserPhone(int userId, String phone) {
+		if (phone != null) {
+			Object[] objs = new Object[2];
+			objs[0] = userId;
+			objs[1] = phone;
+			int update = jdbcTemplate.update(DELETE_PHONE_BY_USERID_PHONE, objs);
+			if (update > 0) {
+				return true;
+			}
 		}
 		return false;
 	}

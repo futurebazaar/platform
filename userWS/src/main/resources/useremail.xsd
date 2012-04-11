@@ -1,0 +1,106 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	targetNamespace="http://www.fb.com/platform/user/email/1.0.0" xmlns:useremail="http://www.fb.com/platform/user/email/1.0.0" 
+	elementFormDefault="qualified">
+	  
+	<xs:element name="userId" type="xs:int"/>
+	<xs:element name="sessionToken" type="xs:string"/>
+	
+   <xs:element name="getUserEmailRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="useremail:userId"/>
+        <xs:element ref="useremail:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getUserEmailResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="useremail:userId"/>
+        <xs:element ref="useremail:getUserEmailStatus"/>
+        <xs:element ref="useremail:sessionToken"/>
+        <xs:element maxOccurs="unbounded" ref="useremail:userEmail"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getUserEmailStatus" type="useremail:getUserEmailStatus"/>
+  <xs:simpleType name="getUserEmailStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INVALID_USER"/>
+      <xs:enumeration value="NO_EMAIL_ID"/>
+      <xs:enumeration value="ERROR_RETRIVING_EMAIL"/>
+      <xs:enumeration value="NO_SESSION"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="userEmail">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="useremail:emailId"/>
+        <xs:element ref="useremail:type"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="emailId" type="xs:string"/>
+  <xs:element name="type" type="xs:string"/> 
+  
+   
+  <xs:element name="addUserEmailRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="useremail:userId"/>
+        <xs:element ref="useremail:userEmail"/>
+        <xs:element ref="useremail:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="addUserEmailResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="useremail:addUserEmailStatus"/>
+        <xs:element ref="useremail:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="addUserEmailStatus" type="useremail:addUserEmailStatus"/>
+  <xs:simpleType name="addUserEmailStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INVALID_USER"/>
+      <xs:enumeration value="NO_EMAIL_ID"/>
+      <xs:enumeration value="ERROR_RETRIVING_EMAIL"/>
+      <xs:enumeration value="NO_SESSION"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="deleteUserEmailRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="useremail:userId"/>
+        <xs:element ref="useremail:emailId"/>
+        <xs:element ref="useremail:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="deleteUserEmailResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="useremail:deleteUserEmailStatus"/>
+        <xs:element ref="useremail:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="deleteUserEmailStatus" type="useremail:deleteUserEmailStatus"/>
+  <xs:simpleType name="deleteUserEmailStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INVALID_USER"/>
+      <xs:enumeration value="NO_EMAIL_ID"/>
+      <xs:enumeration value="ERROR_RETRIVING_EMAIL"/>
+      <xs:enumeration value="NO_SESSION"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+
+ </xs:schema>
+  
+	

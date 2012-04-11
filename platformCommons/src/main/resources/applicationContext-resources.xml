@@ -1,38 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" 
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xmlns:jee="http://www.springframework.org/schema/jee"
-		xsi:schemaLocation="http://www.springframework.org/schema/beans 
-			http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-            http://www.springframework.org/schema/jee 
-            http://www.springframework.org/schema/jee/spring-jee-3.0.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/jee
+	http://www.springframework.org/schema/jee/spring-jee-3.0.xsd">
             
-	
-	
-	<jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jndi/datasource"></jee:jndi-lookup>
-	       
-    <!-- For mail settings and future properties files -->
-    <!--<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations">
-            <list>
-                <value>classpath:jdbc.properties</value>
-            </list>
-        </property>
-    </bean>  -->
 
-    <!-- JNDI DataSource for J2EE environments -->
-    <!--<jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jdbc/colada"/>-->
+
+	<jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jndi/datasource"></jee:jndi-lookup>
 
     <!-- <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-        <property name="driverClassName" value="${jdbc1.driverClassName}"/>
-        <property name="url" value="${jdbc1.url}"/>
-        <property name="username" value="${jdbc1.username}"/>
-        <property name="password" value="${jdbc1.password}"/>
-        <property name="maxActive" value="100"/>
-        <property name="maxIdle" value="30"/>
-        <property name="maxWait" value="1000"/>
-        <property name="defaultAutoCommit" value="true"/>
-        <property name="removeAbandoned" value="true"/>
-        <property name="removeAbandonedTimeout" value="60"/>
-    </bean>  -->
+			<property name="driverClassName" value="${jdbc1.driverClassName}"/>
+			<property name="url" value="${jdbc1.url}"/>
+			<property name="username" value="${jdbc1.username}"/>
+			<property name="password" value="${jdbc1.password}"/>
+			<property name="maxActive" value="100"/>
+			<property name="maxIdle" value="30"/>
+			<property name="maxWait" value="1000"/>
+			<property name="defaultAutoCommit" value="true"/>
+			<property name="removeAbandoned" value="true"/>
+			<property name="removeAbandonedTimeout" value="60"/>
+		</bean> -->
 </beans>

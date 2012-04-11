@@ -19,7 +19,7 @@ import org.springframework.test.context.junit4.AbstractTransactionalJUnit4Spring
 				"classpath*:/applicationContext.xml",
 				"classpath*:/applicationContext-service.xml",
 				"classpath*:/applicationContext-dao.xml",
-				"classpath:**/applicationContext*-test.xml"})
+				"classpath:**/test-applicationContext*.xml"})
 public abstract class BaseTestCase extends AbstractTransactionalJUnit4SpringContextTests {
 
 }

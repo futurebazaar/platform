@@ -40,7 +40,7 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>promotionWeb</finalName>
+		<finalName>promotionWS</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-failsafe-plugin</artifactId>
@@ -67,7 +67,7 @@
 						<scanTarget>src/main/webapp/WEB-INF/applicationContext.xml</scanTarget>
 						<scanTarget>src/main/webapp/WEB-INF/web.xml</scanTarget>
 					</scanTargets>
-					<jettyEnvXml>target/promotionWeb/WEB-INF/classes/jetty-env.xml</jettyEnvXml>
+					<jettyEnvXml>target/promotionWS/WEB-INF/classes/jetty-env.xml</jettyEnvXml>
 					<connectors>
 						<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
 							<port>9090</port>

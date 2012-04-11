@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 
 
-public class UpdateUserReponse implements Serializable {
+public class UpdateUserResponse implements Serializable {
 
 	private UpdateUserStatusEnum status = null;
 	private String sessionToken = null;

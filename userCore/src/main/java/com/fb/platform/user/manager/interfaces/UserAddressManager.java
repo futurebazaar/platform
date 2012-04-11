@@ -5,6 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fb.platform.user.manager.model.address.AddAddressRequest;
 import com.fb.platform.user.manager.model.address.AddAddressResponse;
+import com.fb.platform.user.manager.model.address.DeleteAddressRequest;
+import com.fb.platform.user.manager.model.address.DeleteAddressResponse;
 import com.fb.platform.user.manager.model.address.GetAddressRequest;
 import com.fb.platform.user.manager.model.address.GetAddressResponse;
 import com.fb.platform.user.manager.model.address.UpdateAddressRequest;
@@ -20,5 +22,8 @@ public interface UserAddressManager {
 
 	@Transactional(propagation = Propagation.SUPPORTS)
 	UpdateAddressResponse updateAddress(UpdateAddressRequest updateAddressRequest);
+	
+	@Transactional(propagation = Propagation.SUPPORTS)
+	DeleteAddressResponse deleteAddress(DeleteAddressRequest deleteAddressRequest);
 
 }

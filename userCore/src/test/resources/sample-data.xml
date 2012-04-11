@@ -130,6 +130,19 @@
             <value description="last_login">2012-02-26 22:37:14</value>
             <value description="date_joined">2010-01-01 22:37:14</value>
         </row>
+        <row>
+        	<value description="id">162820</value>
+           	<value description="username">testonlyusername</value>
+            <value description="first_name"></value>
+            <value description="last_name"></value>
+            <value description="email"></value>
+            <value description="password" >sha1$da42a$46b44c51df06fcfdf3eda17286ed98b34bfb4917</value>
+            <value description="is_staff">0</value>
+            <value description="is_active">1</value>
+            <value description="is_superuser">0</value>
+            <value description="last_login">2012-02-26 22:37:14</value>
+            <value description="date_joined">2010-01-01 22:37:14</value>
+        </row>
     </table>
   
 	<table name="users_profile">
@@ -357,6 +370,37 @@
             <null />
             <value description="full_name">jas</value>
             <value description="primary_email">jasvipul@gmail.com</value>
+            <value description="secondary_email"></value>
+            <value description="gender"></value>
+            <value description="salutation"></value>
+            <value description="salt"></value>
+            <value description="passcode"></value>
+        	<value description="marketing_alerts">no</value>
+        	<value description="created_on">2009-06-12 10:06:01</value>
+            <null/>
+            <value description="is_agent">0</value>
+            <value description="webpage"></value>
+            <value description="facebook"></value>
+            <value description="twitter"></value>
+            <value description="email_notification">0</value>
+            <value description="sms_alert">0</value>
+            <null/>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<null/>
+        </row>
+        <row>
+        	<value description="id">-5</value>
+        	<value description="user_id">162820</value>
+           	<value description="primary_phone">9916737322</value>
+            <value description="secondary_phone"></value>
+            <value description="buyer_or_seller">buyer</value>
+            <null />
+            <value description="full_name">test</value>
+            <value description="primary_email"></value>
             <value description="secondary_email"></value>
             <value description="gender"></value>
             <value description="salutation"></value>
