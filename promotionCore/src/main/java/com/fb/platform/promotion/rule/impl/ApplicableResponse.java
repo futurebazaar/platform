@@ -5,7 +5,7 @@ package com.fb.platform.promotion.rule.impl;
 
 import java.io.Serializable;
 
-import com.fb.platform.promotion.to.CouponResponseStatusEnum;
+import com.fb.platform.promotion.to.ApplyCouponResponseStatusEnum;
 
 /**
  * @author keith
@@ -13,7 +13,7 @@ import com.fb.platform.promotion.to.CouponResponseStatusEnum;
  */
 public class ApplicableResponse implements Serializable{
 
-	CouponResponseStatusEnum statusCode;
+	ApplyCouponResponseStatusEnum statusCode;
 	private String statusMessage;
 	private String statusDescription;
 	public String getStatusMessage() {
@@ -28,10 +28,10 @@ public class ApplicableResponse implements Serializable{
 	public void setStatusDescription(String statusDescription) {
 		this.statusDescription = statusDescription;
 	}
-	public CouponResponseStatusEnum getStatusCode() {
+	public ApplyCouponResponseStatusEnum getStatusCode() {
 		return statusCode;
 	}
-	public void setStatusCode(CouponResponseStatusEnum statusCode) {
+	public void setStatusCode(ApplyCouponResponseStatusEnum statusCode) {
 		this.statusCode = statusCode;
 	}
 	

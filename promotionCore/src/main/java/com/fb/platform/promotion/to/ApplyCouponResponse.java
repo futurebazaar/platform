@@ -8,13 +8,14 @@ import java.math.BigDecimal;
  * @author keith
  *
  */
-public class CouponResponse implements Serializable{
+public class ApplyCouponResponse implements Serializable{
 
 	private String couponCode;
 	private BigDecimal discountValue;
-	private CouponResponseStatusEnum couponStatus;
+	private ApplyCouponResponseStatusEnum couponStatus;
 	private String statusMessage;
-	private String statusDescription;
+	private String promoName;
+	private String promoDescription;
 	private String sessionToken;
 
 	/**
@@ -53,22 +54,10 @@ public class CouponResponse implements Serializable{
 	public void setStatusMessage(String statusMessage) {
 		this.statusMessage = statusMessage;
 	}
-	/**
-	 * @return the statusDescription
-	 */
-	public String getStatusDescription() {
-		return statusDescription;
-	}
-	/**
-	 * @param statusDescription the statusDescription to set
-	 */
-	public void setStatusDescription(String statusDescription) {
-		this.statusDescription = statusDescription;
-	}
-	public CouponResponseStatusEnum getCouponStatus() {
+	public ApplyCouponResponseStatusEnum getCouponStatus() {
 		return couponStatus;
 	}
-	public void setCouponStatus(CouponResponseStatusEnum couponStatus) {
+	public void setCouponStatus(ApplyCouponResponseStatusEnum couponStatus) {
 		this.couponStatus = couponStatus;
 	}
 	public String getSessionToken() {
@@ -76,5 +65,17 @@ public class CouponResponse implements Serializable{
 	}
 	public void setSessionToken(String sessionToken) {
 		this.sessionToken = sessionToken;
+	}
+	public String getPromoName() {
+		return promoName;
+	}
+	public void setPromoName(String promoName) {
+		this.promoName = promoName;
+	}
+	public String getPromoDescription() {
+		return promoDescription;
+	}
+	public void setPromoDescription(String promoDescription) {
+		this.promoDescription = promoDescription;
 	}
 }

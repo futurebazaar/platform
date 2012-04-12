@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.fb.com/platform/promotion/1.0.0" xmlns:promotion="http://www.fb.com/platform/promotion/1.0.0">
-  <xs:element name="couponRequest">
+  <xs:element name="applyCouponRequest">
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="promotion:couponCode"/>
@@ -47,35 +47,47 @@
   <xs:element name="sessionToken" type="xs:string"/>
   <xs:element name="price" type="xs:decimal"/>
 
-  <xs:element name="couponResponse">
+  <xs:element name="applyCouponResponse">
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="promotion:couponCode"/>
         <xs:element ref="promotion:discountValue"/>
         <xs:element ref="promotion:couponStatus"/>
+        <xs:element ref="promotion:statusMessage"/>
+        <xs:element ref="promotion:promoName"/>
+        <xs:element ref="promotion:promoDescription"/>
         <xs:element ref="promotion:sessionToken"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="discountValue" type="xs:decimal"/>
   <xs:element name="couponStatus" type="promotion:couponStatus"/>
-
+  <xs:element name="statusMessage" type="xs:string"/>
+  <xs:element name="promoName" type="xs:string"/>
+  <xs:element name="promoDescription" type="xs:string"/>
+  
   <xs:simpleType name="couponStatus">
     <xs:restriction base="xs:string">
       <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="NO_SESSION"/>
       <xs:enumeration value="INVALID_COUPON_CODE"/>
       <xs:enumeration value="COUPON_CODE_EXPIRED"/>
-      <xs:enumeration value="NOT_AUTHORIZED_USER"/>
+      <xs:enumeration value="USER_NOT_AUTHORIZED"/>
       <xs:enumeration value="NUMBER_OF_USES_EXCEEDED"/>
       <xs:enumeration value="NOT_APPLICABLE"/>
       <xs:enumeration value="LESS_ORDER_AMOUNT"/>
-      <xs:enumeration value="INTERNAL_ERROR"/>
       <xs:enumeration value="ALREADY_APPLIED_COUPON_ON_ORDER"/>
       <xs:enumeration value="ALREADY_APPLIED_PROMOTION_ON_ORDER"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
       <xs:enumeration value="INVALID_CLIENT"/>
       <xs:enumeration value="CATEGORY_MISMATCH"/>
       <xs:enumeration value="BRAND_MISMATCH"/>
       <xs:enumeration value="INACTIVE_COUPON"/>
+      <xs:enumeration value="TOTAL_MAX_USES_EXCEEDED"/>
+      <xs:enumeration value="TOTAL_MAX_USES_PER_USER_EXCEEDED"/>
+      <xs:enumeration value="TOTAL_MAX_AMOUNT_EXCEEDED"/>
+      <xs:enumeration value="TOTAL_MAX_AMOUNT_PER_USER_EXCEEDED"/>
+      <xs:enumeration value="LIMIT_SUCCESS"/>
     </xs:restriction>
   </xs:simpleType>
 

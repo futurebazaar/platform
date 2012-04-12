@@ -27,8 +27,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.test.BaseTestCase;
-import com.fb.platform.promotion._1_0.CouponRequest;
-import com.fb.platform.promotion._1_0.CouponResponse;
+import com.fb.platform.promotion._1_0.ApplyCouponRequest;
+import com.fb.platform.promotion._1_0.ApplyCouponResponse;
 import com.fb.platform.promotion._1_0.CouponStatus;
 import com.fb.platform.promotion._1_0.OrderItem;
 import com.fb.platform.promotion._1_0.OrderRequest;

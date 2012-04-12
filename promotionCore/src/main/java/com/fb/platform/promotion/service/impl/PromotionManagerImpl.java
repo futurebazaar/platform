@@ -28,12 +28,12 @@ import com.fb.platform.promotion.service.CouponNotFoundException;
 import com.fb.platform.promotion.service.PromotionManager;
 import com.fb.platform.promotion.service.PromotionNotFoundException;
 import com.fb.platform.promotion.service.PromotionService;
+import com.fb.platform.promotion.to.ApplyCouponRequest;
+import com.fb.platform.promotion.to.ApplyCouponResponse;
+import com.fb.platform.promotion.to.ApplyCouponResponseStatusEnum;
 import com.fb.platform.promotion.to.CommitCouponRequest;
 import com.fb.platform.promotion.to.CommitCouponResponse;
 import com.fb.platform.promotion.to.CommitCouponStatusEnum;
-import com.fb.platform.promotion.to.CouponRequest;
-import com.fb.platform.promotion.to.CouponResponse;
-import com.fb.platform.promotion.to.CouponResponseStatusEnum;
 import com.fb.platform.promotion.to.ReleaseCouponRequest;
 import com.fb.platform.promotion.to.ReleaseCouponResponse;
 import com.fb.platform.promotion.to.ReleaseCouponStatusEnum;
@@ -59,14 +59,14 @@ public class PromotionManagerImpl implements PromotionManager {
 	private PromotionService promotionService = null;
 
 	@Override
-	public CouponResponse applyCoupon(CouponRequest request) {
+	public ApplyCouponResponse applyCoupon(ApplyCouponRequest request) {
 		if(logger.isDebugEnabled()) {
 			logger.debug("Applying coupon : " + request.getCouponCode());
 		}
-		CouponResponse response = new CouponResponse();
+		ApplyCouponResponse response = new ApplyCouponResponse();
 
 		if (request == null || StringUtils.isBlank(request.getSessionToken())) {
-			response.setCouponStatus(CouponResponseStatusEnum.NO_SESSION);
+			response.setCouponStatus(ApplyCouponResponseStatusEnum.NO_SESSION);
 			return response;
 		}
 
@@ -74,7 +74,7 @@ public class PromotionManagerImpl implements PromotionManager {
 		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
 		if (authentication == null) {
 			//invalid session token
-			response.setCouponStatus(CouponResponseStatusEnum.NO_SESSION);
+			response.setCouponStatus(ApplyCouponResponseStatusEnum.NO_SESSION);
 			return response;
 		}
 
@@ -88,13 +88,17 @@ public class PromotionManagerImpl implements PromotionManager {
 			coupon = promotionService.getCoupon(request.getCouponCode(), userId);
 			//find the associated promotion
 			promotion = promotionService.getPromotion(coupon.getPromotionId());
+			
+			response.setPromoName(promotion.getName());
+			response.setPromoDescription(promotion.getDescription());
 
 			//check if the couponId is already applied on the same orderId for the same user
 			//If yes, then return error
 			boolean isCouponApplicable = couponDao.isCouponApplicable(coupon.getId(), userId, request.getOrderReq().getOrderId());
 			if(!isCouponApplicable){
 				logger.error("Already an entry present for the user ="+ userId + " having couponId =" + coupon.getId() + " on the orderId = "+ request.getOrderReq().getOrderId());
-				response.setCouponStatus(CouponResponseStatusEnum.ALREADY_APPLIED_COUPON_ON_ORDER);
+				response.setCouponStatus(ApplyCouponResponseStatusEnum.ALREADY_APPLIED_COUPON_ON_ORDER);
+				response.setStatusMessage(ApplyCouponResponseStatusEnum.ALREADY_APPLIED_COUPON_ON_ORDER.toString());
 				return response;
 			}
 			
@@ -103,33 +107,37 @@ public class PromotionManagerImpl implements PromotionManager {
 			boolean isPromotionApplicable = promotionDao.isPromotionApplicable(promotion.getId(), userId, request.getOrderReq().getOrderId());
 			if(!isPromotionApplicable){
 				logger.error("Already an entry present for the user ="+ userId + " having promotionId =" + promotion.getId() + " on the orderId = "+ request.getOrderReq().getOrderId());
-				response.setCouponStatus(CouponResponseStatusEnum.ALREADY_APPLIED_PROMOTION_ON_ORDER);
+				response.setCouponStatus(ApplyCouponResponseStatusEnum.ALREADY_APPLIED_PROMOTION_ON_ORDER);
+				response.setStatusMessage(ApplyCouponResponseStatusEnum.ALREADY_APPLIED_PROMOTION_ON_ORDER.toString());
 				return response;
 			}
 			
 			GlobalCouponUses globalCouponUses = couponDao.loadGlobalUses(coupon.getId());
 			UserCouponUses userCouponUses = couponDao.loadUserUses(coupon.getId(), userId);
-			boolean withinCouponUsesLimits = validateCouponUses(coupon, globalCouponUses, userCouponUses);
-			if (!withinCouponUsesLimits) {
+			ApplyCouponResponseStatusEnum withinCouponUsesLimitsStatus = validateCouponUses(coupon, globalCouponUses, userCouponUses);
+			if (withinCouponUsesLimitsStatus.compareTo(ApplyCouponResponseStatusEnum.LIMIT_SUCCESS)!=0) {
 				logger.warn("Coupon exceeded limit. Coupon code : " + coupon.getCode());
-				response.setCouponStatus(CouponResponseStatusEnum.NUMBER_OF_USES_EXCEEDED);
+				response.setCouponStatus(withinCouponUsesLimitsStatus);
+				response.setStatusMessage(withinCouponUsesLimitsStatus.toString());
 				return response;
 			}
 
 			GlobalPromotionUses globalPromotionUses = promotionDao.loadGlobalUses(promotion.getId());
 			UserPromotionUses userPromotionUses = promotionDao.loadUserUses(promotion.getId(), userId);
-			boolean withinPromotionUsesLimits = validatePromotionUses(promotion, globalPromotionUses, userPromotionUses);
-			if (!withinPromotionUsesLimits) {
+			ApplyCouponResponseStatusEnum withinPromotionUsesLimitsStatus = validatePromotionUses(promotion, globalPromotionUses, userPromotionUses);
+			if (withinPromotionUsesLimitsStatus.compareTo(ApplyCouponResponseStatusEnum.LIMIT_SUCCESS)!=0) {
 				logger.warn("Coupon exceeded Promotions limit. Coupon code : " + coupon.getCode());
-				response.setCouponStatus(CouponResponseStatusEnum.NUMBER_OF_USES_EXCEEDED);
+				response.setCouponStatus(withinPromotionUsesLimitsStatus);
+				response.setStatusMessage(withinPromotionUsesLimitsStatus.toString());
 				return response;
 			}
 
 			//check if the promotion is applicable on this request.
 			ApplicableResponse applicable = promotion.isApplicable(request.getOrderReq());
-			if (applicable.getStatusCode().compareTo(CouponResponseStatusEnum.SUCCESS) !=0) {
+			if (applicable.getStatusCode().compareTo(ApplyCouponResponseStatusEnum.SUCCESS) !=0) {
 				logger.warn("Coupon code used when not applicable. Coupon code : " + coupon.getCode());
 				response.setCouponStatus(applicable.getStatusCode());
+				response.setStatusMessage(applicable.getStatusCode().toString());
 				return response;
 			}
 
@@ -137,23 +145,26 @@ public class PromotionManagerImpl implements PromotionManager {
 			if (discount != null) {
 				globalCouponUses.increment(discount);
 				userCouponUses.increment(discount);
-				boolean withinCouponUsesLimitsAfterApplying = validateCouponUses(coupon, globalCouponUses, userCouponUses);
-				if (!withinCouponUsesLimitsAfterApplying) {
+				ApplyCouponResponseStatusEnum withinCouponUsesLimitsStatusAfterApplying = validateCouponUses(coupon, globalCouponUses, userCouponUses);
+				if (withinCouponUsesLimitsStatusAfterApplying.compareTo(ApplyCouponResponseStatusEnum.LIMIT_SUCCESS)!=0) {
 					logger.warn("Coupon exceeded limit. Coupon code : " + coupon.getCode());
-					response.setCouponStatus(CouponResponseStatusEnum.NUMBER_OF_USES_EXCEEDED);
+					response.setCouponStatus(withinCouponUsesLimitsStatusAfterApplying);
+					response.setStatusMessage(withinCouponUsesLimitsStatusAfterApplying.toString());
 					return response;
 				}
 				
 				globalPromotionUses.increment(discount);
 				userPromotionUses.increment(discount);
-				boolean withinPromotionUsesLimitsAfterApplying = validatePromotionUses(promotion, globalPromotionUses, userPromotionUses);
-				if (!withinPromotionUsesLimitsAfterApplying) {
+				ApplyCouponResponseStatusEnum withinPromotionUsesLimitsStatusAfterApplying = validatePromotionUses(promotion, globalPromotionUses, userPromotionUses);
+				if (withinPromotionUsesLimitsStatusAfterApplying.compareTo(ApplyCouponResponseStatusEnum.LIMIT_SUCCESS)!=0) {
 					logger.warn("Coupon exceeded Promotions limit. Coupon code : " + coupon.getCode());
-					response.setCouponStatus(CouponResponseStatusEnum.NUMBER_OF_USES_EXCEEDED);
+					response.setCouponStatus(withinPromotionUsesLimitsStatusAfterApplying);
+					response.setStatusMessage(withinPromotionUsesLimitsStatusAfterApplying.toString());
 					return response;
 				}
 				
-				response.setCouponStatus(CouponResponseStatusEnum.SUCCESS);
+				response.setCouponStatus(ApplyCouponResponseStatusEnum.SUCCESS);
+				response.setStatusMessage(ApplyCouponResponseStatusEnum.SUCCESS.toString());
 				response.setDiscountValue(discount.getAmount());
 				response.setCouponCode(request.getCouponCode());
 				response.setSessionToken(request.getSessionToken());
@@ -161,13 +172,13 @@ public class PromotionManagerImpl implements PromotionManager {
 
 		} catch (CouponNotFoundException e) {
 			//we dont recognise this coupon code, bye bye
-			response.setCouponStatus(CouponResponseStatusEnum.INVALID_COUPON_CODE);
+			response.setCouponStatus(ApplyCouponResponseStatusEnum.INVALID_COUPON_CODE);
 		} catch (PromotionNotFoundException e) {
 			logger.error("No Promotion Found for Coupon code : " + request.getCouponCode());
-			response.setCouponStatus(CouponResponseStatusEnum.INTERNAL_ERROR);
+			response.setCouponStatus(ApplyCouponResponseStatusEnum.INTERNAL_ERROR);
 		} catch (PlatformException e) {
 			logger.error("Error while applying the Coupon code : " + request.getCouponCode(), e);
-			response.setCouponStatus(CouponResponseStatusEnum.INTERNAL_ERROR);
+			response.setCouponStatus(ApplyCouponResponseStatusEnum.INTERNAL_ERROR);
 		}
 
 		return response;
@@ -290,11 +301,11 @@ public class PromotionManagerImpl implements PromotionManager {
 		return response;
 	}
 
-	private boolean validatePromotionUses(Promotion promotion, GlobalPromotionUses globalPromotionUses, UserPromotionUses userPromotionUses) {
+	private ApplyCouponResponseStatusEnum validatePromotionUses(Promotion promotion, GlobalPromotionUses globalPromotionUses, UserPromotionUses userPromotionUses) {
 		return promotion.isWithinLimits(globalPromotionUses, userPromotionUses);
 	}
 
-	private boolean validateCouponUses(Coupon coupon, GlobalCouponUses globalUses, UserCouponUses userUses) {
+	private ApplyCouponResponseStatusEnum validateCouponUses(Coupon coupon, GlobalCouponUses globalUses, UserCouponUses userUses) {
 		return coupon.isWithinLimits(globalUses, userUses);
 	}
 

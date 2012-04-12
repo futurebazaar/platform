@@ -14,7 +14,7 @@ import org.apache.commons.logging.LogFactory;
 import com.fb.platform.promotion.rule.PromotionRule;
 import com.fb.platform.promotion.rule.RuleConfigConstants;
 import com.fb.platform.promotion.rule.RuleConfiguration;
-import com.fb.platform.promotion.to.CouponResponseStatusEnum;
+import com.fb.platform.promotion.to.ApplyCouponResponseStatusEnum;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.util.StringToIntegerList;
 import com.fb.commons.to.Money;
@@ -48,13 +48,16 @@ public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule, Serializable {
 		Money orderValue = new Money(request.getOrderValue());
 		if(request.isValidClient(client_list)){
 			if(orderValue.gteq(minOrderValue)){
-				ar.setStatusCode(CouponResponseStatusEnum.SUCCESS);
+				ar.setStatusCode(ApplyCouponResponseStatusEnum.SUCCESS);
+				ar.setStatusMessage(ApplyCouponResponseStatusEnum.SUCCESS.toString());
 				return ar;
 			}
-			ar.setStatusCode(CouponResponseStatusEnum.LESS_ORDER_AMOUNT);
+			ar.setStatusCode(ApplyCouponResponseStatusEnum.LESS_ORDER_AMOUNT);
+			ar.setStatusMessage(ApplyCouponResponseStatusEnum.LESS_ORDER_AMOUNT.toString());
 			return ar;
 		}
-		ar.setStatusCode(CouponResponseStatusEnum.INVALID_CLIENT);
+		ar.setStatusCode(ApplyCouponResponseStatusEnum.INVALID_CLIENT);
+		ar.setStatusMessage(ApplyCouponResponseStatusEnum.INVALID_CLIENT.toString());
 		return ar;
 	}
 

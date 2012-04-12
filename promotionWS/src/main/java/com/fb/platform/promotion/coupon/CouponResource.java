@@ -28,11 +28,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.fb.commons.PlatformException;
+import com.fb.platform.promotion._1_0.ApplyCouponRequest;
+import com.fb.platform.promotion._1_0.ApplyCouponResponse;
 import com.fb.platform.promotion._1_0.CommitCouponRequest;
 import com.fb.platform.promotion._1_0.CommitCouponResponse;
 import com.fb.platform.promotion._1_0.CommitCouponStatus;
-import com.fb.platform.promotion._1_0.CouponRequest;
-import com.fb.platform.promotion._1_0.CouponResponse;
 import com.fb.platform.promotion._1_0.CouponStatus;
 import com.fb.platform.promotion._1_0.OrderItem;
 import com.fb.platform.promotion._1_0.OrderRequest;
@@ -79,9 +79,9 @@ public class CouponResource {
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 
-			CouponRequest xmlCouponRequest = (CouponRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(applyCouponXml)));
+			ApplyCouponRequest xmlCouponRequest = (ApplyCouponRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(applyCouponXml)));
 
-			com.fb.platform.promotion.to.CouponRequest apiCouponRequest = new com.fb.platform.promotion.to.CouponRequest();
+			com.fb.platform.promotion.to.ApplyCouponRequest apiCouponRequest = new com.fb.platform.promotion.to.ApplyCouponRequest();
 			apiCouponRequest.setCouponCode(xmlCouponRequest.getCouponCode());
 			apiCouponRequest.setSessionToken(xmlCouponRequest.getSessionToken());
 
@@ -90,13 +90,16 @@ public class CouponResource {
 
 			apiCouponRequest.setOrderReq(apiOrderRequest);
 
-			CouponResponse xmlCouponResponse = new CouponResponse();
-			com.fb.platform.promotion.to.CouponResponse apiCouponResponse = promotionManager.applyCoupon(apiCouponRequest);
+			ApplyCouponResponse xmlCouponResponse = new ApplyCouponResponse();
+			com.fb.platform.promotion.to.ApplyCouponResponse apiCouponResponse = promotionManager.applyCoupon(apiCouponRequest);
 
 			xmlCouponResponse.setCouponCode(apiCouponResponse.getCouponCode());
 			xmlCouponResponse.setCouponStatus(CouponStatus.fromValue(apiCouponResponse.getCouponStatus().toString()));
 			xmlCouponResponse.setDiscountValue(apiCouponResponse.getDiscountValue());
 			xmlCouponResponse.setSessionToken(apiCouponResponse.getSessionToken());
+			xmlCouponResponse.setPromoName(apiCouponResponse.getPromoName());
+			xmlCouponResponse.setPromoDescription(apiCouponResponse.getPromoDescription());
+			xmlCouponResponse.setStatusMessage(apiCouponResponse.getStatusMessage());
 
 			StringWriter outStringWriter = new StringWriter();
 			Marshaller marsheller = context.createMarshaller();

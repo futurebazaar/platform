@@ -5,6 +5,8 @@ package com.fb.platform.promotion.model.coupon;
 
 import java.io.Serializable;
 
+import com.fb.platform.promotion.to.ApplyCouponResponseStatusEnum;
+
 /**
  * @author vinayak
  *
@@ -19,7 +21,7 @@ public class Coupon implements Serializable {
 	//if it is a preIssue coupon, then find the user associated with this coupon
 	private int userId;
 
-	public boolean isWithinLimits(GlobalCouponUses globalUses, UserCouponUses userUses) {
+	public ApplyCouponResponseStatusEnum isWithinLimits(GlobalCouponUses globalUses, UserCouponUses userUses) {
 		//TODO change the behaviour for different coupon types
 		return limitsConfig.isWithinLimits(globalUses, userUses);
 	}

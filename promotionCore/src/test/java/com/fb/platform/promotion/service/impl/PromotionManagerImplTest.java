@@ -2,6 +2,7 @@ package com.fb.platform.promotion.service.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -17,9 +18,9 @@ import com.fb.platform.promotion.service.PromotionManager;
 import com.fb.platform.promotion.to.CommitCouponRequest;
 import com.fb.platform.promotion.to.CommitCouponResponse;
 import com.fb.platform.promotion.to.CommitCouponStatusEnum;
-import com.fb.platform.promotion.to.CouponRequest;
-import com.fb.platform.promotion.to.CouponResponse;
-import com.fb.platform.promotion.to.CouponResponseStatusEnum;
+import com.fb.platform.promotion.to.ApplyCouponRequest;
+import com.fb.platform.promotion.to.ApplyCouponResponse;
+import com.fb.platform.promotion.to.ApplyCouponResponseStatusEnum;
 import com.fb.platform.promotion.to.OrderItem;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.Product;
@@ -44,17 +45,20 @@ public class PromotionManagerImplTest extends BaseTestCase{
 
 		LoginResponse response = userManager.login(request);
 		
-		CouponRequest couponRequest = new CouponRequest();
+		ApplyCouponRequest couponRequest = new ApplyCouponRequest();
 		couponRequest.setOrderReq(getSampleOrderRequest());
 		couponRequest.setCouponCode("END2END_GLOBAL");
 		couponRequest.setSessionToken(response.getSessionToken());
 		
-		CouponResponse couponResponse = promotionManager.applyCoupon(couponRequest);
+		ApplyCouponResponse couponResponse = promotionManager.applyCoupon(couponRequest);
 		
 		assertNotNull(couponResponse);
-		assertEquals(couponResponse.getCouponStatus(), CouponResponseStatusEnum.SUCCESS);
+		assertEquals(couponResponse.getCouponStatus(), ApplyCouponResponseStatusEnum.SUCCESS);
 		assertNotNull(couponResponse.getSessionToken());
 		assertEquals(0, new BigDecimal(120).compareTo(couponResponse.getDiscountValue()));
+		assertTrue((couponResponse.getPromoName()).equals("End to End Test Promotion 1"));
+		assertTrue(couponResponse.getPromoDescription().equals("end to end promo 1"));
+		assertTrue(couponResponse.getStatusMessage().equals("SUCCESSFULLY APPLIED"));
 	}
 	
 	@Test
@@ -94,15 +98,15 @@ public class PromotionManagerImplTest extends BaseTestCase{
 	}
 
 	private CommitCouponResponse placeOrder(String sessionToken) {
-		CouponRequest couponRequest = new CouponRequest();
+		ApplyCouponRequest couponRequest = new ApplyCouponRequest();
 		couponRequest.setOrderReq(getSampleOrderRequest());
 		couponRequest.setCouponCode("END2END_POST_ISSUE");
 		couponRequest.setSessionToken(sessionToken);
 		
-		CouponResponse couponResponse = promotionManager.applyCoupon(couponRequest);
+		ApplyCouponResponse couponResponse = promotionManager.applyCoupon(couponRequest);
 		
 		assertNotNull(couponResponse);
-		assertEquals(couponResponse.getCouponStatus(), CouponResponseStatusEnum.SUCCESS);
+		assertEquals(couponResponse.getCouponStatus(), ApplyCouponResponseStatusEnum.SUCCESS);
 		assertNotNull(couponResponse.getSessionToken());
 		assertEquals(0, new BigDecimal(50).compareTo(couponResponse.getDiscountValue()));
 		

@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 import com.fb.commons.to.Money;
+import com.fb.platform.promotion.to.ApplyCouponResponseStatusEnum;
 
 /**
  * @author vinayak
@@ -19,22 +20,22 @@ public class PromotionLimitsConfig implements Serializable {
 	private int maxUsesPerUser = 0;
 	private Money maxAmountPerUser = null;
 
-	public boolean isWithinLimit(GlobalPromotionUses globalUses, UserPromotionUses userUses) {
+	public ApplyCouponResponseStatusEnum isWithinLimit(GlobalPromotionUses globalUses, UserPromotionUses userUses) {
 		Money zeroMoney = new Money(BigDecimal.ZERO);
 		
 		if (maxUses > 0 && maxUses < globalUses.getCurrentCount()) {
-			return false;
+			return ApplyCouponResponseStatusEnum.TOTAL_MAX_USES_EXCEEDED;
 		}
 		if (maxAmount.gt(zeroMoney) && maxAmount.lt(globalUses.getCurrentAmount())) {
-			return false;
+			return ApplyCouponResponseStatusEnum.TOTAL_MAX_AMOUNT_EXCEEDED;
 		}
 		if (maxUsesPerUser > 0 && maxUsesPerUser < userUses.getCurrentCount()) {
-			return false;
+			return ApplyCouponResponseStatusEnum.TOTAL_MAX_USES_PER_USER_EXCEEDED;
 		}
 		if (maxAmountPerUser.gt(zeroMoney) && maxAmountPerUser.lt(userUses.getCurrentAmount())) {
-			return false;
+			return ApplyCouponResponseStatusEnum.TOTAL_MAX_AMOUNT_PER_USER_EXCEEDED;
 		}
-		return true;
+		return ApplyCouponResponseStatusEnum.LIMIT_SUCCESS;
 	}
 
 	public void setMaxUses(int maxUses) {
