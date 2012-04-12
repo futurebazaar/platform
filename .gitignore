@@ -63,4 +63,14 @@ userWS/target/
 database/ddl/platform.err
 platformPlanning/
 promotionCore/bin/
+ifsCore/.classpath
+ifsCore/.project
+ifsCore/.settings/
+ifsCore/bin/
+ifsCore/target/
+ifsWS/.classpath
+ifsWS/.project
+ifsWS/.settings/
+ifsWS/bin/
+ifsWS/target/
 .gitignore
