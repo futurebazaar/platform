@@ -21,6 +21,7 @@
     <!-- =================================================================== -->
     <bean id="ifsManager" class="com.fb.platform.ifs.manager.impl.IFSManagerImpl">
         <property name="ifsDao" ref="ifsDao"/>
+        <property name="authenticationService" ref="authenticationService"></property>
     </bean> 	
 </beans>
 

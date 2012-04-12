@@ -21,6 +21,8 @@ import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.PlatformException;
+import com.fb.platform.auth.AuthenticationService;
+import com.fb.platform.auth.AuthenticationTO;
 import com.fb.platform.ifs.caching.LSPCacheAccess;
 import com.fb.platform.ifs.caching.ProductGroupCacheAccess;
 import com.fb.platform.ifs.dao.IFSDao;
@@ -48,7 +50,7 @@ public class IFSManagerImpl implements IFSManager {
 	
 	private static Logger log = Logger.getLogger(IFSManagerImpl.class);
 	
-	public enum ResponseCode {SUCCESS,FAILURE,ERR_PRODGRP,ERR_CVG_AREA,ERR_LSP_COD,ERR_LSP_HV,ERR_INV,ERR_INV_COD_LOCAL,ERR_INV_COD,ERR_INV_LOCAL,ERR_LOCAL,ERR_DELV}
+	public enum ResponseCode {NO_SESSION,SUCCESS,FAILURE,ERR_PRODGRP,ERR_CVG_AREA,ERR_LSP_COD,ERR_LSP_HV,ERR_INV,ERR_INV_COD_LOCAL,ERR_INV_COD,ERR_INV_LOCAL,ERR_LOCAL,ERR_DELV}
 	
 	static final String PRDGRP_NOT_FOUND = "SKUPrdGrpNotFound";
 	
@@ -63,6 +65,9 @@ public class IFSManagerImpl implements IFSManager {
 	static final String PARTIAL_STOCK_AVAILABLE = "SKUPartialStockAvailable";
 	
 	static final String SKU_AVAILABLE = "SKUAvailable";
+	
+	@Autowired
+	private AuthenticationService authenticationService;
 	
 	@Autowired
 	private ProductGroupCacheAccess productGroupCacheAccess = null;
@@ -82,11 +87,21 @@ public class IFSManagerImpl implements IFSManager {
 	@Override
 	public SingleArticleServiceabilityResponseTO getSingleArticleServiceabilityInfo(SingleArticleServiceabilityRequestTO serviceabilityRequestTO) {
 
+		SingleArticleServiceabilityResponseTO art = new SingleArticleServiceabilityResponseTO();
+
+		AuthenticationTO authentication = authenticationService.authenticate(serviceabilityRequestTO.getSessionToken());
+		if (authentication == null) {
+			art.setStatusCode(ResponseCode.NO_SESSION.toString());
+			return art;
+		}
+		art.setSessionToken(authentication.getToken());
+		
+		
 		IFSToBoMapper ifsToBoMapper = new IFSToBoMapper();
 		
 		SingleArticleServiceabilityRequestBo serviceabilityRequestBo = ifsToBoMapper.updateBo(serviceabilityRequestTO);
 		IFSResultTO ifsResultTO = new IFSResultTO(); 
-		SingleArticleServiceabilityResponseTO art = new SingleArticleServiceabilityResponseTO();
+		
 		List<Jsonizable> ljs = new ArrayList<Jsonizable>();
 		String articleId = serviceabilityRequestBo.getArticleId();
 		String clientId = serviceabilityRequestBo.getClient();
@@ -845,6 +860,14 @@ public class IFSManagerImpl implements IFSManager {
 	 */
 	public void setIfsDao(IFSDao ifsDao) {
 		this.ifsDao = ifsDao;
+	}
+	
+	public AuthenticationService getAuthenticationService() {
+		return authenticationService;
+	}
+
+	public void setAuthenticationService(AuthenticationService authenticationService) {
+		this.authenticationService = authenticationService;
 	}
 
 }

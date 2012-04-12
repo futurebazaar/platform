@@ -22,7 +22,16 @@ public class SingleArticleServiceabilityResponseTO implements Serializable  {
 	private long numReturned = 101;
 	private long startIndex = 0;
 	private List<String> errors;
+	private String sessionToken = null;
 	
+	public String getSessionToken() {
+		return sessionToken;
+	}
+
+	public void setSessionToken(String sessionToken) {
+		this.sessionToken = sessionToken;
+	}
+
 	public String getStatusCode() {
 		return responseCode;
 	}

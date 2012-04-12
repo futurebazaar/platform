@@ -13,7 +13,9 @@ public enum NamedCachesEnum {
 	SESSION_CACHE("sessionCache"),
 	CRYPTO_KEY_CACHE("cryptoKeyCache"),
 	PROMOTION_CACHE("promotionCache"),
-	COUPON_CACHE("couponCache");
+	COUPON_CACHE("couponCache"),
+	PRODUCT_GROUP_CACHE("productGroupCache"),
+	LSP_CACHE("lspCache");
 
 	private String name = null;
 

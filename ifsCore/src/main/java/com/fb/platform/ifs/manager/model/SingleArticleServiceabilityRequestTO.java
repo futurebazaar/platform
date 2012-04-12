@@ -19,8 +19,15 @@ public class SingleArticleServiceabilityRequestTO {
     private int qty;
     private String client;
     private String vendorId;
+    private String sessionToken = null;
 
-    public String getVendorId() {
+    public String getSessionToken() {
+		return sessionToken;
+	}
+	public void setSessionToken(String sessionToken) {
+		this.sessionToken = sessionToken;
+	}
+	public String getVendorId() {
 		return vendorId;
 	}
 	public void setVendorId(String vendorId) {
