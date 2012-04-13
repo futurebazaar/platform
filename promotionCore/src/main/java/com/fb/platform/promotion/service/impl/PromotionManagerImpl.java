@@ -98,7 +98,6 @@ public class PromotionManagerImpl implements PromotionManager {
 			if(!isCouponApplicable){
 				logger.error("Already an entry present for the user ="+ userId + " having couponId =" + coupon.getId() + " on the orderId = "+ request.getOrderReq().getOrderId());
 				response.setCouponStatus(ApplyCouponResponseStatusEnum.ALREADY_APPLIED_COUPON_ON_ORDER);
-				response.setStatusMessage(ApplyCouponResponseStatusEnum.ALREADY_APPLIED_COUPON_ON_ORDER.toString());
 				return response;
 			}
 			
@@ -108,7 +107,6 @@ public class PromotionManagerImpl implements PromotionManager {
 			if(!isPromotionApplicable){
 				logger.error("Already an entry present for the user ="+ userId + " having promotionId =" + promotion.getId() + " on the orderId = "+ request.getOrderReq().getOrderId());
 				response.setCouponStatus(ApplyCouponResponseStatusEnum.ALREADY_APPLIED_PROMOTION_ON_ORDER);
-				response.setStatusMessage(ApplyCouponResponseStatusEnum.ALREADY_APPLIED_PROMOTION_ON_ORDER.toString());
 				return response;
 			}
 			
@@ -118,7 +116,6 @@ public class PromotionManagerImpl implements PromotionManager {
 			if (withinCouponUsesLimitsStatus.compareTo(ApplyCouponResponseStatusEnum.LIMIT_SUCCESS)!=0) {
 				logger.warn("Coupon exceeded limit. Coupon code : " + coupon.getCode());
 				response.setCouponStatus(withinCouponUsesLimitsStatus);
-				response.setStatusMessage(withinCouponUsesLimitsStatus.toString());
 				return response;
 			}
 
@@ -128,7 +125,6 @@ public class PromotionManagerImpl implements PromotionManager {
 			if (withinPromotionUsesLimitsStatus.compareTo(ApplyCouponResponseStatusEnum.LIMIT_SUCCESS)!=0) {
 				logger.warn("Coupon exceeded Promotions limit. Coupon code : " + coupon.getCode());
 				response.setCouponStatus(withinPromotionUsesLimitsStatus);
-				response.setStatusMessage(withinPromotionUsesLimitsStatus.toString());
 				return response;
 			}
 
@@ -137,7 +133,6 @@ public class PromotionManagerImpl implements PromotionManager {
 			if (applicable.getStatusCode().compareTo(ApplyCouponResponseStatusEnum.SUCCESS) !=0) {
 				logger.warn("Coupon code used when not applicable. Coupon code : " + coupon.getCode());
 				response.setCouponStatus(applicable.getStatusCode());
-				response.setStatusMessage(applicable.getStatusCode().toString());
 				return response;
 			}
 
@@ -149,22 +144,19 @@ public class PromotionManagerImpl implements PromotionManager {
 				if (withinCouponUsesLimitsStatusAfterApplying.compareTo(ApplyCouponResponseStatusEnum.LIMIT_SUCCESS)!=0) {
 					logger.warn("Coupon exceeded limit. Coupon code : " + coupon.getCode());
 					response.setCouponStatus(withinCouponUsesLimitsStatusAfterApplying);
-					response.setStatusMessage(withinCouponUsesLimitsStatusAfterApplying.toString());
 					return response;
 				}
 				
 				globalPromotionUses.increment(discount);
 				userPromotionUses.increment(discount);
 				ApplyCouponResponseStatusEnum withinPromotionUsesLimitsStatusAfterApplying = validatePromotionUses(promotion, globalPromotionUses, userPromotionUses);
-				if (withinPromotionUsesLimitsStatusAfterApplying.compareTo(ApplyCouponResponseStatusEnum.LIMIT_SUCCESS)!=0) {
+				if (withinPromotionUsesLimitsStatusAfterApplying.compareTo(ApplyCouponResponseStatusEnum.LIMIT_SUCCESS) != 0) {
 					logger.warn("Coupon exceeded Promotions limit. Coupon code : " + coupon.getCode());
 					response.setCouponStatus(withinPromotionUsesLimitsStatusAfterApplying);
-					response.setStatusMessage(withinPromotionUsesLimitsStatusAfterApplying.toString());
 					return response;
 				}
 				
 				response.setCouponStatus(ApplyCouponResponseStatusEnum.SUCCESS);
-				response.setStatusMessage(ApplyCouponResponseStatusEnum.SUCCESS.toString());
 				response.setDiscountValue(discount.getAmount());
 				response.setCouponCode(request.getCouponCode());
 				response.setSessionToken(request.getSessionToken());

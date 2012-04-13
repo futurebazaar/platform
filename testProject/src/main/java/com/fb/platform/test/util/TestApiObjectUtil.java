@@ -3,10 +3,8 @@
  */
 package com.fb.platform.test.util;
 
-import java.math.BigDecimal;
-
 import com.fb.commons.util.APIObjectUtil;
-import com.fb.platform.promotion._1_0.CouponRequest;
+import com.fb.platform.promotion._1_0.ApplyCouponRequest;
 import com.fb.platform.promotion._1_0.OrderItem;
 import com.fb.platform.promotion._1_0.OrderRequest;
 import com.fb.platform.promotion._1_0.Product;
@@ -20,7 +18,7 @@ public class TestApiObjectUtil {
 	public static void main(String[] args) {
 		APIObjectUtil objectUtil = new APIObjectUtil();
 
-		CouponRequest cr = new CouponRequest();
+		ApplyCouponRequest cr = new ApplyCouponRequest();
 		cr.setCouponCode("xxxx");
 		cr.setSessionToken("xxxxyyyy0000==");
 		OrderRequest or = new OrderRequest();
@@ -29,7 +27,7 @@ public class TestApiObjectUtil {
 		Product pr1 = new Product();
 		//pr1.g
 		//or.getOrderItem().
-		com.fb.platform.promotion.to.CouponRequest apiCouponReq = new com.fb.platform.promotion.to.CouponRequest();
+		//com.fb.platform.promotion.to.CouponRequest apiCouponReq = new com.fb.platform.promotion.to.CouponRequest();
 		
 	}
 }

@@ -26,10 +26,10 @@ import com.fb.platform.auth._1_0.LoginRequest;
 import com.fb.platform.auth._1_0.LoginResponse;
 import com.fb.platform.auth._1_0.LogoutRequest;
 import com.fb.platform.auth._1_0.LogoutResponse;
+import com.fb.platform.promotion._1_0.ApplyCouponRequest;
+import com.fb.platform.promotion._1_0.ApplyCouponResponse;
 import com.fb.platform.promotion._1_0.CommitCouponRequest;
 import com.fb.platform.promotion._1_0.CommitCouponResponse;
-import com.fb.platform.promotion._1_0.CouponRequest;
-import com.fb.platform.promotion._1_0.CouponResponse;
 import com.fb.platform.promotion._1_0.OrderItem;
 import com.fb.platform.promotion._1_0.OrderRequest;
 import com.fb.platform.promotion._1_0.Product;
@@ -93,7 +93,7 @@ public class RestClient {
 
 		PostMethod applyPromotionMethod = new PostMethod("http://localhost:8080/promotionWS/coupon/apply");
 
-		CouponRequest couponRequest = new CouponRequest();
+		ApplyCouponRequest couponRequest = new ApplyCouponRequest();
 		couponRequest.setCouponCode("GlobalCoupon1000Off");
 		couponRequest.setSessionToken(sessionToken);
 
@@ -119,7 +119,7 @@ public class RestClient {
 		String applyPromotionResponseStr = applyPromotionMethod.getResponseBodyAsString();
 		System.out.println("Got the applyPromotion Response : \n\n" + applyPromotionResponseStr);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
-		CouponResponse couponResponse = (CouponResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(applyPromotionResponseStr)));
+		ApplyCouponResponse couponResponse = (ApplyCouponResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(applyPromotionResponseStr)));
 		System.out.println(couponResponse.getCouponStatus());
 		return couponResponse.getDiscountValue();
 	}

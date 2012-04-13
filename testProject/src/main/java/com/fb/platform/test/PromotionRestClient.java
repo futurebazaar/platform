@@ -19,8 +19,8 @@ import org.apache.commons.httpclient.methods.StringRequestEntity;
 
 import com.fb.platform.auth._1_0.LoginRequest;
 import com.fb.platform.auth._1_0.LoginResponse;
-import com.fb.platform.promotion._1_0.CouponRequest;
-import com.fb.platform.promotion._1_0.CouponResponse;
+import com.fb.platform.promotion._1_0.ApplyCouponRequest;
+import com.fb.platform.promotion._1_0.ApplyCouponResponse;
 import com.fb.platform.promotion._1_0.OrderItem;
 import com.fb.platform.promotion._1_0.OrderRequest;
 import com.fb.platform.promotion._1_0.Product;
@@ -71,7 +71,7 @@ public class PromotionRestClient {
 		HttpClient httpClient = new HttpClient();
 		PostMethod couponMethod = new PostMethod("http://localhost:8080/promotionWS/coupon/apply");
 		
-		CouponRequest couponRequest = new CouponRequest();
+		ApplyCouponRequest couponRequest = new ApplyCouponRequest();
 		couponRequest.setCouponCode("global_coupon_1");
 		couponRequest.setSessionToken(sessionToken);
 //		//Create Products
@@ -123,7 +123,7 @@ public class PromotionRestClient {
 		String couponResponseStr = couponMethod.getResponseBodyAsString();
 		System.out.println("Got the login Response : \n" + couponResponseStr);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
-		CouponResponse couponResponse = (CouponResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(couponResponseStr)));
+		ApplyCouponResponse couponResponse = (ApplyCouponResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(couponResponseStr)));
 		System.out.println(couponResponse);
 		return couponResponse.getDiscountValue();
 	}

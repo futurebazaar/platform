@@ -48,17 +48,12 @@ public class ApplyCouponResponse implements Serializable{
 	public String getStatusMessage() {
 		return statusMessage;
 	}
-	/**
-	 * @param statusMessage the statusMessage to set
-	 */
-	public void setStatusMessage(String statusMessage) {
-		this.statusMessage = statusMessage;
-	}
 	public ApplyCouponResponseStatusEnum getCouponStatus() {
 		return couponStatus;
 	}
 	public void setCouponStatus(ApplyCouponResponseStatusEnum couponStatus) {
 		this.couponStatus = couponStatus;
+		this.statusMessage = couponStatus.getMesage();
 	}
 	public String getSessionToken() {
 		return sessionToken;
