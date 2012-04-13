@@ -61,4 +61,18 @@ public interface PromotionService {
 	 */
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void updateUserUses(int couponId, int promotionId, int userId, BigDecimal valueApplied, int orderId);
+
+	/**
+	 * Clears the cached promotion. Also clears any cached coupon belonging to this promotion.
+	 * @param promotionId
+	 */
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void clearCache(int promotionId);
+
+	/**
+	 * 
+	 * @param couponCode
+	 */
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void clearCache(String couponCode);
 }

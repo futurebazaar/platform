@@ -137,4 +137,16 @@ public class PromotionServiceImpl implements PromotionService {
 		this.promotionDao = promotionDao;
 	}
 
+	@Override
+	public void clearCache(int promotionId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void clearCache(String couponCode) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

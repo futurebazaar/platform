@@ -356,8 +356,6 @@
         <module>authenticationCore</module>
 	<module>promotionCore</module>
 	<module>promotionWS</module>
-	<module>ifsCore</module>
-	<module>ifsWS</module>
     </modules>
 
     <reporting>

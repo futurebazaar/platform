@@ -316,4 +316,12 @@ public class PromotionManagerImpl implements PromotionManager {
 	public void setPromotionService(PromotionService promotionService) {
 		this.promotionService = promotionService;
 	}
+
+	@Override
+	public void clearCache(int promotionId) {
+	}
+
+	@Override
+	public void clearCache(String couponCode) {
+	}
 }
