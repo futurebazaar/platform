@@ -139,8 +139,10 @@ public class PromotionServiceImpl implements PromotionService {
 
 	@Override
 	public void clearCache(int promotionId) {
-		// TODO Auto-generated method stub
-		
+		Promotion promotion = promotionCacheAccess.get(promotionId);
+		if (promotion != null) {
+			promotionCacheAccess.clear(promotionId);
+		}
 	}
 
 	@Override
