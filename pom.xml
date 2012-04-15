@@ -108,17 +108,19 @@
             <id>central</id>
             <url>http://repo1.maven.org/maven2</url>
         </repository>
-    </repositories>
+    </repositories> 
+
 -->
+
 <!-- download artifacts from this repo -->
- <distributionManagement>
+ <distributionManagement> 
  <!-- Publish the versioned releases here -->
- <repository>
+<repository>
  <uniqueVersion>false</uniqueVersion>
         <id>fb</id>
         <name>fb</name>
   <url>dav:http://maven.futurebazaar.com/nexus/content/repositories/releases</url>
- </repository>
+ </repository> 
 
  <!-- Publish the versioned releases here -->
  <snapshotRepository>
@@ -145,6 +147,8 @@
 </repositories>
 
 <!-- download plugins from this repo -->
+
+
 <pluginRepositories>
  <pluginRepository>
   <id>fb</id>
@@ -356,6 +360,8 @@
         <module>authenticationCore</module>
 	<module>promotionCore</module>
 	<module>promotionWS</module>
+	<module>migrationCore</module>
+	<module>migrationWS</module>
     </modules>
 
     <reporting>
