@@ -152,4 +152,35 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:element name="applyScratchCardRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:cardNumber"/>
+        <xs:element ref="promotion:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="cardNumber" type="xs:string"/>
+
+  <xs:element name="applyScratchCardResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:applyScratchCardStatus"/>
+        <xs:element ref="promotion:couponCode"/>
+        <xs:element ref="promotion:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="applyScratchCardStatus" type="promotion:applyScratchCardStatus"/>
+  <xs:simpleType name="applyScratchCardStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INVALID_SCRATCH_CARD"/>
+      <xs:enumeration value="COUPON_ALREADY_ASSIGNED_TO_USER"/>
+      <xs:enumeration value="NOT_FIRST_ORDER"/>
+      <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+    </xs:restriction>
+  </xs:simpleType>
+
 </xs:schema>

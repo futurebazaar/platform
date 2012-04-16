@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<applyScartchCardRequest xmlns="http://www.fb.com/platform/promotion/1.0.0">
+<applyScratchCardRequest xmlns="http://www.fb.com/platform/promotion/1.0.0">
 	<cardNumber>10</cardNumber>
 	<sessionToken>xxxx1111yyyy-ee-02==</sessionToken>
-</applyScartchCardRequest>
+</applyScratchCardRequest>

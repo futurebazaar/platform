@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.fb.com/platform/promotion/1.0.0" xmlns:promotion="http://www.fb.com/platform/promotion/1.0.0">
+  <xs:element name="applyScratchCardResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:applyScratchCardStatus"/>
+        <xs:element ref="promotion:couponCode"/>
+        <xs:element ref="promotion:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="applyScratchCardStatus" type="xs:NCName"/>
+  <xs:element name="couponCode" type="xs:NCName"/>
+  <xs:element name="sessionToken" type="xs:string"/>
+</xs:schema>

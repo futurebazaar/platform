@@ -14,6 +14,7 @@ import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
+import com.fb.platform.promotion.admin.service.PromotionAdminService;
 import com.fb.platform.promotion.dao.CouponDao;
 import com.fb.platform.promotion.dao.PromotionDao;
 import com.fb.platform.promotion.model.GlobalPromotionUses;
@@ -22,15 +23,21 @@ import com.fb.platform.promotion.model.UserPromotionUses;
 import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.coupon.GlobalCouponUses;
 import com.fb.platform.promotion.model.coupon.UserCouponUses;
+import com.fb.platform.promotion.model.scratchCard.ScratchCard;
 import com.fb.platform.promotion.rule.impl.ApplicableResponse;
+import com.fb.platform.promotion.service.CouponAlreadyAssignedToUserException;
 import com.fb.platform.promotion.service.CouponNotCommitedException;
 import com.fb.platform.promotion.service.CouponNotFoundException;
 import com.fb.platform.promotion.service.PromotionManager;
 import com.fb.platform.promotion.service.PromotionNotFoundException;
 import com.fb.platform.promotion.service.PromotionService;
+import com.fb.platform.promotion.service.ScratchCardNotFoundException;
 import com.fb.platform.promotion.to.ApplyCouponRequest;
 import com.fb.platform.promotion.to.ApplyCouponResponse;
 import com.fb.platform.promotion.to.ApplyCouponResponseStatusEnum;
+import com.fb.platform.promotion.to.ApplyScratchCardRequest;
+import com.fb.platform.promotion.to.ApplyScratchCardResponse;
+import com.fb.platform.promotion.to.ApplyScratchCardStatus;
 import com.fb.platform.promotion.to.CommitCouponRequest;
 import com.fb.platform.promotion.to.CommitCouponResponse;
 import com.fb.platform.promotion.to.CommitCouponStatusEnum;
@@ -57,6 +64,9 @@ public class PromotionManagerImpl implements PromotionManager {
 
 	@Autowired
 	private PromotionService promotionService = null;
+
+	@Autowired
+	private PromotionAdminService promotionAdminService = null;
 
 	@Override
 	public ApplyCouponResponse applyCoupon(ApplyCouponRequest request) {
@@ -301,6 +311,76 @@ public class PromotionManagerImpl implements PromotionManager {
 		return coupon.isWithinLimits(globalUses, userUses);
 	}
 
+	@Override
+	public void clearCache(int promotionId) {
+	}
+
+	@Override
+	public void clearCache(String couponCode) {
+	}
+
+	@Override
+	public ApplyScratchCardResponse applyScratchCard(ApplyScratchCardRequest request) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("applyScratchCard : " + request.getCardNumber());
+		}
+		ApplyScratchCardResponse response = new ApplyScratchCardResponse();
+		response.setSessionToken(request.getSessionToken());
+
+		if (request == null || StringUtils.isBlank(request.getSessionToken())) {
+			response.setApplyScratchCardStatus(ApplyScratchCardStatus.NO_SESSION);
+			return response;
+		}
+
+		if (StringUtils.isBlank(request.getCardNumber())) {
+			response.setApplyScratchCardStatus(ApplyScratchCardStatus.INVALID_SCRATCH_CARD);
+			return response;
+		}
+
+		//authenticate the session token and find out the userId
+		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
+		if (authentication == null) {
+			//invalid session token
+			response.setApplyScratchCardStatus(ApplyScratchCardStatus.NO_SESSION);
+			return response;
+		}
+
+		int userId = authentication.getUserID();
+
+		try {
+			//load the scratch card
+			ScratchCard scratchCard = promotionService.loadScratchCard(request.getCardNumber());
+			if (!scratchCard.isActive()) {
+				logger.warn("Inactive scratch card used : " + request.getCardNumber());
+				response.setApplyScratchCardStatus(ApplyScratchCardStatus.INVALID_SCRATCH_CARD);
+				return response;
+			}
+
+			//get a coupon for the store associated with the scratch card.
+			String couponCode = promotionService.getCouponCode(scratchCard.getStore(), userId);
+			//assign coupon to this user
+			promotionAdminService.assignCouponToUser(userId, couponCode, 0);
+
+			//commit the scratch card use by this user
+			promotionService.commitScratchCard(scratchCard.getId(), userId, couponCode);
+
+			response.setCouponCode(couponCode);
+			response.setApplyScratchCardStatus(ApplyScratchCardStatus.SUCCESS);
+
+		} catch (ScratchCardNotFoundException e) {
+			logger.error("scratchCard not found : " + request.getCardNumber(), e);
+			response.setApplyScratchCardStatus(ApplyScratchCardStatus.INVALID_SCRATCH_CARD);
+		} catch (CouponAlreadyAssignedToUserException e) {
+			logger.error("Coupon alrady given to scratch card : " + request.getCardNumber(), e);
+			response.setApplyScratchCardStatus(ApplyScratchCardStatus.COUPON_ALREADY_ASSIGNED_TO_USER);
+		} catch (PlatformException e) {
+			logger.error("Error while applying the scratchCard : " + request.getCardNumber(), e);
+			response.setApplyScratchCardStatus(ApplyScratchCardStatus.INTERNAL_ERROR);
+		}
+
+		return response;
+	}
+
 	public void setAuthenticationService(AuthenticationService authenticationService) {
 		this.authenticationService = authenticationService;
 	}
@@ -317,11 +397,7 @@ public class PromotionManagerImpl implements PromotionManager {
 		this.promotionService = promotionService;
 	}
 
-	@Override
-	public void clearCache(int promotionId) {
-	}
-
-	@Override
-	public void clearCache(String couponCode) {
+	public void setPromotionAdminService(PromotionAdminService promotionAdminService) {
+		this.promotionAdminService = promotionAdminService;
 	}
 }

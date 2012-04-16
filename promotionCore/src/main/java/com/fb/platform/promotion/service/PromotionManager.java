@@ -5,6 +5,8 @@ package com.fb.platform.promotion.service;
 
 import com.fb.platform.promotion.to.ApplyCouponRequest;
 import com.fb.platform.promotion.to.ApplyCouponResponse;
+import com.fb.platform.promotion.to.ApplyScratchCardRequest;
+import com.fb.platform.promotion.to.ApplyScratchCardResponse;
 import com.fb.platform.promotion.to.CommitCouponRequest;
 import com.fb.platform.promotion.to.CommitCouponResponse;
 import com.fb.platform.promotion.to.ReleaseCouponRequest;
@@ -25,4 +27,6 @@ public interface PromotionManager {
 	public void clearCache(int promotionId);
 
 	public void clearCache(String couponCode);
+
+	public ApplyScratchCardResponse applyScratchCard(ApplyScratchCardRequest request);
 }

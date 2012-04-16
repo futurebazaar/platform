@@ -163,6 +163,12 @@ CREATE TABLE platform_coupon_user (
 	CONSTRAINT platform_coupon_user_fk2 FOREIGN KEY (user_id) REFERENCES users_profile (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+ALTER TABLE promotions_scratchcard ADD COLUMN user_id INTEGER;
+
+ALTER TABLE promotions_scratchcard ADD CONSTRAINT fk_user_id FOREIGN KEY(user_id) REFERENCES users_profile(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE promotions_scratchcard ADD COLUMN usedDate DATETIME;
+
 -- end of promotion tables 
 
 

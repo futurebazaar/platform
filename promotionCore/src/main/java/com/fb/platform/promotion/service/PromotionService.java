@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fb.commons.PlatformException;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.coupon.Coupon;
+import com.fb.platform.promotion.model.scratchCard.ScratchCard;
 
 /**
  * @author vinayak
@@ -75,4 +76,13 @@ public interface PromotionService {
 	 */
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void clearCache(String couponCode);
+
+	@Transactional(propagation=Propagation.REQUIRED)
+	public ScratchCard loadScratchCard(String cardNumber);
+
+	@Transactional(propagation=Propagation.REQUIRED)
+	public String getCouponCode(String store, int userId);
+
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void commitScratchCard(int scratchCardId, int userId, String couponCode);
 }

@@ -320,6 +320,25 @@ CREATE TABLE platform_coupon_user (
 	CONSTRAINT platform_coupon_user_fk2 FOREIGN KEY (user_id) REFERENCES users_profile (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE promotions_scratchcard (
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  mobile varchar(15) DEFAULT NULL,
+  email varchar(100) DEFAULT NULL,
+  name varchar(100) DEFAULT NULL,
+  scratch_card_no varchar(100) NOT NULL,
+  coupon_code varchar(100) DEFAULT NULL,
+  status varchar(25) NOT NULL DEFAULT 'active',
+  timestamp datetime NOT NULL,
+  store varchar(50) NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE promotions_scratchcard ADD COLUMN user_id INTEGER;
+
+ALTER TABLE promotions_scratchcard ADD CONSTRAINT fk_user_id FOREIGN KEY(user_id) REFERENCES users_profile(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+ALTER TABLE promotions_scratchcard ADD COLUMN used_date DATETIME;
+
 -- end of promotion tables 
 
 CREATE TABLE accounts_client (
@@ -470,3 +489,4 @@ CREATE TABLE `fulfillment_deliverychart_vendor` (
   `shipping_time` int(11) NOT NULL,
   `delivery_time` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+

@@ -55,7 +55,7 @@ public class RestClient {
 		logout(sessionToken);
 	}
 
-	private static String login() throws Exception {
+	public static String login() throws Exception {
 		HttpClient httpClient = new HttpClient();
 		//PostMethod loginMethod = new PostMethod("http://10.0.102.12:8082/userWS/auth/login");
 		PostMethod loginMethod = new PostMethod("http://localhost:8080/userWS/auth/login");

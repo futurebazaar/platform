@@ -26,6 +26,13 @@
 		<property name="jdbcTemplate" ref="jdbcTemplate"/>
 	</bean>
 
+	<bean id="couponAdminDao" class="com.fb.platform.promotion.admin.dao.impl.CouponAdminDaoJdbcImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+
+	<bean id="scratchCardDao" class="com.fb.platform.promotion.dao.impl.ScratchCardDaoJdbcImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
     <!-- Add new DAOs here -->
 
 </beans>

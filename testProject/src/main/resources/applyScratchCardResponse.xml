@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applyScratchCardResponse xmlns="http://www.fb.com/platform/promotion/1.0.0">
+	<applyScratchCardStatus>SUCCESS</applyScratchCardStatus>
+	<couponCode>xxxxx</couponCode>
+	<sessionToken>xxxx1111yyyy-ee-02==</sessionToken>
+</applyScratchCardResponse>
