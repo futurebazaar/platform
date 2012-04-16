@@ -24,8 +24,8 @@ public class CouponCacheAccess extends AbstractCacheAccess {
 		return (Coupon) platformCachingManager.get(NamedCachesEnum.COUPON_CACHE, couponCode);
 	}
 
-	public void clear(String couponCode) {
-		platformCachingManager.remove(NamedCachesEnum.COUPON_CACHE, couponCode);
+	public boolean clear(String couponCode) {
+		return platformCachingManager.remove(NamedCachesEnum.COUPON_CACHE, couponCode);
 	}
 
 	public void lock(String couponCode) {

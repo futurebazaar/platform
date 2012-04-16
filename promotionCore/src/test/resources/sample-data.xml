@@ -187,6 +187,18 @@
                         <value name="is_active">1</value>
                         <value name="rule_id">-2</value>
         	</row>
+        	<row>
+                        <value name="id">-2100</value>
+                        <null/>
+                        <null/>
+                        <value name="valid_from">2012-02-01 00:00:00</value>
+                        <value name="valid_till">2012-08-31 00:00:00</value>
+                        <value name="name">ScratchCard Response</value>
+                        <value name="description">This promotion is asscociated with a scratch coupon</value>
+                        <value name="is_coupon">1</value>
+                        <value name="is_active">1</value>
+                        <value name="rule_id">-2</value>
+        	</row>
         </table>
         <table name="promotion_limits_config">
                 <column>id</column>
@@ -298,6 +310,14 @@
                         <value name="max_amount">4000</value>
                         <value name="max_uses_per_user">1</value>
                         <value name="max_amount_per_user">1000</value>
+                </row>
+                <row>
+                        <value name="id">-2100</value>
+                        <value name="promotion_id">-2100</value>
+                        <value name="max_uses">5</value>
+                        <value name="max_amount">4500</value>
+                        <value name="max_uses_per_user">1</value>
+                        <value name="max_amount_per_user">900</value>
                 </row>
         </table>
         <table name="user_promotion_uses">
@@ -429,8 +449,40 @@
                         <value name="created_on">2012-02-01 00:00:00</value>
                         <value name="last_modified_on">2012-04-01 00:00:00</value>
                         <value name="coupon_code">DCBF78KT54</value>
-                        <value name="promotion_id">-2000</value>
+                        <value name="promotion_id">-2100</value>
                         <value name="coupon_type">PRE_ISSUE</value>
+                </row>
+                <row>
+                        <value name="id">-2001</value>
+                        <value name="created_on">2012-02-01 00:00:00</value>
+                        <value name="last_modified_on">2012-04-01 00:00:00</value>
+                        <value name="coupon_code">GlobalCoupon1000Off2</value>
+                        <value name="promotion_id">-2000</value>
+                        <value name="coupon_type">GLOBAL</value>
+                </row>
+                <row>
+                        <value name="id">-2002</value>
+                        <value name="created_on">2012-02-01 00:00:00</value>
+                        <value name="last_modified_on">2012-04-01 00:00:00</value>
+                        <value name="coupon_code">GlobalCoupon1000Off3</value>
+                        <value name="promotion_id">-2000</value>
+                        <value name="coupon_type">GLOBAL</value>
+                </row>
+                <row>
+                        <value name="id">-2003</value>
+                        <value name="created_on">2012-02-01 00:00:00</value>
+                        <value name="last_modified_on">2012-04-01 00:00:00</value>
+                        <value name="coupon_code">GlobalCoupon1000Off4</value>
+                        <value name="promotion_id">-2000</value>
+                        <value name="coupon_type">GLOBAL</value>
+                </row>
+                <row>
+                        <value name="id">-2004</value>
+                        <value name="created_on">2012-02-01 00:00:00</value>
+                        <value name="last_modified_on">2012-04-01 00:00:00</value>
+                        <value name="coupon_code">GlobalCoupon1000Off5</value>
+                        <value name="promotion_id">-2000</value>
+                        <value name="coupon_type">GLOBAL</value>
                 </row>
         </table>
         <table name="coupon_limits_config">
@@ -515,6 +567,38 @@
                 <row>
                         <value name="id">-2100</value>
                         <value name="coupon_id">-2100</value>
+                        <value name="max_uses">5</value>
+                        <value name="max_amount">4500</value>
+                        <value name="max_uses_per_user">1</value>
+                        <value name="max_amount_per_user">900</value>
+                </row>
+                <row>
+                        <value name="id">-2001</value>
+                        <value name="coupon_id">-2001</value>
+                        <value name="max_uses">4</value>
+                        <value name="max_amount">4000</value>
+                        <value name="max_uses_per_user">1</value>
+                        <value name="max_amount_per_user">1000</value>
+                </row>
+                <row>
+                        <value name="id">-2002</value>
+                        <value name="coupon_id">-2002</value>
+                        <value name="max_uses">4</value>
+                        <value name="max_amount">4000</value>
+                        <value name="max_uses_per_user">1</value>
+                        <value name="max_amount_per_user">1000</value>
+                </row>
+                <row>
+                        <value name="id">-2003</value>
+                        <value name="coupon_id">-2003</value>
+                        <value name="max_uses">4</value>
+                        <value name="max_amount">4000</value>
+                        <value name="max_uses_per_user">1</value>
+                        <value name="max_amount_per_user">1000</value>
+                </row>
+                <row>
+                        <value name="id">-2004</value>
+                        <value name="coupon_id">-2004</value>
                         <value name="max_uses">4</value>
                         <value name="max_amount">4000</value>
                         <value name="max_uses_per_user">1</value>

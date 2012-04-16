@@ -4,6 +4,8 @@
 package com.fb.platform.promotion.service.impl;
 
 import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,11 @@ import com.fb.platform.promotion.model.scratchCard.ScratchCard;
 import com.fb.platform.promotion.service.CouponNotFoundException;
 import com.fb.platform.promotion.service.PromotionNotFoundException;
 import com.fb.platform.promotion.service.PromotionService;
+import com.fb.platform.promotion.to.ClearCacheEnum;
+import com.fb.platform.promotion.to.ClearCouponCacheRequest;
+import com.fb.platform.promotion.to.ClearCouponCacheResponse;
+import com.fb.platform.promotion.to.ClearPromotionCacheRequest;
+import com.fb.platform.promotion.to.ClearPromotionCacheResponse;
 
 /**
  * @author vinayak
@@ -144,16 +151,50 @@ public class PromotionServiceImpl implements PromotionService {
 	}
 
 	@Override
-	public void clearCache(int promotionId) {
-		Promotion promotion = promotionCacheAccess.get(promotionId);
+	public ClearPromotionCacheResponse clearCache(ClearPromotionCacheRequest clearPromotionCacheRequest) {
+		Promotion promotion = promotionCacheAccess.get(clearPromotionCacheRequest.getPromotionId());
+		ClearPromotionCacheResponse clearPromotionCacheResponse = new ClearPromotionCacheResponse();
 		if (promotion != null) {
-			promotionCacheAccess.clear(promotionId);
+			clearPromotionCacheResponse.setPromotionId(clearPromotionCacheRequest.getPromotionId());
+			boolean isClear = promotionCacheAccess.clear(clearPromotionCacheRequest.getPromotionId());
+			if(isClear == true) {
+				clearPromotionCacheResponse.setClearCacheEnum(ClearCacheEnum.SUCCESS);
+			} else {
+				clearPromotionCacheResponse.setClearCacheEnum(ClearCacheEnum.INTERNAL_ERROR);
+			}
+		} else {
+			clearPromotionCacheResponse.setClearCacheEnum(ClearCacheEnum.CACHE_NOT_FOUND);
 		}
+		//get all the coupons cached corresponding to this promotion and then clear them from cache
+		Collection<Coupon> couponsList = couponDao.getCouponsForPromotion(clearPromotionCacheRequest.getPromotionId());
+		Iterator<Coupon> iterator = couponsList.iterator();
+		while(iterator.hasNext()) {
+			Coupon coupon = iterator.next();
+			ClearCouponCacheRequest clearCouponCacheRequest = new ClearCouponCacheRequest();
+			clearCouponCacheRequest.setCouponCode(coupon.getCode());
+			clearCouponCacheRequest.setSessionToken(clearPromotionCacheRequest.getSessionToken());
+			clearPromotionCacheResponse.getClearCouponCacheResponse().add(clearCache(clearCouponCacheRequest));
+		}
+		return clearPromotionCacheResponse;
 	}
 
 	@Override
-	public void clearCache(String couponCode) {
-		// TODO Auto-generated method stub
+	public ClearCouponCacheResponse clearCache(ClearCouponCacheRequest clearCouponCacheRequest) {
+		Coupon coupon = couponCacheAccess.get(clearCouponCacheRequest.getCouponCode());
+		ClearCouponCacheResponse clearCouponCacheResponse = new ClearCouponCacheResponse();
+		clearCouponCacheResponse.setCouponCode(clearCouponCacheRequest.getCouponCode());
+		clearCouponCacheResponse.setSessionToken(clearCouponCacheRequest.getSessionToken());
+		if (coupon != null) {
+			boolean isClear = couponCacheAccess.clear(clearCouponCacheRequest.getCouponCode());
+			if(isClear == true) {
+				clearCouponCacheResponse.setClearCacheEnum(ClearCacheEnum.SUCCESS);
+			} else {
+				clearCouponCacheResponse.setClearCacheEnum(ClearCacheEnum.INTERNAL_ERROR);
+			}
+		} else {
+			clearCouponCacheResponse.setClearCacheEnum(ClearCacheEnum.CACHE_NOT_FOUND);
+		}
+		return clearCouponCacheResponse;
 		
 	}
 

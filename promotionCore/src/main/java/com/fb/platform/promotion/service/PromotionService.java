@@ -12,6 +12,10 @@ import com.fb.commons.PlatformException;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.scratchCard.ScratchCard;
+import com.fb.platform.promotion.to.ClearCouponCacheRequest;
+import com.fb.platform.promotion.to.ClearCouponCacheResponse;
+import com.fb.platform.promotion.to.ClearPromotionCacheRequest;
+import com.fb.platform.promotion.to.ClearPromotionCacheResponse;
 
 /**
  * @author vinayak
@@ -65,17 +69,17 @@ public interface PromotionService {
 
 	/**
 	 * Clears the cached promotion, if it is cached. Also clears any cached coupon belonging to this promotion.
-	 * @param promotionId
+	 * @param clearPromotionCacheRequest
 	 */
 	@Transactional(propagation=Propagation.REQUIRED)
-	public void clearCache(int promotionId);
+	public ClearPromotionCacheResponse clearCache(ClearPromotionCacheRequest clearPromotionCacheRequest);
 
 	/**
 	 * Clears the cached coupon associated with this coupon code, if it is cached.
-	 * @param couponCode
+	 * @param clearCouponCacheRequest
 	 */
 	@Transactional(propagation=Propagation.REQUIRED)
-	public void clearCache(String couponCode);
+	public ClearCouponCacheResponse clearCache(ClearCouponCacheRequest clearCouponCacheRequest);
 
 	@Transactional(propagation=Propagation.REQUIRED)
 	public ScratchCard loadScratchCard(String cardNumber);
@@ -85,4 +89,5 @@ public interface PromotionService {
 
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void commitScratchCard(int scratchCardId, int userId, String couponCode);
+
 }

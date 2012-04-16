@@ -38,7 +38,7 @@ public class ScratchCardRestClient {
 		PostMethod applyScratchCardMethod = new PostMethod("http://localhost:8080/promotionWS/scratchCard/apply");
 
 		ApplyScratchCardRequest request = new ApplyScratchCardRequest();
-		request.setCardNumber("BB0003AON");
+		request.setCardNumber("BB0003TLK");
 		request.setSessionToken(sessionToken);
 
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion._1_0");

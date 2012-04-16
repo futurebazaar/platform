@@ -151,7 +151,59 @@
       <xs:enumeration value="COUPON_NOT_COMMITTED"/>
     </xs:restriction>
   </xs:simpleType>
+  
+  <xs:element name="clearPromotionCacheResponse">
+  	<xs:complexType>
+  		<xs:sequence>
+  			<xs:element ref="promotion:promotionId"/>
+  			<xs:element maxOccurs="unbounded" ref="promotion:clearCouponCacheResponse"/>
+  			<xs:element ref="promotion:sessionToken"/>
+  			<xs:element ref="promotion:clearCacheEnum"/>
+  		</xs:sequence>
+  	</xs:complexType>
+  </xs:element>
+  
+  <xs:element name="clearCouponCacheResponse">
+  	<xs:complexType>
+  		<xs:sequence>
+  			<xs:element ref="promotion:couponCode"/>
+  			<xs:element ref="promotion:sessionToken"/>
+  			<xs:element ref="promotion:clearCacheEnum"/>
+  		</xs:sequence>
+  	</xs:complexType>
+  </xs:element>
+  
+   <xs:element name="clearPromotionCacheRequest">
+  	<xs:complexType>
+  		<xs:sequence>
+  			<xs:element ref="promotion:promotionId"/>
+			<xs:element ref="promotion:sessionToken"/>
+  		</xs:sequence>
+  	</xs:complexType>
+  </xs:element>
+  
+  <xs:element name="clearCouponCacheRequest">
+  	<xs:complexType>
+  		<xs:sequence>
+  			<xs:element ref="promotion:couponCode"/>
+			<xs:element ref="promotion:sessionToken"/>
+  		</xs:sequence>
+  	</xs:complexType>
+  </xs:element>
+  
+  <xs:element name="promotionId" type="xs:int"/>
 
+  <xs:element name="clearCacheEnum" type="promotion:clearCacheEnum"/>
+
+  <xs:simpleType name="clearCacheEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="CACHE_NOT_FOUND"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+      <xs:enumeration value="NO_SESSION"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
   <xs:element name="applyScratchCardRequest">
     <xs:complexType>
       <xs:sequence>

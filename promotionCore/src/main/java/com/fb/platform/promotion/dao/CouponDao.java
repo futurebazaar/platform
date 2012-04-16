@@ -4,6 +4,7 @@
 package com.fb.platform.promotion.dao;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 
 import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.coupon.GlobalCouponUses;
@@ -20,6 +21,10 @@ public interface CouponDao {
 	public GlobalCouponUses loadGlobalUses(int couponId);
 
 	public UserCouponUses loadUserUses(int couponId, int userId);
+	
+	public Collection<Coupon> getCouponsForPromotion(int promotionId);
+	
+	public Collection<Coupon> getCouponsForPromotion(int promotionId, String couponType);
 
 	public void updateUserUses(int couponId, int userId, BigDecimal valueApplied, int orderId);
 	
