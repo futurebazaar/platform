@@ -5,6 +5,10 @@ package com.fb.platform.promotion.service;
 
 import com.fb.platform.promotion.to.ApplyCouponRequest;
 import com.fb.platform.promotion.to.ApplyCouponResponse;
+import com.fb.platform.promotion.to.ClearCouponCacheRequest;
+import com.fb.platform.promotion.to.ClearCouponCacheResponse;
+import com.fb.platform.promotion.to.ClearPromotionCacheRequest;
+import com.fb.platform.promotion.to.ClearPromotionCacheResponse;
 import com.fb.platform.promotion.to.CommitCouponRequest;
 import com.fb.platform.promotion.to.CommitCouponResponse;
 import com.fb.platform.promotion.to.ReleaseCouponRequest;
@@ -22,7 +26,7 @@ public interface PromotionManager {
 	
 	public ReleaseCouponResponse releaseCoupon(ReleaseCouponRequest request);
 
-	public void clearCache(int promotionId);
+	public ClearPromotionCacheResponse clearCache(ClearPromotionCacheRequest clearPromotionCacheRequest);
 
-	public void clearCache(String couponCode);
+	public ClearCouponCacheResponse clearCache(ClearCouponCacheRequest clearCouponCacheRequest);
 }

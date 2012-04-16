@@ -28,6 +28,10 @@ import com.fb.platform.auth._1_0.LogoutRequest;
 import com.fb.platform.auth._1_0.LogoutResponse;
 import com.fb.platform.promotion._1_0.ApplyCouponRequest;
 import com.fb.platform.promotion._1_0.ApplyCouponResponse;
+import com.fb.platform.promotion._1_0.ClearCouponCacheRequest;
+import com.fb.platform.promotion._1_0.ClearCouponCacheResponse;
+import com.fb.platform.promotion._1_0.ClearPromotionCacheRequest;
+import com.fb.platform.promotion._1_0.ClearPromotionCacheResponse;
 import com.fb.platform.promotion._1_0.CommitCouponRequest;
 import com.fb.platform.promotion._1_0.CommitCouponResponse;
 import com.fb.platform.promotion._1_0.OrderItem;
@@ -52,6 +56,8 @@ public class RestClient {
 		BigDecimal discountValue = applyPromotion(sessionToken, orderId);
 		commitCouupon(sessionToken, orderId, discountValue);
 		releaseCoupon(sessionToken, orderId);
+		clearCoupon(sessionToken);
+		clearPromotion(sessionToken);
 		logout(sessionToken);
 	}
 
@@ -208,6 +214,70 @@ public class RestClient {
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		ReleaseCouponResponse releaseCouponResponse = (ReleaseCouponResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(releaseCouponResponseStr)));
 		System.out.println(releaseCouponResponse.getReleaseCouponStatus());
+	}
+	
+	private static void clearCoupon(String sessionToken) throws Exception {
+		HttpClient httpClient = new HttpClient();
+		//PostMethod logoutMethod = new PostMethod("http://10.0.102.12:8082/promotionWS/coupon/clear/coupon");
+		PostMethod clearCoupon = new PostMethod("http://localhost:8080/promotionWS/coupon/clear/coupon");
+		ClearCouponCacheRequest clearCouponCacheRequest = new ClearCouponCacheRequest();
+		clearCouponCacheRequest.setCouponCode("GlobalCoupon1000Off");
+		clearCouponCacheRequest.setSessionToken(sessionToken);
+		
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion._1_0");
+
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(clearCouponCacheRequest, sw);
+
+		System.out.println("\n\nclearCoupon : \n" + sw.toString());
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		clearCoupon.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(clearCoupon);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the clearCoupon method : " + statusCode);
+			System.exit(1);
+		}
+		String clearCouponResponseStr = clearCoupon.getResponseBodyAsString();
+		System.out.println("Got the clearCouponCache Response : \n\n" + clearCouponResponseStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		ClearCouponCacheResponse clearCouponCacheResponse = (ClearCouponCacheResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(clearCouponResponseStr)));
+		System.out.println(clearCouponCacheResponse.getClearCacheEnum().toString());
+		
+	}
+	
+	private static void clearPromotion(String sessionToken) throws Exception {
+		HttpClient httpClient = new HttpClient();
+		//PostMethod logoutMethod = new PostMethod("http://10.0.102.12:8082/promotionWS/coupon/clear/promotion");
+		PostMethod clearPromotion = new PostMethod("http://localhost:8080/promotionWS/coupon/clear/promotion");
+		ClearPromotionCacheRequest clearPromotionCacheRequest = new ClearPromotionCacheRequest();
+		clearPromotionCacheRequest.setPromotionId(-2000);
+		clearPromotionCacheRequest.setSessionToken(sessionToken);
+		
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion._1_0");
+
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(clearPromotionCacheRequest, sw);
+
+		System.out.println("\n\nclearPromotion : \n" + sw.toString());
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		clearPromotion.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(clearPromotion);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the clearPromotion method : " + statusCode);
+			System.exit(1);
+		}
+		String clearPromotionResponseStr = clearPromotion.getResponseBodyAsString();
+		System.out.println("Got the clearPromotionCache Response : \n\n" + clearPromotionResponseStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		ClearPromotionCacheResponse clearPromotionCacheResponse = (ClearPromotionCacheResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(clearPromotionResponseStr)));
+		System.out.println(clearPromotionCacheResponse.getClearCacheEnum().toString());
+		
 	}
 
 	private static void logout(String sessionToken) throws Exception {

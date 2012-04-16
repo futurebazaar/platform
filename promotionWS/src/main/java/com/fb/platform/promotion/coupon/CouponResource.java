@@ -9,6 +9,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Collection;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -30,6 +32,11 @@ import org.springframework.stereotype.Component;
 import com.fb.commons.PlatformException;
 import com.fb.platform.promotion._1_0.ApplyCouponRequest;
 import com.fb.platform.promotion._1_0.ApplyCouponResponse;
+import com.fb.platform.promotion._1_0.ClearCacheEnum;
+import com.fb.platform.promotion._1_0.ClearCouponCacheRequest;
+import com.fb.platform.promotion._1_0.ClearCouponCacheResponse;
+import com.fb.platform.promotion._1_0.ClearPromotionCacheRequest;
+import com.fb.platform.promotion._1_0.ClearPromotionCacheResponse;
 import com.fb.platform.promotion._1_0.CommitCouponRequest;
 import com.fb.platform.promotion._1_0.CommitCouponResponse;
 import com.fb.platform.promotion._1_0.CommitCouponStatus;
@@ -182,7 +189,7 @@ public class CouponResource {
 			
 			xmlReleaseCouponResponse.setReleaseCouponStatus(ReleaseCouponStatus.fromValue(apiReleaseCouponResponse.getReleaseCouponStatus().toString()));
 			xmlReleaseCouponResponse.setSessionToken(apiReleaseCouponResponse.getSessionToken());
-
+			
 			StringWriter outStringWriter = new StringWriter();
 			Marshaller marsheller = context.createMarshaller();
 			marsheller.marshal(xmlReleaseCouponResponse, outStringWriter);
@@ -198,6 +205,96 @@ public class CouponResource {
 			return "error"; //TODO return proper error response
 		}
 	}
+	
+	@POST
+	@Path("/clear/promotion")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String clearPromotionCache(String clearPromotionCacheXml) {
+		try {
+			
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			
+			ClearPromotionCacheRequest xmlClearPromotionCacheRequest = (ClearPromotionCacheRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(clearPromotionCacheXml)));
+			
+			if(logger.isDebugEnabled()) {
+				logger.debug("Clearing the cache for Promotion Id : " + xmlClearPromotionCacheRequest.getPromotionId() );
+			}
+			
+			com.fb.platform.promotion.to.ClearPromotionCacheRequest clearPromotionCacheRequest = new com.fb.platform.promotion.to.ClearPromotionCacheRequest();
+			clearPromotionCacheRequest.setPromotionId(xmlClearPromotionCacheRequest.getPromotionId());
+			clearPromotionCacheRequest.setSessionToken(xmlClearPromotionCacheRequest.getSessionToken());
+			
+			com.fb.platform.promotion.to.ClearPromotionCacheResponse clearPromotionCacheResponse = promotionManager.clearCache(clearPromotionCacheRequest);
+			
+			ClearPromotionCacheResponse xmlClearPromotionCacheResponse = new ClearPromotionCacheResponse();
+			xmlClearPromotionCacheResponse.setPromotionId(clearPromotionCacheResponse.getPromotionId());
+			xmlClearPromotionCacheResponse.setSessionToken(clearPromotionCacheResponse.getSessionToken());
+			xmlClearPromotionCacheResponse.setClearCacheEnum(ClearCacheEnum.fromValue(clearPromotionCacheResponse.getClearCacheEnum().toString()));
+			for(com.fb.platform.promotion.to.ClearCouponCacheResponse clearCouponCacheResponse : clearPromotionCacheResponse.getClearCouponCacheResponse()) {
+				ClearCouponCacheResponse xmlClearCouponCacheResponse = createClearCouponCacheResponse(clearCouponCacheResponse);
+				xmlClearPromotionCacheResponse.getClearCouponCacheResponse().add(xmlClearCouponCacheResponse);
+			}
+			
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marsheller = context.createMarshaller();
+			marsheller.marshal(xmlClearPromotionCacheResponse, outStringWriter);
+
+			String xmlResponse = outStringWriter.toString();
+			if (logger.isDebugEnabled()) {
+				logger.debug("clearPromotionCache response :\n" + xmlResponse);
+			}
+			return xmlResponse;
+		} catch (JAXBException e) {
+			logger.error("Error in the clearPromotionCache call.", e);
+			return "error";
+		}
+	}
+	
+	private ClearCouponCacheResponse createClearCouponCacheResponse(com.fb.platform.promotion.to.ClearCouponCacheResponse clearCouponCacheResponse) {
+		ClearCouponCacheResponse xmlClearCouponCacheResponse = new ClearCouponCacheResponse();
+		xmlClearCouponCacheResponse.setClearCacheEnum(ClearCacheEnum.fromValue(clearCouponCacheResponse.getClearCacheEnum().toString()));
+		xmlClearCouponCacheResponse.setCouponCode(clearCouponCacheResponse.getCouponCode());
+		xmlClearCouponCacheResponse.setSessionToken(clearCouponCacheResponse.getSessionToken());
+		return xmlClearCouponCacheResponse;
+	}
+	
+	@POST
+	@Path("/clear/coupon")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String clearCouponCache(String clearCouponCacheXml) {
+		try {
+			
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			
+			ClearCouponCacheRequest xmlClearCouponCacheRequest = (ClearCouponCacheRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(clearCouponCacheXml)));
+			
+			if(logger.isDebugEnabled()) {
+				logger.debug("Clearing the cache for Coupon code : " + xmlClearCouponCacheRequest.getCouponCode());
+			}
+			
+			com.fb.platform.promotion.to.ClearCouponCacheRequest clearCouponCacheRequest = new com.fb.platform.promotion.to.ClearCouponCacheRequest();
+			clearCouponCacheRequest.setCouponCode(xmlClearCouponCacheRequest.getCouponCode());
+			clearCouponCacheRequest.setSessionToken(xmlClearCouponCacheRequest.getSessionToken());
+			
+			com.fb.platform.promotion.to.ClearCouponCacheResponse clearCouponCacheResponse = promotionManager.clearCache(clearCouponCacheRequest);
+			ClearCouponCacheResponse xmlClearCouponCacheResponse = createClearCouponCacheResponse(clearCouponCacheResponse);
+			
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marsheller = context.createMarshaller();
+			marsheller.marshal(xmlClearCouponCacheResponse, outStringWriter);
+
+			String xmlResponse = outStringWriter.toString();
+			if (logger.isDebugEnabled()) {
+				logger.debug("clearCouponCache response :\n" + xmlResponse);
+			}
+			return xmlResponse;
+		} catch (JAXBException e) {
+			logger.error("Error in the clearCouponCache call.", e);
+			return "error";
+		}
+	}
 
 	@GET
 	public String ping() {
@@ -206,6 +303,8 @@ public class CouponResource {
 		sb.append("To apply Coupon post to : http://hostname:port/promotionWS/coupon/apply\n");
 		sb.append("To commit Coupon post to : http://hostname:port/promotionWS/coupon/commit\n");
 		sb.append("To release Coupon post to : http://hostname:port/promotionWS/coupon/release\n");
+		sb.append("To clear Promotion cache post to : http://hostname:port/promotionWS/coupon/clear/promotion\n");
+		sb.append("To clear Coupon cache post to : http://hostname:port/promotionWS/coupon/clear/coupon\n");
 		return sb.toString();
 	}
 	
@@ -230,7 +329,7 @@ public class CouponResource {
 			}
 			inputStream.close();
 		} catch(IOException exception) {
-			logger.error("User.xsd loading error : " + exception.getMessage() );
+			logger.error("promotion.xsd loading error : " + exception.getMessage() );
 		}
 		return sb.toString();
 	}

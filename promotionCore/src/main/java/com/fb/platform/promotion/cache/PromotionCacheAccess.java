@@ -24,8 +24,8 @@ public class PromotionCacheAccess extends AbstractCacheAccess {
 		return (Promotion) platformCachingManager.get(NamedCachesEnum.PROMOTION_CACHE, promotionId);
 	}
 
-	public void clear(Integer promotionId) {
-		platformCachingManager.remove(NamedCachesEnum.PROMOTION_CACHE, promotionId);
+	public boolean clear(Integer promotionId) {
+		return platformCachingManager.remove(NamedCachesEnum.PROMOTION_CACHE, promotionId);
 	}
 
 	public void lock(Integer promotionId) {

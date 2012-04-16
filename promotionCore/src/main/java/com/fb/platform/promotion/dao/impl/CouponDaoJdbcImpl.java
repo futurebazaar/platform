@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,8 +28,8 @@ import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
 import com.fb.platform.promotion.model.coupon.CouponType;
 import com.fb.platform.promotion.model.coupon.GlobalCouponUses;
-import com.fb.platform.promotion.model.coupon.UserCouponUsesEntry;
 import com.fb.platform.promotion.model.coupon.UserCouponUses;
+import com.fb.platform.promotion.model.coupon.UserCouponUsesEntry;
 import com.fb.platform.promotion.service.CouponNotCommitedException;
 
 /**
@@ -115,6 +116,16 @@ public class CouponDaoJdbcImpl implements CouponDao {
 	private static final String DELETE_USER_USES = 
 			"DELETE from user_coupon_uses " +
 			"where coupon_id = ? AND user_id = ? AND order_id = ?";
+	
+	private static final String GET_COUPON_FOR_PROMOTION_QUERY =
+			" SELECT coupon_code" +
+			"	FROM coupon " +
+			"	WHERE promotion_id = ?";
+	
+	private static final String GET_COUPON_FOR_PROMOTION_AND_TYPE_QUERY =
+			" SELECT coupon_code" +
+			"	FROM coupon " +
+			"	WHERE promotion_id = ? AND coupon_type = ? ";
 	
 	@Override
 	public Coupon load(String couponCode, int userId) {
@@ -238,6 +249,18 @@ public class CouponDaoJdbcImpl implements CouponDao {
 		}
 		
 		return userCouponUsesEntry==null ? true : false;
+	}
+	
+	@Override
+	public Collection<Coupon> getCouponsForPromotion(int promotionId) {
+		Collection<Coupon> couponsList = jdbcTemplate.query(GET_COUPON_FOR_PROMOTION_QUERY, new Object[]{promotionId}, new CouponPromotionMapper());
+		return couponsList;
+	}
+	
+	@Override
+	public Collection<Coupon> getCouponsForPromotion(int promotionId, String couponType) {
+		Collection<Coupon> couponsList = jdbcTemplate.query(GET_COUPON_FOR_PROMOTION_AND_TYPE_QUERY, new Object[]{promotionId, couponType}, new CouponPromotionMapper());
+		return couponsList;
 	}
 	
 	private BigDecimal getDiscountValue(int couponId, int userId, int orderId) throws CouponNotCommitedException {
@@ -463,6 +486,16 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			userUses.setCurrentAmount(new Money(currentAmount));
 
 			return userUses;
+		}
+	}
+	
+	private static class CouponPromotionMapper implements RowMapper<Coupon> {
+		
+		@Override
+		public Coupon mapRow(ResultSet rs, int rowNum) throws SQLException {
+			Coupon coupon = new Coupon();
+			coupon.setCode(rs.getString("coupon_code"));
+			return coupon;
 		}
 	}
 

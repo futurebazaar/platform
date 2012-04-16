@@ -31,6 +31,10 @@ import com.fb.platform.promotion.service.PromotionService;
 import com.fb.platform.promotion.to.ApplyCouponRequest;
 import com.fb.platform.promotion.to.ApplyCouponResponse;
 import com.fb.platform.promotion.to.ApplyCouponResponseStatusEnum;
+import com.fb.platform.promotion.to.ClearCacheEnum;
+import com.fb.platform.promotion.to.ClearCouponCacheResponse;
+import com.fb.platform.promotion.to.ClearPromotionCacheRequest;
+import com.fb.platform.promotion.to.ClearPromotionCacheResponse;
 import com.fb.platform.promotion.to.CommitCouponRequest;
 import com.fb.platform.promotion.to.CommitCouponResponse;
 import com.fb.platform.promotion.to.CommitCouponStatusEnum;
@@ -318,10 +322,45 @@ public class PromotionManagerImpl implements PromotionManager {
 	}
 
 	@Override
-	public void clearCache(int promotionId) {
+	public ClearPromotionCacheResponse clearCache(ClearPromotionCacheRequest clearPromotionCacheRequest) {
+		
+		ClearPromotionCacheResponse clearPromotionCacheResponse = new ClearPromotionCacheResponse();
+		
+		if (clearPromotionCacheRequest == null || StringUtils.isBlank(clearPromotionCacheRequest.getSessionToken())) {
+			clearPromotionCacheResponse.setClearCacheEnum(ClearCacheEnum.NO_SESSION);
+			return clearPromotionCacheResponse;
+		}
+
+		//authenticate the session token and find out the userId
+		AuthenticationTO authentication = authenticationService.authenticate(clearPromotionCacheRequest.getSessionToken());
+		if (authentication == null) {
+			//invalid session token
+			clearPromotionCacheResponse.setClearCacheEnum(ClearCacheEnum.NO_SESSION);
+			return clearPromotionCacheResponse;
+		}
+		
+		clearPromotionCacheResponse = promotionService.clearCache(clearPromotionCacheRequest);
+		return clearPromotionCacheResponse;
 	}
 
 	@Override
-	public void clearCache(String couponCode) {
+	public ClearCouponCacheResponse clearCache(com.fb.platform.promotion.to.ClearCouponCacheRequest clearCouponCacheRequest) {
+		ClearCouponCacheResponse clearCouponCacheResponse = new ClearCouponCacheResponse();
+		if (clearCouponCacheRequest == null || StringUtils.isBlank(clearCouponCacheRequest.getSessionToken())) {
+			clearCouponCacheResponse.setClearCacheEnum(ClearCacheEnum.NO_SESSION);
+			return clearCouponCacheResponse;
+		}
+
+		//authenticate the session token and find out the userId
+		AuthenticationTO authentication = authenticationService.authenticate(clearCouponCacheRequest.getSessionToken());
+		if (authentication == null) {
+			//invalid session token
+			clearCouponCacheResponse.setClearCacheEnum(ClearCacheEnum.NO_SESSION);
+			return clearCouponCacheResponse;
+		}
+
+		
+		clearCouponCacheResponse = promotionService.clearCache(clearCouponCacheRequest);
+		return clearCouponCacheResponse;
 	}
 }

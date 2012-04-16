@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 
 import com.fb.platform.promotion.model.GlobalPromotionUses;
 import com.fb.platform.promotion.model.Promotion;
-import com.fb.platform.promotion.model.UserPromotionUsesEntry;
 import com.fb.platform.promotion.model.UserPromotionUses;
 
 /**
@@ -21,7 +20,7 @@ public interface PromotionDao {
 	public GlobalPromotionUses loadGlobalUses(int promotionId);
 
 	public UserPromotionUses loadUserUses(int promotionId, int userId);
-
+	
 	public boolean updateUserUses(int promotionId, int userId, BigDecimal valueApplied, int orderId);
 	
 	public boolean releasePromotion(int promotionId, int userId, int orderId);

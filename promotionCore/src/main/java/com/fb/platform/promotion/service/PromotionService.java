@@ -11,6 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fb.commons.PlatformException;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.coupon.Coupon;
+import com.fb.platform.promotion.to.ClearCouponCacheRequest;
+import com.fb.platform.promotion.to.ClearCouponCacheResponse;
+import com.fb.platform.promotion.to.ClearPromotionCacheRequest;
+import com.fb.platform.promotion.to.ClearPromotionCacheResponse;
 
 /**
  * @author vinayak
@@ -67,12 +71,12 @@ public interface PromotionService {
 	 * @param promotionId
 	 */
 	@Transactional(propagation=Propagation.REQUIRED)
-	public void clearCache(int promotionId);
+	public ClearPromotionCacheResponse clearCache(ClearPromotionCacheRequest clearPromotionCacheRequest);
 
 	/**
 	 * Clears the cached coupon associated with this coupon code, if it is cached.
 	 * @param couponCode
 	 */
 	@Transactional(propagation=Propagation.REQUIRED)
-	public void clearCache(String couponCode);
+	public ClearCouponCacheResponse clearCache(ClearCouponCacheRequest clearCouponCacheRequest);
 }

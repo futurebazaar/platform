@@ -424,6 +424,38 @@
                         <value name="promotion_id">-2000</value>
                         <value name="coupon_type">GLOBAL</value>
                 </row>
+                <row>
+                        <value name="id">-2001</value>
+                        <value name="created_on">2012-02-01 00:00:00</value>
+                        <value name="last_modified_on">2012-04-01 00:00:00</value>
+                        <value name="coupon_code">GlobalCoupon1000Off2</value>
+                        <value name="promotion_id">-2000</value>
+                        <value name="coupon_type">GLOBAL</value>
+                </row>
+                <row>
+                        <value name="id">-2002</value>
+                        <value name="created_on">2012-02-01 00:00:00</value>
+                        <value name="last_modified_on">2012-04-01 00:00:00</value>
+                        <value name="coupon_code">GlobalCoupon1000Off3</value>
+                        <value name="promotion_id">-2000</value>
+                        <value name="coupon_type">GLOBAL</value>
+                </row>
+                <row>
+                        <value name="id">-2003</value>
+                        <value name="created_on">2012-02-01 00:00:00</value>
+                        <value name="last_modified_on">2012-04-01 00:00:00</value>
+                        <value name="coupon_code">GlobalCoupon1000Off4</value>
+                        <value name="promotion_id">-2000</value>
+                        <value name="coupon_type">GLOBAL</value>
+                </row>
+                <row>
+                        <value name="id">-2004</value>
+                        <value name="created_on">2012-02-01 00:00:00</value>
+                        <value name="last_modified_on">2012-04-01 00:00:00</value>
+                        <value name="coupon_code">GlobalCoupon1000Off5</value>
+                        <value name="promotion_id">-2000</value>
+                        <value name="coupon_type">GLOBAL</value>
+                </row>
         </table>
         <table name="coupon_limits_config">
                 <column>id</column>
@@ -499,6 +531,38 @@
                 <row>
                         <value name="id">-2000</value>
                         <value name="coupon_id">-2000</value>
+                        <value name="max_uses">4</value>
+                        <value name="max_amount">4000</value>
+                        <value name="max_uses_per_user">1</value>
+                        <value name="max_amount_per_user">1000</value>
+                </row>
+                <row>
+                        <value name="id">-2001</value>
+                        <value name="coupon_id">-2001</value>
+                        <value name="max_uses">4</value>
+                        <value name="max_amount">4000</value>
+                        <value name="max_uses_per_user">1</value>
+                        <value name="max_amount_per_user">1000</value>
+                </row>
+                <row>
+                        <value name="id">-2002</value>
+                        <value name="coupon_id">-2002</value>
+                        <value name="max_uses">4</value>
+                        <value name="max_amount">4000</value>
+                        <value name="max_uses_per_user">1</value>
+                        <value name="max_amount_per_user">1000</value>
+                </row>
+                <row>
+                        <value name="id">-2003</value>
+                        <value name="coupon_id">-2003</value>
+                        <value name="max_uses">4</value>
+                        <value name="max_amount">4000</value>
+                        <value name="max_uses_per_user">1</value>
+                        <value name="max_amount_per_user">1000</value>
+                </row>
+                <row>
+                        <value name="id">-2004</value>
+                        <value name="coupon_id">-2004</value>
                         <value name="max_uses">4</value>
                         <value name="max_amount">4000</value>
                         <value name="max_uses_per_user">1</value>
