@@ -1,7 +1,7 @@
 /**
  * 
  */
-package platform.fb.com.migration.model;
+package com.fb.platform.promotion.migration.oldModel;
 
 /**
  * @author keith

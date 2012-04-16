@@ -1,4 +1,4 @@
-package platform.fb.com.migration.model;
+package com.fb.platform.promotion.migration.oldModel;
 
 import java.sql.Timestamp;
 
@@ -6,7 +6,7 @@ import java.sql.Timestamp;
  * 
  * @author Keith
  */
-public class OldPromo {
+public class OldPromotion {
     private int promotionId;    
     private String appliesOn;
     private String discountType;

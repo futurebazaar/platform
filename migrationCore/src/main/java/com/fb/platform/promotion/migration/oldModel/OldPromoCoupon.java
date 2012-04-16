@@ -1,7 +1,7 @@
 /**
  * 
  */
-package platform.fb.com.migration.model;
+package com.fb.platform.promotion.migration.oldModel;
 
 /**
  * @author keith
@@ -10,7 +10,7 @@ package platform.fb.com.migration.model;
 public class OldPromoCoupon {
 
 	private String couponCode;
-	private String clientId;
+	private int clientId;
 	private int promotionId;
 	public String getCouponCode() {
 		return couponCode;
@@ -18,10 +18,10 @@ public class OldPromoCoupon {
 	public void setCouponCode(String couponCode) {
 		this.couponCode = couponCode;
 	}
-	public String getClientId() {
+	public int getClientId() {
 		return clientId;
 	}
-	public void setClientId(String clientId) {
+	public void setClientId(int clientId) {
 		this.clientId = clientId;
 	}
 	public int getPromotionId() {

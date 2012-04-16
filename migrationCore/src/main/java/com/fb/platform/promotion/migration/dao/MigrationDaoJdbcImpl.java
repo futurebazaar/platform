@@ -113,9 +113,11 @@ public class MigrationDaoJdbcImpl  implements MigrationDao {
 			"VALUES (?, ?, ?)";
 
 	
-	public boolean createPromotion(final String name, final String description, final Timestamp validFrom,
-			final Timestamp validTill, final int maxUses, final Money maxAmount,
-			final int maxUsesPerUser, final Money maxAmountPerUser, int ruleId) {
+	@Override
+	public int createPromotion(final String name, final String description,
+			final Timestamp validFrom, final Timestamp validTill, final int maxUses,
+			final Money maxAmount, final int maxUsesPerUser, final Money maxAmountPerUser,
+			final int global, final int active) throws PlatformException{
 
 			log.info("Insert in the platform_promotion table => name " + name + " , description : " + description + " , validFrom : " + validFrom + " , validTill : " + validTill);// + " , Rule " + rule);
 			
@@ -167,8 +169,49 @@ public class MigrationDaoJdbcImpl  implements MigrationDao {
 				}
 			}
 			
-			return rowAffected > 0 ? true : false;
+			return promotionKeyHolder.getKey().intValue();
 
+	}
+
+
+
+	@Override
+	public boolean createPromotionRuleConfig(String appliedOn,
+			String discountType, Money minOrderValue, Money discountValue,
+			String promotionType, int clientId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public boolean createCoupon(String couponCode, int promotionId,
+			int maxUsesPerCoupon, String appliedOn, String DiscountType) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public boolean createCouponUser(String couponCode, int userId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+
+	@Override
+	public boolean createCouponUses() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+
+	@Override
+	public boolean createPromotionUses() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

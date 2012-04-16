@@ -15,6 +15,8 @@ public class MigrationService {
 	 */
 	public void migrate(){
 		
+		//read from oldDB 1 by 1 promotion and call SinglePromotionMIgrateService
+		
 	}
 
 }

@@ -5,8 +5,8 @@ package com.fb.platform.promotion.migration.dao;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import platform.fb.com.migration.model.OldPromo;
-import platform.fb.com.migration.model.*;
+import com.fb.platform.promotion.migration.oldModel.*;
+
 
 /**
  * @author keith
@@ -23,19 +23,24 @@ public class SinglePromotionMigrate {
 	 */
 	@Transactional
 	public void migrate() throws Exception{
-//		OldPromo oldPromo = readOldPromo(promoId);
+//		OldPromo oldPromo = loadOldPromotion(promoId);
 //		NewPromotion newPromotion = convertOldPromoToNewPromo(oldPromo);
 //		migDaoImpl.createPromotion(newPromotion);
-//		List<OldPromoCoupon> coupons = getOldCoupons(promoId);
+//		** Attach RuleConfigValues **
+//		List<OldPromoCoupon> coupons = loadOldCoupons(promoId);
 //		for (OldPromoCoupon oldCoupon:coupons){
 //			NewCoupon newCoupon = convertOldCouponToNewCoupon(oldCoupon);
 //			migDaoImpl.createCoupon(newCoupon);
-//			List<OldCouponUser> couponUsers = getOldUsersForCoupon(couponCode);
+//			List<OldCouponUser> couponUsers = loadCouponUsers(couponCode);
 //			for(OldCouponUser oldCouponUser : couponUsers){
 //				NewCouponUser newCouponUser = convertOldtoNewCouponUser(oldCoupon);
 //				migDaoImpl.createCouponUser(newCouponUser);
 //			}
 //		}
+//		** QueryOrderTable to get couponUses info
+//		insert into couponUses and promotionUses table accordingly **
+//		createPromotionUses()
+//		createCouponUses();
 //		
 	}
 
