@@ -91,6 +91,7 @@ public class CouponResource {
 			com.fb.platform.promotion.to.ApplyCouponRequest apiCouponRequest = new com.fb.platform.promotion.to.ApplyCouponRequest();
 			apiCouponRequest.setCouponCode(xmlCouponRequest.getCouponCode());
 			apiCouponRequest.setSessionToken(xmlCouponRequest.getSessionToken());
+			apiCouponRequest.setIsOrderCommitted(xmlCouponRequest.isCouponCommitted());
 
 			OrderRequest xmlOrderRequest = xmlCouponRequest.getOrderRequest();
 			com.fb.platform.promotion.to.OrderRequest apiOrderRequest = getApiOrderRequest(xmlOrderRequest);

@@ -26,4 +26,6 @@ public interface PromotionDao {
 	public boolean releasePromotion(int promotionId, int userId, int orderId);
 	
 	public boolean isPromotionApplicable(int promotionId, int userId, int orderId);
+	
+	public UserPromotionUsesEntry load(int promotionId, int userId, int orderId);
 }

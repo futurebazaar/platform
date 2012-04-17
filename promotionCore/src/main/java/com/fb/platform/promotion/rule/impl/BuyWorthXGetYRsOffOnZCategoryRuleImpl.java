@@ -7,16 +7,17 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.fb.platform.promotion.rule.PromotionRule;
-import com.fb.platform.promotion.rule.RuleConfigConstants;
-import com.fb.platform.promotion.rule.RuleConfiguration;
-import com.fb.platform.promotion.to.ApplyCouponResponseStatusEnum;
-import com.fb.platform.promotion.to.OrderRequest;
-import com.fb.platform.promotion.util.StringToIntegerList;
-import com.fb.commons.to.Money;
 import org.apache.commons.lang.text.StrTokenizer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import com.fb.commons.to.Money;
+import com.fb.platform.promotion.rule.PromotionRule;
+import com.fb.platform.promotion.rule.RuleConfigConstants;
+import com.fb.platform.promotion.rule.RuleConfiguration;
+import com.fb.platform.promotion.to.OrderRequest;
+import com.fb.platform.promotion.to.PromotionStatusEnum;
+import com.fb.platform.promotion.util.StringToIntegerList;
 
 /**
  * @author keith
@@ -42,30 +43,21 @@ public class BuyWorthXGetYRsOffOnZCategoryRuleImpl implements PromotionRule, Ser
 	}
 
 	@Override
-	public ApplicableResponse isApplicable(OrderRequest request) {
+	public PromotionStatusEnum isApplicable(OrderRequest request) {
 		if(log.isDebugEnabled()) {
 			log.debug("Checking if BuyWorthXGetYRsOffOnZCategoryRuleImpl applies on order : " + request.getOrderId());
 		}
-		ApplicableResponse ar = new ApplicableResponse();
 		Money orderValue = new Money(request.getOrderValue());
 		if(request.isValidClient(client_list)){
 			if(orderValue.gteq(minOrderValue)){
 				if(request.isAllProductsInCategory(categories)){
-					ar.setStatusCode(ApplyCouponResponseStatusEnum.SUCCESS);
-					ar.setStatusMessage(ApplyCouponResponseStatusEnum.SUCCESS.toString());
-					return ar;
+					return PromotionStatusEnum.SUCCESS;
 				}
-				ar.setStatusCode(ApplyCouponResponseStatusEnum.CATEGORY_MISMATCH);
-				ar.setStatusMessage(ApplyCouponResponseStatusEnum.CATEGORY_MISMATCH.toString());
-				return ar;
+				return PromotionStatusEnum.CATEGORY_MISMATCH;
 			}
-			ar.setStatusCode(ApplyCouponResponseStatusEnum.LESS_ORDER_AMOUNT);
-			ar.setStatusMessage(ApplyCouponResponseStatusEnum.LESS_ORDER_AMOUNT.toString());
-			return ar;
+			return PromotionStatusEnum.LESS_ORDER_AMOUNT;
 		}
-		ar.setStatusCode(ApplyCouponResponseStatusEnum.INVALID_CLIENT);
-		ar.setStatusMessage(ApplyCouponResponseStatusEnum.INVALID_CLIENT.toString());
-		return ar;
+		return PromotionStatusEnum.INVALID_CLIENT;
 	}
 
 	@Override

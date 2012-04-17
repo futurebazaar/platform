@@ -256,14 +256,31 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		}
 		UserPromotionUsesEntry userPromotionUsesEntry = null;
 		try {
-			userPromotionUsesEntry = jdbcTemplate.queryForObject(LOAD_USER_ORDER_PROMOTION_QUERY, new Object [] {promotionId, userId, orderId}, new UserOrderPromotionMapper());
+			userPromotionUsesEntry = load(promotionId, userId, orderId);
 		} catch (IncorrectResultSizeDataAccessException e) {
 			log.warn("No entry found for userId" + userId + " with promotionId "+ promotionId + " and orderId " + orderId);
 			//throw new PlatformException("No entry in user_coupon_uses found for userId" + userId + " with couponId "+ couponId + " and orderId " + orderId);
 			return true;
 		}
 		
-		return userPromotionUsesEntry==null ? false : true;
+		return userPromotionUsesEntry==null ? true : false;
+	}
+	
+	@Override
+	public UserPromotionUsesEntry load(int promotionId, int userId, int orderId){
+		if(log.isDebugEnabled()) {
+			log.debug("Get from the user promotion uses table record for user : " + userId + " , applied promotion id : " + promotionId + " , on order id : " + orderId);
+		}
+		UserPromotionUsesEntry userPromotionUsesEntry = null;
+		try {
+			userPromotionUsesEntry = jdbcTemplate.queryForObject(LOAD_USER_ORDER_PROMOTION_QUERY, new Object [] {promotionId, userId, orderId}, new UserOrderPromotionMapper());
+		} catch (IncorrectResultSizeDataAccessException e) {
+			log.warn("No entry found for userId" + userId + " with promotionId "+ promotionId + " and orderId " + orderId);
+			//throw new PlatformException("No entry in user_coupon_uses found for userId" + userId + " with couponId "+ couponId + " and orderId " + orderId);
+			return null;
+		}
+		
+		return userPromotionUsesEntry;
 	}
 	
 	private BigDecimal getDiscountValue(int promotionId, int userId, int orderId){

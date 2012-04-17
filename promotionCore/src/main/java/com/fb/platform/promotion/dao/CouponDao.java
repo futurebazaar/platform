@@ -9,6 +9,7 @@ import java.util.Collection;
 import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.coupon.GlobalCouponUses;
 import com.fb.platform.promotion.model.coupon.UserCouponUses;
+import com.fb.platform.promotion.model.coupon.UserCouponUsesEntry;
 
 /**
  * @author vinayak
@@ -31,5 +32,7 @@ public interface CouponDao {
 	public void releaseCoupon(int couponId, int userId, int orderId);
 	
 	public boolean isCouponApplicable(int couponId, int userId, int orderId);
+	
+	public UserCouponUsesEntry load(int couponId, int userId, int orderId);
 
 }

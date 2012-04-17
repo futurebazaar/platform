@@ -47,4 +47,9 @@ public class UserPromotionUses implements Serializable {
 		this.currentAmount.plus(discountAmount);
 		this.currentCount++;
 	}
+	
+	public void decrement(Money discountAmount){
+		this.currentAmount.minus(discountAmount);
+		this.currentCount--;
+	}
 }

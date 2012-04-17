@@ -1,4 +1,6 @@
 .project
+copyWar.sh
+restartTomcat.sh
 AllCommon/
 authenticationCore/.classpath
 authenticationCore/.project

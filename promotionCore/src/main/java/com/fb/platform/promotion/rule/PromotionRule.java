@@ -6,6 +6,7 @@ package com.fb.platform.promotion.rule;
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.rule.impl.ApplicableResponse;
 import com.fb.platform.promotion.to.OrderRequest;
+import com.fb.platform.promotion.to.PromotionStatusEnum;
 
 
 /**
@@ -23,7 +24,7 @@ public interface PromotionRule {
 	/**
 	 * @return true if the rule is applicable on the request
 	 */
-	public ApplicableResponse isApplicable(OrderRequest request);
+	public PromotionStatusEnum isApplicable(OrderRequest request);
 
 	/**
 	 * Applies the rule on the request.

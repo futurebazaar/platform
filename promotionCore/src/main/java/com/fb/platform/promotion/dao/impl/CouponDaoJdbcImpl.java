@@ -240,7 +240,7 @@ public class CouponDaoJdbcImpl implements CouponDao {
 		}
 		UserCouponUsesEntry userCouponUsesEntry = null;
 		try {
-			userCouponUsesEntry = jdbcTemplate.queryForObject(LOAD_USER_ORDER_COUPON_QUERY, new Object [] {couponId, userId, orderId}, new UserOrderCouponMapper());
+			userCouponUsesEntry = load(couponId,userId,orderId);
 		} catch (IncorrectResultSizeDataAccessException e) {
 			if (log.isDebugEnabled()) {
 				log.debug("Coupon is Applicable as no entry found for userId" + userId + " with couponId "+ couponId + " and orderId " + orderId);
@@ -252,6 +252,7 @@ public class CouponDaoJdbcImpl implements CouponDao {
 	}
 	
 	@Override
+<<<<<<< Updated upstream
 	public Collection<Coupon> getCouponsForPromotion(int promotionId) {
 		Collection<Coupon> couponsList = jdbcTemplate.query(GET_COUPON_FOR_PROMOTION_QUERY, new Object[]{promotionId}, new CouponPromotionMapper());
 		return couponsList;
@@ -261,6 +262,23 @@ public class CouponDaoJdbcImpl implements CouponDao {
 	public Collection<Coupon> getCouponsForPromotion(int promotionId, String couponType) {
 		Collection<Coupon> couponsList = jdbcTemplate.query(GET_COUPON_FOR_PROMOTION_AND_TYPE_QUERY, new Object[]{promotionId, couponType}, new CouponPromotionMapper());
 		return couponsList;
+=======
+	public UserCouponUsesEntry load(int couponId, int userId, int orderId){
+		if(log.isDebugEnabled()) {
+			log.debug("Get from the user coupon uses table record for user : " + userId + " , applied coupon id : " + couponId + " , on order id : " + orderId);
+		}
+		UserCouponUsesEntry userCouponUsesEntry = null;
+		try {
+			userCouponUsesEntry = jdbcTemplate.queryForObject(LOAD_USER_ORDER_COUPON_QUERY, new Object [] {couponId, userId, orderId}, new UserOrderCouponMapper());
+		} catch (IncorrectResultSizeDataAccessException e) {
+			if (log.isDebugEnabled()) {
+				log.debug("Coupon is Applicable as no entry found for userId" + userId + " with couponId "+ couponId + " and orderId " + orderId);
+			}
+			return null;
+		}
+		
+		return userCouponUsesEntry;
+>>>>>>> Stashed changes
 	}
 	
 	private BigDecimal getDiscountValue(int couponId, int userId, int orderId) throws CouponNotCommitedException {

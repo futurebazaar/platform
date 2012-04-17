@@ -9,13 +9,19 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fb.commons.PlatformException;
+import com.fb.commons.to.Money;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.coupon.Coupon;
+<<<<<<< Updated upstream
 import com.fb.platform.promotion.model.scratchCard.ScratchCard;
 import com.fb.platform.promotion.to.ClearCouponCacheRequest;
 import com.fb.platform.promotion.to.ClearCouponCacheResponse;
 import com.fb.platform.promotion.to.ClearPromotionCacheRequest;
 import com.fb.platform.promotion.to.ClearPromotionCacheResponse;
+=======
+import com.fb.platform.promotion.to.OrderRequest;
+import com.fb.platform.promotion.to.PromotionStatusEnum;
+>>>>>>> Stashed changes
 
 /**
  * @author vinayak
@@ -79,6 +85,7 @@ public interface PromotionService {
 	 * @param clearCouponCacheRequest
 	 */
 	@Transactional(propagation=Propagation.REQUIRED)
+<<<<<<< Updated upstream
 	public ClearCouponCacheResponse clearCache(ClearCouponCacheRequest clearCouponCacheRequest);
 
 	@Transactional(propagation=Propagation.REQUIRED)
@@ -90,4 +97,24 @@ public interface PromotionService {
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void commitScratchCard(int scratchCardId, int userId, String couponCode);
 
+=======
+	public void clearCache(String couponCode);
+	
+	/**
+	 * 
+	 */
+	public PromotionStatusEnum isApplicable(int userId, OrderRequest orderRequest, Money discountAmount, Coupon coupon, Promotion promotion, boolean isOrderCommitted);
+	
+	/**
+	 * 
+	 * @param userId
+	 * @param orderId
+	 * @param discountAmount
+	 * @param coupon
+	 * @param promotion
+	 * @param isOrderCommitted
+	 * @return
+	 */
+	public PromotionStatusEnum isApplicable(int userId, int orderId, Money discountAmount, Coupon coupon, Promotion promotion, boolean isOrderCommitted);
+>>>>>>> Stashed changes
 }
