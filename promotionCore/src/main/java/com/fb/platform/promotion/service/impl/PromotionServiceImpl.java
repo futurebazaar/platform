@@ -155,6 +155,9 @@ public class PromotionServiceImpl implements PromotionService {
 		//if the discount amount is not null, then validate the limits taking
 		// into account the discount amount
 		if(null!=discountAmount){
+			
+			logger.info("Incrementing the Discount Amount and recheck");
+			
 			globalCouponUses.increment(discountAmount);
 			userCouponUses.increment(discountAmount);
 			PromotionStatusEnum withinCouponUsesLimitsStatusAfterApplying = validateCouponUses(coupon, globalCouponUses, userCouponUses);
