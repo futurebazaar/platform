@@ -56,6 +56,7 @@ public class ApplyCouponResponse implements Serializable{
 		this.statusMessage = couponStatus.getMesage();
 	}
 	public void setCouponStatus(PromotionStatusEnum status) {
+		this.statusMessage = status.getMesage();
 		switch (status) {
 		case ALREADY_APPLIED_COUPON_ON_ORDER:
 			couponStatus = ApplyCouponResponseStatusEnum.ALREADY_APPLIED_COUPON_ON_ORDER;

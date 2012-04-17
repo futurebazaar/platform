@@ -6,7 +6,11 @@ package com.fb.platform.promotion.model.coupon;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.fb.commons.to.Money;
+import com.fb.platform.promotion.model.PromotionLimitsConfig;
 import com.fb.platform.promotion.to.PromotionStatusEnum;
 
 /**
@@ -14,6 +18,8 @@ import com.fb.platform.promotion.to.PromotionStatusEnum;
  *
  */
 public class CouponLimitsConfig implements Serializable {
+	
+	private static Log logger = LogFactory.getLog(CouponLimitsConfig.class);
 
 	private int maxUses;
 	private Money maxAmount;
@@ -22,6 +28,12 @@ public class CouponLimitsConfig implements Serializable {
 
 	public PromotionStatusEnum isWithinLimits(GlobalCouponUses globalUses, UserCouponUses userUses) {
 		Money zeroMoney = new Money(BigDecimal.ZERO);
+		
+		logger.info("Limits for Coupon : " 
+				+ "  globalUsesCount = "+globalUses.getCurrentCount() + ", maxUses = " + maxUses 
+				+ ", globalUsesAmount = " + globalUses.getCurrentAmount() + ", maxAmount = " + maxAmount 
+				+ ", UserUsesCount = "+userUses.getCurrentCount() + ", maxUsesPerUser = " + maxUsesPerUser
+				+ ", UserUsesAmount = "+userUses.getCurrentAmount() + ", maxAmountPerUser = "+maxAmountPerUser);
 		
 		if (maxUses > 0 && maxUses < globalUses.getCurrentCount()) {
 			return PromotionStatusEnum.TOTAL_MAX_USES_EXCEEDED;

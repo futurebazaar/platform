@@ -32,6 +32,9 @@ import com.fb.platform.user.phone._1_0.AddUserPhoneStatus;
 import com.fb.platform.user.phone._1_0.DeleteUserPhoneRequest;
 import com.fb.platform.user.phone._1_0.DeleteUserPhoneResponse;
 import com.fb.platform.user.phone._1_0.DeleteUserPhoneStatus;
+import com.fb.platform.user.phone._1_0.VerifyUserPhoneRequest;
+import com.fb.platform.user.phone._1_0.VerifyUserPhoneResponse;
+import com.fb.platform.user.phone._1_0.VerifyUserPhoneStatus;
 
 import com.fb.platform.user.manager.interfaces.UserAdminManager;
 
@@ -193,6 +196,45 @@ public class UserPhoneResource {
 			return "error"; //TODO return proper error response
 		}
 	}
+	@POST
+	@Path("/verify")
+	@Consumes("application/xml")
+	@Produces("application/xml")	
+	public String verify(String verifyPhoneXml) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Verify Phone XML request: \n" + verifyPhoneXml);
+		}
+		try{
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			VerifyUserPhoneRequest xmlVerifyUserPhoneReq = (VerifyUserPhoneRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(verifyPhoneXml)));
+			com.fb.platform.user.manager.model.admin.phone.VerifyUserPhoneRequest apiVerifyUserPhoneReq = new com.fb.platform.user.manager.model.admin.phone.VerifyUserPhoneRequest();
+			apiVerifyUserPhoneReq.setSessionToken(xmlVerifyUserPhoneReq.getSessionToken());
+			apiVerifyUserPhoneReq.setUserId(xmlVerifyUserPhoneReq.getUserId());
+			apiVerifyUserPhoneReq.setPhone(xmlVerifyUserPhoneReq.getPhone());
+			
+			com.fb.platform.user.manager.model.admin.phone.VerifyUserPhoneResponse apiVerifyUserPhoneRes = userAdminManager.verifyUserPhone(apiVerifyUserPhoneReq);
+			
+			VerifyUserPhoneResponse xmlVerifyUserPhoneRes = new VerifyUserPhoneResponse();
+			xmlVerifyUserPhoneRes.setVerifyUserPhoneStatus(VerifyUserPhoneStatus.fromValue(apiVerifyUserPhoneRes.getVerifyUserPhoneStatus().name()));
+			xmlVerifyUserPhoneRes.setSessionToken(apiVerifyUserPhoneRes.getSessionToken());
+			
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marsheller = context.createMarshaller();
+			marsheller.marshal(xmlVerifyUserPhoneRes, outStringWriter);
+
+			String xmlResponse = outStringWriter.toString();
+			if (logger.isDebugEnabled()) {
+				logger.debug("Verify USER Phone XMl response :\n" + xmlVerifyUserPhoneRes);
+			}
+			return xmlResponse;
+			
+			
+		}catch (JAXBException e) {
+			logger.error("Error in the get Phone call.", e);
+			return "error"; //TODO return proper error response
+		}
+	}
+	
 	
 
 }
