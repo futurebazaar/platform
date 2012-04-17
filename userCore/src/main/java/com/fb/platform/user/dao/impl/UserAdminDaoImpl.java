@@ -651,4 +651,18 @@ public class UserAdminDaoImpl implements UserAdminDao {
 		}
 		return false;
 	}
+
+	@Override
+	public boolean verifyUserPhone(int userId, String phone) {
+		if (phone != null) {
+			Object[] objs = new Object[2];
+			objs[0] = userId;
+			objs[1] = phone;
+			int update = jdbcTemplate.update(VERIFY_PHONE_BY_USERID_PHONE, objs);
+			if (update > 0) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

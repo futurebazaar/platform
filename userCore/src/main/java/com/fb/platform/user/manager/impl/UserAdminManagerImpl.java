@@ -24,7 +24,9 @@ import com.fb.platform.user.dao.interfaces.UserAdminDao;
 import com.fb.platform.user.domain.UserBo;
 import com.fb.platform.user.domain.UserEmailBo;
 import com.fb.platform.user.domain.UserPhoneBo;
+import com.fb.platform.user.manager.exception.UserNotFoundException;
 import com.fb.platform.user.manager.interfaces.UserAdminManager;
+import com.fb.platform.user.manager.interfaces.UserAdminService;
 import com.fb.platform.user.manager.model.admin.AddUserRequest;
 import com.fb.platform.user.manager.model.admin.AddUserResponse;
 import com.fb.platform.user.manager.model.admin.AddUserStatusEnum;
@@ -61,6 +63,7 @@ import com.fb.platform.user.manager.model.admin.phone.GetUserPhoneStatusEnum;
 import com.fb.platform.user.manager.model.admin.phone.UserPhone;
 import com.fb.platform.user.manager.model.admin.phone.VerifyUserPhoneRequest;
 import com.fb.platform.user.manager.model.admin.phone.VerifyUserPhoneResponse;
+import com.fb.platform.user.manager.model.admin.phone.VerifyUserPhoneStatusEnum;
 import com.fb.platform.user.util.ValidatorUtil;
 
 /**
@@ -71,7 +74,11 @@ public class UserAdminManagerImpl implements UserAdminManager {
 
 	private static final Log logger = LogFactory.getLog(UserAdminManagerImpl.class);
 
+	@Autowired
 	private UserAdminDao userAdminDao;
+	
+	@Autowired
+	private UserAdminService userAdminService;
 	
 	@Autowired
 	private AuthenticationService authenticationService;
@@ -107,16 +114,14 @@ public class UserAdminManagerImpl implements UserAdminManager {
 				return getUserResponse;
 			}
 			getUserResponse.setSessionToken(authentication.getToken());
-			UserBo user = userAdminDao.load(getUserRequest.getKey());
-			if (user == null) {
-				getUserResponse.setStatus(GetUserStatusEnum.INVALID_USER);
-				return getUserResponse;
-			}
+			UserBo user = userAdminService.getUser(getUserRequest.getKey());
 			getUserResponse.setStatus(GetUserStatusEnum.SUCCESS);
 			getUserResponse.setUserName(user.getName());
 			return getUserResponse;
 
-		} catch (PlatformException pe) {
+		} catch (UserNotFoundException e){
+			getUserResponse.setStatus(GetUserStatusEnum.INVALID_USER);
+		}catch (PlatformException pe) {
 			logger.error("Error while getting the user : " + getUserRequest.getKey(), pe);
 			getUserResponse.setStatus(GetUserStatusEnum.ERROR_RETRIVING_USER);
 		}
@@ -551,10 +556,44 @@ public class UserAdminManagerImpl implements UserAdminManager {
 	@Override
 	public VerifyUserPhoneResponse verifyUserPhone(
 			VerifyUserPhoneRequest verifyUserPhoneRequest) {
-		// TODO Auto-generated method stub
-		return null;
+		VerifyUserPhoneResponse verifyUserPhoneResponse = new VerifyUserPhoneResponse();
+		if (verifyUserPhoneRequest == null) {
+			verifyUserPhoneResponse.setVerifyUserPhoneStatus(VerifyUserPhoneStatusEnum.INVALID_USER);
+			return verifyUserPhoneResponse;
+		}
+		if(logger.isDebugEnabled()) {
+			logger.debug("Verify Phone for user : " + verifyUserPhoneRequest.getUserId()+ "::" + verifyUserPhoneRequest.getPhone());
+		}
+		
+		
+		
+		if (StringUtils.isBlank(verifyUserPhoneRequest.getSessionToken())) {
+			verifyUserPhoneResponse.setVerifyUserPhoneStatus(VerifyUserPhoneStatusEnum.NO_SESSION);
+			return verifyUserPhoneResponse;
+		}
+		try {
+			AuthenticationTO authentication = authenticationService.authenticate(verifyUserPhoneRequest.getSessionToken());
+			if (authentication == null) {
+				verifyUserPhoneResponse.setVerifyUserPhoneStatus(VerifyUserPhoneStatusEnum.NO_SESSION);
+				return verifyUserPhoneResponse;
+			}
+			
+			boolean success = userAdminDao.verifyUserPhone(verifyUserPhoneRequest.getUserId(), verifyUserPhoneRequest.getPhone());
+			
+			if(success){
+				verifyUserPhoneResponse.setSessionToken(authentication.getToken());
+				verifyUserPhoneResponse.setVerifyUserPhoneStatus(VerifyUserPhoneStatusEnum.SUCCESS);
+			}else{
+				verifyUserPhoneResponse.setSessionToken(authentication.getToken());
+				verifyUserPhoneResponse.setVerifyUserPhoneStatus(VerifyUserPhoneStatusEnum.NO_PHONE);
+			}
+			return verifyUserPhoneResponse;
+		}catch (PlatformException pe) {
+			logger.error("Error while verify the user Phone: " + verifyUserPhoneRequest.getUserId(), pe);
+			verifyUserPhoneResponse.setVerifyUserPhoneStatus(VerifyUserPhoneStatusEnum.ERROR_VERIFYING_PHONE);
+		}
+		return verifyUserPhoneResponse;
 	}
-
 	@Override
 	public DeleteUserPhoneResponse deleteUserPhone(
 			DeleteUserPhoneRequest deleteUserPhoneRequest) {
@@ -597,5 +636,63 @@ public class UserAdminManagerImpl implements UserAdminManager {
 		}
 		return deleteUserPhoneResponse;
 	}
+
+	/**
+	 * @return the userAdminService
+	 */
+	public UserAdminService getUserAdminService() {
+		return userAdminService;
+	}
+
+	/**
+	 * @param userAdminService the userAdminService to set
+	 */
+	public void setUserAdminService(UserAdminService userAdminService) {
+		this.userAdminService = userAdminService;
+	}
+
+	/**
+	 * @return the authenticationService
+	 */
+	public AuthenticationService getAuthenticationService() {
+		return authenticationService;
+	}
+
+	/**
+	 * @param authenticationService the authenticationService to set
+	 */
+	public void setAuthenticationService(AuthenticationService authenticationService) {
+		this.authenticationService = authenticationService;
+	}
+
+	/**
+	 * @return the ssoMasterService
+	 */
+	public SSOMasterService getSsoMasterService() {
+		return ssoMasterService;
+	}
+
+	/**
+	 * @param ssoMasterService the ssoMasterService to set
+	 */
+	public void setSsoMasterService(SSOMasterService ssoMasterService) {
+		this.ssoMasterService = ssoMasterService;
+	}
+
+	/**
+	 * @return the sessionTokenCacheAccess
+	 */
+	public SessionTokenCacheAccess getSessionTokenCacheAccess() {
+		return sessionTokenCacheAccess;
+	}
+
+	/**
+	 * @param sessionTokenCacheAccess the sessionTokenCacheAccess to set
+	 */
+	public void setSessionTokenCacheAccess(
+			SessionTokenCacheAccess sessionTokenCacheAccess) {
+		this.sessionTokenCacheAccess = sessionTokenCacheAccess;
+	}
+	
 	
 }

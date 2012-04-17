@@ -37,4 +37,6 @@ public interface UserAdminDao {
 	
 	public boolean addUserPhone(int userId,UserPhoneBo userPhoneBo);
 	public boolean deleteUserPhone(int userId,String phone);
+
+	public boolean verifyUserPhone(int userId, String phone);
 }
