@@ -27,13 +27,13 @@ public class PromotionLimitsConfig implements Serializable {
 		if (maxUses > 0 && maxUses < globalUses.getCurrentCount()) {
 			return PromotionStatusEnum.TOTAL_MAX_USES_EXCEEDED;
 		}
-		if (maxAmount.gt(zeroMoney) && maxAmount.lt(globalUses.getCurrentAmount())) {
+		if (maxAmount.gt(zeroMoney) && maxAmount.lteq(globalUses.getCurrentAmount())) {
 			return PromotionStatusEnum.TOTAL_MAX_AMOUNT_EXCEEDED;
 		}
 		if (maxUsesPerUser > 0 && maxUsesPerUser < userUses.getCurrentCount()) {
 			return PromotionStatusEnum.TOTAL_MAX_USES_PER_USER_EXCEEDED;
 		}
-		if (maxAmountPerUser.gt(zeroMoney) && maxAmountPerUser.lt(userUses.getCurrentAmount())) {
+		if (maxAmountPerUser.gt(zeroMoney) && maxAmountPerUser.lteq(userUses.getCurrentAmount())) {
 			return PromotionStatusEnum.TOTAL_MAX_AMOUNT_PER_USER_EXCEEDED;
 		}
 		return PromotionStatusEnum.LIMIT_SUCCESS;
