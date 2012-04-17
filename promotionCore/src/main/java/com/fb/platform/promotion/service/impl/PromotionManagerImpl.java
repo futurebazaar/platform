@@ -14,23 +14,11 @@ import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
-<<<<<<< Updated upstream
 import com.fb.platform.promotion.admin.service.PromotionAdminService;
-import com.fb.platform.promotion.dao.CouponDao;
-import com.fb.platform.promotion.dao.PromotionDao;
-import com.fb.platform.promotion.model.GlobalPromotionUses;
-=======
->>>>>>> Stashed changes
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.coupon.Coupon;
-<<<<<<< Updated upstream
-import com.fb.platform.promotion.model.coupon.GlobalCouponUses;
-import com.fb.platform.promotion.model.coupon.UserCouponUses;
 import com.fb.platform.promotion.model.scratchCard.ScratchCard;
-import com.fb.platform.promotion.rule.impl.ApplicableResponse;
 import com.fb.platform.promotion.service.CouponAlreadyAssignedToUserException;
-=======
->>>>>>> Stashed changes
 import com.fb.platform.promotion.service.CouponNotCommitedException;
 import com.fb.platform.promotion.service.CouponNotFoundException;
 import com.fb.platform.promotion.service.PromotionManager;
@@ -270,15 +258,6 @@ public class PromotionManagerImpl implements PromotionManager {
 		return response;
 	}
 
-<<<<<<< Updated upstream
-	private ApplyCouponResponseStatusEnum validatePromotionUses(Promotion promotion, GlobalPromotionUses globalPromotionUses, UserPromotionUses userPromotionUses) {
-		return promotion.isWithinLimits(globalPromotionUses, userPromotionUses);
-	}
-
-	private ApplyCouponResponseStatusEnum validateCouponUses(Coupon coupon, GlobalCouponUses globalUses, UserCouponUses userUses) {
-		return coupon.isWithinLimits(globalUses, userUses);
-	}
-
 	@Override
 	public ApplyScratchCardResponse applyScratchCard(ApplyScratchCardRequest request) {
 		if(logger.isDebugEnabled()) {
@@ -383,8 +362,6 @@ public class PromotionManagerImpl implements PromotionManager {
 		return clearCouponCacheResponse;
 	}
 
-=======
->>>>>>> Stashed changes
 	public void setAuthenticationService(AuthenticationService authenticationService) {
 		this.authenticationService = authenticationService;
 	}

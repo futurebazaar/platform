@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import com.fb.platform.promotion.model.GlobalPromotionUses;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.UserPromotionUses;
+import com.fb.platform.promotion.model.UserPromotionUsesEntry;
 
 /**
  * @author vinayak

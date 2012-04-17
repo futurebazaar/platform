@@ -252,7 +252,6 @@ public class CouponDaoJdbcImpl implements CouponDao {
 	}
 	
 	@Override
-<<<<<<< Updated upstream
 	public Collection<Coupon> getCouponsForPromotion(int promotionId) {
 		Collection<Coupon> couponsList = jdbcTemplate.query(GET_COUPON_FOR_PROMOTION_QUERY, new Object[]{promotionId}, new CouponPromotionMapper());
 		return couponsList;
@@ -262,7 +261,9 @@ public class CouponDaoJdbcImpl implements CouponDao {
 	public Collection<Coupon> getCouponsForPromotion(int promotionId, String couponType) {
 		Collection<Coupon> couponsList = jdbcTemplate.query(GET_COUPON_FOR_PROMOTION_AND_TYPE_QUERY, new Object[]{promotionId, couponType}, new CouponPromotionMapper());
 		return couponsList;
-=======
+	}
+	
+	@Override
 	public UserCouponUsesEntry load(int couponId, int userId, int orderId){
 		if(log.isDebugEnabled()) {
 			log.debug("Get from the user coupon uses table record for user : " + userId + " , applied coupon id : " + couponId + " , on order id : " + orderId);
@@ -278,7 +279,6 @@ public class CouponDaoJdbcImpl implements CouponDao {
 		}
 		
 		return userCouponUsesEntry;
->>>>>>> Stashed changes
 	}
 	
 	private BigDecimal getDiscountValue(int couponId, int userId, int orderId) throws CouponNotCommitedException {

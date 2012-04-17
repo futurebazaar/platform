@@ -19,17 +19,16 @@ import com.fb.platform.promotion.cache.CouponCacheAccess;
 import com.fb.platform.promotion.cache.PromotionCacheAccess;
 import com.fb.platform.promotion.dao.CouponDao;
 import com.fb.platform.promotion.dao.PromotionDao;
-<<<<<<< Updated upstream
 import com.fb.platform.promotion.dao.ScratchCardDao;
-=======
 import com.fb.platform.promotion.model.GlobalPromotionUses;
->>>>>>> Stashed changes
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.UserPromotionUses;
 import com.fb.platform.promotion.model.UserPromotionUsesEntry;
 import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.coupon.CouponType;
-<<<<<<< Updated upstream
+import com.fb.platform.promotion.model.coupon.GlobalCouponUses;
+import com.fb.platform.promotion.model.coupon.UserCouponUses;
+import com.fb.platform.promotion.model.coupon.UserCouponUsesEntry;
 import com.fb.platform.promotion.model.scratchCard.ScratchCard;
 import com.fb.platform.promotion.service.CouponNotFoundException;
 import com.fb.platform.promotion.service.PromotionNotFoundException;
@@ -39,16 +38,8 @@ import com.fb.platform.promotion.to.ClearCouponCacheRequest;
 import com.fb.platform.promotion.to.ClearCouponCacheResponse;
 import com.fb.platform.promotion.to.ClearPromotionCacheRequest;
 import com.fb.platform.promotion.to.ClearPromotionCacheResponse;
-=======
-import com.fb.platform.promotion.model.coupon.GlobalCouponUses;
-import com.fb.platform.promotion.model.coupon.UserCouponUses;
-import com.fb.platform.promotion.model.coupon.UserCouponUsesEntry;
-import com.fb.platform.promotion.service.CouponNotFoundException;
-import com.fb.platform.promotion.service.PromotionNotFoundException;
-import com.fb.platform.promotion.service.PromotionService;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.PromotionStatusEnum;
->>>>>>> Stashed changes
 
 /**
  * @author vinayak
