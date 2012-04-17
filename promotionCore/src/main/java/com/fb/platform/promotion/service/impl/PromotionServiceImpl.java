@@ -357,4 +357,14 @@ public class PromotionServiceImpl implements PromotionService {
 			throw new PlatformException("Error while committing the scratchCard. scratchCardId : " + scratchCardId + ", userId : " + userId + ", couponCode : " + couponCode, e);
 		}
 	}
+	
+	@Override
+	public boolean isUserFirstOrder(int userId) {
+		int orderCount = scratchCardDao.getUserOrderCount(userId);
+		boolean isUserEligible = true;
+		if(orderCount > 0) {
+			isUserEligible = false;
+		}
+		return isUserEligible;
+	}
 }

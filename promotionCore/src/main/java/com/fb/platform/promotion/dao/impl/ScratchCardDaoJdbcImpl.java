@@ -6,11 +6,11 @@ package com.fb.platform.promotion.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -57,6 +57,18 @@ public class ScratchCardDaoJdbcImpl implements ScratchCardDao {
 			"	used_date = ?, " +
 			"	coupon_code = ? " +
 			"WHERE id = ?";
+	
+	private static final String GET_USER_ORDER_COUNT = 
+			"SELECT " +
+			"	count(*) " +
+			"FROM tinla.orders_order " +
+			"WHERE " +
+			"	user_id = ? " +
+			"	AND " +
+			"	support_state IS NOT NULL " +
+			"	AND " +
+			"	support_state NOT IN ('booked','cancelled','returned') " +
+			"GROUP BY user_id";
 
 	@Override
 	public ScratchCard load(String cardNumber) {
@@ -90,6 +102,19 @@ public class ScratchCardDaoJdbcImpl implements ScratchCardDao {
 		if (rowsUpdated != 1) {
 			throw new PlatformException("Unable to assgin Scratch Card to user, scratchCardId : " + id + ", userId : " + userId + ", couponCode : " + couponCode);
 		}
+	}
+	
+	@Override
+	public int getUserOrderCount(int userId) {
+		int orderCount = 0;
+		try {
+			orderCount = jdbcTemplate.queryForInt(GET_USER_ORDER_COUNT, new Object[]{userId});
+		} catch (EmptyResultDataAccessException e) {
+			if(log.isDebugEnabled()) {
+				log.debug("User first record.");
+			}
+		}
+		return orderCount;
 	}
 
 	private static class ScratchCardRowMapper implements RowMapper<ScratchCard> {

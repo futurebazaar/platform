@@ -25,6 +25,7 @@ import com.fb.platform.promotion.service.PromotionManager;
 import com.fb.platform.promotion.service.PromotionNotFoundException;
 import com.fb.platform.promotion.service.PromotionService;
 import com.fb.platform.promotion.service.ScratchCardNotFoundException;
+import com.fb.platform.promotion.service.UserNotElligibleException;
 import com.fb.platform.promotion.to.ApplyCouponRequest;
 import com.fb.platform.promotion.to.ApplyCouponResponse;
 import com.fb.platform.promotion.to.ApplyCouponResponseStatusEnum;
@@ -294,24 +295,33 @@ public class PromotionManagerImpl implements PromotionManager {
 				response.setApplyScratchCardStatus(ApplyScratchCardStatus.INVALID_SCRATCH_CARD);
 				return response;
 			}
-
-			//get a coupon for the store associated with the scratch card.
-			String couponCode = promotionService.getCouponCode(scratchCard.getStore(), userId);
-			//assign coupon to this user
-			promotionAdminService.assignCouponToUser(userId, couponCode, 0);
-
-			//commit the scratch card use by this user
-			promotionService.commitScratchCard(scratchCard.getId(), userId, couponCode);
-
-			response.setCouponCode(couponCode);
-			response.setApplyScratchCardStatus(ApplyScratchCardStatus.SUCCESS);
+			
+			boolean isUserEligible = promotionService.isUserFirstOrder(userId);
+			
+			if(isUserEligible) {
+				//get a coupon for the store associated with the scratch card.
+				String couponCode = promotionService.getCouponCode(scratchCard.getStore(), userId);
+				//assign coupon to this user
+				promotionAdminService.assignCouponToUser(userId, couponCode, 0);
+	
+				//commit the scratch card use by this user
+				promotionService.commitScratchCard(scratchCard.getId(), userId, couponCode);
+	
+				response.setCouponCode(couponCode);
+				response.setApplyScratchCardStatus(ApplyScratchCardStatus.SUCCESS);
+			} else {
+				throw new UserNotElligibleException();
+			}
 
 		} catch (ScratchCardNotFoundException e) {
 			logger.error("scratchCard not found : " + request.getCardNumber(), e);
 			response.setApplyScratchCardStatus(ApplyScratchCardStatus.INVALID_SCRATCH_CARD);
 		} catch (CouponAlreadyAssignedToUserException e) {
-			logger.error("Coupon alrady given to scratch card : " + request.getCardNumber(), e);
+			logger.error("Coupon already given to scratch card : " + request.getCardNumber(), e);
 			response.setApplyScratchCardStatus(ApplyScratchCardStatus.COUPON_ALREADY_ASSIGNED_TO_USER);
+		} catch (UserNotElligibleException e) {
+			logger.error("Not the first order of the user : " + request.getCardNumber(), e);
+			response.setApplyScratchCardStatus(ApplyScratchCardStatus.NOT_FIRST_ORDER);
 		} catch (PlatformException e) {
 			logger.error("Error while applying the scratchCard : " + request.getCardNumber(), e);
 			response.setApplyScratchCardStatus(ApplyScratchCardStatus.INTERNAL_ERROR);

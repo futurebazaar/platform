@@ -18,4 +18,6 @@ public interface ScratchCardDao {
 	public List<String> getCouponCodesForStore(String store);
 
 	void commitUse(int id, int userId, String couponCode);
+	
+	public int getUserOrderCount(int userId);
 }

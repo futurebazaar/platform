@@ -27,6 +27,19 @@
             <value description="date_joined">2010-01-01 22:37:14</value>
         </row>
         <row>
+        	<value description="id">190219</value>
+           	<value description="username">8080532955</value>
+            <value description="first_name">Neha</value>
+            <value description="last_name">Garani</value>
+            <value description="email">neha.garani@gmail.com</value>
+            <value description="password" >sha1$da42a$46b44c51df06fcfdf3eda17286ed98b34bfb4917</value>
+            <value description="is_staff">0</value>
+            <value description="is_active">1</value>
+            <value description="is_superuser">0</value>
+            <value description="last_login">2012-02-26 22:37:14</value>
+            <value description="date_joined">2010-01-01 22:37:14</value>
+        </row>
+        <row>
         	<value description="id">162812</value>
            	<value description="username">test@test.com</value>
             <value description="first_name">test</value>
@@ -237,7 +250,7 @@
         	<null/>
         	<null/>
         </row>
-	<row>
+		<row>
         	<value description="id">3</value>
         	<value description="user_id">162817</value>
            	<value description="primary_phone">9916737322</value>
@@ -268,7 +281,7 @@
         	<null/>
         	<null/>
         </row>
-	<row>
+		<row>
         	<value description="id">-1</value>
         	<value description="user_id">162813</value>
            	<value description="primary_phone">9916737322</value>
@@ -299,7 +312,7 @@
         	<null/>
         	<null/>
         </row>
-	<row>
+		<row>
         	<value description="id">-2</value>
         	<value description="user_id">162814</value>
            	<value description="primary_phone">9916737322</value>
@@ -330,7 +343,7 @@
         	<null/>
         	<null/>
         </row>
-	<row>
+		<row>
         	<value description="id">-3</value>
         	<value description="user_id">162815</value>
            	<value description="primary_phone">9916737322</value>
@@ -361,7 +374,7 @@
         	<null/>
         	<null/>
         </row>
-	<row>
+		<row>
         	<value description="id">-4</value>
         	<value description="user_id">162816</value>
            	<value description="primary_phone">9916737322</value>
@@ -423,6 +436,37 @@
         	<null/>
         	<null/>
         </row>
+        <row>
+        	<value description="id">6</value>
+        	<value description="user_id">190219</value>
+           	<value description="primary_phone">8080532955</value>
+            <value description="secondary_phone"></value>
+            <value description="buyer_or_seller">buyer</value>
+            <null />
+            <value description="full_name">Neha Garani</value>
+            <value description="primary_email">neha.garani@gmail.com</value>
+            <value description="secondary_email"></value>
+            <value description="gender"></value>
+            <value description="salutation"></value>
+            <value description="salt"></value>
+            <value description="passcode"></value>
+        	<value description="marketing_alerts">no</value>
+        	<value description="created_on">2009-06-12 10:06:01</value>
+            <null/>
+            <value description="is_agent">0</value>
+            <value description="webpage"></value>
+            <value description="facebook"></value>
+            <value description="twitter"></value>
+            <value description="email_notification">0</value>
+            <value description="sms_alert">0</value>
+            <null/>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<null/>
+        </row>
 	</table>
 	<table name="users_phone">
 	    <column>id</column>
@@ -441,7 +485,12 @@
         	<value description="phone">9870587074</value>
             <value description="type">primary</value>
         </row>
-        
+        <row>
+        	<value description="id">3</value>
+        	<value description="user_id">6</value>
+        	<value description="phone">8080532955</value>
+            <value description="type">primary</value>
+        </row>
 	</table>
 	<table name="users_email">
 	    <column>id</column>
@@ -459,6 +508,12 @@
         	<value description="email">test@test.com</value>
         	<value description="type">primary</value>
             <value description="user_id">2</value>
+        </row>
+        <row>
+        	<value description="id">3</value>
+        	<value description="email">neha.garani@gmail.com</value>
+        	<value description="type">primary</value>
+            <value description="user_id">6</value>
         </row>
      
 	</table>
@@ -555,7 +610,7 @@
 	        <value description="country_id">1</value>
 	        <value description="type">delivery</value>
 	        <value description="address">mydelivery test add</value>
-	        <value description="profile_id">1</value>
+	        <value description="profile_id">1</value>9870587074
 	        <null/>
 	        <value description="created_on">2010-08-27 02:11:44</value>
 	        <value description="uses">0</value>

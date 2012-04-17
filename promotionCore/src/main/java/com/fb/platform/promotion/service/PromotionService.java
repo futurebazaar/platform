@@ -92,6 +92,9 @@ public interface PromotionService {
 
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void commitScratchCard(int scratchCardId, int userId, String couponCode);
+	
+	@Transactional(propagation=Propagation.REQUIRED)
+	public boolean isUserFirstOrder(int userId);
 
 	/**
 	 * 
