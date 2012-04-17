@@ -444,7 +444,6 @@
                         <value name="promotion_id">-2000</value>
                         <value name="coupon_type">GLOBAL</value>
                 </row>
-<<<<<<< Updated upstream
                 <row>
                         <value name="id">-2100</value>
                         <value name="created_on">2012-02-01 00:00:00</value>
@@ -484,7 +483,7 @@
                         <value name="coupon_code">GlobalCoupon1000Off5</value>
                         <value name="promotion_id">-2000</value>
                         <value name="coupon_type">GLOBAL</value>
-=======
+                 </row>
                  <row>
                         <value name="id">-4444</value>
                         <value name="created_on">2012-02-01 00:00:00</value>
@@ -500,7 +499,6 @@
                         <value name="coupon_code">GLOBAL_COUPON_4448</value>
                         <value name="promotion_id">-3002</value>
                         <value name="coupon_type">PRE_ISSUE</value>
->>>>>>> Stashed changes
                 </row>
         </table>
         <table name="coupon_limits_config">
@@ -583,7 +581,6 @@
                         <value name="max_amount_per_user">1000</value>
                 </row>
                 <row>
-<<<<<<< Updated upstream
                         <value name="id">-2100</value>
                         <value name="coupon_id">-2100</value>
                         <value name="max_uses">5</value>
@@ -610,24 +607,30 @@
                 <row>
                         <value name="id">-2003</value>
                         <value name="coupon_id">-2003</value>
-=======
-                        <value name="id">-4444</value>
-                        <value name="coupon_id">-4444</value>
->>>>>>> Stashed changes
                         <value name="max_uses">4</value>
                         <value name="max_amount">4000</value>
                         <value name="max_uses_per_user">1</value>
                         <value name="max_amount_per_user">1000</value>
                 </row>
-<<<<<<< Updated upstream
                 <row>
                         <value name="id">-2004</value>
                         <value name="coupon_id">-2004</value>
-=======
+                        <value name="max_uses">4</value>
+                        <value name="max_amount">4000</value>
+                        <value name="max_uses_per_user">1</value>
+                        <value name="max_amount_per_user">1000</value>
+                </row>
+                <row>
+                        <value name="id">-4444</value>
+                        <value name="coupon_id">-4444</value>
+                        <value name="max_uses">4</value>
+                        <value name="max_amount">4000</value>
+                        <value name="max_uses_per_user">1</value>
+                        <value name="max_amount_per_user">1000</value>
+                </row>
                  <row>
                         <value name="id">-4448</value>
                         <value name="coupon_id">-4448</value>
->>>>>>> Stashed changes
                         <value name="max_uses">4</value>
                         <value name="max_amount">4000</value>
                         <value name="max_uses_per_user">1</value>
