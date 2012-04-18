@@ -339,6 +339,13 @@ ALTER TABLE promotions_scratchcard ADD CONSTRAINT fk_user_id FOREIGN KEY(user_id
 
 ALTER TABLE promotions_scratchcard ADD COLUMN used_date DATETIME;
 
+CREATE TABLE promotions_scratchcardcoupons (
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  coupon_code varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  store varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- end of promotion tables 
 
 CREATE TABLE accounts_client (
