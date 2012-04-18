@@ -22,6 +22,9 @@ import com.fb.platform.promotion.service.PromotionService;
 import com.fb.platform.promotion.to.ApplyCouponRequest;
 import com.fb.platform.promotion.to.ApplyCouponResponse;
 import com.fb.platform.promotion.to.ApplyCouponResponseStatusEnum;
+import com.fb.platform.promotion.to.ApplyScratchCardRequest;
+import com.fb.platform.promotion.to.ApplyScratchCardResponse;
+import com.fb.platform.promotion.to.ApplyScratchCardStatus;
 import com.fb.platform.promotion.to.ClearCacheEnum;
 import com.fb.platform.promotion.to.ClearCouponCacheResponse;
 import com.fb.platform.promotion.to.ClearPromotionCacheRequest;
@@ -53,16 +56,30 @@ public class PromotionManagerImplTest extends BaseTestCase{
 	@Autowired
 	private PromotionService promotionService = null;
 	
-	LoginResponse response = null;
+	LoginResponse responseUser1 = null;
+	
+	LoginResponse responseUser2 = null;
+	
+	LoginResponse responseUser6 = null;
 	
 	@Before
-	public void login() {
+	public void loginUser1() {
 		
 		LoginRequest request = new LoginRequest();
 		request.setUsername("jasvipul@gmail.com");
 		request.setPassword("testpass");
 
-		response = userManager.login(request);
+		responseUser1 = userManager.login(request);
+		
+		request.setUsername("test@test.com");
+		request.setPassword("testpass");
+
+		responseUser2 = userManager.login(request);
+		
+		request.setUsername("neha.garani@gmail.com");
+		request.setPassword("testpass");
+
+		responseUser6 = userManager.login(request);
 	}
 	
 	@Test
@@ -71,7 +88,7 @@ public class PromotionManagerImplTest extends BaseTestCase{
 		ApplyCouponRequest couponRequest = new ApplyCouponRequest();
 		couponRequest.setOrderReq(getSampleOrderRequest(639));
 		couponRequest.setCouponCode("END2END_GLOBAL");
-		couponRequest.setSessionToken(response.getSessionToken());
+		couponRequest.setSessionToken(responseUser1.getSessionToken());
 		couponRequest.setIsOrderCommitted(false);
 		
 		ApplyCouponResponse couponResponse = promotionManager.applyCoupon(couponRequest);
@@ -88,7 +105,7 @@ public class PromotionManagerImplTest extends BaseTestCase{
 	@Test
 	public void testCommitCoupon(){
 		
-		CommitCouponResponse commitCouponResponse = placeOrder(response.getSessionToken());
+		CommitCouponResponse commitCouponResponse = placeOrder(responseUser1.getSessionToken());
 		
 		assertNotNull(commitCouponResponse);
 		assertEquals(commitCouponResponse.getCommitCouponStatus(), CommitCouponStatusEnum.SUCCESS);
@@ -189,12 +206,12 @@ public class PromotionManagerImplTest extends BaseTestCase{
 	public void testCouponMaxUsesPerUserLimit(){
 		CommitCouponResponse commitCouponResponse = null;
 		for(int i=0; i>5; i++){
-			commitCouponResponse = placeOrder(response.getSessionToken());
+			commitCouponResponse = placeOrder(responseUser1.getSessionToken());
 			assertNotNull(commitCouponResponse);
 			assertEquals(commitCouponResponse.getCommitCouponStatus(), CommitCouponStatusEnum.SUCCESS);
 		}
 		
-		commitCouponResponse = placeOrder(response.getSessionToken());
+		commitCouponResponse = placeOrder(responseUser1.getSessionToken());
 		
 		assertNotNull(commitCouponResponse);
 		assertEquals(commitCouponResponse.getCommitCouponStatus(), CommitCouponStatusEnum.SUCCESS);
@@ -202,12 +219,12 @@ public class PromotionManagerImplTest extends BaseTestCase{
 	
 	@Test
 	public void testClearCache() {
-		AuthenticationTO authentication = authenticationService.authenticate(response.getSessionToken());
+		AuthenticationTO authentication = authenticationService.authenticate(responseUser1.getSessionToken());
 		int userId = authentication.getUserID();
 		
 		ClearPromotionCacheRequest clearPromotionCacheRequest = new ClearPromotionCacheRequest();
 		clearPromotionCacheRequest.setPromotionId(-2000);
-		clearPromotionCacheRequest.setSessionToken(response.getSessionToken());
+		clearPromotionCacheRequest.setSessionToken(responseUser1.getSessionToken());
 		
 		promotionService.getCoupon("GlobalCoupon1000Off5", userId);
 		promotionService.getCoupon("GlobalCoupon1000Off4", userId);
@@ -222,6 +239,78 @@ public class PromotionManagerImplTest extends BaseTestCase{
 		for(ClearCouponCacheResponse clearCouponCacheResponse: clearPromotionCacheResponse.getClearCouponCacheResponse()) {
 			assertEquals(clearCouponCacheResponse.getClearCacheEnum(), ClearCacheEnum.SUCCESS);
 		}
+	}
+	
+	@Test
+	public void testApplyScratchCard() {
+		ApplyScratchCardRequest applyScratchCardRequest = new ApplyScratchCardRequest();
+		applyScratchCardRequest.setCardNumber("NG2202BMJ");
+		applyScratchCardRequest.setSessionToken(responseUser1.getSessionToken());
+		ApplyScratchCardResponse applyScratchCardResponse = promotionManager.applyScratchCard(applyScratchCardRequest);
+		
+		//User 1 has a confirmed order.
+		//The scratch card is active.
+		//The user is not eligible exception should be thrown because it is not his first order.
+		assertEquals(ApplyScratchCardStatus.NOT_FIRST_ORDER, applyScratchCardResponse.getApplyScratchCardStatus());
+		
+		applyScratchCardRequest.setCardNumber("NG1987BMJ");
+		applyScratchCardRequest.setSessionToken(responseUser2.getSessionToken());
+		applyScratchCardResponse = promotionManager.applyScratchCard(applyScratchCardRequest);
+		
+		//User 2 has orders in orders_order table but are in cancelled state.
+		//The scratch card is inactive.
+		//The user is eligible for the scratch card.
+		assertEquals(ApplyScratchCardStatus.INVALID_SCRATCH_CARD, applyScratchCardResponse.getApplyScratchCardStatus());
+		
+		applyScratchCardRequest.setCardNumber("NG2287BMJ");
+		applyScratchCardRequest.setSessionToken(responseUser2.getSessionToken());
+		applyScratchCardResponse = promotionManager.applyScratchCard(applyScratchCardRequest);
+		
+		//User 2 has orders in orders_order table but are in cancelled state.
+		//The scratch card is active.
+		//The user is eligible for the scratch card.
+		assertEquals(ApplyScratchCardStatus.SUCCESS, applyScratchCardResponse.getApplyScratchCardStatus());
+		
+		applyScratchCardRequest.setCardNumber("NG0287BMJ");
+		applyScratchCardRequest.setSessionToken(responseUser6.getSessionToken());
+		applyScratchCardResponse = promotionManager.applyScratchCard(applyScratchCardRequest);
+		
+		//User 6 is a new user and has no order in orders_order table.
+		//The scratch card is active.
+		//The user is eligible for the scratch card.
+		assertEquals(ApplyScratchCardStatus.SUCCESS, applyScratchCardResponse.getApplyScratchCardStatus());
+		
+		applyScratchCardRequest.setCardNumber("NG2908BMJ");
+		applyScratchCardRequest.setSessionToken(responseUser6.getSessionToken());
+		applyScratchCardResponse = promotionManager.applyScratchCard(applyScratchCardRequest);
+		
+		//User 6 is a new user and has no order in orders_order table.
+		//The scratch card is active.
+		//A scratch card has already been given to this user.
+		//The user is not eligible for the scratch card.
+		assertEquals(ApplyScratchCardStatus.COUPON_ALREADY_ASSIGNED_TO_USER, applyScratchCardResponse.getApplyScratchCardStatus());
+		
+		applyScratchCardRequest.setCardNumber("NG2910BMJ");
+		applyScratchCardRequest.setSessionToken(responseUser6.getSessionToken());
+		applyScratchCardResponse = promotionManager.applyScratchCard(applyScratchCardRequest);
+		
+		//User 6 is a new user and has no order in orders_order table.
+		//The scratch card is active.
+		//The user already has a scratch card issued of a different store.
+		//The user is eligible for the scratch card.
+		assertEquals(ApplyScratchCardStatus.SUCCESS, applyScratchCardResponse.getApplyScratchCardStatus());
+		
+		applyScratchCardRequest.setCardNumber("VK0105BMJ");
+		applyScratchCardRequest.setSessionToken(responseUser6.getSessionToken());
+		applyScratchCardResponse = promotionManager.applyScratchCard(applyScratchCardRequest);
+		
+		//User 6 is a new user and has no order in orders_order table.
+		//The scratch card is active.
+		//The user already has a scratch card issued of a different store.
+		//The user is eligible for the scratch card.
+		assertEquals(ApplyScratchCardStatus.INVALID_SCRATCH_CARD, applyScratchCardResponse.getApplyScratchCardStatus());
+		
+		
 	}
 
 	private CommitCouponResponse placeOrder(String sessionToken) {

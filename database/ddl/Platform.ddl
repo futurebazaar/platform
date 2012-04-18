@@ -1,9 +1,40 @@
 -- ******************** DROP TABLE AND CONSTRANTS **********
 
 
-DROP TABLE IF EXISTS categories_store,sso_session, crypto_key,users_email,users_phone ,user_promotion_uses , user_coupon_uses , users_profile , auth_user,locations_address ,locations_city,locations_state,locations_country,client_master,released_coupon,release_promotion,
-promotion_rule_config,promotion_limits_config,coupon_limits_config,coupon ,platform_promotion,promotion_rule,platform_coupon_user, accounts_client,
-fulfillment_articleproductgroup,fulfillment_dc,fulfillment_dczipgroup,fulfillment_lsp,fulfillment_lspdeliverychart,fulfillment_lspzipgroup,fulfillment_pincodezipgroupmap,fulfillment_productgroup,inventory_inventory;
+DROP TABLE IF EXISTS 	categories_store,
+						sso_session, 
+						crypto_key,
+						orders_order,
+						users_email,
+						users_phone ,
+						user_promotion_uses , 
+						user_coupon_uses , 
+						users_profile , 
+						auth_user,
+						locations_address ,
+						locations_city,
+						locations_state,
+						locations_country,
+						client_master,
+						released_coupon,
+						release_promotion,
+						promotion_rule_config,
+						promotion_limits_config,
+						coupon_limits_config,coupon ,
+						platform_promotion,
+						promotion_rule,
+						platform_coupon_user, 
+						accounts_client,
+						fulfillment_articleproductgroup,
+						fulfillment_dc,
+						fulfillment_dczipgroup,
+						fulfillment_lsp,
+						fulfillment_lspdeliverychart,
+						fulfillment_lspzipgroup,
+						fulfillment_pincodezipgroupmap,
+						fulfillment_productgroup,
+						inventory_inventory,
+						accounts_clientdomain;
 
 
 --  ******************** CREATE TABLE *****************
@@ -490,3 +521,91 @@ CREATE TABLE `fulfillment_deliverychart_vendor` (
   `delivery_time` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+
+CREATE TABLE accounts_clientdomain (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  client_id int(11) NOT NULL,
+  type varchar(25) NOT NULL,
+  is_public tinyint(1) NOT NULL,
+  custom_home_page varchar(100) NOT NULL,
+  domain varchar(150) NOT NULL,
+  default_redirect_to varchar(50) NOT NULL,
+  code varchar(10) NOT NULL,
+  sale_pricelist varchar(15) NOT NULL,
+  list_pricelist varchar(15) NOT NULL,
+  is_second_factor_auth_reqd tinyint(1) NOT NULL,
+  is_channel tinyint(1) NOT NULL,
+  PRIMARY KEY (id),
+  KEY accounts_clientdomain_4a4e8ffb (client_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE orders_order (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  user_id int(11) DEFAULT NULL,
+  state varchar(25) NOT NULL,
+  payable_amount decimal(22,2) NOT NULL,
+  timestamp datetime DEFAULT NULL,
+  modified_on datetime DEFAULT NULL,
+  payment_realized_on datetime DEFAULT NULL,
+  payment_mode varchar(25) NOT NULL,
+  coupon_discount decimal(22,2) DEFAULT NULL,
+  coupon_id int(11) DEFAULT NULL,
+  call_id varchar(50),
+  list_price_total decimal(22,2) NOT NULL,
+  total decimal(22,2) NOT NULL,
+  shipping_charges decimal(22,2) NOT NULL,
+  taxes decimal(22,2) NOT NULL,
+  transaction_charges decimal(22,2) NOT NULL,
+  payment_realized_mode varchar(25) NOT NULL,
+  medium varchar(20) NOT NULL,
+  partner varchar(100) NOT NULL,
+  reference_order_id varchar(15) NOT NULL,
+  ga_tracked tinyint(1) NOT NULL,
+  wstore_id int(11) DEFAULT NULL,
+  client_id int(11) NOT NULL,
+  top10_discount decimal(22,2) DEFAULT NULL,
+  auto_promotions_discount decimal(22,2) DEFAULT NULL,
+  verify_code int(11) DEFAULT NULL,
+  notes varchar(100) NOT NULL,
+  payback_id varchar(16) DEFAULT NULL,
+  cashback_amount_total decimal(22,2) DEFAULT NULL,
+  booking_agent_id int(11) DEFAULT NULL,
+  confirming_agent_id int(11) DEFAULT NULL,
+  booking_timestamp datetime DEFAULT NULL,
+  confirming_timestamp datetime,
+  agent_id int(11) DEFAULT NULL,
+  support_state varchar(15) DEFAULT NULL,
+  client_domain_id int(11) DEFAULT NULL,
+  sap_date datetime DEFAULT NULL,
+  PRIMARY KEY (id),
+  KEY orders_order_403f60f (user_id),
+  KEY orders_order_3d64d1a0 (coupon_id),
+  KEY orders_order_388e5db4 (wstore_id),
+  KEY orders_order_4a4e8ffb (client_id),
+  KEY orders_order_reference_order_id (reference_order_id),
+  KEY orders_order_fbe6d70c (payback_id),
+  KEY orders_order_2ff4e7ca (booking_agent_id),
+  KEY orders_order_61274386 (confirming_agent_id),
+  KEY orders_order_c3ec1dbe (agent_id),
+  KEY orders_order_timestamp (timestamp),
+  KEY orders_order_modified_on (modified_on),
+  KEY orders_order_payment_realized_on (payment_realized_on),
+  KEY orders_order_support_state (support_state),
+  KEY orders_order_state (state),
+  KEY orders_order_ef0dcc2f (client_domain_id),
+  CONSTRAINT agent_id_refs_id_684bce15b1886510 FOREIGN KEY (agent_id) REFERENCES users_profile (id),
+  CONSTRAINT client_domain_id_refs_id_42c094ebad791900 FOREIGN KEY (client_domain_id) REFERENCES accounts_clientdomain (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE promotions_scratchcardcoupons (
+
+  id INTEGER NOT NULL AUTO_INCREMENT,
+
+  coupon_code varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+
+  store varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+
+  PRIMARY KEY (id)
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

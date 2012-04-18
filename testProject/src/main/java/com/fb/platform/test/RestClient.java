@@ -69,7 +69,7 @@ public class RestClient {
 		LoginRequest loginRequest = new LoginRequest();
 		//loginRequest.setUsername("9920694762");
 		//loginRequest.setPassword("test");
-		loginRequest.setUsername("jasvipul@gmail.com");
+		loginRequest.setUsername("neha.garani@gmail.com");
 		loginRequest.setPassword("testpass");
 
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.auth._1_0");

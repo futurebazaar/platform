@@ -14,7 +14,6 @@ import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
-import com.fb.platform.promotion.admin.service.PromotionAdminService;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.scratchCard.ScratchCard;
@@ -57,9 +56,6 @@ public class PromotionManagerImpl implements PromotionManager {
 
 	@Autowired
 	private PromotionService promotionService = null;
-
-	@Autowired
-	private PromotionAdminService promotionAdminService = null;
 
 	@Override
 	public ApplyCouponResponse applyCoupon(ApplyCouponRequest request) {
@@ -301,8 +297,6 @@ public class PromotionManagerImpl implements PromotionManager {
 			if(isUserEligible) {
 				//get a coupon for the store associated with the scratch card.
 				String couponCode = promotionService.getCouponCode(scratchCard.getStore(), userId);
-				//assign coupon to this user
-				promotionAdminService.assignCouponToUser(userId, couponCode, 0);
 	
 				//commit the scratch card use by this user
 				promotionService.commitScratchCard(scratchCard.getId(), userId, couponCode);
@@ -380,7 +374,4 @@ public class PromotionManagerImpl implements PromotionManager {
 		this.promotionService = promotionService;
 	}
 
-	public void setPromotionAdminService(PromotionAdminService promotionAdminService) {
-		this.promotionAdminService = promotionAdminService;
-	}
 }

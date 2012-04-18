@@ -15,6 +15,7 @@ import org.springframework.dao.DataAccessException;
 
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
+import com.fb.platform.promotion.admin.dao.CouponAdminDao;
 import com.fb.platform.promotion.cache.CouponCacheAccess;
 import com.fb.platform.promotion.cache.PromotionCacheAccess;
 import com.fb.platform.promotion.dao.CouponDao;
@@ -30,6 +31,7 @@ import com.fb.platform.promotion.model.coupon.GlobalCouponUses;
 import com.fb.platform.promotion.model.coupon.UserCouponUses;
 import com.fb.platform.promotion.model.coupon.UserCouponUsesEntry;
 import com.fb.platform.promotion.model.scratchCard.ScratchCard;
+import com.fb.platform.promotion.service.CouponAlreadyAssignedToUserException;
 import com.fb.platform.promotion.service.CouponNotFoundException;
 import com.fb.platform.promotion.service.PromotionNotFoundException;
 import com.fb.platform.promotion.service.PromotionService;
@@ -63,6 +65,9 @@ public class PromotionServiceImpl implements PromotionService {
 
 	@Autowired
 	private ScratchCardDao scratchCardDao = null;
+	
+	@Autowired
+	private CouponAdminDao couponAdminDao = null;
 
 	@Override
 	public PromotionStatusEnum isApplicable(int userId, OrderRequest orderRequest, Money discountAmount, Coupon coupon, Promotion promotion, boolean isCouponCommitted){
@@ -355,9 +360,18 @@ public class PromotionServiceImpl implements PromotionService {
 	@Override
 	public void commitScratchCard(int scratchCardId, int userId, String couponCode) {
 		try {
+			assignCouponToUser(userId, couponCode, 0);
 			scratchCardDao.commitUse(scratchCardId, userId, couponCode);
 		} catch (DataAccessException e) {
 			throw new PlatformException("Error while committing the scratchCard. scratchCardId : " + scratchCardId + ", userId : " + userId + ", couponCode : " + couponCode, e);
+		}
+	}
+	
+	private void assignCouponToUser(int userId, String couponCode, int overriddenUserLimit) throws CouponAlreadyAssignedToUserException {
+		try {
+			couponAdminDao.assignToUser(userId, couponCode, overriddenUserLimit);
+		} catch (DataAccessException e) {
+			throw new PlatformException("Error while assigning couponCode : " + couponCode + " to userId : " + userId, e);
 		}
 	}
 	
