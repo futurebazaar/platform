@@ -360,8 +360,6 @@
         <module>authenticationCore</module>
 	<module>promotionCore</module>
 	<module>promotionWS</module>
-	<module>migrationCore</module>
-	<module>migrationWS</module>
     </modules>
 
     <reporting>

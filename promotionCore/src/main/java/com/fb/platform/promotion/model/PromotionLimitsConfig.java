@@ -6,8 +6,13 @@ package com.fb.platform.promotion.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.fb.commons.to.Money;
+import com.fb.platform.promotion.service.impl.PromotionServiceImpl;
 import com.fb.platform.promotion.to.ApplyCouponResponseStatusEnum;
+import com.fb.platform.promotion.to.PromotionStatusEnum;
 
 /**
  * @author vinayak
@@ -15,27 +20,35 @@ import com.fb.platform.promotion.to.ApplyCouponResponseStatusEnum;
  */
 public class PromotionLimitsConfig implements Serializable {
 
+	private static Log logger = LogFactory.getLog(PromotionLimitsConfig.class);
+	
 	private int maxUses = 0;
 	private Money maxAmount = null;
 	private int maxUsesPerUser = 0;
 	private Money maxAmountPerUser = null;
 
-	public ApplyCouponResponseStatusEnum isWithinLimit(GlobalPromotionUses globalUses, UserPromotionUses userUses) {
+	public PromotionStatusEnum isWithinLimit(GlobalPromotionUses globalUses, UserPromotionUses userUses) {
 		Money zeroMoney = new Money(BigDecimal.ZERO);
 		
+		logger.info("Limits for Promotion : " 
+					+ "  globalUsesCount = "+globalUses.getCurrentCount() + ", maxUses = " + maxUses 
+					+ ", globalUsesAmount = " + globalUses.getCurrentAmount() + ", maxAmount = " + maxAmount 
+					+ ", UserUsesCount = "+userUses.getCurrentCount() + ", maxUsesPerUser = " + maxUsesPerUser
+					+ ", UserUsesAmount = "+userUses.getCurrentAmount() + ", maxAmountPerUser = "+maxAmountPerUser);
+		
 		if (maxUses > 0 && maxUses < globalUses.getCurrentCount()) {
-			return ApplyCouponResponseStatusEnum.TOTAL_MAX_USES_EXCEEDED;
+			return PromotionStatusEnum.TOTAL_MAX_USES_EXCEEDED;
 		}
 		if (maxAmount.gt(zeroMoney) && maxAmount.lt(globalUses.getCurrentAmount())) {
-			return ApplyCouponResponseStatusEnum.TOTAL_MAX_AMOUNT_EXCEEDED;
+			return PromotionStatusEnum.TOTAL_MAX_AMOUNT_EXCEEDED;
 		}
 		if (maxUsesPerUser > 0 && maxUsesPerUser < userUses.getCurrentCount()) {
-			return ApplyCouponResponseStatusEnum.TOTAL_MAX_USES_PER_USER_EXCEEDED;
+			return PromotionStatusEnum.TOTAL_MAX_USES_PER_USER_EXCEEDED;
 		}
 		if (maxAmountPerUser.gt(zeroMoney) && maxAmountPerUser.lt(userUses.getCurrentAmount())) {
-			return ApplyCouponResponseStatusEnum.TOTAL_MAX_AMOUNT_PER_USER_EXCEEDED;
+			return PromotionStatusEnum.TOTAL_MAX_AMOUNT_PER_USER_EXCEEDED;
 		}
-		return ApplyCouponResponseStatusEnum.LIMIT_SUCCESS;
+		return PromotionStatusEnum.LIMIT_SUCCESS;
 	}
 
 	public void setMaxUses(int maxUses) {

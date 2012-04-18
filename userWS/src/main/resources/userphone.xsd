@@ -99,8 +99,34 @@
       <xs:enumeration value="NO_SESSION"/>
     </xs:restriction>
   </xs:simpleType>
-  
-
+  <xs:element name="verifyUserPhoneRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="userphone:userId"/>
+        <xs:element ref="userphone:phone"/>
+        <xs:element ref="userphone:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="verifyUserPhoneResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="userphone:verifyUserPhoneStatus"/>
+        <xs:element ref="userphone:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="verifyUserPhoneStatus" type="userphone:verifyUserPhoneStatus"/>
+  <xs:simpleType name="verifyUserPhoneStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INVALID_USER"/>
+      <xs:enumeration value="NO_PHONE"/>
+      <xs:enumeration value="ALREADY_VERIFIED"/>
+      <xs:enumeration value="ERROR_VERIFYING_PHONE"/>
+      <xs:enumeration value="NO_SESSION"/>
+    </xs:restriction>
+  </xs:simpleType>
  </xs:schema>
   
 	

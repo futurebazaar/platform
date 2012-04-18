@@ -6,10 +6,12 @@
         <xs:element ref="promotion:couponCode"/>
         <xs:element ref="promotion:orderRequest"/>
         <xs:element ref="promotion:sessionToken"/>
+        <xs:element ref="promotion:couponCommitted"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="couponCode" type="xs:string"/>
+  <xs:element name="couponCommitted" type="xs:boolean"/>
   <xs:element name="orderRequest">
     <xs:complexType>
       <xs:sequence>
@@ -88,6 +90,7 @@
       <xs:enumeration value="TOTAL_MAX_AMOUNT_EXCEEDED"/>
       <xs:enumeration value="TOTAL_MAX_AMOUNT_PER_USER_EXCEEDED"/>
       <xs:enumeration value="LIMIT_SUCCESS"/>
+      <xs:enumeration value="NO_APPLIED_COUPON_ON_ORDER"/>
     </xs:restriction>
   </xs:simpleType>
 

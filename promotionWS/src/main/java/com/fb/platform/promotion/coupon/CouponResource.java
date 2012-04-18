@@ -9,8 +9,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.Collection;
-import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -91,6 +89,7 @@ public class CouponResource {
 			com.fb.platform.promotion.to.ApplyCouponRequest apiCouponRequest = new com.fb.platform.promotion.to.ApplyCouponRequest();
 			apiCouponRequest.setCouponCode(xmlCouponRequest.getCouponCode());
 			apiCouponRequest.setSessionToken(xmlCouponRequest.getSessionToken());
+			apiCouponRequest.setIsOrderCommitted(xmlCouponRequest.isCouponCommitted());
 
 			OrderRequest xmlOrderRequest = xmlCouponRequest.getOrderRequest();
 			com.fb.platform.promotion.to.OrderRequest apiOrderRequest = getApiOrderRequest(xmlOrderRequest);

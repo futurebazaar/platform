@@ -1,0 +1,2 @@
+2012-04-11 15:54:24.048 [INFO] com.fb.platform.caching.impl.PlatformCachingManagerEhCacheImpl:33 - Trying to read ehcache.xml from the classpath and initializing all the caches
+2012-04-11 15:54:27.261 [INFO] com.fb.platform.caching.impl.PlatformCachingManagerEhCacheImpl:33 - Trying to read ehcache.xml from the classpath and initializing all the caches

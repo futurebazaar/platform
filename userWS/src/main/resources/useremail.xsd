@@ -99,7 +99,35 @@
       <xs:enumeration value="NO_SESSION"/>
     </xs:restriction>
   </xs:simpleType>
-  
+  <xs:element name="verifyUserEmailRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="useremail:userId"/>
+        <xs:element ref="useremail:emailId"/>
+        <xs:element ref="useremail:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="verifyUserEmailResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="useremail:verifyUserEmailStatus"/>
+        <xs:element ref="useremail:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="verifyUserEmailStatus" type="useremail:verifyUserEmailStatus"/>
+  <xs:simpleType name="verifyUserEmailStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INVALID_USER"/>
+      <xs:enumeration value="NO_EMAIL_ID"/>
+      <xs:enumeration value="ALREADY_VERIFIED"/>
+      <xs:enumeration value="ERROR_VERIFYING_EMAIL"/>
+      <xs:enumeration value="NO_SESSION"/>
+    </xs:restriction>
+  </xs:simpleType>
+    
 
  </xs:schema>
   

@@ -18,8 +18,6 @@ import org.apache.commons.httpclient.methods.StringRequestEntity;
 
 import com.fb.platform.promotion._1_0.ApplyScratchCardRequest;
 import com.fb.platform.promotion._1_0.ApplyScratchCardResponse;
-import com.fb.platform.promotion._1_0.CommitCouponRequest;
-import com.fb.platform.promotion._1_0.CommitCouponResponse;
 
 /**
  * @author vinayak
@@ -38,7 +36,7 @@ public class ScratchCardRestClient {
 		PostMethod applyScratchCardMethod = new PostMethod("http://localhost:8080/promotionWS/scratchCard/apply");
 
 		ApplyScratchCardRequest request = new ApplyScratchCardRequest();
-		request.setCardNumber("BB0003TLK");
+		request.setCardNumber("BB0003609");
 		request.setSessionToken(sessionToken);
 
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion._1_0");

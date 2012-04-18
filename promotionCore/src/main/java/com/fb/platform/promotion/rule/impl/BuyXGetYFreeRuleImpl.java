@@ -13,6 +13,7 @@ import com.fb.platform.promotion.rule.PromotionRule;
 import com.fb.platform.promotion.rule.RuleConfiguration;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.Product;
+import com.fb.platform.promotion.to.PromotionStatusEnum;
 
 /**
  * @author vinayak
@@ -31,7 +32,7 @@ public class BuyXGetYFreeRuleImpl implements PromotionRule, Serializable{
 	}
 
 	@Override
-	public ApplicableResponse isApplicable(OrderRequest request) {
+	public PromotionStatusEnum isApplicable(OrderRequest request) {
 		if(log.isDebugEnabled()) {
 			log.debug("Checking if BuyXGetYFreeRuleImpl applies on order : " + request.getOrderId());
 		}

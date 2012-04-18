@@ -40,7 +40,6 @@ import com.fb.platform.user.manager.model.admin.phone.VerifyUserPhoneResponse;
 @Transactional
 public interface UserAdminManager {
 
-	@Transactional(propagation = Propagation.SUPPORTS)
 	GetUserResponse getUser(GetUserRequest getUserRequest);
 
 	@Transactional(propagation = Propagation.REQUIRED)
