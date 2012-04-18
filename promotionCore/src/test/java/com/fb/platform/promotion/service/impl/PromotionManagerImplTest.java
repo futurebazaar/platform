@@ -144,7 +144,7 @@ public class PromotionManagerImplTest extends BaseTestCase{
 		assertEquals(couponResponse.getCouponStatus(), ApplyCouponResponseStatusEnum.SUCCESS);
 		
 		ApplyCouponRequest reCouponRequest = new ApplyCouponRequest();
-		OrderRequest newOrderRequest = getSampleOrderRequest(90);
+		OrderRequest newOrderRequest = getSampleOrderRequest(150);
 		newOrderRequest.setOrderId(-4444);
 		reCouponRequest.setOrderReq(newOrderRequest);
 		reCouponRequest.setCouponCode("GLOBAL_COUPON_4444");
@@ -152,9 +152,9 @@ public class PromotionManagerImplTest extends BaseTestCase{
 		reCouponRequest.setIsOrderCommitted(true);
 		
 		ApplyCouponResponse reCouponResponse = promotionManager.applyCoupon(reCouponRequest);
-		assertNotNull(couponResponse);
-		assertEquals(couponResponse.getCouponStatus(), ApplyCouponResponseStatusEnum.SUCCESS);
-		assertEquals(0, new BigDecimal(13.5).compareTo(reCouponResponse.getDiscountValue()));
+		assertNotNull(reCouponResponse);
+		assertEquals(reCouponResponse.getCouponStatus(), ApplyCouponResponseStatusEnum.SUCCESS);
+		assertEquals(0, new BigDecimal(22.5).compareTo(reCouponResponse.getDiscountValue()));
 	}	
 	
 	/*@Test
