@@ -47,11 +47,12 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule, Serializa
 			log.debug("Checking if BuyWorthXGetYPercentOffRuleImpl applies on order : " + request.getOrderId());
 		}
 		Money orderValue = new Money(request.getOrderValue());
+		log.info("[isApplicable] - client list= "+client_list+ "\n minOrderValue= "+minOrderValue);
 		if(request.isValidClient(client_list)){
 			if(orderValue.gteq(minOrderValue)){
 				return PromotionStatusEnum.SUCCESS;
 			}
-			return PromotionStatusEnum.SUCCESS;
+			return PromotionStatusEnum.LESS_ORDER_AMOUNT;
 		}
 		return PromotionStatusEnum.INVALID_CLIENT;
 	}
