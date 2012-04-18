@@ -29,7 +29,7 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule, Serializa
 	private Money minOrderValue;
 	private BigDecimal discountPercentage;
 	private Money maxDiscountPerUse;
-	private List<Integer> client_list;
+	private List<Integer> clientList;
 	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
@@ -37,7 +37,7 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule, Serializa
 		discountPercentage = BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigConstants.DISCOUNT_PERCENTAGE)));
 		maxDiscountPerUse = new Money (BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigConstants.MAX_DISCOUNT_CEIL_IN_VALUE))));
 		StrTokenizer strTokClients = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigConstants.CLIENT_LIST),",");
-		client_list = StringToIntegerList.convert((List<String>)strTokClients.getTokenList());
+		clientList = StringToIntegerList.convert((List<String>)strTokClients.getTokenList());
 		log.info("minOrderValue : " + minOrderValue.toString() + ", discountPercentage : " + discountPercentage.toString() + " ,maxDiscountPerUse" + maxDiscountPerUse.toString());
 	}
 
@@ -47,8 +47,8 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule, Serializa
 			log.debug("Checking if BuyWorthXGetYPercentOffRuleImpl applies on order : " + request.getOrderId());
 		}
 		Money orderValue = new Money(request.getOrderValue());
-		log.info("[isApplicable] - client list= "+client_list+ "\n minOrderValue= "+minOrderValue);
-		if(request.isValidClient(client_list)){
+		log.info("[isApplicable] - client list= "+clientList+ "\n minOrderValue= "+minOrderValue);
+		if(request.isValidClient(clientList)){
 			if(orderValue.gteq(minOrderValue)){
 				return PromotionStatusEnum.SUCCESS;
 			}

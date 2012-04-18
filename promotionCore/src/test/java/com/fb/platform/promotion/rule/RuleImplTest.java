@@ -150,7 +150,7 @@ public class RuleImplTest extends BaseTestCase {
 		assertEquals(4, yPercentOffRuleConfiguration.getConfigItems().size());
 
 		assertEquals(buyWorthXGetYPercentOffRule.isApplicable(orderReq1),PromotionStatusEnum.SUCCESS);
-		assertEquals(buyWorthXGetYPercentOffRule.isApplicable(orderReq2),PromotionStatusEnum.SUCCESS);
+		assertEquals(buyWorthXGetYPercentOffRule.isApplicable(orderReq2),PromotionStatusEnum.LESS_ORDER_AMOUNT);
 		assertEquals(buyWorthXGetYPercentOffRule.isApplicable(orderReq3),PromotionStatusEnum.SUCCESS);
 		
 		assertTrue(new Money(new BigDecimal(78)).eq(buyWorthXGetYPercentOffRule.execute(orderReq1)));
@@ -172,6 +172,8 @@ public class RuleImplTest extends BaseTestCase {
 		assertEquals(buyWorthXGetYRsOffOnZCategoryRule.isApplicable(orderReq2),PromotionStatusEnum.LESS_ORDER_AMOUNT);
 		
 		assertTrue(new Money(new BigDecimal(150)).eq(buyWorthXGetYRsOffOnZCategoryRule.execute(orderReq1)));
+		
+		
 		
 		
 	}

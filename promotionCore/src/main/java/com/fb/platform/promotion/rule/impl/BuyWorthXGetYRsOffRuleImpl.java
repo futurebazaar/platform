@@ -28,14 +28,14 @@ public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule, Serializable {
 	private static transient Log log = LogFactory.getLog(BuyWorthXGetYRsOffRuleImpl.class);
 	private Money minOrderValue;
 	private Money fixedRsOff;
-	private List<Integer> client_list;
+	private List<Integer> clientList;
 	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
 		minOrderValue = new Money(BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue("MIN_ORDER_VALUE"))));
 		fixedRsOff = new Money (BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue("FIXED_DISCOUNT_RS_OFF"))));
 		StrTokenizer strTokClients = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigConstants.CLIENT_LIST),",");
-		client_list = StringToIntegerList.convert((List<String>)strTokClients.getTokenList());
+		clientList = StringToIntegerList.convert((List<String>)strTokClients.getTokenList());
 		log.info("minOrderValue : " + minOrderValue.toString() + ", fixedRsOff : " + fixedRsOff.toString());
 	}
 
@@ -46,7 +46,7 @@ public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule, Serializable {
 		}
 		ApplicableResponse ar = new ApplicableResponse();
 		Money orderValue = new Money(request.getOrderValue());
-		if(request.isValidClient(client_list)){
+		if(request.isValidClient(clientList)){
 			if(orderValue.gteq(minOrderValue)){
 				return PromotionStatusEnum.SUCCESS;
 			}
