@@ -16,21 +16,13 @@
     <!-- This is to scan and load the CacheAccess classes -->
     <context:component-scan base-package="com.fb.platform.promotion.cache"></context:component-scan>
 
+    <bean id="migrationService" class="com.fb.platform.promotion.service.migration.impl.MigrationServiceImpl">
+        <property name="promotionAdminDao" ref="promotionAdminDao"/>
+    </bean>
+
     <!-- Add new services here -->
-    <bean id="promotionService" class="com.fb.platform.promotion.service.impl.PromotionServiceImpl">
-        <property name="couponDao" ref="couponDao"/>
-        <property name="promotionDao" ref="promotionDao"></property>
-    </bean>
-
-    <bean id="promotionAdminService" class="com.fb.platform.promotion.admin.service.PromotionAdminServiceImpl">
-        <property name="couponAdminDao" ref="couponAdminDao"/>
-    </bean>
-
-    <!-- Add new Managers here -->
-    <bean id="promotionManager" class="com.fb.platform.promotion.service.impl.PromotionManagerImpl">
-        <property name="couponDao" ref="couponDao"/>
-        <property name="promotionDao" ref="promotionDao"></property>
-        <property name="promotionService" ref="promotionService"></property>
-        <property name="authenticationService" ref="authenticationService"></property>
+    <bean id="migrationManager" class="com.fb.platform.promotion.service.migration.impl.MigrationManagerImpl">
+        <property name="legacyDao" ref="legacyDao"/>
+        <property name="migrationService" ref="migrationService"></property>
     </bean>
 </beans>

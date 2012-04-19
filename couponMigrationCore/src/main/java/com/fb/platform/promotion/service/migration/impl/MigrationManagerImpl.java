@@ -10,7 +10,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.platform.promotion.dao.legacy.LegacyDao;
-import com.fb.platform.promotion.dao.legacy.impl.LegacyDaoJdbcImpl;
 import com.fb.platform.promotion.model.legacy.LegacyPromotion;
 import com.fb.platform.promotion.service.migration.MigrationManager;
 import com.fb.platform.promotion.service.migration.MigrationService;
@@ -31,13 +30,13 @@ public class MigrationManagerImpl implements MigrationManager {
 
 	@Override
 	public void migrate() {
-		int startRecord = 0;
+		int startRecord = 110;
 		int batchSize = 10;
 
 		try {
 			while (true) {
 				List<Integer> idsToMigrate = legacyDao.loadIdsToMigrate(startRecord, batchSize);
-				if (idsToMigrate == null || idsToMigrate.size() == 0) {
+				if (idsToMigrate != null && idsToMigrate.size() > 0) {
 
 					for (Integer promotionId : idsToMigrate) {
 						LegacyPromotion legacyPromotion = legacyDao.loadPromotion(promotionId);
@@ -54,4 +53,13 @@ public class MigrationManagerImpl implements MigrationManager {
 			log.error("Error while migrating legacy promotions to new promotions.", e);
 		}
 	}
+
+	public void setLegacyDao(LegacyDao legacyDao) {
+		this.legacyDao = legacyDao;
+	}
+
+	public void setMigrationService(MigrationService migrationService) {
+		this.migrationService = migrationService;
+	}
+
 }

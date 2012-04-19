@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,6 +22,8 @@ import com.fb.commons.to.Money;
 import com.fb.platform.promotion.dao.admin.PromotionAdminDao;
 import com.fb.platform.promotion.dao.legacy.impl.LegacyDaoJdbcImpl;
 import com.fb.platform.promotion.model.Promotion;
+import com.fb.platform.promotion.model.coupon.Coupon;
+import com.fb.platform.promotion.rule.RuleConfiguration;
 
 /**
  * @author vinayak
@@ -115,9 +118,9 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 			"		override_user_uses_limit) " +
 			"VALUES (?, ?, ?)";
 
-
 	@Override
-	public void createPromotion(Promotion promotion) {
+	public void createPromotion(Promotion promotion, RuleConfiguration ruleConfig, List<Coupon> coupons) {
+		
 		
 	}
 
@@ -178,6 +181,10 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 		}
 		
 		return promotionKeyHolder.getKey().intValue();
+	}
+
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
 	}
 
 }
