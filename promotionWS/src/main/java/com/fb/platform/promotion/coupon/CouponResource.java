@@ -147,6 +147,7 @@ public class CouponResource {
 			CommitCouponResponse xmlCommitCouponResponse = new CommitCouponResponse();
 			xmlCommitCouponResponse.setCommitCouponStatus(CommitCouponStatus.fromValue(apiCommitCouponResponse.getCommitCouponStatus().toString()));
 			xmlCommitCouponResponse.setSessionToken(apiCommitCouponResponse.getSessionToken());
+			xmlCommitCouponResponse.setStatusMessage(apiCommitCouponResponse.getStatusMessage());
 
 			StringWriter outStringWriter = new StringWriter();
 			Marshaller marsheller = context.createMarshaller();
