@@ -3,6 +3,7 @@
  */
 package com.fb.platform.promotion.rule;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fb.commons.PlatformException;
@@ -14,7 +15,17 @@ import com.fb.commons.PlatformException;
  */
 public class RuleConfiguration {
 
+	private int promotionId = 0;
+	private int ruleId = 0;
 	private List<RuleConfigItem> configItems = null;
+
+	public RuleConfiguration () {
+		configItems = new ArrayList<RuleConfigItem>();
+	}
+
+	public void add(RuleConfigItem configItem) {
+		this.configItems.add(configItem);
+	}
 
 	public RuleConfiguration(List<RuleConfigItem> configItems) {
 		this.configItems = configItems;
@@ -52,5 +63,21 @@ public class RuleConfiguration {
 			}
 		}
 		throw new PlatformException("Config Item Value not found for the key - "+key);
+	}
+
+	public int getPromotionId() {
+		return promotionId;
+	}
+
+	public void setPromotionId(int promotionId) {
+		this.promotionId = promotionId;
+	}
+
+	public int getRuleId() {
+		return ruleId;
+	}
+
+	public void setRuleId(int ruleId) {
+		this.ruleId = ruleId;
 	}
 }

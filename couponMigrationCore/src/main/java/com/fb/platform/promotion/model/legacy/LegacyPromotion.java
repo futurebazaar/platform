@@ -14,7 +14,7 @@ public class LegacyPromotion {
     private int promotionId;
     private String appliesOn;
     private String discountType;
-    private double discountValue;
+    private String discountValue;
     private double minAmountValue;
     private int maxUsesPerUser;
     private int maxUsesPerCoupon;
@@ -51,10 +51,10 @@ public class LegacyPromotion {
 	public void setDiscountType(String discountType) {
 		this.discountType = discountType;
 	}
-	public double getDiscountValue() {
+	public String getDiscountValue() {
 		return discountValue;
 	}
-	public void setDiscountValue(double discountValue) {
+	public void setDiscountValue(String discountValue) {
 		this.discountValue = discountValue;
 	}
 	public double getMinAmountValue() {

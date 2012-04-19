@@ -29,6 +29,31 @@ public class LegacyDaoJdbcImpl implements LegacyDao {
 
 	private static final String LOAD_PROMOTION_ID_BATCH_QUERY = "SELECT promotion_id FROM promotion order by promotion_id asc LIMIT ?, ?";
 
+	/*
+| promotion_id        | int(11)      | NO   | PRI | NULL    | auto_increment |
+| ---order_amount        | double       | YES  |     | NULL    |                |
+| applied_on          | varchar(45)  | YES  |     | NULL    |                |
+| discount_type       | varchar(50)  | YES  |     | NULL    |                |
+| discount_value      | varchar(45)  | YES  |     | NULL    |                |
+| min_order_value     | double       | YES  |     | NULL    |                |
+| max_uses            | int(11)      | YES  |     | NULL    |                |
+| max_uses_per_user   | int(11)      | YES  |     | NULL    |                |
+| ---total_uses          | int(11)      | YES  |     | NULL    |                |
+| --can_be_claimed_by   | varchar(200) | YES  |     | NULL    |                |
+| name_of_promotion   | varchar(50)  | YES  |     | NULL    |                |
+| start_date          | date         | YES  |     | NULL    |                |
+| end_date            | date         | YES  |     | NULL    |                |
+| created_on          | date         | YES  |     | NULL    |                |
+| last_modified_on    | date         | YES  |     | NULL    |                |
+| --created_by          | varchar(100) | YES  |     | NULL    |                |
+| --celin               | double       | YES  |     | NULL    |                |
+| promotion_type      | varchar(45)  | YES  | MUL | NULL    |                |
+| --bundle_id           | int(11)      | YES  |     | NULL    |                |
+| --discount_bundle_id  | varchar(45)  | YES  |     | NULL    |                |
+| active              | int(1)       | YES  |     | 1       |                |
+| global              | int(1)       | YES  |     | 0       |                |
+| max_uses_per_coupon | int(11)      | YES  |     | -1      |                |
+	 */
 	public static final String LOAD_PROMOTION_QUERY =
 			"SELECT " +
 			"	promotion_id," +
@@ -38,6 +63,7 @@ public class LegacyDaoJdbcImpl implements LegacyDao {
 			"	min_order_value," +
 			"	max_uses_per_user," +
 			"	max_uses_per_coupon," +
+			"	total_uses," +
 			"	max_uses," +
 			"	name_of_promotion," +
 			"	start_date," +
@@ -59,7 +85,7 @@ public class LegacyDaoJdbcImpl implements LegacyDao {
 	public static final String LOAD_COUPON_USERS_QUERY =
 			"SELECT " +
 			"	cp.coupon_code," +
-			"	cp.user_id" +
+			"	cp.profile_id " +
 			"FROM coupon_profile cp WHERE coupon_code = ?";
 
 	@Override
@@ -72,7 +98,9 @@ public class LegacyDaoJdbcImpl implements LegacyDao {
 
 	@Override
 	public List<LegacyPromotionCoupon> loadCoupons(int promotionId) {
+		log.info("Loading coupons for promotion : " + promotionId);
 		List<LegacyPromotionCoupon> coupons = jdbcTemplate.query(LOAD_COUPONS_QUERY, new LegacyPromotionCouponMapper(), promotionId);
+		log.info("Loaded coupons for promotion : " + promotionId + ". Number of coupons : " + coupons.size());
 		for (LegacyPromotionCoupon coupon : coupons) {
 			List<LegacyCouponUser> couponUsers = loadCouponUsers(coupon.getCouponCode());
 			coupon.setCouponUsers(couponUsers);
@@ -82,6 +110,7 @@ public class LegacyDaoJdbcImpl implements LegacyDao {
 
 	@Override
 	public List<LegacyCouponUser> loadCouponUsers(String couponCode) {
+		log.info("Loading coupon users for couponCode : " + couponCode);
 		List<LegacyCouponUser> couponUsers = jdbcTemplate.query(LOAD_COUPON_USERS_QUERY, new LegacyCouponUserMapper(), couponCode);
 		return couponUsers;
 	}
@@ -89,8 +118,12 @@ public class LegacyDaoJdbcImpl implements LegacyDao {
 	@Override
 	public List<Integer> loadIdsToMigrate(int startRecord, int batchSize) {
 		List<Integer> promotiondIds = jdbcTemplate.queryForList(LOAD_PROMOTION_ID_BATCH_QUERY, Integer.class, startRecord, batchSize);
-		log.debug("PromotionIds to migrate : " + promotiondIds);
+		log.info("PromotionIds to migrate : " + promotiondIds);
 		return promotiondIds;
+	}
+
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
 	}
 
 	private static class LegacyPromotionMapper implements RowMapper<LegacyPromotion> {
@@ -101,7 +134,7 @@ public class LegacyDaoJdbcImpl implements LegacyDao {
 	        fbPromotion.setPromotionId(resultSet.getInt("promotion_id"));
 	        fbPromotion.setAppliesOn(resultSet.getString("applied_on"));
 	        fbPromotion.setDiscountType(resultSet.getString("discount_type"));
-	        fbPromotion.setDiscountValue(resultSet.getInt("discount_value"));
+	        fbPromotion.setDiscountValue(resultSet.getString("discount_value"));
 	        fbPromotion.setMinAmountValue(resultSet.getDouble("min_order_value"));
 	        fbPromotion.setMaxUsesPerUser(resultSet.getInt("max_uses_per_user"));
 	        fbPromotion.setMaxUsesPerCoupon(resultSet.getInt("max_uses_per_coupon"));

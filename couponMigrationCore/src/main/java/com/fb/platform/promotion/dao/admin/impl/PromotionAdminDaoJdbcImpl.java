@@ -7,8 +7,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -23,7 +21,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.dao.admin.PromotionAdminDao;
-import com.fb.platform.promotion.dao.legacy.impl.LegacyDaoJdbcImpl;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.rule.RuleConfigItem;
@@ -37,7 +34,7 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 
 	private JdbcTemplate jdbcTemplate;
 
-	private Log log = LogFactory.getLog(LegacyDaoJdbcImpl.class);
+	private Log log = LogFactory.getLog(PromotionAdminDaoJdbcImpl.class);
 
 	private static final String CREATE_PROMOTION_SQL = 
 			"INSERT INTO " +
@@ -74,21 +71,21 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 	
 	private static final String CREATE_PROMOTION_LIMIT_CONFIG_SQL = 
 			"INSERT INTO " +
-			"	promotion_limit_config " +
+			"	promotion_limits_config " +
 			"		(max_uses, " +
 			"		max_amount, " +
 			"		max_uses_per_user, " +
-			"		max_amuont_per_user, " +
+			"		max_amount_per_user, " +
 			"		promotion_id) " +
 			"VALUES (?, ?, ?, ?, ?)";
 	
 	private static final String CREATE_COUPON_LIMIT_CONFIG_SQL = 
 			"INSERT INTO " +
-			"	coupon_limit_config " +
+			"	coupon_limits_config " +
 			"		(max_uses, " +
 			"		max_amount, " +
 			"		max_uses_per_user, " +
-			"		max_amuont_per_user, " +
+			"		max_amount_per_user, " +
 			"		coupon_id) " +
 			"VALUES (?, ?, ?, ?, ?)";
 
@@ -122,7 +119,6 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 			"		override_user_uses_limit) " +
 			"VALUES (?, ?, ?)";
 
-
 	@Override
 	public void createPromotion(Promotion promotion, RuleConfiguration ruleConfig, List<Coupon> couponsList) {
 		int promotionId = createPromotion(	promotion.getName(),
@@ -130,41 +126,34 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 												promotion.getDates().getValidFrom(),
 												promotion.getDates().getValidTill(),
 												promotion.isActive(),
-												0);
-		int promotionLimitConfigId;
-		List<Integer> promotionRuleConfigId = new ArrayList<Integer>();
-		List<Integer> couponRuleConfigId = new ArrayList<Integer>();
+												promotion.getRuleId());
 		
 		if(promotionId > 0) {
-			promotionLimitConfigId = createPromotionsLimitConfig(promotion.getLimitsConfig().getMaxUses(),
+			createPromotionsLimitConfig(promotion.getLimitsConfig().getMaxUses(),
 										promotion.getLimitsConfig().getMaxAmount(),
 										promotion.getLimitsConfig().getMaxUsesPerUser(),
 										promotion.getLimitsConfig().getMaxAmountPerUser(),
 										promotionId);
 			
 			List<RuleConfigItem> ruleConfigList = ruleConfig.getConfigItems();
-			Iterator<RuleConfigItem> iterator = ruleConfigList.iterator();
-			while(iterator.hasNext()) {
-				RuleConfigItem ruleConfigItem = iterator.next();
-				promotionRuleConfigId.add(createPromotionRuleConfig(ruleConfigItem.getKey(),
-																	ruleConfigItem.getValue(), 
-																	promotionId, 
-																	0));
+			for(RuleConfigItem ruleConfigItem : ruleConfigList ) {
+				createPromotionRuleConfig(  ruleConfigItem.getKey(),
+											ruleConfigItem.getValue(), 
+											promotionId, 
+											promotion.getRuleId());
 			}
 			
-			Iterator<Coupon> couponIterator = couponsList.iterator();
-			while(iterator.hasNext()) {
-				Coupon coupon = couponIterator.next();
+			for (Coupon coupon : couponsList){
 				int couponId = createCoupon(coupon.getCode(), 
 											promotionId, 
 											coupon.getType().toString());
 				coupon.setId(couponId);
 				
-				couponRuleConfigId.add(createCouponLimitsConfig(coupon.getLimitsConfig().getMaxUses(), 
-																coupon.getLimitsConfig().getMaxAmount(), 
-																coupon.getLimitsConfig().getMaxUsesPerUser(), 
-																coupon.getLimitsConfig().getMaxAmountPerUser(), 
-																couponId));
+				createCouponLimitsConfig(	coupon.getLimitsConfig().getMaxUses(), 
+											coupon.getLimitsConfig().getMaxAmount(), 
+											coupon.getLimitsConfig().getMaxUsesPerUser(), 
+											coupon.getLimitsConfig().getMaxAmountPerUser(), 
+											couponId);
 			}
 		}
 	}
@@ -207,7 +196,7 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 		return promotionKeyHolder.getKey().intValue();
 	}
 	
-	private int createPromotionsLimitConfig(final int maxUses,
+	private void createPromotionsLimitConfig(final int maxUses,
 											final Money maxAmount,
 											final int maxUsesPerUser,
 											final Money maxAmountPerUser,
@@ -234,10 +223,9 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 			throw new PlatformException("Duplicate key insertion exception "+e);
 		}
 		log.info("promotion_limit_config id : " + promotionLimitConfigKeyHolder.getKey().intValue());
-		return promotionLimitConfigKeyHolder.getKey().intValue();
 	}
 	
-	private int createPromotionRuleConfig(  final String name,
+	private void createPromotionRuleConfig(  final String name,
 											final String value,
 											final int promotionId,
 											final int ruleId) {
@@ -262,7 +250,6 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 			throw new PlatformException("Duplicate key insertion exception "+e);
 		}
 		log.info("promotion_rule_config id : " + promotionRuleConfigKeyHolder.getKey().intValue());
-		return promotionRuleConfigKeyHolder.getKey().intValue();
 	}
 	
 	private int createCoupon(	final String couponCode,
@@ -284,7 +271,7 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 					ps.setString(3, couponCode);
 					ps.setInt(4, promotionId);
 					ps.setString(5, couponType);
-					return null;
+					return ps;
 				}
 			}, couponKeyHolder);
 		} catch (DuplicateKeyException e) {
@@ -296,7 +283,7 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 		return couponKeyHolder.getKey().intValue();
 	}
 	
-	private int createCouponLimitsConfig(	final int maxUses,
+	private void createCouponLimitsConfig(	final int maxUses,
 											final Money maxAmount,
 											final int maxUsesPerUser,
 											final Money maxAmountPerUser,
@@ -326,8 +313,11 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 		}
 		
 		log.info("coupon_limit_config id : " + couponLimitConfigKeyHolder.getKey().intValue());
-		return couponLimitConfigKeyHolder.getKey().intValue();
 		
+	}
+
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
 	}
 
 }

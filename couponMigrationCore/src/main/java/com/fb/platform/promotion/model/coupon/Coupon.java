@@ -4,6 +4,8 @@
 package com.fb.platform.promotion.model.coupon;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fb.platform.promotion.to.PromotionStatusEnum;
 
@@ -18,8 +20,8 @@ public class Coupon implements Serializable {
 	private int promotionId;
 	private CouponType type;
 	private CouponLimitsConfig limitsConfig;
-	//if it is a preIssue coupon, then find the user associated with this coupon
-	private int userId;
+
+	private List<Integer> users = new ArrayList<Integer>();
 
 	public PromotionStatusEnum isWithinLimits(GlobalCouponUses globalUses, UserCouponUses userUses) {
 		//TODO change the behaviour for different coupon types
@@ -55,5 +57,13 @@ public class Coupon implements Serializable {
 	}
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public List<Integer> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<Integer> users) {
+		this.users = users;
 	}
 }

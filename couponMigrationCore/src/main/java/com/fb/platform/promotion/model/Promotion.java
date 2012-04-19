@@ -25,6 +25,7 @@ public class Promotion implements Serializable {
 	private PromotionLimitsConfig limitsConfig;
 
 	private PromotionRule rule;
+	private int ruleId = 0;
 
 	public PromotionStatusEnum isApplicable(OrderRequest request) {
 		if (!isActive) {
@@ -87,5 +88,13 @@ public class Promotion implements Serializable {
 	}
 	public void setRule(PromotionRule rule) {
 		this.rule = rule;
+	}
+
+	public int getRuleId() {
+		return ruleId;
+	}
+
+	public void setRuleId(int ruleId) {
+		this.ruleId = ruleId;
 	}
 }

@@ -16,4 +16,5 @@ import com.fb.platform.promotion.rule.RuleConfiguration;
 public interface PromotionAdminDao {
 
 	public void createPromotion(Promotion promotion, RuleConfiguration ruleConfig, List<Coupon> couponsList);
+	
 }
