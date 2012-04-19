@@ -22,10 +22,6 @@
         <property name="promotionDao" ref="promotionDao"></property>
     </bean>
 
-    <bean id="promotionAdminService" class="com.fb.platform.promotion.admin.service.PromotionAdminServiceImpl">
-        <property name="couponAdminDao" ref="couponAdminDao"/>
-    </bean>
-
     <!-- Add new Managers here -->
     <bean id="promotionManager" class="com.fb.platform.promotion.service.impl.PromotionManagerImpl">
         <!-- <property name="couponDao" ref="couponDao"/>

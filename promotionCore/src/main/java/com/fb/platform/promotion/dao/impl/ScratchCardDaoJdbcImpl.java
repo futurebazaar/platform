@@ -61,7 +61,7 @@ public class ScratchCardDaoJdbcImpl implements ScratchCardDao {
 	private static final String GET_USER_ORDER_COUNT = 
 			"SELECT " +
 			"	count(*) " +
-			"FROM tinla.orders_order " +
+			"FROM orders_order " +
 			"WHERE " +
 			"	user_id = ? " +
 			"	AND " +
