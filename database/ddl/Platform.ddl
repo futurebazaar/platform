@@ -299,6 +299,7 @@ CREATE TABLE coupon (
 	promotion_id INTEGER,
 	coupon_type VARCHAR(10),
 	PRIMARY KEY(id),
+	UNIQUE KEY coupon_code_uniq (coupon_code),
 	CONSTRAINT coupon_fk1 FOREIGN KEY (promotion_id) REFERENCES platform_promotion(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
