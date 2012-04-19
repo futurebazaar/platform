@@ -176,7 +176,7 @@ public class PromotionManagerImpl implements PromotionManager {
 
 			PromotionStatusEnum isApplicableStatus = promotionService.isApplicable(userId, request.getOrderId(), new Money(request.getDiscountValue()), coupon, promotion, false);
 			if(PromotionStatusEnum.SUCCESS.compareTo(isApplicableStatus)!=0){
-				//response.setCommitCouponStatus(isApplicableStatus);
+				response.setCommitCouponStatus(isApplicableStatus);
 				return response;
 			}
 			

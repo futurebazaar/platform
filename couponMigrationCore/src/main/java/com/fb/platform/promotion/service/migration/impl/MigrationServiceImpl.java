@@ -96,7 +96,7 @@ public class MigrationServiceImpl implements MigrationService {
 		PromotionLimitsConfig limits = new PromotionLimitsConfig();
 		limits.setMaxUses(legacyPromotion.getMaxUses());
 		limits.setMaxUsesPerUser(legacyPromotion.getMaxUsesPerUser());
-		limits.setMaxAmountPerUser(new Money(new BigDecimal("-1.00")));
+		limits.setMaxAmount(new Money(new BigDecimal("-1.00")));
 		limits.setMaxAmountPerUser(new Money(new BigDecimal("-1.00")));
 		
 		return limits;
@@ -109,7 +109,7 @@ public class MigrationServiceImpl implements MigrationService {
 		String discountType = legacyPromotion.getDiscountType();
 		if (discountType.equals("Amount")) {
 			//this is fixed rs off rule
-			ruleConfig.setRuleId(2);
+			ruleConfig.setRuleId(-2);
 			RuleConfigItem minOrderValue = new RuleConfigItem(RuleConfigConstants.MIN_ORDER_VALUE, doubleToString(legacyPromotion.getMinAmountValue()));
 			RuleConfigItem fixedDiscountOff = new RuleConfigItem(RuleConfigConstants.FIXED_DISCOUNT_RS_OFF, legacyPromotion.getDiscountValue());
 			RuleConfigItem clientListConfig = new RuleConfigItem(RuleConfigConstants.CLIENT_LIST, clientsStr);
@@ -119,7 +119,7 @@ public class MigrationServiceImpl implements MigrationService {
 			ruleConfig.add(clientListConfig);
 		} else if (discountType.equals("Percent")) {
 			//this is percent off rule
-			ruleConfig.setRuleId(3);
+			ruleConfig.setRuleId(-3);
 			RuleConfigItem minOrderValue = new RuleConfigItem(RuleConfigConstants.MIN_ORDER_VALUE, doubleToString(legacyPromotion.getMinAmountValue()));
 			RuleConfigItem fixedDiscountOff = new RuleConfigItem(RuleConfigConstants.DISCOUNT_PERCENTAGE, legacyPromotion.getDiscountValue());
 			RuleConfigItem maxDiscount = new RuleConfigItem(RuleConfigConstants.MAX_DISCOUNT_CEIL_IN_VALUE, "10000.00");
@@ -187,7 +187,7 @@ public class MigrationServiceImpl implements MigrationService {
 	private CouponLimitsConfig createCouponLimits(LegacyPromotion legacyPromotion) {
 		CouponLimitsConfig limits = new CouponLimitsConfig();
 		limits.setMaxUses(legacyPromotion.getMaxUsesPerCoupon());
-		limits.setMaxAmountPerUser(new Money(new BigDecimal("-1.00")));
+		limits.setMaxAmount(new Money(new BigDecimal("-1.00")));
 		limits.setMaxAmountPerUser(new Money(new BigDecimal("-1.00")));
 		
 		return limits;

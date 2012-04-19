@@ -30,11 +30,11 @@ public class MigrationManagerImpl implements MigrationManager {
 
 	@Override
 	public void migrate() {
-		int startRecord = 110;
+		int startRecord = 0;
 		int batchSize = 10;
 
 		try {
-			while (true) {
+			while(true) {
 				List<Integer> idsToMigrate = legacyDao.loadIdsToMigrate(startRecord, batchSize);
 				if (idsToMigrate != null && idsToMigrate.size() > 0) {
 

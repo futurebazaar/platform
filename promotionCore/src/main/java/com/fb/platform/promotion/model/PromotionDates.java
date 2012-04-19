@@ -20,7 +20,7 @@ public class PromotionDates implements Serializable {
 	private DateTime lastModifiedOn;
 
 	public boolean isWithinDates() {
-		DateTimeComparator dateComparator = DateTimeComparator.getInstance();
+		DateTimeComparator dateComparator = DateTimeComparator.getDateOnlyInstance();
 		boolean greaterThanStart = false;
 		boolean lessThanEnd = false;
 		if (validFrom == null) {

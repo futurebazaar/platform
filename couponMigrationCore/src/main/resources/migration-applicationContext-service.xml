@@ -13,9 +13,6 @@
     <!-- Enable @Transactional support -->
     <tx:annotation-driven/>
     
-    <!-- This is to scan and load the CacheAccess classes -->
-    <context:component-scan base-package="com.fb.platform.promotion.cache"></context:component-scan>
-
     <bean id="migrationService" class="com.fb.platform.promotion.service.migration.impl.MigrationServiceImpl">
         <property name="promotionAdminDao" ref="promotionAdminDao"/>
     </bean>
