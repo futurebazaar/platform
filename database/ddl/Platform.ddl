@@ -1,41 +1,42 @@
 -- ******************** DROP TABLE AND CONSTRANTS **********
-
-
-DROP TABLE IF EXISTS 	categories_store,
-						sso_session, 
-						crypto_key,
-						orders_order,
-						users_email,
-						users_phone ,
-						user_promotion_uses , 
-						user_coupon_uses , 
-						users_profile , 
-						auth_user,
-						locations_address ,
-						locations_city,
-						locations_state,
-						locations_country,
-						client_master,
-						released_coupon,
-						release_promotion,
-						promotion_rule_config,
-						promotion_limits_config,
-						coupon_limits_config,coupon ,
-						platform_promotion,
-						promotion_rule,
-						platform_coupon_user, 
-						accounts_client,
-						fulfillment_articleproductgroup,
-						fulfillment_dc,
-						fulfillment_dczipgroup,
-						fulfillment_lsp,
-						fulfillment_lspdeliverychart,
-						fulfillment_lspzipgroup,
-						fulfillment_pincodezipgroupmap,
-						fulfillment_productgroup,
-						inventory_inventory,
-						accounts_clientdomain;
-
+DROP TABLE IF EXISTS categories_store; 
+DROP TABLE IF EXISTS sso_session;
+DROP TABLE IF EXISTS crypto_key;
+DROP TABLE IF EXISTS orders_order;
+DROP TABLE IF EXISTS platform_coupon_user;
+DROP TABLE IF EXISTS user_promotion_uses ;
+DROP TABLE IF EXISTS user_coupon_uses ;
+DROP TABLE IF EXISTS released_coupon;
+DROP TABLE IF EXISTS released_promotion;
+DROP TABLE IF EXISTS users_email;
+DROP TABLE IF EXISTS users_phone ;
+DROP TABLE IF EXISTS locations_address ;
+DROP TABLE IF EXISTS locations_city;
+DROP TABLE IF EXISTS locations_state;
+DROP TABLE IF EXISTS locations_country;
+DROP TABLE IF EXISTS client_master;
+DROP TABLE IF EXISTS promotions_scratchcardcoupons;
+DROP TABLE IF EXISTS promotions_scratchcard;
+DROP TABLE IF EXISTS promotion_rule_config;
+DROP TABLE IF EXISTS promotion_limits_config;
+DROP TABLE IF EXISTS coupon_limits_config;
+DROP TABLE IF EXISTS coupon ;
+DROP TABLE IF EXISTS platform_promotion;
+DROP TABLE IF EXISTS promotion_rule;
+DROP TABLE IF EXISTS fulfillment_deliverychart_vendor;
+DROP TABLE IF EXISTS fulfillment_lspdeliverychart;
+DROP TABLE IF EXISTS fulfillment_pincodezipgroupmap;
+DROP TABLE IF EXISTS fulfillment_dczipgroup;
+DROP TABLE IF EXISTS fulfillment_lspzipgroup;
+DROP TABLE IF EXISTS fulfillment_articleproductgroup;
+DROP TABLE IF EXISTS fulfillment_lsp;
+DROP TABLE IF EXISTS fulfillment_dc;
+DROP TABLE IF EXISTS fulfillment_productgroup;
+DROP TABLE IF EXISTS inventory_inventory;
+DROP TABLE IF EXISTS accounts_clientdomain;
+DROP TABLE IF EXISTS accounts_client;
+DROP TABLE IF EXISTS users_profile ;
+DROP TABLE IF EXISTS auth_user;
 
 --  ******************** CREATE TABLE *****************
 
