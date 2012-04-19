@@ -605,14 +605,3 @@ CREATE TABLE orders_order (
   CONSTRAINT client_domain_id_refs_id_42c094ebad791900 FOREIGN KEY (client_domain_id) REFERENCES accounts_clientdomain (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE promotions_scratchcardcoupons (
-
-  id INTEGER NOT NULL AUTO_INCREMENT,
-
-  coupon_code varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-
-  store varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-
-  PRIMARY KEY (id)
-
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
