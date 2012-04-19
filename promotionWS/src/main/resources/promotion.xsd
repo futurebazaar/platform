@@ -122,6 +122,23 @@
       <xs:enumeration value="NUMBER_OF_USES_EXCEEDED"/>
       <xs:enumeration value="INTERNAL_ERROR"/>
       <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="ALREADY_APPLIED_COUPON_ON_ORDER"/>
+      <xs:enumeration value="ALREADY_APPLIED_PROMOTION_ON_ORDER"/>
+	  <xs:enumeration value="NO_APPLIED_COUPON_ON_ORDER"/>
+	  <xs:enumeration value="NO_APPLIED_PROMOTION_ON_ORDER"/>
+	  <xs:enumeration value="TOTAL_MAX_USES_EXCEEDED"/>
+	  <xs:enumeration value="TOTAL_MAX_USES_PER_USER_EXCEEDED"/>
+	  <xs:enumeration value="TOTAL_MAX_AMOUNT_EXCEEDED"/>
+	  <xs:enumeration value="TOTAL_MAX_AMOUNT_PER_USER_EXCEEDED"/>
+	  <xs:enumeration value="INACTIVE_COUPON"/>
+	  <xs:enumeration value="COUPON_CODE_EXPIRED"/>
+	  <xs:enumeration value="USER_NOT_AUTHORIZED"/>
+	  <xs:enumeration value="NOT_APPLICABLE"/>
+	  <xs:enumeration value="LESS_ORDER_AMOUNT"/>
+	  <xs:enumeration value="INVALID_CLIENT"/>
+	  <xs:enumeration value="CATEGORY_MISMATCH"/>
+	  <xs:enumeration value="BRAND_MISMATCH"/>
+	  <xs:enumeration value="LIMIT_SUCCESS"/>
     </xs:restriction>
   </xs:simpleType>
   
