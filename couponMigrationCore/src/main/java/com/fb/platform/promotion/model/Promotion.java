@@ -5,6 +5,8 @@
 package com.fb.platform.promotion.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.rule.PromotionRule;
@@ -26,6 +28,8 @@ public class Promotion implements Serializable {
 
 	private PromotionRule rule;
 	private int ruleId = 0;
+
+	private List<UserPromotionUsesEntry> userUses = new ArrayList<UserPromotionUsesEntry>();
 
 	public PromotionStatusEnum isApplicable(OrderRequest request) {
 		if (!isActive) {
@@ -96,5 +100,13 @@ public class Promotion implements Serializable {
 
 	public void setRuleId(int ruleId) {
 		this.ruleId = ruleId;
+	}
+
+	public List<UserPromotionUsesEntry> getUserUses() {
+		return userUses;
+	}
+
+	public void setUserUses(List<UserPromotionUsesEntry> userUses) {
+		this.userUses = userUses;
 	}
 }

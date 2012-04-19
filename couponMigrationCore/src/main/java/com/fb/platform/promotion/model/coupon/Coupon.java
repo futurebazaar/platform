@@ -22,6 +22,7 @@ public class Coupon implements Serializable {
 	private CouponLimitsConfig limitsConfig;
 
 	private List<Integer> users = new ArrayList<Integer>();
+	private List<UserCouponUsesEntry> couponUses = new ArrayList<UserCouponUsesEntry>();
 
 	public PromotionStatusEnum isWithinLimits(GlobalCouponUses globalUses, UserCouponUses userUses) {
 		//TODO change the behaviour for different coupon types
@@ -65,5 +66,13 @@ public class Coupon implements Serializable {
 
 	public void setUsers(List<Integer> users) {
 		this.users = users;
+	}
+
+	public List<UserCouponUsesEntry> getCouponUses() {
+		return couponUses;
+	}
+
+	public void setCouponUses(List<UserCouponUsesEntry> couponUses) {
+		this.couponUses = couponUses;
 	}
 }

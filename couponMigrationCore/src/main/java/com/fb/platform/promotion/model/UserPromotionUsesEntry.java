@@ -2,6 +2,8 @@ package com.fb.platform.promotion.model;
 
 import java.io.Serializable;
 
+import org.joda.time.DateTime;
+
 import com.fb.commons.to.Money;
 
 public class UserPromotionUsesEntry implements Serializable {
@@ -11,7 +13,8 @@ public class UserPromotionUsesEntry implements Serializable {
 	private int promotionId;
 	private int orderId;
 	private Money discountAmount;
-	
+	private DateTime createdDate;
+
 	public int getUserId() {
 		return userId;
 	}
@@ -41,5 +44,11 @@ public class UserPromotionUsesEntry implements Serializable {
 	}
 	public void setId(int id) {
 		this.id = id;
+	}
+	public DateTime getCreatedDate() {
+		return createdDate;
+	}
+	public void setCreatedDate(DateTime createdDate) {
+		this.createdDate = createdDate;
 	}
 }

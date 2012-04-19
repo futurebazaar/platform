@@ -2,6 +2,8 @@ package com.fb.platform.promotion.model.coupon;
 
 import java.io.Serializable;
 
+import org.joda.time.DateTime;
+
 import com.fb.commons.to.Money;
 
 public class UserCouponUsesEntry implements Serializable {
@@ -11,6 +13,7 @@ public class UserCouponUsesEntry implements Serializable {
 	private int couponId;
 	private int orderId;
 	private Money discountAmount;
+	private DateTime createdDate;
 	
 	public int getUserId() {
 		return userId;
@@ -41,5 +44,11 @@ public class UserCouponUsesEntry implements Serializable {
 	}
 	public void setId(int id) {
 		this.id = id;
+	}
+	public DateTime getCreatedDate() {
+		return createdDate;
+	}
+	public void setCreatedDate(DateTime createdDate) {
+		this.createdDate = createdDate;
 	}
 }

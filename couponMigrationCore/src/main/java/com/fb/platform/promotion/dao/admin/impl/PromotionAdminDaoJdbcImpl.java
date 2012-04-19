@@ -22,7 +22,9 @@ import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.dao.admin.PromotionAdminDao;
 import com.fb.platform.promotion.model.Promotion;
+import com.fb.platform.promotion.model.UserPromotionUsesEntry;
 import com.fb.platform.promotion.model.coupon.Coupon;
+import com.fb.platform.promotion.model.coupon.UserCouponUsesEntry;
 import com.fb.platform.promotion.rule.RuleConfigItem;
 import com.fb.platform.promotion.rule.RuleConfiguration;
 
@@ -92,7 +94,7 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 	private static final String CREATE_USER_PROMOTION_USES_SQL = 
 			"INSERT INTO " +
 			"	user_promotion_uses " +
-			"		(coupon_id, " +
+			"		(promotion_id, " +
 			"		user_id, " +
 			"		order_id, " +
 			"		discount_amount, " +
@@ -142,7 +144,11 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 											promotionId, 
 											promotion.getRuleId());
 			}
-			
+
+			for (UserPromotionUsesEntry promotionUse : promotion.getUserUses()) {
+				createUserPromotionUses(promotionUse, promotionId);
+			}
+
 			for (Coupon coupon : couponsList){
 				int couponId = createCoupon(coupon.getCode(), 
 											promotionId, 
@@ -154,6 +160,14 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 											coupon.getLimitsConfig().getMaxUsesPerUser(), 
 											coupon.getLimitsConfig().getMaxAmountPerUser(), 
 											couponId);
+
+				for (UserCouponUsesEntry couponUse : coupon.getCouponUses()) {
+					createUserCouponUses(couponUse, couponId);
+				}
+
+				for (Integer userId : coupon.getUsers()) {
+					assignUserToCoupon(userId, couponId);
+				}
 			}
 		}
 	}
@@ -314,6 +328,64 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 		
 		log.info("coupon_limit_config id : " + couponLimitConfigKeyHolder.getKey().intValue());
 		
+	}
+
+	/*
+			"INSERT INTO " +
+			"	user_coupon_uses " +
+			"		(coupon_id, " +
+			"		user_id, " +
+			"		order_id, " +
+			"		discount_amount, " +
+			"		created_on, " +
+			"		last_modified_on) " +
+			"VALUES (?, ?, ?, ?, ?, ?)";
+	 */
+	private void createUserCouponUses(UserCouponUsesEntry couponUse, int couponId) {
+
+		int rowsUpdated = jdbcTemplate.update(CREATE_USER_COUPON_USES_SQL, 
+				couponId, 
+				couponUse.getUserId(),
+				couponUse.getOrderId(), 
+				couponUse.getDiscountAmount().getAmount(), 
+				new java.sql.Timestamp(couponUse.getCreatedDate().getMillis()), 
+				new java.sql.Timestamp(System.currentTimeMillis()));
+
+		if (rowsUpdated != 1) {
+			throw new PlatformException("Unable to create entry in user_coupon_uses for couponId : " + couponId + ", userId : " + couponUse.getUserId());
+		}
+	}
+
+	/*
+			"INSERT INTO " +
+			"	user_promotion_uses " +
+			"		(promotion_id, " +
+			"		user_id, " +
+			"		order_id, " +
+			"		discount_amount, " +
+			"		created_on, " +
+			"		last_modified_on) " +
+			"VALUES (?, ?, ?, ?, ?, ?)";
+	 */
+	private void createUserPromotionUses(UserPromotionUsesEntry promotionUse, int promotionId) {
+		int rowsUpdated = jdbcTemplate.update(CREATE_USER_PROMOTION_USES_SQL, 
+				promotionId, 
+				promotionUse.getUserId(),
+				promotionUse.getOrderId(), 
+				promotionUse.getDiscountAmount().getAmount(),
+				new java.sql.Timestamp(promotionUse.getCreatedDate().getMillis()), 
+				new java.sql.Timestamp(System.currentTimeMillis()));
+
+		if (rowsUpdated != 1) {
+			throw new PlatformException("Unable to create entry in user_promotion_uses for promotionId : " + promotionId + ", userId : " + promotionUse.getUserId());
+		}
+	}
+
+	private void assignUserToCoupon(int userId, int couponId) {
+		int rowsUpdated = jdbcTemplate.update(CREATE_COUPON_USER_MAPPING_SQL, couponId, userId, 0);
+		if (rowsUpdated != 1) {
+			throw new PlatformException("Unable to create entry in platform_coupon_user for couponId : " + couponId + ", userId : " + userId);
+		}
 	}
 
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
