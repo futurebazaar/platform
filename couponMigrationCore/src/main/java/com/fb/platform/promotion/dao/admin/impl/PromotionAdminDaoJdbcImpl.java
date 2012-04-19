@@ -7,9 +7,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTime;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -21,6 +25,9 @@ import com.fb.commons.to.Money;
 import com.fb.platform.promotion.dao.admin.PromotionAdminDao;
 import com.fb.platform.promotion.dao.legacy.impl.LegacyDaoJdbcImpl;
 import com.fb.platform.promotion.model.Promotion;
+import com.fb.platform.promotion.model.coupon.Coupon;
+import com.fb.platform.promotion.rule.RuleConfigItem;
+import com.fb.platform.promotion.rule.RuleConfiguration;
 
 /**
  * @author vinayak
@@ -56,7 +63,7 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 			"VALUES (?, ?, ?, ?, ?)";
 
 
-	private static final String CREATE_RULE_CONFIG = 
+	private static final String CREATE_PROMOTION_RULE_CONFIG = 
 			"INSERT INTO " +
 					"	promotion_rule_config " +
 					"		(name, " +
@@ -117,35 +124,78 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 
 
 	@Override
-	public void createPromotion(Promotion promotion) {
+	public void createPromotion(Promotion promotion, RuleConfiguration ruleConfig, List<Coupon> couponsList) {
+		int promotionId = createPromotion(	promotion.getName(),
+												promotion.getDescription(),
+												promotion.getDates().getValidFrom(),
+												promotion.getDates().getValidTill(),
+												promotion.isActive(),
+												0);
+		int promotionLimitConfigId;
+		List<Integer> promotionRuleConfigId = new ArrayList<Integer>();
+		List<Integer> couponRuleConfigId = new ArrayList<Integer>();
 		
+		if(promotionId > 0) {
+			promotionLimitConfigId = createPromotionsLimitConfig(promotion.getLimitsConfig().getMaxUses(),
+										promotion.getLimitsConfig().getMaxAmount(),
+										promotion.getLimitsConfig().getMaxUsesPerUser(),
+										promotion.getLimitsConfig().getMaxAmountPerUser(),
+										promotionId);
+			
+			List<RuleConfigItem> ruleConfigList = ruleConfig.getConfigItems();
+			Iterator<RuleConfigItem> iterator = ruleConfigList.iterator();
+			while(iterator.hasNext()) {
+				RuleConfigItem ruleConfigItem = iterator.next();
+				promotionRuleConfigId.add(createPromotionRuleConfig(ruleConfigItem.getKey(),
+																	ruleConfigItem.getValue(), 
+																	promotionId, 
+																	0));
+			}
+			
+			Iterator<Coupon> couponIterator = couponsList.iterator();
+			while(iterator.hasNext()) {
+				Coupon coupon = couponIterator.next();
+				int couponId = createCoupon(coupon.getCode(), 
+											promotionId, 
+											coupon.getType().toString());
+				coupon.setId(couponId);
+				
+				couponRuleConfigId.add(createCouponLimitsConfig(coupon.getLimitsConfig().getMaxUses(), 
+																coupon.getLimitsConfig().getMaxAmount(), 
+																coupon.getLimitsConfig().getMaxUsesPerUser(), 
+																coupon.getLimitsConfig().getMaxAmountPerUser(), 
+																couponId));
+			}
+		}
 	}
 
-	private int createPromotion(final String name, final String description,
-			final Timestamp validFrom, final Timestamp validTill, final int maxUses,
-			final Money maxAmount, final int maxUsesPerUser, final Money maxAmountPerUser,
-			final int global, final int active) throws PlatformException {
-	
-
-		log.info("Insert in the platform_promotion table => name " + name + " , description : " + description + " , validFrom : " + validFrom + " , validTill : " + validTill);// + " , Rule " + rule);
+	private int createPromotion( final String name,
+								 final String description,
+								 final DateTime validFrom,
+								 final DateTime validTill,
+								 final boolean active,
+								 final int rule_id) {
 		
-		int rowAffected = 0;
+		log.info("Insert in the platform_promotion table => name " + name + " , description : " + description + " , validFrom : " + validFrom + " , validTill : " + validTill + " , Rule id : " + rule_id);
+		
 		KeyHolder promotionKeyHolder = new GeneratedKeyHolder();
 		
 		try {
-			rowAffected = jdbcTemplate.update(new PreparedStatementCreator() {
+			jdbcTemplate.update(new PreparedStatementCreator() {
 				
 				@Override
-				public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-					PreparedStatement ps = con.prepareStatement(CREATE_PROMOTION_SQL, new String [] {"id"});
+				public PreparedStatement createPreparedStatement(Connection con)
+						throws SQLException {
+					PreparedStatement ps = con.prepareStatement(CREATE_PROMOTION_SQL, new String[] {"id"});
 					Timestamp timestamp = new java.sql.Timestamp(System.currentTimeMillis());
-					ps.setTimestamp(1, timestamp);
-					ps.setTimestamp(2, timestamp);
-//						ps.setInt(3, RulesEnum);
-					ps.setTimestamp(4, validFrom);
-					ps.setTimestamp(5, validTill);
+					ps.setTimestamp(1, timestamp); //created_on
+					ps.setTimestamp(2, timestamp); //last_modified_on
+					ps.setInt(3, rule_id); 
+					ps.setTimestamp(4, new java.sql.Timestamp(validFrom.getMillis()));
+					ps.setTimestamp(5, new java.sql.Timestamp(validTill.getMillis()));
 					ps.setString(6, name);
 					ps.setString(7, description);
+					ps.setBoolean(8, active);
 					return ps;
 				}
 			}, promotionKeyHolder);
@@ -153,31 +203,131 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 			log.error("Duplicate key insertion exception " + e);
 			throw new PlatformException("Duplicate key insertion exception "+e);
 		}
+		log.info("platform_promotion id : " + promotionKeyHolder.getKey().intValue());
+		return promotionKeyHolder.getKey().intValue();
+	}
+	
+	private int createPromotionsLimitConfig(final int maxUses,
+											final Money maxAmount,
+											final int maxUsesPerUser,
+											final Money maxAmountPerUser,
+											final int promotionId ) throws PlatformException {
+		log.info("Insert into promotion_limit_config promotionId : " + promotionId + " , maxUses : " + maxUses + " , maxAmount :" + maxAmount.toString() + " , maxUsesPerUser : " + maxAmountPerUser.toString());
+		KeyHolder promotionLimitConfigKeyHolder = new GeneratedKeyHolder();
+		try {
+			jdbcTemplate.update(new PreparedStatementCreator() {
+				
+				@Override
+				public PreparedStatement createPreparedStatement(Connection con)
+						throws SQLException {
+					PreparedStatement ps = con.prepareStatement(CREATE_PROMOTION_LIMIT_CONFIG_SQL, new String[] {"id"});
+					ps.setInt(1, maxUses);
+					ps.setBigDecimal(2, maxAmount.getAmount());
+					ps.setInt(3, maxUsesPerUser);
+					ps.setBigDecimal(4, maxAmountPerUser.getAmount());
+					ps.setInt(5, promotionId);
+					return ps;
+				}
+			}, promotionLimitConfigKeyHolder);
+		} catch (DuplicateKeyException e) {
+			log.error("Duplicate key insertion exception " + e);
+			throw new PlatformException("Duplicate key insertion exception "+e);
+		}
+		log.info("promotion_limit_config id : " + promotionLimitConfigKeyHolder.getKey().intValue());
+		return promotionLimitConfigKeyHolder.getKey().intValue();
+	}
+	
+	private int createPromotionRuleConfig(  final String name,
+											final String value,
+											final int promotionId,
+											final int ruleId) {
+		log.info("Insert in promotion_rule_config promotionId : " + promotionId + " , ruleId : " + " , name : " + name + " , value : " + value);
+		KeyHolder promotionRuleConfigKeyHolder = new GeneratedKeyHolder();
+		try {
+			jdbcTemplate.update(new PreparedStatementCreator() {
+				
+				@Override
+				public PreparedStatement createPreparedStatement(Connection con)
+						throws SQLException {
+					PreparedStatement ps = con.prepareStatement(CREATE_PROMOTION_RULE_CONFIG, new String[] {"id"});
+					ps.setString(1, name);
+					ps.setString(2, value);
+					ps.setInt(3, promotionId);
+					ps.setInt(4, ruleId);
+					return ps;
+				}
+			}, promotionRuleConfigKeyHolder);
+		} catch (DuplicateKeyException e) {
+			log.error("Duplicate key insertion exception " + e);
+			throw new PlatformException("Duplicate key insertion exception "+e);
+		}
+		log.info("promotion_rule_config id : " + promotionRuleConfigKeyHolder.getKey().intValue());
+		return promotionRuleConfigKeyHolder.getKey().intValue();
+	}
+	
+	private int createCoupon(	final String couponCode,
+								final int promotionId,
+								final String couponType) {
+		log.info("Insert into coupon couponCode : " + couponCode + " , promotionId : " + promotionId + " , couponType : " + couponType);
+		KeyHolder couponKeyHolder = new GeneratedKeyHolder();
 		
-		if(rowAffected > 0){
-			KeyHolder promotionLimitsKeyHolder = new GeneratedKeyHolder();
-			
-			try {
-				rowAffected = jdbcTemplate.update(new PreparedStatementCreator() {
-					
-					@Override
-					public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-						PreparedStatement ps = con.prepareStatement(CREATE_PROMOTION_LIMIT_CONFIG_SQL, new String [] {"id"});
-						Timestamp timestamp = new java.sql.Timestamp(System.currentTimeMillis());
-						ps.setInt(1, maxUses);
-						ps.setBigDecimal(2, maxAmount.getAmount());
-						ps.setInt(3, maxUsesPerUser);
-						ps.setBigDecimal(4, maxAmountPerUser.getAmount());
-						return ps;
-					}
-				}, promotionLimitsKeyHolder);
-			} catch (DuplicateKeyException e) {
-				log.error("Duplicate key insertion exception " + e);
-				throw new PlatformException("Duplicate key insertion exception "+e);
-			}
+		try {
+			jdbcTemplate.update(new PreparedStatementCreator() {
+				
+				@Override
+				public PreparedStatement createPreparedStatement(Connection con)
+						throws SQLException {
+					PreparedStatement ps = con.prepareStatement(CREATE_COUPON_SQL, new String[] {"id"});
+					Timestamp timestamp = new java.sql.Timestamp(System.currentTimeMillis());
+					ps.setTimestamp(1, timestamp); //created_on
+					ps.setTimestamp(2, timestamp); //last_modified_onmaxUses
+					ps.setString(3, couponCode);
+					ps.setInt(4, promotionId);
+					ps.setString(5, couponType);
+					return null;
+				}
+			}, couponKeyHolder);
+		} catch (DuplicateKeyException e) {
+			log.error("Duplicate key insertion exception " + e);
+			throw new PlatformException("Duplicate key insertion exception "+e);
 		}
 		
-		return promotionKeyHolder.getKey().intValue();
+		log.info("coupon id : " + couponKeyHolder.getKey().intValue());
+		return couponKeyHolder.getKey().intValue();
+	}
+	
+	private int createCouponLimitsConfig(	final int maxUses,
+											final Money maxAmount,
+											final int maxUsesPerUser,
+											final Money maxAmountPerUser,
+											final int couponId) {
+		log.info("Insert into coupon_limit_config couponId : " + couponId + " , maxUses : " + maxUses + " , maxAmount :" + maxAmount.toString() + " , maxUsesPerUser : " + maxAmountPerUser.toString());
+		KeyHolder couponLimitConfigKeyHolder = new GeneratedKeyHolder();
+		
+		try {
+			jdbcTemplate.update(new PreparedStatementCreator() {
+				
+				@Override
+				public PreparedStatement createPreparedStatement(Connection con)
+						throws SQLException {
+					PreparedStatement ps = con.prepareStatement(CREATE_COUPON_LIMIT_CONFIG_SQL, new String[] {"id"});
+					ps.setInt(1, maxUses);
+					ps.setBigDecimal(2, maxAmount.getAmount());
+					ps.setInt(3, maxUsesPerUser);
+					ps.setBigDecimal(4, maxAmountPerUser.getAmount());
+					ps.setInt(5, couponId);
+					return ps;
+				}
+			}, couponLimitConfigKeyHolder);
+			
+		} catch (DuplicateKeyException e) {
+			log.error("Duplicate key insertion exception " + e);
+			throw new PlatformException("Duplicate key insertion exception "+e);
+		}
+		
+		log.info("coupon_limit_config id : " + couponLimitConfigKeyHolder.getKey().intValue());
+		return couponLimitConfigKeyHolder.getKey().intValue();
+		
 	}
 
 }
