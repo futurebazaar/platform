@@ -21,9 +21,12 @@ import com.fb.platform.promotion.dao.admin.PromotionAdminDao;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.PromotionDates;
 import com.fb.platform.promotion.model.PromotionLimitsConfig;
+import com.fb.platform.promotion.model.UserPromotionUsesEntry;
 import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
 import com.fb.platform.promotion.model.coupon.CouponType;
+import com.fb.platform.promotion.model.coupon.UserCouponUsesEntry;
+import com.fb.platform.promotion.model.legacy.LegacyCouponOrder;
 import com.fb.platform.promotion.model.legacy.LegacyCouponUser;
 import com.fb.platform.promotion.model.legacy.LegacyPromotion;
 import com.fb.platform.promotion.model.legacy.LegacyPromotionCoupon;
@@ -166,6 +169,8 @@ public class MigrationServiceImpl implements MigrationService {
 			
 			if (legacyPromotion.getGlobal() == 0) {
 				coupon.setType(CouponType.PRE_ISSUE);
+				coupon.setCouponUses(createCouponUses(legacyCoupon));
+				coupon.setPromotionUses(createPromotionUses(legacyCoupon));
 			} else {
 				coupon.setType(CouponType.POST_ISSUE);
 			}
@@ -174,6 +179,7 @@ public class MigrationServiceImpl implements MigrationService {
 
 			CouponLimitsConfig couponLimits = createCouponLimits(legacyPromotion);
 			coupon.setLimitsConfig(couponLimits);
+
 			coupons.add(coupon);
 
 			if (legacyCoupon.getClientId() != 0) {
@@ -182,6 +188,42 @@ public class MigrationServiceImpl implements MigrationService {
 		}
 
 		return coupons;
+	}
+
+	private List<UserCouponUsesEntry> createCouponUses(LegacyPromotionCoupon legacyCoupon) {
+
+		List<UserCouponUsesEntry> couponUses = new ArrayList<UserCouponUsesEntry>();
+
+		for (LegacyCouponOrder legacyCouponOrder : legacyCoupon.getCouponOrders()) {
+			UserCouponUsesEntry couponUse = new UserCouponUsesEntry();
+			if (legacyCouponOrder.getConfirmingTimeStamp() != null) {
+				couponUse.setCreatedDate(new DateTime(legacyCouponOrder.getConfirmingTimeStamp()));
+			}
+			couponUse.setDiscountAmount(new Money(legacyCouponOrder.getCouponDiscount()));
+			couponUse.setOrderId(legacyCouponOrder.getOrderId());
+			couponUse.setUserId(legacyCouponOrder.getUserId());
+
+			couponUses.add(couponUse);
+		}
+		return couponUses;
+	}
+
+	private List<UserPromotionUsesEntry> createPromotionUses(LegacyPromotionCoupon legacyCoupon) {
+
+		List<UserPromotionUsesEntry> promotionUses = new ArrayList<UserPromotionUsesEntry>();
+
+		for (LegacyCouponOrder legacyCouponOrder : legacyCoupon.getCouponOrders()) {
+			UserPromotionUsesEntry promotionUse = new UserPromotionUsesEntry();
+			if (legacyCouponOrder.getConfirmingTimeStamp() != null) {
+				promotionUse.setCreatedDate(new DateTime(legacyCouponOrder.getConfirmingTimeStamp()));
+			}
+			promotionUse.setDiscountAmount(new Money(legacyCouponOrder.getCouponDiscount()));
+			promotionUse.setOrderId(legacyCouponOrder.getOrderId());
+			promotionUse.setUserId(legacyCouponOrder.getUserId());
+
+			promotionUses.add(promotionUse);
+		}
+		return promotionUses;
 	}
 
 	private CouponLimitsConfig createCouponLimits(LegacyPromotion legacyPromotion) {

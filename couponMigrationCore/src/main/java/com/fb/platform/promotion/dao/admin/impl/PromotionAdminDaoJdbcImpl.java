@@ -148,10 +148,6 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 											promotion.getRuleId());
 			}
 
-			for (UserPromotionUsesEntry promotionUse : promotion.getUserUses()) {
-				createUserPromotionUses(promotionUse, promotionId);
-			}
-
 			for (Coupon coupon : couponsList){
 				int couponId = createCoupon(coupon.getCode(), 
 											promotionId, 
@@ -171,6 +167,9 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 	
 					for (Integer userId : coupon.getUsers()) {
 						assignUserToCoupon(userId, couponId);
+					}
+					for (UserPromotionUsesEntry promotionUse : coupon.getPromotionUses()) {
+						createUserPromotionUses(promotionUse, promotionId);
 					}
 				}
 			}

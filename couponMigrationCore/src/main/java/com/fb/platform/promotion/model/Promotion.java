@@ -29,7 +29,7 @@ public class Promotion implements Serializable {
 	private PromotionRule rule;
 	private int ruleId = 0;
 
-	private List<UserPromotionUsesEntry> userUses = new ArrayList<UserPromotionUsesEntry>();
+	//private List<UserPromotionUsesEntry> userUses = new ArrayList<UserPromotionUsesEntry>();
 
 	public PromotionStatusEnum isApplicable(OrderRequest request) {
 		if (!isActive) {
@@ -102,11 +102,4 @@ public class Promotion implements Serializable {
 		this.ruleId = ruleId;
 	}
 
-	public List<UserPromotionUsesEntry> getUserUses() {
-		return userUses;
-	}
-
-	public void setUserUses(List<UserPromotionUsesEntry> userUses) {
-		this.userUses = userUses;
-	}
 }

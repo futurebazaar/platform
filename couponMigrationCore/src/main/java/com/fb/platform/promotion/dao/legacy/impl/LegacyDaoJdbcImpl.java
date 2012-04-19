@@ -93,11 +93,19 @@ public class LegacyDaoJdbcImpl implements LegacyDao {
 			"FROM coupon_profile cp WHERE coupon_code = ?";
 	
 	private static final String GET_USER_ORDER_DETAILS = 
-			"SELECT o.user_id,o.coupon_discount,o.confirming_timestamp,o.id" +
-			"FROM orders_order o, promotions_coupon pc" +
-			"WHERE o.coupon_id = pc.id and pc.code = ?   AND"+
-			"o.support_state IS NOT NULL AND"+
-			"o.support_state NOT IN ('booked','cancelled','returned')";
+			"SELECT " +
+			"	o.user_id," +
+			"	o.coupon_discount," +
+			"	o.confirming_timestamp," +
+			"	o.id " +
+			"FROM " +
+			"	orders_order o, " +
+			"	promotions_coupon pc " +
+			"WHERE " +
+			"	o.coupon_id = pc.id " +
+			"	AND pc.code = ? " +
+			"	AND o.support_state IS NOT NULL " +
+			"	AND o.support_state NOT IN ('booked','cancelled','returned')";
 
 	@Override
 	public LegacyPromotion loadPromotion(int promotionId) {

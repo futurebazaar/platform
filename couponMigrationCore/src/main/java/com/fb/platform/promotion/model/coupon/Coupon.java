@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fb.platform.promotion.model.UserPromotionUsesEntry;
 import com.fb.platform.promotion.to.PromotionStatusEnum;
 
 /**
@@ -23,6 +24,7 @@ public class Coupon implements Serializable {
 
 	private List<Integer> users = new ArrayList<Integer>();
 	private List<UserCouponUsesEntry> couponUses = new ArrayList<UserCouponUsesEntry>();
+	private List<UserPromotionUsesEntry> promotionUses = new ArrayList<UserPromotionUsesEntry>();
 
 	public PromotionStatusEnum isWithinLimits(GlobalCouponUses globalUses, UserCouponUses userUses) {
 		//TODO change the behaviour for different coupon types
@@ -74,5 +76,13 @@ public class Coupon implements Serializable {
 
 	public void setCouponUses(List<UserCouponUsesEntry> couponUses) {
 		this.couponUses = couponUses;
+	}
+
+	public List<UserPromotionUsesEntry> getPromotionUses() {
+		return promotionUses;
+	}
+
+	public void setPromotionUses(List<UserPromotionUsesEntry> promotionUses) {
+		this.promotionUses = promotionUses;
 	}
 }
