@@ -167,7 +167,7 @@ ALTER TABLE promotions_scratchcard ADD COLUMN user_id INTEGER;
 
 ALTER TABLE promotions_scratchcard ADD CONSTRAINT fk_user_id FOREIGN KEY(user_id) REFERENCES users_profile(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
-ALTER TABLE promotions_scratchcard ADD COLUMN usedDate DATETIME;
+ALTER TABLE promotions_scratchcard ADD COLUMN used_date DATETIME;
 
 -- end of promotion tables 
 
