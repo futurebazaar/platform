@@ -7,12 +7,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -25,6 +27,7 @@ import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.UserPromotionUsesEntry;
 import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.coupon.UserCouponUsesEntry;
+import com.fb.platform.promotion.model.coupon.CouponType;
 import com.fb.platform.promotion.rule.RuleConfigItem;
 import com.fb.platform.promotion.rule.RuleConfiguration;
 
@@ -120,7 +123,7 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 			"		user_id, " +
 			"		override_user_uses_limit) " +
 			"VALUES (?, ?, ?)";
-
+	
 	@Override
 	public void createPromotion(Promotion promotion, RuleConfiguration ruleConfig, List<Coupon> couponsList) {
 		int promotionId = createPromotion(	promotion.getName(),
@@ -153,20 +156,22 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 				int couponId = createCoupon(coupon.getCode(), 
 											promotionId, 
 											coupon.getType().toString());
-				coupon.setId(couponId);
+				if(couponId > 0) {
+					coupon.setId(couponId);
 				
-				createCouponLimitsConfig(	coupon.getLimitsConfig().getMaxUses(), 
-											coupon.getLimitsConfig().getMaxAmount(), 
-											coupon.getLimitsConfig().getMaxUsesPerUser(), 
-											coupon.getLimitsConfig().getMaxAmountPerUser(), 
-											couponId);
-
-				for (UserCouponUsesEntry couponUse : coupon.getCouponUses()) {
-					createUserCouponUses(couponUse, couponId);
-				}
-
-				for (Integer userId : coupon.getUsers()) {
-					assignUserToCoupon(userId, couponId);
+					createCouponLimitsConfig(	coupon.getLimitsConfig().getMaxUses(), 
+												coupon.getLimitsConfig().getMaxAmount(), 
+												coupon.getLimitsConfig().getMaxUsesPerUser(), 
+												coupon.getLimitsConfig().getMaxAmountPerUser(), 
+												couponId);
+	
+					for (UserCouponUsesEntry couponUse : coupon.getCouponUses()) {
+						createUserCouponUses(couponUse, couponId);
+					}
+	
+					for (Integer userId : coupon.getUsers()) {
+						assignUserToCoupon(userId, couponId);
+					}
 				}
 			}
 		}
@@ -330,17 +335,6 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 		
 	}
 
-	/*
-			"INSERT INTO " +
-			"	user_coupon_uses " +
-			"		(coupon_id, " +
-			"		user_id, " +
-			"		order_id, " +
-			"		discount_amount, " +
-			"		created_on, " +
-			"		last_modified_on) " +
-			"VALUES (?, ?, ?, ?, ?, ?)";
-	 */
 	private void createUserCouponUses(UserCouponUsesEntry couponUse, int couponId) {
 
 		int rowsUpdated = jdbcTemplate.update(CREATE_USER_COUPON_USES_SQL, 
@@ -356,17 +350,7 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 		}
 	}
 
-	/*
-			"INSERT INTO " +
-			"	user_promotion_uses " +
-			"		(promotion_id, " +
-			"		user_id, " +
-			"		order_id, " +
-			"		discount_amount, " +
-			"		created_on, " +
-			"		last_modified_on) " +
-			"VALUES (?, ?, ?, ?, ?, ?)";
-	 */
+
 	private void createUserPromotionUses(UserPromotionUsesEntry promotionUse, int promotionId) {
 		int rowsUpdated = jdbcTemplate.update(CREATE_USER_PROMOTION_USES_SQL, 
 				promotionId, 
@@ -391,5 +375,4 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
-
 }
