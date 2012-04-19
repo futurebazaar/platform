@@ -1004,7 +1004,7 @@
         <row>
                         <value name="id">-3014</value>
                         <value name="name">MIN_ORDER_VALUE</value>
-                        <value name="value">500</value>
+                        <value name="value">700</value>
                         <value name="promotion_id">-3004</value>
                         <value name="rule_id">-5</value>
         </row>
@@ -1018,7 +1018,7 @@
         <row>
                         <value name="id">-3016</value>
                         <value name="name">BRAND_LIST</value>
-                        <value name="value">1,2,3,4,5,6,7,8,9,10,12,4,15,25</value>
+                        <value name="value">3</value>
                         <value name="promotion_id">-3004</value>
                         <value name="rule_id">-5</value>
         </row>
@@ -1031,7 +1031,7 @@
         </row>
         <row>
                         <value name="id">-3018</value>
-                        <value name="name">PRODUCT_LIST</value>
+                        <value name="name">PRODUCT_ID</value>
                         <value name="value">5</value>
                         <value name="promotion_id">-3004</value>
                         <value name="rule_id">-5</value>

@@ -51,4 +51,8 @@ public class Product {
 	public boolean isProductOfCategory(List<Integer> catList){
 		return catList.containsAll(this.categories);
 	}
+	
+	public boolean isProductOfBrand(List<Integer> brandList){
+		return brandList.containsAll(this.brands);
+	}
 }

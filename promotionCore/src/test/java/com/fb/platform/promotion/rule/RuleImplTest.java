@@ -19,6 +19,7 @@ import com.fb.platform.promotion.dao.RuleDao;
 import com.fb.platform.promotion.rule.impl.BuyWorthXGetYPercentOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyWorthXGetYRsOffOnZCategoryRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyWorthXGetYRsOffRuleImpl;
+import com.fb.platform.promotion.rule.impl.BuyXBrandGetYRsOffOnZProductRuleImpl;
 import com.fb.platform.promotion.to.OrderItem;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.Product;
@@ -37,19 +38,24 @@ public class RuleImplTest extends BaseTestCase {
 		Product p1 = new Product();
 		p1.setPrice(new BigDecimal(10));
 		p1.setCategories(Arrays.asList(1,2,3,4,5));
-		p1.setBrands(Arrays.asList(1,2,3));
+		p1.setBrands(Arrays.asList(3));
 		Product p2 = new Product();
 		p2.setPrice(new BigDecimal(50));
 		p2.setCategories(Arrays.asList(2,3,4,5,6,7,8,9,10));
-		p2.setBrands(Arrays.asList(2,3,4,5));
+		p2.setBrands(Arrays.asList(3));
 		Product p3 = new Product();
 		p3.setPrice(new BigDecimal(100));
 		p3.setCategories(Arrays.asList(6,7,8,9,10));
-		p3.setBrands(Arrays.asList(4,5,6));
+		p3.setBrands(Arrays.asList(3));
 		Product p4 = new Product();
 		p4.setPrice(new BigDecimal(500));
 		p4.setCategories(Arrays.asList(6,7,8,9,10,11,12,13,14));
-		p4.setBrands(Arrays.asList(3,6,9));
+		p4.setBrands(Arrays.asList(6,9));
+		Product p5 = new Product();
+		p5.setProductId(5);
+		p5.setPrice(new BigDecimal(495));
+		p5.setCategories(Arrays.asList(6,7,8,9,10,11,12,13,14));
+		p5.setBrands(Arrays.asList(3));
 
 		//Create OrderItems
 		OrderItem oItem1 = new OrderItem(); //30 Rs
@@ -82,6 +88,9 @@ public class RuleImplTest extends BaseTestCase {
 		OrderItem oItem10 = new OrderItem(); //150 Rs
 		oItem10.setQuantity(3);
 		oItem10.setProduct(p2);
+		OrderItem oItem11 = new OrderItem(); //495 Rs
+		oItem11.setQuantity(1);
+		oItem11.setProduct(p5);
 
 		//Create OrderReq
 		OrderRequest orderReq1 = new OrderRequest(); //780 Rs
@@ -117,6 +126,49 @@ public class RuleImplTest extends BaseTestCase {
 		oList4.add(oItem9);
 		orderReq4.setOrderItems(oList4);		
 		orderReq4.setClientId(5);
+		
+		OrderRequest orderReq5 = new OrderRequest(); //1275 Rs
+		orderReq5.setOrderId(5);
+		List<OrderItem> oList5 = new ArrayList<OrderItem>();
+		oList5.add(oItem1);
+		oList5.add(oItem2);
+		oList5.add(oItem3);
+		oList5.add(oItem11);
+		orderReq5.setOrderItems(oList5);
+		orderReq5.setClientId(5);
+		
+		OrderRequest orderReq6 = new OrderRequest(); //780 Rs
+		orderReq5.setOrderId(6);
+		List<OrderItem> oList6 = new ArrayList<OrderItem>();
+		oList6.add(oItem1);
+		oList6.add(oItem2);
+		oList6.add(oItem3);
+		orderReq6.setOrderItems(oList6);
+		orderReq6.setClientId(5);
+		
+		OrderRequest orderReq7 = new OrderRequest(); //780 Rs
+		orderReq5.setOrderId(7);
+		List<OrderItem> oList7 = new ArrayList<OrderItem>();
+		oList7.add(oItem1);
+		oList7.add(oItem11);
+		orderReq7.setOrderItems(oList7);
+		orderReq7.setClientId(5);
+		
+		OrderRequest orderReq8 = new OrderRequest(); //780 Rs
+		orderReq5.setOrderId(8);
+		List<OrderItem> oList8 = new ArrayList<OrderItem>();
+		oList8.add(oItem1);
+		oList8.add(oItem11);
+		oList8.add(oItem8);
+		orderReq8.setOrderItems(oList8);
+		orderReq8.setClientId(5);
+		
+		OrderRequest orderReq9 = new OrderRequest(); //
+		orderReq9.setOrderId(9);
+		List<OrderItem> oList9 = new ArrayList<OrderItem>();
+		oList9.add(oItem8);
+		orderReq9.setOrderItems(oList9);
+		orderReq9.setClientId(5);
 		
 		//BuyWorthXGetYRsOffRule
 		PromotionRule buyWorthXGetYRsOffRule = ruleDao.load(-7, -2);
@@ -174,6 +226,27 @@ public class RuleImplTest extends BaseTestCase {
 		assertTrue(new Money(new BigDecimal(150)).eq(buyWorthXGetYRsOffOnZCategoryRule.execute(orderReq1)));
 		
 		
+		
+		//BuyXBrandGetYRsOffOnZProductRuleImpl
+		PromotionRule buyXBrandGetYRsOffOnZProductRule = ruleDao.load(-3004, -5);
+
+		assertNotNull(buyXBrandGetYRsOffOnZProductRule);
+		assertTrue(buyXBrandGetYRsOffOnZProductRule instanceof BuyXBrandGetYRsOffOnZProductRuleImpl);
+		
+		RuleConfiguration buyXBrandGetYRsOffOnZProductRuleImplRuleConfiguration = ruleDao.loadRuleConfiguration(-3004, -5);
+
+		assertNotNull(buyXBrandGetYRsOffOnZProductRuleImplRuleConfiguration);
+		assertEquals(5, buyXBrandGetYRsOffOnZProductRuleImplRuleConfiguration.getConfigItems().size());
+		assertEquals("700", buyXBrandGetYRsOffOnZProductRuleImplRuleConfiguration.getConfigItem("MIN_ORDER_VALUE").getValue());
+
+		assertEquals(buyXBrandGetYRsOffOnZProductRule.isApplicable(orderReq5),PromotionStatusEnum.SUCCESS);
+		assertEquals(buyXBrandGetYRsOffOnZProductRule.isApplicable(orderReq6),PromotionStatusEnum.PRODUCT_NOT_PRESENT);
+		assertEquals(buyXBrandGetYRsOffOnZProductRule.isApplicable(orderReq7),PromotionStatusEnum.LESS_ORDER_AMOUNT);
+		assertEquals(buyXBrandGetYRsOffOnZProductRule.isApplicable(orderReq8),PromotionStatusEnum.LESS_ORDER_AMOUNT_OF_BRAND_PRODUCTS);
+		assertEquals(buyXBrandGetYRsOffOnZProductRule.isApplicable(orderReq9),PromotionStatusEnum.BRAND_MISMATCH);
+		
+		assertTrue(new Money(new BigDecimal(445)).eq(buyXBrandGetYRsOffOnZProductRule.execute(orderReq5)));
+
 		
 		
 	}

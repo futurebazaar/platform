@@ -35,4 +35,16 @@ public class OrderItem {
 		return product.isProductOfCategory(categories);
 	}
 	
+	public boolean isOrderItemInBrand(List<Integer> brands){
+		return product.isProductOfBrand(brands);
+	}
+	
+	public boolean isProductPresent(int productId){
+		return (this.product.getProductId() == productId);
+	}
+	
+	public BigDecimal getProductPrice(){
+		return product.getPrice();
+	}
+	
 }
