@@ -7,12 +7,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -23,6 +25,7 @@ import com.fb.commons.to.Money;
 import com.fb.platform.promotion.dao.admin.PromotionAdminDao;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.coupon.Coupon;
+import com.fb.platform.promotion.model.coupon.CouponType;
 import com.fb.platform.promotion.rule.RuleConfigItem;
 import com.fb.platform.promotion.rule.RuleConfiguration;
 
@@ -118,7 +121,7 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 			"		user_id, " +
 			"		override_user_uses_limit) " +
 			"VALUES (?, ?, ?)";
-
+	
 	@Override
 	public void createPromotion(Promotion promotion, RuleConfiguration ruleConfig, List<Coupon> couponsList) {
 		int promotionId = createPromotion(	promotion.getName(),
@@ -147,13 +150,17 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 				int couponId = createCoupon(coupon.getCode(), 
 											promotionId, 
 											coupon.getType().toString());
-				coupon.setId(couponId);
+				if(couponId > 0) {
+					coupon.setId(couponId);
 				
-				createCouponLimitsConfig(	coupon.getLimitsConfig().getMaxUses(), 
-											coupon.getLimitsConfig().getMaxAmount(), 
-											coupon.getLimitsConfig().getMaxUsesPerUser(), 
-											coupon.getLimitsConfig().getMaxAmountPerUser(), 
-											couponId);
+					createCouponLimitsConfig(	coupon.getLimitsConfig().getMaxUses(), 
+												coupon.getLimitsConfig().getMaxAmount(), 
+												coupon.getLimitsConfig().getMaxUsesPerUser(), 
+												coupon.getLimitsConfig().getMaxAmountPerUser(), 
+												couponId);
+				}
+				
+				
 			}
 		}
 	}
@@ -315,7 +322,7 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 		log.info("coupon_limit_config id : " + couponLimitConfigKeyHolder.getKey().intValue());
 		
 	}
-
+	
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}

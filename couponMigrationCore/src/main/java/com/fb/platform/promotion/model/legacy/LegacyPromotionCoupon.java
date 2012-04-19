@@ -16,6 +16,8 @@ public class LegacyPromotionCoupon {
 	private int promotionId;
 
 	private List<LegacyCouponUser> couponUsers = null;
+	
+	private List<LegacyCouponOrder> couponOrders = null;
 
 	public String getCouponCode() {
 		return couponCode;
@@ -41,4 +43,11 @@ public class LegacyPromotionCoupon {
 	public void setCouponUsers(List<LegacyCouponUser> couponUsers) {
 		this.couponUsers = couponUsers;
 	}
+	public List<LegacyCouponOrder> getCouponOrders() {
+		return couponOrders;
+	}
+	public void setCouponOrders(List<LegacyCouponOrder> couponOrders) {
+		this.couponOrders = couponOrders;
+	}
+	
 }

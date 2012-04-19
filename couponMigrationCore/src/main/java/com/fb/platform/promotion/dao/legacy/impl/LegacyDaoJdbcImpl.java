@@ -5,14 +5,18 @@ package com.fb.platform.promotion.dao.legacy.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.fb.platform.promotion.dao.legacy.LegacyDao;
+import com.fb.platform.promotion.model.coupon.Coupon;
+import com.fb.platform.promotion.model.legacy.LegacyCouponOrder;
 import com.fb.platform.promotion.model.legacy.LegacyCouponUser;
 import com.fb.platform.promotion.model.legacy.LegacyPromotion;
 import com.fb.platform.promotion.model.legacy.LegacyPromotionCoupon;
@@ -87,28 +91,37 @@ public class LegacyDaoJdbcImpl implements LegacyDao {
 			"	cp.coupon_code," +
 			"	cp.profile_id " +
 			"FROM coupon_profile cp WHERE coupon_code = ?";
+	
+	private static final String GET_USER_ORDER_DETAILS = 
+			"SELECT o.user_id,o.coupon_discount,o.confirming_timestamp,o.id" +
+			"FROM orders_order o, promotions_coupon pc" +
+			"WHERE o.coupon_id = pc.id and pc.code = ?   AND"+
+			"o.support_state IS NOT NULL AND"+
+			"o.support_state NOT IN ('booked','cancelled','returned')";
 
 	@Override
 	public LegacyPromotion loadPromotion(int promotionId) {
 		LegacyPromotion legacyPromotion = jdbcTemplate.queryForObject(LOAD_PROMOTION_QUERY, new LegacyPromotionMapper(), promotionId);
-		List<LegacyPromotionCoupon> coupons = loadCoupons(promotionId);
+		List<LegacyPromotionCoupon> coupons = loadCoupons(legacyPromotion);
 		legacyPromotion.setCoupons(coupons);
 		return legacyPromotion;
 	}
 
-	@Override
-	public List<LegacyPromotionCoupon> loadCoupons(int promotionId) {
-		log.info("Loading coupons for promotion : " + promotionId);
-		List<LegacyPromotionCoupon> coupons = jdbcTemplate.query(LOAD_COUPONS_QUERY, new LegacyPromotionCouponMapper(), promotionId);
-		log.info("Loaded coupons for promotion : " + promotionId + ". Number of coupons : " + coupons.size());
+	public List<LegacyPromotionCoupon> loadCoupons(LegacyPromotion legacyPromotion) {
+		log.info("Loading coupons for promotion : " + legacyPromotion.getPromotionId());
+		List<LegacyPromotionCoupon> coupons = jdbcTemplate.query(LOAD_COUPONS_QUERY, new LegacyPromotionCouponMapper(), legacyPromotion.getPromotionId());
+		log.info("Loaded coupons for promotion : " + legacyPromotion.getPromotionId() + ". Number of coupons : " + coupons.size());
 		for (LegacyPromotionCoupon coupon : coupons) {
 			List<LegacyCouponUser> couponUsers = loadCouponUsers(coupon.getCouponCode());
 			coupon.setCouponUsers(couponUsers);
+			if(legacyPromotion.getGlobal() == 0) {
+				List<LegacyCouponOrder> legacyCouponOrder = getUserOders(coupon.getCouponCode());
+				coupon.setCouponOrders(legacyCouponOrder);
+			}
 		}
 		return coupons;
 	}
 
-	@Override
 	public List<LegacyCouponUser> loadCouponUsers(String couponCode) {
 		log.info("Loading coupon users for couponCode : " + couponCode);
 		List<LegacyCouponUser> couponUsers = jdbcTemplate.query(LOAD_COUPON_USERS_QUERY, new LegacyCouponUserMapper(), couponCode);
@@ -120,6 +133,18 @@ public class LegacyDaoJdbcImpl implements LegacyDao {
 		List<Integer> promotiondIds = jdbcTemplate.queryForList(LOAD_PROMOTION_ID_BATCH_QUERY, Integer.class, startRecord, batchSize);
 		log.info("PromotionIds to migrate : " + promotiondIds);
 		return promotiondIds;
+	}
+	
+	private List<LegacyCouponOrder> getUserOders(String couponCode) {
+		List<LegacyCouponOrder> couponList = new ArrayList<LegacyCouponOrder>();
+		try {
+			couponList = jdbcTemplate.query(GET_USER_ORDER_DETAILS, new LegacyCouponOrderMapper(), couponCode);
+		} catch (EmptyResultDataAccessException e) {
+			if(log.isDebugEnabled()) {
+				log.debug("User first record.");
+			}
+		}
+		return couponList;
 	}
 
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
@@ -172,6 +197,19 @@ public class LegacyDaoJdbcImpl implements LegacyDao {
 	        fbCouponUser.setCouponCode(resultSet.getString("coupon_code"));
 	        fbCouponUser.setUserId(resultSet.getInt("profile_id"));
 	        return fbCouponUser;
+		}
+	}
+	
+	private static class LegacyCouponOrderMapper implements RowMapper<LegacyCouponOrder> {
+
+		@Override
+		public LegacyCouponOrder mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+			LegacyCouponOrder legacyCouponOrder = new LegacyCouponOrder();
+			legacyCouponOrder.setConfirmingTimeStamp(resultSet.getTimestamp("confirming_timestamp"));
+			legacyCouponOrder.setCouponDiscount(resultSet.getBigDecimal("coupon_discount"));
+			legacyCouponOrder.setOrderId(resultSet.getInt("id"));
+			legacyCouponOrder.setUserId(resultSet.getInt("user_id"));
+	        return legacyCouponOrder;
 		}
 	}
 }

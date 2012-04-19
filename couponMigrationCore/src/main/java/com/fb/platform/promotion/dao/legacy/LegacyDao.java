@@ -17,9 +17,5 @@ public interface LegacyDao {
 
 	public LegacyPromotion loadPromotion(int promotionId);
 
-	public List<LegacyPromotionCoupon> loadCoupons(int promotionId);
-
-	public List<LegacyCouponUser> loadCouponUsers(String couponCode);
-
 	public List<Integer> loadIdsToMigrate(int startRecord, int batchSize);
 }
