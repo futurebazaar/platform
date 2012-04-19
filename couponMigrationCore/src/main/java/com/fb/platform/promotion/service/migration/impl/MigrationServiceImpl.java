@@ -6,11 +6,14 @@ package com.fb.platform.promotion.service.migration.impl;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.to.Money;
@@ -44,14 +47,24 @@ public class MigrationServiceImpl implements MigrationService {
 	public void migrate(LegacyPromotion legacyPromotion) {
 		log.info("Migration Service : Start migrating legacyPromotion : " + legacyPromotion.getPromotionId());
 
+		if (legacyPromotion.getEndDate() != null) {
+			DateTime validTill = new DateTime(legacyPromotion.getEndDate());
+			DateTimeComparator dateComparator = DateTimeComparator.getDateOnlyInstance();
+			if (dateComparator.compare(validTill, null) >= 0) {
+				//expired promotion
+				return;
+			}
+		}
 		Promotion promotion = createPromotion(legacyPromotion);
 
-		RuleConfiguration ruleConfig = createRule(legacyPromotion);
-		promotion.setRuleId(ruleConfig.getRuleId());
+		Set<Integer> clientList = new HashSet<Integer>();
 
-		List<Coupon> coupons = createCoupons(legacyPromotion);
+		List<Coupon> coupons = createCoupons(legacyPromotion, clientList);
 
 		log.info("Created new coupons for legacyPromotion : " + legacyPromotion.getPromotionId() + ", No of new coupons : " + coupons.size());
+
+		RuleConfiguration ruleConfig = createRule(legacyPromotion, clientList);
+		promotion.setRuleId(ruleConfig.getRuleId());
 
 		promotionAdminDao.createPromotion(promotion, ruleConfig, coupons);
 
@@ -66,7 +79,6 @@ public class MigrationServiceImpl implements MigrationService {
 
 		promotion.setDates(createPromotionDates(legacyPromotion));
 		promotion.setLimitsConfig(createLimitsConfig(legacyPromotion));
-
 
 		return promotion;
 	}
@@ -90,7 +102,8 @@ public class MigrationServiceImpl implements MigrationService {
 		return limits;
 	}
 
-	private RuleConfiguration createRule(LegacyPromotion legacyPromotion) {
+	private RuleConfiguration createRule(LegacyPromotion legacyPromotion, Set<Integer> clientList) {
+		String clientsStr = createCommaSeparatedClients(clientList);
 		RuleConfiguration ruleConfig = new RuleConfiguration();
 
 		String discountType = legacyPromotion.getDiscountType();
@@ -99,21 +112,38 @@ public class MigrationServiceImpl implements MigrationService {
 			ruleConfig.setRuleId(2);
 			RuleConfigItem minOrderValue = new RuleConfigItem(RuleConfigConstants.MIN_ORDER_VALUE, doubleToString(legacyPromotion.getMinAmountValue()));
 			RuleConfigItem fixedDiscountOff = new RuleConfigItem(RuleConfigConstants.FIXED_DISCOUNT_RS_OFF, legacyPromotion.getDiscountValue());
+			RuleConfigItem clientListConfig = new RuleConfigItem(RuleConfigConstants.CLIENT_LIST, clientsStr);
 
 			ruleConfig.add(minOrderValue);
 			ruleConfig.add(fixedDiscountOff);
+			ruleConfig.add(clientListConfig);
 		} else if (discountType.equals("Percent")) {
 			//this is percent off rule
 			ruleConfig.setRuleId(3);
 			RuleConfigItem minOrderValue = new RuleConfigItem(RuleConfigConstants.MIN_ORDER_VALUE, doubleToString(legacyPromotion.getMinAmountValue()));
 			RuleConfigItem fixedDiscountOff = new RuleConfigItem(RuleConfigConstants.DISCOUNT_PERCENTAGE, legacyPromotion.getDiscountValue());
 			RuleConfigItem maxDiscount = new RuleConfigItem(RuleConfigConstants.MAX_DISCOUNT_CEIL_IN_VALUE, "10000.00");
+			RuleConfigItem clientListConfig = new RuleConfigItem(RuleConfigConstants.CLIENT_LIST, clientsStr);
 
 			ruleConfig.add(minOrderValue);
 			ruleConfig.add(fixedDiscountOff);
 			ruleConfig.add(maxDiscount);
+			ruleConfig.add(clientListConfig);
 		}
 		return ruleConfig;
+	}
+
+	private String createCommaSeparatedClients(Set<Integer> clientList) {
+		StringBuffer sb = new StringBuffer();
+		int count = 0;
+		for (Integer clientId : clientList) {
+			sb.append(clientId);
+			count ++;
+			if (count != clientList.size()) {
+				sb.append(",");
+			}
+		}
+		return sb.toString();
 	}
 
 	private String doubleToString(double inValue){
@@ -126,7 +156,7 @@ public class MigrationServiceImpl implements MigrationService {
 		this.promotionAdminDao = promotionAdminDao;
 	}
 
-	private List<Coupon> createCoupons(LegacyPromotion legacyPromotion) {
+	private List<Coupon> createCoupons(LegacyPromotion legacyPromotion, Set<Integer> clientList) {
 		List<LegacyPromotionCoupon> legacyCoupons = legacyPromotion.getCoupons();
 		List<Coupon> coupons = new ArrayList<Coupon>();
 
@@ -145,6 +175,10 @@ public class MigrationServiceImpl implements MigrationService {
 			CouponLimitsConfig couponLimits = createCouponLimits(legacyPromotion);
 			coupon.setLimitsConfig(couponLimits);
 			coupons.add(coupon);
+
+			if (legacyCoupon.getClientId() != 0) {
+				clientList.add(legacyCoupon.getClientId());
+			}
 		}
 
 		return coupons;
