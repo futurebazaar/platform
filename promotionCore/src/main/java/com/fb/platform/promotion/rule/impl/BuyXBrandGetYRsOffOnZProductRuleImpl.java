@@ -40,7 +40,7 @@ public class BuyXBrandGetYRsOffOnZProductRuleImpl implements PromotionRule, Seri
 		StrTokenizer strTokClients = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigConstants.CLIENT_LIST),",");
 		clientList = StringToIntegerList.convert((List<String>)strTokClients.getTokenList());
 		productId = Integer.valueOf(ruleConfig.getConfigItemValue(RuleConfigConstants.PRODUCT_ID)).intValue();
-		productDiscountValue = new Money (BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigConstants.PRODUCT_DISCOUNT_RS_OFF))));
+		productDiscountValue = new Money (BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigConstants.PRODUCT_DISCOUNTED_VALUE))));
 		log.info("minOrderValue : " + minOrderValue.toString() 
 				+ ", productId : " + productId 
 				+ ", productDiscountValue : " + productDiscountValue 
