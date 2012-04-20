@@ -6,12 +6,12 @@
     <parent>
         <groupId>com.fb</groupId>
         <artifactId>platform</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
 	<artifactId>authenticationCore</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0</version>
 	<packaging>jar</packaging>
 	
 	<name>Authentication Module of the E Commerce platform</name>
@@ -21,12 +21,12 @@
 	  	<dependency>
 	  		<groupId>com.fb</groupId>
 			<artifactId>platformCommons</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>1.0</version>
 	  	</dependency>
 	  	<dependency>
 	  		<groupId>com.fb</groupId>
 			<artifactId>platformCaching</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>1.0</version>
 	  	</dependency>
 	</dependencies>
 

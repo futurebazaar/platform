@@ -4,12 +4,12 @@
     <parent>
         <groupId>com.fb</groupId>
         <artifactId>platform</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>orderWS</artifactId>
     <packaging>war</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <name>Order Web Service</name>
     <build>
         <finalName>orderWS</finalName>
@@ -39,7 +39,7 @@
 		<dependency>
 			<groupId>com.fb</groupId>
 			<artifactId>orderCore</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>1.0</version>
 		</dependency>
     </dependencies>
     <properties>
