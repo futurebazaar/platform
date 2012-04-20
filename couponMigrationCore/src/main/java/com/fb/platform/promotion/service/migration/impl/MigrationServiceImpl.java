@@ -41,14 +41,15 @@ import com.fb.platform.promotion.service.migration.MigrationService;
  */
 public class MigrationServiceImpl implements MigrationService {
 
-	private Log log = LogFactory.getLog(MigrationServiceImpl.class);
+	private Log infoLog = LogFactory.getLog("LOGINFO");
+
 
 	@Autowired
 	private PromotionAdminDao promotionAdminDao = null;
 
 	@Override
 	public void migrate(LegacyPromotion legacyPromotion) {
-		log.info("Migration Service : Start migrating legacyPromotion : " + legacyPromotion.getPromotionId());
+		infoLog.info("Migration Service : Start migrating legacyPromotion : " + legacyPromotion.getPromotionId());
 
 		if (legacyPromotion.getEndDate() != null) {
 			DateTime validTill = new DateTime(legacyPromotion.getEndDate());
@@ -64,14 +65,14 @@ public class MigrationServiceImpl implements MigrationService {
 
 		List<Coupon> coupons = createCoupons(legacyPromotion, clientList);
 
-		log.info("Created new coupons for legacyPromotion : " + legacyPromotion.getPromotionId() + ", No of new coupons : " + coupons.size());
+		infoLog.info("Created new coupons for legacyPromotion : " + legacyPromotion.getPromotionId() + ", No of new coupons : " + coupons.size());
 
 		RuleConfiguration ruleConfig = createRule(legacyPromotion, clientList);
 		promotion.setRuleId(ruleConfig.getRuleId());
 
 		promotionAdminDao.createPromotion(promotion, ruleConfig, coupons);
 
-		log.info("Migration Service : Done migrating legacyPromotion : " + legacyPromotion.getPromotionId() + ". New promotion created : " + promotion.getId());
+		infoLog.info("Migration Service : Done migrating legacyPromotion : " + legacyPromotion.getPromotionId() + ". New promotion created : " + promotion.getId());
 	}
 
 	private Promotion createPromotion(LegacyPromotion legacyPromotion) {
@@ -112,7 +113,7 @@ public class MigrationServiceImpl implements MigrationService {
 		String discountType = legacyPromotion.getDiscountType();
 		if (discountType.equals("Amount")) {
 			//this is fixed rs off rule
-			ruleConfig.setRuleId(-2);
+			ruleConfig.setRuleId(2);
 			RuleConfigItem minOrderValue = new RuleConfigItem(RuleConfigConstants.MIN_ORDER_VALUE, doubleToString(legacyPromotion.getMinAmountValue()));
 			RuleConfigItem fixedDiscountOff = new RuleConfigItem(RuleConfigConstants.FIXED_DISCOUNT_RS_OFF, legacyPromotion.getDiscountValue());
 			RuleConfigItem clientListConfig = new RuleConfigItem(RuleConfigConstants.CLIENT_LIST, clientsStr);
@@ -122,7 +123,7 @@ public class MigrationServiceImpl implements MigrationService {
 			ruleConfig.add(clientListConfig);
 		} else if (discountType.equals("Percent")) {
 			//this is percent off rule
-			ruleConfig.setRuleId(-3);
+			ruleConfig.setRuleId(3);
 			RuleConfigItem minOrderValue = new RuleConfigItem(RuleConfigConstants.MIN_ORDER_VALUE, doubleToString(legacyPromotion.getMinAmountValue()));
 			RuleConfigItem fixedDiscountOff = new RuleConfigItem(RuleConfigConstants.DISCOUNT_PERCENTAGE, legacyPromotion.getDiscountValue());
 			RuleConfigItem maxDiscount = new RuleConfigItem(RuleConfigConstants.MAX_DISCOUNT_CEIL_IN_VALUE, "10000.00");

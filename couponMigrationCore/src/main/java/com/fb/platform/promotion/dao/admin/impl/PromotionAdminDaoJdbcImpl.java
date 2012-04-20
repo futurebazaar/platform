@@ -39,7 +39,9 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 
 	private JdbcTemplate jdbcTemplate;
 
-	private Log log = LogFactory.getLog(PromotionAdminDaoJdbcImpl.class);
+	private Log infoLog = LogFactory.getLog("LOGINFO");
+
+	private Log errorLog = LogFactory.getLog("LOGERROR");
 
 	private static final String CREATE_PROMOTION_SQL = 
 			"INSERT INTO " +
@@ -183,7 +185,7 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 								 final boolean active,
 								 final int rule_id) {
 		
-		log.info("Insert in the platform_promotion table => name " + name + " , description : " + description + " , validFrom : " + validFrom + " , validTill : " + validTill + " , Rule id : " + rule_id);
+		infoLog.info("Insert in the platform_promotion table => name " + name + " , description : " + description + " , validFrom : " + validFrom + " , validTill : " + validTill + " , Rule id : " + rule_id);
 		
 		KeyHolder promotionKeyHolder = new GeneratedKeyHolder();
 		
@@ -207,10 +209,10 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 				}
 			}, promotionKeyHolder);
 		} catch (DuplicateKeyException e) {
-			log.error("Duplicate key insertion exception " + e);
+			errorLog.error("Duplicate key insertion exception " + e);
 			throw new PlatformException("Duplicate key insertion exception "+e);
 		}
-		log.info("platform_promotion id : " + promotionKeyHolder.getKey().intValue());
+		infoLog.info("platform_promotion id : " + promotionKeyHolder.getKey().intValue());
 		return promotionKeyHolder.getKey().intValue();
 	}
 	
@@ -219,7 +221,7 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 											final int maxUsesPerUser,
 											final Money maxAmountPerUser,
 											final int promotionId ) throws PlatformException {
-		log.info("Insert into promotion_limit_config promotionId : " + promotionId + " , maxUses : " + maxUses + " , maxAmount :" + maxAmount.toString() + " , maxUsesPerUser : " + maxAmountPerUser.toString());
+		infoLog.info("Insert into promotion_limit_config promotionId : " + promotionId + " , maxUses : " + maxUses + " , maxAmount :" + maxAmount.toString() + " , maxUsesPerUser : " + maxAmountPerUser.toString());
 		KeyHolder promotionLimitConfigKeyHolder = new GeneratedKeyHolder();
 		try {
 			jdbcTemplate.update(new PreparedStatementCreator() {
@@ -237,17 +239,17 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 				}
 			}, promotionLimitConfigKeyHolder);
 		} catch (DuplicateKeyException e) {
-			log.error("Duplicate key insertion exception " + e);
+			errorLog.error("Duplicate key insertion exception " + e);
 			throw new PlatformException("Duplicate key insertion exception "+e);
 		}
-		log.info("promotion_limit_config id : " + promotionLimitConfigKeyHolder.getKey().intValue());
+		infoLog.info("promotion_limit_config id : " + promotionLimitConfigKeyHolder.getKey().intValue());
 	}
 	
 	private void createPromotionRuleConfig(  final String name,
 											final String value,
 											final int promotionId,
 											final int ruleId) {
-		log.info("Insert in promotion_rule_config promotionId : " + promotionId + " , ruleId : " + " , name : " + name + " , value : " + value);
+		infoLog.info("Insert in promotion_rule_config promotionId : " + promotionId + " , ruleId : " + " , name : " + name + " , value : " + value);
 		KeyHolder promotionRuleConfigKeyHolder = new GeneratedKeyHolder();
 		try {
 			jdbcTemplate.update(new PreparedStatementCreator() {
@@ -264,16 +266,16 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 				}
 			}, promotionRuleConfigKeyHolder);
 		} catch (DuplicateKeyException e) {
-			log.error("Duplicate key insertion exception " + e);
+			errorLog.error("Duplicate key insertion exception " + e);
 			throw new PlatformException("Duplicate key insertion exception "+e);
 		}
-		log.info("promotion_rule_config id : " + promotionRuleConfigKeyHolder.getKey().intValue());
+		infoLog.info("promotion_rule_config id : " + promotionRuleConfigKeyHolder.getKey().intValue());
 	}
 	
 	private int createCoupon(	final String couponCode,
 								final int promotionId,
 								final String couponType) {
-		log.info("Insert into coupon couponCode : " + couponCode + " , promotionId : " + promotionId + " , couponType : " + couponType);
+		infoLog.info("Insert into coupon couponCode : " + couponCode + " , promotionId : " + promotionId + " , couponType : " + couponType);
 		KeyHolder couponKeyHolder = new GeneratedKeyHolder();
 		
 		try {
@@ -293,11 +295,11 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 				}
 			}, couponKeyHolder);
 		} catch (DuplicateKeyException e) {
-			log.error("Duplicate key insertion exception " + e);
+			errorLog.error("Duplicate key insertion exception " + e);
 			throw new PlatformException("Duplicate key insertion exception "+e);
 		}
 		
-		log.info("coupon id : " + couponKeyHolder.getKey().intValue());
+		infoLog.info("coupon id : " + couponKeyHolder.getKey().intValue());
 		return couponKeyHolder.getKey().intValue();
 	}
 	
@@ -306,7 +308,7 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 											final int maxUsesPerUser,
 											final Money maxAmountPerUser,
 											final int couponId) {
-		log.info("Insert into coupon_limit_config couponId : " + couponId + " , maxUses : " + maxUses + " , maxAmount :" + maxAmount.toString() + " , maxUsesPerUser : " + maxAmountPerUser.toString());
+		infoLog.info("Insert into coupon_limit_config couponId : " + couponId + " , maxUses : " + maxUses + " , maxAmount :" + maxAmount.toString() + " , maxUsesPerUser : " + maxAmountPerUser.toString());
 		KeyHolder couponLimitConfigKeyHolder = new GeneratedKeyHolder();
 		
 		try {
@@ -326,11 +328,11 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 			}, couponLimitConfigKeyHolder);
 			
 		} catch (DuplicateKeyException e) {
-			log.error("Duplicate key insertion exception " + e);
+			errorLog.error("Duplicate key insertion exception " + e);
 			throw new PlatformException("Duplicate key insertion exception "+e);
 		}
 		
-		log.info("coupon_limit_config id : " + couponLimitConfigKeyHolder.getKey().intValue());
+		infoLog.info("coupon_limit_config id : " + couponLimitConfigKeyHolder.getKey().intValue());
 		
 	}
 

@@ -20,7 +20,9 @@ import com.fb.platform.promotion.service.migration.MigrationService;
  */
 public class MigrationManagerImpl implements MigrationManager {
 
-	private Log log = LogFactory.getLog(MigrationManagerImpl.class);
+	private Log infoLog = LogFactory.getLog("LOGINFO");
+
+	private Log errorLog = LogFactory.getLog("LOGERROR");
 
 	@Autowired
 	private LegacyDao legacyDao = null;
@@ -32,25 +34,24 @@ public class MigrationManagerImpl implements MigrationManager {
 	public void migrate() {
 		int startRecord = 0;
 		int batchSize = 10;
+		while(true) {
+			List<Integer> idsToMigrate = legacyDao.loadIdsToMigrate(startRecord, batchSize);
+			if (idsToMigrate != null && idsToMigrate.size() > 0) {
 
-		try {
-			while(true) {
-				List<Integer> idsToMigrate = legacyDao.loadIdsToMigrate(startRecord, batchSize);
-				if (idsToMigrate != null && idsToMigrate.size() > 0) {
-
-					for (Integer promotionId : idsToMigrate) {
-						LegacyPromotion legacyPromotion = legacyDao.loadPromotion(promotionId);
+				for (Integer promotionId : idsToMigrate) {
+					LegacyPromotion legacyPromotion = legacyDao.loadPromotion(promotionId);
+					try {
 						migrationService.migrate(legacyPromotion);
+					} catch (Exception e) {
+						errorLog.error("Error while migrating legacy promotions to new promotions.", e);
 					}
-				} else {
-					//end
-					log.info("End of migration. Number of promotions migrated : " + startRecord);
-					break;
 				}
-				startRecord = startRecord + batchSize;
+			} else {
+				//end
+				infoLog.info("End of migration. Number of promotions migrated : " + startRecord);
+				break;
 			}
-		} catch (Exception e) {
-			log.error("Error while migrating legacy promotions to new promotions.", e);
+			startRecord = startRecord + batchSize;
 		}
 	}
 

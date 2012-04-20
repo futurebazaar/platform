@@ -19,6 +19,33 @@
         </layout>
 
     </appender>
+    
+    
+    <appender name="INFOLOG" class="org.apache.log4j.DailyRollingFileAppender">
+	        <!-- The active file to log to -->
+	        <param name="file" value="/var/log/tomcat6/migration/system.log" />
+	        <param name="append" value="true" />
+	        <param name="encoding" value="UTF-8" />
+	        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+	
+	        <layout class="org.apache.log4j.PatternLayout">
+	                <!-- The log message pattern -->
+	                <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] %c:%L - %m%n" />
+	        </layout>
+	</appender>
+	
+	<appender name="ERRORLOG" class="org.apache.log4j.DailyRollingFileAppender">
+	        <!-- The active file to log to -->
+	        <param name="file" value="/var/log/tomcat6/migration/error.log" />
+	        <param name="append" value="true" />
+	        <param name="encoding" value="UTF-8" />
+	        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+	
+	        <layout class="org.apache.log4j.PatternLayout">
+	                <!-- The log message pattern -->
+	                <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] %c:%L - %m%n" />
+	        </layout>
+	</appender>
 
 
 
@@ -57,9 +84,19 @@
 
 
 
-    <logger name="com.fb">
+    <logger name="LOGERROR">
 
-        <level value="DEBUG"/>
+        <level value="WARN"/>
+        
+        <appender-ref ref="ERRORLOG"/>
+
+    </logger>
+    
+    <logger name="LOGINFO">
+
+        <level value="INFO"/>
+        
+        <appender-ref ref="INFOLOG"/>
 
     </logger>
 
@@ -70,7 +107,8 @@
         <level value="INFO"/>
 
         <appender-ref ref="CONSOLE"/>
-
+        
+        
     </root>
 
 

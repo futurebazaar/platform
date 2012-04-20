@@ -29,7 +29,7 @@ public class LegacyDaoJdbcImpl implements LegacyDao {
 
 	private JdbcTemplate jdbcTemplate;
 
-	private Log log = LogFactory.getLog(LegacyDaoJdbcImpl.class);
+	private Log infoLog = LogFactory.getLog("LOGINFO");
 
 	private static final String LOAD_PROMOTION_ID_BATCH_QUERY = "SELECT promotion_id FROM promotion order by promotion_id asc LIMIT ?, ?";
 
@@ -116,9 +116,9 @@ public class LegacyDaoJdbcImpl implements LegacyDao {
 	}
 
 	public List<LegacyPromotionCoupon> loadCoupons(LegacyPromotion legacyPromotion) {
-		log.info("Loading coupons for promotion : " + legacyPromotion.getPromotionId());
+		infoLog.info("Loading coupons for promotion : " + legacyPromotion.getPromotionId());
 		List<LegacyPromotionCoupon> coupons = jdbcTemplate.query(LOAD_COUPONS_QUERY, new LegacyPromotionCouponMapper(), legacyPromotion.getPromotionId());
-		log.info("Loaded coupons for promotion : " + legacyPromotion.getPromotionId() + ". Number of coupons : " + coupons.size());
+		infoLog.info("Loaded coupons for promotion : " + legacyPromotion.getPromotionId() + ". Number of coupons : " + coupons.size());
 		for (LegacyPromotionCoupon coupon : coupons) {
 			List<LegacyCouponUser> couponUsers = loadCouponUsers(coupon.getCouponCode());
 			coupon.setCouponUsers(couponUsers);
@@ -131,7 +131,7 @@ public class LegacyDaoJdbcImpl implements LegacyDao {
 	}
 
 	public List<LegacyCouponUser> loadCouponUsers(String couponCode) {
-		log.info("Loading coupon users for couponCode : " + couponCode);
+		infoLog.info("Loading coupon users for couponCode : " + couponCode);
 		List<LegacyCouponUser> couponUsers = jdbcTemplate.query(LOAD_COUPON_USERS_QUERY, new LegacyCouponUserMapper(), couponCode);
 		return couponUsers;
 	}
@@ -139,7 +139,7 @@ public class LegacyDaoJdbcImpl implements LegacyDao {
 	@Override
 	public List<Integer> loadIdsToMigrate(int startRecord, int batchSize) {
 		List<Integer> promotiondIds = jdbcTemplate.queryForList(LOAD_PROMOTION_ID_BATCH_QUERY, Integer.class, startRecord, batchSize);
-		log.info("PromotionIds to migrate : " + promotiondIds);
+		infoLog.info("PromotionIds to migrate : " + promotiondIds);
 		return promotiondIds;
 	}
 	
@@ -148,8 +148,8 @@ public class LegacyDaoJdbcImpl implements LegacyDao {
 		try {
 			couponList = jdbcTemplate.query(GET_USER_ORDER_DETAILS, new LegacyCouponOrderMapper(), couponCode);
 		} catch (EmptyResultDataAccessException e) {
-			if(log.isDebugEnabled()) {
-				log.debug("User first record.");
+			if(infoLog.isDebugEnabled()) {
+				infoLog.debug("User first record.");
 			}
 		}
 		return couponList;
