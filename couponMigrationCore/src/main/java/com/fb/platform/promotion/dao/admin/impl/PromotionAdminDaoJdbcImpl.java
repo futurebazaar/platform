@@ -175,6 +175,8 @@ public class PromotionAdminDaoJdbcImpl implements PromotionAdminDao {
 					}
 				}
 			}
+		} else {
+			errorLog.error("Promotion not migrated for legacy promotion : " + promotion.getName());
 		}
 	}
 

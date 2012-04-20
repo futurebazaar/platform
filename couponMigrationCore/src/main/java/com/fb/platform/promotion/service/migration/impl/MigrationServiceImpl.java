@@ -42,6 +42,8 @@ import com.fb.platform.promotion.service.migration.MigrationService;
 public class MigrationServiceImpl implements MigrationService {
 
 	private Log infoLog = LogFactory.getLog("LOGINFO");
+	
+	private Log errorLog = LogFactory.getLog("LOGERROR");
 
 
 	@Autowired
@@ -54,8 +56,8 @@ public class MigrationServiceImpl implements MigrationService {
 		if (legacyPromotion.getEndDate() != null) {
 			DateTime validTill = new DateTime(legacyPromotion.getEndDate());
 			DateTimeComparator dateComparator = DateTimeComparator.getDateOnlyInstance();
-			if (dateComparator.compare(validTill, null) >= 0) {
-				//expired promotion
+			if (dateComparator.compare(validTill, null) < 0) {
+				infoLog.info("EXPIRED PROMOTION : " + legacyPromotion.getPromotionId());
 				return;
 			}
 		}
@@ -98,8 +100,20 @@ public class MigrationServiceImpl implements MigrationService {
 
 	private PromotionLimitsConfig createLimitsConfig(LegacyPromotion legacyPromotion) {
 		PromotionLimitsConfig limits = new PromotionLimitsConfig();
-		limits.setMaxUses(legacyPromotion.getMaxUses());
-		limits.setMaxUsesPerUser(legacyPromotion.getMaxUsesPerUser());
+		int maxUses;
+		if(legacyPromotion.getMaxUses() == 0) {
+			maxUses = -1;
+		} else {
+			maxUses = legacyPromotion.getMaxUses();
+		}
+		limits.setMaxUses(maxUses);
+		int maxUsesPerUser;
+		if(legacyPromotion.getMaxUsesPerUser() == 0) {
+			maxUsesPerUser = -1;
+		} else {
+			maxUsesPerUser = legacyPromotion.getMaxUsesPerUser();
+		}
+		limits.setMaxUsesPerUser(maxUsesPerUser);
 		limits.setMaxAmount(new Money(new BigDecimal("-1.00")));
 		limits.setMaxAmountPerUser(new Money(new BigDecimal("-1.00")));
 		
@@ -133,6 +147,8 @@ public class MigrationServiceImpl implements MigrationService {
 			ruleConfig.add(fixedDiscountOff);
 			ruleConfig.add(maxDiscount);
 			ruleConfig.add(clientListConfig);
+		} else {
+			errorLog.error("Discount Type not found. Nothing to do. Promotion ID : " + legacyPromotion.getPromotionId());
 		}
 		return ruleConfig;
 	}
@@ -229,7 +245,15 @@ public class MigrationServiceImpl implements MigrationService {
 
 	private CouponLimitsConfig createCouponLimits(LegacyPromotion legacyPromotion) {
 		CouponLimitsConfig limits = new CouponLimitsConfig();
-		limits.setMaxUses(legacyPromotion.getMaxUsesPerCoupon());
+		
+		int maxUses;
+		if(legacyPromotion.getMaxUsesPerCoupon() == 0) {
+			maxUses = -1;
+		} else {
+			maxUses = legacyPromotion.getMaxUsesPerCoupon();
+		}
+		limits.setMaxUses(maxUses);
+		limits.setMaxUsesPerUser(-1);
 		limits.setMaxAmount(new Money(new BigDecimal("-1.00")));
 		limits.setMaxAmountPerUser(new Money(new BigDecimal("-1.00")));
 		
