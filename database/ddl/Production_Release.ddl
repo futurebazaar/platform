@@ -171,6 +171,11 @@ ALTER TABLE promotions_scratchcard ADD CONSTRAINT fk_user_id FOREIGN KEY(user_id
 
 ALTER TABLE promotions_scratchcard ADD COLUMN used_date DATETIME;
 
+INSERT into promotion_rule (id, name, description) VALUES (1, "BUY_WORTH_X_GET_Y_RS_OFF_ON_Z_CATEGORY", "BUY_WORTH_X_GET_Y_RS_OFF_ON_Z_CATEGORY");
+INSERT into promotion_rule (id, name, description) VALUES (2, "BUY_WORTH_X_GET_Y_RS_OFF", "BUY_WORTH_X_GET_Y_RS_OFF");
+INSERT into promotion_rule (id, name, description) VALUES (3, "BUY_WORTH_X_GET_Y_PERCENT_OFF", "BUY_WORTH_X_GET_Y_PERCENT_OFF");
+INSERT into promotion_rule (id, name, description) VALUES (4, "BUY_X_BRAND_GET_Y_RS_OFF_ON_Z_PRODUCT", "BUY_X_BRAND_GET_Y_RS_OFF_ON_Z_PRODUCT");
+
 -- end of promotion tables 
 
 
