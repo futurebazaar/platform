@@ -170,8 +170,6 @@ ALTER TABLE promotions_scratchcard ADD COLUMN user_id INTEGER;
 ALTER TABLE promotions_scratchcard ADD CONSTRAINT fk_user_id FOREIGN KEY(user_id) REFERENCES users_profile(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 ALTER TABLE promotions_scratchcard ADD COLUMN used_date DATETIME;
-
-
 INSERT INTO promotion_rule(id,name,description) VALUES (2,'BUY_WORTH_X_GET_Y_RS_OFF','Buy worth A Rs and get Flat B Rs OFF');
 INSERT INTO promotion_rule(id,name,description) VALUES (3,'BUY_WORTH_X_GET_Y_PERCENT_OFF','Buy worth A Rs and get B% Percent OFF');
 INSERT INTO promotion_rule(id,name,description) VALUES (1,'BUY_WORTH_X_GET_Y_RS_OFF_ON_Z_CATEGORY','Buy worth A Rs from category B and get C Rs OFF');
