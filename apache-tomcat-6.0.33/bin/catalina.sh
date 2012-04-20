@@ -85,6 +85,7 @@
 # -----------------------------------------------------------------------------
 
 # OS specific support.  $var _must_ be set to either true or false.
+JAVA_OPTS=-Xmx4096m
 cygwin=false
 os400=false
 darwin=false
