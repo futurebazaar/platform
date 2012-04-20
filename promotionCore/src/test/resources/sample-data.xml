@@ -23,23 +23,6 @@
                         <value name="id">-5</value>
                         <value name="name">BUY_X_BRAND_GET_Y_RS_OFF_ON_Z_PRODUCT</value>
         </row>
-        <row>
-                        <value name="id">1</value>
-                        <value name="name">BUY_WORTH_X_GET_Y_RS_OFF_ON_Z_CATEGORY</value>
-        </row>
-        <row>
-                        <value name="id">2</value>
-                        <value name="name">BUY_WORTH_X_GET_Y_RS_OFF</value>
-        </row>
-        <row>
-                        <value name="id">3</value>
-                        <value name="name">BUY_WORTH_X_GET_Y_PERCENT_OFF</value>
-        </row>
-       
-        <row>
-                        <value name="id">4</value>
-                        <value name="name">BUY_X_BRAND_GET_Y_RS_OFF_ON_Z_PRODUCT</value>
-        </row>
         </table>
         <table name="platform_promotion">
                 <column>id</column>
