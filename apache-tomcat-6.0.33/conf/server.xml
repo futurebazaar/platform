@@ -48,7 +48,11 @@
           maxActive="101" maxIdle="30" maxWait="10000"
           username="root" password="root"
 	  driverClassName="com.mysql.jdbc.Driver"
-	  url="jdbc:mysql://localhost/platform?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true"/>
+	  url="jdbc:mysql://localhost/platform?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true"
+	  validationQuery="select 1"
+	  testOnBorrow="true"
+	  removeAbandoned="true"
+          removeAbandonedTimeout="20"/>
   </GlobalNamingResources>
 
   <!-- A "Service" is a collection of one or more "Connectors" that share
@@ -72,13 +76,13 @@
          APR (HTTP/AJP) Connector: /docs/apr.html
          Define a non-SSL HTTP/1.1 Connector on port 8080
     -->
-    <Connector port="8082" protocol="HTTP/1.1" 
+    <Connector port="8080" protocol="HTTP/1.1" 
                connectionTimeout="20000" 
                redirectPort="8443" />
     <!-- A "Connector" using the shared thread pool-->
     <!--
     <Connector executor="tomcatThreadPool"
-               port="8082" protocol="HTTP/1.1" 
+               port="8080" protocol="HTTP/1.1" 
                connectionTimeout="20000" 
                redirectPort="8443" />
     -->           
