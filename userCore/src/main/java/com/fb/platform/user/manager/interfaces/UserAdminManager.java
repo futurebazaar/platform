@@ -3,9 +3,6 @@
  */
 package com.fb.platform.user.manager.interfaces;
 
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.fb.platform.user.manager.model.admin.AddUserRequest;
 import com.fb.platform.user.manager.model.admin.AddUserResponse;
 import com.fb.platform.user.manager.model.admin.GetUserRequest;
@@ -37,48 +34,29 @@ import com.fb.platform.user.manager.model.admin.phone.VerifyUserPhoneResponse;
  * @author vinayak
  *
  */
-@Transactional
 public interface UserAdminManager {
 
 	GetUserResponse getUser(GetUserRequest getUserRequest);
 
-	@Transactional(propagation = Propagation.REQUIRED)
 	AddUserResponse addUser(AddUserRequest addUserRequest);
 
-	@Transactional(propagation = Propagation.REQUIRED)
 	UpdateUserResponse updateUser(UpdateUserRequest updateUserRequest);
 
-	@Transactional(propagation = Propagation.REQUIRED)
 	IsValidUserResponse isValidUser(IsValidUserRequest isValidUserRequest);
 
-	/*@Transactional(propagation=Propagation.SUPPORTS)
-	public GetUsersReponse getUsers(GetUsersRequest getUsersRequest);*/
-	
-	@Transactional(propagation = Propagation.SUPPORTS)
 	GetUserEmailResponse getUserEmail(GetUserEmailRequest getUserEmailRequest);
-
-	@Transactional(propagation = Propagation.REQUIRED)
+	
 	AddUserEmailResponse addUserEmail(AddUserEmailRequest addUserEmailRequest);
 
-	@Transactional(propagation = Propagation.REQUIRED)
 	VerifyUserEmailResponse verifyUserEmail(VerifyUserEmailRequest verifyUserEmailRequest);
 	
-	@Transactional(propagation = Propagation.REQUIRED)
 	DeleteUserEmailResponse deleteUserEmail(DeleteUserEmailRequest deleteUserEmailRequest);
 	
-	
-	@Transactional(propagation = Propagation.SUPPORTS)
 	GetUserPhoneResponse getUserPhone(GetUserPhoneRequest getUserPhoneRequest);
 
-	@Transactional(propagation = Propagation.REQUIRED)
 	AddUserPhoneResponse addUserPhone(AddUserPhoneRequest addUserPhoneRequest);
 
-	@Transactional(propagation = Propagation.REQUIRED)
 	VerifyUserPhoneResponse verifyUserPhone(VerifyUserPhoneRequest verifyUserPhoneRequest);
 	
-	@Transactional(propagation = Propagation.REQUIRED)
 	DeleteUserPhoneResponse deleteUserPhone(DeleteUserPhoneRequest deleteUserPhoneRequest);
-
-
-
 }

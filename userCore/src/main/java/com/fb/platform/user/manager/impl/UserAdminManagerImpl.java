@@ -3,13 +3,9 @@
  */
 package com.fb.platform.user.manager.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.PlatformException;
@@ -20,10 +16,11 @@ import com.fb.platform.sso.SSOSessionId;
 import com.fb.platform.sso.SSOSessionTO;
 import com.fb.platform.sso.SSOToken;
 import com.fb.platform.sso.caching.SessionTokenCacheAccess;
-import com.fb.platform.user.dao.interfaces.UserAdminDao;
-import com.fb.platform.user.domain.UserBo;
-import com.fb.platform.user.domain.UserEmailBo;
-import com.fb.platform.user.domain.UserPhoneBo;
+
+import com.fb.platform.user.manager.exception.EmailNotFoundException;
+import com.fb.platform.user.manager.exception.InvalidUserNameException;
+import com.fb.platform.user.manager.exception.PhoneNotFoundException;
+import com.fb.platform.user.manager.exception.UserAlreadyExistsException;
 import com.fb.platform.user.manager.exception.UserNotFoundException;
 import com.fb.platform.user.manager.interfaces.UserAdminManager;
 import com.fb.platform.user.manager.interfaces.UserAdminService;
@@ -39,6 +36,7 @@ import com.fb.platform.user.manager.model.admin.IsValidUserResponse;
 import com.fb.platform.user.manager.model.admin.UpdateUserRequest;
 import com.fb.platform.user.manager.model.admin.UpdateUserResponse;
 import com.fb.platform.user.manager.model.admin.UpdateUserStatusEnum;
+import com.fb.platform.user.manager.model.admin.User;
 import com.fb.platform.user.manager.model.admin.email.AddUserEmailRequest;
 import com.fb.platform.user.manager.model.admin.email.AddUserEmailResponse;
 import com.fb.platform.user.manager.model.admin.email.AddUserEmailStatusEnum;
@@ -48,9 +46,9 @@ import com.fb.platform.user.manager.model.admin.email.DeleteUserEmailStatusEnum;
 import com.fb.platform.user.manager.model.admin.email.GetUserEmailRequest;
 import com.fb.platform.user.manager.model.admin.email.GetUserEmailResponse;
 import com.fb.platform.user.manager.model.admin.email.GetUserEmailStatusEnum;
-import com.fb.platform.user.manager.model.admin.email.UserEmail;
 import com.fb.platform.user.manager.model.admin.email.VerifyUserEmailRequest;
 import com.fb.platform.user.manager.model.admin.email.VerifyUserEmailResponse;
+import com.fb.platform.user.manager.model.admin.email.VerifyUserEmailStatusEnum;
 import com.fb.platform.user.manager.model.admin.phone.AddUserPhoneRequest;
 import com.fb.platform.user.manager.model.admin.phone.AddUserPhoneResponse;
 import com.fb.platform.user.manager.model.admin.phone.AddUserPhoneStatusEnum;
@@ -60,11 +58,9 @@ import com.fb.platform.user.manager.model.admin.phone.DeleteUserPhoneStatusEnum;
 import com.fb.platform.user.manager.model.admin.phone.GetUserPhoneRequest;
 import com.fb.platform.user.manager.model.admin.phone.GetUserPhoneResponse;
 import com.fb.platform.user.manager.model.admin.phone.GetUserPhoneStatusEnum;
-import com.fb.platform.user.manager.model.admin.phone.UserPhone;
 import com.fb.platform.user.manager.model.admin.phone.VerifyUserPhoneRequest;
 import com.fb.platform.user.manager.model.admin.phone.VerifyUserPhoneResponse;
 import com.fb.platform.user.manager.model.admin.phone.VerifyUserPhoneStatusEnum;
-import com.fb.platform.user.util.ValidatorUtil;
 
 /**
  * @author vinayak
@@ -74,9 +70,6 @@ public class UserAdminManagerImpl implements UserAdminManager {
 
 	private static final Log logger = LogFactory.getLog(UserAdminManagerImpl.class);
 
-	@Autowired
-	private UserAdminDao userAdminDao;
-	
 	@Autowired
 	private UserAdminService userAdminService;
 	
@@ -114,9 +107,9 @@ public class UserAdminManagerImpl implements UserAdminManager {
 				return getUserResponse;
 			}
 			getUserResponse.setSessionToken(authentication.getToken());
-			UserBo user = userAdminService.getUser(getUserRequest.getKey());
+			User user = userAdminService.getUser(getUserRequest.getKey());
 			getUserResponse.setStatus(GetUserStatusEnum.SUCCESS);
-			getUserResponse.setUserName(user.getName());
+			getUserResponse.setUserName(user.getUserName());
 			return getUserResponse;
 
 		} catch (UserNotFoundException e){
@@ -143,63 +136,31 @@ public class UserAdminManagerImpl implements UserAdminManager {
 		if(logger.isDebugEnabled()) {
 			logger.debug("Add user with username : " + addUserRequest.getUserName() );
 		}
-		boolean isEmail = ValidatorUtil.isValidEmailAddress(addUserRequest.getUserName());
-		boolean isPhone = ValidatorUtil.isValidPhoneNumber(addUserRequest.getUserName());
-		if (!(isEmail | isPhone )){
-			addUserResponse.setStatus(AddUserStatusEnum.INVALID_USER_NAME);
-			addUserResponse.setUserId(0);
-			return addUserResponse;
-		}
 		try {
-			UserBo userPresent = userAdminDao.load(addUserRequest.getUserName());
-			if(userPresent != null && userPresent.getUserid() > 0){
-				addUserResponse.setStatus(AddUserStatusEnum.USER_ALREADY_EXISTS);
-				addUserResponse.setUserId(userPresent.getUserid());
-				return addUserResponse;
-			}
-			UserBo userBo = new UserBo();
-			userBo.setUsername(addUserRequest.getUserName());
-			userBo.setPassword(addUserRequest.getPassword());
-			if(isEmail){
-				UserEmailBo userEmailBo = new UserEmailBo();
-				userEmailBo.setEmail(addUserRequest.getUserName());
-				userEmailBo.setType("primary");
-				List<UserEmailBo> userEmailBos = new ArrayList<UserEmailBo>();
-				userEmailBos.add(userEmailBo);
-				userBo.setUserEmail(userEmailBos);
-			}
-			if(isPhone){
-				UserPhoneBo userPhoneBo = new UserPhoneBo();
-				userPhoneBo.setPhoneno(addUserRequest.getUserName());
-				userPhoneBo.setType("primary");
-				List<UserPhoneBo> userPhoneBos = new ArrayList<UserPhoneBo>();
-				userPhoneBos.add(userPhoneBo);
-				userBo.setUserPhone(userPhoneBos);
-			}
-			UserBo user = userAdminDao.add(userBo);
+			User user = new User();
+			user.setUserName(addUserRequest.getUserName());
+			user.setPassword(addUserRequest.getPassword());
+			User userRes = userAdminService.addUser(user);
 			addUserResponse.setStatus(AddUserStatusEnum.SUCCESS);
-
 			SSOSessionTO ssoSession = new SSOSessionTO();
-			ssoSession.setUserId(user.getUserid());
-
+			ssoSession.setUserId(userRes.getUserId());
 			//create the global sso session
 			SSOSessionId ssoSessionId = ssoMasterService.createSSOSession(ssoSession);
-
 			//create the session token to be included in the response and cache it for the use of next request
 			SSOToken ssoToken = ssoMasterService.createSessionToken(ssoSessionId);
-
 			sessionTokenCacheAccess.put(ssoToken, ssoSessionId);
-
 			addUserResponse.setSessionToken(ssoToken.getToken());
-			addUserResponse.setUserId(user.getUserid());
-
-			return addUserResponse;
-
-		} catch (PlatformException pe) {
+			addUserResponse.setUserId(userRes.getUserId());
+		} catch (InvalidUserNameException e) {
+			addUserResponse.setStatus(AddUserStatusEnum.INVALID_USER_NAME);
+			addUserResponse.setUserId(0);
+		}catch (UserAlreadyExistsException e) {
+			addUserResponse.setStatus(AddUserStatusEnum.USER_ALREADY_EXISTS);
+			addUserResponse.setUserId(0);
+		}catch (PlatformException pe) {
 			logger.error("Error while adding the user : " + addUserRequest.getUserName(), pe);
 			addUserResponse.setStatus(AddUserStatusEnum.ADD_USER_FAILED);
 		}
-
 		return addUserResponse;
 	}
 
@@ -229,41 +190,24 @@ public class UserAdminManagerImpl implements UserAdminManager {
 				updateUserReponse.setStatus(UpdateUserStatusEnum.NO_SESSION);
 				return updateUserReponse;
 			}
-			UserBo userBo = userAdminDao.loadByUserId(authentication.getUserID());
-			if(updateUserRequest.getDateOfBirth() != null){
-				userBo.setDateofbirth(updateUserRequest.getDateOfBirth());
-			}
-			if(!(StringUtils.isBlank(updateUserRequest.getFirstName()))){
-				userBo.setFirstname(updateUserRequest.getFirstName());
-			}
-			if(!(StringUtils.isBlank(updateUserRequest.getLastName()))){
-				userBo.setLastname(updateUserRequest.getLastName());
-			}
-			if(!(StringUtils.isBlank(updateUserRequest.getGender()))){
-				userBo.setGender(updateUserRequest.getGender());
-			}
-			if(!(StringUtils.isBlank(updateUserRequest.getSalutation()))){
-				userBo.setSalutation(updateUserRequest.getSalutation());
-			}
-			UserBo user = userAdminDao.update(userBo);
+			User user  = new User();
+			user.setUserId(authentication.getUserID());
+			user.setDateOfBirth(updateUserRequest.getDateOfBirth());
+			user.setFirstName(updateUserRequest.getFirstName());
+			user.setLastName(updateUserRequest.getLastName());
+			user.setGender(updateUserRequest.getGender());
+			user.setSalutation(updateUserRequest.getSalutation());			
 			updateUserReponse.setSessionToken(authentication.getToken());
-			updateUserReponse.setStatus(UpdateUserStatusEnum.SUCCESS);
+			updateUserReponse.setStatus(userAdminService.updateUser(user));
 			return updateUserReponse;
-
-		} catch (PlatformException pe) {
+		} catch (UserNotFoundException e){
+			logger.error("Error while getting the user : " + updateUserRequest.getFirstName(), e);
+			updateUserReponse.setStatus(UpdateUserStatusEnum.UPDATE_USER_FAILED);
+		}catch (PlatformException pe) {
 			logger.error("Error while getting the user : " + updateUserRequest.getFirstName(), pe);
 			updateUserReponse.setStatus(UpdateUserStatusEnum.UPDATE_USER_FAILED);
 		}
-
 		return updateUserReponse;
-	}
-
-	public UserAdminDao getUserAdminDao() {
-		return userAdminDao;
-	}
-
-	public void setUserAdminDao(UserAdminDao userAdminDao) {
-		this.userAdminDao = userAdminDao;
 	}
 
 	@Override
@@ -278,21 +222,16 @@ public class UserAdminManagerImpl implements UserAdminManager {
 		}
 
 		try {
-
-			UserBo user = userAdminDao.load(isValidUserRequest.getUserName());
-			if (user == null) {
-				isValidUserResponse.setIsValidUserStatus(IsValidUserEnum.INVALID_USER);
-				return isValidUserResponse;
-			}
-			isValidUserResponse.setUserId(user.getUserid());
+			User user = userAdminService.getUser(isValidUserRequest.getUserName());
+			isValidUserResponse.setUserId(user.getUserId());
 			isValidUserResponse.setIsValidUserStatus(IsValidUserEnum.VALID_USER);
 			return isValidUserResponse;
-
+		}catch (UserNotFoundException e){
+			isValidUserResponse.setIsValidUserStatus(IsValidUserEnum.INVALID_USER);
 		} catch (PlatformException pe) {
 			logger.error("Error while getting the user : " + isValidUserRequest.getUserName(), pe);
 			isValidUserResponse.setIsValidUserStatus(IsValidUserEnum.ERROR);
 		}
-
 		return isValidUserResponse;
 	}
 
@@ -319,22 +258,13 @@ public class UserAdminManagerImpl implements UserAdminManager {
 			}
 			getUserEmailResponse.setUserId(getUserEmailRequest.getUserId());
 			getUserEmailResponse.setSessionToken(authentication.getToken());
-			UserBo userBo = userAdminDao.loadByUserId(getUserEmailRequest.getUserId());
-			if (userBo.getUserEmail() != null && userBo.getUserEmail().size() > 0){
-				List<UserEmail> userEmails = new ArrayList<UserEmail>();
-				for(UserEmailBo userEmailBo : userBo.getUserEmail()){
-					UserEmail userEmail = new UserEmail();
-					userEmail.setEmail(userEmailBo.getEmail());
-					userEmail.setType(userEmailBo.getType());
-					userEmails.add(userEmail);
-				}
-				getUserEmailResponse.setUserEmail(userEmails);
-				
-				getUserEmailResponse.setGetUserEmailStatus(GetUserEmailStatusEnum.SUCCESS);
-			}else{
-				getUserEmailResponse.setGetUserEmailStatus(GetUserEmailStatusEnum.NO_EMAIL_ID);
-			}			
+			getUserEmailResponse.setUserEmail(userAdminService.getUserEmail(getUserEmailRequest.getUserId()));
+			getUserEmailResponse.setGetUserEmailStatus(GetUserEmailStatusEnum.SUCCESS);
 			return getUserEmailResponse;
+		} catch(UserNotFoundException e){
+			getUserEmailResponse.setGetUserEmailStatus(GetUserEmailStatusEnum.INVALID_USER);
+		} catch(EmailNotFoundException e){
+			getUserEmailResponse.setGetUserEmailStatus(GetUserEmailStatusEnum.NO_EMAIL_ID);
 		} catch (PlatformException pe) {
 			logger.error("Error while getting the user emails: " + getUserEmailRequest.getUserId(), pe);
 			getUserEmailResponse.setGetUserEmailStatus(GetUserEmailStatusEnum.ERROR_RETRIVING_EMAIL);
@@ -344,23 +274,14 @@ public class UserAdminManagerImpl implements UserAdminManager {
 
 	@Override
 	public AddUserEmailResponse addUserEmail(
-			AddUserEmailRequest addUserEmailRequest) {
-		
+			AddUserEmailRequest addUserEmailRequest) {		
 		AddUserEmailResponse addUserEmailResponse = new AddUserEmailResponse();
 		if (addUserEmailRequest == null) {
 			addUserEmailResponse.setAddUserEmailStatus(AddUserEmailStatusEnum.INVALID_EMAIL);
 			return addUserEmailResponse;
 		}
-		if(logger.isDebugEnabled()) {
-			logger.debug("Adding emails for user : " + addUserEmailRequest.getUserId() );
-		}
-		
 		if (StringUtils.isBlank(addUserEmailRequest.getSessionToken())) {
 			addUserEmailResponse.setAddUserEmailStatus(AddUserEmailStatusEnum.NO_SESSION);
-			return addUserEmailResponse;
-		}
-		if(!ValidatorUtil.isValidEmailAddress(addUserEmailRequest.getUserEmail().getEmail())){
-			addUserEmailResponse.setAddUserEmailStatus(AddUserEmailStatusEnum.INVALID_EMAIL);
 			return addUserEmailResponse;
 		}
 		try {
@@ -369,31 +290,11 @@ public class UserAdminManagerImpl implements UserAdminManager {
 				addUserEmailResponse.setAddUserEmailStatus(AddUserEmailStatusEnum.NO_SESSION);
 				return addUserEmailResponse;
 			}
-			UserBo userBo = userAdminDao.loadByUserId(addUserEmailRequest.getUserId());
-			UserEmailBo userEmailBo = new UserEmailBo();
-			userEmailBo.setEmail(addUserEmailRequest.getUserEmail().getEmail());
-			userEmailBo.setType(addUserEmailRequest.getUserEmail().getType());
-			if (userBo.getUserEmail() != null){
-				for(UserEmailBo userEmail : userBo.getUserEmail()){
-					if(userEmail.equals(userEmailBo)){
-						addUserEmailResponse.setSessionToken(authentication.getToken());
-						addUserEmailResponse.setAddUserEmailStatus(AddUserEmailStatusEnum.ALREADY_PRESENT);
-						return addUserEmailResponse;
-					}
-				}
-			}
-			
-			boolean success = userAdminDao.addUserEmail(addUserEmailRequest.getUserId(), userEmailBo);
-			if(success){
-				addUserEmailResponse.setSessionToken(authentication.getToken());
-				addUserEmailResponse.setAddUserEmailStatus(AddUserEmailStatusEnum.SUCCESS);
-			}else{
-				logger.error("Error while adding the user emails: " + addUserEmailRequest.getUserId());
-				addUserEmailResponse.setSessionToken(authentication.getToken());
-				addUserEmailResponse.setAddUserEmailStatus(AddUserEmailStatusEnum.ERROR_ADDING_EMAIL);
-			}
-			return addUserEmailResponse;
-		} catch (PlatformException pe) {
+			addUserEmailResponse.setSessionToken(authentication.getToken());
+			addUserEmailResponse.setAddUserEmailStatus(userAdminService.addUserEmail(addUserEmailRequest.getUserId(), addUserEmailRequest.getUserEmail()));
+		}catch (UserNotFoundException e) {
+			addUserEmailResponse.setAddUserEmailStatus(AddUserEmailStatusEnum.ERROR_ADDING_EMAIL);
+		}catch (PlatformException pe) {
 			logger.error("Error while adding the user emails: " + addUserEmailRequest.getUserId(), pe);
 			addUserEmailResponse.setAddUserEmailStatus(AddUserEmailStatusEnum.ERROR_ADDING_EMAIL);
 		}
@@ -403,8 +304,32 @@ public class UserAdminManagerImpl implements UserAdminManager {
 	@Override
 	public VerifyUserEmailResponse verifyUserEmail(
 			VerifyUserEmailRequest verifyUserEmailRequest) {
-		// TODO Auto-generated method stub
-		return null;
+		VerifyUserEmailResponse verifyUserEmailResponse = new VerifyUserEmailResponse();
+		if (verifyUserEmailRequest == null) {
+			verifyUserEmailResponse.setVerifyUserEmailStatus(VerifyUserEmailStatusEnum.INVALID_USER);
+			return verifyUserEmailResponse;
+		}
+		if(logger.isDebugEnabled()) {
+			logger.debug("Verify Email for user : " + verifyUserEmailRequest.getUserId()+ "::" + verifyUserEmailRequest.getEmail());
+		}
+		if (StringUtils.isBlank(verifyUserEmailRequest.getSessionToken())) {
+			verifyUserEmailResponse.setVerifyUserEmailStatus(VerifyUserEmailStatusEnum.NO_SESSION);
+			return verifyUserEmailResponse;
+		}
+		try {
+			AuthenticationTO authentication = authenticationService.authenticate(verifyUserEmailRequest.getSessionToken());
+			if (authentication == null) {
+				verifyUserEmailResponse.setVerifyUserEmailStatus(VerifyUserEmailStatusEnum.NO_SESSION);
+				return verifyUserEmailResponse;
+			}
+			verifyUserEmailResponse.setSessionToken(authentication.getToken());
+			verifyUserEmailResponse.setVerifyUserEmailStatus(userAdminService.verifyUserEmail(verifyUserEmailRequest.getUserId(), verifyUserEmailRequest.getEmail()));
+			return verifyUserEmailResponse;
+		}catch (PlatformException pe) {
+			logger.error("Error while verify the user Phone: " + verifyUserEmailRequest.getUserId(), pe);
+			verifyUserEmailResponse.setVerifyUserEmailStatus(VerifyUserEmailStatusEnum.ERROR_VERIFYING_EMAIL);
+		}
+		return verifyUserEmailResponse;
 	}
 
 	@Override
@@ -418,10 +343,7 @@ public class UserAdminManagerImpl implements UserAdminManager {
 		}
 		if(logger.isDebugEnabled()) {
 			logger.debug("Delete email for user : " + deleteUserEmailRequest.getUserId()+ "::" + deleteUserEmailRequest.getEmailId());
-		}
-		
-		
-		
+		}		
 		if (StringUtils.isBlank(deleteUserEmailRequest.getSessionToken())) {
 			deleteUserEmailResponse.setDeleteUserEmailStatus(DeleteUserEmailStatusEnum.NO_SESSION);
 			return deleteUserEmailResponse;
@@ -432,16 +354,8 @@ public class UserAdminManagerImpl implements UserAdminManager {
 				deleteUserEmailResponse.setDeleteUserEmailStatus(DeleteUserEmailStatusEnum.NO_SESSION);
 				return deleteUserEmailResponse;
 			}
-			
-			boolean success = userAdminDao.deleteUserEmail(deleteUserEmailRequest.getUserId(), deleteUserEmailRequest.getEmailId());
-			
-			if(success){
-				deleteUserEmailResponse.setSessionToken(authentication.getToken());
-				deleteUserEmailResponse.setDeleteUserEmailStatus(DeleteUserEmailStatusEnum.SUCCESS);
-			}else{
-				deleteUserEmailResponse.setSessionToken(authentication.getToken());
-				deleteUserEmailResponse.setDeleteUserEmailStatus(DeleteUserEmailStatusEnum.NO_EMAIL_ID);
-			}
+			deleteUserEmailResponse.setSessionToken(authentication.getToken());
+			deleteUserEmailResponse.setDeleteUserEmailStatus(userAdminService.deleteUserEmail(deleteUserEmailRequest.getUserId(), deleteUserEmailRequest.getEmailId()));
 			return deleteUserEmailResponse;
 		}catch (PlatformException pe) {
 			logger.error("Error while delete the user email: " + deleteUserEmailRequest.getUserId(), pe);
@@ -471,26 +385,17 @@ public class UserAdminManagerImpl implements UserAdminManager {
 				getUserPhoneResponse.setGetUserPhoneStatus(GetUserPhoneStatusEnum.NO_SESSION);
 				return getUserPhoneResponse;
 			}
-			getUserPhoneResponse.setSessionToken(authentication.getToken());
 			getUserPhoneResponse.setUserId(getUserPhoneRequest.getUserId());
-			UserBo userBo = userAdminDao.loadByUserId(getUserPhoneRequest.getUserId());
-			
-			if (userBo.getUserPhone() != null && userBo.getUserPhone().size() > 0){
-				List<UserPhone> userPhones = new ArrayList<UserPhone>();
-				for(UserPhoneBo userPhoneBo : userBo.getUserPhone()){
-					UserPhone userPhone = new UserPhone();
-					userPhone.setPhone(userPhoneBo.getPhoneno());
-					userPhone.setType(userPhoneBo.getType());
-					userPhones.add(userPhone);
-				}
-				getUserPhoneResponse.setUserPhone(userPhones);
-				getUserPhoneResponse.setGetUserPhoneStatus(GetUserPhoneStatusEnum.SUCCESS);
-			}else{
-				getUserPhoneResponse.setGetUserPhoneStatus(GetUserPhoneStatusEnum.NO_PHONE);
-			}			
+			getUserPhoneResponse.setSessionToken(authentication.getToken());
+			getUserPhoneResponse.setUserPhone(userAdminService.getUserPhone(getUserPhoneRequest.getUserId()));
+			getUserPhoneResponse.setGetUserPhoneStatus(GetUserPhoneStatusEnum.SUCCESS);
 			return getUserPhoneResponse;
+		} catch(UserNotFoundException e){
+			getUserPhoneResponse.setGetUserPhoneStatus(GetUserPhoneStatusEnum.INVALID_USER);
+		} catch(PhoneNotFoundException e){
+			getUserPhoneResponse.setGetUserPhoneStatus(GetUserPhoneStatusEnum.NO_PHONE);
 		} catch (PlatformException pe) {
-			logger.error("Error while getting the user Phones: " + getUserPhoneRequest.getUserId(), pe);
+			logger.error("Error while getting the user emails: " + getUserPhoneRequest.getUserId(), pe);
 			getUserPhoneResponse.setGetUserPhoneStatus(GetUserPhoneStatusEnum.ERROR_RETRIVING_PHONE);
 		}
 		return getUserPhoneResponse;
@@ -513,41 +418,18 @@ public class UserAdminManagerImpl implements UserAdminManager {
 			addUserPhoneResponse.setAddUserPhoneStatus(AddUserPhoneStatusEnum.NO_SESSION);
 			return addUserPhoneResponse;
 		}
-		if(!ValidatorUtil.isValidPhoneNumber(addUserPhoneRequest.getUserPhone().getPhone())){
-			addUserPhoneResponse.setAddUserPhoneStatus(AddUserPhoneStatusEnum.INVALID_PHONE);
-			return addUserPhoneResponse;
-		}
 		try {
 			AuthenticationTO authentication = authenticationService.authenticate(addUserPhoneRequest.getSessionToken());
 			if (authentication == null) {
 				addUserPhoneResponse.setAddUserPhoneStatus(AddUserPhoneStatusEnum.NO_SESSION);
 				return addUserPhoneResponse;
 			}
-			UserBo userBo = userAdminDao.loadByUserId(addUserPhoneRequest.getUserId());
-			UserPhoneBo userPhoneBo = new UserPhoneBo();
-			userPhoneBo.setPhoneno(addUserPhoneRequest.getUserPhone().getPhone());
-			userPhoneBo.setType(addUserPhoneRequest.getUserPhone().getType());
-			if (userBo.getUserPhone() != null){
-				for(UserPhoneBo userPhone : userBo.getUserPhone()){
-					if(userPhone.equals(userPhoneBo)){
-						addUserPhoneResponse.setSessionToken(authentication.getToken());
-						addUserPhoneResponse.setAddUserPhoneStatus(AddUserPhoneStatusEnum.ALREADY_PRESENT);
-						return addUserPhoneResponse;
-					}
-				}
-			}			
-			boolean success = userAdminDao.addUserPhone(addUserPhoneRequest.getUserId(), userPhoneBo);
-			if(success){
-				addUserPhoneResponse.setSessionToken(authentication.getToken());
-				addUserPhoneResponse.setAddUserPhoneStatus(AddUserPhoneStatusEnum.SUCCESS);
-			}else{
-				logger.error("Error while adding the user Phones: " + addUserPhoneRequest.getUserId());
-				addUserPhoneResponse.setSessionToken(authentication.getToken());
-				addUserPhoneResponse.setAddUserPhoneStatus(AddUserPhoneStatusEnum.ERROR_ADDING_PHONE);
-			}
-			return addUserPhoneResponse;
-		} catch (PlatformException pe) {
-			logger.error("Error while adding the user Phones: " + addUserPhoneRequest.getUserId(), pe);
+			addUserPhoneResponse.setSessionToken(authentication.getToken());
+			addUserPhoneResponse.setAddUserPhoneStatus(userAdminService.addUserPhone(addUserPhoneRequest.getUserId(), addUserPhoneRequest.getUserPhone()));
+		}catch (UserNotFoundException e) {
+			addUserPhoneResponse.setAddUserPhoneStatus(AddUserPhoneStatusEnum.ERROR_ADDING_PHONE);
+		}catch (PlatformException pe) {
+			logger.error("Error while adding the user emails: " + addUserPhoneRequest.getUserId(), pe);
 			addUserPhoneResponse.setAddUserPhoneStatus(AddUserPhoneStatusEnum.ERROR_ADDING_PHONE);
 		}
 		return addUserPhoneResponse;
@@ -564,9 +446,6 @@ public class UserAdminManagerImpl implements UserAdminManager {
 		if(logger.isDebugEnabled()) {
 			logger.debug("Verify Phone for user : " + verifyUserPhoneRequest.getUserId()+ "::" + verifyUserPhoneRequest.getPhone());
 		}
-		
-		
-		
 		if (StringUtils.isBlank(verifyUserPhoneRequest.getSessionToken())) {
 			verifyUserPhoneResponse.setVerifyUserPhoneStatus(VerifyUserPhoneStatusEnum.NO_SESSION);
 			return verifyUserPhoneResponse;
@@ -577,16 +456,8 @@ public class UserAdminManagerImpl implements UserAdminManager {
 				verifyUserPhoneResponse.setVerifyUserPhoneStatus(VerifyUserPhoneStatusEnum.NO_SESSION);
 				return verifyUserPhoneResponse;
 			}
-			
-			boolean success = userAdminDao.verifyUserPhone(verifyUserPhoneRequest.getUserId(), verifyUserPhoneRequest.getPhone());
-			
-			if(success){
-				verifyUserPhoneResponse.setSessionToken(authentication.getToken());
-				verifyUserPhoneResponse.setVerifyUserPhoneStatus(VerifyUserPhoneStatusEnum.SUCCESS);
-			}else{
-				verifyUserPhoneResponse.setSessionToken(authentication.getToken());
-				verifyUserPhoneResponse.setVerifyUserPhoneStatus(VerifyUserPhoneStatusEnum.NO_PHONE);
-			}
+			verifyUserPhoneResponse.setSessionToken(authentication.getToken());
+			verifyUserPhoneResponse.setVerifyUserPhoneStatus(userAdminService.verifyUserPhone(verifyUserPhoneRequest.getUserId(), verifyUserPhoneRequest.getPhone()));
 			return verifyUserPhoneResponse;
 		}catch (PlatformException pe) {
 			logger.error("Error while verify the user Phone: " + verifyUserPhoneRequest.getUserId(), pe);
@@ -619,19 +490,11 @@ public class UserAdminManagerImpl implements UserAdminManager {
 				deleteUserPhoneResponse.setDeleteUserPhoneStatus(DeleteUserPhoneStatusEnum.NO_SESSION);
 				return deleteUserPhoneResponse;
 			}
-			
-			boolean success = userAdminDao.deleteUserPhone(deleteUserPhoneRequest.getUserId(), deleteUserPhoneRequest.getPhone());
-			
-			if(success){
-				deleteUserPhoneResponse.setSessionToken(authentication.getToken());
-				deleteUserPhoneResponse.setDeleteUserPhoneStatus(DeleteUserPhoneStatusEnum.SUCCESS);
-			}else{
-				deleteUserPhoneResponse.setSessionToken(authentication.getToken());
-				deleteUserPhoneResponse.setDeleteUserPhoneStatus(DeleteUserPhoneStatusEnum.NO_PHONE);
-			}
+			deleteUserPhoneResponse.setSessionToken(authentication.getToken());
+			deleteUserPhoneResponse.setDeleteUserPhoneStatus(userAdminService.deleteUserPhone(deleteUserPhoneRequest.getUserId(), deleteUserPhoneRequest.getPhone()));
 			return deleteUserPhoneResponse;
 		}catch (PlatformException pe) {
-			logger.error("Error while delete the user Phone: " + deleteUserPhoneRequest.getUserId(), pe);
+			logger.error("Error while delete the user phone: " + deleteUserPhoneRequest.getUserId(), pe);
 			deleteUserPhoneResponse.setDeleteUserPhoneStatus(DeleteUserPhoneStatusEnum.ERROR_DELETING_PHONE);
 		}
 		return deleteUserPhoneResponse;
