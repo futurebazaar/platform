@@ -75,6 +75,4 @@ ifsWS/.project
 ifsWS/.settings/
 ifsWS/bin/
 ifsWS/target/
-apache-tomcat-6.0.33/
 .gitignore
-

@@ -92,6 +92,9 @@
       <xs:enumeration value="LIMIT_SUCCESS"/>
       <xs:enumeration value="NO_APPLIED_COUPON_ON_ORDER"/>
       <xs:enumeration value="NO_APPLIED_PROMOTION_ON_ORDER"/>
+      <xs:enumeration value="PRODUCT_NOT_PRESENT"/>
+      <xs:enumeration value="LESS_ORDER_AMOUNT_OF_BRAND_PRODUCTS"/>
+      <xs:enumeration value="LESS_ORDER_AMOUNT_OF_CATEGORY_PRODUCTS"/>
     </xs:restriction>
   </xs:simpleType>
 

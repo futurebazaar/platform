@@ -99,9 +99,9 @@ public class PromotionManagerImplTest extends BaseTestCase{
 		assertEquals(0, new BigDecimal(120).compareTo(couponResponse.getDiscountValue()));
 		assertTrue((couponResponse.getPromoName()).equals("End to End Test Promotion 1"));
 		assertTrue(couponResponse.getPromoDescription().equals("end to end promo 1"));
-		assertTrue(couponResponse.getStatusMessage().equals(ApplyCouponResponseStatusEnum.TOTAL_MAX_AMOUNT_EXCEEDED.getMesage()));
+		assertTrue(couponResponse.getStatusMessage().equals(ApplyCouponResponseStatusEnum.TOTAL_MAX_AMOUNT_PER_USER_EXCEEDED.getMesage()));
 	}
-	
+
 	@Test
 	public void testCommitCoupon(){
 		

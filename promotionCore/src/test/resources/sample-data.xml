@@ -1010,7 +1010,7 @@
         </row>
         <row>
                         <value name="id">-3015</value>
-                        <value name="name">PRODUCT_DISCOUNT_RS_OFF</value>
+                        <value name="name">PRODUCT_DISCOUNTED_VALUE</value>
                         <value name="value">50</value>
                         <value name="promotion_id">-3004</value>
                         <value name="rule_id">-5</value>
