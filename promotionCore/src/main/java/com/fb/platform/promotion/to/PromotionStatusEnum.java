@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public enum PromotionStatusEnum implements Serializable {
 
-	SUCCESS("SUCCESS", "Nice, you coupon is applied. Happy savings!"),
+	SUCCESS("SUCCESS", "Nice, your coupon is applied. Happy savings!"),
 	INVALID_COUPON_CODE("INVALID_COUPON_CODE", "This is not a valid coupon. Try another one."),
 	INTERNAL_ERROR("INTERNAL_ERROR", "Oops, there seems to be a problem with our systems. Can you please try again?"),
 	ALREADY_APPLIED_COUPON_ON_ORDER("ALREADY_APPLIED_COUPON_ON_ORDER", "COUPON HAS ALREADY BEEN APPLIED ON THE ORDER"),

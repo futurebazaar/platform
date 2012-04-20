@@ -11,7 +11,7 @@ import java.io.Serializable;
  */
 public enum ApplyCouponResponseStatusEnum implements Serializable {
 
-	SUCCESS("SUCCESS", "Nice, you coupon is applied. Happy savings!"),
+	SUCCESS("SUCCESS", "Nice, your coupon is applied. Happy savings!"),
 	NO_SESSION("NO_SESSION", "INVALID SESSION, PLEASE APPLY AGAIN OR LOGIN AGAIN AND TRY"),
 	INVALID_COUPON_CODE("INVALID_COUPON_CODE", "This is not a valid coupon. Try another one."),
 	COUPON_CODE_EXPIRED("COUPON_CODE_EXPIRED", "You are too late in using this coupon. It has already expired."),
