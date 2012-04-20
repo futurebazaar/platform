@@ -18,6 +18,10 @@
     <bean id="userAdminService" class="com.fb.platform.user.manager.impl.UserAdminServiceImpl">
         <property name="userAdminDao" ref="userAdminDao"/>
     </bean>
+    <bean id="userAddressService" class="com.fb.platform.user.manager.impl.UserAddressServiceImpl">
+        <property name="userAdminDao" ref="userAdminDao"/>
+        <property name="userAddressDao" ref="userAddressDao"/>
+    </bean>
     
 	 <!-- =================================================================== -->
     <!-- Managers: For accessing Services                                        -->
@@ -30,11 +34,11 @@
     </bean>
     <bean id="userAdminManager" class="com.fb.platform.user.manager.impl.UserAdminManagerImpl">
     	<property name="userAdminService" ref="userAdminService"/>
-        <property name="userAdminDao" ref="userAdminDao"/>
         <property name="ssoMasterService" ref="ssoMasterService"></property>
         <property name="authenticationService" ref="authenticationService"></property>
     </bean>
     <bean id="userAddressManager" class="com.fb.platform.user.manager.impl.UserAddressManagerImpl">
-        <property name="userAddressDao" ref="userAddressDao"/>
+        <property name="userAddressService" ref="userAddressService"/>
+        <property name="authenticationService" ref="authenticationService"/>
     </bean>
 </beans>
