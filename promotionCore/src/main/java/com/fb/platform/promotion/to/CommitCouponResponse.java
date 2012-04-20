@@ -24,6 +24,7 @@ public class CommitCouponResponse implements Serializable {
 	}
 	public void setCommitCouponStatus(CommitCouponStatusEnum commitCouponStatus) {
 		this.commitCouponStatus = commitCouponStatus;
+		this.statusMessage = commitCouponStatus.getMesage();
 	}
 	public String getSessionToken() {
 		return sessionToken;
