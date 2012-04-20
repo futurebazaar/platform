@@ -9,3 +9,5 @@ ALTER TABLE promotions_scratchcard DROP COLUMN user_id;
 
 ALTER TABLE promotions_scratchcard DROP COLUMN used_date;
 
+
+DELETE FROM promotion_rule where id in (1,2,3,4);
