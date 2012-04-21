@@ -10,12 +10,14 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeComparator;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import com.fb.commons.ExpiredPromotionException;
 import com.fb.platform.promotion.dao.legacy.LegacyDao;
-import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.legacy.LegacyCouponOrder;
 import com.fb.platform.promotion.model.legacy.LegacyCouponUser;
 import com.fb.platform.promotion.model.legacy.LegacyPromotion;
@@ -110,6 +112,15 @@ public class LegacyDaoJdbcImpl implements LegacyDao {
 	@Override
 	public LegacyPromotion loadPromotion(int promotionId) {
 		LegacyPromotion legacyPromotion = jdbcTemplate.queryForObject(LOAD_PROMOTION_QUERY, new LegacyPromotionMapper(), promotionId);
+		if(legacyPromotion.getEndDate()!=null){
+			DateTime endDate = new DateTime(legacyPromotion.getEndDate());
+			DateTimeComparator dateComparator = DateTimeComparator.getDateOnlyInstance();
+			if (dateComparator.compare(endDate, null) < 0) {
+				//expired promotion
+				throw new ExpiredPromotionException("Promotion is expired so not migrating. Legacy promotion_id = " + promotionId);
+			}
+		
+		}
 		List<LegacyPromotionCoupon> coupons = loadCoupons(legacyPromotion);
 		legacyPromotion.setCoupons(coupons);
 		return legacyPromotion;

@@ -9,6 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fb.commons.ExpiredPromotionException;
 import com.fb.platform.promotion.dao.legacy.LegacyDao;
 import com.fb.platform.promotion.model.legacy.LegacyPromotion;
 import com.fb.platform.promotion.service.migration.MigrationManager;
@@ -42,7 +43,9 @@ public class MigrationManagerImpl implements MigrationManager {
 					LegacyPromotion legacyPromotion = legacyDao.loadPromotion(promotionId);
 					try {
 						migrationService.migrate(legacyPromotion);
-					} catch (Exception e) {
+					} catch (ExpiredPromotionException e) {
+						errorLog.error("Promotion is expired so not migrating. Legacy promotion_id = " + promotionId, e);
+					}catch (Exception e) {
 						errorLog.error("Error while migrating legacy promotions to new promotions.", e);
 					}
 				}
