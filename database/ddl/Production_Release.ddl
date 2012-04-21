@@ -12,7 +12,7 @@ CREATE TABLE sso_session
 	app_data VARCHAR(200),
 	UNIQUE(session_id),
 	PRIMARY KEY (id)
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE crypto_key
 (
@@ -22,7 +22,7 @@ CREATE TABLE crypto_key
 	cryptokey_next VARCHAR(200),
 	UNIQUE(cryptokey_current),
 	PRIMARY KEY (id)
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 -- Promotions and Coupons Related Tables
@@ -81,7 +81,6 @@ CREATE TABLE user_promotion_uses (
 	discount_amount DECIMAL(18,2),
         created_on datetime NOT NULL,
         last_modified_on datetime NOT NULL,
-	is_cancelled bool NOT NULL,
 	PRIMARY KEY(id),
 	UNIQUE(promotion_id, order_id, user_id),
 	CONSTRAINT user_promotion_uses_fk1 FOREIGN KEY (promotion_id) REFERENCES platform_promotion(id) ON DELETE CASCADE,
@@ -146,7 +145,6 @@ CREATE TABLE user_coupon_uses (
 	discount_amount DECIMAL(18,2),
         created_on datetime NOT NULL,
         last_modified_on datetime NOT NULL,
-	is_cancelled bool NOT NULL,
 	PRIMARY KEY(id),
 	UNIQUE(coupon_id,user_id,order_id),
 	CONSTRAINT user_coupon_uses_fk1 FOREIGN KEY (coupon_id) REFERENCES coupon(id) ON DELETE CASCADE,
