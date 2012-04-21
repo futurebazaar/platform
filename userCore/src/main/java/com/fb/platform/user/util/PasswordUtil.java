@@ -81,7 +81,6 @@ public class PasswordUtil {
 			
 			return (storedPasswordHash.equals(hash)); //step 6
 		} catch (Exception e) {
-			e.printStackTrace();
 			return false;
 		}
 	}

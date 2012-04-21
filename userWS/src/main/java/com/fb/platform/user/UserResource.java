@@ -64,10 +64,8 @@ public class UserResource {
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String getUser(String getUserXml) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("GET USER XML request: \n" + getUserXml);
-		}
-
+		
+		logger.debug("GET USER XML request: \n" + getUserXml);
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			GetUserRequest xmlGetUserReq = (GetUserRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(getUserXml)));
@@ -87,9 +85,8 @@ public class UserResource {
 			marsheller.marshal(xmlGetUserRes, outStringWriter);
 
 			String xmlResponse = outStringWriter.toString();
-			if (logger.isDebugEnabled()) {
-				logger.debug("Get USER XMl response :\n" + xmlGetUserRes);
-			}
+			
+			logger.info("Get USER XMl response :\n" + xmlGetUserRes);
 			return xmlResponse;
 
 		} catch (JAXBException e) {
@@ -103,10 +100,8 @@ public class UserResource {
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String addUser(String addUserXml) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("ADD USER XML request: \n" + addUserXml);
-		}
-
+		
+		logger.info("ADD USER XML request: \n" + addUserXml);
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			AddUserRequest xmlGetUserReq = (AddUserRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(addUserXml)));
@@ -116,7 +111,7 @@ public class UserResource {
 			try {
 				password = xmlGetUserReq.getPassword();
 			}catch (Exception ex){
-				logger.debug("Adding user without Password:: " + xmlGetUserReq.getUserName());
+				logger.info("Adding user without Password:: " + xmlGetUserReq.getUserName());
 			}
 			apiAddUserReq.setPassword(password);
 			com.fb.platform.user.manager.model.admin.AddUserResponse apiAddUserRes = userAdminManager.addUser(apiAddUserReq);
@@ -129,9 +124,8 @@ public class UserResource {
 			marsheller.marshal(xmlAddUserRes, outStringWriter);
 
 			String xmlResponse = outStringWriter.toString();
-			if (logger.isDebugEnabled()) {
-				logger.debug("Add USER XMl response :\n" + xmlAddUserRes);
-			}
+			
+			logger.info("Add USER XMl response :\n" + xmlAddUserRes);
 			return xmlResponse;
 		} catch (JAXBException e) {
 			logger.error("Error in the login call.", e);
@@ -143,10 +137,8 @@ public class UserResource {
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String updateUser(String updateUserXml) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("UPDATE USER XML request: \n" + updateUserXml);
-		}
-
+		
+		logger.info("UPDATE USER XML request: \n" + updateUserXml);
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			UpdateUserRequest xmlUpdateUserReq = (UpdateUserRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(updateUserXml)));
@@ -167,9 +159,8 @@ public class UserResource {
 			marsheller.marshal(xmlUpdateUserRes, outStringWriter);
 
 			String xmlResponse = outStringWriter.toString();
-			if (logger.isDebugEnabled()) {
-				logger.debug("Update USER XMl response :\n" + xmlUpdateUserRes);
-			}
+			
+			logger.info("Update USER XMl response :\n" + xmlUpdateUserRes);
 			return xmlResponse;
 		} catch (JAXBException e) {
 			logger.error("Error in the update call.", e);

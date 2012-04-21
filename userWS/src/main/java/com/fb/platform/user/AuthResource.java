@@ -72,10 +72,7 @@ public class AuthResource {
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String login(String loginXml) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("LoginXML request: \n" + loginXml);
-		}
-
+		logger.info("LoginXML request: \n" + loginXml);
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 
@@ -98,9 +95,7 @@ public class AuthResource {
 			marsheller.marshal(xmlLoginResp, outStringWriter);
 
 			String xmlResponse = outStringWriter.toString();
-			if (logger.isDebugEnabled()) {
-				logger.debug("LoginXML response :\n" + xmlResponse);
-			}
+			logger.info("LoginXML response :\n" + xmlResponse);
 			return xmlResponse;
 
 		} catch (JAXBException e) {
@@ -114,10 +109,7 @@ public class AuthResource {
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String logout(String logoutXml) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("LogoutXML request :\n" + logoutXml);
-		}
-
+		logger.info("LogoutXML request :\n" + logoutXml);
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 
@@ -136,9 +128,7 @@ public class AuthResource {
 			marsheller.marshal(xmlLogoutResp, outStringWriter);
 
 			String xmlResponse = outStringWriter.toString();
-			if (logger.isDebugEnabled()) {
-				logger.debug("LogoutXML response :\n" + xmlResponse);
-			}
+			logger.info("LogoutXML response :\n" + xmlResponse);
 			return xmlResponse;
 
 		} catch (JAXBException e) {
@@ -187,9 +177,7 @@ public class AuthResource {
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String keepAlive(String keepAliveXml){
-		if (logger.isDebugEnabled()) {
-			logger.debug("KeepAliveXml request :\n" + keepAliveXml);
-		}
+		logger.info("KeepAliveXml request :\n" + keepAliveXml);
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 
@@ -209,11 +197,8 @@ public class AuthResource {
 			marsheller.marshal(xmlKeepAliveResp, outStringWriter);
 
 			String xmlResponse = outStringWriter.toString();
-			if (logger.isDebugEnabled()) {
-				logger.debug("KeepAliveXML response :\n" + xmlResponse);
-			}
+			logger.info("KeepAliveXML response :\n" + xmlResponse);
 			return xmlResponse;
-
 		} catch (JAXBException e) {
 			logger.error("Error in the keep alive call.", e);
 			return "error"; //TODO return proper error response
