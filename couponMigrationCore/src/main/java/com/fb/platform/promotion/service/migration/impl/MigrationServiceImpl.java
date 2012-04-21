@@ -215,6 +215,8 @@ public class MigrationServiceImpl implements MigrationService {
 			UserCouponUsesEntry couponUse = new UserCouponUsesEntry();
 			if (legacyCouponOrder.getConfirmingTimeStamp() != null) {
 				couponUse.setCreatedDate(new DateTime(legacyCouponOrder.getConfirmingTimeStamp()));
+			} else {
+				couponUse.setCreatedDate(new DateTime());
 			}
 			couponUse.setDiscountAmount(new Money(legacyCouponOrder.getCouponDiscount()));
 			couponUse.setOrderId(legacyCouponOrder.getOrderId());
@@ -233,6 +235,8 @@ public class MigrationServiceImpl implements MigrationService {
 			UserPromotionUsesEntry promotionUse = new UserPromotionUsesEntry();
 			if (legacyCouponOrder.getConfirmingTimeStamp() != null) {
 				promotionUse.setCreatedDate(new DateTime(legacyCouponOrder.getConfirmingTimeStamp()));
+			} else {
+				promotionUse.setCreatedDate(new DateTime());
 			}
 			promotionUse.setDiscountAmount(new Money(legacyCouponOrder.getCouponDiscount()));
 			promotionUse.setOrderId(legacyCouponOrder.getOrderId());

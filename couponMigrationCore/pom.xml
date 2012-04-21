@@ -101,8 +101,10 @@
         <jdbc.artifactId>mysql-connector-java</jdbc.artifactId>
         <jdbc.version>5.0.5</jdbc.version>
         <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
-        <jdbc.url><![CDATA[jdbc:mysql://localhost/platform?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf-8]]></jdbc.url>
-        <jdbc.username>root</jdbc.username>
-        <jdbc.password>root</jdbc.password>
+         <jdbc.url><![CDATA[jdbc:mysql://localhost/platform?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf-8]]></jdbc.url>
+<!--    QA
+		<jdbc.url><![CDATA[jdbc:mysql://10.0.102.21/tinla?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf-8]]></jdbc.url> -->
+        <jdbc.username>apps3</jdbc.username>
+        <jdbc.password>apps3</jdbc.password>
 	</properties>
 </project>

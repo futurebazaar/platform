@@ -97,25 +97,41 @@ public class LegacyPromotion {
 		return startDate;
 	}
 	public void setStartDate(Timestamp startDate) {
-		this.startDate = startDate;
+		if(startDate == null) {
+			this.startDate = new Timestamp(System.currentTimeMillis());
+		} else {
+			this.startDate = startDate;
+		}
 	}
 	public Timestamp getEndDate() {
 		return endDate;
 	}
 	public void setEndDate(Timestamp endDate) {
-		this.endDate = endDate;
+		if(endDate == null) {
+			this.endDate = new Timestamp(System.currentTimeMillis());
+		} else {
+			this.endDate = endDate;
+		}
 	}
 	public Timestamp getCreatedOn() {
 		return createdOn;
 	}
 	public void setCreatedOn(Timestamp createdOn) {
-		this.createdOn = createdOn;
+		if(createdOn == null) {
+			this.createdOn = new Timestamp(System.currentTimeMillis());
+		} else {
+			this.createdOn = createdOn;
+		}
 	}
 	public Timestamp getLastModifedOn() {
 		return lastModifedOn;
 	}
 	public void setLastModifedOn(Timestamp lastModifedOn) {
-		this.lastModifedOn = lastModifedOn;
+		if(lastModifedOn == null) {
+			this.lastModifedOn = new Timestamp(System.currentTimeMillis());
+		} else {
+			this.lastModifedOn = lastModifedOn;
+		}
 	}
 	public String getPromotionType() {
 		return promotionType;
