@@ -4,6 +4,7 @@ public class VerifyUserEmailRequest {
 	private String sessionToken = null;
 	private int userId;
 	private String email = null;
+	private String verificationCode=null;
 	/**
 	 * @return the sessionToken
 	 */
@@ -39,6 +40,12 @@ public class VerifyUserEmailRequest {
 	 */
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public String getVerificationCode() {
+		return verificationCode;
+	}
+	public void setVerificationCode(String verificationCode) {
+		this.verificationCode = verificationCode;
 	}
 
 	

@@ -4,6 +4,7 @@ public class VerifyUserPhoneRequest {
 	private String sessionToken = null;
 	private int userId;
 	private String phone = null;
+	private String verificationCode =null;
 	/**
 	 * @return the sessionToken
 	 */
@@ -40,9 +41,10 @@ public class VerifyUserPhoneRequest {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	
-	
-	
-	
-
+	public String getVerificationCode() {
+		return verificationCode;
+	}
+	public void setVerificationCode(String verificationCode) {
+		this.verificationCode = verificationCode;
+	}
 }

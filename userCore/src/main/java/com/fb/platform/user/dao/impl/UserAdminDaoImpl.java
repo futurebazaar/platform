@@ -196,6 +196,14 @@ public class UserAdminDaoImpl implements UserAdminDao {
 			+ "set is_verified=1," 
 			+ "verified_on = ? "
 			+ "where user_id =? and phone = ?";
+	private static final String VERIFY_EMAIL_BY_USERID_EMAIL = "UPDTE users_email "
+			+ "set is_verified=1," 
+			+ "verified_on = ? "
+			+ "where user_id =? and email = ?";
+	
+	private static final String SELECT_VERIFICATION_CODE = "Select verification_code from";
+	private static final String SELECT_VERIFICATION_CODE_EMAIL = SELECT_VERIFICATION_CODE + " user_email where email=? and userid=?";
+	private static final String SELECT_VERIFICATION_CODE_PHONE = SELECT_VERIFICATION_CODE + " user_phone where phone=? and userid=?";
 
 	private JdbcTemplate jdbcTemplate;
 
@@ -655,14 +663,55 @@ public class UserAdminDaoImpl implements UserAdminDao {
 	@Override
 	public boolean verifyUserPhone(int userId, String phone) {
 		if (phone != null) {
-			Object[] objs = new Object[2];
-			objs[0] = userId;
-			objs[1] = phone;
+			Object[] objs = new Object[3];
+			objs[0] = new Date(new java.util.Date().getTime());
+			objs[1] = userId;
+			objs[2] = phone;
 			int update = jdbcTemplate.update(VERIFY_PHONE_BY_USERID_PHONE, objs);
 			if (update > 0) {
 				return true;
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public boolean verifyUserEmail(int userId, String emailId) {
+		if (emailId != null) {
+			Object[] objs = new Object[3];
+			objs[0] = new Date(new java.util.Date().getTime());
+			objs[1] = userId;
+			objs[2] = emailId;
+			int update = jdbcTemplate.update(VERIFY_EMAIL_BY_USERID_EMAIL, objs);
+			if (update > 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	@Override
+	public String getVerificationCodeEmail(int userid,String email){
+		if(email != null){
+			try{
+				String verificationCode = this.jdbcTemplate.queryForObject(SELECT_VERIFICATION_CODE_EMAIL,new Object[]{email,userid},String.class);
+				return verificationCode;
+			}catch (Exception e) {
+				return null;
+			}
+		}
+		return null;
+	}
+	@Override
+	public String getVerificationCodePhone(int userid,String phone){
+		if(phone != null){
+			try{
+				String verificationCode = this.jdbcTemplate.queryForObject(SELECT_VERIFICATION_CODE_PHONE,new Object[]{phone,userid},String.class);
+				return verificationCode;
+			}catch (Exception e) {
+				return null;
+			}
+		}
+		return null;
 	}
 }

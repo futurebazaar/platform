@@ -82,11 +82,12 @@ public interface UserAdminService {
 	 * Verify an Emailid for User.
 	 * @param userId
 	 * @param userEmail
+	 * @param verificationCode
 	 * @throws PlatformException When an unrecoverable error happens.
 	 * @return VerifyUserEmailStatusEnum
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS)
-	VerifyUserEmailStatusEnum verifyUserEmail(int userId,String userEmail) throws PlatformException;
+	VerifyUserEmailStatusEnum verifyUserEmail(int userId,String userEmail,String verificationCode) throws PlatformException;
 	
 	/**
 	 * Delete an Email ID for User.
@@ -125,12 +126,13 @@ public interface UserAdminService {
 	 * Verify an Phone for User.
 	 * @param userId
 	 * @param userPhone
+	 * @param verificationCode
 	 * @throws UserNotFoundException when user is absent.
 	 * @throws PlatformException When an unrecoverable error happens.
 	 * @return VerifyUserPhoneStatusEnum
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS)
-	VerifyUserPhoneStatusEnum verifyUserPhone(int userId,String userPhone) throws PlatformException;
+	VerifyUserPhoneStatusEnum verifyUserPhone(int userId,String userPhone,String verificationCode) throws PlatformException;
 	
 	/**
 	 * Delete an Phone for User.

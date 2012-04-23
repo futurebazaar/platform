@@ -203,9 +203,24 @@ public class UserAdminServiceImpl implements UserAdminService {
 	}
 	@Override
 	public VerifyUserEmailStatusEnum verifyUserEmail(int userId,
-			String userEmail) throws PlatformException {
-		// TODO Auto-generated method stub
-		return null;
+			String userEmail,String verificationCode) throws PlatformException {
+		try{
+			if (verificationCode == null){
+				return VerifyUserEmailStatusEnum.INVALID_VERIFICATION_CODE;
+			}
+			if(VerifyUserEmailStatusEnum.SUCCESS.equals(isValidCodeEmail(userId, userEmail, verificationCode))){
+				boolean success = userAdminDao.verifyUserEmail(userId, userEmail);		
+				if(success){				
+					return VerifyUserEmailStatusEnum.SUCCESS;
+				}else{
+					return VerifyUserEmailStatusEnum.NO_EMAIL;
+				}
+			}else{
+				return VerifyUserEmailStatusEnum.INVALID_VERIFICATION_CODE;
+			}
+		}catch(PlatformException e){
+			throw new PlatformException("Error Verifying email record"); 
+		}
 	}
 
 	@Override
@@ -299,13 +314,20 @@ public class UserAdminServiceImpl implements UserAdminService {
 
 	@Override
 	public VerifyUserPhoneStatusEnum verifyUserPhone(int userId,
-			String userPhone) throws PlatformException {
+			String userPhone,String verificationCode) throws PlatformException {
 		try{
-			boolean success = userAdminDao.verifyUserPhone(userId, userPhone);		
-			if(success){				
-				return VerifyUserPhoneStatusEnum.SUCCESS;
+			if(verificationCode == null){
+				return VerifyUserPhoneStatusEnum.INVALID_VERIFICATION_CODE;
+			}
+			if(VerifyUserPhoneStatusEnum.SUCCESS.equals(isValidCodePhone(userId, userPhone, verificationCode))){
+				boolean success = userAdminDao.verifyUserPhone(userId, userPhone);		
+				if(success){				
+					return VerifyUserPhoneStatusEnum.SUCCESS;
+				}else{
+					return VerifyUserPhoneStatusEnum.NO_PHONE;
+				}
 			}else{
-				return VerifyUserPhoneStatusEnum.NO_PHONE;
+				return VerifyUserPhoneStatusEnum.INVALID_VERIFICATION_CODE;
 			}
 		}catch(PlatformException e){
 			throw new PlatformException("Error Verifying phone record"); 
@@ -337,6 +359,22 @@ public class UserAdminServiceImpl implements UserAdminService {
 			return userBo;
 		} else {
 			throw new UserNotFoundException("User not found with userId : " + userId);
+		}
+	}
+	private VerifyUserEmailStatusEnum isValidCodeEmail(int userId,String email,String verificationCode){
+		String verificationCodeAct =  userAdminDao.getVerificationCodeEmail(userId, email);
+		if(verificationCodeAct != null){
+			return (verificationCodeAct.equals(verificationCode)) ? VerifyUserEmailStatusEnum.SUCCESS : VerifyUserEmailStatusEnum.INVALID_VERIFICATION_CODE;
+		}else{
+			return VerifyUserEmailStatusEnum.INVALID_VERIFICATION_CODE;
+		}
+	}
+	private VerifyUserPhoneStatusEnum isValidCodePhone(int userId,String phone,String verificationCode){
+		String verificationCodeAct =  userAdminDao.getVerificationCodePhone(userId, phone);
+		if(verificationCodeAct != null){
+			return (verificationCodeAct.equals(verificationCode)) ? VerifyUserPhoneStatusEnum.SUCCESS : VerifyUserPhoneStatusEnum.INVALID_VERIFICATION_CODE;
+		}else{
+			return VerifyUserPhoneStatusEnum.INVALID_VERIFICATION_CODE;
 		}
 	}
 }

@@ -211,6 +211,7 @@ public class UserPhoneResource {
 			apiVerifyUserPhoneReq.setSessionToken(xmlVerifyUserPhoneReq.getSessionToken());
 			apiVerifyUserPhoneReq.setUserId(xmlVerifyUserPhoneReq.getUserId());
 			apiVerifyUserPhoneReq.setPhone(xmlVerifyUserPhoneReq.getPhone());
+			apiVerifyUserPhoneReq.setVerificationCode(xmlVerifyUserPhoneReq.getVerificationCode());
 			
 			com.fb.platform.user.manager.model.admin.phone.VerifyUserPhoneResponse apiVerifyUserPhoneRes = userAdminManager.verifyUserPhone(apiVerifyUserPhoneReq);
 			
@@ -234,7 +235,4 @@ public class UserPhoneResource {
 			return "error"; //TODO return proper error response
 		}
 	}
-	
-	
-
 }

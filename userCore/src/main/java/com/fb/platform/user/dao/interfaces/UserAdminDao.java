@@ -39,4 +39,9 @@ public interface UserAdminDao {
 	public boolean deleteUserPhone(int userId,String phone);
 
 	public boolean verifyUserPhone(int userId, String phone);
+	public boolean verifyUserEmail(int userId,String emailId);
+
+	String getVerificationCodeEmail(int userid, String email);
+
+	String getVerificationCodePhone(int userid, String phone);
 }

@@ -323,7 +323,7 @@ public class UserAdminManagerImpl implements UserAdminManager {
 				return verifyUserEmailResponse;
 			}
 			verifyUserEmailResponse.setSessionToken(authentication.getToken());
-			verifyUserEmailResponse.setVerifyUserEmailStatus(userAdminService.verifyUserEmail(verifyUserEmailRequest.getUserId(), verifyUserEmailRequest.getEmail()));
+			verifyUserEmailResponse.setVerifyUserEmailStatus(userAdminService.verifyUserEmail(verifyUserEmailRequest.getUserId(), verifyUserEmailRequest.getEmail(),verifyUserEmailRequest.getVerificationCode()));
 			return verifyUserEmailResponse;
 		}catch (PlatformException pe) {
 			logger.error("Error while verify the user Phone: " + verifyUserEmailRequest.getUserId(), pe);
@@ -457,7 +457,7 @@ public class UserAdminManagerImpl implements UserAdminManager {
 				return verifyUserPhoneResponse;
 			}
 			verifyUserPhoneResponse.setSessionToken(authentication.getToken());
-			verifyUserPhoneResponse.setVerifyUserPhoneStatus(userAdminService.verifyUserPhone(verifyUserPhoneRequest.getUserId(), verifyUserPhoneRequest.getPhone()));
+			verifyUserPhoneResponse.setVerifyUserPhoneStatus(userAdminService.verifyUserPhone(verifyUserPhoneRequest.getUserId(), verifyUserPhoneRequest.getPhone(),verifyUserPhoneRequest.getVerificationCode()));
 			return verifyUserPhoneResponse;
 		}catch (PlatformException pe) {
 			logger.error("Error while verify the user Phone: " + verifyUserPhoneRequest.getUserId(), pe);

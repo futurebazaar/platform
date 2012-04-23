@@ -473,23 +473,35 @@
 		<column>user_id</column>
 		<column>phone</column>
         <column>type</column>
+        <column>is_verified</column>
+  		<column>verified_on</column>
+  		<column>verification_code</column>
         <row>
         	<value description="id">1</value>
         	<value description="user_id">1</value>
         	<value description="phone">9326164025</value>
             <value description="type">primary</value>
+            <value description="is_verified">0</value>
+            <null/>
+            <null/>
         </row>
         <row>
         	<value description="id">2</value>
         	<value description="user_id">2</value>
         	<value description="phone">9870587074</value>
             <value description="type">primary</value>
+            <value description="is_verified">0</value>
+            <null/>
+            <null/>
         </row>
         <row>
         	<value description="id">3</value>
         	<value description="user_id">6</value>
         	<value description="phone">8080532955</value>
             <value description="type">primary</value>
+            <value description="is_verified">0</value>
+            <null/>
+            <null/>
         </row>
 	</table>
 	<table name="users_email">
@@ -497,23 +509,35 @@
 		<column>email</column>
 		<column>type</column>
         <column>user_id</column>
+        <column>is_verified</column>
+  		<column>verified_on</column>
+  		<column>verification_code</column>
         <row>
         	<value description="id">1</value>
         	<value description="email">jasvipul@gmail.com</value>
         	<value description="type">primary</value>
             <value description="user_id">1</value>
+            <value description="is_verified">0</value>
+            <null/>
+            <null/>
         </row>
         <row>
         	<value description="id">2</value>
         	<value description="email">test@test.com</value>
         	<value description="type">primary</value>
             <value description="user_id">2</value>
+            <value description="is_verified">0</value>
+            <null/>
+            <null/>
         </row>
         <row>
         	<value description="id">3</value>
         	<value description="email">neha.garani@gmail.com</value>
         	<value description="type">primary</value>
             <value description="user_id">6</value>
+            <value description="is_verified">0</value>
+            <null/>
+            <null/>
         </row>
      
 	</table>

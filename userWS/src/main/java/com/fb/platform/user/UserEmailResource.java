@@ -32,10 +32,10 @@ import com.fb.platform.user.email._1_0.AddUserEmailStatus;
 import com.fb.platform.user.email._1_0.DeleteUserEmailRequest;
 import com.fb.platform.user.email._1_0.DeleteUserEmailResponse;
 import com.fb.platform.user.email._1_0.DeleteUserEmailStatus;
-
+import com.fb.platform.user.email._1_0.VerifyUserEmailRequest;
+import com.fb.platform.user.email._1_0.VerifyUserEmailResponse;
+import com.fb.platform.user.email._1_0.VerifyUserEmailStatus;
 import com.fb.platform.user.manager.interfaces.UserAdminManager;
-
-
 /**
  * @author kislaya
  *
@@ -193,6 +193,44 @@ public class UserEmailResource {
 			return "error"; //TODO return proper error response
 		}
 	}
-	
+	@POST
+	@Path("/verify")
+	@Consumes("application/xml")
+	@Produces("application/xml")	
+	public String verify(String verifyEmailXml) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Verify Email XML request: \n" + verifyEmailXml);
+		}
+		try{
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			VerifyUserEmailRequest xmlVerifyUserEmailReq = (VerifyUserEmailRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(verifyEmailXml)));
+			com.fb.platform.user.manager.model.admin.email.VerifyUserEmailRequest apiVerifyUserEmailReq = new com.fb.platform.user.manager.model.admin.email.VerifyUserEmailRequest();
+			apiVerifyUserEmailReq.setSessionToken(xmlVerifyUserEmailReq.getSessionToken());
+			apiVerifyUserEmailReq.setUserId(xmlVerifyUserEmailReq.getUserId());
+			apiVerifyUserEmailReq.setEmail(xmlVerifyUserEmailReq.getEmailId());
+			apiVerifyUserEmailReq.setVerificationCode(xmlVerifyUserEmailReq.getVerificationCode());
+			
+			com.fb.platform.user.manager.model.admin.email.VerifyUserEmailResponse apiVerifyUserEmailRes = userAdminManager.verifyUserEmail(apiVerifyUserEmailReq);
+			
+			VerifyUserEmailResponse xmlVerifyUserEmailRes = new VerifyUserEmailResponse();
+			xmlVerifyUserEmailRes.setVerifyUserEmailStatus(VerifyUserEmailStatus.fromValue(apiVerifyUserEmailRes.getVerifyUserEmailStatus().name()));
+			xmlVerifyUserEmailRes.setSessionToken(apiVerifyUserEmailRes.getSessionToken());
+			
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marsheller = context.createMarshaller();
+			marsheller.marshal(xmlVerifyUserEmailRes, outStringWriter);
+
+			String xmlResponse = outStringWriter.toString();
+			if (logger.isDebugEnabled()) {
+				logger.debug("Verify USER Email XMl response :\n" + xmlVerifyUserEmailRes);
+			}
+			return xmlResponse;
+			
+			
+		}catch (JAXBException e) {
+			logger.error("Error in the Verify email call.", e);
+			return "error"; //TODO return proper error response
+		}
+	}
 
 }

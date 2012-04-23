@@ -104,10 +104,12 @@
       <xs:sequence>
         <xs:element ref="userphone:userId"/>
         <xs:element ref="userphone:phone"/>
+        <xs:element ref="userphone:verificationCode"/>
         <xs:element ref="userphone:sessionToken"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="verificationCode" type="xs:string"/>
   <xs:element name="verifyUserPhoneResponse">
     <xs:complexType>
       <xs:sequence>
@@ -122,6 +124,7 @@
       <xs:enumeration value="SUCCESS"/>
       <xs:enumeration value="INVALID_USER"/>
       <xs:enumeration value="NO_PHONE"/>
+      <xs:enumeration value="INVALID_VERIFICATION_CODE"/>
       <xs:enumeration value="ALREADY_VERIFIED"/>
       <xs:enumeration value="ERROR_VERIFYING_PHONE"/>
       <xs:enumeration value="NO_SESSION"/>

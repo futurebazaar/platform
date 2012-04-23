@@ -104,10 +104,12 @@
       <xs:sequence>
         <xs:element ref="useremail:userId"/>
         <xs:element ref="useremail:emailId"/>
+        <xs:element ref="useremail:verificationCode"/>
         <xs:element ref="useremail:sessionToken"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="verificationCode" type="xs:string"/>
   <xs:element name="verifyUserEmailResponse">
     <xs:complexType>
       <xs:sequence>
@@ -121,6 +123,7 @@
     <xs:restriction base="xs:string">
       <xs:enumeration value="SUCCESS"/>
       <xs:enumeration value="INVALID_USER"/>
+      <xs:enumeration value="INVALID_VERIFICATION_CODE"/>
       <xs:enumeration value="NO_EMAIL_ID"/>
       <xs:enumeration value="ALREADY_VERIFIED"/>
       <xs:enumeration value="ERROR_VERIFYING_EMAIL"/>
