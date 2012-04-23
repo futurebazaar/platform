@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.fb.commons.test.BaseTestCase;
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.dao.RuleDao;
+import com.fb.platform.promotion.rule.impl.BuyWorthXGetYPercentOffOnZCategoryRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyWorthXGetYPercentOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyWorthXGetYRsOffOnZCategoryRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyWorthXGetYRsOffRuleImpl;
@@ -56,6 +57,18 @@ public class RuleImplTest extends BaseTestCase {
 		p5.setPrice(new BigDecimal(495));
 		p5.setCategories(Arrays.asList(6,7,8,9,10,11,12,13,14));
 		p5.setBrands(Arrays.asList(3));
+		
+		Product catMismatchProd = new Product();
+		catMismatchProd.setProductId(5);
+		catMismatchProd.setPrice(new BigDecimal(1500));
+		catMismatchProd.setCategories(Arrays.asList(101,102,103,104,105));
+		catMismatchProd.setBrands(Arrays.asList(3));
+		
+		Product brandMismatchProd = new Product();
+		brandMismatchProd.setProductId(5);
+		brandMismatchProd.setPrice(new BigDecimal(1500));
+		brandMismatchProd.setCategories(Arrays.asList(6,7,8,9,10,11,12,13,14));
+		brandMismatchProd.setBrands(Arrays.asList(51));
 
 		//Create OrderItems
 		OrderItem oItem1 = new OrderItem(); //30 Rs
@@ -91,6 +104,12 @@ public class RuleImplTest extends BaseTestCase {
 		OrderItem oItem11 = new OrderItem(); //495 Rs
 		oItem11.setQuantity(1);
 		oItem11.setProduct(p5);
+		OrderItem o5kItem = new OrderItem(); //5000 Rs
+		o5kItem.setQuantity(10);
+		o5kItem.setProduct(p4);
+		OrderItem catMismatchItem = new OrderItem(); //3000 Rs
+		catMismatchItem.setQuantity(2);
+		catMismatchItem.setProduct(catMismatchProd);
 
 		//Create OrderReq
 		OrderRequest orderReq1 = new OrderRequest(); //780 Rs
@@ -170,6 +189,21 @@ public class RuleImplTest extends BaseTestCase {
 		orderReq9.setOrderItems(oList9);
 		orderReq9.setClientId(5);
 		
+		OrderRequest catMisMatchOrderReq = new OrderRequest(); // 3000
+		catMisMatchOrderReq.setOrderId(10);
+		List<OrderItem> oList10 = new ArrayList<OrderItem>();
+		oList10.add(catMismatchItem);
+		catMisMatchOrderReq.setOrderItems(oList10);
+		catMisMatchOrderReq.setClientId(5);
+		
+		OrderRequest clientMisMatchOrderReq = new OrderRequest(); //
+		clientMisMatchOrderReq.setOrderId(10);
+		List<OrderItem> oList11 = new ArrayList<OrderItem>();
+		oList11.add(oItem8);
+		clientMisMatchOrderReq.setOrderItems(oList11);
+		clientMisMatchOrderReq.setClientId(17);
+		
+		
 		//BuyWorthXGetYRsOffRule
 		PromotionRule buyWorthXGetYRsOffRule = ruleDao.load(-7, -2);
 
@@ -209,7 +243,7 @@ public class RuleImplTest extends BaseTestCase {
 //		assertTrue(new Money(new BigDecimal(100)).eq(buyWorthXGetYPercentOffRule.execute(orderReq2)));
 		assertTrue(new Money(new BigDecimal(100)).eq(buyWorthXGetYPercentOffRule.execute(orderReq3)));
 		
-//		BuyWorthXGetYRsOffOnZCategoryRuleImpl
+		//BuyWorthXGetYRsOffOnZCategoryRuleImpl
 		PromotionRule buyWorthXGetYRsOffOnZCategoryRule = ruleDao.load(-9, -4);
 
 		assertNotNull(buyWorthXGetYRsOffOnZCategoryRule);
@@ -247,7 +281,27 @@ public class RuleImplTest extends BaseTestCase {
 		
 		assertTrue(new Money(new BigDecimal(445)).eq(buyXBrandGetYRsOffOnZProductRule.execute(orderReq5)));
 
+
+		//BuyWorthXGetYRsOffOnZCategoryRuleImpl
+		PromotionRule buyWorthXGetYPercentOffOnZCategoryRule = ruleDao.load(-3005, -6);
+
+		assertNotNull(buyWorthXGetYPercentOffOnZCategoryRule);
+		assertTrue(buyWorthXGetYPercentOffOnZCategoryRule instanceof BuyWorthXGetYPercentOffOnZCategoryRuleImpl);
 		
+		RuleConfiguration yPerentOffOnZCategoryRuleConfiguration = ruleDao.loadRuleConfiguration(-3005, -6);
+
+		assertNotNull(yPerentOffOnZCategoryRuleConfiguration);
+		assertEquals(5, yPerentOffOnZCategoryRuleConfiguration.getConfigItems().size());
+
+		assertEquals(buyWorthXGetYPercentOffOnZCategoryRule.isApplicable(orderReq1),PromotionStatusEnum.SUCCESS);
+		assertEquals(buyWorthXGetYPercentOffOnZCategoryRule.isApplicable(orderReq2),PromotionStatusEnum.LESS_ORDER_AMOUNT);
+		assertEquals(buyWorthXGetYPercentOffOnZCategoryRule.isApplicable(catMisMatchOrderReq),PromotionStatusEnum.CATEGORY_MISMATCH);
+		assertEquals(buyWorthXGetYPercentOffOnZCategoryRule.isApplicable(clientMisMatchOrderReq),PromotionStatusEnum.INVALID_CLIENT);
+		
+		assertEquals(new BigDecimal(780),orderReq1.getOrderValue());
+		
+		assertTrue(new Money(new BigDecimal(195)).eq(buyWorthXGetYPercentOffOnZCategoryRule.execute(orderReq1)));
+
 		
 	}
 
