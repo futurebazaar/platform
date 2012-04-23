@@ -6,6 +6,7 @@ package com.fb.platform.promotion.util;
 import com.fb.platform.promotion.rule.PromotionRule;
 import com.fb.platform.promotion.rule.RuleConfiguration;
 import com.fb.platform.promotion.rule.RulesEnum;
+import com.fb.platform.promotion.rule.impl.BuyWorthXGetYPercentOffOnZCategoryRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyXBrandGetYRsOffOnZProductRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyXGetYFreeRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyWorthXGetYRsOffRuleImpl;
@@ -45,6 +46,11 @@ public class PromotionRuleFactory {
 			
 		case BUY_X_BRAND_GET_Y_RS_OFF_ON_Z_PRODUCT:
 			rule = new BuyXBrandGetYRsOffOnZProductRuleImpl();
+			rule.init(ruleConfig);
+			break;
+			
+		case BUY_WORTH_X_GET_Y_PERCENT_OFF_ON_Z_CATEGORY:
+			rule = new BuyWorthXGetYPercentOffOnZCategoryRuleImpl();
 			rule.init(ruleConfig);
 			break;
 			

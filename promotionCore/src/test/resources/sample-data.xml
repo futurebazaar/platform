@@ -23,6 +23,10 @@
                         <value name="id">-5</value>
                         <value name="name">BUY_X_BRAND_GET_Y_RS_OFF_ON_Z_PRODUCT</value>
         </row>
+        <row>
+                        <value name="id">-6</value>
+                        <value name="name">BUY_WORTH_X_GET_Y_PERCENT_OFF_ON_Z_CATEGORY</value>
+        </row>
         </table>
         <table name="platform_promotion">
                 <column>id</column>
@@ -192,6 +196,18 @@
                         <value name="rule_id">-5</value>
         	</row>
         	<row>
+                        <value name="id">-3005</value>
+                        <null/>
+                        <null/>
+                        <value name="valid_from">2012-04-01 00:00:00</value>
+                        <value name="valid_till">2012-06-30 00:00:00</value>
+                        <value name="name">Category Based Percent Off promotion Testing</value>
+                        <value name="description">end to end promo 5</value>
+                        <value name="is_coupon">0</value>
+                        <value name="is_active">1</value>
+                        <value name="rule_id">-6</value>
+        	</row>
+        	<row>
                         <value name="id">-2000</value>
                         <null/>
                         <null/>
@@ -326,6 +342,14 @@
                         <value name="max_amount">5000</value>
                         <value name="max_uses_per_user">3</value>
                         <value name="max_amount_per_user">2500</value>
+                </row>
+                <row>
+                        <value name="id">-3005</value>
+                        <value name="promotion_id">-3005</value>
+                        <value name="max_uses">50</value>
+                        <value name="max_amount">15000</value>
+                        <value name="max_uses_per_user">5</value>
+                        <value name="max_amount_per_user">5000</value>
                 </row>
                 <row>
                         <value name="id">-2000</value>
@@ -466,6 +490,14 @@
                         <null/>
                         <value name="coupon_code">BRAND_BASED_PROMOTION</value>
                         <value name="promotion_id">-3004</value>
+                        <value name="coupon_type">GLOBAL</value>
+                </row>
+                <row>
+                        <value name="id">-3005</value>
+                        <null/>
+                        <null/>
+                        <value name="coupon_code">CATEGORY_PERCENT_OFF</value>
+                        <value name="promotion_id">-3005</value>
                         <value name="coupon_type">GLOBAL</value>
                 </row>
                 <row>
@@ -619,6 +651,14 @@
                         <value name="max_amount">2000</value>
                         <value name="max_uses_per_user">2</value>
                         <value name="max_amount_per_user">1000</value>
+                </row>
+                <row>
+                        <value name="id">-3005</value>
+                        <value name="coupon_id">-3005</value>
+                        <value name="max_uses">20</value>
+                        <value name="max_amount">10000</value>
+                        <value name="max_uses_per_user">3</value>
+                        <value name="max_amount_per_user">2000</value>
                 </row>
                 <row>
                         <value name="id">-2000</value>
@@ -1058,6 +1098,42 @@
                        <value name="rule_id">-2</value>
        </row>
         
+        <!-- Category Based Percent Off -->
+        <row>
+                        <value name="id">-3019</value>
+                        <value name="name">MIN_ORDER_VALUE</value>
+                        <value name="value">500</value>
+                        <value name="promotion_id">-3005</value>
+                        <value name="rule_id">-6</value>
+        </row>
+        <row>
+                        <value name="id">-3020</value>
+                        <value name="name">DISCOUNT_PERCENTAGE</value>
+                        <value name="value">25</value>
+                        <value name="promotion_id">-3005</value>
+                        <value name="rule_id">-6</value>
+        </row>
+        <row>
+                        <value name="id">-3021</value>
+                        <value name="name">MAX_DISCOUNT_CEIL_IN_VALUE</value>
+                        <value name="value">1000</value>
+                        <value name="promotion_id">-3005</value>
+                        <value name="rule_id">-6</value>
+        </row>
+        <row>
+                        <value name="id">-3022</value>
+                        <value name="name">CATEGORY_LIST</value>
+                        <value name="value">1,2,3,4,5,6,7,8,9,10,12,4,15,25</value>
+                        <value name="promotion_id">-3005</value>
+                        <value name="rule_id">-6</value>
+        </row>
+        <row>
+                        <value name="id">-3023</value>
+                        <value name="name">CLIENT_LIST</value>
+                        <value name="value">5</value>
+                        <value name="promotion_id">-3005</value>
+                        <value name="rule_id">-6</value>
+        </row>
         </table>
         <table name="platform_coupon_user">
                 <column>id</column>
