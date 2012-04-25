@@ -1,9 +1,14 @@
 package com.fb.platform.user;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -166,5 +171,28 @@ public class UserResource {
 			logger.error("Error in the update call.", e);
 			return "error"; //TODO return proper error response
 		}
+	}
+	@GET
+	@Path("/xsd")
+	@Produces("application/xml")
+	public String getXsd() {	
+		InputStream addressXsd = this.getClass().getClassLoader().getResourceAsStream("useradmin.xsd");
+		String addressXsdString = convertInputStreamToString(addressXsd);
+		return addressXsdString;
+	}
+	private String convertInputStreamToString(InputStream inputStream) {
+		BufferedReader bufReader = new BufferedReader(new InputStreamReader(inputStream));
+		StringBuilder sb = new StringBuilder();
+		try {
+			String line = bufReader.readLine();
+			while( line != null ) {
+				sb.append( line + "\n" );
+				line = bufReader.readLine();
+			}
+			inputStream.close();
+		} catch(IOException exception) {
+			logger.error("user.xsd loading error : " + exception.getMessage() );
+		}
+		return sb.toString();
 	}
 }
