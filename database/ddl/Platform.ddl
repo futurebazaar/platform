@@ -11,6 +11,7 @@ DROP TABLE IF EXISTS released_promotion;
 DROP TABLE IF EXISTS users_email;
 DROP TABLE IF EXISTS users_phone ;
 DROP TABLE IF EXISTS locations_address ;
+DROP TABLE IF EXISTS locations_addressbook ;
 DROP TABLE IF EXISTS locations_city;
 DROP TABLE IF EXISTS locations_state;
 DROP TABLE IF EXISTS locations_country;
@@ -151,6 +152,24 @@ CREATE TABLE locations_address (
   last_name varchar(200) NOT NULL,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB ;
+
+CREATE TABLE locations_addressbook (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  address longtext NOT NULL,
+  pincode varchar(10) NOT NULL,
+  city_id int(11) DEFAULT NULL,
+  state_id int(11) DEFAULT NULL,
+  country_id int(11) DEFAULT NULL,
+  profile_id int(11) DEFAULT NULL,
+  name varchar(200) NOT NULL,
+  phone varchar(100) NOT NULL,
+  email varchar(75) NOT NULL,
+  defaddress tinyint(1) NOT NULL,
+  first_name varchar(200) NOT NULL,
+  last_name varchar(200) NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB ;
+
 
 CREATE TABLE locations_city (
   id int(11) NOT NULL AUTO_INCREMENT,
