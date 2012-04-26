@@ -16,6 +16,7 @@ public class UserBo {
 	private String gender;
 	private String salutation;
 	private Date dateofbirth;
+	private boolean isActive;
 
 	/**
 	 * @return the userid
@@ -149,6 +150,13 @@ public class UserBo {
 	 */
 	public void setSalutation(String salutation) {
 		this.salutation = salutation;
+	}
+	
+	public boolean getIsActive() {
+		return isActive;
+	}
+	public void setIsActive(boolean isActive) {
+		this.isActive = isActive;
 	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -296,6 +304,8 @@ public class UserBo {
 		builder.append(salutation);
 		builder.append(", dateofbirth=");
 		builder.append(dateofbirth);
+		builder.append(", is_active=");
+		builder.append(isActive);
 		builder.append("]");
 		return builder.toString();
 	}

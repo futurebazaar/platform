@@ -7,6 +7,9 @@ package com.fb.platform.user.domain;
 public class UserAddressBo {
 
 	private long userid;
+	private String name = "";
+	private String phone = "";
+	private String email = "";
 	private long addressid;
 	private String addresstype;
 	private String address;
@@ -14,6 +17,8 @@ public class UserAddressBo {
 	private String city;
 	private String state;
 	private String country;
+	private String lastName = "";
+	private String firstName = "";
 	/**
 	 * @return the userid
 	 */
@@ -111,6 +116,67 @@ public class UserAddressBo {
 	public void setCountry(String country) {
 		this.country = country;
 	}
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+	/**
+	 * @return the phone
+	 */
+	public String getPhone() {
+		return phone;
+	}
+	/**
+	 * @param phone the phone to set
+	 */
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	/**
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
+	}
+	/**
+	 * @param email the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
+	/**
+	 * @return the lastName
+	 */
+	public String getLastName() {
+		return lastName;
+	}
+	/**
+	 * @param lastName the lastName to set
+	 */
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+	/**
+	 * @return the firstName
+	 */
+	public String getFirstName() {
+		return firstName;
+	}
+	/**
+	 * @param firstName the firstName to set
+	 */
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -124,6 +190,13 @@ public class UserAddressBo {
 				+ ((addresstype == null) ? 0 : addresstype.hashCode());
 		result = prime * result + ((city == null) ? 0 : city.hashCode());
 		result = prime * result + ((country == null) ? 0 : country.hashCode());
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result
+				+ ((firstName == null) ? 0 : firstName.hashCode());
+		result = prime * result
+				+ ((lastName == null) ? 0 : lastName.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
 		result = prime * result + ((pincode == null) ? 0 : pincode.hashCode());
 		result = prime * result + ((state == null) ? 0 : state.hashCode());
 		result = prime * result + (int) (userid ^ (userid >>> 32));
@@ -175,6 +248,41 @@ public class UserAddressBo {
 		} else if (!country.equals(other.country)) {
 			return false;
 		}
+		if (email == null) {
+			if (other.email != null) {
+				return false;
+			}
+		} else if (!email.equals(other.email)) {
+			return false;
+		}
+		if (firstName == null) {
+			if (other.firstName != null) {
+				return false;
+			}
+		} else if (!firstName.equals(other.firstName)) {
+			return false;
+		}
+		if (lastName == null) {
+			if (other.lastName != null) {
+				return false;
+			}
+		} else if (!lastName.equals(other.lastName)) {
+			return false;
+		}
+		if (name == null) {
+			if (other.name != null) {
+				return false;
+			}
+		} else if (!name.equals(other.name)) {
+			return false;
+		}
+		if (phone == null) {
+			if (other.phone != null) {
+				return false;
+			}
+		} else if (!phone.equals(other.phone)) {
+			return false;
+		}
 		if (pincode == null) {
 			if (other.pincode != null) {
 				return false;
@@ -202,6 +310,12 @@ public class UserAddressBo {
 		StringBuilder builder = new StringBuilder();
 		builder.append("UserAddressBo [userid=");
 		builder.append(userid);
+		builder.append(", name=");
+		builder.append(name);
+		builder.append(", phone=");
+		builder.append(phone);
+		builder.append(", email=");
+		builder.append(email);
 		builder.append(", addressid=");
 		builder.append(addressid);
 		builder.append(", addresstype=");
@@ -216,8 +330,13 @@ public class UserAddressBo {
 		builder.append(state);
 		builder.append(", country=");
 		builder.append(country);
+		builder.append(", lastName=");
+		builder.append(lastName);
+		builder.append(", firstName=");
+		builder.append(firstName);
 		builder.append("]");
 		return builder.toString();
 	}
+	
 
 }

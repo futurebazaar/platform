@@ -46,11 +46,15 @@ public class UserAddressServiceImpl implements UserAddressService {
 						UserAddress userAddress =  new UserAddress();
 						userAddress.setAddress(userAddressBo.getAddress());
 						userAddress.setAddressId(userAddressBo.getAddressid());
-						userAddress.setAddressType(userAddressBo.getAddresstype());
 						userAddress.setCity(userAddressBo.getCity());
 						userAddress.setState(userAddressBo.getState());
 						userAddress.setCountry(userAddressBo.getCountry());
 						userAddress.setPinCode(userAddressBo.getPincode());
+						userAddress.setName(userAddressBo.getName());
+						userAddress.setFirstName(userAddressBo.getFirstName());
+						userAddress.setLastName(userAddressBo.getLastName());
+						userAddress.setPhone(userAddressBo.getPhone());
+						userAddress.setEmail(userAddressBo.getEmail());
 						userAddressLst.add(userAddress);
 					}
 					return userAddressLst;
@@ -111,12 +115,16 @@ public class UserAddressServiceImpl implements UserAddressService {
 			}
 			UserAddressBo userAddressBo = new UserAddressBo();
 			userAddressBo.setAddress(userAddress.getAddress());
-			userAddressBo.setAddresstype(userAddress.getAddressType());
 			userAddressBo.setCity(userAddress.getCity());
 			userAddressBo.setState(userAddress.getState());
 			userAddressBo.setCountry(userAddress.getCountry());
 			userAddressBo.setPincode(userAddress.getPinCode());
 			userAddressBo.setUserid(userId);
+			userAddressBo.setName(userAddress.getName());
+			userAddressBo.setFirstName(userAddress.getFirstName());
+			userAddressBo.setLastName(userAddress.getLastName());
+			userAddressBo.setPhone(userAddress.getPhone());
+			userAddressBo.setEmail(userAddress.getEmail());
 			UserAddressBo userAddressBoAdd = userAddressDao.add(userAddressBo);
 			
 			UserAddress userAddressResp = new UserAddress();
@@ -166,7 +174,22 @@ public class UserAddressServiceImpl implements UserAddressService {
 			}
 			if(!StringUtils.isBlank(userAddress.getPinCode())){
 				userAddressBo.setPincode(userAddress.getPinCode());
-			}			
+			}
+			if(!StringUtils.isBlank(userAddress.getName())){
+				userAddressBo.setName(userAddress.getName());
+			}
+			if(!StringUtils.isBlank(userAddress.getFirstName())){
+				userAddressBo.setFirstName(userAddress.getFirstName());
+			}	
+			if(!StringUtils.isBlank(userAddress.getLastName())){
+				userAddressBo.setLastName(userAddress.getLastName());
+			}	
+			if(!StringUtils.isBlank(userAddress.getPhone())){
+				userAddressBo.setPhone(userAddress.getPhone());
+			}	
+			if(!StringUtils.isBlank(userAddress.getEmail())){
+				userAddressBo.setEmail(userAddress.getEmail());
+			}	
 			userAddressDao.update(userAddressBo);
 			return UpdateAddressStatusEnum.SUCCESS;			
 		}catch(PlatformException pe){

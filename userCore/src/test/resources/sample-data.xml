@@ -606,18 +606,14 @@
   			<value description="user_created">1</value>
   		</row>
   	</table>
-	<table name="locations_address">
+	<table name="locations_addressbook">
 	    <column>id</column>
+	    <column>address</column>
 		<column>pincode</column>
 		<column>city_id</column>
         <column>state_id</column>
         <column>country_id</column>
-        <column>type</column>
-        <column>address</column>
         <column>profile_id</column>
-        <column>account_id</column>
-        <column>created_on</column>
-        <column>uses</column>
         <column>name</column>
         <column>phone</column>
         <column>email</column>
@@ -628,16 +624,12 @@
         
         <row>
         	<value description="id">1</value>
+        	<value description="address">mydelivery test add</value>
         	<value description="pincode">400001</value>
 			<value description="city_id">1</value>
 	        <value description="state_id">1</value>
 	        <value description="country_id">1</value>
-	        <value description="type">delivery</value>
-	        <value description="address">mydelivery test add</value>
-	        <value description="profile_id">1</value>9870587074
-	        <null/>
-	        <value description="created_on">2010-08-27 02:11:44</value>
-	        <value description="uses">0</value>
+	        <value description="profile_id">1</value>
 	        <value description="name">Test</value>
 	        <value description="phone">9818376041</value>
 	        <value description="email">1</value>
@@ -647,16 +639,12 @@
         </row>
         <row>
         	<value description="id">2</value>
+        	<value description="address">my delivery test add</value>
         	<value description="pincode">110005</value>
 			<value description="city_id">2</value>
 	        <value description="state_id">2</value>
 	        <value description="country_id">1</value>
-	        <value description="type">delivery</value>
-	        <value description="address">my delivery test add</value>
 	        <value description="profile_id">2</value>
-	        <null/>
-	        <value description="created_on">2010-08-27 02:11:44</value>
-	        <value description="uses">0</value>
 	        <value description="name">Test 2</value>
 	        <value description="phone">9818376042</value>
 	        <value description="email">1</value>

@@ -27,7 +27,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.fb.commons.PlatformException;
-import com.fb.platform.user._1_0.UpdateUserStatus;
 import com.fb.platform.user.address._1_0.GetUserAddressRequest;
 import com.fb.platform.user.address._1_0.GetUserAddressResponse;
 import com.fb.platform.user.address._1_0.GetUserAddressStatus;
@@ -41,7 +40,7 @@ import com.fb.platform.user.address._1_0.DeleteUserAddressRequest;
 import com.fb.platform.user.address._1_0.DeleteUserAddressResponse;
 import com.fb.platform.user.address._1_0.DeleteUserAddressStatus;
 
-import com.fb.platform.user.address._1_0.UserAddresses;
+import com.fb.platform.user.address._1_0.UserAddress;
 import com.fb.platform.user.manager.interfaces.UserAddressManager;
 
 /**
@@ -75,9 +74,8 @@ public class UserAddressResource {
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String get(String getAddressXml) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Get Address XML request: \n" + getAddressXml);
-		}
+		
+		logger.info("Get Address XML request: \n" + getAddressXml);
 		try{
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			GetUserAddressRequest xmlGetUserAddressReq = (GetUserAddressRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(getAddressXml)));
@@ -91,33 +89,34 @@ public class UserAddressResource {
 			xmlGetUserAddressRes.setGetUserAddressStatus(GetUserAddressStatus.fromValue(apiGetUserAddressRes.getGetAddressStatus().name()));
 			xmlGetUserAddressRes.setSessionToken(apiGetUserAddressRes.getSessionToken());
 					
-			List<UserAddresses> userAddresslLst = new ArrayList<UserAddresses>();
+			List<UserAddress> userAddresslLst = new ArrayList<UserAddress>();
 			if(apiGetUserAddressRes.getUserAddress() != null){
 				for (com.fb.platform.user.manager.model.address.UserAddress apiUserAddress : apiGetUserAddressRes.getUserAddress()){
-					UserAddresses userAddress = new UserAddresses();
+					UserAddress userAddress = new UserAddress();
 					userAddress.setAddressId(apiUserAddress.getAddressId());
 					userAddress.setAddress(apiUserAddress.getAddress());
-					userAddress.setAddressType(apiUserAddress.getAddressType());
 					userAddress.setCity(apiUserAddress.getCity());
 					userAddress.setState(apiUserAddress.getState());
 					userAddress.setCountry(apiUserAddress.getCountry());
 					userAddress.setPincode(apiUserAddress.getPinCode());
+					userAddress.setName(apiUserAddress.getName());
+					userAddress.setFirstName(apiUserAddress.getFirstName());
+					userAddress.setLastName(apiUserAddress.getLastName());
+					userAddress.setPhone(apiUserAddress.getPhone());
+					userAddress.setEmail(apiUserAddress.getEmail());
 					userAddresslLst.add(userAddress);
 				}
 			}
-			xmlGetUserAddressRes.getUserAddresses().addAll(userAddresslLst);	
+			xmlGetUserAddressRes.getUserAddress().addAll(userAddresslLst);	
 			
 			StringWriter outStringWriter = new StringWriter();
 			Marshaller marsheller = context.createMarshaller();
 			marsheller.marshal(xmlGetUserAddressRes, outStringWriter);
 
 			String xmlResponse = outStringWriter.toString();
-			if (logger.isDebugEnabled()) {
-				logger.debug("Add GET USER Addresss XMl response :\n" + xmlGetUserAddressRes);
-			}
+			
+			logger.info("Add GET USER Addresss XMl response :\n" + xmlGetUserAddressRes);
 			return xmlResponse;
-			
-			
 		}catch (JAXBException e) {
 			logger.error("Error in the get address call.", e);
 			return "error"; //TODO return proper error response
@@ -128,9 +127,8 @@ public class UserAddressResource {
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String add(String addAddressXml) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Add Address XML request: \n" + addAddressXml);
-		}
+		
+		logger.info("Add Address XML request: \n" + addAddressXml);
 		try{
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			AddUserAddressRequest xmlAddUserAddressReq = (AddUserAddressRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(addAddressXml)));
@@ -139,12 +137,16 @@ public class UserAddressResource {
 			apiAddUserAddressReq.setUserId(xmlAddUserAddressReq.getUserId());
 			
 			com.fb.platform.user.manager.model.address.UserAddress apiUserAddress = new com.fb.platform.user.manager.model.address.UserAddress();
-			apiUserAddress.setAddress(xmlAddUserAddressReq.getUserAddresses().getAddress());
-			apiUserAddress.setCity(xmlAddUserAddressReq.getUserAddresses().getCity());
-			apiUserAddress.setCountry(xmlAddUserAddressReq.getUserAddresses().getCountry());
-			apiUserAddress.setState(xmlAddUserAddressReq.getUserAddresses().getState());
-			apiUserAddress.setPinCode(xmlAddUserAddressReq.getUserAddresses().getPincode());
-			apiUserAddress.setAddressType(xmlAddUserAddressReq.getUserAddresses().getAddressType());
+			apiUserAddress.setAddress(xmlAddUserAddressReq.getUserAddress().getAddress());
+			apiUserAddress.setCity(xmlAddUserAddressReq.getUserAddress().getCity());
+			apiUserAddress.setCountry(xmlAddUserAddressReq.getUserAddress().getCountry());
+			apiUserAddress.setState(xmlAddUserAddressReq.getUserAddress().getState());
+			apiUserAddress.setPinCode(xmlAddUserAddressReq.getUserAddress().getPincode());
+			apiUserAddress.setName(xmlAddUserAddressReq.getUserAddress().getName());
+			apiUserAddress.setFirstName(xmlAddUserAddressReq.getUserAddress().getFirstName());
+			apiUserAddress.setLastName(xmlAddUserAddressReq.getUserAddress().getLastName());
+			apiUserAddress.setEmail(xmlAddUserAddressReq.getUserAddress().getEmail());
+			apiUserAddress.setPhone(xmlAddUserAddressReq.getUserAddress().getPhone());
 			apiAddUserAddressReq.setUserAddress(apiUserAddress);
 			
 			com.fb.platform.user.manager.model.address.AddAddressResponse apiAddUserAddressRes = userAddressManager.addAddress(apiAddUserAddressReq);
@@ -157,14 +159,9 @@ public class UserAddressResource {
 			StringWriter outStringWriter = new StringWriter();
 			Marshaller marsheller = context.createMarshaller();
 			marsheller.marshal(xmlAddUserAddressRes, outStringWriter);
-
-			String xmlResponse = outStringWriter.toString();
-			if (logger.isDebugEnabled()) {
-				logger.debug("Add ADD USER Addresss XMl response :\n" + xmlAddUserAddressRes);
-			}
-			return xmlResponse;
-			
-			
+			String xmlResponse = outStringWriter.toString();			
+			logger.info("Add ADD USER Addresss XMl response :\n" + xmlAddUserAddressRes);
+			return xmlResponse;			
 		}catch (JAXBException e) {
 			logger.error("Error in the add address call.", e);
 			return "error"; //TODO return proper error response
@@ -175,9 +172,8 @@ public class UserAddressResource {
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String update(String updateAddressXml) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Update Address XML request: \n" + updateAddressXml);
-		}
+		
+		logger.info("Update Address XML request: \n" + updateAddressXml);
 		try{
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			UpdateUserAddressRequest xmlUpdateUserAddressReq = (UpdateUserAddressRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(updateAddressXml)));
@@ -186,13 +182,17 @@ public class UserAddressResource {
 			apiUpdateUserAddressReq.setUserId(xmlUpdateUserAddressReq.getUserId());
 			
 			com.fb.platform.user.manager.model.address.UserAddress apiUserAddress = new com.fb.platform.user.manager.model.address.UserAddress();
-			apiUserAddress.setAddressId(xmlUpdateUserAddressReq.getUserAddresses().getAddressId());
-			apiUserAddress.setAddress(xmlUpdateUserAddressReq.getUserAddresses().getAddress());
-			apiUserAddress.setCity(xmlUpdateUserAddressReq.getUserAddresses().getCity());
-			apiUserAddress.setCountry(xmlUpdateUserAddressReq.getUserAddresses().getCountry());
-			apiUserAddress.setState(xmlUpdateUserAddressReq.getUserAddresses().getState());
-			apiUserAddress.setPinCode(xmlUpdateUserAddressReq.getUserAddresses().getPincode());
-			apiUserAddress.setAddressType(xmlUpdateUserAddressReq.getUserAddresses().getAddressType());
+			apiUserAddress.setAddressId(xmlUpdateUserAddressReq.getUserAddress().getAddressId());
+			apiUserAddress.setAddress(xmlUpdateUserAddressReq.getUserAddress().getAddress());
+			apiUserAddress.setCity(xmlUpdateUserAddressReq.getUserAddress().getCity());
+			apiUserAddress.setCountry(xmlUpdateUserAddressReq.getUserAddress().getCountry());
+			apiUserAddress.setState(xmlUpdateUserAddressReq.getUserAddress().getState());
+			apiUserAddress.setPinCode(xmlUpdateUserAddressReq.getUserAddress().getPincode());
+			apiUserAddress.setName(xmlUpdateUserAddressReq.getUserAddress().getName());
+			apiUserAddress.setFirstName(xmlUpdateUserAddressReq.getUserAddress().getFirstName());
+			apiUserAddress.setLastName(xmlUpdateUserAddressReq.getUserAddress().getLastName());
+			apiUserAddress.setEmail(xmlUpdateUserAddressReq.getUserAddress().getEmail());
+			apiUserAddress.setPhone(xmlUpdateUserAddressReq.getUserAddress().getPhone());
 			apiUpdateUserAddressReq.setUserAddress(apiUserAddress);
 			
 			com.fb.platform.user.manager.model.address.UpdateAddressResponse apiUpdateUserAddressRes = userAddressManager.updateAddress(apiUpdateUserAddressReq);
@@ -204,14 +204,9 @@ public class UserAddressResource {
 			StringWriter outStringWriter = new StringWriter();
 			Marshaller marsheller = context.createMarshaller();
 			marsheller.marshal(xmlUpdateUserAddressRes, outStringWriter);
-
 			String xmlResponse = outStringWriter.toString();
-			if (logger.isDebugEnabled()) {
-				logger.debug("Update USER Addresss XMl response :\n" + xmlUpdateUserAddressRes);
-			}
-			return xmlResponse;
-			
-			
+			logger.info("Update USER Addresss XMl response :\n" + xmlUpdateUserAddressRes);
+			return xmlResponse;			
 		}catch (JAXBException e) {
 			logger.error("Error in the add address call.", e);
 			return "error"; //TODO return proper error response
@@ -222,9 +217,8 @@ public class UserAddressResource {
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String delete(String deleteAddressXml) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Delete Address XML request: \n" + deleteAddressXml);
-		}
+		
+		logger.info("Delete Address XML request: \n" + deleteAddressXml);
 		try{
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			DeleteUserAddressRequest xmlDeleteUserAddressReq = (DeleteUserAddressRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(deleteAddressXml)));
@@ -242,14 +236,9 @@ public class UserAddressResource {
 			StringWriter outStringWriter = new StringWriter();
 			Marshaller marsheller = context.createMarshaller();
 			marsheller.marshal(xmlDeleteUserAddressRes, outStringWriter);
-
 			String xmlResponse = outStringWriter.toString();
-			if (logger.isDebugEnabled()) {
-				logger.debug("Delete USER Addresss XMl response :\n" + xmlDeleteUserAddressRes);
-			}
-			return xmlResponse;
-			
-			
+			logger.info("Delete USER Addresss XMl response :\n" + xmlDeleteUserAddressRes);
+			return xmlResponse;			
 		}catch (JAXBException e) {
 			logger.error("Error in the delete address call.", e);
 			return "error"; //TODO return proper error response

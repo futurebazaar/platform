@@ -59,7 +59,8 @@ public class UserAdminDaoImpl implements UserAdminDao {
 			+ "up.email_notification, "
 			+ "up.sms_alert, "
 			+ "up.profession, "
-			+ "up.user_photo ";
+			+ "up.user_photo, "
+			+ "au.is_active";
 
 	private static final String SELECT_USER_BY_EMAIL_QUERY =
 			SELECT_USER_FIELDS
@@ -554,6 +555,7 @@ public class UserAdminDaoImpl implements UserAdminDao {
 			user.setDateofbirth(rs.getDate("date_of_birth"));
 			user.setPassword(rs.getString("password"));
 			user.setSalutation(rs.getString("salutation"));
+			user.setIsActive(rs.getBoolean("is_active"));
 			return user;
     	}
     }
