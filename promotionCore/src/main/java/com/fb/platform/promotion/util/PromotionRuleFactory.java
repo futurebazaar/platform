@@ -66,7 +66,7 @@ public class PromotionRuleFactory {
 			rule.init(ruleConfig);
 			break;
 			
-		case FIRST_PURCHASE_BUY_X_GET_Y_FREE:
+		case FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF:
 			rule = new FirstPurchaseBuyWorthXGetYRsOffRuleImpl();
 			((FirstPurchaseBuyWorthXGetYRsOffRuleImpl)rule).setOrderDao(orderDao);
 			rule.init(ruleConfig);
