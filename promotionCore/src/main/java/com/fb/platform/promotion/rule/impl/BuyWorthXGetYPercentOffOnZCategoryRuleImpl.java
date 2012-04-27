@@ -44,7 +44,7 @@ public class BuyWorthXGetYPercentOffOnZCategoryRuleImpl implements PromotionRule
 	}
 
 	@Override
-	public PromotionStatusEnum isApplicable(OrderRequest request) {
+	public PromotionStatusEnum isApplicable(OrderRequest request,int userId) {
 		if(log.isDebugEnabled()) {
 			log.debug("Checking if BuyWorthXGetYPercentOffOnZCategoryRuleImpl applies on order : " + request.getOrderId());
 		}

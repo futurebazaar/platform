@@ -95,6 +95,7 @@
       <xs:enumeration value="PRODUCT_NOT_PRESENT"/>
       <xs:enumeration value="LESS_ORDER_AMOUNT_OF_BRAND_PRODUCTS"/>
       <xs:enumeration value="LESS_ORDER_AMOUNT_OF_CATEGORY_PRODUCTS"/>
+      <xs:enumeration value="NOT_FIRST_PURCHASE"/>
     </xs:restriction>
   </xs:simpleType>
 

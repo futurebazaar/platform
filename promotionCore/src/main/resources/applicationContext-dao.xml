@@ -33,6 +33,9 @@
 	<bean id="scratchCardDao" class="com.fb.platform.promotion.dao.impl.ScratchCardDaoJdbcImpl">
 		<property name="jdbcTemplate" ref="jdbcTemplate"/>
 	</bean>
+	<bean id="orderDao" class="com.fb.platform.promotion.dao.impl.OrderDaoJdbcImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
     <!-- Add new DAOs here -->
 
 </beans>

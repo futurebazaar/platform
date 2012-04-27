@@ -24,8 +24,8 @@ public interface PromotionRule {
 	/**
 	 * @return true if the rule is applicable on the request
 	 */
-	public PromotionStatusEnum isApplicable(OrderRequest request);
-
+	public PromotionStatusEnum isApplicable(OrderRequest request,int userId);
+	
 	/**
 	 * Applies the rule on the request.
 	 * @param request
