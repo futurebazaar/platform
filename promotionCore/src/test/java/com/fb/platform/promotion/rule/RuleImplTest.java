@@ -320,7 +320,7 @@ public class RuleImplTest extends BaseTestCase {
 		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(orderReq2,userId),PromotionStatusEnum.LESS_ORDER_AMOUNT);
 		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(orderReq3,3),PromotionStatusEnum.SUCCESS);
 		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(orderReq3,4),PromotionStatusEnum.SUCCESS);
-		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(orderReq4,2),PromotionStatusEnum.SUCCESS);
+		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(orderReq4,2),PromotionStatusEnum.NOT_FIRST_PURCHASE);
 		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(orderReq4,5),PromotionStatusEnum.NOT_FIRST_PURCHASE);
 		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(clientMisMatchOrderReq,userId),PromotionStatusEnum.INVALID_CLIENT);
 		

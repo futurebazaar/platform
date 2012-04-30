@@ -22,14 +22,14 @@ public class OrderDaoJdbcImpl implements OrderDao{
 	
 	private static final String GET_USER_ORDER_COUNT = 
 			"SELECT " +
-			"	count(*) " +
+			"	count(1) " +
 			"FROM orders_order " +
 			"WHERE " +
 			"	user_id = ? " +
 			"	AND " +
 			"	support_state IS NOT NULL " +
 			"	AND " +
-			"	support_state NOT IN ('booked','cancelled','returned') " +
+			"	support_state NOT IN ('booked','cancelled') " +
 			"GROUP BY user_id";
 
 
