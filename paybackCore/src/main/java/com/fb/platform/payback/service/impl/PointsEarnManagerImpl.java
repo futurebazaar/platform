@@ -1,21 +1,14 @@
 package com.fb.platform.payback.service.impl;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.Properties;
 
 import org.joda.time.DateTime;
 
-import com.fb.commons.PlatformException;
-import com.fb.commons.util.SFTPConnector;
-import com.fb.platform.payback.model.PointsItems;
 import com.fb.platform.payback.service.PointsEarnManager;
 import com.fb.platform.payback.service.PointsEarnService;
 import com.fb.platform.payback.service.PointsService;
 import com.fb.platform.payback.util.EarnActionCodesEnum;
-import com.fb.platform.payback.util.PartnerMerchantIdEnum;
 import com.fb.platform.payback.util.PointsUtil;
 
 public class PointsEarnManagerImpl implements PointsEarnManager{
@@ -37,17 +30,34 @@ public class PointsEarnManagerImpl implements PointsEarnManager{
 	}
 
 	@Override
-	public int putEarnData() {
-		for (EarnActionCodesEnum txnActionCode : EarnActionCodesEnum.values()){
-			for (PartnerMerchantIdEnum partnerMerchantId : PartnerMerchantIdEnum.values()){
-				String[] partnerIds = partnerMerchantId.toString().split(",");
+	public int putEarnDataOnSftp() {
+		try {
+			Properties props = pointsUtil.getProperties("points.properties");
+			String[] clients =  props.getProperty("CLIENTS").split(",");
+			for(String client : clients){
+				String[] partnerIds = props.getProperty(client + "_IDS").split(",");
 				String merchantId = partnerIds[0];
-				pointsEarnService.postEarnData(txnActionCode.name(), merchantId);
-				pointsService.sendMail(txnActionCode.name(), merchantId);
-				
+				for (EarnActionCodesEnum txnActionCode : EarnActionCodesEnum.values()){
+					pointsEarnService.postEarnData(txnActionCode.name(), merchantId);
+					pointsService.sendMail(txnActionCode.name(), merchantId);
+					
+				}
 			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+
 		return 0;
 	}
 	
+	public void storeEarnData(){
+		DateTime dateTime = new DateTime();
+		String day = dateTime.dayOfWeek().getAsText();	
+		if (day.equals("Friday")){
+			//PointsFactor.Client.Day.
+		}
+		
+	}
 }

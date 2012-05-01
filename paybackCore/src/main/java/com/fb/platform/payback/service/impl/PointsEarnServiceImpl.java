@@ -2,6 +2,7 @@ package com.fb.platform.payback.service.impl;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Properties;
@@ -139,5 +140,6 @@ public class PointsEarnServiceImpl implements PointsEarnService{
 		}
 		return sequenceNumber;
 	}
+	
 
 }

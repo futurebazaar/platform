@@ -2,6 +2,7 @@ package com.fb.platform.payback.service.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Properties;
 
 import javax.mail.MessagingException;
@@ -25,8 +26,8 @@ public class PointsServiceImpl implements PointsService{
 	public void setPointsUtil(PointsUtil pointsUtil){
 		this.pointsUtil = pointsUtil;
 	}
-
-
+	
+	
 	@Override
 	public void sendMail(String txnActionCode, String merchantId) {
 		try{
@@ -97,6 +98,5 @@ public class PointsServiceImpl implements PointsService{
 
 		
 	}
-
 
 }

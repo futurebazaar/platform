@@ -13,7 +13,7 @@ import com.fb.platform.payback.service.PointsBurnManager;
 import com.fb.platform.payback.service.PointsBurnService;
 import com.fb.platform.payback.service.PointsService;
 import com.fb.platform.payback.to.StoreBurnPointsRequest;
-import com.fb.platform.payback.util.PartnerMerchantIdEnum;
+import com.fb.platform.payback.util.EarnActionCodesEnum;
 import com.fb.platform.payback.util.PointsUtil;
 
 public class PointsBurnManagerImpl implements PointsBurnManager{
@@ -36,51 +36,20 @@ public class PointsBurnManagerImpl implements PointsBurnManager{
 
 	@Override
 	public void mailBurnData() {
-		String settlementDate = pointsUtil.getPreviousDayDate();;
-		String header = "Transaction ID, Transaction Date, Merchant ID, Points, Reason";
-		String fileBody = header + "\n";
-		String txnActionCode = "BURN_REVERSAL";
-		for(PartnerMerchantIdEnum partnerMerchantId : PartnerMerchantIdEnum.values()){
-			String[] partnerIds = partnerMerchantId.toString().split(",");
-			String merchantId = partnerIds[0];
-			Collection<PointsHeader> burnList = pointsBurnService.loadBurnData(txnActionCode, settlementDate, merchantId);
-			Iterator<PointsHeader> burnIterator = burnList.iterator();
-			while(burnIterator.hasNext()){
-				PointsHeader burnValues = burnIterator.next();
-				String transactionID = burnValues.getTransactionId();
-				String transactionDate = burnValues.getTxnDate();
-				String points = String.valueOf(burnValues.getTxnPoints());
-				String reason = burnValues.getReason();
-				
-				fileBody += transactionID + ", " + transactionDate + ", " + merchantId + ", " +
-						points + ", " + reason + "\n";
-				System.out.println(fileBody);
-				
-			}
-			if (fileBody != null && !fileBody.equals("")){
-					
-				try{
-					Properties props = pointsUtil.getProperties("payback.properties");					
-					String host = props.getProperty("mailHost");
-					int port = Integer.parseInt(props.getProperty("mailPort"));
-					String username = props.getProperty("mailUsername");
-					String password = props.getProperty("mailPassword");
-					MailSender mailSender = new MailSender(host, port, username, password);
-					mailSender.setFrom(props.getProperty("burnFROM"));
-					mailSender.setTO(props.getProperty("burnTO"));
-					mailSender.setCC(props.getProperty("burnCC"));
-					mailSender.setFileContent(fileBody, "BurnReversal_" + settlementDate + ".csv");
-					mailSender.sendMail();
-					//pointsService.setStatusDone(txnActionCode, settlementDate, merchantId);
-				}catch(IOException ioException){
-					ioException.printStackTrace();
-				} catch (MessagingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+		try {
+			Properties props = pointsUtil.getProperties("points.properties");
+			String[] clients =  props.getProperty("CLIENTS").split(",");
+			for(String client : clients){
+				String[] partnerIds = props.getProperty(client + "_IDS").split(",");
+				String merchantId = partnerIds[0];
+				for (EarnActionCodesEnum txnActionCode : EarnActionCodesEnum.values()){
+					pointsBurnService.mailBurnData(txnActionCode.name(), merchantId);
 				}
 			}
-
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+		
 	}
 	
 	public int storeBurnPoints(StoreBurnPointsRequest request){

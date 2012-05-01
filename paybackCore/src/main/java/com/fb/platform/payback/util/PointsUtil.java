@@ -2,7 +2,9 @@ package com.fb.platform.payback.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.Properties;
+import java.util.StringTokenizer;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -33,21 +35,31 @@ public class PointsUtil {
 		return props;
 	}
 	
-
-	/*private void setProperty(String key, String value) throws FileNotFoundException, IOException, URISyntaxException {
-		ClassLoader loader = ClassLoader.getSystemClassLoader();
-		URL url = loader.getResource("payback.properties");
-		InputStream inStream = url.openStream();
-		Properties props = new Properties();
-		props.load(inStream);
-		FileOutputStream fos = new FileOutputStream(new File(url.toURI()));
-		props.setProperty(key, value);
-		props.store(fos,null);
-		fos.flush();
-		fos.close();
-		inStream.close();
-	}*/
-
-
+	public int getEarnPoints(BigDecimal amount, DateTime datetime, String clientName, String code){
+		try {
+			Properties props = getProperties("points.properties");
+			String day = datetime.dayOfWeek().getAsText();
+			BigDecimal earnRatio = new BigDecimal(props.getProperty(clientName.toUpperCase() + "_" + code + "_POINTS"));
+			String earnFactorMap = props.getProperty(clientName.toUpperCase() + "_" + code +"_FACTOR");
+			//String [] earnFactorList = earnFactorMap.split(";");
+			StringTokenizer earnFactorIterator = new StringTokenizer(earnFactorMap, ",");
+			int earnFactor = Integer.parseInt(earnFactorIterator.nextToken());
+			while(earnFactorIterator.hasMoreTokens()){
+				String dayFactorMap = earnFactorIterator.nextToken();
+				String[] dayFactorList = dayFactorMap.split(",");
+				if (day.equals(dayFactorList[0]) && dayFactorList[1] != null && !dayFactorList[1].equals("")){
+					earnFactor = earnFactor * Integer.parseInt(dayFactorList[1]);
+					break;
+				}			
+			}
+			earnRatio = earnRatio.multiply(new BigDecimal(earnFactor));
+			BigDecimal txnPoints = amount.multiply(earnRatio);
+			return txnPoints.ROUND_HALF_EVEN;
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
 
 }

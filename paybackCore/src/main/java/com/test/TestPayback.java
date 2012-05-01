@@ -78,11 +78,12 @@ public class TestPayback {
 
 		ApplicationContext orderServiceContext = new ClassPathXmlApplicationContext(serviceResources);
 		Object manager = orderServiceContext.getBean("pointsEarnManager");
+		//((PointsEarnManagerImpl) manager).storeEarnData();
 		//int manager1 = ((PointsManagerImpl) manager).mailBurnData();
-		int earnManager = ((PointsEarnManagerImpl) manager).putEarnData();
+		//int earnManager = ((PointsEarnManagerImpl) manager).putEarnData();
 		
 		Object burnManager = orderServiceContext.getBean("pointsBurnManager");
-		((PointsBurnManagerImpl) burnManager).mailBurnData();
+		//((PointsBurnManagerImpl) burnManager).mailBurnData();
 		// SFTP put
 		/*try {
 			upload("/home/anubhav/Documents/a.txt");
@@ -92,6 +93,8 @@ public class TestPayback {
 		}*/
 		
 		//sendMail();
+		
+		System.out.println(Integer.parseInt("2"));
 
 	}
 	
