@@ -32,7 +32,7 @@ public class BuyXGetYFreeRuleImpl implements PromotionRule, Serializable{
 	}
 
 	@Override
-	public PromotionStatusEnum isApplicable(OrderRequest request,int userId) {
+	public PromotionStatusEnum isApplicable(OrderRequest request,int userId,boolean isCouponCommitted) {
 		if(log.isDebugEnabled()) {
 			log.debug("Checking if BuyXGetYFreeRuleImpl applies on order : " + request.getOrderId());
 		}

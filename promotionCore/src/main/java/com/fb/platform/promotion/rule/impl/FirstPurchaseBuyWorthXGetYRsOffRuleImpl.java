@@ -30,7 +30,7 @@ import com.fb.platform.promotion.util.StringToIntegerList;
  */
 public class FirstPurchaseBuyWorthXGetYRsOffRuleImpl  implements PromotionRule, Serializable {
 
-	private static transient Log log = LogFactory.getLog(BuyWorthXGetYRsOffRuleImpl.class);
+	private static transient Log log = LogFactory.getLog(FirstPurchaseBuyWorthXGetYRsOffRuleImpl.class);
 	private Money minOrderValue;
 	private Money fixedRsOff;
 	private List<Integer> clientList;
@@ -54,9 +54,9 @@ public class FirstPurchaseBuyWorthXGetYRsOffRuleImpl  implements PromotionRule, 
 	}
 
 	@Override
-	public PromotionStatusEnum isApplicable(OrderRequest request,int userId) {
+	public PromotionStatusEnum isApplicable(OrderRequest request,int userId,boolean isCouponCommitted) {
 		if(log.isDebugEnabled()) {
-			log.debug("Checking if BuyWorthXGetYRsOffRuleImpl applies on order : " + request.getOrderId());
+			log.debug("Checking if FirstPurchaseBuyWorthXGetYRsOffRuleImpl applies on order : " + request.getOrderId());
 		}
 		ApplicableResponse ar = new ApplicableResponse();
 		Money orderValue = new Money(request.getOrderValue());
@@ -69,17 +69,18 @@ public class FirstPurchaseBuyWorthXGetYRsOffRuleImpl  implements PromotionRule, 
 		if(orderValue.lt(minOrderValue)){
 			return PromotionStatusEnum.LESS_ORDER_AMOUNT;
 		}
-		if(!orderDao.isUserFirstOrder(userId)){
-			return PromotionStatusEnum.NOT_FIRST_PURCHASE;
+		if(!isCouponCommitted){
+			if(!orderDao.isUserFirstOrder(userId)){
+				return PromotionStatusEnum.NOT_FIRST_PURCHASE;
+			}
 		}
 		return PromotionStatusEnum.SUCCESS;
 	}
 	
-	
 	@Override
 	public Money execute(OrderRequest request) {
 		if(log.isDebugEnabled()) {
-			log.debug("Executing BuyWorthXGetYRsOffRuleImpl on order : " + request.getOrderId());
+			log.debug("Executing FirstPurchaseBuyWorthXGetYRsOffRuleImpl on order : " + request.getOrderId());
 		}
 		return fixedRsOff;
 	}

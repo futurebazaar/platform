@@ -49,7 +49,7 @@ public class BuyXBrandGetYRsOffOnZProductRuleImpl implements PromotionRule, Seri
 	}
 
 	@Override
-	public PromotionStatusEnum isApplicable(OrderRequest request,int userId) {
+	public PromotionStatusEnum isApplicable(OrderRequest request,int userId,boolean isCouponCommitted) {
 		if(log.isDebugEnabled()) {
 			log.debug("Checking if BuyXBrandGetYRsOffOnZProductRuleImpl applies on order : " + request.getOrderId());
 		}
