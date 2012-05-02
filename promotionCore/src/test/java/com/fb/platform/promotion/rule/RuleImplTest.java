@@ -314,15 +314,16 @@ public class RuleImplTest extends BaseTestCase {
 		RuleConfiguration firstPurchaseBuyWorthXGetYRsOffRuleConfig = ruleDao.loadRuleConfiguration(-3007, -7);
 
 		assertNotNull(firstPurchaseBuyWorthXGetYRsOffRuleConfig);
-		assertEquals(3, firstPurchaseBuyWorthXGetYRsOffRuleConfig.getConfigItems().size());
+		assertEquals(4, firstPurchaseBuyWorthXGetYRsOffRuleConfig.getConfigItems().size());
 
 		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(orderReq1,1),PromotionStatusEnum.NOT_FIRST_PURCHASE);
-		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(orderReq2,userId),PromotionStatusEnum.LESS_ORDER_AMOUNT);
+		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(orderReq2,3),PromotionStatusEnum.LESS_ORDER_AMOUNT);
+		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(catMisMatchOrderReq,3),PromotionStatusEnum.CATEGORY_MISMATCH);
 		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(orderReq3,3),PromotionStatusEnum.SUCCESS);
 		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(orderReq3,4),PromotionStatusEnum.SUCCESS);
 		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(orderReq4,2),PromotionStatusEnum.NOT_FIRST_PURCHASE);
 		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(orderReq4,5),PromotionStatusEnum.NOT_FIRST_PURCHASE);
-		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(clientMisMatchOrderReq,userId),PromotionStatusEnum.INVALID_CLIENT);
+		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(clientMisMatchOrderReq,3),PromotionStatusEnum.INVALID_CLIENT);
 		
 		assertTrue(new Money(new BigDecimal(300)).eq(buyWorthXGetYRsOffRule.execute(orderReq1)));
 		assertTrue(new Money(new BigDecimal(300)).eq(buyWorthXGetYRsOffRule.execute(orderReq3)));

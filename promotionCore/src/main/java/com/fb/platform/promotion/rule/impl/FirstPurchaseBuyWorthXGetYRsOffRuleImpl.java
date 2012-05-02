@@ -34,6 +34,7 @@ public class FirstPurchaseBuyWorthXGetYRsOffRuleImpl  implements PromotionRule, 
 	private Money minOrderValue;
 	private Money fixedRsOff;
 	private List<Integer> clientList;
+	private List<Integer> categories;
 	
 	private OrderDao orderDao = null;
 	
@@ -45,6 +46,8 @@ public class FirstPurchaseBuyWorthXGetYRsOffRuleImpl  implements PromotionRule, 
 	public void init(RuleConfiguration ruleConfig) {
 		minOrderValue = new Money(BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigConstants.MIN_ORDER_VALUE))));
 		fixedRsOff = new Money (BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigConstants.FIXED_DISCOUNT_RS_OFF))));
+		StrTokenizer strTokCategories = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigConstants.CATEGORY_LIST),",");
+		categories = StringToIntegerList.convert((List<String>)strTokCategories.getTokenList());
 		StrTokenizer strTokClients = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigConstants.CLIENT_LIST),",");
 		clientList = StringToIntegerList.convert((List<String>)strTokClients.getTokenList());
 		log.info("minOrderValue : " + minOrderValue.toString() + ", fixedRsOff : " + fixedRsOff.toString());
@@ -59,6 +62,9 @@ public class FirstPurchaseBuyWorthXGetYRsOffRuleImpl  implements PromotionRule, 
 		Money orderValue = new Money(request.getOrderValue());
 		if(!request.isValidClient(clientList)){
 			return PromotionStatusEnum.INVALID_CLIENT;
+		}
+		if(!request.isAllProductsInCategory(categories)){
+			return PromotionStatusEnum.CATEGORY_MISMATCH;
 		}
 		if(orderValue.lt(minOrderValue)){
 			return PromotionStatusEnum.LESS_ORDER_AMOUNT;
