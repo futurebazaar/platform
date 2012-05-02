@@ -151,7 +151,7 @@ public class PromotionServiceImpl implements PromotionService {
 		}
 		
 		//check if the promotion is applicable on this request.
-		PromotionStatusEnum promotionStatusEnum = promotion.isApplicable(orderRequest,userId);
+		PromotionStatusEnum promotionStatusEnum = promotion.isApplicable(orderRequest,userId,isCouponCommitted);
 		if (PromotionStatusEnum.SUCCESS.compareTo(promotionStatusEnum) !=0) {
 			logger.warn("Coupon code used when not applicable. Coupon code : " + coupon.getCode());
 			return promotionStatusEnum;
