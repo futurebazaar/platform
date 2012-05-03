@@ -373,13 +373,13 @@ public class CouponResource {
 		return apiProduct;
 	}
 	
-	private DateTime convertToDateTime(String inputDateTime){
+	private DateTime convertToDateTime(String inputDate){
 		DateTime convertedDateTime = null;
 		try {
-			DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
-			convertedDateTime = fmt.parseDateTime(inputDateTime);
+			DateTimeFormatter fmt = ISODateTimeFormat.date();
+			convertedDateTime = fmt.parseDateTime(inputDate);
 		} catch (Exception e) {
-			logger.error("Error in converting input date-time field into DateTime object while parsing. Input Date-time receieved in request is - "+inputDateTime);
+			logger.error("Error in converting input date-time field into DateTime object while parsing. Input Date-time receieved in request is - "+inputDate);
 		}
 		return convertedDateTime;
 	}
