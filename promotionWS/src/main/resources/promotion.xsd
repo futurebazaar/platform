@@ -7,6 +7,7 @@
         <xs:element ref="promotion:orderRequest"/>
         <xs:element ref="promotion:sessionToken"/>
         <xs:element ref="promotion:couponCommitted"/>
+        <xs:element ref="promotion:orderBookingDate"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -48,6 +49,7 @@
   <xs:element name="clientId" type="xs:int"/>
   <xs:element name="sessionToken" type="xs:string"/>
   <xs:element name="price" type="xs:decimal"/>
+  <xs:element name="orderBookingDate" type="xs:string"/>
 
   <xs:element name="applyCouponResponse">
     <xs:complexType>
@@ -106,6 +108,7 @@
         <xs:element ref="promotion:couponCode"/>
         <xs:element ref="promotion:discountValue"/>
         <xs:element ref="promotion:sessionToken"/>
+        <xs:element ref="promotion:orderBookingDate"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>

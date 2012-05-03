@@ -8,6 +8,8 @@ import java.math.BigDecimal;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.PlatformException;
@@ -15,6 +17,7 @@ import com.fb.commons.to.Money;
 import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
 import com.fb.platform.promotion.model.Promotion;
+import com.fb.platform.promotion.model.PromotionDates;
 import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.scratchCard.ScratchCard;
 import com.fb.platform.promotion.service.CouponAlreadyAssignedToUserException;
@@ -94,6 +97,10 @@ public class PromotionManagerImpl implements PromotionManager {
 			coupon = promotionService.getCoupon(request.getCouponCode(), userId);
 			//find the associated promotion
 			promotion = promotionService.getPromotion(coupon.getPromotionId());
+			
+			// check if the order booking date is one which is before today
+			//if yes, then don't check the promotion valid till date by setting the validTill date as todays
+			orderIdCheck(request.getOrderBookingDate(), promotion);
 			
 			response.setPromoName(promotion.getName());
 			response.setPromoDescription(promotion.getDescription());
@@ -366,6 +373,26 @@ public class PromotionManagerImpl implements PromotionManager {
 		return clearCouponCacheResponse;
 	}
 
+	/*
+	 * If orderId is a legacy order which had issue after Promotion migration, then
+	 * update the promotion valid till date to current date
+	 */
+	private void orderIdCheck(DateTime orderBookingDate, Promotion promotion) {
+		if(orderBookingDate==null){
+			logger.info("The orderBookingDate receieved is null so not modifying the promotion valid till date");
+			return;
+		}
+		// check if the order is one among those which had issue after promotion migration
+		logger.info("The orderBookingDate receieved is orderBookingDate = "+orderBookingDate);
+		PromotionDates promotionDates = promotion.getDates();
+		DateTime promotionValidTillDate = promotionDates.getValidTill();
+		DateTimeComparator dateComparator = DateTimeComparator.getDateOnlyInstance();
+		if(dateComparator.compare(null, orderBookingDate) > 1){
+			logger.info("Order Booking Date is an old date, before today so allow the promotion date check to pass");
+			promotionDates.setValidTill(DateTime.now());
+		}
+	}
+	
 	public void setAuthenticationService(AuthenticationService authenticationService) {
 		this.authenticationService = authenticationService;
 	}
