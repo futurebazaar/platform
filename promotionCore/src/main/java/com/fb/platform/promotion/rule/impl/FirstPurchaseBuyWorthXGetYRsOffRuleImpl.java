@@ -70,7 +70,7 @@ public class FirstPurchaseBuyWorthXGetYRsOffRuleImpl  implements PromotionRule, 
 			return PromotionStatusEnum.LESS_ORDER_AMOUNT;
 		}
 		if(!isCouponCommitted){
-			if(!orderDao.isUserFirstOrder(userId)){
+			if(!orderDao.isUserFirstOrder(userId,request.getOrderId())){
 				return PromotionStatusEnum.NOT_FIRST_PURCHASE;
 			}
 		}

@@ -30,6 +30,8 @@ public class OrderDaoJdbcImpl implements OrderDao{
 			"	support_state IS NOT NULL " +
 			"	AND " +
 			"	support_state NOT IN ('booked','cancelled') " +
+			"	AND " +
+			"	id <> ? " +
 			"GROUP BY user_id";
 
 
@@ -38,8 +40,8 @@ public class OrderDaoJdbcImpl implements OrderDao{
 	}
 	
 	@Override
-	public boolean isUserFirstOrder(int userId) {
-		int orderCount = getUserOrderCount(userId);
+	public boolean isUserFirstOrder(int userId,int orderId) {
+		int orderCount = getUserOrderCount(userId,orderId);
 		boolean isUserEligible = true;
 		if(orderCount > 0) {
 			isUserEligible = false;
@@ -47,10 +49,10 @@ public class OrderDaoJdbcImpl implements OrderDao{
 		return isUserEligible;
 	}
 	
-	public int getUserOrderCount(int userId) {
+	public int getUserOrderCount(int userId,int orderId) {
 		int orderCount = 0;
 		try {
-			orderCount = jdbcTemplate.queryForInt(GET_USER_ORDER_COUNT, new Object[]{userId});
+			orderCount = jdbcTemplate.queryForInt(GET_USER_ORDER_COUNT, new Object[]{userId,orderId});
 		} catch (EmptyResultDataAccessException e) {
 			if(log.isDebugEnabled()) {
 				log.debug("User first record.");

@@ -322,8 +322,8 @@ public class RuleImplTest extends BaseTestCase {
 		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(catMisMatchOrderReq,3,isCouponCommitted),PromotionStatusEnum.CATEGORY_MISMATCH);
 		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(orderReq3,3,isCouponCommitted),PromotionStatusEnum.SUCCESS);
 		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(orderReq3,4,isCouponCommitted),PromotionStatusEnum.SUCCESS);
-		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(orderReq4,2,isCouponCommitted),PromotionStatusEnum.NOT_FIRST_PURCHASE);
-		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(orderReq4,5,isCouponCommitted),PromotionStatusEnum.NOT_FIRST_PURCHASE);
+		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(orderReq4,2,isCouponCommitted),PromotionStatusEnum.SUCCESS);
+		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(orderReq1,5,isCouponCommitted),PromotionStatusEnum.NOT_FIRST_PURCHASE);
 		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(clientMisMatchOrderReq,3,isCouponCommitted),PromotionStatusEnum.INVALID_CLIENT);
 		
 		assertTrue(new Money(new BigDecimal(300)).eq(buyWorthXGetYRsOffRule.execute(orderReq1)));

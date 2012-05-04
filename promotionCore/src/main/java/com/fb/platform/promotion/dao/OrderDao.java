@@ -9,7 +9,7 @@ package com.fb.platform.promotion.dao;
  */
 public interface OrderDao {
 
-	public boolean isUserFirstOrder(int userId);
+	public boolean isUserFirstOrder(int userId,int orderId);
 
 	
 }
