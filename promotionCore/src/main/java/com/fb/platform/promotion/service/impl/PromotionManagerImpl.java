@@ -389,9 +389,7 @@ public class PromotionManagerImpl implements PromotionManager {
 		// check if the order is one among those which had issue after promotion migration
 		logger.info("The orderBookingDate receieved is orderBookingDate = "+orderBookingDate);
 		PromotionDates promotionDates = promotion.getDates();
-		DateTime promotionValidTillDate = promotionDates.getValidTill();
-		DateTimeComparator dateComparator = DateTimeComparator.getDateOnlyInstance();
-		if(dateComparator.compare(null, orderBookingDate) > 1){
+		if(orderBookingDate.isBeforeNow()){
 			logger.info("Order Booking Date is an old date, before today so allow the promotion date check to pass");
 			promotionDates.setValidTill(DateTime.now());
 		}
