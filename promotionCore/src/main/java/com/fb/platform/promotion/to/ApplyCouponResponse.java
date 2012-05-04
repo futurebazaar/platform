@@ -115,6 +115,18 @@ public class ApplyCouponResponse implements Serializable{
 		case USER_NOT_AUTHORIZED:
 			couponStatus = ApplyCouponResponseStatusEnum.USER_NOT_AUTHORIZED;
 			break;
+		case PRODUCT_NOT_PRESENT:
+			couponStatus = ApplyCouponResponseStatusEnum.PRODUCT_NOT_PRESENT;
+			break;
+		case LESS_ORDER_AMOUNT_OF_BRAND_PRODUCTS:
+			couponStatus = ApplyCouponResponseStatusEnum.LESS_ORDER_AMOUNT_OF_BRAND_PRODUCTS;
+			break;
+		case LESS_ORDER_AMOUNT_OF_CATEGORY_PRODUCTS:
+			couponStatus = ApplyCouponResponseStatusEnum.LESS_ORDER_AMOUNT_OF_CATEGORY_PRODUCTS;
+			break;
+		case NOT_FIRST_PURCHASE:
+			couponStatus = ApplyCouponResponseStatusEnum.NOT_FIRST_PURCHASE;
+			break;
 		case SUCCESS:
 			couponStatus = ApplyCouponResponseStatusEnum.SUCCESS;
 			break;
