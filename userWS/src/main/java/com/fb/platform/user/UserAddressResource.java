@@ -30,6 +30,9 @@ import com.fb.commons.PlatformException;
 import com.fb.platform.user.address._1_0.GetUserAddressRequest;
 import com.fb.platform.user.address._1_0.GetUserAddressResponse;
 import com.fb.platform.user.address._1_0.GetUserAddressStatus;
+import com.fb.platform.user.address._1_0.GetAddressByIdRequest;
+import com.fb.platform.user.address._1_0.GetAddressByIdResponse;
+import com.fb.platform.user.address._1_0.GetAddressByIdStatus;
 import com.fb.platform.user.address._1_0.AddUserAddressRequest;
 import com.fb.platform.user.address._1_0.AddUserAddressResponse;
 import com.fb.platform.user.address._1_0.AddUserAddressStatus;
@@ -266,5 +269,52 @@ public class UserAddressResource {
 			logger.error("address.xsd loading error : " + exception.getMessage() );
 		}
 		return sb.toString();
+	}
+	@POST
+	@Path("/getbyid")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String getbyid (String getAddressXml) {
+		
+		logger.info("Get Address XML request: \n" + getAddressXml);
+		try{
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			GetAddressByIdRequest xmlGetAddressByIdReq = (GetAddressByIdRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(getAddressXml)));
+			com.fb.platform.user.manager.model.address.GetAddressByIdRequest apiGetAddressByIdReq = new com.fb.platform.user.manager.model.address.GetAddressByIdRequest();
+			apiGetAddressByIdReq.setSessionToken(xmlGetAddressByIdReq.getSessionToken());
+			apiGetAddressByIdReq.setAddressId(xmlGetAddressByIdReq.getAddressId());
+			
+			com.fb.platform.user.manager.model.address.GetAddressByIdResponse apiGetAddressByIdRes = userAddressManager.getAddress(apiGetAddressByIdReq);
+			
+			GetAddressByIdResponse xmlGetAddressByIdRes = new GetAddressByIdResponse();
+			xmlGetAddressByIdRes.setGetAddressByIdStatus(GetAddressByIdStatus.fromValue(apiGetAddressByIdRes.getGetAddressStatus().name()));
+			xmlGetAddressByIdRes.setSessionToken(apiGetAddressByIdRes.getSessionToken());
+			if (apiGetAddressByIdRes.getUserAddress() != null){
+				UserAddress userAddress = new UserAddress();
+	    		userAddress.setAddressId(apiGetAddressByIdRes.getUserAddress().getAddressId());
+				userAddress.setAddress(apiGetAddressByIdRes.getUserAddress().getAddress());
+				userAddress.setCity(apiGetAddressByIdRes.getUserAddress().getCity());
+				userAddress.setState(apiGetAddressByIdRes.getUserAddress().getState());
+				userAddress.setCountry(apiGetAddressByIdRes.getUserAddress().getCountry());
+				userAddress.setPincode(apiGetAddressByIdRes.getUserAddress().getPinCode());
+				userAddress.setName(apiGetAddressByIdRes.getUserAddress().getName());
+				userAddress.setFirstName(apiGetAddressByIdRes.getUserAddress().getFirstName());
+				userAddress.setLastName(apiGetAddressByIdRes.getUserAddress().getLastName());
+				userAddress.setPhone(apiGetAddressByIdRes.getUserAddress().getPhone());
+				userAddress.setEmail(apiGetAddressByIdRes.getUserAddress().getEmail());
+				xmlGetAddressByIdRes.setUserAddress(userAddress);
+			}
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marsheller = context.createMarshaller();
+			marsheller.marshal(xmlGetAddressByIdRes, outStringWriter);
+
+			String xmlResponse = outStringWriter.toString();
+			
+			logger.info("Add GET Addresss XMl response :\n" + xmlGetAddressByIdRes);
+			return xmlResponse;
+		}catch (JAXBException e) {
+			logger.error("Error in the get address call.", e);
+			return "error"; //TODO return proper error response
+		}
 	}
 }

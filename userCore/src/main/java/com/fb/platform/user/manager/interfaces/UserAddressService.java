@@ -16,7 +16,7 @@ import com.fb.platform.user.manager.model.address.UserAddress;
 public interface UserAddressService {
 
 	/**
-	 * Returns the User Associated with a Userid.
+	 * Returns the Address Associated with a Userid.
 	 * @param userId
 	 * @throws UserNotFoundException When no user is found.
 	 * @throws AddressNotFoundException When no user address is found.
@@ -26,6 +26,16 @@ public interface UserAddressService {
 	@Transactional(propagation = Propagation.SUPPORTS)
 	List<UserAddress> getAddress(int userId) throws UserNotFoundException,
 			AddressNotFoundException, PlatformException;
+	
+	/**
+	 * Returns the Address Associated with a Addressid.
+	 * @param addressId
+	 * @throws AddressNotFoundException When no user address is found.
+	 * @throws PlatformException When an unrecoverable error happens.
+	 * @return User Address
+	 */
+	@Transactional(propagation = Propagation.SUPPORTS)
+	UserAddress getAddress(long addressId) throws AddressNotFoundException, PlatformException;
 
 	/**
 	 * Add a new address for the user.

@@ -6,7 +6,7 @@
 	<xs:element name="userId" type="xs:int"/>
 	<xs:element name="sessionToken" type="xs:string"/>
 	
-	<xs:element name="getUserAddressRequest">
+  <xs:element name="getUserAddressRequest">
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="useradd:userId"/>
@@ -143,6 +143,32 @@
       <xs:enumeration value="USER_ADDRESSID_MISMATCH"/>
       <xs:enumeration value="ADDRESSID_ABSENT"/>
       <xs:enumeration value="ERROR_DELETING_ADDRESS"/>
+      <xs:enumeration value="NO_SESSION"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="getAddressByIdRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="useradd:addressId"/>
+        <xs:element ref="useradd:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getAddressByIdResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="useradd:getAddressByIdStatus"/>
+        <xs:element ref="useradd:sessionToken"/>
+        <xs:element ref="useradd:userAddress"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="getAddressByIdStatus" type="useradd:getAddressByIdStatus"/>
+  <xs:simpleType name="getAddressByIdStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INVALID_ADDRESS_ID"/>
+      <xs:enumeration value="ERROR_RETRIVING_ADDRESS"/>
       <xs:enumeration value="NO_SESSION"/>
     </xs:restriction>
   </xs:simpleType>

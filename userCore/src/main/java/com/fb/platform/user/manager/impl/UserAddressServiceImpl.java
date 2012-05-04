@@ -230,6 +230,33 @@ public class UserAddressServiceImpl implements UserAddressService {
 			throw new PlatformException("Errror deleting address");
 		}
 	}
-	
-	
+
+	@Override
+	public UserAddress getAddress(long addressId)
+			throws AddressNotFoundException, PlatformException {
+		try {
+			UserAddressBo userAddressBo = userAddressDao.getAddressById(addressId);
+			if(userAddressBo != null){
+				UserAddress userAddress =  new UserAddress();
+				userAddress.setAddress(userAddressBo.getAddress());
+				userAddress.setAddressId(userAddressBo.getAddressid());
+				userAddress.setCity(userAddressBo.getCity());
+				userAddress.setState(userAddressBo.getState());
+				userAddress.setCountry(userAddressBo.getCountry());
+				userAddress.setPinCode(userAddressBo.getPincode());
+				userAddress.setName(userAddressBo.getName());
+				userAddress.setFirstName(userAddressBo.getFirstName());
+				userAddress.setLastName(userAddressBo.getLastName());
+				userAddress.setPhone(userAddressBo.getPhone());
+				userAddress.setEmail(userAddressBo.getEmail());
+				return userAddress;
+			}else{
+				throw new AddressNotFoundException();
+			}
+		}catch(AddressNotFoundException pe){
+			throw new AddressNotFoundException("No Address with this addressid");
+		}catch(PlatformException pe){
+			throw new PlatformException("Somehitng went wrong in retriving address");
+		}
+	}
 }

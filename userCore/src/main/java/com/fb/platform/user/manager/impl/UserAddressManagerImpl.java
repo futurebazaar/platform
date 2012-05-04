@@ -18,6 +18,9 @@ import com.fb.platform.user.manager.model.address.AddAddressStatusEnum;
 import com.fb.platform.user.manager.model.address.DeleteAddressRequest;
 import com.fb.platform.user.manager.model.address.DeleteAddressResponse;
 import com.fb.platform.user.manager.model.address.DeleteAddressStatusEnum;
+import com.fb.platform.user.manager.model.address.GetAddressByIdRequest;
+import com.fb.platform.user.manager.model.address.GetAddressByIdResponse;
+import com.fb.platform.user.manager.model.address.GetAddressByIdStatusEnum;
 import com.fb.platform.user.manager.model.address.GetAddressRequest;
 import com.fb.platform.user.manager.model.address.GetAddressResponse;
 import com.fb.platform.user.manager.model.address.GetAddressStatusEnum;
@@ -182,5 +185,43 @@ public class UserAddressManagerImpl implements UserAddressManager {
 
 	public void setAuthenticationService(AuthenticationService authenticationService) {
 		this.authenticationService = authenticationService;
+	}
+
+	@Override
+	public GetAddressByIdResponse getAddress(
+			GetAddressByIdRequest getAddressByIdRequest) {
+		GetAddressByIdResponse getAddressByIdResponse = new GetAddressByIdResponse();
+		if (getAddressByIdRequest == null) {
+			getAddressByIdResponse.setGetAddressStatus(GetAddressByIdStatusEnum.INVALID_ADDRESS_ID);
+			return getAddressByIdResponse;
+		}
+		if (getAddressByIdRequest.getAddressId() <= 0) {
+			getAddressByIdResponse.setGetAddressStatus(GetAddressByIdStatusEnum.INVALID_ADDRESS_ID);
+			return getAddressByIdResponse;
+		}
+		if(logger.isDebugEnabled()) {
+			logger.debug("Getting user address for : " + getAddressByIdRequest.getAddressId());
+		}
+		if (StringUtils.isBlank(getAddressByIdRequest.getSessionToken())) {
+			getAddressByIdResponse.setGetAddressStatus(GetAddressByIdStatusEnum.NO_SESSION);
+			return getAddressByIdResponse;
+		}
+		try {
+			AuthenticationTO authentication = authenticationService.authenticate(getAddressByIdRequest.getSessionToken());
+			if (authentication == null) {
+				getAddressByIdResponse.setGetAddressStatus(GetAddressByIdStatusEnum.NO_SESSION);
+				return getAddressByIdResponse;
+			}
+			getAddressByIdResponse.setSessionToken(authentication.getToken());
+			getAddressByIdResponse.setUserAddress(userAddressService.getAddress(getAddressByIdRequest.getAddressId()));
+			getAddressByIdResponse.setGetAddressStatus(GetAddressByIdStatusEnum.SUCCESS);
+			return getAddressByIdResponse;
+		} catch (AddressNotFoundException e) {
+			getAddressByIdResponse.setGetAddressStatus(GetAddressByIdStatusEnum.INVALID_ADDRESS_ID);
+		} catch (PlatformException pe) {
+			logger.error("Error while getting address for the user : " + getAddressByIdRequest.getAddressId(), pe);
+			getAddressByIdResponse.setGetAddressStatus(GetAddressByIdStatusEnum.ERROR_RETRIVING_ADDRESS);
+		}
+		return getAddressByIdResponse;
 	}	
 }
