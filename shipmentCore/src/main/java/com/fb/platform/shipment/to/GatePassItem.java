@@ -8,10 +8,10 @@ public class GatePassItem {
     private int deece;
     private String delno;
     private DateTime deldt;
-    private int sonum;
-    private int invno;
+    private long sonum;
+    private long invno;
     private DateTime invdt;
-    private int gtpas;
+    private long gtpas;
     private String awbno;
     private ShipmentLSPEnum lspcode;
     
@@ -33,16 +33,16 @@ public class GatePassItem {
 	public void setDeldt(DateTime deldt) {
 		this.deldt = deldt;
 	}
-	public int getSonum() {
+	public long getSonum() {
 		return sonum;
 	}
-	public void setSonum(int sonum) {
+	public void setSonum(long sonum) {
 		this.sonum = sonum;
 	}
-	public int getInvno() {
+	public long getInvno() {
 		return invno;
 	}
-	public void setInvno(int invno) {
+	public void setInvno(long invno) {
 		this.invno = invno;
 	}
 	public DateTime getInvdt() {
@@ -51,10 +51,10 @@ public class GatePassItem {
 	public void setInvdt(DateTime invdt) {
 		this.invdt = invdt;
 	}
-	public int getGtpas() {
+	public long getGtpas() {
 		return gtpas;
 	}
-	public void setGtpas(int gtpas) {
+	public void setGtpas(long gtpas) {
 		this.gtpas = gtpas;
 	}
 	public String getAwbno() {

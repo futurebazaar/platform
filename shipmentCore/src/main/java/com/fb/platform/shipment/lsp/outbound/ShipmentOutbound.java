@@ -9,5 +9,5 @@ import com.fb.platform.shipment.to.ParcelItem;
  *
  */
 public interface ShipmentOutbound {
-	public void generateOutboundFile(List<ParcelItem> parcelItem);
+	public boolean generateOutboundFile(List<ParcelItem> parcelItem);
 }

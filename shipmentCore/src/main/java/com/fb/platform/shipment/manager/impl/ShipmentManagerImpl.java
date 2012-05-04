@@ -1,20 +1,12 @@
 package com.fb.platform.shipment.manager.impl;
 
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.fb.commons.PlatformException;
 import com.fb.platform.shipment.lsp.impl.AramexLSP;
 import com.fb.platform.shipment.lsp.impl.BlueDartLSP;
 import com.fb.platform.shipment.lsp.impl.FirstFlightLSP;
@@ -23,10 +15,7 @@ import com.fb.platform.shipment.manager.ShipmentManager;
 import com.fb.platform.shipment.service.ShipmentService;
 import com.fb.platform.shipment.to.GatePassItem;
 import com.fb.platform.shipment.to.ParcelItem;
-import com.fb.platform.shipment.to.ShipmentLSPEnum;
 import com.fb.platform.shipment.util.ShipmentProcessor;
-import com.sap.abapxml.Abap;
-import com.sap.abapxml.Values.TAB.Item;
 
 /**
  * @author nehaga
@@ -36,10 +25,10 @@ import com.sap.abapxml.Values.TAB.Item;
  */
 public class ShipmentManagerImpl implements ShipmentManager {
 	
-	private static Log logger = LogFactory.getLog(ShipmentManagerImpl.class);
+	private static Log infoLog = LogFactory.getLog("LOGINFO");
 	
-	//JAXBContext class is thread safe and can be shared
-	private static final JAXBContext context = initContext();
+	private static Log errorLog = LogFactory.getLog("LOGERROR");	
+	
 	private List<ParcelItem> quantiumParcelsList = null;
 	private List<ParcelItem> firstFlightParcelsList = null;
 	private List<ParcelItem> aramexParcelsList = null;
@@ -48,26 +37,15 @@ public class ShipmentManagerImpl implements ShipmentManager {
 	@Autowired
 	private ShipmentService shipmentService = null;
 	
-	private static JAXBContext initContext() {
-		try {
-			return JAXBContext.newInstance("com.sap.abapxml");
-		} catch (JAXBException e) {
-			logger.error("Error Initializing the JAXBContext to bind the schema classes", e);
-			throw new PlatformException("Error Initializing the JAXBContext to bind the schema classes", e);
-		}
-	}
-	
 	/**
-	 * This function accepts the gatePass.xml as String and initiates the process of creating the outbound files.
+	 * This function accepts a list of gate pass delivery items and processes it to create outbound files.
 	 * @param gatePassString
 	 */
 	@Override
-	public void generateOutboundFile(String gatePassString) {
-		logger.info("GatePass xml String received : " + gatePassString);
-		List<Item> ordersList = createItemList(gatePassString);
-		createLSPLists(ordersList);
-		processLSPLists();
-		
+	public boolean generateOutboundFile(List<GatePassItem> deliveryList) {
+		createLSPLists(deliveryList);
+		boolean outboundCreated = processLSPLists();
+		return outboundCreated;
 	}
 	
 	/**
@@ -75,40 +53,45 @@ public class ShipmentManagerImpl implements ShipmentManager {
 	 * This function calls the service layer and fetches the required information from the database to generate ParcelItem object. 
 	 * @param ordersList
 	 */
-	private void createLSPLists(List<Item> ordersList) {
-		quantiumParcelsList = new ArrayList<ParcelItem>();
-		firstFlightParcelsList = new ArrayList<ParcelItem>();
-		aramexParcelsList = new ArrayList<ParcelItem>();
-		blueDartParcelsList = new ArrayList<ParcelItem>();
-		
-		for(Item gatePassItemReceived : ordersList) {
-			GatePassItem gatePassItem = new GatePassItem();
-			gatePassItem.setAwbno(gatePassItemReceived.getAWBNO());
-			gatePassItem.setDeece(gatePassItemReceived.getDEECE());
-			gatePassItem.setDeldt(new DateTime(gatePassItemReceived.getDELDT()));
-			gatePassItem.setDelno(gatePassItemReceived.getDELNO());
-			gatePassItem.setGtpas(gatePassItemReceived.getGTPAS());
-			gatePassItem.setInvdt(new DateTime(gatePassItemReceived.getINVDT()));
-			gatePassItem.setInvno(gatePassItemReceived.getINVNO());
-			gatePassItem.setLspcode(ShipmentLSPEnum.getLSP(gatePassItemReceived.getLSPCODE()));
-			gatePassItem.setSonum(gatePassItemReceived.getSONUM());
+	private void createLSPLists(List<GatePassItem> deliveryList) {
+		for(GatePassItem gatePassItem : deliveryList) {
+			infoLog.debug("Gate Pass item : " + gatePassItem.toString());
 			ParcelItem parcelItem = shipmentService.getParcelDetails(gatePassItem);
-			switch (gatePassItem.getLspcode()) {
-			case Quantium:
-				quantiumParcelsList.add(parcelItem);
-				break;
-			case FirstFlight:
-				firstFlightParcelsList.add(parcelItem);
-				break;
-			case Aramex:
-				aramexParcelsList.add(parcelItem);
-				break;
-			case BlueDart:
-				blueDartParcelsList.add(parcelItem);
-				break;
-			default:
-				logger.error("Invalid LSP code : " + gatePassItemReceived.getLSPCODE() + " , for gate pass delivery : " + gatePassItem.toString());
-				break;
+			if(parcelItem != null) {
+				infoLog.debug("Parcel Item Data : " + parcelItem.toString());
+				if(gatePassItem.getLspcode() == null) {
+					errorLog.error("Incorrect LSP code for order : " + gatePassItem.toString());
+				} else {
+					switch (gatePassItem.getLspcode()) {
+					case Quantium:
+						if(quantiumParcelsList == null) {
+							quantiumParcelsList = new ArrayList<ParcelItem>();
+						}
+						quantiumParcelsList.add(parcelItem);
+						break;
+					case FirstFlight:
+						if(firstFlightParcelsList == null) {
+							firstFlightParcelsList = new ArrayList<ParcelItem>();
+						}
+						firstFlightParcelsList.add(parcelItem);
+						break;
+					case Aramex:
+						if(aramexParcelsList == null) {
+							aramexParcelsList = new ArrayList<ParcelItem>();
+						}
+						aramexParcelsList.add(parcelItem);
+						break;
+					case BlueDart:
+						if(blueDartParcelsList == null) {
+							blueDartParcelsList = new ArrayList<ParcelItem>();
+						}
+						blueDartParcelsList.add(parcelItem);
+						break;
+					default:
+						errorLog.error("Invalid LSP code : " + gatePassItem.getLspcode() + " , for gate pass delivery : " + gatePassItem.toString());
+						break;
+					}
+				}
 			}
 		}
 	}
@@ -119,44 +102,28 @@ public class ShipmentManagerImpl implements ShipmentManager {
 	 * deliver it to the lsp.
 	 */
 	
-	private void processLSPLists() {
+	private boolean processLSPLists() {
+		boolean aramexOutboundCreated = false;
+		boolean firstFlightOutboundCreated = false;
+		boolean blueDartOutboundCreated = false;
+		boolean quantiumOutboundCreated = false;
 		if(aramexParcelsList != null) {
 			ShipmentProcessor aramexShipmentProcessor = new ShipmentProcessor(new AramexLSP());
-			aramexShipmentProcessor.generateOutboundFile(aramexParcelsList);
+			aramexOutboundCreated = aramexShipmentProcessor.generateOutboundFile(aramexParcelsList);
 		}
 		if(firstFlightParcelsList != null) {
 			ShipmentProcessor firstFlightShipmentProcessor = new ShipmentProcessor(new FirstFlightLSP());
-			firstFlightShipmentProcessor.generateOutboundFile(firstFlightParcelsList);
+			firstFlightOutboundCreated = firstFlightShipmentProcessor.generateOutboundFile(firstFlightParcelsList);
 		}
 		if(blueDartParcelsList != null) {
 			ShipmentProcessor blueDartShipmentProcessor = new ShipmentProcessor(new BlueDartLSP());
-			blueDartShipmentProcessor.generateOutboundFile(blueDartParcelsList);
+			blueDartOutboundCreated = blueDartShipmentProcessor.generateOutboundFile(blueDartParcelsList);
 		}
 		if(quantiumParcelsList != null) {
 			ShipmentProcessor quantiumShipmentProcessor = new ShipmentProcessor(new QuantiumLSP());
-			quantiumShipmentProcessor.generateOutboundFile(quantiumParcelsList);
+			quantiumOutboundCreated = quantiumShipmentProcessor.generateOutboundFile(quantiumParcelsList);
 		}
-	}
-	
-	/**
-	 * This generates JAXB objects after unmarshalling the gatePass.xml
-	 * @param gatePassString
-	 * @return
-	 *  
-	 */
-	private List<Item> createItemList(String gatePassString) {
-		try {
-			
-			Unmarshaller unmarshaller = context.createUnmarshaller();
-			
-			Abap abap = (Abap) unmarshaller.unmarshal(new StreamSource(new StringReader(gatePassString)));
-			
-			return abap.getValues().getTAB().getItem();
-		} catch (JAXBException e) {
-			System.out.println(e.getStackTrace());
-		}
-		
-		return null;
+		return (aramexOutboundCreated || firstFlightOutboundCreated || blueDartOutboundCreated || quantiumOutboundCreated);
 	}
 	
 	public void setShipmentService(ShipmentService shipmentService) {

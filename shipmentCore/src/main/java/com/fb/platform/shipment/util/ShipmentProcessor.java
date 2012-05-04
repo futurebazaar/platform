@@ -31,7 +31,8 @@ public class ShipmentProcessor {
 	 * This function calls the outbound processor of lsp to create the outbound files for a list of parcels.
 	 * @param parcelItem
 	 */
-	public void generateOutboundFile(List<ParcelItem> parcelItem) {
-		shipmentOutboundProcessor.generateOutboundFile(parcelItem);
+	public boolean generateOutboundFile(List<ParcelItem> parcelItem) {
+		boolean outboundCreated = shipmentOutboundProcessor.generateOutboundFile(parcelItem);
+		return outboundCreated;
 	}
 }

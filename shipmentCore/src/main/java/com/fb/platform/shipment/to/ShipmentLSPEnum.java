@@ -41,5 +41,10 @@ public enum ShipmentLSPEnum  implements Serializable {
 		return lookup.get(code);
 	}
 	
+	@Override
+	public String toString() {
+		return "Code : " + this.code + " ,Name :" + this.name();
+	}
+	
 	
 }

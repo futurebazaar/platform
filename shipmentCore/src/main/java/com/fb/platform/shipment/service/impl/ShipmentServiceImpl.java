@@ -15,7 +15,9 @@ import com.fb.platform.shipment.to.ParcelItem;
  */
 public class ShipmentServiceImpl implements ShipmentService {
 	
-	private static Log logger = LogFactory.getLog(ShipmentServiceImpl.class);
+	private static Log infoLog = LogFactory.getLog("LOGINFO");
+	
+	private static Log errorLog = LogFactory.getLog("LOGERROR");
 
 	@Autowired
 	private ShipmentDao shipmentDao;
@@ -27,13 +29,16 @@ public class ShipmentServiceImpl implements ShipmentService {
 	 */
 	@Override
 	public ParcelItem getParcelDetails(GatePassItem gatePassItem) {
-		if(logger.isDebugEnabled()) {
-			logger.debug("GatePassItem received : " + gatePassItem.toString());
+		ParcelItem parcelItem = null;
+		try {
+			infoLog.debug("GatePassItem received : " + gatePassItem.toString());
+			parcelItem = shipmentDao.getParcelDetails(gatePassItem);
+			infoLog.debug("ParcelItem retrieved : " + parcelItem.toString());
+		} catch (Exception e) {
+			errorLog.error("Outbound entry not created for : " + gatePassItem.getSonum() + " , LSP code : " + gatePassItem.getLspcode().toString());
+			errorLog.error(e.getStackTrace());
 		}
-		ParcelItem parcelItem = shipmentDao.getParcelDetails(gatePassItem);
-		if(logger.isDebugEnabled()) {
-			logger.debug("ParcelItem received : " + parcelItem.toString());
-		}
+		
 		return parcelItem;
 	}
 	

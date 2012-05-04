@@ -1,5 +1,9 @@
 package com.fb.platform.shipment.manager;
 
+import java.util.List;
+
+import com.fb.platform.shipment.to.GatePassItem;
+
 
 /**
  * @author nehaga
@@ -10,8 +14,8 @@ package com.fb.platform.shipment.manager;
 public interface ShipmentManager {
 	
 	/**
-	 * This function accepts the gatePass.xml as String and initiates the process of creating the outbound files.  
+	 * This function accepts a list of gate pass delivery items and processes it to create outbound files.
 	 * @param gatePassString
 	 */
-	public void generateOutboundFile(String gatePassString);
+	public boolean generateOutboundFile(List<GatePassItem> deliveryList);
 }

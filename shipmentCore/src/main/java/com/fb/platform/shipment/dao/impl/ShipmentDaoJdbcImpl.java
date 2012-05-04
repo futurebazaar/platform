@@ -18,10 +18,26 @@ import com.fb.platform.shipment.to.ParcelItem;
  */
 public class ShipmentDaoJdbcImpl implements ShipmentDao {
 
-	private Log logger = LogFactory.getLog(ShipmentDaoJdbcImpl.class);
+	private static Log infoLog = LogFactory.getLog("LOGINFO");
+	
+	private static Log errorLog = LogFactory.getLog("LOGERROR");
+	/**
+	 * QUERY:
+	 * SELECT
+			CONCAT_WS(' ',la.first_name, la.last_name) as name, la.address as address,lci.name as cityName,ls.name as stateName, lco.name as countryName, la.pincode as pincode,la.phone as phone,oo.payable_amount as payableAmount,oo.payment_mode as paymentMode
+	    FROM
+			orders_deliveryinfo od 
+			INNER JOIN orders_order oo ON od.order_id = oo.id 
+			INNER JOIN locations_address la ON la.id = od.address_id 
+			INNER JOIN locations_state ls ON ls.id = la.state_id 
+			INNER JOIN locations_country lco ON lco.id = la.country_id 
+			INNER JOIN locations_city lci ON lci.id = la.city_id 
+		WHERE
+			oo.reference_order_id = ? 
+	 */
 	
 	private static final String FETCH_PARCEL_DETAILS = "SELECT " +
-			"la.name as name, " +
+			"CONCAT_WS(' ',la.first_name, la.last_name) as name, " +
 			"la.address as address, " +
 			"lci.name as cityName, " +
 			"ls.name as stateName, " +
@@ -49,9 +65,7 @@ public class ShipmentDaoJdbcImpl implements ShipmentDao {
 	 */
 	@Override
 	public ParcelItem getParcelDetails(GatePassItem gatePassItem) {
-		if(logger.isDebugEnabled()) {
-			logger.debug("Getting parcel details for object : " + gatePassItem.getSonum());
-		}
+		infoLog.info("Getting parcel details for order : " + gatePassItem.toString());
 		ParcelItem parcelItem = jdbcTemplate.queryForObject(FETCH_PARCEL_DETAILS,
 				new Object[] {gatePassItem.getSonum()},
 				new ParcelItemMapper());
@@ -59,9 +73,7 @@ public class ShipmentDaoJdbcImpl implements ShipmentDao {
 		parcelItem.setDeliveryNumber(gatePassItem.getDelno());
 		parcelItem.setDeliverySiteId(gatePassItem.getDeece());
 		parcelItem.setTrackingNumber(gatePassItem.getAwbno());
-		if(logger.isDebugEnabled()) {
-			logger.debug("Parcel details : " + parcelItem.toString());
-		}
+		infoLog.info("Parcel details : " + parcelItem.toString());
 		return parcelItem;
 	}
 	
@@ -79,6 +91,7 @@ public class ShipmentDaoJdbcImpl implements ShipmentDao {
     		parcelItem.setPhoneNumber(rs.getBigDecimal("phone"));
     		parcelItem.setPincode(rs.getInt("pincode"));
     		parcelItem.setState(rs.getString("stateName"));
+    		parcelItem.setCustomerName(rs.getString("name"));
 			return parcelItem;
     	}
     }

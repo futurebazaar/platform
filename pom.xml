@@ -346,6 +346,11 @@
             <version>${wiser.version}</version>
             <scope>test</scope>
         </dependency>
+	<dependency>
+		<groupId>commons-net</groupId>
+		<artifactId>commons-net</artifactId>
+		<version>2.0</version>
+	</dependency>
     </dependencies>
     
     <modules>
@@ -360,6 +365,9 @@
         <module>authenticationCore</module>
 	<module>promotionCore</module>
 	<module>promotionWS</module>
+	<module>shipmentCore</module>
+	<module>shipmentReceiver</module>
+	<module>shipmentTestProject</module>
     </modules>
 
     <reporting>
@@ -438,6 +446,9 @@
         <jdbc.url><![CDATA[jdbc:mysql://localhost/platform?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf-8]]></jdbc.url>
         <jdbc.username>root</jdbc.username>
         <jdbc.password>root</jdbc.password>
+	<!--<jdbc.url><![CDATA[jdbc:mysql://10.0.102.21/tinla?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf-8]]></jdbc.url>
+        <jdbc.username>nehag</jdbc.username>
+        <jdbc.password>NehaGarnani@123</jdbc.password>-->
     </properties>
 </project>
 
