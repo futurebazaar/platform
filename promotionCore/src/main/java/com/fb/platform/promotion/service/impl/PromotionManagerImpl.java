@@ -181,6 +181,10 @@ public class PromotionManagerImpl implements PromotionManager {
 			coupon = promotionService.getCoupon(request.getCouponCode(), userId);
 			promotion = promotionService.getPromotion(coupon.getPromotionId());
 
+			// check if the order booking date is one which is before today
+			//if yes, then don't check the promotion valid till date by setting the validTill date as todays
+			orderIdCheck(request.getOrderBookingDate(), promotion);
+
 			PromotionStatusEnum isApplicableStatus = promotionService.isApplicable(userId, request.getOrderId(), new Money(request.getDiscountValue()), coupon, promotion, false);
 			if(PromotionStatusEnum.SUCCESS.compareTo(isApplicableStatus)!=0){
 				response.setCommitCouponStatus(isApplicableStatus);
