@@ -35,9 +35,11 @@ DROP TABLE IF EXISTS fulfillment_dc;
 DROP TABLE IF EXISTS fulfillment_productgroup;
 DROP TABLE IF EXISTS inventory_inventory;
 DROP TABLE IF EXISTS accounts_clientdomain;
+DROP TABLE IF EXISTS users_wallet;
 DROP TABLE IF EXISTS accounts_client;
 DROP TABLE IF EXISTS users_profile ;
 DROP TABLE IF EXISTS auth_user;
+
 
 --  ******************** CREATE TABLE *****************
 
@@ -629,3 +631,23 @@ CREATE TABLE orders_order (
   CONSTRAINT client_domain_id_refs_id_42c094ebad791900 FOREIGN KEY (client_domain_id) REFERENCES accounts_clientdomain (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- new wallet tables 
+CREATE TABLE users_wallet (
+	id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+	user_id int(11) NOT NULL,
+	client_id int(11) NOT NULL,
+	cash_amount decimal(6,2) DEFAULT NULL,
+	refund_amount decimal(6,2) DEFAULT NULL,
+	gift_amount decimal(6,2) DEFAULT NULL,
+	total_amount decimal(6,2) DEFAULT NULL,
+	created_on datetime DEFAULT NULL,
+    modified_on datetime DEFAULT NULL,
+  	PRIMARY KEY (id)  
+   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+   
+ALTER TABLE users_wallet ADD CONSTRAINT fk_uw_user_id FOREIGN KEY(user_id) REFERENCES users_profile(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE users_wallet ADD CONSTRAINT fk_uw_client_id FOREIGN KEY(client_id) REFERENCES accounts_client(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE users_wallet ADD UNIQUE INDEX(user_id,client_id);
+
+
+-- end of wallet tables

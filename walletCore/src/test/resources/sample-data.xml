@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<table name="accounts_client">
+		<column>id</column>
+		<column>name</column>
+		<column>confirmed_order_email</column>
+		<column>pending_order_email</column>
+		<column>share_product_email</column>
+		<column>signature</column>
+		<column>pending_order_helpline</column>
+		<column>confirmed_order_helpline</column>
+		<column>sms_mask</column>
+		<column>noreply_email</column>
+		<column>feedback_email</column>
+		<column>promotions_email</column>
+		<column>sale_pricelist</column>
+		<column>list_pricelist</column>
+		<column>clientdomain_name</column>
+		<column>slug</column>
+        <row>
+        	<value description="id">-1</value>
+        	<value description="name">Test Client 1</value>
+            <value description="confirmed_order_email">test confirmed_order_email 1</value>
+        	<value description="pending_order_email">test pending_order_email 1</value>
+            <value description="share_product_email">test share_product_email 1</value>
+            <value description="signature">test signature 1</value>
+        	<value description="pending_order_helpline">1111111111</value>
+            <value description="confirmed_order_helpline">12121212</value>
+        	<value description="sms_mask">test sms_mask 1</value>
+            <value description="noreply_email">test noreply_email 1</value>
+        	<value description="feedback_email">test feedback_email 1</value>
+            <value description="promotions_email">test promotions_email 1</value>
+        	<value description="sale_pricelist">12345678</value>
+            <value description="list_pricelist">123456789</value>
+        	<value description="clientdomain_name">test clientdomain_name 1</value>
+        	<value description="slug">test slug 1</value>
+        </row>
+	</table>
+	<table name="users_wallet">
+		<column>id</column>
+		<column>user_id</column>
+		<column>client_id</column>
+		<column>cash_amount</column>
+		<column>refund_amount</column>
+		<column>gift_amount</column>
+		<column>total_amount</column>
+		<column>created_on</column>
+		<column>modified_on</column>
+        <row>
+        	<value description="id">1</value>
+        	<value description="user_id">1</value>
+            <value description="client_id">-1</value>
+        	<value description="cash_amount">100.00</value>
+            <value description="refund_amount">300.00</value>
+            <null/>
+        	<value description="total_amount">400.00</value>
+            <value description="created_on">2012-05-02 10:37:14</value>
+            <value description="modified_on">2012-05-02 10:37:14</value>
+        </row>
+        <row>
+        	<value description="id">2</value>
+        	<value description="user_id">2</value>
+            <value description="client_id">-1</value>
+        	<null/>
+            <value description="refund_amount">300.00</value>
+            <null/>
+        	<value description="total_amount">300.00</value>
+            <value description="created_on">2012-05-02 10:37:14</value>
+            <value description="modified_on">2012-05-02 10:37:14</value>
+        </row>
+	</table>
+
+</dataset>
