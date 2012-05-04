@@ -41,16 +41,16 @@ public class SFTPConnector {
 		Session session = null;
 		
 		try {
-			session = jsch.getSession(username, host, port);
-			session.setPassword(password);
+			session = jsch.getSession(this.username, this.host, this.port);
+			session.setPassword(this.password);
 			java.util.Properties config = new java.util.Properties();
 			if (!strictHostKeyChecking) config.put("StrictHostKeyChecking", "no");
 			session.setConfig(config);
 			session.connect();
+			session.setServerAliveCountMax(3000);
 			
 			this.channel = session.openChannel("sftp");
 			this.channel.connect();
-		
 		} catch (JSchException jschException) {
 			jschException.printStackTrace();
 			throw new PlatformException("Java SFTP Error.");

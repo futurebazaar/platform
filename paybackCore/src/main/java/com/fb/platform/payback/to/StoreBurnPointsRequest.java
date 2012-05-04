@@ -1,35 +1,30 @@
 package com.fb.platform.payback.to;
 
+import java.math.BigDecimal;
+
 public class StoreBurnPointsRequest {
 	
-	private String txnActionCode;
-	private int merchantId;
-	private int terminalId;	
-	private BurnRequest burnRequest;
+	private long orderId;
+	private BigDecimal amount;
+	private String reason;
 	
-	public String getTxnActionCode() {
-		return txnActionCode;
+	public long getOrderId() {
+		return orderId;
 	}
-	public void setTxnActionCode(String txnActionCode) {
-		this.txnActionCode = txnActionCode;
+	public void setOrderId(long orderId) {
+		this.orderId = orderId;
 	}
-	public int getMerchantId() {
-		return merchantId;
+	public BigDecimal getAmount() {
+		return amount;
 	}
-	public void setMerchantId(int merchantId) {
-		this.merchantId = merchantId;
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
 	}
-	public int getTerminalId() {
-		return terminalId;
+	public String getReason() {
+		return reason;
 	}
-	public void setTerminalId(int terminalId) {
-		this.terminalId = terminalId;
-	}
-	public BurnRequest getBurnRequest() {
-		return burnRequest;
-	}
-	public void setBurnRequest(BurnRequest burnRequest) {
-		this.burnRequest = burnRequest;
-	}
+	public void setReason(String reason) {
+		this.reason = reason;
+	}	
 	
 }

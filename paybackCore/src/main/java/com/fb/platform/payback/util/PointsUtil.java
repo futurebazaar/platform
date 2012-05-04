@@ -2,19 +2,22 @@ package com.fb.platform.payback.util;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.util.Properties;
-import java.util.StringTokenizer;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import com.fb.commons.util.MailSender;
+
 public class PointsUtil {
 	
 	public String getPreviousDayDate(){
 		DateTime datetime = new DateTime();
-		datetime = datetime.minusDays(14);
+		datetime = datetime.minusDays(3); //3
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 		return fmt.print(datetime);
 	}
@@ -27,39 +30,50 @@ public class PointsUtil {
 		return newSettlementDate;
 	}
 	
+	public String convertDateToFormat(DateTime currentTime, String dateFormat) {
+		DateTimeFormatter format = DateTimeFormat.forPattern(dateFormat);
+		return format.print(currentTime);
+	}
+
+	
 	public Properties getProperties(String fileName) throws IOException{
-		InputStream inStream = this.getClass().getClassLoader().getResourceAsStream("payback.properties");
+		InputStream inStream = this.getClass().getClassLoader().getResourceAsStream(fileName);
 		Properties props = new Properties();
 		props.load(inStream);
 		inStream.close();
 		return props;
 	}
+
+	public boolean isValidDate(String validTill) {
+		DateTimeFormatter format = DateTimeFormat.forPattern("yyyyMMdd");
+		DateTime validTillDate = format.parseDateTime("20120502");
+		return DateTime.now().isAfter(validTillDate);
+
+	}
 	
-	public int getEarnPoints(BigDecimal amount, DateTime datetime, String clientName, String code){
-		try {
-			Properties props = getProperties("points.properties");
-			String day = datetime.dayOfWeek().getAsText();
-			BigDecimal earnRatio = new BigDecimal(props.getProperty(clientName.toUpperCase() + "_" + code + "_POINTS"));
-			String earnFactorMap = props.getProperty(clientName.toUpperCase() + "_" + code +"_FACTOR");
-			//String [] earnFactorList = earnFactorMap.split(";");
-			StringTokenizer earnFactorIterator = new StringTokenizer(earnFactorMap, ",");
-			int earnFactor = Integer.parseInt(earnFactorIterator.nextToken());
-			while(earnFactorIterator.hasMoreTokens()){
-				String dayFactorMap = earnFactorIterator.nextToken();
-				String[] dayFactorList = dayFactorMap.split(",");
-				if (day.equals(dayFactorList[0]) && dayFactorList[1] != null && !dayFactorList[1].equals("")){
-					earnFactor = earnFactor * Integer.parseInt(dayFactorList[1]);
-					break;
-				}			
-			}
-			earnRatio = earnRatio.multiply(new BigDecimal(earnFactor));
-			BigDecimal txnPoints = amount.multiply(earnRatio);
-			return txnPoints.ROUND_HALF_EVEN;
-			
-		} catch (IOException e) {
-			e.printStackTrace();
+
+	public void sendMail(String txnActionCode, String merchantId, String fileName, String fileContent) {
+		try{
+			Properties props = getProperties("payback.properties");					
+			String host = props.getProperty("mailHost");
+			int port = Integer.parseInt(props.getProperty("mailPort"));
+			MailSender mailSender = new MailSender(host, port, props.getProperty("mailUsername"),props.getProperty("mailPassword"));
+			mailSender.setFrom(props.getProperty("from"));
+			mailSender.setTO(props.getProperty("to"));
+			mailSender.setCC(props.getProperty("cc"));
+			mailSender.setSubject(txnActionCode + " " + merchantId + " " + getPreviousDayDate());
+			mailSender.setText("Please find the attached " + txnActionCode + " file");
+			if (fileContent != null) mailSender.setFileContent(fileContent, fileName);
+			mailSender.sendMail();
+		}catch(IOException ie){
+			ie.printStackTrace();
+		} catch (AddressException ae) {
+			ae.printStackTrace();
+		} catch (MessagingException me) {
+			me.printStackTrace();
 		}
-		return 0;
+		
 	}
 
+	
 }

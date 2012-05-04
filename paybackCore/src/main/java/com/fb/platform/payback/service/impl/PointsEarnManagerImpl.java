@@ -3,26 +3,18 @@ package com.fb.platform.payback.service.impl;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.joda.time.DateTime;
-
 import com.fb.platform.payback.service.PointsEarnManager;
 import com.fb.platform.payback.service.PointsEarnService;
-import com.fb.platform.payback.service.PointsService;
 import com.fb.platform.payback.util.EarnActionCodesEnum;
 import com.fb.platform.payback.util.PointsUtil;
 
 public class PointsEarnManagerImpl implements PointsEarnManager{
 	
 	private PointsEarnService pointsEarnService;
-	private PointsService pointsService;
 	private PointsUtil pointsUtil;
 	
 	public void setPointsEarnService(PointsEarnService pointsEarnService){
 		this.pointsEarnService = pointsEarnService;
-	}
-	
-	public void setPointsService(PointsService pointsService){
-		this.pointsService = pointsService;
 	}
 	
 	public void setPointsUtil(PointsUtil pointsUtil){
@@ -38,8 +30,8 @@ public class PointsEarnManagerImpl implements PointsEarnManager{
 				String[] partnerIds = props.getProperty(client + "_IDS").split(",");
 				String merchantId = partnerIds[0];
 				for (EarnActionCodesEnum txnActionCode : EarnActionCodesEnum.values()){
-					pointsEarnService.postEarnData(txnActionCode.name(), merchantId);
-					pointsService.sendMail(txnActionCode.name(), merchantId);
+					String dataToUpload = pointsEarnService.postEarnData(txnActionCode, merchantId);
+					pointsUtil.sendMail(txnActionCode.name(), merchantId, txnActionCode.toString()+ ".txt", dataToUpload);
 					
 				}
 			}
@@ -52,12 +44,8 @@ public class PointsEarnManagerImpl implements PointsEarnManager{
 		return 0;
 	}
 	
-	public void storeEarnData(){
-		DateTime dateTime = new DateTime();
-		String day = dateTime.dayOfWeek().getAsText();	
-		if (day.equals("Friday")){
-			//PointsFactor.Client.Day.
-		}
-		
+	public void storeEarnReversalData(){
+		EarnActionCodesEnum txnActionCode = EarnActionCodesEnum.EARN_REVERSAL;
+			
 	}
 }

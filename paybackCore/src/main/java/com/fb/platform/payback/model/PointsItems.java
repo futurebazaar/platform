@@ -2,11 +2,13 @@ package com.fb.platform.payback.model;
 
 import java.io.Serializable;
 
+import org.joda.time.DateTime;
+
 public class PointsItems implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	private String orderId;
+	private long orderId;
 	private String referenceId;
 	private String loyaltyCard;
 	private String PartnerMerchantId;
@@ -14,26 +16,26 @@ public class PointsItems implements Serializable{
 	private String txnActionCode;
 	private String txnClassificationCode;
 	private String txnPaymentType;
-	private String txnDate; // No Need to set type as java Date as it is passed as it is
-	private String settlementDate;
+	private DateTime txnDate; // No Need to set type as java Date as it is passed as it is
+	private DateTime settlementDate;
 	private int txnValue;
 	private String marketingCode;
 	private String branchId;
 	private int txnPoints;
-	private String txnTimestamp;
+	private DateTime txnTimestamp;
 	private String reason;
 	private String departmentName;
 	private String articleId;
 	private int quantity;
 	private String departmentCode;
 	private int itemAmount;
-	private String itemId;
-	private String pointsHeaderId;
+	private long itemId;
+	private long pointsHeaderId;
 	
-	public String getOrderId() {
+	public long getOrderId() {
 		return orderId;
 	}
-	public void setOrderId(String orderId) {
+	public void setOrderId(long orderId) {
 		this.orderId = orderId;
 	}
 	public String getReferenceId() {
@@ -78,16 +80,16 @@ public class PointsItems implements Serializable{
 	public void setTxnPaymentType(String txnPaymentType) {
 		this.txnPaymentType = txnPaymentType;
 	}
-	public String getTxnDate() {
+	public DateTime getTxnDate() {
 		return txnDate;
 	}
-	public void setTxnDate(String txnDate) {
+	public void setTxnDate(DateTime txnDate) {
 		this.txnDate = txnDate;
 	}
-	public String getSettlementDate() {
+	public DateTime getSettlementDate() {
 		return settlementDate;
 	}
-	public void setSettlementDate(String settlementDate) {
+	public void setSettlementDate(DateTime settlementDate) {
 		this.settlementDate = settlementDate;
 	}
 	public int getTxnValue() {
@@ -114,10 +116,10 @@ public class PointsItems implements Serializable{
 	public void setTxnPoints(int txnPoints) {
 		this.txnPoints = txnPoints;
 	}
-	public String getTxnTimestamp() {
+	public DateTime getTxnTimestamp() {
 		return txnTimestamp;
 	}
-	public void setTxnTimestamp(String txnTimestamp) {
+	public void setTxnTimestamp(DateTime txnTimestamp) {
 		this.txnTimestamp = txnTimestamp;
 	}
 	public String getReason() {
@@ -156,17 +158,17 @@ public class PointsItems implements Serializable{
 	public void setItemAmount(int itemAmount) {
 		this.itemAmount = itemAmount;
 	}
-	public String getItemId() {
+	public long getItemId() {
 		return itemId;
 	}
-	public void setItemId(String itemId) {
+	public void setItemId(long itemId) {
 		this.itemId = itemId;
 	}
 	
-	public String getPointsHeaderId() {
+	public long getPointsHeaderId() {
 		return pointsHeaderId;
 	}
-	public void setPointsHeaderId(String pointsHeaderId) {
+	public void setPointsHeaderId(long pointsHeaderId) {
 		this.pointsHeaderId = pointsHeaderId;
 	}
 }

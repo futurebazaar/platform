@@ -3,16 +3,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.PasswordAuthentication;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.Date;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
-import javax.activation.FileDataSource;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -25,16 +21,12 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
+import org.joda.time.DateTime;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-
-import com.fb.platform.payback.dao.impl.*;
-import com.fb.platform.payback.model.PointsHeader;
-import com.fb.platform.payback.model.PointsItems;
-import com.fb.platform.payback.service.impl.PointsServiceImpl;
-import com.fb.platform.payback.service.impl.PointsBurnManagerImpl;
-import com.fb.platform.payback.service.impl.PointsEarnManagerImpl;
+import com.fb.platform.payback.util.PointsTxnClassificationCodeEnum;
+import com.fb.platform.payback.util.PointsUtil;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
@@ -50,12 +42,6 @@ public class TestPayback {
 	private static String password;
 	private static String remoteDirectory;
 	
-	private static String to;
-	private static String from;
-	private static String subject;
-	private static String text;
-	private static String file;
-	private static String cc;
 	
 	public static void main(String[] args) {
 		host = "10.40.15.119";
@@ -63,12 +49,6 @@ public class TestPayback {
 		username = "futureba";
 		password = "17d@Gil+2";
 		remoteDirectory = "/futureba/in";
-		
-		from = "anubhav.j89@gmail.com";
-		to = "anubhav.j89@gmail.com";
-		subject = "Test Mail";
-		text = "Hello";
-		cc = "anubhav.jain@futuregroup.in";
 		
 		String settlementDate = "2012-04-16";
 		String txnActionCode = "EARN_REVERSAL";
@@ -80,7 +60,8 @@ public class TestPayback {
 		Object manager = orderServiceContext.getBean("pointsEarnManager");
 		//((PointsEarnManagerImpl) manager).storeEarnData();
 		//int manager1 = ((PointsManagerImpl) manager).mailBurnData();
-		//int earnManager = ((PointsEarnManagerImpl) manager).putEarnData();
+		//int earnManager = ((PointsEarnManagerImpl) manager).putEarnDataOnSftp();
+		
 		
 		Object burnManager = orderServiceContext.getBean("pointsBurnManager");
 		//((PointsBurnManagerImpl) burnManager).mailBurnData();
@@ -93,9 +74,44 @@ public class TestPayback {
 		}*/
 		
 		//sendMail();
+		PointsUtil pointsUtil = new PointsUtil();
+		//pointsUtil.sendMail("EARN", "1234", "anubhav", "anubhav");
 		
-		System.out.println(Integer.parseInt("2"));
-
+		/*BigDecimal txnPoints = (new BigDecimal(10.6)).setScale(0, BigDecimal.ROUND_HALF_DOWN);
+		System.out.println(txnPoints.setScale(2));
+		
+		DateTimeFormatter format = DateTimeFormat.forPattern("ddMMyyyy");
+		System.out.println(format.print(DateTime.now()));*/
+		//String ab = "1234";
+		//System.out.println(ab.substring(0, 29));
+		/*StringTokenizer factorIterator = new StringTokenizer("1234", ",");
+		int earnFactor = Integer.parseInt(factorIterator.nextToken());
+		System.out.println(earnFactor);
+		
+		DateTimeFormatter format = DateTimeFormat.forPattern("yyyyMMdd");
+		DateTime validTillDate = format.parseDateTime("20120503");
+		System.out.println(validTillDate);
+		System.out.println(DateTime.now());
+		System.out.println(DateTime.now().isAfter(validTillDate));
+		System.out.println(validTillDate.toDate().before(DateTime.now().toDate()));
+		System.out.println(new BigDecimal(3).compareTo(new BigDecimal(2.25)));
+		
+		
+		InputStream inStream = TestPayback.class.getClassLoader().getResourceAsStream("payback.properties");
+		Properties props = new Properties();
+		System.out.println(props.getProperty("sftpUsername"));
+		
+		File files = new File("/");
+		if (files.isDirectory()){
+			String[] file = files.list();
+			System.out.println(file[0]);
+		}*/
+		System.out.println(PointsTxnClassificationCodeEnum.valueOf(txnActionCode).toString().split(",")[0]);
+		Date d = DateTime.now().toDate();
+		System.out.println(d);
+		
+		System.out.println(pointsUtil.convertDateToFormat(DateTime.now(), "hhmmss"));
+		
 	}
 	
 	public static int upload(String fileToUpload) throws IOException{
@@ -143,30 +159,22 @@ public class TestPayback {
 	public static int sendMail(){
 			
 		Properties properties = new Properties();
-		properties.put("mail.smtp.host", "smtp.gmail.com");
-		properties.put("mail.smtp.port", "587");
-		//properties.put("mail.user", "anubhav.j89");
-		//properties.put("mail.password", "!n89sep02");
-		properties.put("mail.smtp.auth", "true");
-		properties.put("mail.smtp.starttls.enable", "true");
-		
-		javax.mail.Session session = javax.mail.Session.getInstance(properties, 
-				new javax.mail.Authenticator(){
-					protected javax.mail.PasswordAuthentication getPasswordAuthentication(){
-						return new javax.mail.PasswordAuthentication("anubhav.j89", "!n89sep02");
-					}
-		});
+		properties.put("mail.smtp.host", "10.0.101.39");
+		properties.put("mail.smtp.port", "25");
+		//properties.put("mail.smtp.auth", "true");
+		//properties.put("mail.smtp.starttls.enable", "true");
+		javax.mail.Session session = javax.mail.Session.getInstance(properties);
 		
 		try{
 			
 	         MimeMessage message = new MimeMessage(session);
-	         message.setFrom(new InternetAddress(from));
-	         message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-	         message.addRecipient(Message.RecipientType.CC, new InternetAddress(cc));
-	         message.setSubject(subject);
+	         message.setFrom(new InternetAddress("fbadmin@futurebazaar.com"));
+	         message.addRecipient(Message.RecipientType.TO, new InternetAddress("anubhav.jain@futuregroup.in"));
+	         message.addRecipient(Message.RecipientType.CC, new InternetAddress("salim.majgaonkar@futuregroup.in"));
+	         message.setSubject("Test Mail");
 	         
 	         BodyPart messageBodyPart = new MimeBodyPart();
-	         messageBodyPart.setText(text);
+	         messageBodyPart.setText("testing");
 	         Multipart multipart = new MimeMultipart();
 	         multipart.addBodyPart(messageBodyPart);
 	         

@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
+import org.joda.time.DateTime;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -30,7 +31,7 @@ public class PointsEarnDaoJdbcImpl implements PointsEarnDao{
 			"FROM " +
 			"payments_pointsheader ph, payments_pointsitems pi " +
 			"WHERE ph.id = pi.points_header_id AND " +
-			"ph.status = 'FRESH' AND " +
+			"ph.status = 'DONE' AND " +
 			"ph.txn_action_code = ? AND " +
 			"ph.settlement_date = ? AND " +
 			"ph.partner_merchant_id = ?";
@@ -60,24 +61,24 @@ public class PointsEarnDaoJdbcImpl implements PointsEarnDao{
 			earnPoints.setDepartmentCode(rs.getString("department_code"));
 			earnPoints.setDepartmentName(rs.getString("department_name"));
 			earnPoints.setItemAmount(rs.getInt("item_amount"));
-			earnPoints.setItemId(rs.getString("order_item_id"));
+			earnPoints.setItemId(rs.getLong("order_item_id"));
 			earnPoints.setLoyaltyCard(rs.getString("loyalty_card"));
 			earnPoints.setMarketingCode(rs.getString("marketing_code"));
-			earnPoints.setOrderId(rs.getString("order_id"));
+			earnPoints.setOrderId(rs.getLong("order_id"));
 			earnPoints.setPartnerMerchantId(rs.getString("partner_merchant_id"));
 			earnPoints.setPartnerTerminalId(rs.getString("partner_terminal_id"));
 			earnPoints.setQuantity(rs.getInt("quantity"));
 			earnPoints.setReason(rs.getString("reason"));
 			earnPoints.setReferenceId(rs.getString("reference_id"));
-			earnPoints.setSettlementDate(rs.getString("settlement_date"));
+			earnPoints.setSettlementDate(new DateTime(rs.getDate("settlement_date").getTime()));
 			earnPoints.setTxnActionCode(rs.getString("txn_action_code"));
 			earnPoints.setTxnClassificationCode(rs.getString("txn_classification_code"));
-			earnPoints.setTxnDate(rs.getString("txn_date"));
+			earnPoints.setTxnDate(new DateTime(rs.getDate("txn_date").getTime()));
 			earnPoints.setTxnPaymentType(rs.getString("txn_payment_type"));
 			earnPoints.setTxnPoints(rs.getInt("txn_points"));
-			earnPoints.setTxnTimestamp(rs.getString("txn_timstamp"));
+			earnPoints.setTxnTimestamp(new DateTime(rs.getDate("txn_timstamp").getTime()));
 			earnPoints.setTxnValue(rs.getInt("txn_value"));
-			earnPoints.setPointsHeaderId(rs.getString("points_header_id"));
+			earnPoints.setPointsHeaderId(rs.getLong("points_header_id"));
 			return earnPoints;
 		}
 		

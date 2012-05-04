@@ -1,33 +1,22 @@
 package com.fb.platform.payback.service.impl;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
+import java.math.BigDecimal;
 import java.util.Properties;
 
-import javax.mail.MessagingException;
-
-import com.fb.commons.util.MailSender;
-import com.fb.platform.payback.model.PointsHeader;
 import com.fb.platform.payback.service.PointsBurnManager;
 import com.fb.platform.payback.service.PointsBurnService;
-import com.fb.platform.payback.service.PointsService;
 import com.fb.platform.payback.to.StoreBurnPointsRequest;
-import com.fb.platform.payback.util.EarnActionCodesEnum;
+import com.fb.platform.payback.util.BurnActionCodesEnum;
 import com.fb.platform.payback.util.PointsUtil;
 
 public class PointsBurnManagerImpl implements PointsBurnManager{
 	
 	private PointsBurnService pointsBurnService;
-	private PointsService pointsService;
 	private PointsUtil pointsUtil;
 	
 	public void setPointsBurnService(PointsBurnService pointsBurnService){
 		this.pointsBurnService = pointsBurnService;
-	}
-	
-	public void setPointsService(PointsService pointsService){
-		this.pointsService = pointsService;
 	}
 	
 	public void setPointsUtil(PointsUtil pointsUtil){
@@ -42,18 +31,21 @@ public class PointsBurnManagerImpl implements PointsBurnManager{
 			for(String client : clients){
 				String[] partnerIds = props.getProperty(client + "_IDS").split(",");
 				String merchantId = partnerIds[0];
-				for (EarnActionCodesEnum txnActionCode : EarnActionCodesEnum.values()){
+				for (BurnActionCodesEnum txnActionCode : BurnActionCodesEnum.values()){
 					pointsBurnService.mailBurnData(txnActionCode.name(), merchantId);
 				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
-	public int storeBurnPoints(StoreBurnPointsRequest request){
-		pointsBurnService.saveBurnPoints(request);		
+	public int storeBurnReversalPoints(StoreBurnPointsRequest request){
+		BurnActionCodesEnum txnActionCode = BurnActionCodesEnum.BURN_REVERSAL;
+		BigDecimal amount = request.getAmount();
+		long orderId = request.getOrderId();
+		String reason = request.getReason();
+		pointsBurnService.saveBurnData(txnActionCode, amount, orderId, reason);		
 		return 0;
 	}
 
