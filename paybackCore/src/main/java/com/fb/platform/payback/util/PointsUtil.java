@@ -17,7 +17,7 @@ public class PointsUtil {
 	
 	public String getPreviousDayDate(){
 		DateTime datetime = new DateTime();
-		datetime = datetime.minusDays(3); //3
+		datetime = datetime.minusDays(1); //3
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 		return fmt.print(datetime);
 	}
@@ -36,18 +36,27 @@ public class PointsUtil {
 	}
 
 	
-	public Properties getProperties(String fileName) throws IOException{
+	public Properties getProperties(String fileName){
 		InputStream inStream = this.getClass().getClassLoader().getResourceAsStream(fileName);
 		Properties props = new Properties();
-		props.load(inStream);
-		inStream.close();
+		try {
+			props.load(inStream);
+			inStream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return props;
 	}
 
 	public boolean isValidDate(String validTill) {
-		DateTimeFormatter format = DateTimeFormat.forPattern("yyyyMMdd");
-		DateTime validTillDate = format.parseDateTime("20120502");
-		return DateTime.now().isAfter(validTillDate);
+		try{
+			DateTimeFormatter format = DateTimeFormat.forPattern("yyyyMMdd");
+			DateTime validTillDate = format.parseDateTime(validTill);
+			return validTillDate.isAfterNow();
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		return false;
 
 	}
 	

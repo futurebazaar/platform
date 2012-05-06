@@ -1,13 +1,12 @@
 package com.fb.platform.payback.service.impl;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Properties;
 
 import com.fb.platform.payback.service.PointsBurnManager;
 import com.fb.platform.payback.service.PointsBurnService;
-import com.fb.platform.payback.to.StoreBurnPointsRequest;
-import com.fb.platform.payback.util.BurnActionCodesEnum;
+import com.fb.platform.payback.to.BurnActionCodesEnum;
+import com.fb.platform.payback.to.StorePointsHeaderRequest;
 import com.fb.platform.payback.util.PointsUtil;
 
 public class PointsBurnManagerImpl implements PointsBurnManager{
@@ -35,13 +34,14 @@ public class PointsBurnManagerImpl implements PointsBurnManager{
 					pointsBurnService.mailBurnData(txnActionCode.name(), merchantId);
 				}
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public int storeBurnReversalPoints(StoreBurnPointsRequest request){
-		BurnActionCodesEnum txnActionCode = BurnActionCodesEnum.BURN_REVERSAL;
+	@Override
+	public int storeBurnPoints(StorePointsHeaderRequest request, String actionCode){
+		BurnActionCodesEnum txnActionCode = BurnActionCodesEnum.valueOf(actionCode);
 		BigDecimal amount = request.getAmount();
 		long orderId = request.getOrderId();
 		String reason = request.getReason();

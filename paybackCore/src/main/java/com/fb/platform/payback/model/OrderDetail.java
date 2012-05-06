@@ -1,18 +1,43 @@
 package com.fb.platform.payback.model;
 
+import java.math.BigDecimal;
+
+import org.joda.time.DateTime;
+
 public class OrderDetail {
 	
 	private long id;
 	private String clientName;
 	private String paymentMode;
 	private String orderDate;
-	private String reference_order_id;
+	private String referenceOrderId;
 	private String supportState;
 	private long clientId;
 	private String clientDomainType;
+	private DateTime timestamp;
+	private String loyaltyCard;
+	private BigDecimal amount;
 	
 	public long getId() {
 		return id;
+	}
+	public DateTime getTimestamp() {
+		return timestamp;
+	}
+	public void setTimestamp(DateTime timestamp) {
+		this.timestamp = timestamp;
+	}
+	public String getLoyaltyCard() {
+		return loyaltyCard;
+	}
+	public void setLoyaltyCard(String loyaltyCard) {
+		this.loyaltyCard = loyaltyCard;
+	}
+	public BigDecimal getAmount() {
+		return amount;
+	}
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
 	}
 	public void setId(long id) {
 		this.id = id;
@@ -35,11 +60,11 @@ public class OrderDetail {
 	public void setOrderDate(String orderDate) {
 		this.orderDate = orderDate;
 	}
-	public String getReference_order_id() {
-		return reference_order_id;
+	public String getReferenceOrderId() {
+		return referenceOrderId;
 	}
-	public void setReference_order_id(String reference_order_id) {
-		this.reference_order_id = reference_order_id;
+	public void setReferenceOrderId(String referenceOrderId) {
+		this.referenceOrderId = referenceOrderId;
 	}
 	public String getSupportState() {
 		return supportState;

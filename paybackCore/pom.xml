@@ -6,7 +6,7 @@
     <version>1.0</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <artifactId>PaybackCore</artifactId>
+  <artifactId>paybackCore</artifactId>
   <version>1.0</version>
 	<packaging>jar</packaging>
 	

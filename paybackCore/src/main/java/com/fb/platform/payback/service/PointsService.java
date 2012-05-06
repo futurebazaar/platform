@@ -1,14 +1,23 @@
 package com.fb.platform.payback.service;
 
-import java.io.File;
+import java.math.BigDecimal;
+import java.util.Properties;
 
+import com.fb.platform.payback.to.EarnActionCodesEnum;
+import com.fb.platform.payback.to.PointsTxnClassificationCodeEnum;
 
 public interface PointsService {
 
-	void sendMail(String txnActionCode, String merchantId);
+	BigDecimal getBurnRatio(String day, Properties props, String clientName);
 
-	void sendMail(String txnActionCode, String merchantId, String fileName, String fileContent);
-	
-	void sendMail(String txnActionCode, String merchantId, String fileName, File file);
+	String getSequenceNumber();
+
+	BigDecimal getEarnRatio(String day, Properties props, String clientName,
+			long orderId, EarnActionCodesEnum txnActionCode);
+
+	int getTxnPoints(BigDecimal amount, String day, Properties props,
+			String clientName, String txnCode, long orderId);
+
+	int getBonusPoints(BigDecimal amount, String day, Properties props, String clientName, long orderId, String txnActionCode);
 
 }

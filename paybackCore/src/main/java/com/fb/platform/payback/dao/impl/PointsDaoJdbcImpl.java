@@ -4,18 +4,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 
 import org.joda.time.DateTime;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 import com.fb.platform.payback.dao.PointsDao;
 import com.fb.platform.payback.model.OrderDetail;
-import com.fb.platform.payback.model.PaymentDetail;
 import com.fb.platform.payback.model.PointsHeader;
-import com.fb.platform.payback.model.PointsItems;
 
 public class PointsDaoJdbcImpl implements PointsDao{
 	
@@ -33,30 +34,18 @@ public class PointsDaoJdbcImpl implements PointsDao{
 			"txn_payment_type, " +
 			"txn_date, " +
 			"settlement_date, " +
+			"txn_timstamp, " +
 			"txn_value, " +
 			"marketing_code, " +
 			"branch_id, " +
 			"txn_points, " +
 			"status, " +
-			"txn_timstamp, " +
 			"reason, " +
 			"burn_ratio, " +
 			"earn_ratio) " +
 			"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " +
 			"?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
-	private static final String INSERT_POINTS_ITEMS_SQL = 
-			"INSERT INTO payments_pointsitems " +
-			"(points_header_id, " +
-			"quantity, " +
-			"department_code, " +
-			"department_name, " +
-			"item_amount, " +
-			"article_id, " +
-			"action_code, " +
-			"order_item_id) " +
-			"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
 	private static final String UPDATE_STATUS_SQL = 
 			"UPDATE payments_pointsheader SET " +
 			"txn_timstamp = ?, " +
@@ -69,80 +58,72 @@ public class PointsDaoJdbcImpl implements PointsDao{
 			" SELECT * FROM payments_pointsheader WHERE " +
 			"txn_action_code = ? AND " +
 			"order_id = ? AND " +
-			"txn_classification_code = ?";
+			"txn_classification_code = ? " +
+			"order by id desc";
 	
 	private static final String GET_ORDER_QUERY = 
-			"SELECT o.id, c.name , " +
-			"o.payment_mode, o.timestamp, " +
-			"o.reference_order_id, o.support_state, " +
+			"SELECT o.*, c.name , " +
 			"c.id, cd.type FROM " +
 			"orders_order o, accounts_client c, " +
 			"accounts_clientdomain cd  " +
 			"WHERE o.client_id = c.id AND " +
 			"o.id = ? ";
 	
+	private static final String LOAD_HEADER_DATA_QUERY = 
+			"SELECT * FROM " +
+			"payments_pointsheader WHERE " +
+			"status = 'FRESH' AND " +
+			"txn_action_code = ? AND " +
+			"settlement_date = ? AND " +
+			"partner_merchant_id = ? " +
+			"order by id desc";
+	
+	
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 	
 	@Override
-	public void insertPointsHeaderData(final PointsHeader pointsHeader) {
-			int rowAffected = jdbcTemplate.update(new PreparedStatementCreator() {
+	public Long insertPointsHeaderData(final PointsHeader pointsHeader) {
+		final KeyHolder keyHolderPointsHeader = new GeneratedKeyHolder();
+			jdbcTemplate.update(new PreparedStatementCreator() {
 			
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
 				PreparedStatement ps = con.prepareStatement(INSERT_POINTS_HEADER_SQL, new String [] {"id"});
+				
 				ps.setLong(1, pointsHeader.getOrderId());
-				ps.setString(2, pointsHeader.getTransactionId());
-				ps.setString(3, pointsHeader.getPartnerMerchantId());
-				ps.setString(4, pointsHeader.getPartnerTerminalId());
-				ps.setString(5, pointsHeader.getTxnActionCode());
-				ps.setString(6, pointsHeader.getTxnClassificationCode());
-				ps.setString(7, pointsHeader.getTxnPaymentType());
-				ps.setDate(8, new java.sql.Date(pointsHeader.getTxnDate().getMillis()));
-				ps.setDate(9, new java.sql.Date(pointsHeader.getSettlementDate().getMillis()));
+				ps.setString(2, pointsHeader.getReferenceId());
+				ps.setString(3, pointsHeader.getLoyaltyCard());
+				ps.setString(4, pointsHeader.getPartnerMerchantId());
+				ps.setString(5, pointsHeader.getPartnerTerminalId());
+				ps.setString(6, pointsHeader.getTxnActionCode());
+				ps.setString(7, pointsHeader.getTxnClassificationCode());
+				ps.setString(8, pointsHeader.getTxnPaymentType());
+				
+				ps.setDate(9, new java.sql.Date(pointsHeader.getTxnDate().getMillis()));
+				ps.setDate(10, new java.sql.Date(pointsHeader.getSettlementDate().getMillis()));
+				ps.setTimestamp(11, new java.sql.Timestamp(pointsHeader.getTxnTimestamp().getMillis()));				
 			
-				ps.setTimestamp(10, new java.sql.Timestamp(System.currentTimeMillis()));				
-				ps.setInt(11, pointsHeader.getTxnValue());
-				ps.setString(12, pointsHeader.getMarketingCode());
-				ps.setString(13, pointsHeader.getBranchId());
-				ps.setInt(14, pointsHeader.getTxnPoints());
-				ps.setString(15, "FRESH");
-				ps.setString(16, pointsHeader.getReason());
-				ps.setBigDecimal(17, pointsHeader.getBurnRatio());
-				ps.setBigDecimal(18, pointsHeader.getEarnRatio());
+				ps.setInt(12, pointsHeader.getTxnValue());
+				ps.setString(13, pointsHeader.getMarketingCode());
+				ps.setString(14, pointsHeader.getBranchId());
+				ps.setInt(15, pointsHeader.getTxnPoints());
+				ps.setString(16, "FRESH");
+				ps.setString(17, pointsHeader.getReason());
+				ps.setBigDecimal(18, pointsHeader.getBurnRatio());
+				ps.setBigDecimal(19, pointsHeader.getEarnRatio());
 				
 				return ps;
 			}
-		});
-	}
-	
-
-	@Override
-	public void insertPointsItemsData(final PointsItems pointsItems) {
-		int rowAffected = jdbcTemplate.update(new PreparedStatementCreator() {
-		
-			@Override
-			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-				PreparedStatement ps = con.prepareStatement(INSERT_POINTS_ITEMS_SQL, new String [] {"id"});
-				ps.setLong(1, pointsItems.getPointsHeaderId());
-				ps.setInt(2, pointsItems.getQuantity());
-				ps.setString(3, pointsItems.getDepartmentCode());
-				ps.setString(4, pointsItems.getDepartmentName());
-				ps.setInt(5, pointsItems.getItemAmount());
-				ps.setString(6, pointsItems.getArticleId());
-				ps.setString(7, pointsItems.getTxnActionCode());
-				ps.setLong(8, pointsItems.getItemId());
-				
-				return ps;
-			}
-		});
-		
+		}, keyHolderPointsHeader);
+			
+		return (Long) keyHolderPointsHeader.getKey();
 	}
 
 	@Override
 	public void updateStatus(final String txnActionCode, final String settlementDate, final String merchantId) {
-		long rowUpdated = jdbcTemplate.update(new PreparedStatementCreator() {
+		jdbcTemplate.update(new PreparedStatementCreator() {
 			
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con)
@@ -177,8 +158,11 @@ public class PointsDaoJdbcImpl implements PointsDao{
 			orderDetail.setClientName(rs.getString("name"));
 			orderDetail.setOrderDate(rs.getDate("timestamp").toString());
 			orderDetail.setPaymentMode(rs.getString("payment_mode"));
-			orderDetail.setReference_order_id(rs.getString("reference_order_id"));
+			orderDetail.setReferenceOrderId(rs.getString("reference_order_id"));
 			orderDetail.setSupportState(rs.getString("support_state"));
+			orderDetail.setTimestamp(new DateTime(rs.getTimestamp("timestamp")));
+			orderDetail.setLoyaltyCard(rs.getString("payback_id"));
+			orderDetail.setAmount(rs.getBigDecimal("payable_amount"));
 			return orderDetail;
 		}
 		
@@ -194,10 +178,18 @@ public class PointsDaoJdbcImpl implements PointsDao{
 		return null;
 	}
 	
+	@Override
+	public Collection<PointsHeader> loadPointsHeaderData(String txnActionCode, String settlementDate, String merchantId) {
+		Collection<PointsHeader> pointsHeaderList = jdbcTemplate.query(LOAD_HEADER_DATA_QUERY, new Object[]{txnActionCode, settlementDate, merchantId}, 
+				new HeaderMapper());
+		return pointsHeaderList;
+	}
+	
 	private class HeaderMapper implements RowMapper<PointsHeader>{
 
 		public PointsHeader mapRow(ResultSet rs, int rowNum) throws SQLException {
 			PointsHeader pointsHeader = new PointsHeader();
+			pointsHeader.setId(rs.getLong("id"));
 			pointsHeader.setBurnRatio(rs.getBigDecimal("burn_ratio"));
 			pointsHeader.setEarnRatio(rs.getBigDecimal("earn_ratio"));
 			pointsHeader.setOrderId(rs.getLong("order_id"));
@@ -205,10 +197,21 @@ public class PointsDaoJdbcImpl implements PointsDao{
 			pointsHeader.setTxnTimestamp(new DateTime(rs.getTimestamp("txn_timstamp").getTime()));
 			pointsHeader.setSettlementDate(new DateTime(rs.getDate("settlement_date").getTime()));
 			pointsHeader.setTxnDate(new DateTime(rs.getDate("txn_date").getTime()));
-			//pointsHeader.setTxnPoints(txnPoints)
+			pointsHeader.setTxnPoints(rs.getInt("txn_points"));
+			pointsHeader.setBranchId(rs.getString("branch_id"));
+			pointsHeader.setLoyaltyCard(rs.getString("loyalty_card"));
+			pointsHeader.setMarketingCode(rs.getString("marketing_code"));
+			pointsHeader.setPartnerMerchantId(rs.getString("partner_merchant_id"));
+			pointsHeader.setPartnerTerminalId(rs.getString("partner_terminal_id"));
+			pointsHeader.setReason(rs.getString("reason"));
+			pointsHeader.setReferenceId(rs.getString("reference_id"));
+			pointsHeader.setTxnClassificationCode(rs.getString("txn_classification_code"));
+			pointsHeader.setTxnPaymentType(rs.getString("txn_payment_type"));
+			pointsHeader.setTxnValue(rs.getInt("txn_points"));
+			
 			return pointsHeader;
 		}
 		
-	}
+	}	
 	
 }

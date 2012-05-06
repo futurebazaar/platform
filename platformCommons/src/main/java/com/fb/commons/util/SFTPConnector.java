@@ -71,7 +71,7 @@ public class SFTPConnector {
 	
 	public int upload(String dataToUpload, String fileName, String remoteDirectory) throws PlatformException{		
 		try {
-			ChannelSftp channelSFTP = (ChannelSftp) this.channel;		
+			ChannelSftp channelSFTP = (ChannelSftp) this.channel;
 			channelSFTP.cd(remoteDirectory);
 			InputStream inStream = new ByteArrayInputStream(dataToUpload.getBytes("UTF-8"));
 			channelSFTP.put(inStream, fileName);

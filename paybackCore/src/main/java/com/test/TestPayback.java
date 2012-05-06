@@ -1,37 +1,20 @@
 package com.test;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.Date;
-import java.util.Properties;
-
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.mail.BodyPart;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.util.ByteArrayDataSource;
+import java.math.BigDecimal;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.fb.platform.payback.util.PointsTxnClassificationCodeEnum;
+import com.fb.platform.payback.service.impl.PointsEarnManagerImpl;
+import com.fb.platform.payback.service.impl.PointsManagerImpl;
+import com.fb.platform.payback.to.EarnActionCodesEnum;
+import com.fb.platform.payback.to.StorePointsHeaderRequest;
+import com.fb.platform.payback.to.StorePointsItemRequest;
+import com.fb.platform.payback.to.StorePointsResponse;
 import com.fb.platform.payback.util.PointsUtil;
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.Session;
-import com.jcraft.jsch.SftpException;
+
 
 
 public class TestPayback {
@@ -41,7 +24,6 @@ public class TestPayback {
 	private static String username;
 	private static String password;
 	private static String remoteDirectory;
-	
 	
 	public static void main(String[] args) {
 		host = "10.40.15.119";
@@ -57,7 +39,7 @@ public class TestPayback {
 				"applicationContext-resources.xml"};	
 
 		ApplicationContext orderServiceContext = new ClassPathXmlApplicationContext(serviceResources);
-		Object manager = orderServiceContext.getBean("pointsEarnManager");
+		Object earnManager = orderServiceContext.getBean("pointsEarnManager");
 		//((PointsEarnManagerImpl) manager).storeEarnData();
 		//int manager1 = ((PointsManagerImpl) manager).mailBurnData();
 		//int earnManager = ((PointsEarnManagerImpl) manager).putEarnDataOnSftp();
@@ -88,9 +70,7 @@ public class TestPayback {
 		int earnFactor = Integer.parseInt(factorIterator.nextToken());
 		System.out.println(earnFactor);
 		
-		DateTimeFormatter format = DateTimeFormat.forPattern("yyyyMMdd");
-		DateTime validTillDate = format.parseDateTime("20120503");
-		System.out.println(validTillDate);
+		
 		System.out.println(DateTime.now());
 		System.out.println(DateTime.now().isAfter(validTillDate));
 		System.out.println(validTillDate.toDate().before(DateTime.now().toDate()));
@@ -106,99 +86,41 @@ public class TestPayback {
 			String[] file = files.list();
 			System.out.println(file[0]);
 		}*/
-		System.out.println(PointsTxnClassificationCodeEnum.valueOf(txnActionCode).toString().split(",")[0]);
-		Date d = DateTime.now().toDate();
-		System.out.println(d);
 		
-		System.out.println(pointsUtil.convertDateToFormat(DateTime.now(), "hhmmss"));
+		//DateTimeFormatter format = DateTimeFormat.forPattern("yyyyMMdd");
+		//DateTime validTillDate = format.parseDateTime(null);
+		//System.out.println(validTillDate);
+		
+		EarnActionCodesEnum e = EarnActionCodesEnum.valueOf("PREALLOC_EARN");
+		System.out.println(e.name() + e.toString());
+		System.out.println(new BigDecimal("0.03"));
+		StorePointsHeaderRequest storePointsHeaderRequest = new StorePointsHeaderRequest();
+		storePointsHeaderRequest.setAmount(new BigDecimal(3000));
+		storePointsHeaderRequest.setLoyaltyCard("1234567812345678");
+		storePointsHeaderRequest.setOrderId(1245150);
+		storePointsHeaderRequest.setTxnActionCode("PREALLOC_EARN");
+		storePointsHeaderRequest.setReason("");
+		
+		StorePointsItemRequest storePointsItemRequest = new StorePointsItemRequest();
+		storePointsItemRequest.setAmount(BigDecimal.TEN);
+		storePointsItemRequest.setId(12345);
+		storePointsItemRequest.setArticleId(12345);
+		storePointsItemRequest.setQuantity(1);
+		storePointsItemRequest.setDepartmentCode(1234);
+		storePointsItemRequest.setDepartmentName("TEST");
+		storePointsHeaderRequest.getStorePointsItemRequest().add(storePointsItemRequest);
+		
+		/*for (OrderItem xmlOrderItem : xmlStorePointsRequest.getOrderItem()) {
+			com.fb.platform.payback.to.StorePointsItemRequest storePointsItemRequest = createStorePointsItem(xmlOrderItem);
+			storePointsHeaderRequest.getStorePointsItemRequest().add(storePointsItemRequest);
+		}*/
+		Object manager = orderServiceContext.getBean("pointsManager");
+		StorePointsResponse storePointsResponse = ((PointsManagerImpl) manager).getPointsReponse(storePointsHeaderRequest);
+		System.out.println(storePointsResponse.getStorePointsResponseCodeEnum().name());
+		System.out.println(storePointsResponse.getActionCode());
+		System.out.println(storePointsResponse.getStorePointsResponseCodeEnum().toString());
+
 		
 	}
 	
-	public static int upload(String fileToUpload) throws IOException{
-		JSch jsch = new JSch();
-		Session session = null;
-		Channel channel = null;
-		ChannelSftp channelSFTP = null;
-		
-		try {
-			session = jsch.getSession(username, host, port);
-			session.setPassword(password);
-			java.util.Properties config = new java.util.Properties();
-			config.put("StrictHostKeyChecking", "no");
-			session.setConfig(config);
-			session.connect();
-			
-			channel = session.openChannel("sftp");
-			channel.connect();
-			channelSFTP = (ChannelSftp) channel;
-			
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			// Will throw a proper Exception
-			throw new IOException();
-		}
-		
-		try{
-			channelSFTP.cd(remoteDirectory);
-			File file = new File(fileToUpload);
-			channelSFTP.put(new FileInputStream(file), file.getName());
-		}
-		catch(FileNotFoundException e){
-			e.printStackTrace();
-			throw new IOException();
-		} catch (SftpException e) {
-			// TODO Auto-generated catch 	block
-			e.printStackTrace();
-			throw new IOException();
-		}
-			
-		return 0;
-	}
-	
-	public static int sendMail(){
-			
-		Properties properties = new Properties();
-		properties.put("mail.smtp.host", "10.0.101.39");
-		properties.put("mail.smtp.port", "25");
-		//properties.put("mail.smtp.auth", "true");
-		//properties.put("mail.smtp.starttls.enable", "true");
-		javax.mail.Session session = javax.mail.Session.getInstance(properties);
-		
-		try{
-			
-	         MimeMessage message = new MimeMessage(session);
-	         message.setFrom(new InternetAddress("fbadmin@futurebazaar.com"));
-	         message.addRecipient(Message.RecipientType.TO, new InternetAddress("anubhav.jain@futuregroup.in"));
-	         message.addRecipient(Message.RecipientType.CC, new InternetAddress("salim.majgaonkar@futuregroup.in"));
-	         message.setSubject("Test Mail");
-	         
-	         BodyPart messageBodyPart = new MimeBodyPart();
-	         messageBodyPart.setText("testing");
-	         Multipart multipart = new MimeMultipart();
-	         multipart.addBodyPart(messageBodyPart);
-	         
-	          MimeBodyPart attachmentPart = new MimeBodyPart();
-	         
-	         DataSource source = new ByteArrayDataSource("Anubhav".getBytes("UTF-8"), "text/plain");
-	         attachmentPart.setDataHandler(new DataHandler(source));
-	         attachmentPart.setFileName("BurnReversal.csv");
-	         multipart.addBodyPart(attachmentPart);
-	         message.setContent(multipart );
-	         System.out.println("Sending message successfully....");
-	         Transport.send(message);
-	         System.out.println("Sent message successfully....");
-	      
-		}catch(AddressException addressException) {
-	    	addressException.printStackTrace();
-	    	
-	    }catch (MessagingException messageException) {
-	         messageException.printStackTrace();
-	         
-	    } catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return 0;
-	}
 }

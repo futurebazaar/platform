@@ -1,4 +1,4 @@
-package com.fb.platform.payback.util;
+package com.fb.platform.payback.to;
 
 public enum BurnActionCodesEnum {
 	

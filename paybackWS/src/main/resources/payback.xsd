@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.fb.com/platform/payback/1.0.0" xmlns:payback="http://www.fb.com/platform/payback/1.0.0">
+  <xs:element name="storePointsRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="payback:orderId"/>
+        <xs:element ref="payback:loyaltyCard"/>
+        <xs:element ref="payback:amount"/>
+        <xs:element ref="payback:actionCode"/>
+         <xs:element ref="payback:reason"/>
+        <xs:element maxOccurs="unbounded" ref="payback:orderItem"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="actionCode" type="xs:string"/>
+  <xs:element name="orderId" type="xs:long"/>
+  <xs:element name="loyaltyCard" type="xs:string"/>
+  <xs:element name="reason" type="xs:string"/>
+  <xs:element name="amount" type="xs:decimal"/>
+  <xs:element name="orderItem">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="payback:itemId"/>
+         <xs:element ref="payback:articleId"/>
+        <xs:element ref="payback:quantity"/>
+        <xs:element ref="payback:amount"/>
+        <xs:element ref="payback:departmentName"/>
+        <xs:element ref="payback:departmentCode" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="itemId" type="xs:long"/>
+  <xs:element name="articleId" type="xs:long"/>
+  <xs:element name="quantity" type="xs:int"/>
+  <xs:element name="departmentName" type="xs:string"/>
+  <xs:element name="departmentCode" type="xs:long"/>
+  <xs:simpleType name="actionCode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+      <xs:enumeration value="FAILURE"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="storePointsResponse">
+  	<xs:complexType>
+      <xs:sequence>
+	  	 <xs:element ref="payback:actionCode"/>
+        <xs:element ref="payback:storePointsStatus"/>
+        <xs:element ref="payback:message"/>
+	  </xs:sequence>
+	</xs:complexType>
+  </xs:element>
+  <xs:element name="storePointsStatus" type="payback:storePointsStatus"/>
+   <xs:element name="message" type="xs:string"/>
+   <xs:simpleType name="storePointsStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="PREALLOC_EARN"/>
+      <xs:enumeration value="EARN_REVERSAL"/>
+      <xs:enumeration value="BURN_REVERSAL"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

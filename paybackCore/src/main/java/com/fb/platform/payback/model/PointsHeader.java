@@ -3,22 +3,25 @@ package com.fb.platform.payback.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Properties;
+
 import org.joda.time.DateTime;
 
-import com.fb.platform.payback.util.PointsTxnClassificationCodeEnum;
+//import com.fb.platform.payback.util.PointsTxnClassificationCodeEnum;
 
 public class PointsHeader implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
+	private long id;
 	private long orderId;
-	private String transactionId;
+	private String referenceId;
+	private String loyaltyCard;
 	private String partnerMerchantId;
 	private String partnerTerminalId;
 	private String txnActionCode;
 	private String txnClassificationCode;
 	private String txnPaymentType;
-	private DateTime txnDate; // No Need to set type as java Date as it is passed as it is
+	private DateTime txnDate; 
 	private DateTime settlementDate;
 	private DateTime txnTimestamp;
 	private int txnValue;
@@ -29,7 +32,18 @@ public class PointsHeader implements Serializable{
 	private BigDecimal burnRatio;
 	private BigDecimal earnRatio;
 	
-	
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
+	public String getLoyaltyCard() {
+		return loyaltyCard;
+	}
+	public void setLoyaltyCard(String loyaltyCard) {
+		this.loyaltyCard = loyaltyCard;
+	}
 	public String getTxnActionCode() {
 		return txnActionCode;
 	}
@@ -84,11 +98,11 @@ public class PointsHeader implements Serializable{
 	public void setOrderId(long orderId) {
 		this.orderId = orderId;
 	}
-	public String getTransactionId() {
-		return transactionId;
+	public String getReferenceId() {
+		return referenceId;
 	}
-	public void setTransactionId(String transactionId) {
-		this.transactionId = transactionId;
+	public void setReferenceId(String referenceId) {
+		this.referenceId = referenceId;
 	}
 	public String getPartnerMerchantId() {
 		return partnerMerchantId;
@@ -132,8 +146,9 @@ public class PointsHeader implements Serializable{
 	public void setReason(String reason) {
 		this.reason = reason;
 	}
+	
 	public void setOrderDetails(OrderDetail orderDetail, Properties props) {
-		String clientName = orderDetail.getClientName().toUpperCase(); 
+		String clientName = orderDetail.getClientName().replaceAll(" ", "").toUpperCase(); 
 		String branchId = props.getProperty(clientName + "_BRANCH_ID");
 		String marketingCode = props.getProperty(clientName + "_MARKETING_CODE");
 		String [] partnerIds = props.getProperty(clientName + "_IDS").split(",");
@@ -146,12 +161,12 @@ public class PointsHeader implements Serializable{
 		
 	}
 	
-	public void setTxnDetails(PaymentDetail paymentDetail, Properties props, String txnActionCode){
-		this.setTransactionId(paymentDetail.getTransactionId());
+	public void setBurnTxnDetails(PaymentDetail paymentDetail, Properties props, String classificationCode, 
+			String paymentType){
+		this.setReferenceId(paymentDetail.getTransactionId());
 		this.setTxnDate(paymentDetail.getTxnDate());
-		String [] txnCodes = PointsTxnClassificationCodeEnum.valueOf(txnActionCode).toString().split(",");
-		this.setTxnClassificationCode(txnCodes[0]);
-		this.setTxnPaymentType(txnCodes[1]);
+		this.setTxnClassificationCode(classificationCode);
+		this.setTxnPaymentType(paymentType);
 		this.setTxnTimestamp(paymentDetail.getTxnDate());
 		
 	}

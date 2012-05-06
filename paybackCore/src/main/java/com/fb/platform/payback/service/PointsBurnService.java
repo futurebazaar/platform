@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fb.platform.payback.util.BurnActionCodesEnum;
+import com.fb.platform.payback.to.BurnActionCodesEnum;
 
 public interface PointsBurnService {
 

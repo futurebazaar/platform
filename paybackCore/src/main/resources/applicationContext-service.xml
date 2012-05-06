@@ -16,21 +16,33 @@
     <!-- =================================================================== -->
     <!-- Add new services here -->
 
-     <bean id="pointsEarnService" class="com.fb.platform.payback.service.impl.PointsEarnServiceImpl">
+     
+     <bean id="pointsService" class="com.fb.platform.payback.service.impl.PointsServiceImpl">
+        <property name="pointsUtil" ref="pointsUtil"></property>
+        <property name="pointsDao" ref="pointsDao"></property>
+    </bean>
+    <bean id="pointsEarnService" class="com.fb.platform.payback.service.impl.PointsEarnServiceImpl">
         <property name="pointsEarnDao" ref="pointsEarnDao"></property>
         <property name="pointsUtil" ref="pointsUtil"></property>
+        <property name="pointsService" ref="pointsService"></property>
         <property name="pointsDao" ref="pointsDao"></property>
     </bean>
      <bean id="pointsBurnService" class="com.fb.platform.payback.service.impl.PointsBurnServiceImpl">
         <property name="pointsBurnDao" ref="pointsBurnDao"></property>
         <property name="pointsUtil" ref="pointsUtil"></property>
-         <property name="pointsDao" ref="pointsDao"></property>
+        <property name="pointsDao" ref="pointsDao"></property>
+        <property name="pointsService" ref="pointsService"></property>
     </bean>
     
 	 <!-- =================================================================== -->
     <!-- Managers: For accessing Services                                        -->
     <!-- =================================================================== -->
     <!-- Add new Managers here -->
+     
+     <bean id="pointsManager" class="com.fb.platform.payback.service.impl.PointsManagerImpl">
+        <property name="pointsEarnManager" ref="pointsEarnManager"></property>
+       	<property name="pointsBurnManager" ref="pointsBurnManager"></property>
+    </bean>
      <bean id="pointsEarnManager" class="com.fb.platform.payback.service.impl.PointsEarnManagerImpl">
         <property name="pointsEarnService" ref="pointsEarnService"></property>
         <property name="pointsUtil" ref="pointsUtil"></property>
@@ -38,5 +50,12 @@
     <bean id="pointsBurnManager" class="com.fb.platform.payback.service.impl.PointsBurnManagerImpl">
         <property name="pointsBurnService" ref="pointsBurnService"></property>
         <property name="pointsUtil" ref="pointsUtil"></property>
+    </bean>
+    
+   <!-- =================================================================== -->
+    <!-- Utilities: For general methods                                      -->
+    <!-- =================================================================== -->
+    <!-- Add new Utilities here -->
+    <bean id="pointsUtil" class="com.fb.platform.payback.util.PointsUtil">
     </bean>
 </beans>

@@ -5,7 +5,8 @@ import java.util.Properties;
 
 import com.fb.platform.payback.service.PointsEarnManager;
 import com.fb.platform.payback.service.PointsEarnService;
-import com.fb.platform.payback.util.EarnActionCodesEnum;
+import com.fb.platform.payback.to.EarnActionCodesEnum;
+import com.fb.platform.payback.to.StorePointsHeaderRequest;
 import com.fb.platform.payback.util.PointsUtil;
 
 public class PointsEarnManagerImpl implements PointsEarnManager{
@@ -31,12 +32,12 @@ public class PointsEarnManagerImpl implements PointsEarnManager{
 				String merchantId = partnerIds[0];
 				for (EarnActionCodesEnum txnActionCode : EarnActionCodesEnum.values()){
 					String dataToUpload = pointsEarnService.postEarnData(txnActionCode, merchantId);
-					pointsUtil.sendMail(txnActionCode.name(), merchantId, txnActionCode.toString()+ ".txt", dataToUpload);
+					if (dataToUpload != null && !dataToUpload.equals("")){
+						pointsUtil.sendMail(txnActionCode.name(), merchantId, txnActionCode.toString()+ ".txt", dataToUpload);
+					}
 					
 				}
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -44,8 +45,15 @@ public class PointsEarnManagerImpl implements PointsEarnManager{
 		return 0;
 	}
 	
-	public void storeEarnReversalData(){
-		EarnActionCodesEnum txnActionCode = EarnActionCodesEnum.EARN_REVERSAL;
-			
+	@Override
+	public int storeEarnPoints(StorePointsHeaderRequest request, String actionCode){
+		EarnActionCodesEnum txnActionCode = EarnActionCodesEnum.valueOf(actionCode);
+		try {
+			pointsEarnService.saveEarnData(txnActionCode, request);
+			return 0;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return -1;
 	}
 }

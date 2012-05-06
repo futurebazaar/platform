@@ -371,6 +371,7 @@
         <module>promotionCore</module>
         <module>promotionWS</module>
         <module>paybackCore</module>
+        <module>paybackWS</module>
     </modules>
 
     <reporting>
