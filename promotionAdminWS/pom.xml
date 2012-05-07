@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+
+	<parent>
+	    <artifactId>platform</artifactId>
+	    <groupId>com.fb</groupId>
+	    <version>1.1.1</version>
+	    <relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>promotionAdminWS</artifactId>
+	<packaging>war</packaging>
+	<version>1.1.1</version>
+	<name>Promotion Admin Web Services</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+	        <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss.SSS</maven.build.timestamp.format> 
+	        <buildDate>${maven.build.timestamp}</buildDate> 
+		<junit.version>4.8.2</junit.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.fb</groupId>
+			<artifactId>platformCommons</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fb</groupId>
+			<artifactId>promotionCore</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<build>
+		<finalName>promotionAdminWS</finalName>
+		<plugins>
+        <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                        <archive>
+                                <manifest>
+                                        <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                                </manifest>
+                                <manifestEntries>
+                                <build-date>${buildDate}</build-date>
+                                </manifestEntries>
+                        </archive>
+                </configuration>
+        </plugin>
+
+			<plugin>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

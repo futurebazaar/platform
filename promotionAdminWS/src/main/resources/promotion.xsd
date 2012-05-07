@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.fb.com/platform/promotion/1.0.0" xmlns:promotion="http://www.fb.com/platform/promotion/1.0.0">
+  <xs:element name="applyCouponRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:couponCode"/>
+        <xs:element ref="promotion:orderRequest"/>
+        <xs:element ref="promotion:sessionToken"/>
+        <xs:element ref="promotion:couponCommitted"/>
+        <xs:element ref="promotion:orderBookingDate"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="couponCode" type="xs:string"/>
+  <xs:element name="couponCommitted" type="xs:boolean"/>
+  <xs:element name="orderRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:orderId"/>
+        <xs:element maxOccurs="unbounded" ref="promotion:orderItem"/>
+        <xs:element ref="promotion:clientId"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="orderId" type="xs:int"/>
+  <xs:element name="orderValue" type="xs:decimal"/>
+  <xs:element name="orderItem">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:product"/>
+        <xs:element ref="promotion:quantity"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="product">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:productId"/>
+        <xs:element maxOccurs="unbounded" ref="promotion:category"/>
+        <xs:element maxOccurs="unbounded" ref="promotion:brand"/>
+        <xs:element ref="promotion:price"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="productId" type="xs:int"/>
+  <xs:element name="category" type="xs:int"/>
+  <xs:element name="brand" type="xs:int"/>
+  <xs:element name="quantity" type="xs:int"/>
+  <xs:element name="clientId" type="xs:int"/>
+  <xs:element name="sessionToken" type="xs:string"/>
+  <xs:element name="price" type="xs:decimal"/>
+  <xs:element name="orderBookingDate" type="xs:string"/>
+
+  <xs:element name="applyCouponResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:couponCode"/>
+        <xs:element ref="promotion:discountValue"/>
+        <xs:element ref="promotion:couponStatus"/>
+        <xs:element ref="promotion:statusMessage"/>
+        <xs:element ref="promotion:promoName"/>
+        <xs:element ref="promotion:promoDescription"/>
+        <xs:element ref="promotion:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="discountValue" type="xs:decimal"/>
+  <xs:element name="couponStatus" type="promotion:couponStatus"/>
+  <xs:element name="statusMessage" type="xs:string"/>
+  <xs:element name="promoName" type="xs:string"/>
+  <xs:element name="promoDescription" type="xs:string"/>
+  
+  <xs:simpleType name="couponStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INVALID_COUPON_CODE"/>
+      <xs:enumeration value="COUPON_CODE_EXPIRED"/>
+      <xs:enumeration value="USER_NOT_AUTHORIZED"/>
+      <xs:enumeration value="NUMBER_OF_USES_EXCEEDED"/>
+      <xs:enumeration value="NOT_APPLICABLE"/>
+      <xs:enumeration value="LESS_ORDER_AMOUNT"/>
+      <xs:enumeration value="ALREADY_APPLIED_COUPON_ON_ORDER"/>
+      <xs:enumeration value="ALREADY_APPLIED_PROMOTION_ON_ORDER"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+      <xs:enumeration value="INVALID_CLIENT"/>
+      <xs:enumeration value="CATEGORY_MISMATCH"/>
+      <xs:enumeration value="BRAND_MISMATCH"/>
+      <xs:enumeration value="INACTIVE_COUPON"/>
+      <xs:enumeration value="TOTAL_MAX_USES_EXCEEDED"/>
+      <xs:enumeration value="TOTAL_MAX_USES_PER_USER_EXCEEDED"/>
+      <xs:enumeration value="TOTAL_MAX_AMOUNT_EXCEEDED"/>
+      <xs:enumeration value="TOTAL_MAX_AMOUNT_PER_USER_EXCEEDED"/>
+      <xs:enumeration value="LIMIT_SUCCESS"/>
+      <xs:enumeration value="NO_APPLIED_COUPON_ON_ORDER"/>
+      <xs:enumeration value="NO_APPLIED_PROMOTION_ON_ORDER"/>
+      <xs:enumeration value="PRODUCT_NOT_PRESENT"/>
+      <xs:enumeration value="LESS_ORDER_AMOUNT_OF_BRAND_PRODUCTS"/>
+      <xs:enumeration value="LESS_ORDER_AMOUNT_OF_CATEGORY_PRODUCTS"/>
+      <xs:enumeration value="NOT_FIRST_PURCHASE"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="commitCouponRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:orderId"/>
+        <xs:element ref="promotion:couponCode"/>
+        <xs:element ref="promotion:discountValue"/>
+        <xs:element ref="promotion:sessionToken"/>
+        <xs:element ref="promotion:orderBookingDate"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="commitCouponResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:commitCouponStatus"/>
+        <xs:element ref="promotion:statusMessage"/>
+        <xs:element ref="promotion:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="commitCouponStatus" type="promotion:commitCouponStatus"/>
+
+  <xs:simpleType name="commitCouponStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INVALID_COUPON_CODE"/>
+      <xs:enumeration value="NUMBER_OF_USES_EXCEEDED"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+      <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="ALREADY_APPLIED_COUPON_ON_ORDER"/>
+      <xs:enumeration value="ALREADY_APPLIED_PROMOTION_ON_ORDER"/>
+	  <xs:enumeration value="NO_APPLIED_COUPON_ON_ORDER"/>
+	  <xs:enumeration value="NO_APPLIED_PROMOTION_ON_ORDER"/>
+	  <xs:enumeration value="TOTAL_MAX_USES_EXCEEDED"/>
+	  <xs:enumeration value="TOTAL_MAX_USES_PER_USER_EXCEEDED"/>
+	  <xs:enumeration value="TOTAL_MAX_AMOUNT_EXCEEDED"/>
+	  <xs:enumeration value="TOTAL_MAX_AMOUNT_PER_USER_EXCEEDED"/>
+	  <xs:enumeration value="INACTIVE_COUPON"/>
+	  <xs:enumeration value="COUPON_CODE_EXPIRED"/>
+	  <xs:enumeration value="USER_NOT_AUTHORIZED"/>
+	  <xs:enumeration value="NOT_APPLICABLE"/>
+	  <xs:enumeration value="LESS_ORDER_AMOUNT"/>
+	  <xs:enumeration value="INVALID_CLIENT"/>
+	  <xs:enumeration value="CATEGORY_MISMATCH"/>
+	  <xs:enumeration value="BRAND_MISMATCH"/>
+	  <xs:enumeration value="LIMIT_SUCCESS"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:element name="releaseCouponRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:orderId"/>
+        <xs:element ref="promotion:couponCode"/>
+        <xs:element ref="promotion:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+    
+  <xs:element name="releaseCouponResponse">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element ref="promotion:releaseCouponStatus"/>
+      <xs:element ref="promotion:sessionToken"/>
+    </xs:sequence>
+  </xs:complexType>
+  </xs:element>
+  <xs:element name="releaseCouponStatus" type="promotion:releaseCouponStatus"/>
+
+  <xs:simpleType name="releaseCouponStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INVALID_COUPON_CODE"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+      <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="COUPON_NOT_COMMITTED"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:element name="clearPromotionCacheResponse">
+  	<xs:complexType>
+  		<xs:sequence>
+  			<xs:element ref="promotion:promotionId"/>
+  			<xs:element maxOccurs="unbounded" ref="promotion:clearCouponCacheResponse"/>
+  			<xs:element ref="promotion:sessionToken"/>
+  			<xs:element ref="promotion:clearCacheEnum"/>
+  		</xs:sequence>
+  	</xs:complexType>
+  </xs:element>
+  
+  <xs:element name="clearCouponCacheResponse">
+  	<xs:complexType>
+  		<xs:sequence>
+  			<xs:element ref="promotion:couponCode"/>
+  			<xs:element ref="promotion:sessionToken"/>
+  			<xs:element ref="promotion:clearCacheEnum"/>
+  		</xs:sequence>
+  	</xs:complexType>
+  </xs:element>
+  
+   <xs:element name="clearPromotionCacheRequest">
+  	<xs:complexType>
+  		<xs:sequence>
+  			<xs:element ref="promotion:promotionId"/>
+			<xs:element ref="promotion:sessionToken"/>
+  		</xs:sequence>
+  	</xs:complexType>
+  </xs:element>
+  
+  <xs:element name="clearCouponCacheRequest">
+  	<xs:complexType>
+  		<xs:sequence>
+  			<xs:element ref="promotion:couponCode"/>
+			<xs:element ref="promotion:sessionToken"/>
+  		</xs:sequence>
+  	</xs:complexType>
+  </xs:element>
+  
+  <xs:element name="promotionId" type="xs:int"/>
+
+  <xs:element name="clearCacheEnum" type="promotion:clearCacheEnum"/>
+
+  <xs:simpleType name="clearCacheEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="CACHE_NOT_FOUND"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+      <xs:enumeration value="NO_SESSION"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:element name="applyScratchCardRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:cardNumber"/>
+        <xs:element ref="promotion:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="cardNumber" type="xs:string"/>
+
+  <xs:element name="applyScratchCardResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:applyScratchCardStatus"/>
+        <xs:element ref="promotion:couponCode"/>
+        <xs:element ref="promotion:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="applyScratchCardStatus" type="promotion:applyScratchCardStatus"/>
+  <xs:simpleType name="applyScratchCardStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INVALID_SCRATCH_CARD"/>
+      <xs:enumeration value="COUPON_ALREADY_ASSIGNED_TO_USER"/>
+      <xs:enumeration value="NOT_FIRST_ORDER"/>
+      <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>
