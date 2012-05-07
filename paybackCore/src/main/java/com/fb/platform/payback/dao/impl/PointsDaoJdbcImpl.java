@@ -207,7 +207,7 @@ public class PointsDaoJdbcImpl implements PointsDao{
 			pointsHeader.setReferenceId(rs.getString("reference_id"));
 			pointsHeader.setTxnClassificationCode(rs.getString("txn_classification_code"));
 			pointsHeader.setTxnPaymentType(rs.getString("txn_payment_type"));
-			pointsHeader.setTxnValue(rs.getInt("txn_points"));
+			pointsHeader.setTxnValue(rs.getInt("txn_value"));
 			
 			return pointsHeader;
 		}

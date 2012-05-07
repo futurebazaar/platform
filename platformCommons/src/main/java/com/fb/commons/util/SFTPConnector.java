@@ -72,10 +72,10 @@ public class SFTPConnector {
 	public int upload(String dataToUpload, String fileName, String remoteDirectory) throws PlatformException{		
 		try {
 			ChannelSftp channelSFTP = (ChannelSftp) this.channel;
-			channelSFTP.cd(remoteDirectory);
+			channelSFTP.cd(channelSFTP.getHome() + remoteDirectory);
 			InputStream inStream = new ByteArrayInputStream(dataToUpload.getBytes("UTF-8"));
 			channelSFTP.put(inStream, fileName);
-		
+			return 0;
 		}catch(IOException ioException){
 			ioException.printStackTrace();
 			throw new PlatformException("No File Found to be put.");
@@ -84,7 +84,6 @@ public class SFTPConnector {
 			sftpException.printStackTrace();
 			throw new PlatformException("Unable to Connect to SFTP.");	
 		}
-		return 0;
 	}
 
 }

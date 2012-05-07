@@ -3,7 +3,7 @@ package com.fb.platform.payback.service.impl;
 import com.fb.platform.payback.service.PointsBurnManager;
 import com.fb.platform.payback.service.PointsEarnManager;
 import com.fb.platform.payback.service.PointsManager;
-import com.fb.platform.payback.to.StorePointsHeaderRequest;
+import com.fb.platform.payback.to.StorePointsRequest;
 import com.fb.platform.payback.to.StorePointsResponse;
 import com.fb.platform.payback.to.StorePointsResponseCodeEnum;
 
@@ -22,7 +22,7 @@ public class PointsManagerImpl implements PointsManager{
 
 	
 	@Override
-	public StorePointsResponse getPointsReponse(StorePointsHeaderRequest request){
+	public StorePointsResponse getPointsReponse(StorePointsRequest request){
 		int flag = 1;
 		try{
 			if (request.getTxnActionCode().equals("PREALLOC_EARN") || request.getTxnActionCode().equals("EARN_REVERSAL")){

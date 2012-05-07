@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 public class StorePointsItemRequest {
 	private BigDecimal amount;
 	private long id;
-	private long articleId;
+	private String articleId;
 	private int quantity;
 	private String departmentName;
 	private long departmentCode;
@@ -34,10 +34,10 @@ public class StorePointsItemRequest {
 	public void setId(long id) {
 		this.id = id;
 	}
-	public long getArticleId() {
+	public String getArticleId() {
 		return articleId;
 	}
-	public void setArticleId(long articleId) {
+	public void setArticleId(String articleId) {
 		this.articleId = articleId;
 	}
 	public int getQuantity() {

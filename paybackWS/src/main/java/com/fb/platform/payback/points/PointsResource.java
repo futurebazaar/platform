@@ -33,8 +33,6 @@ import com.fb.platform.payback._1_0.StorePointsRequest;
 import com.fb.platform.payback._1_0.StorePointsResponse;
 import com.fb.platform.payback._1_0.StorePointsStatus;
 import com.fb.platform.payback.service.PointsManager;
-import com.fb.platform.payback.to.StorePointsHeaderRequest;
-import com.fb.platform.payback.to.StorePointsItemRequest;
 
 
 /**
@@ -74,7 +72,7 @@ public class PointsResource {
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			StorePointsRequest xmlStorePointsRequest = (StorePointsRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(storePointsXml)));
-			StorePointsHeaderRequest storePointsHeaderRequest = new StorePointsHeaderRequest();
+			com.fb.platform.payback.to.StorePointsRequest storePointsHeaderRequest = new com.fb.platform.payback.to.StorePointsRequest();
 			storePointsHeaderRequest.setAmount(xmlStorePointsRequest.getAmount());
 			storePointsHeaderRequest.setLoyaltyCard(xmlStorePointsRequest.getLoyaltyCard());
 			storePointsHeaderRequest.setOrderId(xmlStorePointsRequest.getOrderId());
@@ -107,8 +105,8 @@ public class PointsResource {
 		}
 	}
 
-	private StorePointsItemRequest createStorePointsItem(OrderItem xmlOrderItem) {
-		StorePointsItemRequest storePointsItemRequest = new StorePointsItemRequest();
+	private com.fb.platform.payback.to.StorePointsItemRequest createStorePointsItem(OrderItem xmlOrderItem) {
+		com.fb.platform.payback.to.StorePointsItemRequest storePointsItemRequest = new com.fb.platform.payback.to.StorePointsItemRequest();
 		storePointsItemRequest.setAmount(xmlOrderItem.getAmount());
 		storePointsItemRequest.setId(xmlOrderItem.getItemId());
 		storePointsItemRequest.setQuantity(xmlOrderItem.getQuantity());

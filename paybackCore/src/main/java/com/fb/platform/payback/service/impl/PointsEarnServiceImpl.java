@@ -18,7 +18,7 @@ import com.fb.platform.payback.service.PointsEarnService;
 import com.fb.platform.payback.service.PointsService;
 import com.fb.platform.payback.to.EarnActionCodesEnum;
 import com.fb.platform.payback.to.PointsTxnClassificationCodeEnum;
-import com.fb.platform.payback.to.StorePointsHeaderRequest;
+import com.fb.platform.payback.to.StorePointsRequest;
 import com.fb.platform.payback.to.StorePointsItemRequest;
 import com.fb.platform.payback.util.PointsUtil;
 
@@ -70,11 +70,11 @@ public class PointsEarnServiceImpl implements PointsEarnService{
 			if (dataToUpload != null && !dataToUpload.equals("")){
 				String fileName = txnActionCode.toString() + "_" + String.valueOf(merchantId) + 
 						"_"+ pointsUtil.convertDateToFormat(settlementDate, "ddMMyyyy") + "_" + sequenceNumber + ".txt";
-				String remoteDirectory = "/" + sftpUsername + "/" + props.getProperty("sftpRemoteDirectory");
+				String remoteDirectory = props.getProperty("sftpRemoteDirectory");
 				sftpConnector.upload(dataToUpload, fileName, remoteDirectory);
 				fileName = fileName.replace("txt", "chk");
 				sftpConnector.upload("", fileName, remoteDirectory);
-				pointsDao.updateStatus(txnActionCode.name(), settlementDate, merchantId);
+				//pointsDao.updateStatus(txnActionCode.name(), settlementDate, merchantId);
 			}
 			sftpConnector.closeConnection();			
 			
@@ -90,7 +90,6 @@ public class PointsEarnServiceImpl implements PointsEarnService{
 		int totalTxnPoints = 0;
 		int totalTxnValue = 0;
 		String rowData = "";
-		int itemRows = 0;
 		
 		Collection<PointsHeader> earnHeaderList = pointsDao.loadPointsHeaderData(txnActionCode, settlementDate, partnerMerchantId);
 		Iterator<PointsHeader> EarnIterator = earnHeaderList.iterator();
@@ -107,11 +106,12 @@ public class PointsEarnServiceImpl implements PointsEarnService{
 						pointsUtil.convertDateToFormat(earnHeader.getTxnDate(), "ddMMyyyy") + "|" + 
 						pointsUtil.convertDateToFormat(earnHeader.getTxnTimestamp(), "hhmmss") + "|" + 
 						new BigDecimal(earnHeader.getTxnValue()).setScale(2) + "||" + earnHeader.getMarketingCode() + "|" +
-						earnHeader.getTxnPoints() + "|" + String.valueOf(itemRows) + "|" + 
+						earnHeader.getTxnPoints() + "|" + String.valueOf(headerRows) + "|" + 
 						pointsUtil.convertDateToFormat(earnHeader.getSettlementDate(), "ddMMyyyy")	+ "|||||||" + 
 						new BigDecimal(earnHeader.getTxnValue()).setScale(2) + "|" + earnHeader.getBranchId() + 
 						"||||||||||||||||||||||";
 				rowData += "\n";
+				int itemRows = 0;
 				
 				Iterator<PointsItems> itemIterator = pointsItems.iterator();
 				while(itemIterator.hasNext()){
@@ -141,7 +141,7 @@ public class PointsEarnServiceImpl implements PointsEarnService{
 	}
 
 	@Override
-	public void saveEarnData(EarnActionCodesEnum txnActionCode, StorePointsHeaderRequest request) throws IOException {
+	public void saveEarnData(EarnActionCodesEnum txnActionCode, StorePointsRequest request) throws IOException {
 		Properties props = pointsUtil.getProperties("points.properties");
 		OrderDetail orderDetail = pointsDao.getOrderDetail(request.getOrderId());
 		
@@ -181,7 +181,7 @@ public class PointsEarnServiceImpl implements PointsEarnService{
 		storeBonusPoints(pointsHeader, request.getAmount(), day, props, clientName);
 	}
 
-	private void storePointsItem(StorePointsHeaderRequest request, long pointsHeaderId, String txnActionCode) {
+	private void storePointsItem(StorePointsRequest request, long pointsHeaderId, String txnActionCode) {
 		for (StorePointsItemRequest storePointsItem : request.getStorePointsItemRequest()){
 			PointsItems pointsItem = new PointsItems();
 			pointsItem.setPointsHeaderId(pointsHeaderId);
@@ -216,9 +216,9 @@ public class PointsEarnServiceImpl implements PointsEarnService{
 			String itemId = props.getProperty("PAYBACK_BONUS_ITEM_ID");
 			String departmentCode = props.getProperty("PAYBACK_BONUS_DEPARTMENT_CODE");
 			String departmentName = props.getProperty("PAYBACK_BONUS_DEPARTMENT_NAME");
-			pointsItem.setArticleId(Long.parseLong(articleId == null ? "1111" : articleId));
 			pointsItem.setItemId(Long.parseLong(itemId == null ? "80000" : itemId));
 			pointsItem.setDepartmentCode(Long.parseLong(departmentCode == null ? "100" : departmentCode));
+			pointsItem.setArticleId(articleId == null ? "1111" : articleId);
 			pointsItem.setDepartmentName(departmentName == null ? "BONUS" : departmentName);
 			pointsItem.setTxnActionCode(pointsHeader.getTxnActionCode());
 			pointsItem.setItemAmount(BigDecimal.ZERO);

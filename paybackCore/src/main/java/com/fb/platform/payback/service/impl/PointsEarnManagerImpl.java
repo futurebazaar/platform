@@ -6,7 +6,7 @@ import java.util.Properties;
 import com.fb.platform.payback.service.PointsEarnManager;
 import com.fb.platform.payback.service.PointsEarnService;
 import com.fb.platform.payback.to.EarnActionCodesEnum;
-import com.fb.platform.payback.to.StorePointsHeaderRequest;
+import com.fb.platform.payback.to.StorePointsRequest;
 import com.fb.platform.payback.util.PointsUtil;
 
 public class PointsEarnManagerImpl implements PointsEarnManager{
@@ -38,6 +38,7 @@ public class PointsEarnManagerImpl implements PointsEarnManager{
 					
 				}
 			}
+			System.out.println("Successfully completed the Task on SFTP");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -46,7 +47,7 @@ public class PointsEarnManagerImpl implements PointsEarnManager{
 	}
 	
 	@Override
-	public int storeEarnPoints(StorePointsHeaderRequest request, String actionCode){
+	public int storeEarnPoints(StorePointsRequest request, String actionCode){
 		EarnActionCodesEnum txnActionCode = EarnActionCodesEnum.valueOf(actionCode);
 		try {
 			pointsEarnService.saveEarnData(txnActionCode, request);

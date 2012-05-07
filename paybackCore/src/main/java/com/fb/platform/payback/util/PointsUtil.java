@@ -17,7 +17,7 @@ public class PointsUtil {
 	
 	public String getPreviousDayDate(){
 		DateTime datetime = new DateTime();
-		datetime = datetime.minusDays(1); //3
+		datetime = datetime.minusDays(1); 
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 		return fmt.print(datetime);
 	}

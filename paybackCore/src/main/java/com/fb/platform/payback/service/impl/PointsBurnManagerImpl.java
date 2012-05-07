@@ -6,7 +6,7 @@ import java.util.Properties;
 import com.fb.platform.payback.service.PointsBurnManager;
 import com.fb.platform.payback.service.PointsBurnService;
 import com.fb.platform.payback.to.BurnActionCodesEnum;
-import com.fb.platform.payback.to.StorePointsHeaderRequest;
+import com.fb.platform.payback.to.StorePointsRequest;
 import com.fb.platform.payback.util.PointsUtil;
 
 public class PointsBurnManagerImpl implements PointsBurnManager{
@@ -40,7 +40,7 @@ public class PointsBurnManagerImpl implements PointsBurnManager{
 	}
 	
 	@Override
-	public int storeBurnPoints(StorePointsHeaderRequest request, String actionCode){
+	public int storeBurnPoints(StorePointsRequest request, String actionCode){
 		BurnActionCodesEnum txnActionCode = BurnActionCodesEnum.valueOf(actionCode);
 		BigDecimal amount = request.getAmount();
 		long orderId = request.getOrderId();

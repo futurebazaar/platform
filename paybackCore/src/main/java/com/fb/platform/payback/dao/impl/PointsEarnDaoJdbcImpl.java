@@ -59,7 +59,7 @@ public class PointsEarnDaoJdbcImpl implements PointsEarnDao{
 		@Override
 		public PointsItems mapRow(ResultSet rs, int rowNum) throws SQLException {
 			PointsItems earnPoints = new PointsItems();
-			earnPoints.setArticleId(rs.getLong("article_id"));
+			earnPoints.setArticleId(rs.getString("article_id"));
 			earnPoints.setDepartmentCode(rs.getLong("department_code"));
 			earnPoints.setDepartmentName(rs.getString("department_name"));
 			earnPoints.setItemAmount(rs.getBigDecimal("item_amount"));
@@ -84,7 +84,7 @@ public class PointsEarnDaoJdbcImpl implements PointsEarnDao{
 				ps.setLong(3, pointsItems.getDepartmentCode());
 				ps.setString(4, pointsItems.getDepartmentName());
 				ps.setInt(5, pointsItems.getItemAmount().intValue());
-				ps.setLong(6, pointsItems.getArticleId());
+				ps.setString(6, pointsItems.getArticleId());
 				ps.setString(7, pointsItems.getTxnActionCode());
 				ps.setLong(8, pointsItems.getItemId());
 				ps.setString(9, "FRESH");

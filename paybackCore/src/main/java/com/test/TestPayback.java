@@ -10,7 +10,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.fb.platform.payback.service.impl.PointsEarnManagerImpl;
 import com.fb.platform.payback.service.impl.PointsManagerImpl;
 import com.fb.platform.payback.to.EarnActionCodesEnum;
-import com.fb.platform.payback.to.StorePointsHeaderRequest;
+import com.fb.platform.payback.to.StorePointsRequest;
 import com.fb.platform.payback.to.StorePointsItemRequest;
 import com.fb.platform.payback.to.StorePointsResponse;
 import com.fb.platform.payback.util.PointsUtil;
@@ -42,7 +42,7 @@ public class TestPayback {
 		Object earnManager = orderServiceContext.getBean("pointsEarnManager");
 		//((PointsEarnManagerImpl) manager).storeEarnData();
 		//int manager1 = ((PointsManagerImpl) manager).mailBurnData();
-		//int earnManager = ((PointsEarnManagerImpl) manager).putEarnDataOnSftp();
+		System.out.println(((PointsEarnManagerImpl) earnManager).putEarnDataOnSftp());
 		
 		
 		Object burnManager = orderServiceContext.getBean("pointsBurnManager");
@@ -91,7 +91,7 @@ public class TestPayback {
 		//DateTime validTillDate = format.parseDateTime(null);
 		//System.out.println(validTillDate);
 		
-		EarnActionCodesEnum e = EarnActionCodesEnum.valueOf("PREALLOC_EARN");
+		/*EarnActionCodesEnum e = EarnActionCodesEnum.valueOf("PREALLOC_EARN");
 		System.out.println(e.name() + e.toString());
 		System.out.println(new BigDecimal("0.03"));
 		StorePointsHeaderRequest storePointsHeaderRequest = new StorePointsHeaderRequest();
@@ -114,11 +114,11 @@ public class TestPayback {
 			com.fb.platform.payback.to.StorePointsItemRequest storePointsItemRequest = createStorePointsItem(xmlOrderItem);
 			storePointsHeaderRequest.getStorePointsItemRequest().add(storePointsItemRequest);
 		}*/
-		Object manager = orderServiceContext.getBean("pointsManager");
+		/*Object manager = orderServiceContext.getBean("pointsManager");
 		StorePointsResponse storePointsResponse = ((PointsManagerImpl) manager).getPointsReponse(storePointsHeaderRequest);
 		System.out.println(storePointsResponse.getStorePointsResponseCodeEnum().name());
 		System.out.println(storePointsResponse.getActionCode());
-		System.out.println(storePointsResponse.getStorePointsResponseCodeEnum().toString());
+		System.out.println(storePointsResponse.getStorePointsResponseCodeEnum().toString());*/
 
 		
 	}

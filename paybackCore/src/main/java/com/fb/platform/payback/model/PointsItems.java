@@ -9,9 +9,9 @@ public class PointsItems implements Serializable{
 	
 	
 	private String departmentName;
-	private long articleId;
+	private String articleId;
 	private int quantity;
-	private long departmentCode;
+	private long departmentCode; //Will be long as it is product Id
 	private BigDecimal itemAmount;
 	private long itemId;
 	private long pointsHeaderId;
@@ -23,10 +23,10 @@ public class PointsItems implements Serializable{
 	public void setDepartmentName(String departmentName) {
 		this.departmentName = departmentName;
 	}
-	public long getArticleId() {
+	public String getArticleId() {
 		return articleId;
 	}
-	public void setArticleId(long articleId) {
+	public void setArticleId(String articleId) {
 		this.articleId = articleId;
 	}
 	public int getQuantity() {

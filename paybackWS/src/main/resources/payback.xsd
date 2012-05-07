@@ -30,7 +30,7 @@
     </xs:complexType>
   </xs:element>
   <xs:element name="itemId" type="xs:long"/>
-  <xs:element name="articleId" type="xs:long"/>
+  <xs:element name="articleId" type="xs:string"/>
   <xs:element name="quantity" type="xs:int"/>
   <xs:element name="departmentName" type="xs:string"/>
   <xs:element name="departmentCode" type="xs:long"/>
