@@ -12,6 +12,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.rule.PromotionRule;
+import com.fb.platform.promotion.rule.RuleConfigDescriptorEnum;
 import com.fb.platform.promotion.rule.RuleConfigDescriptorItem;
 import com.fb.platform.promotion.rule.RuleConfiguration;
 import com.fb.platform.promotion.to.OrderRequest;
@@ -27,7 +28,6 @@ public class BuyXGetYFreeRuleImpl implements PromotionRule, Serializable{
 	private static transient Log log = LogFactory.getLog(BuyWorthXGetYRsOffRuleImpl.class);
 	private Product xProduct;
 	private Product yProduct;
-	private List<RuleConfigDescriptorItem> ruleConfigs = new ArrayList<RuleConfigDescriptorItem>();
 	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
@@ -53,6 +53,14 @@ public class BuyXGetYFreeRuleImpl implements PromotionRule, Serializable{
 	
 	@Override
 	public List<RuleConfigDescriptorItem> getRuleConfigs() {
+		List<RuleConfigDescriptorItem> ruleConfigs = new ArrayList<RuleConfigDescriptorItem>();
+		
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CATEGORY_LIST, true));
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.BRAND_LIST, true));
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.MIN_ORDER_VALUE, true));
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CATEGORY_INCLUDE_LIST, true));
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CATEGORY_EXCLUDE_LIST, true));
+		
 		return ruleConfigs;
 	}
 }
