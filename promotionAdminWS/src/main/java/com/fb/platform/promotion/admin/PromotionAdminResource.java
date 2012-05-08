@@ -87,6 +87,10 @@ public class PromotionAdminResource {
 					RuleConfigDescriptorItem ruleConfigDescriptorItem = new RuleConfigDescriptorItem();
 					ruleConfigDescriptorItem.setIsMandatory(apiRuleConfigDescriptorItem.isMandatory());
 					ruleConfigDescriptorItem.setRuleConfigDescriptorEnum(RuleConfigDescriptorEnum.valueOf(apiRuleConfigDescriptorItem.getRuleConfigDescriptorEnum().name()));
+					System.out.println("******" + apiRuleConfigDescriptorItem.getRuleConfigDescriptorEnum().getDescription());
+					ruleConfigDescriptorItem.setRuleConfigDescription(apiRuleConfigDescriptorItem.getRuleConfigDescriptorEnum().getDescription());
+					System.out.println("******" + apiRuleConfigDescriptorItem.getRuleConfigDescriptorEnum().getType());
+					ruleConfigDescriptorItem.setRuleConfigType(apiRuleConfigDescriptorItem.getRuleConfigDescriptorEnum().getType());
 					ruleConfigDescriptor.getRuleConfigDescriptorItem().add(ruleConfigDescriptorItem);
 				}
 				fetchRuleResponse.getRuleConfigDescriptor().add(ruleConfigDescriptor);

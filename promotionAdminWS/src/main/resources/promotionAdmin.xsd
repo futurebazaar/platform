@@ -54,12 +54,16 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
   	<xs:complexType>
       	<xs:sequence>
       		<xs:element ref="promotionAdmin:isMandatory"/>
+      		<xs:element ref="promotionAdmin:ruleConfigDescription"/>
+      		<xs:element ref="promotionAdmin:ruleConfigType"/>
       		<xs:element ref="promotionAdmin:ruleConfigDescriptorEnum"/>
       	</xs:sequence>
    	</xs:complexType>
   </xs:element>
   
   <xs:element name="isMandatory" type="xs:boolean"/>
+  <xs:element name="ruleConfigDescription" type="xs:string"/>
+  <xs:element name="ruleConfigType" type="xs:string"/>
   
   <xs:element name="ruleConfigDescriptorEnum" type="promotionAdmin:ruleConfigDescriptorEnum"/>
   <xs:simpleType name="ruleConfigDescriptorEnum">
