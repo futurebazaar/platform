@@ -9,7 +9,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.PlatformException;
@@ -35,6 +34,7 @@ import com.fb.platform.promotion.to.ApplyScratchCardRequest;
 import com.fb.platform.promotion.to.ApplyScratchCardResponse;
 import com.fb.platform.promotion.to.ApplyScratchCardStatus;
 import com.fb.platform.promotion.to.ClearCacheEnum;
+import com.fb.platform.promotion.to.ClearCouponCacheRequest;
 import com.fb.platform.promotion.to.ClearCouponCacheResponse;
 import com.fb.platform.promotion.to.ClearPromotionCacheRequest;
 import com.fb.platform.promotion.to.ClearPromotionCacheResponse;
@@ -358,7 +358,7 @@ public class PromotionManagerImpl implements PromotionManager {
 	}
 
 	@Override
-	public ClearCouponCacheResponse clearCache(com.fb.platform.promotion.to.ClearCouponCacheRequest clearCouponCacheRequest) {
+	public ClearCouponCacheResponse clearCache(ClearCouponCacheRequest clearCouponCacheRequest) {
 		ClearCouponCacheResponse clearCouponCacheResponse = new ClearCouponCacheResponse();
 		if (clearCouponCacheRequest == null || StringUtils.isBlank(clearCouponCacheRequest.getSessionToken())) {
 			clearCouponCacheResponse.setClearCacheEnum(ClearCacheEnum.NO_SESSION);

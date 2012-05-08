@@ -39,6 +39,8 @@ import com.fb.platform.promotion._1_0.OrderRequest;
 import com.fb.platform.promotion._1_0.Product;
 import com.fb.platform.promotion._1_0.ReleaseCouponRequest;
 import com.fb.platform.promotion._1_0.ReleaseCouponResponse;
+import com.fb.platform.promotion.admin._1_0.FetchRuleRequest;
+import com.fb.platform.promotion.admin._1_0.FetchRuleResponse;
 /**
  * @author vinayak
  *
@@ -58,6 +60,7 @@ public class RestClient {
 		releaseCoupon(sessionToken, orderId);
 		clearCoupon(sessionToken);
 		clearPromotion(sessionToken);
+		getAllPromotionRuleList(sessionToken);
 		logout(sessionToken);
 	}
 
@@ -278,6 +281,35 @@ public class RestClient {
 		ClearPromotionCacheResponse clearPromotionCacheResponse = (ClearPromotionCacheResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(clearPromotionResponseStr)));
 		System.out.println(clearPromotionCacheResponse.getClearCacheEnum().toString());
 		
+	}
+	
+	private static void getAllPromotionRuleList(String sessionToken) throws Exception {
+		HttpClient httpClient = new HttpClient();
+		PostMethod getAllPromotionRuleList = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/getAllPromotionRules");
+		FetchRuleRequest fetchRuleRequest = new FetchRuleRequest();
+		fetchRuleRequest.setSessionToken(sessionToken);
+		
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
+
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(fetchRuleRequest, sw);
+
+		System.out.println("\n\ngetAllPromotionRuleList : \n" + sw.toString());
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		getAllPromotionRuleList.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(getAllPromotionRuleList);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the getAllPromotionRuleList method : " + statusCode);
+			System.exit(1);
+		}
+		String getAllPromotionRuleListResponseStr = getAllPromotionRuleList.getResponseBodyAsString();
+		System.out.println("Got the getAllPromotionRuleList Response : \n\n" + getAllPromotionRuleListResponseStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		FetchRuleResponse fetchRuleResponse = (FetchRuleResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(getAllPromotionRuleListResponseStr)));
+		System.out.println(fetchRuleResponse.getFetchRulesEnum().toString());
 	}
 
 	private static void logout(String sessionToken) throws Exception {

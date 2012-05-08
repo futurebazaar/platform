@@ -21,12 +21,21 @@
         <property name="couponDao" ref="couponDao"/>
         <property name="promotionDao" ref="promotionDao"></property>
     </bean>
+    
+    <bean id="promotionAdminService" class="com.fb.platform.promotion.service.impl.PromotionAdminServiceImpl">
+        <property name="ruleDao" ref="ruleDao"/>
+    </bean>
 
     <!-- Add new Managers here -->
     <bean id="promotionManager" class="com.fb.platform.promotion.service.impl.PromotionManagerImpl">
         <!-- <property name="couponDao" ref="couponDao"/>
         <property name="promotionDao" ref="promotionDao"></property> -->
         <property name="promotionService" ref="promotionService"></property>
+        <property name="authenticationService" ref="authenticationService"></property>
+    </bean>
+    
+    <bean id="promotionAdminManager" class="com.fb.platform.promotion.service.impl.PromotionAdminManagerImpl">
+        <property name="promotionAdminService" ref="promotionAdminService"></property>
         <property name="authenticationService" ref="authenticationService"></property>
     </bean>
     

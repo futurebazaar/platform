@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" 
+targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promotionAdmin="http://www.fb.com/platform/promotion/admin/1.0.0">
+  <xs:element name="fetchRuleRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotionAdmin:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="sessionToken" type="xs:string"/>
+  <xs:element name="fetchRuleResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotionAdmin:sessionToken"/>
+        <xs:element ref="promotionAdmin:ruleConfigDescriptor" maxOccurs="unbounded"/>
+        <xs:element ref="promotionAdmin:fetchRulesEnum"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="fetchRulesEnum" type="promotionAdmin:fetchRulesEnum"/>
+  <xs:simpleType name="fetchRulesEnum">
+  	<xs:restriction base="xs:string">
+    	<xs:enumeration value="SUCCESS"/>
+      	<xs:enumeration value="NO_SESSION"/>
+      	<xs:enumeration value="INTERNAL_ERROR"/>
+	</xs:restriction>
+  </xs:simpleType>
+  
+  <xs:element name="ruleConfigDescriptor">
+  	<xs:complexType>
+      	<xs:sequence>
+  			<xs:element ref="promotionAdmin:rulesEnum"/>
+  			<xs:element ref="promotionAdmin:ruleConfigDescriptorItem" maxOccurs="unbounded"/>
+  		</xs:sequence>
+  	</xs:complexType>
+  </xs:element>
+  
+  <xs:element name="rulesEnum" type="promotionAdmin:rulesEnum"/>
+  <xs:simpleType name="rulesEnum">
+  	<xs:restriction base="xs:string">
+    	<xs:enumeration value="BUY_X_GET_Y_FREE"/>
+      	<xs:enumeration value="BUY_WORTH_X_GET_Y_RS_OFF"/>
+      	<xs:enumeration value="BUY_WORTH_X_GET_Y_PERCENT_OFF"/>
+      	<xs:enumeration value="BUY_WORTH_X_GET_Y_RS_OFF_ON_Z_CATEGORY"/>
+      	<xs:enumeration value="BUY_X_BRAND_GET_Y_RS_OFF_ON_Z_PRODUCT"/>
+      	<xs:enumeration value="BUY_WORTH_X_GET_Y_PERCENT_OFF_ON_Z_CATEGORY"/>
+      	<xs:enumeration value="FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF"/>
+	</xs:restriction>
+  </xs:simpleType>
+  
+  <xs:element name="ruleConfigDescriptorItem">
+  	<xs:complexType>
+      	<xs:sequence>
+      		<xs:element ref="promotionAdmin:isMandatory"/>
+      		<xs:element ref="promotionAdmin:ruleConfigDescriptorEnum"/>
+      	</xs:sequence>
+   	</xs:complexType>
+  </xs:element>
+  
+  <xs:element name="isMandatory" type="xs:boolean"/>
+  
+  <xs:element name="ruleConfigDescriptorEnum" type="promotionAdmin:ruleConfigDescriptorEnum"/>
+  <xs:simpleType name="ruleConfigDescriptorEnum">
+  	<xs:restriction base="xs:string">
+    	<xs:enumeration value="CLIENT_LIST"/>
+      	<xs:enumeration value="CATEGORY_LIST"/>
+      	<xs:enumeration value="BRAND_LIST"/>
+      	<xs:enumeration value="MIN_ORDER_VALUE"/>
+      	<xs:enumeration value="FIXED_DISCOUNT_RS_OFF"/>
+      	<xs:enumeration value="DISCOUNT_PERCENTAGE"/>
+      	<xs:enumeration value="MAX_DISCOUNT_CEIL_IN_VALUE"/>
+      	<xs:enumeration value="PRODUCT_ID"/>
+      	<xs:enumeration value="PRODUCT_LIST"/>
+      	<xs:enumeration value="PRODUCT_DISCOUNT_RS_OFF"/>
+      	<xs:enumeration value="PRODUCT_DISCOUNTED_VALUE"/>
+	</xs:restriction>
+  </xs:simpleType>
+  
+  
+</xs:schema>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" 
+targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promotionAdmin="http://www.fb.com/platform/promotion/admin/1.0.0">
+  <xs:element name="fetchRuleRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotionAdmin:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="sessionToken" type="xs:string"/>
+  <xs:element name="fetchRuleResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotionAdmin:sessionToken"/>
+        <xs:element ref="promotionAdmin:rulesList" maxOccurs="unbounded"/>
+        <xs:element ref="promotionAdmin:fetchRulesEnum"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="fetchRulesEnum" type="promotionAdmin:fetchRulesEnum"/>
+  <xs:simpleType name="fetchRulesEnum">
+  	<xs:restriction base="xs:string">
+    	<xs:enumeration value="SUCCESS"/>
+      	<xs:enumeration value="NO_SESSION"/>
+      	<xs:enumeration value="INTERNAL_ERROR"/>
+	</xs:restriction>
+  </xs:simpleType>
+  
+  <xs:element name="rulesList" type="promotionAdmin:RulesEnum"/>
+  <xs:simpleType name="RulesEnum">
+  	<xs:restriction base="xs:string">
+    	<xs:enumeration value="BUY_X_GET_Y_FREE"/>
+      	<xs:enumeration value="BUY_WORTH_X_GET_Y_RS_OFF"/>
+      	<xs:enumeration value="BUY_WORTH_X_GET_Y_PERCENT_OFF"/>
+      	<xs:enumeration value="BUY_WORTH_X_GET_Y_RS_OFF_ON_Z_CATEGORY"/>
+      	<xs:enumeration value="BUY_X_BRAND_GET_Y_RS_OFF_ON_Z_PRODUCT"/>
+      	<xs:enumeration value="BUY_WORTH_X_GET_Y_PERCENT_OFF_ON_Z_CATEGORY"/>
+      	<xs:enumeration value="FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF"/>
+	</xs:restriction>
+  </xs:simpleType>
+</xs:schema>

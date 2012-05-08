@@ -4,12 +4,15 @@
 package com.fb.platform.promotion.rule.impl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.rule.PromotionRule;
+import com.fb.platform.promotion.rule.RuleConfigDescriptorItem;
 import com.fb.platform.promotion.rule.RuleConfiguration;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.Product;
@@ -24,6 +27,7 @@ public class BuyXGetYFreeRuleImpl implements PromotionRule, Serializable{
 	private static transient Log log = LogFactory.getLog(BuyWorthXGetYRsOffRuleImpl.class);
 	private Product xProduct;
 	private Product yProduct;
+	private List<RuleConfigDescriptorItem> ruleConfigs = new ArrayList<RuleConfigDescriptorItem>();
 	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
@@ -45,5 +49,10 @@ public class BuyXGetYFreeRuleImpl implements PromotionRule, Serializable{
 			log.debug("Executing BuyXGetYFreeRuleImpl on order : " + request.getOrderId());
 		}
 		return null;
+	}
+	
+	@Override
+	public List<RuleConfigDescriptorItem> getRuleConfigs() {
+		return ruleConfigs;
 	}
 }

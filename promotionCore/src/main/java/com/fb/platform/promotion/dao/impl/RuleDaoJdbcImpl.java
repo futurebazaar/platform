@@ -5,6 +5,7 @@ package com.fb.platform.promotion.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -44,6 +45,15 @@ public class RuleDaoJdbcImpl implements RuleDao {
 			"	promotion_id, " +
 			"	rule_id " +
 			"FROM promotion_rule_config WHERE promotion_id = ?";
+	/**
+	 * QUERY
+	 * SELECT id,name FROM promotion_rule
+	 */
+	private static final String LOAD_ALL_PROMOTION_RULES =
+			"SELECT " +
+			"	id," +
+			"	name " +
+			"FROM promotion_rule ";
 
 	/* (non-Javadoc)
 	 * @see com.fb.platform.promotion.dao.RuleDao#load(int, int)
@@ -67,6 +77,12 @@ public class RuleDaoJdbcImpl implements RuleDao {
 		PromotionRule rule = PromotionRuleFactory.createRule(ruleName, ruleConfig);
 
 		return rule;
+	}
+	
+	@Override
+	public List<RulesEnum> getAllPromotionRules() {
+		List<RulesEnum> promotionRulesList = jdbcTemplate.query(LOAD_ALL_PROMOTION_RULES, new PromotionAllRulesRowCallBackHandler());
+		return promotionRulesList;
 	}
 
 	public RuleConfiguration loadRuleConfiguration(int promotionId, int ruleId) {
@@ -93,6 +109,13 @@ public class RuleDaoJdbcImpl implements RuleDao {
 			//ruleId = rs.getInt("id");
 			ruleName = rs.getString("name");
 			ruleFound = true;
+		}
+	}
+	
+	private class PromotionAllRulesRowCallBackHandler implements RowMapper<RulesEnum> {
+		@Override
+		public RulesEnum mapRow(ResultSet rs, int rowNum) throws SQLException {
+			return RulesEnum.valueOf(rs.getString("name"));
 		}
 	}
 

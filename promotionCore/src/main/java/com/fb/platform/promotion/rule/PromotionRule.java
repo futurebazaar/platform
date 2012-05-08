@@ -3,6 +3,8 @@
  */
 package com.fb.platform.promotion.rule;
 
+import java.util.List;
+
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.rule.impl.ApplicableResponse;
 import com.fb.platform.promotion.to.OrderRequest;
@@ -31,4 +33,10 @@ public interface PromotionRule {
 	 * @param request
 	 */
 	public Money execute(OrderRequest request);
+	
+	/**
+	 * This function returns a list of RuleConfigDescriptors for each rule.
+	 * @return
+	 */
+	public List<RuleConfigDescriptorItem> getRuleConfigs();
 }

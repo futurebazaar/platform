@@ -31,6 +31,48 @@ public class PromotionRuleFactory {
 		this.orderDao = orderDao;
 	}
 
+	public static PromotionRule getRule(RulesEnum ruleName) {
+		PromotionRule rule = null;
+
+		switch (ruleName) {
+
+		case BUY_X_GET_Y_FREE:
+			rule = new BuyXGetYFreeRuleImpl();
+			break;
+
+		case BUY_WORTH_X_GET_Y_RS_OFF:
+			rule = new BuyWorthXGetYRsOffRuleImpl();
+			break;
+			
+		case BUY_WORTH_X_GET_Y_PERCENT_OFF:
+			rule = new BuyWorthXGetYPercentOffRuleImpl();
+			break;
+			
+		case BUY_WORTH_X_GET_Y_RS_OFF_ON_Z_CATEGORY:
+			rule = new BuyWorthXGetYRsOffOnZCategoryRuleImpl();
+			break;
+			
+		case BUY_X_BRAND_GET_Y_RS_OFF_ON_Z_PRODUCT:
+			rule = new BuyXBrandGetYRsOffOnZProductRuleImpl();
+			break;
+			
+		case BUY_WORTH_X_GET_Y_PERCENT_OFF_ON_Z_CATEGORY:
+			rule = new BuyWorthXGetYPercentOffOnZCategoryRuleImpl();
+			break;
+			
+		case FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF:
+			rule = new FirstPurchaseBuyWorthXGetYRsOffRuleImpl();
+			((FirstPurchaseBuyWorthXGetYRsOffRuleImpl)rule).setOrderDao(orderDao);
+			break;
+			
+			
+		default:
+			throw new IllegalArgumentException("Unkown RulesEnum object found : " + ruleName);
+		}
+
+		return rule;
+	}
+	
 	public static PromotionRule createRule(RulesEnum ruleName, RuleConfiguration ruleConfig) {
 		PromotionRule rule = null;
 
