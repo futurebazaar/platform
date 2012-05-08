@@ -36,6 +36,9 @@
 	<bean id="orderDao" class="com.fb.platform.promotion.dao.impl.OrderDaoJdbcImpl">
 		<property name="jdbcTemplate" ref="jdbcTemplate"/>
 	</bean>
+	
+	<bean id="promotionAdminDao" class="com.fb.platform.promotion.dao.impl.PromotionAdminDaoJdbcImpl">
+	</bean>
     <!-- Add new DAOs here -->
 
 </beans>

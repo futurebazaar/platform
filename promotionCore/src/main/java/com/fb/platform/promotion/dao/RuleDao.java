@@ -25,5 +25,12 @@ public interface RuleDao {
 	 * @return
 	 */
 	public List<RulesEnum> getAllPromotionRules();
+	
+	/**
+	 * This function will return the rule id of a rule.
+	 * @param rulesEnum
+	 * @return
+	 */
+	public int getRuleId(String ruleName);
 
 }

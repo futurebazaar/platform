@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fb.platform.promotion.model.Promotion;
+import com.fb.platform.promotion.rule.RuleConfigDescriptor;
 import com.fb.platform.promotion.rule.RulesEnum;
 
 /**
@@ -21,5 +23,13 @@ public interface PromotionAdminService {
 	 */
 	@Transactional(propagation=Propagation.REQUIRED)
 	public List<RulesEnum> getAllPromotionRules();
+	
+	/**
+	 * This function creates a new promotion.
+	 * @param promotion
+	 * @return
+	 */
+	@Transactional(propagation=Propagation.REQUIRED)
+	public int createPromotion(Promotion promotion, RuleConfigDescriptor ruleConfigDescriptor);
 
 }

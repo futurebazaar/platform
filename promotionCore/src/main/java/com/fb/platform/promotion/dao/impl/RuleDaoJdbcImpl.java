@@ -54,6 +54,18 @@ public class RuleDaoJdbcImpl implements RuleDao {
 			"	id," +
 			"	name " +
 			"FROM promotion_rule ";
+	
+	/**
+	 * SELECT id FROM promotion_rule where name = 'BUY_X_GET_Y_FREE'
+	 */
+	
+	private static final String GET_RULE_ID = 
+			"SELECT " +
+			"	id " +
+			"FROM " +
+			"	promotion_rule " +
+			"WHERE " +
+			"	name = ?";
 
 	/* (non-Javadoc)
 	 * @see com.fb.platform.promotion.dao.RuleDao#load(int, int)
@@ -83,6 +95,12 @@ public class RuleDaoJdbcImpl implements RuleDao {
 	public List<RulesEnum> getAllPromotionRules() {
 		List<RulesEnum> promotionRulesList = jdbcTemplate.query(LOAD_ALL_PROMOTION_RULES, new PromotionAllRulesRowCallBackHandler());
 		return promotionRulesList;
+	}
+	
+	@Override
+	public int getRuleId(String rulesName) {
+		int ruleId = jdbcTemplate.queryForInt(GET_RULE_ID, rulesName);
+		return ruleId;
 	}
 
 	public RuleConfiguration loadRuleConfiguration(int promotionId, int ruleId) {
