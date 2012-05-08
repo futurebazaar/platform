@@ -17,7 +17,7 @@ import com.fb.platform.promotion.rule.RulesEnum;
 public interface PromotionAdminDao {
 
 
-	int createPromotion(String name, String description, RulesEnum rulesEnum, DateTime validFrom, 
+	int createPromotion(String name, String description, int ruleId, DateTime validFrom, 
 			DateTime validTill, int active);
 	
 	void createPromotionLimitConfig(int promotionId, int maxUses, Money maxAmount,

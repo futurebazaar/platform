@@ -17,6 +17,7 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.lang.math.RandomUtils;
+import org.joda.time.DateTime;
 
 import com.fb.platform.auth._1_0.AddUserRequest;
 import com.fb.platform.auth._1_0.AddUserResponse;
@@ -39,8 +40,12 @@ import com.fb.platform.promotion._1_0.OrderRequest;
 import com.fb.platform.promotion._1_0.Product;
 import com.fb.platform.promotion._1_0.ReleaseCouponRequest;
 import com.fb.platform.promotion._1_0.ReleaseCouponResponse;
+import com.fb.platform.promotion.admin._1_0.CreatePromotionRequest;
+import com.fb.platform.promotion.admin._1_0.CreatePromotionResponse;
 import com.fb.platform.promotion.admin._1_0.FetchRuleRequest;
 import com.fb.platform.promotion.admin._1_0.FetchRuleResponse;
+import com.fb.platform.promotion.admin._1_0.PromotionTO;
+import com.fb.platform.promotion.admin._1_0.RuleConfigItemTO;
 /**
  * @author vinayak
  *
@@ -61,6 +66,7 @@ public class RestClient {
 		clearCoupon(sessionToken);
 		clearPromotion(sessionToken);
 		getAllPromotionRuleList(sessionToken);
+		createPromotion(sessionToken);
 		logout(sessionToken);
 	}
 
@@ -310,6 +316,85 @@ public class RestClient {
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		FetchRuleResponse fetchRuleResponse = (FetchRuleResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(getAllPromotionRuleListResponseStr)));
 		System.out.println(fetchRuleResponse.getFetchRulesEnum().toString());
+	}
+	
+	private static void createPromotion(String sessionToken) throws Exception {
+		HttpClient httpClient = new HttpClient();
+
+		//PostMethod logoutMethod = new PostMethod("http://10.0.102.12:8082/userWS/auth/logout");
+		PostMethod createPromotion = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/createPromotion");
+		CreatePromotionRequest createPromotionRequest = new CreatePromotionRequest();
+		PromotionTO promotionTO = new PromotionTO();
+		
+		promotionTO.setName("New Promotion");
+		promotionTO.setValidFrom(new DateTime().toString());
+		promotionTO.setValidTill("2012-04-29");
+		promotionTO.setDescription("Test new promotion");
+		promotionTO.setIsActive(true);
+		promotionTO.setMaxUses(20);
+		promotionTO.setMaxUsesPerUser(1);
+		promotionTO.setMaxAmount(new BigDecimal(20000.00));
+		promotionTO.setMaxAmountPerUser(new BigDecimal(1000.00));
+		promotionTO.setRuleName("BUY_WORTH_X_GET_Y_RS_OFF");
+		
+		RuleConfigItemTO configItem = new RuleConfigItemTO();
+		configItem.setName("CLIENT_LIST");
+		configItem.setValue("1,2,5,8");
+		promotionTO.getRuleConfigItemTO().add(configItem);
+		
+		configItem = new RuleConfigItemTO();
+		configItem.setName("MIN_ORDER_VALUE");
+		configItem.setValue("2000");
+		promotionTO.getRuleConfigItemTO().add(configItem);
+		
+		configItem = new RuleConfigItemTO();
+		configItem.setName("FIXED_DISCOUNT_RS_OFF");
+		configItem.setValue("100");
+		promotionTO.getRuleConfigItemTO().add(configItem);
+		
+		configItem = new RuleConfigItemTO();
+		configItem.setName("CATEGORY_LIST");
+		configItem.setValue("1,2,3,4,5,6,7,8,9,10,12,4,15,25");
+		promotionTO.getRuleConfigItemTO().add(configItem);
+		
+		configItem = new RuleConfigItemTO();
+		configItem.setName("BRAND_LIST");
+		configItem.setValue("3");
+		promotionTO.getRuleConfigItemTO().add(configItem);
+		
+		configItem = new RuleConfigItemTO();
+		configItem.setName("CATEGORY_INCLUDE_LIST");
+		configItem.setValue("1,2,3,4,5,6,7,8,9");
+		promotionTO.getRuleConfigItemTO().add(configItem);
+		
+		configItem = new RuleConfigItemTO();
+		configItem.setName("CATEGORY_EXCLUDE_LIST");
+		configItem.setValue("10,12,4,15,25");
+		promotionTO.getRuleConfigItemTO().add(configItem);
+		
+		createPromotionRequest.setPromotionTO(promotionTO);
+		createPromotionRequest.setSessionToken(sessionToken);
+		
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(createPromotionRequest, sw);
+
+		System.out.println("\n\ncreatePromotion : \n" + sw.toString());
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		createPromotion.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(createPromotion);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the createPromotion method : " + statusCode);
+			System.exit(1);
+		}
+		String createPromotionResponseStr = createPromotion.getResponseBodyAsString();
+		System.out.println("Got the createPromotion Response : \n\n" + createPromotionResponseStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		CreatePromotionResponse createPromotionResponse = (CreatePromotionResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(createPromotionResponseStr)));
+		System.out.println(createPromotionResponse.getCreatePromotionEnum().toString());
 	}
 
 	private static void logout(String sessionToken) throws Exception {

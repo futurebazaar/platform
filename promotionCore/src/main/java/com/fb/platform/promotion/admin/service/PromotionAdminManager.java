@@ -1,5 +1,7 @@
 package com.fb.platform.promotion.admin.service;
 
+import com.fb.platform.promotion.to.CreatePromotionRequest;
+import com.fb.platform.promotion.to.CreatePromotionResponse;
 import com.fb.platform.promotion.to.FetchRuleRequest;
 import com.fb.platform.promotion.to.FetchRuleResponse;
 
@@ -15,5 +17,12 @@ public interface PromotionAdminManager {
 	 * @return
 	 */
 	public FetchRuleResponse fetchRules(FetchRuleRequest fetchRuleRequest); 
+	
+	/**
+	 * This function creates a new promotion and returns the promotion Id.
+	 * @param createPromotionRequest
+	 * @return
+	 */
+	public CreatePromotionResponse createPromotion(CreatePromotionRequest createPromotionRequest);
 
 }

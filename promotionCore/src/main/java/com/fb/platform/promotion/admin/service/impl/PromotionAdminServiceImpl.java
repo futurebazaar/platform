@@ -7,10 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.fb.platform.promotion.admin.dao.PromotionAdminDao;
 import com.fb.platform.promotion.admin.service.PromotionAdminService;
 import com.fb.platform.promotion.dao.RuleDao;
-import com.fb.platform.promotion.model.Promotion;
-import com.fb.platform.promotion.rule.RuleConfigItem;
-import com.fb.platform.promotion.rule.RuleConfiguration;
 import com.fb.platform.promotion.rule.RulesEnum;
+import com.fb.platform.promotion.to.PromotionTO;
+import com.fb.platform.promotion.to.RuleConfigItemTO;
 
 /**
  * 
@@ -32,25 +31,26 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 	}
 	
 	@Override
-	public int createPromotion(Promotion promotion, RulesEnum rulesEnum, RuleConfiguration ruleConfiguration) {
-		int isActive = promotion.isActive() ? 1 : 0;
-		int promotionId = promotionAdminDao.createPromotion(promotion.getName(), 
-															promotion.getDescription(), 
-															rulesEnum, 
-															promotion.getDates().getValidFrom(), 
-															promotion.getDates().getValidTill(),
-															isActive);
+	public int createPromotion(PromotionTO promotionTO) {
+		int isActive = promotionTO.isActive() ? 1 : 0;
+		int ruleId = ruleDao.getRuleId(promotionTO.getRulesEnum().toString());
+		
+		int promotionId = promotionAdminDao.createPromotion(promotionTO.getName(), 
+				promotionTO.getDescription(), 
+				ruleId, 
+				promotionTO.getValidFrom(), 
+				promotionTO.getValidTill(),
+				isActive);
 		if(promotionId > 0) {
 			promotionAdminDao.createPromotionLimitConfig(	promotionId, 
-															promotion.getLimitsConfig().getMaxUses(), 
-															promotion.getLimitsConfig().getMaxAmount(), 
-															promotion.getLimitsConfig().getMaxUsesPerUser(), 
-															promotion.getLimitsConfig().getMaxAmountPerUser());
+					promotionTO.getMaxUses(), 
+					promotionTO.getMaxAmount(), 
+					promotionTO.getMaxUsesPerUser(), 
+					promotionTO.getMaxAmountPerUser());
 			
-			int ruleId = ruleDao.getRuleId(rulesEnum.toString());
-			for(RuleConfigItem ruleConfigItem : ruleConfiguration.getConfigItems()) {
-				promotionAdminDao.createPromotionRuleConfig(ruleConfigItem.getKey(), 
-						ruleConfigItem.getValue(), 
+			for(RuleConfigItemTO ruleConfigItemTO : promotionTO.getConfigItems()) {
+				promotionAdminDao.createPromotionRuleConfig(ruleConfigItemTO.getName(), 
+						ruleConfigItemTO.getValue(), 
 						promotionId, 
 						ruleId);
 			}
