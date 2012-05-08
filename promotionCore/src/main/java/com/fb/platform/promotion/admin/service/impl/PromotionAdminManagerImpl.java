@@ -13,6 +13,8 @@ import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
 import com.fb.platform.promotion.admin.service.PromotionAdminManager;
 import com.fb.platform.promotion.admin.service.PromotionAdminService;
+import com.fb.platform.promotion.admin.to.CreateCouponRequest;
+import com.fb.platform.promotion.admin.to.CreateCouponResponse;
 import com.fb.platform.promotion.rule.PromotionRule;
 import com.fb.platform.promotion.rule.RuleConfigDescriptor;
 import com.fb.platform.promotion.rule.RuleConfigDescriptorItem;
@@ -75,4 +77,9 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		this.promotionAdminService = promotionAdminService;
 	}
 
+	@Override
+	public CreateCouponResponse createCoupons(CreateCouponRequest createCouponRequest) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

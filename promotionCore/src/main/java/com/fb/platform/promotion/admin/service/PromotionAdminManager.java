@@ -1,5 +1,7 @@
 package com.fb.platform.promotion.admin.service;
 
+import com.fb.platform.promotion.admin.to.CreateCouponRequest;
+import com.fb.platform.promotion.admin.to.CreateCouponResponse;
 import com.fb.platform.promotion.to.FetchRuleRequest;
 import com.fb.platform.promotion.to.FetchRuleResponse;
 
@@ -16,4 +18,10 @@ public interface PromotionAdminManager {
 	 */
 	public FetchRuleResponse fetchRules(FetchRuleRequest fetchRuleRequest); 
 
+	/**
+	 * Creates the coupons as per the requirements specified in the request.
+	 * @param createCouponRequest
+	 * @return 
+	 */
+	public CreateCouponResponse createCoupons(CreateCouponRequest createCouponRequest);
 }
