@@ -285,7 +285,7 @@ public class RestClient {
 	
 	private static void getAllPromotionRuleList(String sessionToken) throws Exception {
 		HttpClient httpClient = new HttpClient();
-		PostMethod getAllPromotionRuleList = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/getAllPromotionRules");
+		PostMethod getAllPromotionRuleList = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/rules");
 		FetchRuleRequest fetchRuleRequest = new FetchRuleRequest();
 		fetchRuleRequest.setSessionToken(sessionToken);
 		

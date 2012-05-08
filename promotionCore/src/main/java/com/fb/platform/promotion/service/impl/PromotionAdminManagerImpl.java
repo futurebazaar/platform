@@ -57,8 +57,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		List<RulesEnum> rulesList = promotionAdminService.getAllPromotionRules();
 		List<RuleConfigDescriptor> rulesConfigList = new ArrayList<RuleConfigDescriptor>();
 		for(RulesEnum rulesEnum : rulesList) {
-			PromotionRule rule = PromotionRuleFactory.getRule(rulesEnum);
-			List<RuleConfigDescriptorItem> rulesConfigItemList = rule.getRuleConfigs();
+			List<RuleConfigDescriptorItem> rulesConfigItemList = PromotionRuleFactory.getRuleConfig(rulesEnum);
 			RuleConfigDescriptor ruleConfigDescriptor = new RuleConfigDescriptor();
 			ruleConfigDescriptor.setRulesEnum(rulesEnum);
 			ruleConfigDescriptor.setRuleConfigItemsList(rulesConfigItemList);

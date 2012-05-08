@@ -79,6 +79,8 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
       	<xs:enumeration value="PRODUCT_LIST"/>
       	<xs:enumeration value="PRODUCT_DISCOUNT_RS_OFF"/>
       	<xs:enumeration value="PRODUCT_DISCOUNTED_VALUE"/>
+      	<xs:enumeration value="CATEGORY_INCLUDE_LIST"/>
+      	<xs:enumeration value="CATEGORY_EXCLUDE_LIST"/>
 	</xs:restriction>
   </xs:simpleType>
   

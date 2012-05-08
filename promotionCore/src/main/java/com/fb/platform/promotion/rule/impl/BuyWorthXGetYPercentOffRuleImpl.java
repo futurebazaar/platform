@@ -32,7 +32,6 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule, Serializa
 	private BigDecimal discountPercentage;
 	private Money maxDiscountPerUse;
 	private List<Integer> clientList;
-	private List<RuleConfigDescriptorItem> ruleConfigs = new ArrayList<RuleConfigDescriptorItem>();
 	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
@@ -77,7 +76,14 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule, Serializa
 	
 	@Override
 	public List<RuleConfigDescriptorItem> getRuleConfigs() {
+		List<RuleConfigDescriptorItem> ruleConfigs = new ArrayList<RuleConfigDescriptorItem>();
+		
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CATEGORY_LIST, true));
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.BRAND_LIST, true));
 		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.MIN_ORDER_VALUE, true));
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CATEGORY_INCLUDE_LIST, true));
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CATEGORY_EXCLUDE_LIST, true));
+		
 		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.DISCOUNT_PERCENTAGE, true));
 		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.MAX_DISCOUNT_CEIL_IN_VALUE, true));
 		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CLIENT_LIST, true));

@@ -31,7 +31,6 @@ public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule, Serializable {
 	private Money minOrderValue;
 	private Money fixedRsOff;
 	private List<Integer> clientList;
-	private List<RuleConfigDescriptorItem> ruleConfigs = new ArrayList<RuleConfigDescriptorItem>();
 	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
@@ -68,7 +67,14 @@ public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule, Serializable {
 	
 	@Override
 	public List<RuleConfigDescriptorItem> getRuleConfigs() {
+		List<RuleConfigDescriptorItem> ruleConfigs = new ArrayList<RuleConfigDescriptorItem>();
+		
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CATEGORY_LIST, true));
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.BRAND_LIST, true));
 		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.MIN_ORDER_VALUE, true));
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CATEGORY_INCLUDE_LIST, true));
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CATEGORY_EXCLUDE_LIST, true));
+		
 		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.FIXED_DISCOUNT_RS_OFF, true));
 		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CLIENT_LIST, true));
 		return ruleConfigs;

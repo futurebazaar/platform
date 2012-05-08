@@ -62,7 +62,7 @@ public class PromotionAdminResource {
 	}
 	
 	@POST
-	@Path("/getAllPromotionRules")
+	@Path("/rules")
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String getAllPromotionRules(String fetchRulesXML) {

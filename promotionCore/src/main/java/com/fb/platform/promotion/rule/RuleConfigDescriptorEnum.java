@@ -8,14 +8,16 @@ public enum RuleConfigDescriptorEnum {
 	CLIENT_LIST("Comma separated list of supported client ids.", "String"),
 	CATEGORY_LIST("Comma separated list of supported categories id.", "String"),
 	BRAND_LIST("Comma separated list of brands", "String"),
-	MIN_ORDER_VALUE("Minimum value of an order(18,2) on which we apply this promotion.", "decimal"),
-	FIXED_DISCOUNT_RS_OFF("Fixed amount(18,2) to be given off on any order.", "decimal"),
-	DISCOUNT_PERCENTAGE("Discount percentage(18,2) to be given on any order.", "decimal"),
-	MAX_DISCOUNT_CEIL_IN_VALUE("Maximum discount(18,2) to be given on any order.", "decimal"),
+	MIN_ORDER_VALUE("Minimum value of an order on which we apply this promotion.", "decimal"),
+	FIXED_DISCOUNT_RS_OFF("Fixed amount to be given off on any order.", "decimal"),
+	DISCOUNT_PERCENTAGE("Discount percentage to be given on any order.", "decimal"),
+	MAX_DISCOUNT_CEIL_IN_VALUE("Maximum discount to be given on any order.", "decimal"),
 	PRODUCT_ID("Product Id on which the promotion has to be applied.", "String"),
-	PRODUCT_LIST("Comma separated list of products", " String"),
-	PRODUCT_DISCOUNT_RS_OFF("Fixed amount(18,2) to be given off on a product.", "decimal"),
-	PRODUCT_DISCOUNTED_VALUE("", "decimal");
+	PRODUCT_LIST("Comma separated list of products", "String"),
+	PRODUCT_DISCOUNT_RS_OFF("Fixed amount to be given off on a product.", "decimal"),
+	PRODUCT_DISCOUNTED_VALUE("", "decimal"),
+	CATEGORY_INCLUDE_LIST("Comma separated list of categories included.", "String"),
+	CATEGORY_EXCLUDE_LIST("Comma separated list of categories excluded.", "String");
 	
 	private String description = null;
 	
