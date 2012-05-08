@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.fb.platform.promotion.dao.impl;
+package com.fb.platform.promotion.admin.dao.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,7 +19,7 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
-import com.fb.platform.promotion.dao.PromotionAdminDao;
+import com.fb.platform.promotion.admin.dao.PromotionAdminDao;
 import com.fb.platform.promotion.rule.RulesEnum;
 
 /**

@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fb.platform.promotion.model.Promotion;
-import com.fb.platform.promotion.rule.RuleConfigDescriptor;
+import com.fb.platform.promotion.rule.RuleConfiguration;
 import com.fb.platform.promotion.rule.RulesEnum;
 
 /**
@@ -30,6 +30,6 @@ public interface PromotionAdminService {
 	 * @return
 	 */
 	@Transactional(propagation=Propagation.REQUIRED)
-	public int createPromotion(Promotion promotion, RuleConfigDescriptor ruleConfigDescriptor);
+	public int createPromotion(Promotion promotion, RulesEnum rulesEnum, RuleConfiguration ruleConfiguration);
 
 }

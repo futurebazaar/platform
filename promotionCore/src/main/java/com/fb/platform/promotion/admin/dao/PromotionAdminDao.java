@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.fb.platform.promotion.dao;
+package com.fb.platform.promotion.admin.dao;
 
 import java.sql.Timestamp;
 
