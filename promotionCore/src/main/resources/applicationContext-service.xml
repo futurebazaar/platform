@@ -22,7 +22,7 @@
         <property name="promotionDao" ref="promotionDao"></property>
     </bean>
     
-    <bean id="promotionAdminService" class="com.fb.platform.promotion.service.impl.PromotionAdminServiceImpl">
+    <bean id="promotionAdminService" class="com.fb.platform.promotion.admin.service.impl.PromotionAdminServiceImpl">
         <property name="ruleDao" ref="ruleDao"/>
     </bean>
 
@@ -34,7 +34,7 @@
         <property name="authenticationService" ref="authenticationService"></property>
     </bean>
     
-    <bean id="promotionAdminManager" class="com.fb.platform.promotion.service.impl.PromotionAdminManagerImpl">
+    <bean id="promotionAdminManager" class="com.fb.platform.promotion.admin.service.impl.PromotionAdminManagerImpl">
         <property name="promotionAdminService" ref="promotionAdminService"></property>
         <property name="authenticationService" ref="authenticationService"></property>
     </bean>

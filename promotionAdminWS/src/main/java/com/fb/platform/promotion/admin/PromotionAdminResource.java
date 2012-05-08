@@ -32,7 +32,7 @@ import com.fb.platform.promotion.admin._1_0.RuleConfigDescriptor;
 import com.fb.platform.promotion.admin._1_0.RuleConfigDescriptorEnum;
 import com.fb.platform.promotion.admin._1_0.RuleConfigDescriptorItem;
 import com.fb.platform.promotion.admin._1_0.RulesEnum;
-import com.fb.platform.promotion.service.PromotionAdminManager;
+import com.fb.platform.promotion.admin.service.PromotionAdminManager;
 
 /**
  * @author nehaga

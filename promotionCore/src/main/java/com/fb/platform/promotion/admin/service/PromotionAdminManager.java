@@ -1,4 +1,4 @@
-package com.fb.platform.promotion.service;
+package com.fb.platform.promotion.admin.service;
 
 import com.fb.platform.promotion.to.FetchRuleRequest;
 import com.fb.platform.promotion.to.FetchRuleResponse;

@@ -1,13 +1,18 @@
-package com.fb.platform.promotion.service.impl;
+package com.fb.platform.promotion.admin.service.impl;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fb.platform.promotion.admin.service.PromotionAdminService;
 import com.fb.platform.promotion.dao.RuleDao;
 import com.fb.platform.promotion.rule.RulesEnum;
-import com.fb.platform.promotion.service.PromotionAdminService;
 
+/**
+ * 
+ * @author neha
+ *
+ */
 public class PromotionAdminServiceImpl implements PromotionAdminService {
 
 	@Autowired

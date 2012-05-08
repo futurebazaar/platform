@@ -1,4 +1,4 @@
-package com.fb.platform.promotion.service;
+package com.fb.platform.promotion.admin.service;
 
 import java.util.List;
 
@@ -14,9 +14,9 @@ import com.fb.platform.promotion.rule.RulesEnum;
 
 @Transactional
 public interface PromotionAdminService {
+
 	/**
 	 * This function returns a list of Promotion rules.
-	 * @param clearCouponCacheRequest
 	 * @return
 	 */
 	@Transactional(propagation=Propagation.REQUIRED)
