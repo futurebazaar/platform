@@ -75,4 +75,14 @@ ifsWS/.project
 ifsWS/.settings/
 ifsWS/bin/
 ifsWS/target/
+walletCore/.classpath
+walletCore/.project
+walletCore/.settings/
+walletCore/bin/
+walletCore/target/
+walletWS/.classpath
+walletWS/.project
+walletWS/.settings/
+walletWS/bin/
+walletWS/target/
 .gitignore

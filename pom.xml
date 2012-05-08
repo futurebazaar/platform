@@ -360,6 +360,8 @@
         <module>authenticationCore</module>
 	<module>promotionCore</module>
 	<module>promotionWS</module>
+	<module>walletCore</module>
+	<module>walletWS</module>
     </modules>
 
     <reporting>

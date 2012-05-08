@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	targetNamespace="http://www.fb.com/platform/wallet/1.0.0" xmlns:tns="http://www.fb.com/platform/wallet/1.0.0" 
+	elementFormDefault="qualified">
+
+  <xs:element name="userId" type="xs:int"/>
+  <xs:element name="clientId" type="xs:int"/>
+  <xs:element name="sessionToken" type="xs:string"/>
+  <xs:element name="cashAmount" type="xs:decimal"/>
+  <xs:element name="refundAmount" type="xs:decimal"/>
+  <xs:element name="giftAmount" type="xs:decimal"/>
+  <xs:element name="totalAmount" type="xs:decimal"/>
+  
+  <xs:element name="walletSummaryRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:userId"/>
+        <xs:element ref="tns:clientId"/>
+        <xs:element ref="tns:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+
+  <xs:element name="walletSummaryResponse">
+    <xs:complexType>
+      <xs:sequence>
+      	<xs:element ref="tns:sessionToken"/>
+      	<xs:element ref="tns:walletSummaryStatus"/>      	
+        <xs:element ref="tns:walletSummaryDetails"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="walletSummaryStatus" type="tns:walletSummaryStatus"/>
+  <xs:simpleType name="walletSummaryStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INVALID_USER"/>
+      <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="ERROR_RETRIVING_WALLET_SUMMARY"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  
+  <xs:element name="walletSummaryDetails">
+  	<xs:complexType>
+  	  <xs:sequence>
+  		<xs:element ref="tns:cashAmount"/>
+        <xs:element ref="tns:refundAmount"/>
+        <xs:element ref="tns:giftAmount"/>
+        <xs:element ref="tns:totalAmount"/>  			
+  	  </xs:sequence>
+  	</xs:complexType>
+  </xs:element>
+     
+</xs:schema>
