@@ -25,6 +25,11 @@
 			<artifactId>authenticationCore</artifactId>
 			<version>1.0</version>
 	  	</dependency>
+	  	<dependency>
+	  		<groupId>com.fb</groupId>
+			<artifactId>userCore</artifactId>
+			<version>1.0</version>
+	  	</dependency>
 	</dependencies>
 	<build>
 		<defaultGoal>install</defaultGoal>
