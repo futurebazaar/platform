@@ -4,7 +4,6 @@
 package com.fb.platform.promotion.rule;
 
 import com.fb.commons.to.Money;
-import com.fb.platform.promotion.rule.impl.ApplicableResponse;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.PromotionStatusEnum;
 

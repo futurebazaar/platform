@@ -7,8 +7,6 @@ package com.fb.platform.promotion.rule;
 public class RuleConfigConstants {
 	
 	public static final String CLIENT_LIST = "CLIENT_LIST";
-	
-	public static final String CATEGORY_LIST = "CATEGORY_LIST";
 
 	public static final String BRAND_LIST = "BRAND_LIST";
 	
@@ -27,5 +25,9 @@ public class RuleConfigConstants {
 	public static final String PRODUCT_DISCOUNT_RS_OFF = "PRODUCT_DISCOUNT_RS_OFF";
 	
 	public static final String PRODUCT_DISCOUNTED_VALUE = "PRODUCT_DISCOUNTED_VALUE";
+	
+	public static final String CATEGORY_INCLUDE_LIST = "CATEGORY_INCLUDE_LIST";
+	
+	public static final String CATEGORY_EXCLUDE_LIST = "CATEGORY_EXCLUDE_LIST";
 
 }

@@ -26,17 +26,41 @@ import com.fb.platform.promotion.util.StringToIntegerList;
 public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule, Serializable {
 
 	private static transient Log log = LogFactory.getLog(BuyWorthXGetYRsOffRuleImpl.class);
-	private Money minOrderValue;
-	private Money fixedRsOff;
-	private List<Integer> clientList;
+	
+	private Money fixedRsOff = null;
+	private Money minOrderValue = null;
+	private List<Integer> clientList = null;
+	private List<Integer> includeCategoryList = null;
+	private List<Integer> excludeCategoryList = null;
+	private List<Integer> brands;
 	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
-		minOrderValue = new Money(BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigConstants.MIN_ORDER_VALUE))));
+		if(ruleConfig.isConfigItemPresent(RuleConfigConstants.CATEGORY_INCLUDE_LIST)){
+			StrTokenizer strTokCategories = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigConstants.CATEGORY_INCLUDE_LIST),",");
+			includeCategoryList = StringToIntegerList.convert((List<String>)strTokCategories.getTokenList());
+		}
+		if(ruleConfig.isConfigItemPresent(RuleConfigConstants.CATEGORY_EXCLUDE_LIST)){
+			StrTokenizer strTokCategories = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigConstants.CATEGORY_EXCLUDE_LIST),",");
+			excludeCategoryList = StringToIntegerList.convert((List<String>)strTokCategories.getTokenList());
+		}
+		if(ruleConfig.isConfigItemPresent(RuleConfigConstants.CLIENT_LIST)){
+			StrTokenizer strTokClients = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigConstants.CLIENT_LIST),",");
+			clientList = StringToIntegerList.convert((List<String>)strTokClients.getTokenList());
+		}
+		if(ruleConfig.isConfigItemPresent(RuleConfigConstants.MIN_ORDER_VALUE)){
+			minOrderValue = new Money(BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigConstants.MIN_ORDER_VALUE))));
+			log.info("minOrderValue : " + minOrderValue.toString());
+		}
+		else{
+			log.warn("Minimum Order Value not specified for this rule");
+		}
+		if(ruleConfig.isConfigItemPresent(RuleConfigConstants.BRAND_LIST)){
+			StrTokenizer strTokCategories = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigConstants.BRAND_LIST),",");
+			brands = StringToIntegerList.convert((List<String>)strTokCategories.getTokenList());
+		}
 		fixedRsOff = new Money (BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigConstants.FIXED_DISCOUNT_RS_OFF))));
-		StrTokenizer strTokClients = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigConstants.CLIENT_LIST),",");
-		clientList = StringToIntegerList.convert((List<String>)strTokClients.getTokenList());
-		log.info("minOrderValue : " + minOrderValue.toString() + ", fixedRsOff : " + fixedRsOff.toString());
+		log.info("fixedRsOff : " + fixedRsOff.toString());
 	}
 
 	@Override
@@ -44,15 +68,23 @@ public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule, Serializable {
 		if(log.isDebugEnabled()) {
 			log.debug("Checking if BuyWorthXGetYRsOffRuleImpl applies on order : " + request.getOrderId());
 		}
-		ApplicableResponse ar = new ApplicableResponse();
 		Money orderValue = new Money(request.getOrderValue());
-		if(request.isValidClient(clientList)){
-			if(orderValue.gteq(minOrderValue)){
-				return PromotionStatusEnum.SUCCESS;
-			}
+		if( clientList != null && !request.isValidClient(clientList)){
+			return PromotionStatusEnum.INVALID_CLIENT;
+		}
+		if( includeCategoryList != null && !request.isAllProductsInCategory(includeCategoryList)){
+			return PromotionStatusEnum.CATEGORY_MISMATCH;
+		}
+		if( excludeCategoryList != null && request.isAnyProductInCategory(excludeCategoryList)){
+			return PromotionStatusEnum.CATEGORY_MISMATCH;
+		}
+		if( brands != null && !request.isAllProductsInBrand(brands)){
+			return PromotionStatusEnum.BRAND_MISMATCH;
+		}
+		if(minOrderValue!=null && orderValue.lt(minOrderValue)){
 			return PromotionStatusEnum.LESS_ORDER_AMOUNT;
 		}
-		return PromotionStatusEnum.INVALID_CLIENT;
+		return PromotionStatusEnum.SUCCESS;
 	}
 
 	@Override

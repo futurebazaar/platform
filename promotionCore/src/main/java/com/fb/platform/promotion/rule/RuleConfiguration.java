@@ -53,4 +53,8 @@ public class RuleConfiguration {
 		}
 		throw new PlatformException("Config Item Value not found for the key - "+key);
 	}
+	
+	public boolean isConfigItemPresent(String key){
+		return (getConfigItem(key) !=null);
+	}
 }
