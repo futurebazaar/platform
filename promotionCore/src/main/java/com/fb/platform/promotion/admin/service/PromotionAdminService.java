@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fb.platform.promotion.admin.to.PromotionTO;
 import com.fb.platform.promotion.rule.RulesEnum;
-import com.fb.platform.promotion.to.PromotionTO;
 
 /**
  * @author nehaga

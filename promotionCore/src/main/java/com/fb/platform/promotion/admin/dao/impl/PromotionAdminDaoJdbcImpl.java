@@ -134,8 +134,16 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 						ps.setTimestamp(1, timestamp);
 						ps.setTimestamp(2, timestamp);
 						ps.setInt(3, ruleId);
-						ps.setTimestamp(4, new Timestamp(validFrom.getMillis()));
-						ps.setTimestamp(5, new Timestamp(validTill.getMillis()));
+						if(validFrom != null) {
+							ps.setTimestamp(4, new Timestamp(validFrom.getMillis()));
+						} else {
+							ps.setNull(4, java.sql.Types.TIMESTAMP);
+						}
+						if(validTill != null) {
+							ps.setTimestamp(5, new Timestamp(validTill.getMillis()));
+						} else {
+							ps.setNull(5, java.sql.Types.TIMESTAMP);
+						}
 						ps.setString(6, name);
 						ps.setString(7, description);
 						ps.setInt(8, active);

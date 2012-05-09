@@ -6,16 +6,24 @@ package com.fb.platform.test;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.math.BigDecimal;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.Duration;
+import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.namespace.QName;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.joda.time.DateTime;
 
@@ -45,7 +53,9 @@ import com.fb.platform.promotion.admin._1_0.CreatePromotionResponse;
 import com.fb.platform.promotion.admin._1_0.FetchRuleRequest;
 import com.fb.platform.promotion.admin._1_0.FetchRuleResponse;
 import com.fb.platform.promotion.admin._1_0.PromotionTO;
+import com.fb.platform.promotion.admin._1_0.RuleConfigDescriptorEnum;
 import com.fb.platform.promotion.admin._1_0.RuleConfigItemTO;
+import com.fb.platform.promotion.admin._1_0.RulesEnum;
 /**
  * @author vinayak
  *
@@ -327,8 +337,12 @@ public class RestClient {
 		PromotionTO promotionTO = new PromotionTO();
 		
 		promotionTO.setName("New Promotion");
-		promotionTO.setValidFrom(new DateTime().toString());
-		promotionTO.setValidTill("2012-04-29");
+		
+		GregorianCalendar gregCal = new GregorianCalendar();
+		gregCal.set(2012, 01, 29);
+		promotionTO.setValidFrom(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+		gregCal.set(2013, 01, 29);
+		promotionTO.setValidTill(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
 		promotionTO.setDescription("Test new promotion");
 		promotionTO.setIsActive(true);
 		promotionTO.setMaxUses(20);
@@ -338,38 +352,38 @@ public class RestClient {
 		promotionTO.setRuleName("BUY_WORTH_X_GET_Y_RS_OFF");
 		
 		RuleConfigItemTO configItem = new RuleConfigItemTO();
-		configItem.setName("CLIENT_LIST");
-		configItem.setValue("1,2,5,8");
+		configItem.setRuleConfigName("CLIENT_LIST");
+		configItem.setRuleConfigValue("1,2,5,8");
 		promotionTO.getRuleConfigItemTO().add(configItem);
 		
 		configItem = new RuleConfigItemTO();
-		configItem.setName("MIN_ORDER_VALUE");
-		configItem.setValue("2000");
+		configItem.setRuleConfigName("MIN_ORDER_VALUE");
+		configItem.setRuleConfigValue("2000");
 		promotionTO.getRuleConfigItemTO().add(configItem);
 		
 		configItem = new RuleConfigItemTO();
-		configItem.setName("FIXED_DISCOUNT_RS_OFF");
-		configItem.setValue("100");
+		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
+		configItem.setRuleConfigValue("100");
 		promotionTO.getRuleConfigItemTO().add(configItem);
 		
 		configItem = new RuleConfigItemTO();
-		configItem.setName("CATEGORY_LIST");
-		configItem.setValue("1,2,3,4,5,6,7,8,9,10,12,4,15,25");
+		configItem.setRuleConfigName("CATEGORY_LIST");
+		configItem.setRuleConfigValue("1,2,3,4,5,6,7,8,9,10,12,4,15,25");
 		promotionTO.getRuleConfigItemTO().add(configItem);
 		
 		configItem = new RuleConfigItemTO();
-		configItem.setName("BRAND_LIST");
-		configItem.setValue("3");
+		configItem.setRuleConfigName("BRAND_LIST");
+		configItem.setRuleConfigValue("3");
 		promotionTO.getRuleConfigItemTO().add(configItem);
 		
 		configItem = new RuleConfigItemTO();
-		configItem.setName("CATEGORY_INCLUDE_LIST");
-		configItem.setValue("1,2,3,4,5,6,7,8,9");
+		configItem.setRuleConfigName("CATEGORY_INCLUDE_LIST");
+		configItem.setRuleConfigValue("1,2,3,4,5,6,7,8,9");
 		promotionTO.getRuleConfigItemTO().add(configItem);
 		
 		configItem = new RuleConfigItemTO();
-		configItem.setName("CATEGORY_EXCLUDE_LIST");
-		configItem.setValue("10,12,4,15,25");
+		configItem.setRuleConfigName("CATEGORY_EXCLUDE_LIST");
+		configItem.setRuleConfigValue("10,12,4,15,25");
 		promotionTO.getRuleConfigItemTO().add(configItem);
 		
 		createPromotionRequest.setPromotionTO(promotionTO);
@@ -395,6 +409,9 @@ public class RestClient {
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		CreatePromotionResponse createPromotionResponse = (CreatePromotionResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(createPromotionResponseStr)));
 		System.out.println(createPromotionResponse.getCreatePromotionEnum().toString());
+		if(!StringUtils.isEmpty(createPromotionResponse.getErrorCause())) {
+			System.out.println(createPromotionResponse.getErrorCause());
+		}
 	}
 
 	private static void logout(String sessionToken) throws Exception {

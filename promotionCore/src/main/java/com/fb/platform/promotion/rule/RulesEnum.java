@@ -18,4 +18,14 @@ public enum RulesEnum {
 	BUY_WORTH_X_GET_Y_PERCENT_OFF_ON_Z_CATEGORY,
 	FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF;
 	
+	public static boolean isRuleValid(String ruleName) {
+		RulesEnum[] rules = RulesEnum.values();
+		for(RulesEnum ruleEnum : rules) {
+			if(ruleEnum.name().equals(ruleName)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }

@@ -1,9 +1,9 @@
 package com.fb.platform.promotion.admin.service;
 
-import com.fb.platform.promotion.to.CreatePromotionRequest;
-import com.fb.platform.promotion.to.CreatePromotionResponse;
-import com.fb.platform.promotion.to.FetchRuleRequest;
-import com.fb.platform.promotion.to.FetchRuleResponse;
+import com.fb.platform.promotion.admin.to.CreatePromotionRequest;
+import com.fb.platform.promotion.admin.to.CreatePromotionResponse;
+import com.fb.platform.promotion.admin.to.FetchRuleRequest;
+import com.fb.platform.promotion.admin.to.FetchRuleResponse;
 
 /**
  * @author nehaga

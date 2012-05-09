@@ -14,17 +14,17 @@ import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
 import com.fb.platform.promotion.admin.service.PromotionAdminManager;
 import com.fb.platform.promotion.admin.service.PromotionAdminService;
+import com.fb.platform.promotion.admin.to.CreatePromotionEnum;
+import com.fb.platform.promotion.admin.to.CreatePromotionRequest;
+import com.fb.platform.promotion.admin.to.CreatePromotionResponse;
+import com.fb.platform.promotion.admin.to.FetchRuleRequest;
+import com.fb.platform.promotion.admin.to.FetchRuleResponse;
+import com.fb.platform.promotion.admin.to.FetchRulesEnum;
+import com.fb.platform.promotion.admin.to.PromotionTO;
+import com.fb.platform.promotion.admin.to.RuleConfigItemTO;
 import com.fb.platform.promotion.rule.RuleConfigDescriptor;
 import com.fb.platform.promotion.rule.RuleConfigDescriptorItem;
 import com.fb.platform.promotion.rule.RulesEnum;
-import com.fb.platform.promotion.to.CreatePromotionEnum;
-import com.fb.platform.promotion.to.CreatePromotionRequest;
-import com.fb.platform.promotion.to.CreatePromotionResponse;
-import com.fb.platform.promotion.to.FetchRuleRequest;
-import com.fb.platform.promotion.to.FetchRuleResponse;
-import com.fb.platform.promotion.to.FetchRulesEnum;
-import com.fb.platform.promotion.to.PromotionTO;
-import com.fb.platform.promotion.to.RuleConfigItemTO;
 import com.fb.platform.promotion.util.PromotionRuleFactory;
 
 /**
@@ -76,11 +76,14 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 	public CreatePromotionResponse createPromotion(CreatePromotionRequest createPromotionRequest) {
 		CreatePromotionResponse createPromotionResponse = new CreatePromotionResponse();
 		
-		if (createPromotionRequest == null || StringUtils.isBlank(createPromotionRequest.getSessionToken())) {
-			createPromotionResponse.setCreatePromotionEnum(CreatePromotionEnum.NO_SESSION);
+		String requestInvalidationList = createPromotionRequest.isValid();
+		
+		if(!StringUtils.isEmpty(requestInvalidationList)) {
+			createPromotionResponse.setCreatePromotionEnum(CreatePromotionEnum.INSUFFICIENT_DATA);
+			createPromotionResponse.setErrorCause(requestInvalidationList);
 			return createPromotionResponse;
 		}
-
+		
 		//authenticate the session token and find out the userId
 		AuthenticationTO authentication = authenticationService.authenticate(createPromotionRequest.getSessionToken());
 		if (authentication == null) {
@@ -89,26 +92,30 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 			return createPromotionResponse;
 		}
 		
+		createPromotionResponse.setSessionToken(createPromotionRequest.getSessionToken());
 		String missingConfigsList = hasValidRuleConfig(createPromotionRequest.getPromotion());
 		
 		if(!StringUtils.isEmpty(missingConfigsList)) {
 			createPromotionResponse.setCreatePromotionEnum(CreatePromotionEnum.RULE_CONFIG_MISSING);
-			createPromotionResponse.setErrorCause("Missing rule configs : " + missingConfigsList);
+			createPromotionResponse.setErrorCause(missingConfigsList);
 			return createPromotionResponse;
 		}
-		createPromotionResponse.setSessionToken(createPromotionRequest.getSessionToken());
-		createPromotionResponse.setPromotionId(promotionAdminService.createPromotion(createPromotionRequest.getPromotion()));
-		createPromotionResponse.setCreatePromotionEnum(CreatePromotionEnum.SUCCESS);
+		
+		int promotionId = promotionAdminService.createPromotion(createPromotionRequest.getPromotion());
+		if(promotionId > 0) {
+			createPromotionResponse.setPromotionId(promotionId);
+			createPromotionResponse.setCreatePromotionEnum(CreatePromotionEnum.SUCCESS);
+		} 
 		return createPromotionResponse;
 	}
 	
 	private String hasValidRuleConfig(PromotionTO promotionTo) {
 		java.util.List<String> missingConfigsList = new ArrayList<String>();
-		List<RuleConfigDescriptorItem> requiredConfigs = PromotionRuleFactory.getRuleConfig(promotionTo.getRulesEnum());
+		List<RuleConfigDescriptorItem> requiredConfigs = PromotionRuleFactory.getRuleConfig(RulesEnum.valueOf(promotionTo.getRuleName()));
 		HashMap<String, RuleConfigItemTO> receivedConfigsMap = new HashMap<String, RuleConfigItemTO>();
 		
 		for(RuleConfigItemTO ruleConfigItemTO:promotionTo.getConfigItems()) {
-			receivedConfigsMap.put(ruleConfigItemTO.getName(), ruleConfigItemTO);
+			receivedConfigsMap.put(ruleConfigItemTO.getRuleConfigName(), ruleConfigItemTO);
 		}
 		
 		for(RuleConfigDescriptorItem ruleConfigDescriptorItem : requiredConfigs) {

@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
@@ -98,8 +99,8 @@ public class RuleDaoJdbcImpl implements RuleDao {
 	}
 	
 	@Override
-	public int getRuleId(String rulesName) {
-		int ruleId = jdbcTemplate.queryForInt(GET_RULE_ID, rulesName);
+	public int getRuleId(String ruleName) {
+		int ruleId = jdbcTemplate.queryForInt(GET_RULE_ID, ruleName);
 		return ruleId;
 	}
 

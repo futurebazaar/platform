@@ -1,8 +1,9 @@
-package com.fb.platform.promotion.to;
+package com.fb.platform.promotion.admin.to;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 
 import com.fb.commons.to.Money;
@@ -19,7 +20,7 @@ public class PromotionTO {
 	private Money maxAmount = null;
 	private int maxUsesPerUser = 0;
 	private Money maxAmountPerUser = null;
-	private RulesEnum rulesEnum = null;
+	private String ruleName = null;
 	private List<RuleConfigItemTO> configItems = new ArrayList<RuleConfigItemTO>();
 	
 	public String getName() {
@@ -76,17 +77,59 @@ public class PromotionTO {
 	public void setMaxAmountPerUser(Money maxAmountPerUser) {
 		this.maxAmountPerUser = maxAmountPerUser;
 	}
-	public RulesEnum getRulesEnum() {
-		return rulesEnum;
-	}
-	public void setRulesEnum(RulesEnum rulesEnum) {
-		this.rulesEnum = rulesEnum;
-	}
 	public List<RuleConfigItemTO> getConfigItems() {
 		return configItems;
 	}
 	public void setConfigItems(List<RuleConfigItemTO> configItems) {
 		this.configItems = configItems;
 	}
+	public String getRuleName() {
+		return ruleName;
+	}
+	public void setRuleName(String ruleName) {
+		this.ruleName = ruleName;
+	}
 	
+	public String isValid() {
+		List<String> invalidationList = new ArrayList<String>();
+		invalidationList.addAll(isDateConfigValid());
+		invalidationList.addAll(isRuleValid());
+		invalidationList.addAll(isLimitsConfigValid());
+		for(RuleConfigItemTO ruleConfigItem : configItems) {
+			if(!StringUtils.isEmpty(ruleConfigItem.isValid())) {
+				invalidationList.add(ruleConfigItem.isValid());
+			}
+		}
+		return StringUtils.join(invalidationList.toArray(), ",");
+	}
+	
+	private List<String> isRuleValid() {
+		List<String> ruleInvalidationList = new ArrayList<String>();
+		if(StringUtils.isEmpty(ruleName)) {
+			ruleInvalidationList.add("Rule name empty");
+		}
+		if(!RulesEnum.isRuleValid(ruleName)) {
+			ruleInvalidationList.add("Invalid rule name " + ruleName);
+		}
+		return ruleInvalidationList;
+	}
+	
+	private List<String> isLimitsConfigValid() {
+		List<String> limitsConfigInvalidationList = new ArrayList<String>();
+		if(maxAmount == null) {
+			limitsConfigInvalidationList.add("Max amount cannot be empty");
+		}
+		if(maxAmountPerUser == null) {
+			limitsConfigInvalidationList.add("Max amount per user cannot be empty");
+		}
+		return limitsConfigInvalidationList;
+	}
+	
+	private List<String> isDateConfigValid() {
+		List<String> dateInvalidationList = new ArrayList<String>();
+		if(getValidFrom() != null && getValidTill() != null && getValidTill().isBefore(getValidFrom())) {
+			dateInvalidationList.add("Valid Till date before Valid From");
+		}
+		return dateInvalidationList;
+	}
 }

@@ -78,11 +78,11 @@ public class PromotionAdminResource {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			
 			FetchRuleRequest fetchRuleRequest = (FetchRuleRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(fetchRulesXML)));
-			com.fb.platform.promotion.to.FetchRuleRequest apiFetchRuleRequest = new com.fb.platform.promotion.to.FetchRuleRequest();
+			com.fb.platform.promotion.admin.to.FetchRuleRequest apiFetchRuleRequest = new com.fb.platform.promotion.admin.to.FetchRuleRequest();
 			apiFetchRuleRequest.setSessionToken(fetchRuleRequest.getSessionToken());
 			
 			FetchRuleResponse fetchRuleResponse = new FetchRuleResponse();
-			com.fb.platform.promotion.to.FetchRuleResponse apiFetchRuleResponse = promotionAdminManager.fetchRules(apiFetchRuleRequest);
+			com.fb.platform.promotion.admin.to.FetchRuleResponse apiFetchRuleResponse = promotionAdminManager.fetchRules(apiFetchRuleRequest);
 			
 			fetchRuleResponse.setSessionToken(apiFetchRuleRequest.getSessionToken());
 			fetchRuleResponse.setFetchRulesEnum(FetchRulesEnum.fromValue(apiFetchRuleResponse.getFetchRulesEnum().toString()));
@@ -125,33 +125,49 @@ public class PromotionAdminResource {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			
 			CreatePromotionRequest createPromotionRequest = (CreatePromotionRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(createPromotionXML)));
-			com.fb.platform.promotion.to.CreatePromotionRequest apiCreatePromotionRequest = new com.fb.platform.promotion.to.CreatePromotionRequest();
+			com.fb.platform.promotion.admin.to.CreatePromotionRequest apiCreatePromotionRequest = new com.fb.platform.promotion.admin.to.CreatePromotionRequest();
 			
 			apiCreatePromotionRequest.setSessionToken(createPromotionRequest.getSessionToken());
 			
 			PromotionTO promotionTO = createPromotionRequest.getPromotionTO();
-			com.fb.platform.promotion.to.PromotionTO apiPromotionTO = new com.fb.platform.promotion.to.PromotionTO();
+			com.fb.platform.promotion.admin.to.PromotionTO apiPromotionTO = new com.fb.platform.promotion.admin.to.PromotionTO();
 			apiPromotionTO.setActive(promotionTO.isIsActive());
 			apiPromotionTO.setDescription(promotionTO.getDescription());
-			apiPromotionTO.setMaxAmount(new Money(promotionTO.getMaxAmount()));
-			apiPromotionTO.setMaxAmountPerUser(new Money(promotionTO.getMaxAmountPerUser()));
+			if(promotionTO.getMaxAmount() != null) {
+				apiPromotionTO.setMaxAmount(new Money(promotionTO.getMaxAmount()));
+			} else {
+				apiPromotionTO.setMaxAmount(null);
+			}
+			if(promotionTO.getMaxAmountPerUser() != null) {
+				apiPromotionTO.setMaxAmountPerUser(new Money(promotionTO.getMaxAmountPerUser()));
+			} else {
+				apiPromotionTO.setMaxAmountPerUser(null);
+			}
 			apiPromotionTO.setMaxUses(promotionTO.getMaxUses());
 			apiPromotionTO.setMaxUsesPerUser(promotionTO.getMaxUsesPerUser());
 			apiPromotionTO.setName(promotionTO.getName());
-			apiPromotionTO.setRulesEnum(com.fb.platform.promotion.rule.RulesEnum.valueOf(promotionTO.getRuleName()));
-			apiPromotionTO.setValidFrom(new DateTime(promotionTO.getValidFrom()));
-			apiPromotionTO.setValidTill(new DateTime(promotionTO.getValidTill()));
+			apiPromotionTO.setRuleName(createPromotionRequest.getPromotionTO().getRuleName());
+			if(promotionTO.getValidFrom() == null) {
+				apiPromotionTO.setValidFrom(null);
+			} else {
+				apiPromotionTO.setValidFrom(new DateTime(promotionTO.getValidFrom().toGregorianCalendar()));
+			}
+			if(promotionTO.getValidTill() == null) {
+				apiPromotionTO.setValidTill(null);
+			} else {
+				apiPromotionTO.setValidTill(new DateTime(promotionTO.getValidTill().toGregorianCalendar()));
+			}
 			for(RuleConfigItemTO ruleConfigItemTO : promotionTO.getRuleConfigItemTO()) {
-				com.fb.platform.promotion.to.RuleConfigItemTO apiRuleConfigItemTO = new com.fb.platform.promotion.to.RuleConfigItemTO();
-				apiRuleConfigItemTO.setName(ruleConfigItemTO.getName());
-				apiRuleConfigItemTO.setValue(ruleConfigItemTO.getValue());
+				com.fb.platform.promotion.admin.to.RuleConfigItemTO apiRuleConfigItemTO = new com.fb.platform.promotion.admin.to.RuleConfigItemTO();
+				apiRuleConfigItemTO.setRuleConfigName(ruleConfigItemTO.getRuleConfigName());
+				apiRuleConfigItemTO.setRuleConfigValue(ruleConfigItemTO.getRuleConfigValue());
 				apiPromotionTO.getConfigItems().add(apiRuleConfigItemTO);
 			}
 			
 			apiCreatePromotionRequest.setPromotion(apiPromotionTO);
 			
 			CreatePromotionResponse createPromotionResponse	= new CreatePromotionResponse();	
-			com.fb.platform.promotion.to.CreatePromotionResponse apiCreatePromotionResponse = promotionAdminManager.createPromotion(apiCreatePromotionRequest);
+			com.fb.platform.promotion.admin.to.CreatePromotionResponse apiCreatePromotionResponse = promotionAdminManager.createPromotion(apiCreatePromotionRequest);
 			
 			createPromotionResponse.setSessionToken(createPromotionRequest.getSessionToken());
 			createPromotionResponse.setCreatePromotionEnum(CreatePromotionEnum.fromValue(apiCreatePromotionResponse.getCreatePromotionEnum().toString()));

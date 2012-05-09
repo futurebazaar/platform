@@ -35,4 +35,14 @@ public enum RuleConfigDescriptorEnum {
 	public String getDescription() {
 		return this.description;
 	}
+	
+	public static boolean isRuleConfigValid(String ruleConfigName) {
+		RuleConfigDescriptorEnum[] ruleConfigs = RuleConfigDescriptorEnum.values();
+		for(RuleConfigDescriptorEnum ruleConfigEnum : ruleConfigs) {
+			if(ruleConfigEnum.name().equals(ruleConfigName)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

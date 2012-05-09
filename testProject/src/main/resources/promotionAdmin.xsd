@@ -113,8 +113,8 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
   <xs:element name="name" type="xs:string"/>
   <xs:element name="description" type="xs:string"/>
   <xs:element name="isActive" type="xs:boolean"/>
-  <xs:element name="validFrom" type="xs:string"/>
-  <xs:element name="validTill" type="xs:string"/>
+  <xs:element name="validFrom" type="xs:dateTime"/>
+  <xs:element name="validTill" type="xs:dateTime"/>
   <xs:element name="maxUses" type="xs:int"/>
   <xs:element name="maxAmount" type="xs:decimal"/>
   <xs:element name="maxUsesPerUser" type="xs:int"/>
@@ -124,12 +124,13 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
   <xs:element name="ruleConfigItemTO">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="promotionAdmin:name"/>
-        <xs:element ref="promotionAdmin:value"/>
+        <xs:element ref="promotionAdmin:ruleConfigName"/>
+        <xs:element ref="promotionAdmin:ruleConfigValue"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="value" type="xs:string"/>
+  <xs:element name="ruleConfigValue" type="xs:string"/>
+  <xs:element name="ruleConfigName" type="xs:string"/>
   
   <xs:element name="createPromotionResponse">
     <xs:complexType>
@@ -152,6 +153,7 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
       	<xs:enumeration value="NO_SESSION"/>
       	<xs:enumeration value="RULE_CONFIG_MISSING"/>
       	<xs:enumeration value="INTERNAL_ERROR"/>
+      	<xs:enumeration value="INSUFFICIENT_DATA"/>
 	</xs:restriction>
   </xs:simpleType>
   
