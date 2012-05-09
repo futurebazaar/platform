@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<table name="wallets_wallet">
+		<column>id</column>
+		<column>total_amount</column>
+		<column>cash_amount</column>
+		<column>gift_amount</column>
+		<column>refund_amount</column>
+		<column>created_on</column>
+		<column>modified_on</column>
+		<row>
+			<value>1</value>
+			<value>100.00</value>
+			<value>100.00</value>
+			<value>0</value>
+			<value>0</value>
+			<value>2011-04-18 20:42:57</value>
+			<value>2011-04-18 20:42:57</value>
+		</row>
+		<row>
+			<value>2</value>
+			<value>200.00</value>
+			<value>100.00</value>
+			<value>100.00</value>
+			<value>0</value>
+			<value>2011-04-18 20:42:57</value>
+			<value>2011-04-18 20:42:57</value>
+		</row>
+		<row>
+			<value>3</value>
+			<value>300.00</value>
+			<value>100.00</value>
+			<value>100.00</value>
+			<value>100.00</value>
+			<value>2011-04-18 20:42:57</value>
+			<value>2011-04-18 20:42:57</value>
+		</row>
+		<row>
+			<value>4</value>
+			<value>100.00</value>
+			<value>0</value>
+			<value>100.00</value>
+			<value>0</value>
+			<value>2011-04-18 20:42:57</value>
+			<value>2011-04-18 20:42:57</value>
+		</row>
+		<row>
+			<value>5</value>
+			<value>100.00</value>
+			<value>0</value>
+			<value>0</value>
+			<value>100.00</value>
+			<value>2011-04-18 20:42:57</value>
+			<value>2011-04-18 20:42:57</value>
+		</row>
+		<row>
+			<value>6</value>
+			<value>200.00</value>
+			<value>100.00</value>
+			<value>0</value>
+			<value>100.00</value>
+			<value>2011-04-18 20:42:57</value>
+			<value>2011-04-18 20:42:57</value>
+		</row>
+		<row>
+			<value>7</value>
+			<value>200.00</value>
+			<value>100.00</value>
+			<value>100.00</value>
+			<value>0</value>
+			<value>2011-04-18 20:42:57</value>
+			<value>2011-04-18 20:42:57</value>
+		</row>
+	</table>
+	<table name="users_wallet">
+		<column>id</column>
+		<column>user_id</column>
+		<column>client_id</column>
+		<column>wallet_id</column>
+		<row>
+			<value>1</value>
+			<value>-1</value>
+			<value>-1</value>
+			<value>1</value>
+		</row>
+		<row>
+			<value>2</value>
+			<value>-1</value>
+			<value>-3</value>
+			<value>2</value>
+		</row>
+		<row>
+			<value>3</value>
+			<value>-2</value>
+			<value>-1</value>
+			<value>3</value>
+		</row>
+		<row>
+			<value>4</value>
+			<value>-5</value>
+			<value>-1</value>
+			<value>4</value>
+		</row>
+		<row>
+			<value>5</value>
+			<value>-3</value>
+			<value>-1</value>
+			<value>5</value>
+		</row>
+		<row>
+			<value>6</value>
+			<value>-4</value>
+			<value>-2</value>
+			<value>6</value>
+		</row>
+		<row>
+			<value>7</value>
+			<value>-4</value>
+			<value>-3</value>
+			<value>7</value>
+		</row>
+	</table>
+	<table name="wallets_transaction">
+		<column>id</column>
+		<column>transaction_id</column>
+		<column>wallet_id</column>
+		<column>amount</column>
+		<column>transaction_type</column>
+		<column>transaction_date</column>
+		<row>
+			<value>1</value>
+			<value>ABSCDFADF12312SASzcv</value>
+			<value>1</value>
+			<value>99</value>
+			<value>D</value>
+			<value>2011-04-18 20:42:57</value>
+		</row>
+		<row>
+			<value>2</value>
+			<value>ABSCDFADF123asdfsadfSASzcv</value>
+			<value>2</value>
+			<value>99</value>
+			<value>C</value>
+			<value>2011-04-18 20:42:57</value>
+		</row>
+		<row>
+			<value>3</value>
+			<value>ABSCDFADasfsMKKNd312SASzcv</value>
+			<value>3</value>
+			<value>199</value>
+			<value>D</value>
+			<value>2011-04-18 20:42:57</value>
+		</row>
+		<row>
+			<value>4</value>
+			<value>ABSCDFADF12312SASz876cv</value>
+			<value>1</value>
+			<value>100</value>
+			<value>C</value>
+			<value>2011-04-18 20:42:57</value>
+		</row>
+		<row>
+			<value>5</value>
+			<value>ABSCDFADF1231lp0bg2SASzcv</value>
+			<value>6</value>
+			<value>99</value>
+			<value>D</value>
+			<value>2011-04-18 20:42:57</value>
+		</row>
+	</table>
+	<table name="wallets_sub_transaction">
+		<column>id</column>
+		<column>tran_id</column>
+		<column>transaction_subwallet</column>
+		<column>amount</column>
+		<column>order_id</column>
+		<column>refund_id</column>
+		<column>payment_id</column>
+		<column>gift_id</column>
+		<column>transaction_reversal_id</column>
+		<column>transaction_description</column>		
+		<row>
+			<value>1</value>
+			<value>1</value>
+			<value>CASH</value>
+			<value>99</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<value>This is a test transaction</value>
+		</row>
+		<row>
+			<value>2</value>
+			<value>2</value>
+			<value>GIFT</value>
+			<value>99</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<value>This is a test transaction</value>
+		</row>
+		<row>
+			<value>3</value>
+			<value>3</value>
+			<value>CASH</value>
+			<value>99</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<value>This is a test trnasaction</value>
+		</row>
+		<row>
+			<value>4</value>
+			<value>3</value>
+			<value>REFUND</value>
+			<value>100</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<value>This is a test trnasaction</value>
+		</row>
+	</table>
+</dataset>

@@ -2,21 +2,23 @@ package com.fb.platform.wallet.model;
 
 import java.util.Date;
 
+import com.fb.commons.to.Money;
+
 public abstract class SubWallet {
 	
-	double amount = 0.0;
+	Money amount = null;
 	boolean isRefundable;
 	Date expiryDate = null;
 	/**
 	 * @return the amount
 	 */
-	public double getAmount() {
+	public Money getAmount() {
 		return amount;
 	}
 	/**
 	 * @param amount the amount to set
 	 */
-	public void setAmount(double amount) {
+	public void setAmount(Money amount) {
 		this.amount = amount;
 	}
 	/**

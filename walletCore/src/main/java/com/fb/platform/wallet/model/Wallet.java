@@ -1,9 +1,9 @@
 package com.fb.platform.wallet.model;
 
 import java.io.Serializable;
-import java.util.Date;
+import org.joda.time.DateTime;
 
-import com.fb.platform.user.manager.model.address.DeleteAddressStatusEnum;
+import com.fb.commons.to.Money;
 import com.fb.platform.user.manager.model.admin.User;
 import com.fb.platform.wallet.to.CreditWalletStatus;
 import com.fb.platform.wallet.to.DebitWalletStatus;
@@ -15,17 +15,31 @@ public class Wallet implements Serializable {
 	private CashSubWallet cashSubWallet;
 	private GiftSubWallet giftSubWallet;
 	private RefundSubWallet refundSubWallet;
-	private Double totalAmount;
-	private Date createdOn;
-	private Date modifiedOn;
+	private Money totalAmount;
+	private DateTime createdOn;
+	private DateTime modifiedOn;
 	private User user;
 	
 	
-	public CreditWalletStatus Credit(double amount,SubWalletType subWalletType,long paymentId){
-		return null;
+	public CreditWalletStatus Credit(Money amount,SubWalletType subWalletType){
+		if (amount.isPlus()){
+			totalAmount = totalAmount.plus(amount);
+			if(subWalletType.equals(SubWalletType.CASH_SUB_WALLET)){
+				cashSubWallet.amount = cashSubWallet.amount.plus(amount);		
+			}else if (subWalletType.equals(SubWalletType.GIFT_SUB_WALLET)){
+				giftSubWallet.amount = giftSubWallet.amount.plus(amount);				
+			}else if (subWalletType.equals(SubWalletType.REFUND_SUB_WALLET)){
+				refundSubWallet.amount = refundSubWallet.amount.plus(amount);				
+			}else{
+				return CreditWalletStatus.INVALID_SUBWALLET;
+			}
+			return CreditWalletStatus.SUCCESS;
+		}else{
+			return CreditWalletStatus.ZERO_AMOUNT;
+		}
 	}
-	public DebitWalletStatus Debit(double amount,long orderId){
-		if(this.totalAmount < amount){
+	public DebitWalletStatus Debit(Money amount){
+		if(this.totalAmount.lt(amount)){
 			return DebitWalletStatus.INSUFFICIENT_FUND;
 		}
 		return null;
@@ -98,37 +112,37 @@ public class Wallet implements Serializable {
 	/**
 	 * @return the createdOn
 	 */
-	public Date getCreatedOn() {
+	public DateTime getCreatedOn() {
 		return createdOn;
 	}
 	/**
 	 * @param createdOn the createdOn to set
 	 */
-	public void setCreatedOn(Date createdOn) {
+	public void setCreatedOn(DateTime createdOn) {
 		this.createdOn = createdOn;
 	}
 	/**
 	 * @return the modifiedOn
 	 */
-	public Date getModifiedOn() {
+	public DateTime getModifiedOn() {
 		return modifiedOn;
 	}
 	/**
 	 * @param modifiedOn the modifiedOn to set
 	 */
-	public void setModifiedOn(Date modifiedOn) {
+	public void setModifiedOn(DateTime modifiedOn) {
 		this.modifiedOn = modifiedOn;
 	}
 	/**
 	 * @return the totalAmount
 	 */
-	public Double getTotalAmount() {
+	public Money getTotalAmount() {
 		return totalAmount;
 	}
 	/**
 	 * @param totalAmount the totalAmount to set
 	 */
-	public void setTotalAmount(Double totalAmount) {
+	public void setTotalAmount(Money totalAmount) {
 		this.totalAmount = totalAmount;
 	}
 	
