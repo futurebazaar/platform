@@ -11,7 +11,7 @@ public class SearchPromotionResponse {
 	
 	private String sessionToken = null;
 	private SearchPromotionEnum searchPromotionEnum = null;
-	private List<PromotionViewTO> promotionsList = new ArrayList<PromotionViewTO>();
+	private List<PromotionTO> promotionsList = new ArrayList<PromotionTO>();
 	private String errorCause;
 	
 	public String getSessionToken() {
@@ -20,10 +20,10 @@ public class SearchPromotionResponse {
 	public void setSessionToken(String sessionToken) {
 		this.sessionToken = sessionToken;
 	}
-	public List<PromotionViewTO> getPromotionsList() {
+	public List<PromotionTO> getPromotionsList() {
 		return promotionsList;
 	}
-	public void setPromotionsList(List<PromotionViewTO> promotionsList) {
+	public void setPromotionsList(List<PromotionTO> promotionsList) {
 		this.promotionsList = promotionsList;
 	}
 	public String getErrorCause() {

@@ -25,7 +25,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.admin.dao.PromotionAdminDao;
-import com.fb.platform.promotion.admin.to.PromotionViewTO;
+import com.fb.platform.promotion.admin.to.PromotionTO;
 
 /**
  * @author keith
@@ -122,17 +122,7 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 	
 	/**
 	 * QUERY
-	 * 
-	 * search without rule config
-	 * SELECT pp.id as promotionId, pp.valid_from as validFrom, pp.valid_till as validTill, pp.name as promotionName, pp.description as description, pp.is_active as isActive, plc.max_uses as maxUses, plc.max_amount as maxAmount, plc.max_uses_per_user as maxUsesPerUser, plc.max_amount_per_user as maxAmountPerUser, pr.name as ruleName FROM platform_promotion pp INNER JOIN promotion_limits_config plc ON plc.promotion_id = pp.id INNER JOIN  promotion_rule pr ON pr.id=pp.rule_id WHERE pp.name LIKE '%Promotion%' AND pp.valid_from='2012-01-04' AND pp.valid_till='2012-05-20'
-	 * 
-	 * 
-	 * short search
 	 * SELECT pp.id as promotionId, pp.valid_from as validFrom, pp.valid_till as validTill, pp.name as promotionName, pp.description as description, pp.is_active as isActive, pr.name as ruleName FROM platform_promotion pp INNER JOIN  promotion_rule pr ON pr.id=pp.rule_id WHERE pp.name LIKE '%Promotion%' AND pp.valid_from>='2012-01-04' AND pp.valid_till<='2012-05-20' LIMIT 0,10
-	 * 
-	 * 
-	 * search with rule config
-	 * SELECT pp.valid_from as validFrom, pp.valid_till as validTill, pp.name as promotionName, pp.description as description, pp.is_active as isActive, plc.max_uses as maxUses, plc.max_amount as maxAmount, plc.max_uses_per_user as maxUsesPerUser, plc.max_amount_per_user as maxAmountPerUser, prc.name as ruleConfigName, prc.value as ruleConfigValue, pr.name as ruleName FROM platform_promotion pp INNER JOIN promotion_limits_config plc ON plc.promotion_id = pp.id INNER JOIN  promotion_rule_config prc ON prc.promotion_id = pp.id INNER JOIN  promotion_rule pr ON pr.id=pp.rule_id WHERE pp.name LIKE '%Promotion%' AND pp.valid_from='2012-01-04' AND pp.valid_till='2012-05-20'
 	 */
 	
 	private static String SELECT_PROMOTION_FIELDS =
@@ -162,6 +152,44 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 	
 	private static String LIMIT_FILTER_SQL = 
 			" LIMIT ?,? ";
+	
+	/**
+	 * QUERY
+	 * SELECT pp.id as promotionId, pp.rule_id as ruleId, pp.valid_from as validFrom, pp.valid_till as validTill, pp.name as promotionName, pp.description as description, pp.is_active as isActive, plc.max_uses as maxUses, plc.max_amount as maxAmount, plc.max_uses_per_user as maxUsesPerUser, plc.max_amount_per_user as maxAmountPerUser, pr.name as ruleName FROM platform_promotion pp INNER JOIN promotion_limits_config plc ON plc.promotion_id = pp.id INNER JOIN  promotion_rule pr ON pr.id=pp.rule_id WHERE pp.id=-3003
+	 */
+	private static String SELECT_PROMOTION_COMPLETE_VIEW_SQL =
+			" SELECT " +
+			"	pp.id as promotionId, " +
+			"	pp.rule_id as ruleId, " +
+			"	pp.valid_from as validFrom, " +
+			"	pp.valid_till as validTill, " +
+			"	pp.name as promotionName, " +
+			"	pp.description as description, " +
+			"	pp.is_active as isActive, " +
+			"	plc.max_uses as maxUses, " +
+			"	plc.max_amount as maxAmount, " +
+			"	plc.max_uses_per_user as maxUsesPerUser, " +
+			"	plc.max_amount_per_user as maxAmountPerUser, " +
+			"	pr.name as ruleName " +
+			" FROM " +
+			"	platform_promotion pp " +
+			"	INNER JOIN promotion_limits_config plc ON plc.promotion_id = pp.id " +
+			"	INNER JOIN  promotion_rule pr ON pr.id=pp.rule_id " +
+			" WHERE pp.id=?";
+	
+	
+	/**
+	 * QUERY
+	 * SELECT prc.name as promotionRuleName, prc.value as promotionRuleValue FROM promotion_rule_config prc where promotion_id=-3003 and rule_id=-4
+	 */
+	private static String SELECT_PROMOTION_RULE_CONFIG_SQL = 
+			" SELECT " +
+			"	prc.name as promotionRuleName, " +
+			"	prc.value as promotionRuleValue " +
+			" FROM " +
+			"	promotion_rule_config prc " +
+			" WHERE " +
+			"	prc.promotion_id=? AND prc.rule_id=?";
 	
 	@Override
 	public int createPromotion(final String name, final String description, final int ruleId,
@@ -211,6 +239,8 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 	public void createPromotionLimitConfig(int promotionId, int maxUses, Money maxAmount,
 		 int maxUsesPerUser, Money maxAmountPerUser) {
 		
+		log.info("Insert in the promotion_limits_config table => promotionId " + promotionId + " , maxUses : " + maxUses + " , maxAmount : " + maxAmount + " , maxAmountPerUser : " + maxAmountPerUser);
+		
 		int rowsUpdated = jdbcTemplate.update(CREATE_PROMOTION_LIMIT_CONFIG_SQL,
 				maxUses,
 				maxAmount.getAmount(),
@@ -219,6 +249,7 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 				promotionId);
 		
 		if (rowsUpdated != 1) {
+			log.error("Unable to create entry in promotion_limits_config for promotionId : " + promotionId);
 			throw new PlatformException("Unable to create entry in promotion_limits_config for promotionId : " + promotionId);
 		}
 		
@@ -226,6 +257,9 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 
 	@Override
 	public void createPromotionRuleConfig(String name, String value, int promotionId, int ruleId) {
+		
+		log.info("Insert in the promotion_rule_config table => name " + name + " , value : " + value + " , promotionId : " + promotionId + " , ruleId : " + ruleId);
+		
 		int rowsUpdated = jdbcTemplate.update(CREATE_PROMOTION_RULE_CONFIG,
 				name,
 				value,
@@ -233,6 +267,7 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 				ruleId);
 		
 		if (rowsUpdated != 1) {
+			log.error("Unable to create entry in promotion_rule_config for promotionId : " + promotionId);
 			throw new PlatformException("Unable to create entry in promotion_rule_config for promotionId : " + promotionId);
 		}
 		
@@ -262,7 +297,6 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 	}
 
 
-
 	@Override
 	public boolean createPromotionUses() {
 		// TODO Auto-generated method stub
@@ -270,7 +304,10 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 	}
 	
 	@Override
-	public List<PromotionViewTO> searchPromotion(String promotionName, DateTime validFrom, DateTime validTill, int startRecord, int batchSize) {
+	public List<PromotionTO> searchPromotion(String promotionName, DateTime validFrom, DateTime validTill, int startRecord, int batchSize) {
+		if(log.isDebugEnabled()) {
+			log.debug("Search promotion with details => promotionName:" + promotionName + " , validFrom:" + validFrom + " ,validTill:" + validTill + " ,startRecord:" + " ,batchSize:" + batchSize);
+		}
 		List<String> searchPromotionFilterList = new ArrayList<String>();
 		String searchPromotionQuery = SELECT_PROMOTION_FIELDS;
 		List<Object> args = new ArrayList<Object>();
@@ -297,7 +334,7 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 			searchPromotionQuery += LIMIT_FILTER_SQL;
 		}
 		
-		List<PromotionViewTO> promotionsList = jdbcTemplate.query(searchPromotionQuery, args.toArray(), new PromotionViewMapper());
+		List<PromotionTO> promotionsList = jdbcTemplate.query(searchPromotionQuery, args.toArray(), new PromotionViewMapper());
 		
 		return promotionsList;
 	}
@@ -306,11 +343,11 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 		this.jdbcTemplate=jdbcTemplate;
 	}
 	
-	private static class PromotionViewMapper implements RowMapper<PromotionViewTO> {
+	private static class PromotionViewMapper implements RowMapper<PromotionTO> {
 
 		@Override
-		public PromotionViewTO mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-			PromotionViewTO promotionView = new PromotionViewTO();
+		public PromotionTO mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+			PromotionTO promotionView = new PromotionTO();
 			promotionView.setPromotionId(resultSet.getInt("promotionId"));
 			promotionView.setValidFrom(new DateTime(resultSet.getTimestamp("validFrom")));
 			promotionView.setValidTill(new DateTime(resultSet.getTimestamp("validTill")));

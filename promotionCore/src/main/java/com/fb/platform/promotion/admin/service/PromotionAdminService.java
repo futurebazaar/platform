@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fb.platform.promotion.admin.to.PromotionTO;
-import com.fb.platform.promotion.admin.to.PromotionViewTO;
 import com.fb.platform.promotion.rule.RulesEnum;
 
 /**
@@ -43,6 +42,6 @@ public interface PromotionAdminService {
 	 * @return
 	 */
 	@Transactional(propagation=Propagation.REQUIRED)
-	public List<PromotionViewTO> searchPromotion(String promotionName, DateTime validFrom, DateTime validTill, int startRecord, int batchSize);
+	public List<PromotionTO> searchPromotion(String promotionName, DateTime validFrom, DateTime validTill, int startRecord, int batchSize);
 
 }

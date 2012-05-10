@@ -233,7 +233,7 @@ public class PromotionAdminResource {
 			searchPromotionResponse.setSearchPromotionEnum(SearchPromotionEnum.valueOf(apiSearchPromotionResponse.getSearchPromotionEnum().toString()));
 			
 			if(searchPromotionResponse.getSearchPromotionEnum().equals(SearchPromotionEnum.SUCCESS)) {
-				for(com.fb.platform.promotion.admin.to.PromotionViewTO apiPromotionView : apiSearchPromotionResponse.getPromotionsList()) {
+				for(com.fb.platform.promotion.admin.to.PromotionTO apiPromotionView : apiSearchPromotionResponse.getPromotionsList()) {
 					PromotionViewTO promotionView = new PromotionViewTO();
 					promotionView.setDescription(apiPromotionView.getDescription());
 					promotionView.setIsActive(apiPromotionView.isActive());

@@ -21,7 +21,6 @@ import com.fb.platform.promotion.admin.to.FetchRuleRequest;
 import com.fb.platform.promotion.admin.to.FetchRuleResponse;
 import com.fb.platform.promotion.admin.to.FetchRulesEnum;
 import com.fb.platform.promotion.admin.to.PromotionTO;
-import com.fb.platform.promotion.admin.to.PromotionViewTO;
 import com.fb.platform.promotion.admin.to.RuleConfigItemTO;
 import com.fb.platform.promotion.admin.to.SearchPromotionEnum;
 import com.fb.platform.promotion.admin.to.SearchPromotionRequest;
@@ -132,7 +131,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 			return searchPromotionResponse;
 		}
 		searchPromotionResponse.setSessionToken(searchPromotionRequest.getSessionToken());
-		List<PromotionViewTO> promotionList = promotionAdminService.searchPromotion(searchPromotionRequest.getPromotionName(), 
+		List<PromotionTO> promotionList = promotionAdminService.searchPromotion(searchPromotionRequest.getPromotionName(), 
 																					searchPromotionRequest.getValidFrom(), 
 																					searchPromotionRequest.getValidTill(), 
 																					searchPromotionRequest.getStartRecord(), 

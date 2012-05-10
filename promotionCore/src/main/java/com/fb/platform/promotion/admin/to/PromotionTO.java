@@ -11,6 +11,8 @@ import com.fb.platform.promotion.rule.RulesEnum;
 
 public class PromotionTO {
 	
+	private int promotionId;
+	private int ruleId;
 	private String promotionName;
 	private String description;
 	private boolean isActive;
@@ -88,6 +90,19 @@ public class PromotionTO {
 	}
 	public void setRuleName(String ruleName) {
 		this.ruleName = ruleName;
+	}
+	
+	public int getPromotionId() {
+		return promotionId;
+	}
+	public void setPromotionId(int promotionId) {
+		this.promotionId = promotionId;
+	}
+	public int getRuleId() {
+		return ruleId;
+	}
+	public void setRuleId(int ruleId) {
+		this.ruleId = ruleId;
 	}
 	
 	public String isValid() {

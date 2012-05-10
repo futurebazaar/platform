@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.fb.platform.promotion.admin.dao.PromotionAdminDao;
 import com.fb.platform.promotion.admin.service.PromotionAdminService;
 import com.fb.platform.promotion.admin.to.PromotionTO;
-import com.fb.platform.promotion.admin.to.PromotionViewTO;
 import com.fb.platform.promotion.admin.to.RuleConfigItemTO;
 import com.fb.platform.promotion.dao.RuleDao;
 import com.fb.platform.promotion.rule.RulesEnum;
@@ -65,8 +64,8 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 	}
 	
 	@Override
-	public List<PromotionViewTO> searchPromotion(String promotionName, DateTime validFrom, DateTime validTill, int startRecord, int batchSize) {
-		List<PromotionViewTO> promotionsList = promotionAdminDao.searchPromotion(promotionName, validFrom, validTill, startRecord, batchSize);
+	public List<PromotionTO> searchPromotion(String promotionName, DateTime validFrom, DateTime validTill, int startRecord, int batchSize) {
+		List<PromotionTO> promotionsList = promotionAdminDao.searchPromotion(promotionName, validFrom, validTill, startRecord, batchSize);
 		return promotionsList;
 	}
 	
