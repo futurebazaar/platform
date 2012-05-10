@@ -3,13 +3,20 @@
  */
 package com.fb.platform.promotion.admin.dao.impl;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.fb.commons.PlatformException;
 import com.fb.platform.promotion.admin.dao.CouponAdminDao;
+import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
+import com.fb.platform.promotion.model.coupon.CouponType;
 import com.fb.platform.promotion.service.CouponAlreadyAssignedToUserException;
 
 /**
@@ -34,6 +41,27 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 			"	override_user_uses_limit) " +
 			"VALUES (?, ?, ?)";
 
+	private static final String COUPON_CODE_PLACEHOLDER = "COUPON_CODE_LIST";
+
+	private static final String SELECT_EXISTING_COUPON_CODES_QUERY = 
+			"SELECT " +
+			"	coupon_code " +
+			"FROM coupon " +
+			"WHERE coupon_code in (" + COUPON_CODE_PLACEHOLDER + ")";
+
+	private static final String APPOSTROPHE = "'";
+	private static final String COMMA = ",";
+
+	private static final String CREATE_COUPON_SQL = 
+			"INSERT INTO " +
+			"	coupon " +
+			"		(created_on, " +
+			"		last_modified_on, " +
+			"		coupon_code, " +
+			"		promotion_id, " +
+			"		coupon_type) " +
+			"VALUES (?, ?, ?, ?, ?)";
+
 	@Override
 	public void assignToUser(int userId, String couponCode, int overriddenUserLimit) {
 		try {
@@ -51,5 +79,52 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
+	}
+
+	@Override
+	public List<String> findExistingCodes(List<String> newCodes) {
+		String couponCodesForQuery = buildCouponCodeStringForQuery(newCodes);
+		String queryString = SELECT_EXISTING_COUPON_CODES_QUERY.replace(COUPON_CODE_PLACEHOLDER, couponCodesForQuery);
+
+		List<String> existingCodes = jdbcTemplate.queryForList(queryString, String.class);
+		return existingCodes;
+	}
+
+	private String buildCouponCodeStringForQuery(List<String> couponCodes) {
+		StringBuilder sb = new StringBuilder();
+		int count = 0;
+		for (String code : couponCodes) {
+			sb.append(APPOSTROPHE);
+			sb.append(code);
+			sb.append(APPOSTROPHE);
+			count ++;
+			if (!(count == couponCodes.size())) {
+				sb.append(COMMA);
+			}
+		}
+		return sb.toString();
+	}
+
+	@Override
+	public void createCouponsInBatch(List<String> couponCodes, int promotionId, CouponType couponType, CouponLimitsConfig limitsConfig) {
+		
+		
+	}
+
+	private static class CreateCouponBatchPSSetter implements BatchPreparedStatementSetter {
+
+		public CreateCouponBatchPSSetter(List<String> couponCodes, int promotionId, CouponType couponType) {
+			
+		}
+		@Override
+		public void setValues(PreparedStatement ps, int i) throws SQLException {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public int getBatchSize() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
 	}
 }

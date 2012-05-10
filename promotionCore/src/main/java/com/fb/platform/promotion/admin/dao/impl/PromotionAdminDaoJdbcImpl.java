@@ -20,10 +20,9 @@ import org.springframework.jdbc.support.KeyHolder;
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.admin.dao.PromotionAdminDao;
-import com.fb.platform.promotion.rule.RulesEnum;
 
 /**
- * @author keith
+ * @author neha
  *
  */
 public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
@@ -45,16 +44,6 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 			"		is_active) " +
 			"VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 	
-	private static final String CREATE_COUPON_SQL = 
-			"INSERT INTO " +
-			"	coupon " +
-			"		(created_on, " +
-			"		last_modified_on, " +
-			"		coupon_code, " +
-			"		promotion_id, " +
-			"		coupon_type) " +
-			"VALUES (?, ?, ?, ?, ?)";
-
 
 	private static final String CREATE_PROMOTION_RULE_CONFIG = 
 			"INSERT INTO " +
@@ -71,7 +60,7 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 			"		(max_uses, " +
 			"		max_amount, " +
 			"		max_uses_per_user, " +
-			"		max_amuont_per_user, " +
+			"		max_amount_per_user, " +
 			"		promotion_id) " +
 			"VALUES (?, ?, ?, ?, ?)";
 	
@@ -81,7 +70,7 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 			"		(max_uses, " +
 			"		max_amount, " +
 			"		max_uses_per_user, " +
-			"		max_amuont_per_user, " +
+			"		max_amount_per_user, " +
 			"		coupon_id) " +
 			"VALUES (?, ?, ?, ?, ?)";
 
@@ -117,15 +106,16 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 
 	
 	@Override
-	public int createPromotion(final String name, final String description, final RulesEnum rulesEnum,
+	public int createPromotion(final String name, final String description, final int ruleId,
 			final DateTime validFrom, final DateTime validTill, final int active) throws PlatformException{
 
 			log.info("Insert in the platform_promotion table => name " + name + " , description : " + description + " , validFrom : " + validFrom + " , validTill : " + validTill);
 			
 			KeyHolder promotionKeyHolder = new GeneratedKeyHolder();
 			
+			int rowUpdated = 0;
 			try {
-				jdbcTemplate.update(new PreparedStatementCreator() {
+				rowUpdated = jdbcTemplate.update(new PreparedStatementCreator() {
 					
 					@Override
 					public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
@@ -133,7 +123,7 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 						Timestamp timestamp = new java.sql.Timestamp(System.currentTimeMillis());
 						ps.setTimestamp(1, timestamp);
 						ps.setTimestamp(2, timestamp);
-						ps.setString(3, rulesEnum.toString());
+						ps.setInt(3, ruleId);
 						ps.setTimestamp(4, new Timestamp(validFrom.getMillis()));
 						ps.setTimestamp(5, new Timestamp(validTill.getMillis()));
 						ps.setString(6, name);
@@ -211,6 +201,10 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 	public boolean createPromotionUses() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate){
+		this.jdbcTemplate=jdbcTemplate;
 	}
 
 }

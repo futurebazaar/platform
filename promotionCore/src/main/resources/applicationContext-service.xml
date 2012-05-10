@@ -21,6 +21,10 @@
         <property name="couponDao" ref="couponDao"/>
         <property name="promotionDao" ref="promotionDao"></property>
     </bean>
+
+    <bean id="couponCodeCreator" class="com.fb.platform.promotion.util.CouponCodeCreator">
+        <property name="couponAdminDao" ref="couponAdminDao"/>
+    </bean>
     
     <bean id="promotionAdminService" class="com.fb.platform.promotion.admin.service.impl.PromotionAdminServiceImpl">
         <property name="ruleDao" ref="ruleDao"/>

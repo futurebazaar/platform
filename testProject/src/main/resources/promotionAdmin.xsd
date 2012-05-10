@@ -83,6 +83,76 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
       	<xs:enumeration value="CATEGORY_EXCLUDE_LIST"/>
 	</xs:restriction>
   </xs:simpleType>
+ 
+  <xs:element name="createPromotionRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotionAdmin:promotionTO"/>
+        <xs:element ref="promotionAdmin:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="promotionTO">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotionAdmin:name"/>
+        <xs:element ref="promotionAdmin:description"/>
+        <xs:element ref="promotionAdmin:isActive"/>
+        <xs:element ref="promotionAdmin:validFrom"/>
+        <xs:element ref="promotionAdmin:validTill"/>
+        <xs:element ref="promotionAdmin:maxUses"/>
+        <xs:element ref="promotionAdmin:maxAmount"/>
+        <xs:element ref="promotionAdmin:maxUsesPerUser"/>
+        <xs:element ref="promotionAdmin:maxAmountPerUser"/>
+        <xs:element ref="promotionAdmin:ruleName"/>
+        <xs:element ref="promotionAdmin:ruleConfigItemTO" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
   
+  <xs:element name="name" type="xs:string"/>
+  <xs:element name="description" type="xs:string"/>
+  <xs:element name="isActive" type="xs:boolean"/>
+  <xs:element name="validFrom" type="xs:string"/>
+  <xs:element name="validTill" type="xs:string"/>
+  <xs:element name="maxUses" type="xs:int"/>
+  <xs:element name="maxAmount" type="xs:decimal"/>
+  <xs:element name="maxUsesPerUser" type="xs:int"/>
+  <xs:element name="maxAmountPerUser" type="xs:decimal"/>
+  <xs:element name="ruleName" type="xs:string"/>
+  
+  <xs:element name="ruleConfigItemTO">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotionAdmin:name"/>
+        <xs:element ref="promotionAdmin:value"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="value" type="xs:string"/>
+  
+  <xs:element name="createPromotionResponse">
+    <xs:complexType>
+      <xs:sequence>
+      	<xs:element ref="promotionAdmin:sessionToken"/>
+        <xs:element ref="promotionAdmin:promotionId"/>
+        <xs:element ref="promotionAdmin:errorCause"/>
+        <xs:element ref="promotionAdmin:createPromotionEnum"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="promotionId" type="xs:int"/>
+  <xs:element name="errorCause" type="xs:string"/>
+  
+  <xs:element name="createPromotionEnum" type="promotionAdmin:createPromotionEnum"/>
+  <xs:simpleType name="createPromotionEnum">
+  	<xs:restriction base="xs:string">
+    	<xs:enumeration value="SUCCESS"/>
+      	<xs:enumeration value="NO_SESSION"/>
+      	<xs:enumeration value="RULE_CONFIG_MISSING"/>
+      	<xs:enumeration value="INTERNAL_ERROR"/>
+	</xs:restriction>
+  </xs:simpleType>
   
 </xs:schema>

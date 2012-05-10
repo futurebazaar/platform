@@ -20,17 +20,24 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.fb.commons.PlatformException;
+import com.fb.commons.to.Money;
+import com.fb.platform.promotion.admin._1_0.CreatePromotionEnum;
+import com.fb.platform.promotion.admin._1_0.CreatePromotionRequest;
+import com.fb.platform.promotion.admin._1_0.CreatePromotionResponse;
 import com.fb.platform.promotion.admin._1_0.FetchRuleRequest;
 import com.fb.platform.promotion.admin._1_0.FetchRuleResponse;
 import com.fb.platform.promotion.admin._1_0.FetchRulesEnum;
+import com.fb.platform.promotion.admin._1_0.PromotionTO;
 import com.fb.platform.promotion.admin._1_0.RuleConfigDescriptor;
 import com.fb.platform.promotion.admin._1_0.RuleConfigDescriptorEnum;
 import com.fb.platform.promotion.admin._1_0.RuleConfigDescriptorItem;
+import com.fb.platform.promotion.admin._1_0.RuleConfigItemTO;
 import com.fb.platform.promotion.admin._1_0.RulesEnum;
 import com.fb.platform.promotion.admin.service.PromotionAdminManager;
 
@@ -95,8 +102,8 @@ public class PromotionAdminResource {
 			}
 			
 			StringWriter outStringWriter = new StringWriter();
-			Marshaller marsheller = context.createMarshaller();
-			marsheller.marshal(fetchRuleResponse, outStringWriter);
+			Marshaller marshaller = context.createMarshaller();
+			marshaller.marshal(fetchRuleResponse, outStringWriter);
 
 			String xmlResponse = outStringWriter.toString();
 			logger.info("getAllPromotionRulesXML response :\n" + xmlResponse);
@@ -106,6 +113,64 @@ public class PromotionAdminResource {
 			logger.error("Error in the getAllPromotionRules call.", e);
 			return "error"; //TODO return proper error response
 		}
+	}
+	
+	@POST
+	@Path("/createPromotion")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String createPromotion(String createPromotionXML) {
+		logger.info("createPromotionXML : " + createPromotionXML);
+		try {
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			
+			CreatePromotionRequest createPromotionRequest = (CreatePromotionRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(createPromotionXML)));
+			com.fb.platform.promotion.to.CreatePromotionRequest apiCreatePromotionRequest = new com.fb.platform.promotion.to.CreatePromotionRequest();
+			
+			apiCreatePromotionRequest.setSessionToken(createPromotionRequest.getSessionToken());
+			
+			PromotionTO promotionTO = createPromotionRequest.getPromotionTO();
+			com.fb.platform.promotion.to.PromotionTO apiPromotionTO = new com.fb.platform.promotion.to.PromotionTO();
+			apiPromotionTO.setActive(promotionTO.isIsActive());
+			apiPromotionTO.setDescription(promotionTO.getDescription());
+			apiPromotionTO.setMaxAmount(new Money(promotionTO.getMaxAmount()));
+			apiPromotionTO.setMaxAmountPerUser(new Money(promotionTO.getMaxAmountPerUser()));
+			apiPromotionTO.setMaxUses(promotionTO.getMaxUses());
+			apiPromotionTO.setMaxUsesPerUser(promotionTO.getMaxUsesPerUser());
+			apiPromotionTO.setName(promotionTO.getName());
+			apiPromotionTO.setRulesEnum(com.fb.platform.promotion.rule.RulesEnum.valueOf(promotionTO.getRuleName()));
+			apiPromotionTO.setValidFrom(new DateTime(promotionTO.getValidFrom()));
+			apiPromotionTO.setValidTill(new DateTime(promotionTO.getValidTill()));
+			for(RuleConfigItemTO ruleConfigItemTO : promotionTO.getRuleConfigItemTO()) {
+				com.fb.platform.promotion.to.RuleConfigItemTO apiRuleConfigItemTO = new com.fb.platform.promotion.to.RuleConfigItemTO();
+				apiRuleConfigItemTO.setName(ruleConfigItemTO.getName());
+				apiRuleConfigItemTO.setValue(ruleConfigItemTO.getValue());
+				apiPromotionTO.getConfigItems().add(apiRuleConfigItemTO);
+			}
+			
+			apiCreatePromotionRequest.setPromotion(apiPromotionTO);
+			
+			CreatePromotionResponse createPromotionResponse	= new CreatePromotionResponse();	
+			com.fb.platform.promotion.to.CreatePromotionResponse apiCreatePromotionResponse = promotionAdminManager.createPromotion(apiCreatePromotionRequest);
+			
+			createPromotionResponse.setSessionToken(createPromotionRequest.getSessionToken());
+			createPromotionResponse.setCreatePromotionEnum(CreatePromotionEnum.fromValue(apiCreatePromotionResponse.getCreatePromotionEnum().toString()));
+			createPromotionResponse.setPromotionId(apiCreatePromotionResponse.getPromotionId());
+			createPromotionResponse.setErrorCause(apiCreatePromotionResponse.getErrorCause());
+			
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marshaller = context.createMarshaller();
+			marshaller.marshal(createPromotionResponse, outStringWriter);
+
+			String xmlResponse = outStringWriter.toString();
+			logger.info("createPromotionXML response :\n" + xmlResponse);
+			return xmlResponse;
+			
+		} catch (JAXBException e) {
+			logger.error("Error in the createPromotion call.", e);
+			return "error"; //TODO return proper error response
+		}
+		
 	}
 	
 	@GET
