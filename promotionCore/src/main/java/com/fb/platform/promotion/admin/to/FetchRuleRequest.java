@@ -1,4 +1,4 @@
-package com.fb.platform.promotion.to;
+package com.fb.platform.promotion.admin.to;
 
 public class FetchRuleRequest {
 	

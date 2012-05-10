@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.GregorianCalendar;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -16,6 +17,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.logging.Log;
@@ -34,11 +38,15 @@ import com.fb.platform.promotion.admin._1_0.FetchRuleRequest;
 import com.fb.platform.promotion.admin._1_0.FetchRuleResponse;
 import com.fb.platform.promotion.admin._1_0.FetchRulesEnum;
 import com.fb.platform.promotion.admin._1_0.PromotionTO;
+import com.fb.platform.promotion.admin._1_0.PromotionViewTO;
 import com.fb.platform.promotion.admin._1_0.RuleConfigDescriptor;
 import com.fb.platform.promotion.admin._1_0.RuleConfigDescriptorEnum;
 import com.fb.platform.promotion.admin._1_0.RuleConfigDescriptorItem;
 import com.fb.platform.promotion.admin._1_0.RuleConfigItemTO;
 import com.fb.platform.promotion.admin._1_0.RulesEnum;
+import com.fb.platform.promotion.admin._1_0.SearchPromotionEnum;
+import com.fb.platform.promotion.admin._1_0.SearchPromotionRequest;
+import com.fb.platform.promotion.admin._1_0.SearchPromotionResponse;
 import com.fb.platform.promotion.admin.service.PromotionAdminManager;
 
 /**
@@ -78,11 +86,11 @@ public class PromotionAdminResource {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			
 			FetchRuleRequest fetchRuleRequest = (FetchRuleRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(fetchRulesXML)));
-			com.fb.platform.promotion.to.FetchRuleRequest apiFetchRuleRequest = new com.fb.platform.promotion.to.FetchRuleRequest();
+			com.fb.platform.promotion.admin.to.FetchRuleRequest apiFetchRuleRequest = new com.fb.platform.promotion.admin.to.FetchRuleRequest();
 			apiFetchRuleRequest.setSessionToken(fetchRuleRequest.getSessionToken());
 			
 			FetchRuleResponse fetchRuleResponse = new FetchRuleResponse();
-			com.fb.platform.promotion.to.FetchRuleResponse apiFetchRuleResponse = promotionAdminManager.fetchRules(apiFetchRuleRequest);
+			com.fb.platform.promotion.admin.to.FetchRuleResponse apiFetchRuleResponse = promotionAdminManager.fetchRules(apiFetchRuleRequest);
 			
 			fetchRuleResponse.setSessionToken(apiFetchRuleRequest.getSessionToken());
 			fetchRuleResponse.setFetchRulesEnum(FetchRulesEnum.fromValue(apiFetchRuleResponse.getFetchRulesEnum().toString()));
@@ -125,33 +133,49 @@ public class PromotionAdminResource {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			
 			CreatePromotionRequest createPromotionRequest = (CreatePromotionRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(createPromotionXML)));
-			com.fb.platform.promotion.to.CreatePromotionRequest apiCreatePromotionRequest = new com.fb.platform.promotion.to.CreatePromotionRequest();
+			com.fb.platform.promotion.admin.to.CreatePromotionRequest apiCreatePromotionRequest = new com.fb.platform.promotion.admin.to.CreatePromotionRequest();
 			
 			apiCreatePromotionRequest.setSessionToken(createPromotionRequest.getSessionToken());
 			
 			PromotionTO promotionTO = createPromotionRequest.getPromotionTO();
-			com.fb.platform.promotion.to.PromotionTO apiPromotionTO = new com.fb.platform.promotion.to.PromotionTO();
+			com.fb.platform.promotion.admin.to.PromotionTO apiPromotionTO = new com.fb.platform.promotion.admin.to.PromotionTO();
 			apiPromotionTO.setActive(promotionTO.isIsActive());
 			apiPromotionTO.setDescription(promotionTO.getDescription());
-			apiPromotionTO.setMaxAmount(new Money(promotionTO.getMaxAmount()));
-			apiPromotionTO.setMaxAmountPerUser(new Money(promotionTO.getMaxAmountPerUser()));
+			if(promotionTO.getMaxAmount() != null) {
+				apiPromotionTO.setMaxAmount(new Money(promotionTO.getMaxAmount()));
+			} else {
+				apiPromotionTO.setMaxAmount(null);
+			}
+			if(promotionTO.getMaxAmountPerUser() != null) {
+				apiPromotionTO.setMaxAmountPerUser(new Money(promotionTO.getMaxAmountPerUser()));
+			} else {
+				apiPromotionTO.setMaxAmountPerUser(null);
+			}
 			apiPromotionTO.setMaxUses(promotionTO.getMaxUses());
 			apiPromotionTO.setMaxUsesPerUser(promotionTO.getMaxUsesPerUser());
-			apiPromotionTO.setName(promotionTO.getName());
-			apiPromotionTO.setRulesEnum(com.fb.platform.promotion.rule.RulesEnum.valueOf(promotionTO.getRuleName()));
-			apiPromotionTO.setValidFrom(new DateTime(promotionTO.getValidFrom()));
-			apiPromotionTO.setValidTill(new DateTime(promotionTO.getValidTill()));
+			apiPromotionTO.setPromotionName(promotionTO.getPromotionName());
+			apiPromotionTO.setRuleName(createPromotionRequest.getPromotionTO().getRuleName());
+			if(promotionTO.getValidFrom() == null) {
+				apiPromotionTO.setValidFrom(null);
+			} else {
+				apiPromotionTO.setValidFrom(new DateTime(promotionTO.getValidFrom().toGregorianCalendar()));
+			}
+			if(promotionTO.getValidTill() == null) {
+				apiPromotionTO.setValidTill(null);
+			} else {
+				apiPromotionTO.setValidTill(new DateTime(promotionTO.getValidTill().toGregorianCalendar()));
+			}
 			for(RuleConfigItemTO ruleConfigItemTO : promotionTO.getRuleConfigItemTO()) {
-				com.fb.platform.promotion.to.RuleConfigItemTO apiRuleConfigItemTO = new com.fb.platform.promotion.to.RuleConfigItemTO();
-				apiRuleConfigItemTO.setName(ruleConfigItemTO.getName());
-				apiRuleConfigItemTO.setValue(ruleConfigItemTO.getValue());
+				com.fb.platform.promotion.admin.to.RuleConfigItemTO apiRuleConfigItemTO = new com.fb.platform.promotion.admin.to.RuleConfigItemTO();
+				apiRuleConfigItemTO.setRuleConfigName(ruleConfigItemTO.getRuleConfigName());
+				apiRuleConfigItemTO.setRuleConfigValue(ruleConfigItemTO.getRuleConfigValue());
 				apiPromotionTO.getConfigItems().add(apiRuleConfigItemTO);
 			}
 			
 			apiCreatePromotionRequest.setPromotion(apiPromotionTO);
 			
 			CreatePromotionResponse createPromotionResponse	= new CreatePromotionResponse();	
-			com.fb.platform.promotion.to.CreatePromotionResponse apiCreatePromotionResponse = promotionAdminManager.createPromotion(apiCreatePromotionRequest);
+			com.fb.platform.promotion.admin.to.CreatePromotionResponse apiCreatePromotionResponse = promotionAdminManager.createPromotion(apiCreatePromotionRequest);
 			
 			createPromotionResponse.setSessionToken(createPromotionRequest.getSessionToken());
 			createPromotionResponse.setCreatePromotionEnum(CreatePromotionEnum.fromValue(apiCreatePromotionResponse.getCreatePromotionEnum().toString()));
@@ -168,6 +192,78 @@ public class PromotionAdminResource {
 			
 		} catch (JAXBException e) {
 			logger.error("Error in the createPromotion call.", e);
+			return "error"; //TODO return proper error response
+		}
+		
+	}
+	
+	@POST
+	@Path("/search")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String searchPromotion(String searchPromotionXML) {
+		logger.info("searchPromotionXML : " + searchPromotionXML);
+		try {
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			GregorianCalendar gregCal = new GregorianCalendar();
+			
+			SearchPromotionRequest searchPromotionRequest = (SearchPromotionRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(searchPromotionXML)));
+			com.fb.platform.promotion.admin.to.SearchPromotionRequest apiSearchPromotionRequest = new com.fb.platform.promotion.admin.to.SearchPromotionRequest();
+			
+			apiSearchPromotionRequest.setBatchSize(searchPromotionRequest.getBatchSize());
+			apiSearchPromotionRequest.setPromotionName(searchPromotionRequest.getPromotionName());
+			apiSearchPromotionRequest.setSessionToken(searchPromotionRequest.getSessionToken());
+			apiSearchPromotionRequest.setStartRecord(searchPromotionRequest.getStartRecord());
+			if(searchPromotionRequest.getValidFrom() == null) {
+				apiSearchPromotionRequest.setValidFrom(null);
+			} else {
+				apiSearchPromotionRequest.setValidFrom(new DateTime(searchPromotionRequest.getValidFrom().toGregorianCalendar()));
+			}
+			if(searchPromotionRequest.getValidTill() == null) {
+				apiSearchPromotionRequest.setValidTill(null);
+			} else {
+				apiSearchPromotionRequest.setValidTill(new DateTime(searchPromotionRequest.getValidTill().toGregorianCalendar()));
+			}
+			
+			SearchPromotionResponse searchPromotionResponse	= new SearchPromotionResponse();
+			com.fb.platform.promotion.admin.to.SearchPromotionResponse apiSearchPromotionResponse = promotionAdminManager.searchPromotion(apiSearchPromotionRequest);
+			
+			searchPromotionResponse.setErrorCause(apiSearchPromotionResponse.getErrorCause());
+			searchPromotionResponse.setSessionToken(apiSearchPromotionResponse.getSessionToken());
+			searchPromotionResponse.setSearchPromotionEnum(SearchPromotionEnum.valueOf(apiSearchPromotionResponse.getSearchPromotionEnum().toString()));
+			
+			if(searchPromotionResponse.getSearchPromotionEnum().equals(SearchPromotionEnum.SUCCESS)) {
+				for(com.fb.platform.promotion.admin.to.PromotionTO apiPromotionView : apiSearchPromotionResponse.getPromotionsList()) {
+					PromotionViewTO promotionView = new PromotionViewTO();
+					promotionView.setDescription(apiPromotionView.getDescription());
+					promotionView.setIsActive(apiPromotionView.isActive());
+					promotionView.setPromotionId(apiPromotionView.getPromotionId());
+					promotionView.setPromotionName(apiPromotionView.getPromotionName());
+					promotionView.setRuleName(apiPromotionView.getRuleName());
+					
+					gregCal.set(apiPromotionView.getValidFrom().getYear(), apiPromotionView.getValidFrom().getMonthOfYear()-1, apiPromotionView.getValidFrom().getDayOfMonth(),0,0,0);
+					promotionView.setValidFrom(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+					
+					gregCal.set(apiPromotionView.getValidTill().getYear(), apiPromotionView.getValidTill().getMonthOfYear()-1, apiPromotionView.getValidTill().getDayOfMonth(),0,0,0);
+					promotionView.setValidTill(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+					
+					searchPromotionResponse.getPromotionViewTO().add(promotionView);
+				}
+			}
+			
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marshaller = context.createMarshaller();
+			marshaller.marshal(searchPromotionResponse, outStringWriter);
+
+			String xmlResponse = outStringWriter.toString();
+			logger.info("searchPromotionXML response :\n" + xmlResponse);
+			return xmlResponse;
+			
+		} catch (JAXBException e) {
+			logger.error("Error in the searchPromotion call.", e);
+			return "error"; //TODO return proper error response
+		} catch (DatatypeConfigurationException e) {
+			logger.error("Error in the searchPromotion call invalid date in database.", e);
 			return "error"; //TODO return proper error response
 		}
 		

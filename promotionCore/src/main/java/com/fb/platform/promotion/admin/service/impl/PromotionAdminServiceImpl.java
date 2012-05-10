@@ -2,18 +2,19 @@ package com.fb.platform.promotion.admin.service.impl;
 
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.platform.promotion.admin.dao.CouponAdminDao;
 import com.fb.platform.promotion.admin.dao.PromotionAdminDao;
 import com.fb.platform.promotion.admin.service.PromotionAdminService;
+import com.fb.platform.promotion.admin.to.PromotionTO;
+import com.fb.platform.promotion.admin.to.RuleConfigItemTO;
 import com.fb.platform.promotion.dao.RuleDao;
 import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
 import com.fb.platform.promotion.model.coupon.CouponType;
 import com.fb.platform.promotion.rule.RulesEnum;
 import com.fb.platform.promotion.service.PromotionService;
-import com.fb.platform.promotion.to.PromotionTO;
-import com.fb.platform.promotion.to.RuleConfigItemTO;
 import com.fb.platform.promotion.util.CouponCodeCreator;
 
 /**
@@ -49,9 +50,10 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 	@Override
 	public int createPromotion(PromotionTO promotionTO) {
 		int isActive = promotionTO.isActive() ? 1 : 0;
-		int ruleId = ruleDao.getRuleId(promotionTO.getRulesEnum().toString());
+		int ruleId = ruleDao.getRuleId(promotionTO.getRuleName());
+		int promotionId = 0;
 		
-		int promotionId = promotionAdminDao.createPromotion(promotionTO.getName(), 
+		promotionId = promotionAdminDao.createPromotion(promotionTO.getPromotionName(), 
 				promotionTO.getDescription(), 
 				ruleId, 
 				promotionTO.getValidFrom(), 
@@ -65,9 +67,9 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 					promotionTO.getMaxAmountPerUser());
 			
 			for(RuleConfigItemTO ruleConfigItemTO : promotionTO.getConfigItems()) {
-				promotionAdminDao.createPromotionRuleConfig(ruleConfigItemTO.getName(), 
-						ruleConfigItemTO.getValue(), 
-						promotionId,
+				promotionAdminDao.createPromotionRuleConfig(ruleConfigItemTO.getRuleConfigName(), 
+						ruleConfigItemTO.getRuleConfigValue(), 
+						promotionId, 
 						ruleId);
 			}
 			
@@ -75,6 +77,12 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 		
 		return promotionId;
 		
+	}
+	
+	@Override
+	public List<PromotionTO> searchPromotion(String promotionName, DateTime validFrom, DateTime validTill, int startRecord, int batchSize) {
+		List<PromotionTO> promotionsList = promotionAdminDao.searchPromotion(promotionName, validFrom, validTill, startRecord, batchSize);
+		return promotionsList;
 	}
 	
 	public void setRuleDao(RuleDao ruleDao) {

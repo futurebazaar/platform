@@ -3,12 +3,12 @@
  */
 package com.fb.platform.promotion.admin.dao;
 
-import java.sql.Timestamp;
+import java.util.List;
 
 import org.joda.time.DateTime;
 
 import com.fb.commons.to.Money;
-import com.fb.platform.promotion.rule.RulesEnum;
+import com.fb.platform.promotion.admin.to.PromotionTO;
 
 /**
  * @author vinayak
@@ -24,6 +24,8 @@ public interface PromotionAdminDao {
 			int maxUsesPerUser, Money maxAmountPerUser);
 	
 	void createPromotionRuleConfig(String name, String value, int promotionId, int ruleId);
+	
+	public List<PromotionTO> searchPromotion(String promotionName, DateTime validFrom, DateTime validTill, int startRecord, int batchSize);
 	
 	boolean createCoupon(String couponCode,int promotionId, int maxUsesPerCoupon,String appliedOn,String DiscountType);
 	
