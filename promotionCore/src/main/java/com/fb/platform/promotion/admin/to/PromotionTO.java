@@ -11,7 +11,7 @@ import com.fb.platform.promotion.rule.RulesEnum;
 
 public class PromotionTO {
 	
-	private String name;
+	private String promotionName;
 	private String description;
 	private boolean isActive;
 	private DateTime validFrom;
@@ -23,11 +23,11 @@ public class PromotionTO {
 	private String ruleName = null;
 	private List<RuleConfigItemTO> configItems = new ArrayList<RuleConfigItemTO>();
 	
-	public String getName() {
-		return name;
+	public String getPromotionName() {
+		return promotionName;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setPromotionName(String promotionName) {
+		this.promotionName = promotionName;
 	}
 	public String getDescription() {
 		return description;

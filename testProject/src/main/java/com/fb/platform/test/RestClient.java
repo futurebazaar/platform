@@ -7,16 +7,11 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.util.GregorianCalendar;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.Duration;
-import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.namespace.QName;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -25,7 +20,6 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
-import org.joda.time.DateTime;
 
 import com.fb.platform.auth._1_0.AddUserRequest;
 import com.fb.platform.auth._1_0.AddUserResponse;
@@ -53,9 +47,9 @@ import com.fb.platform.promotion.admin._1_0.CreatePromotionResponse;
 import com.fb.platform.promotion.admin._1_0.FetchRuleRequest;
 import com.fb.platform.promotion.admin._1_0.FetchRuleResponse;
 import com.fb.platform.promotion.admin._1_0.PromotionTO;
-import com.fb.platform.promotion.admin._1_0.RuleConfigDescriptorEnum;
 import com.fb.platform.promotion.admin._1_0.RuleConfigItemTO;
-import com.fb.platform.promotion.admin._1_0.RulesEnum;
+import com.fb.platform.promotion.admin._1_0.SearchPromotionRequest;
+import com.fb.platform.promotion.admin._1_0.SearchPromotionResponse;
 /**
  * @author vinayak
  *
@@ -77,6 +71,7 @@ public class RestClient {
 		clearPromotion(sessionToken);
 		getAllPromotionRuleList(sessionToken);
 		createPromotion(sessionToken);
+		searchPromotion(sessionToken);
 		logout(sessionToken);
 	}
 
@@ -336,7 +331,7 @@ public class RestClient {
 		CreatePromotionRequest createPromotionRequest = new CreatePromotionRequest();
 		PromotionTO promotionTO = new PromotionTO();
 		
-		promotionTO.setName("New Promotion");
+		promotionTO.setPromotionName("New Promotion");
 		
 		GregorianCalendar gregCal = new GregorianCalendar();
 		gregCal.set(2012, 01, 29);
@@ -412,6 +407,54 @@ public class RestClient {
 		if(!StringUtils.isEmpty(createPromotionResponse.getErrorCause())) {
 			System.out.println(createPromotionResponse.getErrorCause());
 		}
+	}
+	
+	private static void searchPromotion(String sessionToken) throws Exception {
+		HttpClient httpClient = new HttpClient();
+
+		//PostMethod logoutMethod = new PostMethod("http://10.0.102.12:8082/userWS/auth/logout");
+		PostMethod searchPromotionMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/search");
+		
+		SearchPromotionRequest nameSearchPromotionRequest = new SearchPromotionRequest();
+		nameSearchPromotionRequest.setSessionToken(sessionToken);
+		nameSearchPromotionRequest.setBatchSize(3);
+		nameSearchPromotionRequest.setStartRecord(0);
+		nameSearchPromotionRequest.setPromotionName("promotion");
+		
+		GregorianCalendar gregCal = new GregorianCalendar();
+		gregCal.clear();
+		gregCal.set(2012, 00, 02);
+		nameSearchPromotionRequest.setValidFrom(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+		
+		gregCal.clear();
+		gregCal.set(2012, 05, 30);
+		nameSearchPromotionRequest.setValidTill(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+		
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
+
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(nameSearchPromotionRequest, sw);
+
+		System.out.println("\n\nsearchPromotionRequest : \n" + sw.toString());
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		searchPromotionMethod.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(searchPromotionMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the search promotion : " + statusCode);
+			return;
+		}
+		String searchPromotionResponseStr = searchPromotionMethod.getResponseBodyAsString();
+		System.out.println("Got the search promotion Response : \n\n" + searchPromotionResponseStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		SearchPromotionResponse searchPromotionResponse = (SearchPromotionResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(searchPromotionResponseStr)));
+		System.out.println(searchPromotionResponse.getSearchPromotionEnum().toString());
+		if(!StringUtils.isEmpty(searchPromotionResponse.getErrorCause())) {
+			System.out.println(searchPromotionResponse.getErrorCause());
+		}
+		
 	}
 
 	private static void logout(String sessionToken) throws Exception {

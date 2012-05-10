@@ -21,7 +21,11 @@ import com.fb.platform.promotion.admin.to.FetchRuleRequest;
 import com.fb.platform.promotion.admin.to.FetchRuleResponse;
 import com.fb.platform.promotion.admin.to.FetchRulesEnum;
 import com.fb.platform.promotion.admin.to.PromotionTO;
+import com.fb.platform.promotion.admin.to.PromotionViewTO;
 import com.fb.platform.promotion.admin.to.RuleConfigItemTO;
+import com.fb.platform.promotion.admin.to.SearchPromotionEnum;
+import com.fb.platform.promotion.admin.to.SearchPromotionRequest;
+import com.fb.platform.promotion.admin.to.SearchPromotionResponse;
 import com.fb.platform.promotion.rule.RuleConfigDescriptor;
 import com.fb.platform.promotion.rule.RuleConfigDescriptorItem;
 import com.fb.platform.promotion.rule.RulesEnum;
@@ -107,6 +111,40 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 			createPromotionResponse.setCreatePromotionEnum(CreatePromotionEnum.SUCCESS);
 		} 
 		return createPromotionResponse;
+	}
+	
+	@Override
+	public SearchPromotionResponse searchPromotion(SearchPromotionRequest searchPromotionRequest) {
+		SearchPromotionResponse searchPromotionResponse = new SearchPromotionResponse();
+		String requestInvalidationList = searchPromotionRequest.isValid();
+		
+		if(!StringUtils.isEmpty(requestInvalidationList)) {
+			searchPromotionResponse.setSearchPromotionEnum(SearchPromotionEnum.INSUFFICIENT_DATA);
+			searchPromotionResponse.setErrorCause(requestInvalidationList);
+			return searchPromotionResponse;
+		}
+		
+		//authenticate the session token and find out the userId
+		AuthenticationTO authentication = authenticationService.authenticate(searchPromotionRequest.getSessionToken());
+		if (authentication == null) {
+			//invalid session token
+			searchPromotionResponse.setSearchPromotionEnum(SearchPromotionEnum.NO_SESSION);
+			return searchPromotionResponse;
+		}
+		searchPromotionResponse.setSessionToken(searchPromotionRequest.getSessionToken());
+		List<PromotionViewTO> promotionList = promotionAdminService.searchPromotion(searchPromotionRequest.getPromotionName(), 
+																					searchPromotionRequest.getValidFrom(), 
+																					searchPromotionRequest.getValidTill(), 
+																					searchPromotionRequest.getStartRecord(), 
+																					searchPromotionRequest.getBatchSize());
+		if(promotionList.isEmpty()) {
+			searchPromotionResponse.setPromotionsList(null);
+			searchPromotionResponse.setSearchPromotionEnum(SearchPromotionEnum.NO_DATA_FOUND);
+		} else {
+			searchPromotionResponse.setPromotionsList(promotionList);
+			searchPromotionResponse.setSearchPromotionEnum(SearchPromotionEnum.SUCCESS);
+		}
+		return searchPromotionResponse;
 	}
 	
 	private String hasValidRuleConfig(PromotionTO promotionTo) {
