@@ -32,7 +32,7 @@ import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderByOrder;
 
 /**
- * @author keith
+ * @author neha
  *
  */
 public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
@@ -54,16 +54,6 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 			"		is_active) " +
 			"VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 	
-	private static final String CREATE_COUPON_SQL = 
-			"INSERT INTO " +
-			"	coupon " +
-			"		(created_on, " +
-			"		last_modified_on, " +
-			"		coupon_code, " +
-			"		promotion_id, " +
-			"		coupon_type) " +
-			"VALUES (?, ?, ?, ?, ?)";
-
 
 	private static final String CREATE_PROMOTION_RULE_CONFIG = 
 			"INSERT INTO " +

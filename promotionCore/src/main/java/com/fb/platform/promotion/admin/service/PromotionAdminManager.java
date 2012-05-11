@@ -3,6 +3,8 @@ package com.fb.platform.promotion.admin.service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fb.platform.promotion.admin.to.CreateCouponRequest;
+import com.fb.platform.promotion.admin.to.CreateCouponResponse;
 import com.fb.platform.promotion.admin.to.CreatePromotionRequest;
 import com.fb.platform.promotion.admin.to.CreatePromotionResponse;
 import com.fb.platform.promotion.admin.to.FetchRuleRequest;
@@ -56,4 +58,10 @@ public interface PromotionAdminManager {
 	@Transactional(propagation=Propagation.REQUIRED)
 	public UpdatePromotionResponse updatePromotion(UpdatePromotionRequest updatePromotionRequest);
 
+	/**
+	 * Creates the coupons as per the requirements specified in the request.
+	 * @param createCouponRequest
+	 * @return 
+	 */
+	public CreateCouponResponse createCoupons(CreateCouponRequest createCouponRequest);
 }

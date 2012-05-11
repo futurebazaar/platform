@@ -10,10 +10,14 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fb.commons.to.Money;
 import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
 import com.fb.platform.promotion.admin.service.PromotionAdminManager;
 import com.fb.platform.promotion.admin.service.PromotionAdminService;
+import com.fb.platform.promotion.admin.to.CreateCouponRequest;
+import com.fb.platform.promotion.admin.to.CreateCouponResponse;
+import com.fb.platform.promotion.admin.to.CreateCouponStatusEnum;
 import com.fb.platform.promotion.admin.to.CreatePromotionEnum;
 import com.fb.platform.promotion.admin.to.CreatePromotionRequest;
 import com.fb.platform.promotion.admin.to.CreatePromotionResponse;
@@ -31,9 +35,11 @@ import com.fb.platform.promotion.admin.to.UpdatePromotionResponse;
 import com.fb.platform.promotion.admin.to.ViewPromotionEnum;
 import com.fb.platform.promotion.admin.to.ViewPromotionRequest;
 import com.fb.platform.promotion.admin.to.ViewPromotionResponse;
+import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
 import com.fb.platform.promotion.rule.RuleConfigDescriptor;
 import com.fb.platform.promotion.rule.RuleConfigDescriptorItem;
 import com.fb.platform.promotion.rule.RulesEnum;
+import com.fb.platform.promotion.service.PromotionNotFoundException;
 import com.fb.platform.promotion.util.PromotionRuleFactory;
 
 /**
@@ -257,4 +263,45 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		this.promotionAdminService = promotionAdminService;
 	}
 
+	@Override
+	public CreateCouponResponse createCoupons(CreateCouponRequest request) {
+		CreateCouponResponse response = null;
+		if (request == null) {
+			response = new CreateCouponResponse();
+			response.setStatus(CreateCouponStatusEnum.NO_SESSION);
+			return response;
+		}
+
+		response = request.validate();
+		if (response != null) {
+			return response;
+		}
+
+		response = new CreateCouponResponse();
+
+		//authenticate the session token and find out the userId
+		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
+		if (authentication == null) {
+			//invalid session token
+			response.setStatus(CreateCouponStatusEnum.NO_SESSION);
+			return response;
+		}
+
+		CouponLimitsConfig limits = new CouponLimitsConfig();
+		if (request.getMaxAmount() != null) {
+			limits.setMaxAmount(new Money(request.getMaxAmount()));
+		}
+		if (request.getMaxAmountPerUser() != null) {
+			limits.setMaxAmountPerUser(new Money(request.getMaxAmountPerUser()));
+		}
+		limits.setMaxUses(request.getMaxUses());
+		limits.setMaxUsesPerUser(request.getMaxUsesPerUser());
+
+		try {
+			promotionAdminService.createCoupons(request.getCount(), request.getLength(), request.getStartsWith(), request.getEndsWith(), request.getPromotionId(), request.getType(), limits);
+		} catch (PromotionNotFoundException e) {
+			response.setStatus(CreateCouponStatusEnum.INVALID_PROMOTION);
+		}
+		return response;
+	}
 }
