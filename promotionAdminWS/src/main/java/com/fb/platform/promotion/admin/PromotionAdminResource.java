@@ -437,7 +437,11 @@ public class PromotionAdminResource {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Future Platform Promotion Admin Websevice.\n");
 		sb.append("XSD : http://hostname:port/promotionAdminWS/promotionAdmin/xsd\n");
-		sb.append("To get all promotion rules post to : http://hostname:port/promotionAdminWS/promotionAdmin/getAllPromotionRules\n");
+		sb.append("To get all promotion rules post to : http://localhost:8080/promotionAdminWS/promotionAdmin/rules\n");
+		sb.append("To create promotion post to : http://localhost:8080/promotionAdminWS/promotionAdmin/createPromotion\n");
+		sb.append("To search promotion post to : http://localhost:8080/promotionAdminWS/promotionAdmin/search\n");
+		sb.append("To view complete promotion post to : http://localhost:8080/promotionAdminWS/promotionAdmin/view\n");
+		sb.append("To update promotion post to : http://localhost:8080/promotionAdminWS/promotionAdmin/update\n");
 		return sb.toString();
 	}
 	
