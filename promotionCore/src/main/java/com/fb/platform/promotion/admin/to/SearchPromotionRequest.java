@@ -16,6 +16,9 @@ public class SearchPromotionRequest {
 	private String promotionName;
 	private DateTime validFrom;
 	private DateTime validTill;
+	private boolean isActive;
+	private SearchPromotionOrderBy searchPromotionOrderBy;
+	private SearchPromotionOrderByOrder searchPromotionOrderByOrder;
 	private int startRecord;
 	private int batchSize;
 	
@@ -81,6 +84,26 @@ public class SearchPromotionRequest {
 			sessionInvalidationList.add("Session token cannot be empty");
 		}
 		return sessionInvalidationList;
+	}
+	public boolean isActive() {
+		return isActive;
+	}
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+	public SearchPromotionOrderBy getSearchPromotionOrderBy() {
+		return searchPromotionOrderBy;
+	}
+	public void setSearchPromotionOrderBy(
+			SearchPromotionOrderBy searchPromotionOrderBy) {
+		this.searchPromotionOrderBy = searchPromotionOrderBy;
+	}
+	public SearchPromotionOrderByOrder getSearchPromotionOrderByOrder() {
+		return searchPromotionOrderByOrder;
+	}
+	public void setSearchPromotionOrderByOrder(
+			SearchPromotionOrderByOrder searchPromotionOrderByOrder) {
+		this.searchPromotionOrderByOrder = searchPromotionOrderByOrder;
 	}
 	
 }

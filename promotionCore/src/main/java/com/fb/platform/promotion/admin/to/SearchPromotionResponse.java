@@ -13,6 +13,7 @@ public class SearchPromotionResponse {
 	private SearchPromotionEnum searchPromotionEnum = null;
 	private List<PromotionTO> promotionsList = new ArrayList<PromotionTO>();
 	private String errorCause;
+	private int totalCount;
 	
 	public String getSessionToken() {
 		return sessionToken;
@@ -37,6 +38,12 @@ public class SearchPromotionResponse {
 	}
 	public void setSearchPromotionEnum(SearchPromotionEnum searchPromotionEnum) {
 		this.searchPromotionEnum = searchPromotionEnum;
+	}
+	public int getTotalCount() {
+		return totalCount;
+	}
+	public void setTotalCount(int totalCount) {
+		this.totalCount = totalCount;
 	}
 	
 }

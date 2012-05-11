@@ -3,9 +3,11 @@ package com.fb.platform.promotion.admin.to;
 import java.util.List;
 
 import com.fb.platform.promotion.rule.RuleConfigDescriptor;
-import com.fb.platform.promotion.rule.RuleConfigDescriptorItem;
-import com.fb.platform.promotion.rule.RulesEnum;
 
+/**
+ * @author nehaga
+ *
+ */
 public class FetchRuleResponse {
 	
 	private String sessionToken;

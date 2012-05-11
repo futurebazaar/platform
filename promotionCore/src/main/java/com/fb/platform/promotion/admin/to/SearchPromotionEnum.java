@@ -1,5 +1,9 @@
 package com.fb.platform.promotion.admin.to;
 
+/**
+ * @author nehaga
+ *
+ */
 public enum SearchPromotionEnum {
 	SUCCESS,
 	INTERNAL_ERROR,

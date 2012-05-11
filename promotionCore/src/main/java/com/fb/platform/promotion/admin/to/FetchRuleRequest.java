@@ -1,5 +1,9 @@
 package com.fb.platform.promotion.admin.to;
 
+/**
+ * @author nehaga
+ *
+ */
 public class FetchRuleRequest {
 	
 	private String sessionToken;
