@@ -23,15 +23,18 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.fb.commons.PlatformException;
-import com.fb.platform.payback._1_0.OrderItem;
-import com.fb.platform.payback._1_0.StorePointsRequest;
-import com.fb.platform.payback._1_0.StorePointsResponse;
-import com.fb.platform.payback._1_0.StorePointsStatus;
+import com.fb.platform.payback._1_0.OrderItemRequest;
+import com.fb.platform.payback._1_0.PointsRequest;
+import com.fb.platform.payback._1_0.PointsResponse;
+import com.fb.platform.payback._1_0.PointsStatus;
 import com.fb.platform.payback.service.PointsManager;
 
 
@@ -65,55 +68,59 @@ public class PointsResource {
 	@Path("/store")
 	@Consumes("application/xml")
 	@Produces("application/xml")
-	public String storePoints(String storePointsXml) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("storePointsRequestXML : \n" + storePointsXml);
-		}
+	public String storePoints(String pointsXml) {
+		
+		logger.info("pointsRequestXML : \n" + pointsXml);
+		
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
-			StorePointsRequest xmlStorePointsRequest = (StorePointsRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(storePointsXml)));
-			com.fb.platform.payback.to.StorePointsRequest storePointsHeaderRequest = new com.fb.platform.payback.to.StorePointsRequest();
-			storePointsHeaderRequest.setAmount(xmlStorePointsRequest.getAmount());
-			storePointsHeaderRequest.setLoyaltyCard(xmlStorePointsRequest.getLoyaltyCard());
-			storePointsHeaderRequest.setOrderId(xmlStorePointsRequest.getOrderId());
-			storePointsHeaderRequest.setTxnActionCode(xmlStorePointsRequest.getActionCode());
-			storePointsHeaderRequest.setReason(xmlStorePointsRequest.getReason());
+			PointsRequest xmlPointsRequest = (PointsRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(pointsXml)));
+			com.fb.platform.payback.to.PointsRequest pointsHeaderRequest = new com.fb.platform.payback.to.PointsRequest();
+			pointsHeaderRequest.setTxnActionCode(xmlPointsRequest.getActionCode());
+			com.fb.platform.payback.to.OrderRequest orderRequest = new com.fb.platform.payback.to.OrderRequest();
+			orderRequest.setAmount(xmlPointsRequest.getOrderRequest().getAmount());
+			orderRequest.setLoyaltyCard(xmlPointsRequest.getOrderRequest().getLoyaltyCard());
+			orderRequest.setOrderId(xmlPointsRequest.getOrderRequest().getOrderId());
+			orderRequest.setTxnTimestamp(new DateTime(xmlPointsRequest.getOrderRequest().getTimestamp().getMillisecond()));
+			orderRequest.setReason(xmlPointsRequest.getOrderRequest().getReason());
 			
-			for (OrderItem xmlOrderItem : xmlStorePointsRequest.getOrderItem()) {
-				com.fb.platform.payback.to.StorePointsItemRequest storePointsItemRequest = createStorePointsItem(xmlOrderItem);
-				storePointsHeaderRequest.getStorePointsItemRequest().add(storePointsItemRequest);
+			for (OrderItemRequest xmlOrderItem : xmlPointsRequest.getOrderRequest().getOrderItemRequest()) {
+				com.fb.platform.payback.to.OrderItemRequest orderItemRequest = createStorePointsItem(xmlOrderItem);
+				orderRequest.getOrderItemRequest().add(orderItemRequest);
 			}
 			
-			com.fb.platform.payback.to.StorePointsResponse storePointResponse = pointsManager.getPointsReponse(storePointsHeaderRequest);
-			StorePointsResponse xmlStorePointsResponse = new StorePointsResponse();	
-			xmlStorePointsResponse.setActionCode(storePointResponse.getActionCode());
-			xmlStorePointsResponse.setStorePointsStatus(StorePointsStatus.valueOf(storePointResponse.getStorePointsResponseCodeEnum().name()));
-			xmlStorePointsResponse.setMessage(storePointResponse.getStorePointsResponseCodeEnum().toString());
+			com.fb.platform.payback.to.PointsResponse pointResponse = pointsManager.getPointsReponse(pointsHeaderRequest);
+			PointsResponse xmlPointsResponse = new PointsResponse();	
+			xmlPointsResponse.setActionCode(pointResponse.getActionCode());
+			xmlPointsResponse.setPointsStatus(PointsStatus.valueOf(pointResponse.getStorePointsResponseCodeEnum().name()));
+			xmlPointsResponse.setMessage(pointResponse.getStorePointsResponseCodeEnum().toString());
 			StringWriter outStringWriter = new StringWriter();
 			Marshaller marsheller = context.createMarshaller();
-			marsheller.marshal(xmlStorePointsResponse, outStringWriter);
+			marsheller.marshal(xmlPointsResponse, outStringWriter);
 			
 			String xmlResponse = outStringWriter.toString();
-			if (logger.isDebugEnabled()) {
-				logger.debug("CouponXML response :\n" + xmlResponse);
-			}
+			logger.info("PointsXML response :\n" + xmlResponse);
 			return xmlResponse;
-
 		} catch (JAXBException e) {
-			logger.error("Error in the storePoints call.", e);
+			logger.error("Error in the Points call.", e);
 			return null;
 		}
 	}
 
-	private com.fb.platform.payback.to.StorePointsItemRequest createStorePointsItem(OrderItem xmlOrderItem) {
-		com.fb.platform.payback.to.StorePointsItemRequest storePointsItemRequest = new com.fb.platform.payback.to.StorePointsItemRequest();
-		storePointsItemRequest.setAmount(xmlOrderItem.getAmount());
-		storePointsItemRequest.setId(xmlOrderItem.getItemId());
-		storePointsItemRequest.setQuantity(xmlOrderItem.getQuantity());
-		storePointsItemRequest.setDepartmentCode(xmlOrderItem.getDepartmentCode());
-		storePointsItemRequest.setDepartmentName(xmlOrderItem.getDepartmentName());
-		storePointsItemRequest.setArticleId(xmlOrderItem.getArticleId());
-		return storePointsItemRequest;
+	private com.fb.platform.payback.to.OrderItemRequest createStorePointsItem(OrderItemRequest xmlOrderItem) {
+		com.fb.platform.payback.to.OrderItemRequest pointsItemRequest = new com.fb.platform.payback.to.OrderItemRequest();
+		pointsItemRequest.setAmount(xmlOrderItem.getAmount());
+		pointsItemRequest.setId(xmlOrderItem.getItemId());
+		pointsItemRequest.setQuantity(xmlOrderItem.getQuantity());
+		pointsItemRequest.setDepartmentCode(xmlOrderItem.getDepartmentCode());
+		pointsItemRequest.setDepartmentName(xmlOrderItem.getDepartmentName());
+		pointsItemRequest.setArticleId(xmlOrderItem.getArticleId());
+		return pointsItemRequest;
+	}
+	
+	@GET
+	public String uploadEarnOnSFTP(){
+		return null;
 	}
 	
 	@GET
@@ -148,6 +155,10 @@ public class PointsResource {
 		}
 		return sb.toString();
 	}
-	
+
+	private String getIp(){
+		return ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes())
+			       .getRequest().getRemoteAddr();
+	}
 
 }

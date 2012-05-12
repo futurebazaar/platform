@@ -18,8 +18,8 @@ import com.fb.platform.payback.service.PointsEarnService;
 import com.fb.platform.payback.service.PointsService;
 import com.fb.platform.payback.to.EarnActionCodesEnum;
 import com.fb.platform.payback.to.PointsTxnClassificationCodeEnum;
-import com.fb.platform.payback.to.StorePointsRequest;
-import com.fb.platform.payback.to.StorePointsItemRequest;
+import com.fb.platform.payback.to.PointsRequest;
+import com.fb.platform.payback.to.OrderItemRequest;
 import com.fb.platform.payback.util.PointsUtil;
 
 public class PointsEarnServiceImpl implements PointsEarnService{
@@ -90,6 +90,7 @@ public class PointsEarnServiceImpl implements PointsEarnService{
 		int totalTxnPoints = 0;
 		int totalTxnValue = 0;
 		String rowData = "";
+		int itemRows = 0;
 		
 		Collection<PointsHeader> earnHeaderList = pointsDao.loadPointsHeaderData(txnActionCode, settlementDate, partnerMerchantId);
 		Iterator<PointsHeader> EarnIterator = earnHeaderList.iterator();
@@ -106,12 +107,11 @@ public class PointsEarnServiceImpl implements PointsEarnService{
 						pointsUtil.convertDateToFormat(earnHeader.getTxnDate(), "ddMMyyyy") + "|" + 
 						pointsUtil.convertDateToFormat(earnHeader.getTxnTimestamp(), "hhmmss") + "|" + 
 						new BigDecimal(earnHeader.getTxnValue()).setScale(2) + "||" + earnHeader.getMarketingCode() + "|" +
-						earnHeader.getTxnPoints() + "|" + String.valueOf(headerRows) + "|" + 
+						earnHeader.getTxnPoints() + "|1|" + 
 						pointsUtil.convertDateToFormat(earnHeader.getSettlementDate(), "ddMMyyyy")	+ "|||||||" + 
 						new BigDecimal(earnHeader.getTxnValue()).setScale(2) + "|" + earnHeader.getBranchId() + 
 						"||||||||||||||||||||||";
 				rowData += "\n";
-				int itemRows = 0;
 				
 				Iterator<PointsItems> itemIterator = pointsItems.iterator();
 				while(itemIterator.hasNext()){
@@ -125,7 +125,7 @@ public class PointsEarnServiceImpl implements PointsEarnService{
 							pointsItem.getItemAmount().setScale(2) + "||" +	earnHeader.getPartnerMerchantId() + "||" + 
 							new BigDecimal(pointsItem.getQuantity()).setScale(2) + "|AMOUNT|" + 
 							earnHeader.getOrderId() + "|" +	String.valueOf(itemRows) + "||||||||" + pointsItem.getDepartmentCode() + "|" + 
-							departmentName + "|||" + pointsItem.getArticleId() + "|" + String.valueOf(itemRows) + 
+							departmentName + "|||" + pointsItem.getArticleId() + "|2" + 
 							"|||||||||||||||||||||||||||||||";
 					rowData += "\n";
 				}
@@ -133,16 +133,17 @@ public class PointsEarnServiceImpl implements PointsEarnService{
 			totalTxnPoints += earnHeader.getTxnPoints();
 			totalTxnValue += earnHeader.getTxnValue();
 		}
-		if (rowData.length() > 0){
+		if (rowData.length() > 0 && itemRows > 0){
 			rowData += "PB_ACT_1.1|" + currentTime + "|" + sequenceNumber + "|" + partnerMerchantId + "||" + headerRows + "|" + 
 							totalTxnValue + "|" + totalTxnPoints + "|||||||||||||||9|||||||||||||||||||||||||||||||";
+			return rowData;
 		}
-		return rowData;
+		return null;
 	}
 
 	@Override
-	public void saveEarnData(EarnActionCodesEnum txnActionCode, StorePointsRequest request) throws IOException {
-		Properties props = pointsUtil.getProperties("points.properties");
+	public void saveEarnData(EarnActionCodesEnum txnActionCode, PointsRequest request) throws IOException {
+		/*Properties props = pointsUtil.getProperties("points.properties");
 		OrderDetail orderDetail = pointsDao.getOrderDetail(request.getOrderId());
 		
 		PointsHeader pointsHeader = new PointsHeader();
@@ -181,8 +182,8 @@ public class PointsEarnServiceImpl implements PointsEarnService{
 		storeBonusPoints(pointsHeader, request.getAmount(), day, props, clientName);
 	}
 
-	private void storePointsItem(StorePointsRequest request, long pointsHeaderId, String txnActionCode) {
-		for (StorePointsItemRequest storePointsItem : request.getStorePointsItemRequest()){
+	private void storePointsItem(PointsRequest request, long pointsHeaderId, String txnActionCode) {
+		for (OrderItemRequest storePointsItem : request.getStorePointsItemRequest()){
 			PointsItems pointsItem = new PointsItems();
 			pointsItem.setPointsHeaderId(pointsHeaderId);
 			pointsItem.setArticleId(storePointsItem.getArticleId());
@@ -228,7 +229,7 @@ public class PointsEarnServiceImpl implements PointsEarnService{
 			
 			
 			
-		}
+		}*/
 		
 		
 		

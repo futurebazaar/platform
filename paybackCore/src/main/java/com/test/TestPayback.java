@@ -8,11 +8,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.fb.platform.payback.service.impl.PointsEarnManagerImpl;
+import com.fb.platform.payback.service.impl.PointsBurnManagerImpl;
 import com.fb.platform.payback.service.impl.PointsManagerImpl;
+import com.fb.platform.payback.to.BurnActionCodesEnum;
 import com.fb.platform.payback.to.EarnActionCodesEnum;
-import com.fb.platform.payback.to.StorePointsRequest;
-import com.fb.platform.payback.to.StorePointsItemRequest;
-import com.fb.platform.payback.to.StorePointsResponse;
+import com.fb.platform.payback.to.PointsRequest;
+import com.fb.platform.payback.to.OrderItemRequest;
+import com.fb.platform.payback.to.PointsResponse;
 import com.fb.platform.payback.util.PointsUtil;
 
 
@@ -42,7 +44,7 @@ public class TestPayback {
 		Object earnManager = orderServiceContext.getBean("pointsEarnManager");
 		//((PointsEarnManagerImpl) manager).storeEarnData();
 		//int manager1 = ((PointsManagerImpl) manager).mailBurnData();
-		System.out.println(((PointsEarnManagerImpl) earnManager).putEarnDataOnSftp());
+		//System.out.println(((PointsEarnManagerImpl) earnManager).putEarnDataOnSftp());
 		
 		
 		Object burnManager = orderServiceContext.getBean("pointsBurnManager");
@@ -119,6 +121,7 @@ public class TestPayback {
 		System.out.println(storePointsResponse.getStorePointsResponseCodeEnum().name());
 		System.out.println(storePointsResponse.getActionCode());
 		System.out.println(storePointsResponse.getStorePointsResponseCodeEnum().toString());*/
+		
 
 		
 	}

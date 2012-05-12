@@ -37,6 +37,8 @@ DROP TABLE IF EXISTS accounts_clientdomain;
 DROP TABLE IF EXISTS accounts_client;
 DROP TABLE IF EXISTS users_profile ;
 DROP TABLE IF EXISTS auth_user;
+DROP TABLE IF EXISTS orders_orderitem;
+DROP TABLE IF EXISTS payments_paymentattempt;
 
 --  ******************** CREATE TABLE *****************
 

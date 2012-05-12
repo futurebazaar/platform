@@ -35,7 +35,6 @@ public class PointsUtil {
 		return format.print(currentTime);
 	}
 
-	
 	public Properties getProperties(String fileName){
 		InputStream inStream = this.getClass().getClassLoader().getResourceAsStream(fileName);
 		Properties props = new Properties();

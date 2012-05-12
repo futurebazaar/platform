@@ -78,6 +78,11 @@ public class PointsDaoJdbcImpl implements PointsDao{
 			"partner_merchant_id = ? " +
 			"order by id desc";
 	
+	private static final String LOAD_PAYBACK_CONFIG_QUERY = 
+			"SELECT * FROM " +
+			"payback WHERE " +
+			"client_id = ?";
+	
 	
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;

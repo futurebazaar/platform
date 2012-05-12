@@ -46,8 +46,8 @@ public class PointsBurnServiceImpl implements PointsBurnService{
 	public void mailBurnData(String txnActionCode, String merchantId) {
 		String settlementDate = pointsUtil.getPreviousDayDate();
 		String fileName = "Burn Reversal_" + settlementDate +  ".csv";
-		String header = "Transaction ID, Transaction Date, Merchant ID, Points, Reason";
-		String fileBody = header + "\n";
+		String header = "Transaction ID, Transaction Date, Merchant ID, Points, Reason \n";
+		String fileBody = "";
 		Collection<PointsHeader> burnList = pointsDao.loadPointsHeaderData(txnActionCode, settlementDate, merchantId);
 		Iterator<PointsHeader> burnIterator = burnList.iterator();
 		while(burnIterator.hasNext()){
@@ -62,14 +62,15 @@ public class PointsBurnServiceImpl implements PointsBurnService{
 		}
 		
 		if (fileBody != null && !fileBody.equals("")){
+			fileBody = header + fileBody;
 			pointsUtil.sendMail(txnActionCode, merchantId, fileName, fileBody);
-			pointsDao.updateStatus(txnActionCode, merchantId, settlementDate);
+			//pointsDao.updateStatus(txnActionCode, merchantId, settlementDate);
 		}	
 	}
 	
 	@Override
 	public void saveBurnData(BurnActionCodesEnum txnActionCode, BigDecimal amount, long orderId, String reason) {
-		PointsHeader pointsHeader = new PointsHeader();
+		/*PointsHeader pointsHeader = new PointsHeader();
 		try {
 			Properties props = pointsUtil.getProperties("points.properties");
 			pointsHeader.setReason(reason);
@@ -94,6 +95,6 @@ public class PointsBurnServiceImpl implements PointsBurnService{
 			pointsDao.insertPointsHeaderData(pointsHeader);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 }
