@@ -14,6 +14,7 @@ public class OrderRequest {
 	private List<OrderItemRequest> orderItemRequest = new ArrayList<OrderItemRequest>();
 	private String loyaltyCard;
 	private DateTime txnTimestamp;
+	private boolean isBonus;
 	
 	public long getOrderId() {
 		return orderId;
@@ -51,5 +52,19 @@ public class OrderRequest {
 	public void setLoyaltyCard(String loyaltyCard) {
 		this.loyaltyCard = loyaltyCard;
 	}	
+	public void setIsBonus(boolean isBonus){
+		this.isBonus = isBonus;
+	}
+	public boolean isBonus(){
+		return isBonus;
+	}
 	
+	public boolean isInExcludedCategory(List<Long> categoryList){
+		for (OrderItemRequest orderItem : orderItemRequest){
+			if (categoryList.contains(orderItem.getCategoryId())){
+				return true;
+			}
+		}
+		return false;
+	}
 }

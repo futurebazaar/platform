@@ -1,24 +1,30 @@
 package com.fb.platform.payback.service.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import org.joda.time.DateTime;
 
+import com.fb.commons.PlatformException;
 import com.fb.platform.payback.dao.PointsDao;
+import com.fb.platform.payback.exception.DefinitionNotFound;
+import com.fb.platform.payback.exception.InvalidActionCode;
+import com.fb.platform.payback.exception.PointsHeaderDoesNotExist;
 import com.fb.platform.payback.model.PointsHeader;
+import com.fb.platform.payback.rule.PointsRule;
 import com.fb.platform.payback.service.PointsService;
-import com.fb.platform.payback.to.BurnActionCodesEnum;
-import com.fb.platform.payback.to.EarnActionCodesEnum;
+import com.fb.platform.payback.to.OrderItemRequest;
+import com.fb.platform.payback.to.OrderRequest;
+import com.fb.platform.payback.to.PointsRequest;
+import com.fb.platform.payback.to.PointsResponseCodeEnum;
 import com.fb.platform.payback.to.PointsTxnClassificationCodeEnum;
 import com.fb.platform.payback.util.PointsUtil;
 
-public class PointsServiceImpl implements PointsService {
+public class PointsServiceImpl implements PointsService{
 	
-	private static String OFFER_TYPE_EARN_FACTOR = "EARN_FACTOR";
-	private static String OFFER_TYPE_EARN_BONUS = "EARN_BONUS";
-	private static String EARN_FACTOR_TYPE = "EARN_FACTOR";
-	private static String BURN_FACTOR_TYPE = "BURN_FACTOR";
+	private static int ROUND =BigDecimal.ROUND_HALF_DOWN; 
 	
 	private PointsUtil pointsUtil;
 	private PointsDao pointsDao;
@@ -32,69 +38,98 @@ public class PointsServiceImpl implements PointsService {
 	}
 	
 	@Override
-	public BigDecimal getEarnRatio(String day, Properties props, String clientName, long orderId, 
-			EarnActionCodesEnum txnActionCode){
-		BigDecimal earnRatio = null;
-		if (txnActionCode.equals(EarnActionCodesEnum.EARN_REVERSAL)){
-			PointsTxnClassificationCodeEnum earnCode = PointsTxnClassificationCodeEnum.EARN_REVERSAL;
-			String txnClassificationCode = earnCode.toString().split(",")[0];
-			PointsHeader pointsHeader = pointsDao.getHeaderDetails(orderId, earnCode.name(), txnClassificationCode);
-			if (pointsHeader != null){
-				earnRatio = pointsHeader.getEarnRatio();
+	public PointsResponseCodeEnum doOperation(PointsRequest request, PointsRule rule){
+		try{
+			
+			BigDecimal txnPoints = getTxnPoints(request);
+			if (rule != null){
+				if (!rule.isBonus()){
+					txnPoints = rule.execute(request.getOrderRequest());
+				}
+				else{
+					saveBonusPoints(request, rule.execute(request.getOrderRequest()));
+				}
 			}
-		}
-		if (earnRatio == null ){
-			String earnPointsRatio = props.getProperty(clientName + "_EARN_POINTS");
-			earnRatio = new BigDecimal(earnPointsRatio == null ? "1" : earnPointsRatio);
-			if (isApplicableForOffer(day, props, clientName, OFFER_TYPE_EARN_FACTOR))
-				return earnRatio.multiply(getFactor(clientName, props, day, EARN_FACTOR_TYPE));
-		}
-		return earnRatio;
+			savePoints(request, txnPoints);
+			return PointsResponseCodeEnum.SUCCESS;
+			
+		} catch (InvalidActionCode e){
+			return PointsResponseCodeEnum.INVALID_ACTION_CODE;
+		} catch (DefinitionNotFound e){
+			return PointsResponseCodeEnum.INVALID_POINTS;
+		}catch (PointsHeaderDoesNotExist e){
+			return PointsResponseCodeEnum.FAILURE;
+		}catch (PlatformException e){
+			return PointsResponseCodeEnum.INTERNAL_ERROR;
+		} 
 	}
 	
-	@Override
-	public BigDecimal getBurnRatio(String day, Properties props, String clientName){
-		String burnPointsRatio = props.getProperty(clientName + "_BURN_POINTS");
-		BigDecimal burnRatio = new BigDecimal(burnPointsRatio == null ? "1" : burnPointsRatio);
-		if (isApplicableForOffer(day, props, clientName, BURN_FACTOR_TYPE)){
-			return burnRatio.multiply(getFactor(clientName, props, day, BURN_FACTOR_TYPE));
+	private BigDecimal getTxnPoints(PointsRequest request) {
+		PointsTxnClassificationCodeEnum txnActionCode = PointsTxnClassificationCodeEnum.valueOf(request.getTxnActionCode());
+		BigDecimal earnRatio = BigDecimal.ZERO;
+		switch (txnActionCode){
+			case PREALLOC_EARN:
+				earnRatio = getNormalEarnRatio(request);
+				break;
+			case EARN_REVERSAL:
+				earnRatio = getNormalEarnReversalRatio(request);
+			default:
+				throw new InvalidActionCode("No action is defined for action code : " + txnActionCode);
 		}
-		return burnRatio;
-		
-	}
-		
-	@Override
-	public int getBonusPoints(BigDecimal amount, String day, Properties props, String clientName,
-			long orderId, String txnActionCode){
-		PointsHeader pointsHeader = pointsDao.getHeaderDetails(orderId, "PREALLOC_EARN", "BONUS_POINTS");
-		if (pointsHeader != null){
-			if (txnActionCode.equals(EarnActionCodesEnum.EARN_REVERSAL.name())){
-				return pointsHeader.getTxnPoints();	
-			}
-			return 0;
+		if (earnRatio.compareTo(BigDecimal.ZERO) == 1){
+			return earnRatio.multiply(request.getOrderRequest().getAmount());
 		}
-		if (isApplicableForOffer(day, props, clientName, OFFER_TYPE_EARN_BONUS)){
-			return calculateBonusPoints(amount, props, clientName);
-		}
-		return 0;
+		throw new DefinitionNotFound("Earn Ratio Not Defined : " + earnRatio);
 	}
 
+	private BigDecimal getNormalEarnReversalRatio(PointsRequest request ) {
+		PointsTxnClassificationCodeEnum txnActionCode = PointsTxnClassificationCodeEnum.EARN_REVERSAL;
+		String txnClassificationCode = txnActionCode.toString().split(",")[0];
+		PointsHeader pointsHeader = pointsDao.getHeaderDetails(request.getOrderRequest().getOrderId(), txnActionCode.name(), txnClassificationCode);
+		if (pointsHeader.getEarnRatio() != null && !pointsHeader.getEarnRatio().equals(BigDecimal.ZERO)){
+			return pointsHeader.getEarnRatio();
+		}
+		return getNormalEarnRatio(request);
+	}
 
-	@Override
-	public int getTxnPoints(BigDecimal amount, String day, Properties props, String clientName, 
-			String txnCode, long orderId){
-		BigDecimal ratio = BigDecimal.ZERO;
-		if (txnCode.equals(EarnActionCodesEnum.PREALLOC_EARN.name()) || 
-				txnCode.equals(EarnActionCodesEnum.EARN_REVERSAL.name())){
-			ratio = getEarnRatio(day, props, clientName, orderId, EarnActionCodesEnum.valueOf(txnCode));
+	private BigDecimal getNormalEarnRatio(PointsRequest request) {
+		Properties props = pointsUtil.getProperties("points.properties");
+		String earnPointsRatio = props.getProperty("EARN_RATIO");
+		if (earnPointsRatio != null && !earnPointsRatio.equals("")){
+			return new BigDecimal(earnPointsRatio);
 		}
-		else if (txnCode.equals(BurnActionCodesEnum.BURN_REVERSAL.name())){
-			ratio = getBurnRatio(day, props, clientName);
-		}
-		return amount.multiply(ratio).setScale(0, BigDecimal.ROUND_HALF_DOWN).intValue();
+		return BigDecimal.ZERO;
+	}
+	
+	private void savePoints(PointsRequest pointsRequest, BigDecimal txnPoints){
+		OrderRequest request = pointsRequest.getOrderRequest();
+		BigDecimal earnRatio = txnPoints.divide(request.getAmount());
+		BigDecimal burnRatio = new BigDecimal(4);
+		PointsHeader pointsHeader = new PointsHeader();
+		pointsHeader.setDetails(request, txnPoints, earnRatio, burnRatio);
 		
 	}
 	
+	private void saveBonusPoints(PointsRequest pointsRequest, BigDecimal bonusPoints){
+		OrderRequest orderRequest = pointsRequest.getOrderRequest();
+		orderRequest.setAmount(BigDecimal.ZERO);
+		orderRequest.setIsBonus(true);
+		OrderItemRequest orderItem = new OrderItemRequest();
+		orderItem.setId(8000);
+		orderItem.setAmount(BigDecimal.ZERO);
+		orderItem.setArticleId("1111");
+		orderItem.setDepartmentCode(100);
+		orderItem.setDepartmentName("BONUS");
+		
+		List<OrderItemRequest> orderItemRequest = new ArrayList<OrderItemRequest>();
+		orderItemRequest.add(orderItem);
+		orderRequest.setOrderItemRequest(orderItemRequest);
+		pointsRequest.setOrderRequest(orderRequest);
+		
+		savePoints(pointsRequest, bonusPoints);
+		
+	}
+
 	@Override
 	public String getSequenceNumber() {
 		DateTime datetime = new DateTime();
@@ -104,41 +139,6 @@ public class PointsServiceImpl implements PointsService {
 			sequenceNumber = "0" + sequenceNumber;
 		}
 		return sequenceNumber;
-	}
-	
-	private boolean isApplicableForOffer(String day, Properties props, String clientName, String offerType) {
-		String validTill = props.getProperty(clientName + "_" + offerType + "_VALIDITY");
-		if (pointsUtil.isValidDate(validTill)){
-			if (!day.equalsIgnoreCase(getOfferDay(props, clientName)) && offerType.equals(OFFER_TYPE_EARN_BONUS)){
-				return true;
-			}
-			else if(day.equalsIgnoreCase(getOfferDay(props, clientName)) && offerType.equals(OFFER_TYPE_EARN_FACTOR)){
-				return true;
-			}
-			return false;
-		}
-		return false;
-	}
-	
-	private String getOfferDay(Properties props, String clientName){
-		String day = props.getProperty(clientName + "_OFFER_DAY");
-		return day;
-	}
-	
-	private int calculateBonusPoints(BigDecimal amount, Properties props, String clientName) {
-		int bonusPoints = 0;
-		BigDecimal minAmount = new BigDecimal(props.getProperty(clientName + "_EARN_BONUS_MIN_AMOUNT"));
-		if (amount.compareTo(minAmount) == 1){
-			String extraPoints = props.getProperty(clientName.toUpperCase() + "_EARN_BONUS_POINTS");
-			return Integer.parseInt(extraPoints != null ? extraPoints : "0");
-			}
-		return bonusPoints;
-	}
-	
-	private BigDecimal getFactor(String clientName, Properties props, String day, String factorType) {
-		String factorValue = props.getProperty(clientName + "_" + factorType);
-		BigDecimal factor = new BigDecimal(factorValue == null ? "0" : factorValue);
-		return factor;
-	}
+	}	
 	
 }

@@ -1,20 +1,7 @@
 package com.test;
-import java.math.BigDecimal;
-
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.fb.platform.payback.service.impl.PointsEarnManagerImpl;
-import com.fb.platform.payback.service.impl.PointsBurnManagerImpl;
-import com.fb.platform.payback.service.impl.PointsManagerImpl;
-import com.fb.platform.payback.to.BurnActionCodesEnum;
-import com.fb.platform.payback.to.EarnActionCodesEnum;
-import com.fb.platform.payback.to.PointsRequest;
-import com.fb.platform.payback.to.OrderItemRequest;
-import com.fb.platform.payback.to.PointsResponse;
 import com.fb.platform.payback.util.PointsUtil;
 
 
@@ -37,17 +24,17 @@ public class TestPayback {
 		String settlementDate = "2012-04-16";
 		String txnActionCode = "EARN_REVERSAL";
 		
-		String[] serviceResources = {"applicationContext-dao.xml", "applicationContext-service.xml", 
-				"applicationContext-resources.xml"};	
+		//String[] serviceResources = {"applicationContext-dao.xml", "applicationContext-service.xml", 
+		//		"applicationContext-resources.xml"};	
 
-		ApplicationContext orderServiceContext = new ClassPathXmlApplicationContext(serviceResources);
-		Object earnManager = orderServiceContext.getBean("pointsEarnManager");
+		//ApplicationContext orderServiceContext = new ClassPathXmlApplicationContext(serviceResources);
+		//Object earnManager = orderServiceContext.getBean("pointsEarnManager");
 		//((PointsEarnManagerImpl) manager).storeEarnData();
 		//int manager1 = ((PointsManagerImpl) manager).mailBurnData();
 		//System.out.println(((PointsEarnManagerImpl) earnManager).putEarnDataOnSftp());
 		
 		
-		Object burnManager = orderServiceContext.getBean("pointsBurnManager");
+		//Object burnManager = orderServiceContext.getBean("pointsBurnManager");
 		//((PointsBurnManagerImpl) burnManager).mailBurnData();
 		// SFTP put
 		/*try {
@@ -121,8 +108,9 @@ public class TestPayback {
 		System.out.println(storePointsResponse.getStorePointsResponseCodeEnum().name());
 		System.out.println(storePointsResponse.getActionCode());
 		System.out.println(storePointsResponse.getStorePointsResponseCodeEnum().toString());*/
-		
-
+		String s ="123456781234567a";
+		System.out.println(s.matches("[0-9]{16}"));
+		System.out.println(s.length() == 16);
 		
 	}
 	

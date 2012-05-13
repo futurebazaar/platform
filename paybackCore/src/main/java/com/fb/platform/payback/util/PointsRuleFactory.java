@@ -1,15 +1,15 @@
 package com.fb.platform.payback.util;
 
 import com.fb.platform.payback.rule.PointsRule;
-import com.fb.platform.payback.rule.PointsRuleEnum;
+import com.fb.platform.payback.rule.EarnPointsRuleEnum;
 import com.fb.platform.payback.rule.RuleConfiguration;
 import com.fb.platform.payback.rule.impl.BuyProductXEarnYPoints;
 import com.fb.platform.payback.rule.impl.BuyWorthXEarnYPoints;
-import com.fb.platform.payback.rule.impl.EarnXPointsOnYDay;
+import com.fb.platform.payback.rule.impl.EarnXBonusPointsOnYDay;
 
 public class PointsRuleFactory {
 
-		public static PointsRule createRule(PointsRuleEnum ruleName, RuleConfiguration ruleConfig){
+		public static PointsRule createRule(EarnPointsRuleEnum ruleName, RuleConfiguration ruleConfig){
 			PointsRule rule = null;
 			
 			switch(ruleName){
@@ -19,8 +19,8 @@ public class PointsRuleFactory {
 					rule.init(ruleConfig);
 					break;
 				
-				case EARN_Y_BONUS_POINTS_ON_X_DAY:
-					rule = new EarnXPointsOnYDay();
+				case EARN_X_BONUS_POINTS_ON_Y_DAY:
+					rule = new EarnXBonusPointsOnYDay();
 					rule.init(ruleConfig);
 					break;
 					

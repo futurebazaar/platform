@@ -1,5 +1,7 @@
 package com.fb.platform.payback.rule;
 
+import java.math.BigDecimal;
+
 import com.fb.platform.payback.to.OrderRequest;
 
 public interface PointsRule {
@@ -8,6 +10,8 @@ public interface PointsRule {
 
 	boolean isApplicable(OrderRequest request);
 
-	int execute(OrderRequest request);
+	BigDecimal execute(OrderRequest request);
+	
+	boolean isBonus();
 	
 }

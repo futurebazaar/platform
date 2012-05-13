@@ -3,11 +3,9 @@ package com.fb.platform.payback.rule.impl;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.fb.platform.payback.model.PointsHeader;
 import com.fb.platform.payback.rule.PointsRule;
 import com.fb.platform.payback.rule.RuleConfiguration;
 import com.fb.platform.payback.to.OrderRequest;
-import com.fb.platform.payback.to.PointsRequest;
 
 public class BuyProductXEarnYPoints implements PointsRule {
 
@@ -26,8 +24,13 @@ public class BuyProductXEarnYPoints implements PointsRule {
 	}
 
 	@Override
-	public int execute(OrderRequest request) {
-		return 0;
+	public BigDecimal execute(OrderRequest request) {
+		return BigDecimal.ZERO;
+	}
+
+	@Override
+	public boolean isBonus() {
+		return false;
 	}
 
 }

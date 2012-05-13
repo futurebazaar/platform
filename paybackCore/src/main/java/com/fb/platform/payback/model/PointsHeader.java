@@ -2,11 +2,9 @@ package com.fb.platform.payback.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Properties;
-
 import org.joda.time.DateTime;
 
-//import com.fb.platform.payback.util.PointsTxnClassificationCodeEnum;
+import com.fb.platform.payback.to.OrderRequest;
 
 public class PointsHeader implements Serializable{
 	
@@ -147,29 +145,8 @@ public class PointsHeader implements Serializable{
 		this.reason = reason;
 	}
 	
-	public void setOrderDetails(OrderDetail orderDetail, Properties props) {
-		String clientName = orderDetail.getClientName().replaceAll(" ", "").toUpperCase(); 
-		String branchId = props.getProperty(clientName + "_BRANCH_ID");
-		String marketingCode = props.getProperty(clientName + "_MARKETING_CODE");
-		String [] partnerIds = props.getProperty(clientName + "_IDS").split(",");
-		String merchantId = partnerIds[0];
-		String terminalId = partnerIds[1];
-		this.setPartnerMerchantId(merchantId);
-		this.setPartnerTerminalId(terminalId);
-		this.setBranchId(branchId);
-		this.setMarketingCode(marketingCode);
+	public void setDetails(OrderRequest request, BigDecimal txnPoints2,
+			BigDecimal earnRatio2, BigDecimal burnRatio2) {
 		
 	}
-	
-	public void setBurnTxnDetails(PaymentDetail paymentDetail, Properties props, String classificationCode, 
-			String paymentType){
-		this.setReferenceId(paymentDetail.getTransactionId());
-		this.setTxnDate(paymentDetail.getTxnDate());
-		this.setTxnClassificationCode(classificationCode);
-		this.setTxnPaymentType(paymentType);
-		this.setTxnTimestamp(paymentDetail.getTxnDate());
-		
-	}
-	
-
 }

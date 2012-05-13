@@ -11,14 +11,16 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 
 import com.fb.commons.test.BaseTestCase;
-import com.fb.platform.payback.rule.impl.EarnXPointsOnYDay;
+import com.fb.platform.payback.rule.impl.EarnXBonusPointsOnYDay;
 import com.fb.platform.payback.to.OrderRequest;
+
 
 public class EarnXPointsOnYDayTest extends BaseTestCase{
 
 	
 	@Test
 	public void testRule(){
+	
 		List<RuleConfigItem> configItems = new ArrayList<RuleConfigItem>();
 		RuleConfigItem e1 = new RuleConfigItem("POINTS_FACTOR", "2");
 		RuleConfigItem e2 = new RuleConfigItem("EARN_RATIO", "0.03");
@@ -34,10 +36,11 @@ public class EarnXPointsOnYDayTest extends BaseTestCase{
 		request.setTxnTimestamp(DateTime.now());
 		
 		RuleConfiguration ruleConfig = new RuleConfiguration(configItems);
-		PointsRule rule = new EarnXPointsOnYDay();
+		PointsRule rule = new EarnXBonusPointsOnYDay();
 		rule.init(ruleConfig);
 		assertTrue(rule.isApplicable(request));
-		assertEquals(rule.execute(request),  120);
+		BigDecimal earnRatio = new BigDecimal(e1.getValue()).multiply(new BigDecimal(e2.getValue())).multiply(request.getAmount());
+		assertEquals(rule.execute(request),  earnRatio);
 		
 	}
 	

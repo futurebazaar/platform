@@ -1,7 +1,5 @@
 package com.fb.platform.payback.service;
 
-import java.io.IOException;
-
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fb.platform.payback.to.EarnActionCodesEnum;
@@ -14,10 +12,8 @@ public interface PointsEarnService {
 
 	@Transactional
 	public String postEarnData(EarnActionCodesEnum txnActionCode, String merchantId);
-	
-	@Transactional
-	public void saveEarnData(PointsTxnClassificationCodeEnum actionCode, PointsRequest request) throws IOException;
 
+	@Transactional
 	public PointsResponseCodeEnum storeEarnPoints(PointsRequest request,
 			PointsTxnClassificationCodeEnum actionCode);
 

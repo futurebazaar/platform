@@ -4,24 +4,22 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import com.fb.platform.payback.model.PointsHeader;
 import com.fb.platform.payback.rule.PointsRule;
 import com.fb.platform.payback.rule.PointsRuleConfigConstants;
 import com.fb.platform.payback.rule.RuleConfiguration;
 import com.fb.platform.payback.to.OrderRequest;
-import com.fb.platform.payback.to.PointsRequest;
 
 public class BuyWorthXEarnYPoints implements PointsRule {
 	
 	private String offerDay;
 	private List<Long> excludedCategoryList;
-	private int bonusPoints;
+	private BigDecimal bonusPoints;
 	private BigDecimal minimumOrderValue;
 
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
 		this.offerDay = ruleConfig.getConfigItemValue(PointsRuleConfigConstants.OFFER_DAY);
-		this.bonusPoints = Integer.parseInt(ruleConfig.getConfigItemValue(PointsRuleConfigConstants.BONUS_POINTS));
+		this.bonusPoints = new BigDecimal(ruleConfig.getConfigItemValue(PointsRuleConfigConstants.BONUS_POINTS));
 		this.minimumOrderValue = new BigDecimal(ruleConfig.getConfigItemValue(PointsRuleConfigConstants.MIN_ORDER_VALUE));
 		StringTokenizer categoryTokenizer = new StringTokenizer(ruleConfig.getConfigItemValue(PointsRuleConfigConstants.EXCLUDED_CATEGORY_LIST), ",");
 		while (categoryTokenizer.hasMoreTokens()){
@@ -38,7 +36,7 @@ public class BuyWorthXEarnYPoints implements PointsRule {
 		if (minimumOrderValue.compareTo(request.getAmount()) == 1){
 			return false;
 		}
-		if (excludedCategoryList != null && !excludedCategoryList.isEmpty()){
+		if (excludedCategoryList != null && !excludedCategoryList.isEmpty() && request.isInExcludedCategory(excludedCategoryList)){
 			return false;
 		}
 		
@@ -46,8 +44,13 @@ public class BuyWorthXEarnYPoints implements PointsRule {
 	}
 	
 	@Override
-	public int execute(OrderRequest request){
+	public BigDecimal execute(OrderRequest request){
 		return this.bonusPoints;
+	}
+
+	@Override
+	public boolean isBonus() {
+		return true;
 	}
 
 }

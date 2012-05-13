@@ -82,6 +82,10 @@ public class PointsUtil {
 		}
 		
 	}
+	
+	public boolean isValidLoyaltyCard(String cardNumber){
+		return cardNumber.matches("[0-9]{16}");
+	}
 
 	
 }

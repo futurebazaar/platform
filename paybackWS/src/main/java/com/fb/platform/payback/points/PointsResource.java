@@ -31,6 +31,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.fb.commons.PlatformException;
+import com.fb.platform.payback._1_0.ActionCode;
 import com.fb.platform.payback._1_0.OrderItemRequest;
 import com.fb.platform.payback._1_0.PointsRequest;
 import com.fb.platform.payback._1_0.PointsResponse;
@@ -89,11 +90,11 @@ public class PointsResource {
 				orderRequest.getOrderItemRequest().add(orderItemRequest);
 			}
 			
-			com.fb.platform.payback.to.PointsResponse pointResponse = pointsManager.getPointsReponse(pointsHeaderRequest);
+			com.fb.platform.payback.to.PointsResponse pointsResponse = pointsManager.getPointsReponse(pointsHeaderRequest);
 			PointsResponse xmlPointsResponse = new PointsResponse();	
-			xmlPointsResponse.setActionCode(pointResponse.getActionCode());
-			xmlPointsResponse.setPointsStatus(PointsStatus.valueOf(pointResponse.getStorePointsResponseCodeEnum().name()));
-			xmlPointsResponse.setMessage(pointResponse.getStorePointsResponseCodeEnum().toString());
+			xmlPointsResponse.setActionCode(pointsResponse.getActionCode().name());
+			xmlPointsResponse.setPointsStatus(PointsStatus.valueOf(pointsResponse.getPointsResponseCodeEnum().name()));
+			xmlPointsResponse.setMessage(pointsResponse.getStatusMessage());
 			StringWriter outStringWriter = new StringWriter();
 			Marshaller marsheller = context.createMarshaller();
 			marsheller.marshal(xmlPointsResponse, outStringWriter);

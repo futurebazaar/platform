@@ -4,14 +4,12 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import com.fb.platform.payback.model.PointsHeader;
 import com.fb.platform.payback.rule.PointsRule;
 import com.fb.platform.payback.rule.PointsRuleConfigConstants;
 import com.fb.platform.payback.rule.RuleConfiguration;
 import com.fb.platform.payback.to.OrderRequest;
-import com.fb.platform.payback.to.PointsRequest;
 
-public class EarnXPointsOnYDay implements PointsRule {
+public class EarnXBonusPointsOnYDay implements PointsRule {
 	
 	private String offerDay;
 	private BigDecimal earnFactor;
@@ -34,15 +32,20 @@ public class EarnXPointsOnYDay implements PointsRule {
 		if (!request.getTxnTimestamp().dayOfWeek().getAsText().equals(this.offerDay)){
 			return false;
 		}
-		if (this.excludedCategoryList != null && !this.excludedCategoryList.isEmpty()){
+		if (this.excludedCategoryList != null && !this.excludedCategoryList.isEmpty() && request.isInExcludedCategory(excludedCategoryList)){
 			return false;
 		}
 		return true;
 	}
 
 	@Override
-	public int execute(OrderRequest request) {
-		return this.earnRatio.multiply(this.earnFactor.multiply(request.getAmount())).setScale(0, BigDecimal.ROUND_HALF_DOWN).intValue();
+	public BigDecimal execute(OrderRequest request) {
+		return this.earnRatio.multiply(this.earnFactor).multiply(request.getAmount());
+	}
+
+	@Override
+	public boolean isBonus() {
+		return false;
 	}
 
 }

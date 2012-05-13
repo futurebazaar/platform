@@ -14,8 +14,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import com.fb.commons.PlatformException;
 import com.fb.platform.payback.dao.PointsDao;
-import com.fb.platform.payback.model.OrderDetail;
 import com.fb.platform.payback.model.PointsHeader;
 
 public class PointsDaoJdbcImpl implements PointsDao{
@@ -61,14 +61,6 @@ public class PointsDaoJdbcImpl implements PointsDao{
 			"txn_classification_code = ? " +
 			"order by id desc";
 	
-	private static final String GET_ORDER_QUERY = 
-			"SELECT o.*, c.name , " +
-			"c.id, cd.type FROM " +
-			"orders_order o, accounts_client c, " +
-			"accounts_clientdomain cd  " +
-			"WHERE o.client_id = c.id AND " +
-			"o.id = ? ";
-	
 	private static final String LOAD_HEADER_DATA_QUERY = 
 			"SELECT * FROM " +
 			"payments_pointsheader WHERE " +
@@ -77,12 +69,6 @@ public class PointsDaoJdbcImpl implements PointsDao{
 			"settlement_date = ? AND " +
 			"partner_merchant_id = ? " +
 			"order by id desc";
-	
-	private static final String LOAD_PAYBACK_CONFIG_QUERY = 
-			"SELECT * FROM " +
-			"payback WHERE " +
-			"client_id = ?";
-	
 	
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
@@ -144,43 +130,13 @@ public class PointsDaoJdbcImpl implements PointsDao{
 	}
 	
 	@Override
-	public OrderDetail getOrderDetail(long orderId){
-		List<OrderDetail> orderDetail = jdbcTemplate.query(GET_ORDER_QUERY, new Object[]{orderId}, new OrderMapper());
-		if (orderDetail.size() >= 1){
-			return orderDetail.get(0);
-		}
-		return new OrderDetail();
-	}
-	
-	private class OrderMapper implements RowMapper<OrderDetail>{
-
-		@Override
-		public OrderDetail mapRow(ResultSet rs, int rowNum) throws SQLException {
-			OrderDetail orderDetail = new OrderDetail();
-			orderDetail.setId(rs.getLong("id"));
-			orderDetail.setClientDomainType(rs.getString("type"));
-			orderDetail.setClientId(rs.getLong("id"));
-			orderDetail.setClientName(rs.getString("name"));
-			orderDetail.setOrderDate(rs.getDate("timestamp").toString());
-			orderDetail.setPaymentMode(rs.getString("payment_mode"));
-			orderDetail.setReferenceOrderId(rs.getString("reference_order_id"));
-			orderDetail.setSupportState(rs.getString("support_state"));
-			orderDetail.setTimestamp(new DateTime(rs.getTimestamp("timestamp")));
-			orderDetail.setLoyaltyCard(rs.getString("payback_id"));
-			orderDetail.setAmount(rs.getBigDecimal("payable_amount"));
-			return orderDetail;
-		}
-		
-	}
-	
-	@Override
 	public PointsHeader getHeaderDetails(long orderId, String txnActionCode, String txnClassificationCode){
 		List<PointsHeader> pointsHeader = jdbcTemplate.query(LOAD_POINTS_HEADER_SQL, 
 				new Object[]{txnActionCode, orderId, txnClassificationCode}, new HeaderMapper());
-		if (pointsHeader.size() >= 1){
+		if (pointsHeader != null && pointsHeader.size() == 1){
 			return pointsHeader.get(0);
 		}
-		return null;
+		throw new PlatformException("No PointsHeader element exists/ More than one exists.");
 	}
 	
 	@Override
@@ -217,6 +173,5 @@ public class PointsDaoJdbcImpl implements PointsDao{
 			return pointsHeader;
 		}
 		
-	}	
-	
+	}
 }

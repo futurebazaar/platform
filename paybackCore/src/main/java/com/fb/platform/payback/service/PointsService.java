@@ -3,21 +3,15 @@ package com.fb.platform.payback.service;
 import java.math.BigDecimal;
 import java.util.Properties;
 
+import com.fb.platform.payback.rule.PointsRule;
 import com.fb.platform.payback.to.EarnActionCodesEnum;
-import com.fb.platform.payback.to.PointsTxnClassificationCodeEnum;
+import com.fb.platform.payback.to.PointsRequest;
+import com.fb.platform.payback.to.PointsResponseCodeEnum;
 
 public interface PointsService {
 
-	BigDecimal getBurnRatio(String day, Properties props, String clientName);
-
 	String getSequenceNumber();
 
-	BigDecimal getEarnRatio(String day, Properties props, String clientName,
-			long orderId, EarnActionCodesEnum txnActionCode);
-
-	int getTxnPoints(BigDecimal amount, String day, Properties props,
-			String clientName, String txnCode, long orderId);
-
-	int getBonusPoints(BigDecimal amount, String day, Properties props, String clientName, long orderId, String txnActionCode);
+	PointsResponseCodeEnum doOperation(PointsRequest request, PointsRule rule);
 
 }

@@ -19,6 +19,7 @@ public class BuyWorthXEarnYPointsTest extends BaseTestCase{
 	
 	@Test
 	public void testRule(){
+		
 		List<RuleConfigItem> configItems = new ArrayList<RuleConfigItem>();
 		RuleConfigItem e1 = new RuleConfigItem("MIN_ORDER_VALUE", "2000");
 		RuleConfigItem e2 = new RuleConfigItem("BONUS_POINTS", "200");
@@ -37,7 +38,7 @@ public class BuyWorthXEarnYPointsTest extends BaseTestCase{
 		PointsRule rule = new BuyWorthXEarnYPoints();
 		rule.init(ruleConfig);
 		assertTrue(rule.isApplicable(request));
-		assertEquals(rule.execute(request),  200);
+		assertEquals(rule.execute(request),  new BigDecimal(200));
 		
 	}
 	
