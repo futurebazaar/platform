@@ -19,6 +19,9 @@ import com.fb.commons.to.Money;
 import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.promotion.admin.service.PromotionAdminManager;
 import com.fb.platform.promotion.admin.service.PromotionAdminService;
+import com.fb.platform.promotion.admin.to.AssignCouponToUserRequest;
+import com.fb.platform.promotion.admin.to.AssignCouponToUserResponse;
+import com.fb.platform.promotion.admin.to.AssignCouponToUserStatusEnum;
 import com.fb.platform.promotion.admin.to.CreatePromotionEnum;
 import com.fb.platform.promotion.admin.to.CreatePromotionRequest;
 import com.fb.platform.promotion.admin.to.CreatePromotionResponse;
@@ -561,8 +564,142 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		assertEquals(SearchPromotionEnum.NO_DATA_FOUND, searchPromotionResponse.getSearchPromotionEnum());
 	}
-	
-	
+
+	@Test
+	public void assignCouponToUser() {
+		AssignCouponToUserRequest request = new AssignCouponToUserRequest();
+		request.setCouponCode("pre_issued_1");
+		request.setUserId(-4);
+		request.setSessionToken(responseUser.getSessionToken());
+
+		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
+
+		assertNotNull(response);
+		assertEquals(AssignCouponToUserStatusEnum.SUCCESS, response.getStatus());
+		assertNotNull(response.getSessionToken());
+	}
+
+	@Test
+	public void assignCouponToInvalidUser() {
+		AssignCouponToUserRequest request = new AssignCouponToUserRequest();
+		request.setCouponCode("pre_issued_1");
+		request.setUserId(-2844);
+		request.setSessionToken(responseUser.getSessionToken());
+
+		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
+
+		assertNotNull(response);
+		assertEquals(AssignCouponToUserStatusEnum.INVALID_USER_ID, response.getStatus());
+		assertNotNull(response.getSessionToken());
+	}
+
+	@Test
+	public void assignInvalidCouponCode() {
+		AssignCouponToUserRequest request = new AssignCouponToUserRequest();
+		request.setCouponCode("i_am_garbage_i_am_not_there");
+		request.setUserId(-4);
+		request.setSessionToken(responseUser.getSessionToken());
+
+		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
+
+		assertNotNull(response);
+		assertEquals(AssignCouponToUserStatusEnum.INVALID_COUPON_CODE, response.getStatus());
+		assertNotNull(response.getSessionToken());
+	}
+
+	@Test
+	public void assignGlobalCoupon() {
+		AssignCouponToUserRequest request = new AssignCouponToUserRequest();
+		request.setCouponCode("global_coupon_1");
+		request.setUserId(-4);
+		request.setSessionToken(responseUser.getSessionToken());
+
+		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
+
+		assertNotNull(response);
+		assertEquals(AssignCouponToUserStatusEnum.INVALID_COUPON_TYPE, response.getStatus());
+		assertNotNull(response.getSessionToken());
+	}
+
+	@Test
+	public void reAssign() {
+		AssignCouponToUserRequest request = new AssignCouponToUserRequest();
+		request.setCouponCode("pre_issued_1");
+		request.setUserId(-2);
+		request.setSessionToken(responseUser.getSessionToken());
+
+		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
+
+		assertNotNull(response);
+		assertEquals(AssignCouponToUserStatusEnum.COUPON_ALREADY_ASSIGNED_TO_USER, response.getStatus());
+		assertNotNull(response.getSessionToken());
+	}
+
+	@Test
+	public void assignCouponNoSession() {
+		AssignCouponToUserRequest request = new AssignCouponToUserRequest();
+		request.setCouponCode("pre_issued_1");
+		request.setUserId(-4);
+		//request.setSessionToken(responseUser.getSessionToken());
+
+		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
+
+		assertNotNull(response);
+		assertEquals(AssignCouponToUserStatusEnum.NO_SESSION, response.getStatus());
+		assertNull(response.getSessionToken());
+	}
+
+	@Test
+	public void nullAssignRequest() {
+		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(null);
+
+		assertNotNull(response);
+		assertEquals(AssignCouponToUserStatusEnum.NO_SESSION, response.getStatus());
+		assertNull(response.getSessionToken());
+	}
+
+	@Test
+	public void assignNullCouponCode() {
+		AssignCouponToUserRequest request = new AssignCouponToUserRequest();
+		//request.setCouponCode("pre_issued_1");
+		request.setUserId(-4);
+		request.setSessionToken(responseUser.getSessionToken());
+
+		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
+
+		assertNotNull(response);
+		assertEquals(AssignCouponToUserStatusEnum.INVALID_COUPON_CODE, response.getStatus());
+		assertNotNull(response.getSessionToken());
+	}
+
+	@Test
+	public void assignEmptyCouponCode() {
+		AssignCouponToUserRequest request = new AssignCouponToUserRequest();
+		request.setCouponCode("");
+		request.setUserId(-4);
+		request.setSessionToken(responseUser.getSessionToken());
+
+		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
+
+		assertNotNull(response);
+		assertEquals(AssignCouponToUserStatusEnum.INVALID_COUPON_CODE, response.getStatus());
+		assertNotNull(response.getSessionToken());
+	}
+
+	@Test
+	public void assignNoUser() {
+		AssignCouponToUserRequest request = new AssignCouponToUserRequest();
+		request.setCouponCode("pre_issued_1");
+		//request.setUserId(-4);
+		request.setSessionToken(responseUser.getSessionToken());
+
+		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
+
+		assertNotNull(response);
+		assertEquals(AssignCouponToUserStatusEnum.INVALID_USER_ID, response.getStatus());
+		assertNotNull(response.getSessionToken());
+	}
+
 	public void setAuthenticationService(AuthenticationService authenticationService) {
 		this.authenticationService = authenticationService;
 	}

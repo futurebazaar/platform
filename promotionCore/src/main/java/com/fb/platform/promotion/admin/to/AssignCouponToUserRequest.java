@@ -21,6 +21,7 @@ public class AssignCouponToUserRequest implements Serializable {
 
 	public AssignCouponToUserResponse validate() {
 		AssignCouponToUserResponse response = new AssignCouponToUserResponse();
+		response.setSessionToken(sessionToken);
 
 		if (StringUtils.isBlank(sessionToken)) {
 			response.setStatus(AssignCouponToUserStatusEnum.NO_SESSION);
