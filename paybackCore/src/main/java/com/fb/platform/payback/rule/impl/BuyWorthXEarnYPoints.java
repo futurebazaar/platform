@@ -21,9 +21,12 @@ public class BuyWorthXEarnYPoints implements PointsRule {
 		this.offerDay = ruleConfig.getConfigItemValue(PointsRuleConfigConstants.OFFER_DAY);
 		this.bonusPoints = new BigDecimal(ruleConfig.getConfigItemValue(PointsRuleConfigConstants.BONUS_POINTS));
 		this.minimumOrderValue = new BigDecimal(ruleConfig.getConfigItemValue(PointsRuleConfigConstants.MIN_ORDER_VALUE));
-		StringTokenizer categoryTokenizer = new StringTokenizer(ruleConfig.getConfigItemValue(PointsRuleConfigConstants.EXCLUDED_CATEGORY_LIST), ",");
-		while (categoryTokenizer.hasMoreTokens()){
-			this.excludedCategoryList.add(Long.parseLong(categoryTokenizer.nextToken()));
+		String commaSeparatedExcludedCategoryList = ruleConfig.getConfigItemValue(PointsRuleConfigConstants.EXCLUDED_CATEGORY_LIST);
+		if (commaSeparatedExcludedCategoryList != null){
+			StringTokenizer categoryTokenizer = new StringTokenizer(ruleConfig.getConfigItemValue(PointsRuleConfigConstants.EXCLUDED_CATEGORY_LIST), ",");
+			while (categoryTokenizer.hasMoreTokens()){
+				this.excludedCategoryList.add(Long.parseLong(categoryTokenizer.nextToken()));
+			}
 		}
 		
 	}
