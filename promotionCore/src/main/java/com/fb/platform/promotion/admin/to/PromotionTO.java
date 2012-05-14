@@ -117,6 +117,7 @@ public class PromotionTO {
 	}
 	public String isValid() {
 		List<String> invalidationList = new ArrayList<String>();
+		invalidationList.addAll(isNameValid());
 		invalidationList.addAll(isRuleValid());
 		invalidationList.addAll(isDateConfigValid());
 		invalidationList.addAll(isLimitsConfigValid());
@@ -126,6 +127,14 @@ public class PromotionTO {
 			}
 		}
 		return StringUtils.join(invalidationList.toArray(), ",");
+	}
+	
+	private List<String> isNameValid() {
+		List<String> nameInvalidationList = new ArrayList<String>();
+		if(StringUtils.isBlank(promotionName)) {
+			nameInvalidationList.add("Promotion Name cannot be blank");
+		}
+		return nameInvalidationList;
 	}
 	
 	private List<String> isLimitsConfigValid() {

@@ -169,6 +169,9 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 	private static String ORDER_BY_ASCENDING =
 			" ASC ";
 	
+	private static String ORDER_BY_DESCENDING =
+			" DESC ";
+	
 	private static String LIMIT_FILTER_SQL = 
 			" LIMIT ?,? ";
 	
@@ -414,31 +417,41 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 			searchPromotionQuery += (WHERE_CLAUSE + StringUtils.join(searchPromotionFilterList.toArray(), AND_JOINT));
 		}
 		
-		switch(orderBy) {
-		case NAME :
-			searchPromotionQuery += (ORDER_BY_CLAUSE + ORDER_BY_NAME);
-			break;
-		case VALID_FROM :
+		if(orderBy != null) {
+			switch(orderBy) {
+			case NAME :
+				searchPromotionQuery += (ORDER_BY_CLAUSE + ORDER_BY_NAME);
+				break;
+			case VALID_FROM :
+				searchPromotionQuery += (ORDER_BY_CLAUSE + ORDER_BY_VALID_FROM);
+				break;
+			case VALID_TILL :
+				searchPromotionQuery += (ORDER_BY_CLAUSE + ORDER_BY_VALID_TILL);
+				break;
+			case IS_ACTIVE :
+				searchPromotionQuery += (ORDER_BY_CLAUSE + ORDER_BY_IS_ACTIVE);
+				break;
+			default:
+				searchPromotionQuery += (ORDER_BY_CLAUSE + ORDER_BY_VALID_FROM);
+				break;
+			}
+		} else {
 			searchPromotionQuery += (ORDER_BY_CLAUSE + ORDER_BY_VALID_FROM);
-			break;
-		case VALID_TILL :
-			searchPromotionQuery += (ORDER_BY_CLAUSE + ORDER_BY_VALID_TILL);
-			break;
-		case IS_ACTIVE :
-			searchPromotionQuery += (ORDER_BY_CLAUSE + ORDER_BY_IS_ACTIVE);
-			break;
-		default:
-			searchPromotionQuery += (ORDER_BY_CLAUSE + ORDER_BY_NAME);
-			break;
 		}
 		
-		switch (order) {
-		case ASCENDING:
-			searchPromotionQuery += ORDER_BY_ASCENDING;
-			break;
-
-		default:
-			break;
+		if(order != null) {
+			switch (order) {
+			case ASCENDING:
+				searchPromotionQuery += ORDER_BY_ASCENDING;
+				break;
+			case DESCENDING:
+				searchPromotionQuery += ORDER_BY_DESCENDING;
+				break;
+			default:
+				break;
+			}
+		} else {
+			searchPromotionQuery += ORDER_BY_ASCENDING;;
 		}
 		
 		searchPromotionQuery += LIMIT_FILTER_SQL;
