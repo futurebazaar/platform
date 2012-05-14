@@ -88,4 +88,13 @@ public interface PromotionAdminService {
 	 */
 	@Transactional(propagation=Propagation.REQUIRED)
 	public List<String> createCoupons(int count, int length, String startsWith, String endsWith, int promotionId, CouponType type, CouponLimitsConfig limits);
+
+	/**
+	 * Assigns the PRE_ISSUE couponCode to user identified by the userId
+	 * @param couponCode
+	 * @param userId
+	 * @param overriddenUserLimit If greater than zero, the coupon uses limit will be overriden by this value for this user.
+	 */
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void assignCouponToUser(String couponCode, int userId, int overriddenUserLimit);
 }

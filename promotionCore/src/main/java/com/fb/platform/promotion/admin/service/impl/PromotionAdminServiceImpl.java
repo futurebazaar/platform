@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 
+import com.fb.commons.PlatformException;
 import com.fb.platform.promotion.admin.dao.CouponAdminDao;
 import com.fb.platform.promotion.admin.dao.PromotionAdminDao;
 import com.fb.platform.promotion.admin.service.PromotionAdminService;
@@ -13,9 +15,13 @@ import com.fb.platform.promotion.admin.to.RuleConfigItemTO;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderByOrder;
 import com.fb.platform.promotion.dao.RuleDao;
+import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
 import com.fb.platform.promotion.model.coupon.CouponType;
 import com.fb.platform.promotion.rule.RulesEnum;
+import com.fb.platform.promotion.service.CouponAlreadyAssignedToUserException;
+import com.fb.platform.promotion.service.CouponNotFoundException;
+import com.fb.platform.promotion.service.InvalidCouponTypeException;
 import com.fb.platform.promotion.service.PromotionService;
 import com.fb.platform.promotion.util.CouponCodeCreator;
 
@@ -186,4 +192,24 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 		this.couponCodeCreator = couponCodeCreator;
 	}
 
+	@Override
+	public void assignCouponToUser(String couponCode, int userId, int overriddenUserLimit) 
+			throws CouponNotFoundException, CouponAlreadyAssignedToUserException, InvalidCouponTypeException {
+
+		try {
+			Coupon coupon = couponAdminDao.loadCouponWithoutConfig(couponCode);
+			if (coupon == null) {
+				throw new CouponNotFoundException("Assigning invalid CouponCode to user. CouponCode : " + couponCode + ". UserId : "  + userId);
+			}
+
+			if (!(coupon.getType() == CouponType.PRE_ISSUE)) {
+				throw new InvalidCouponTypeException("Only PRE_ISSUE coupons can be assigned to a user. CouponCode : " + couponCode + ". UserId : "  + userId + ". CouponType : " + coupon.getType());
+			}
+
+			couponAdminDao.assignToUser(userId, couponCode, overriddenUserLimit);
+
+		} catch (DataAccessException e) {
+			throw new PlatformException("Exception while assigning Coupon to user. CouponCode : " + couponCode + ". UserId : "  + userId, e);
+		}
+	}
 }

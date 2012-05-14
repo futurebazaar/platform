@@ -10,8 +10,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -126,7 +128,7 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			" SELECT coupon_code" +
 			"	FROM coupon " +
 			"	WHERE promotion_id = ? AND coupon_type = ? ";
-	
+
 	@Override
 	public Coupon load(String couponCode, int userId) {
 		Coupon coupon = null;
@@ -262,7 +264,7 @@ public class CouponDaoJdbcImpl implements CouponDao {
 		Collection<Coupon> couponsList = jdbcTemplate.query(GET_COUPON_FOR_PROMOTION_AND_TYPE_QUERY, new Object[]{promotionId, couponType}, new CouponPromotionMapper());
 		return couponsList;
 	}
-	
+
 	@Override
 	public UserCouponUsesEntry load(int couponId, int userId, int orderId){
 		if(log.isDebugEnabled()) {
@@ -280,7 +282,7 @@ public class CouponDaoJdbcImpl implements CouponDao {
 		
 		return userCouponUsesEntry;
 	}
-	
+
 	private BigDecimal getDiscountValue(int couponId, int userId, int orderId) throws CouponNotCommitedException {
 		if (log.isDebugEnabled()) {
 			log.debug("Get from the user coupon uses table record for user : " + userId + " , applied coupon id : " + couponId + " , on order id : " + orderId);

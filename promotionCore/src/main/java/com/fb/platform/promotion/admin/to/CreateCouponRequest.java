@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.fb.commons.to.Money;
 import com.fb.platform.promotion.model.coupon.CouponType;
 
 /**
