@@ -329,6 +329,9 @@ public class PromotionAdminResource {
 					RuleConfigItemTO ruleConfigItemTO = new RuleConfigItemTO();
 					
 					ruleConfigItemTO.setRuleConfigName(apiRuleConfigItemTO.getRuleConfigName());
+					
+					ruleConfigItemTO.setRuleConfigDescription(apiRuleConfigItemTO.getRuleConfigDescription());
+					
 					ruleConfigItemTO.setRuleConfigValue(apiRuleConfigItemTO.getRuleConfigValue());
 					
 					promotionCompleteView.getRuleConfigItemTO().add(ruleConfigItemTO);

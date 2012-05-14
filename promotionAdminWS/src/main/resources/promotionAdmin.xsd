@@ -130,6 +130,7 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
       <xs:sequence>
         <xs:element ref="promotionAdmin:ruleConfigName"/>
         <xs:element ref="promotionAdmin:ruleConfigValue"/>
+        <xs:element ref="promotionAdmin:ruleConfigDescription"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>

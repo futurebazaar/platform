@@ -476,7 +476,7 @@ public class RestClient {
 		ViewPromotionRequest viewPromotionRequest = new ViewPromotionRequest();
 		
 		viewPromotionRequest.setSessionToken(sessionToken);
-		viewPromotionRequest.setPromotionId(100);
+		viewPromotionRequest.setPromotionId(-4100);
 		
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
 		

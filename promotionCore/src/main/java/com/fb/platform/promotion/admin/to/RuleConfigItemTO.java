@@ -16,6 +16,7 @@ public class RuleConfigItemTO {
 	
 	private String ruleConfigName;
 	private String ruleConfigValue;
+	private String ruleConfigDescription;
 	
 	public String getRuleConfigValue() {
 		return ruleConfigValue;
@@ -28,8 +29,16 @@ public class RuleConfigItemTO {
 	}
 	public void setRuleConfigName(String ruleConfigName) {
 		this.ruleConfigName = ruleConfigName;
+		setRuleConfigDescription();
 	}
-	
+	public String getRuleConfigDescription() {
+		return ruleConfigDescription;
+	}
+	public void setRuleConfigDescription() {
+		if(RuleConfigDescriptorEnum.valueOf(ruleConfigName) != null) {
+			this.ruleConfigDescription = RuleConfigDescriptorEnum.valueOf(ruleConfigName).getDescription();
+		}
+	}
 	public String isValid() {
 		List<String> ruleNameInvalidationList = new ArrayList<String>();
 		if(StringUtils.isEmpty(ruleConfigName)) {
