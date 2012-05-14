@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
 import com.fb.platform.promotion.model.coupon.CouponType;
 import com.fb.platform.promotion.admin.to.PromotionTO;
+import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
+import com.fb.platform.promotion.admin.to.SearchPromotionOrderByOrder;
 import com.fb.platform.promotion.rule.RulesEnum;
 
 /**
@@ -44,7 +46,34 @@ public interface PromotionAdminService {
 	 * @return
 	 */
 	@Transactional(propagation=Propagation.REQUIRED)
-	public List<PromotionTO> searchPromotion(String promotionName, DateTime validFrom, DateTime validTill, int startRecord, int batchSize);
+	public List<PromotionTO> searchPromotion(String promotionName, DateTime validFrom, DateTime validTill, int isActive, SearchPromotionOrderBy orderBy,
+			SearchPromotionOrderByOrder order, int startRecord, int batchSize);
+	
+	/**
+	 * This function fetches a count of all promotions that meet the specified search criteria.
+	 * @param promotionName
+	 * @param validFrom
+	 * @param validTill
+	 * @param isActive
+	 * @return
+	 */
+	public int getPromotionCount(String promotionName, DateTime validFrom, DateTime validTill, int isActive);
+	
+	/**
+	 * Fetching a complete view of promotion. Including limits and rule config.
+	 * @param promotionId
+	 * @return
+	 */
+	@Transactional(propagation=Propagation.REQUIRED)
+	public PromotionTO viewPromotion(int promotionId);
+	
+	/**
+	 * This function updates an existing promotion.
+	 * @param promotion
+	 * @return
+	 */
+	@Transactional(propagation=Propagation.REQUIRED)
+	public boolean updatePromotion(PromotionTO promotionTO);
 
 	/**
 	 * Create new coupons and stores them in the database. 

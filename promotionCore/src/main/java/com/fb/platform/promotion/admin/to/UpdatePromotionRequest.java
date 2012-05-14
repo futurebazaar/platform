@@ -10,7 +10,7 @@ import org.apache.commons.lang.StringUtils;
  * @author nehaga
  *
  */
-public class CreatePromotionRequest {
+public class UpdatePromotionRequest {
 	
 	private String sessionToken = null;
 	private PromotionTO promotionTO = null;
@@ -31,6 +31,7 @@ public class CreatePromotionRequest {
 	public String isValid() {
 		List<String> requestInvalidationList = new ArrayList<String>();
 		requestInvalidationList.addAll(isSessionTokenValid());
+		requestInvalidationList.addAll(isPromotionDetailsValid());
 		requestInvalidationList.add(promotionTO.isValid());
 		return StringUtils.join(requestInvalidationList.toArray(), ",");
 	}
@@ -43,4 +44,11 @@ public class CreatePromotionRequest {
 		return sessionInvalidationList;
 	}
 	
+	private List<String> isPromotionDetailsValid() {
+		List<String> sessionInvalidationList = new ArrayList<String>();
+		if(promotionTO.getPromotionId() == 0) {
+			sessionInvalidationList.add("Incorrect Promotion Id");
+		}
+		return sessionInvalidationList;
+	}
 }

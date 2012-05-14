@@ -9,6 +9,10 @@ import org.joda.time.DateTime;
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.rule.RulesEnum;
 
+/**
+ * @author nehaga
+ *
+ */
 public class PromotionTO {
 	
 	private int promotionId;
@@ -23,6 +27,7 @@ public class PromotionTO {
 	private int maxUsesPerUser = 0;
 	private Money maxAmountPerUser = null;
 	private String ruleName = null;
+	private int couponCount = 0;
 	private List<RuleConfigItemTO> configItems = new ArrayList<RuleConfigItemTO>();
 	
 	public String getPromotionName() {
@@ -104,11 +109,17 @@ public class PromotionTO {
 	public void setRuleId(int ruleId) {
 		this.ruleId = ruleId;
 	}
-	
+	public int getCouponCount() {
+		return couponCount;
+	}
+	public void setCouponCount(int couponCount) {
+		this.couponCount = couponCount;
+	}
 	public String isValid() {
 		List<String> invalidationList = new ArrayList<String>();
-		invalidationList.addAll(isDateConfigValid());
+		invalidationList.addAll(isNameValid());
 		invalidationList.addAll(isRuleValid());
+		invalidationList.addAll(isDateConfigValid());
 		invalidationList.addAll(isLimitsConfigValid());
 		for(RuleConfigItemTO ruleConfigItem : configItems) {
 			if(!StringUtils.isEmpty(ruleConfigItem.isValid())) {
@@ -118,15 +129,12 @@ public class PromotionTO {
 		return StringUtils.join(invalidationList.toArray(), ",");
 	}
 	
-	private List<String> isRuleValid() {
-		List<String> ruleInvalidationList = new ArrayList<String>();
-		if(StringUtils.isEmpty(ruleName)) {
-			ruleInvalidationList.add("Rule name empty");
+	private List<String> isNameValid() {
+		List<String> nameInvalidationList = new ArrayList<String>();
+		if(StringUtils.isBlank(promotionName)) {
+			nameInvalidationList.add("Promotion Name cannot be blank");
 		}
-		if(!RulesEnum.isRuleValid(ruleName)) {
-			ruleInvalidationList.add("Invalid rule name " + ruleName);
-		}
-		return ruleInvalidationList;
+		return nameInvalidationList;
 	}
 	
 	private List<String> isLimitsConfigValid() {
@@ -146,5 +154,16 @@ public class PromotionTO {
 			dateInvalidationList.add("Valid Till date before Valid From");
 		}
 		return dateInvalidationList;
+	}
+	
+	private List<String> isRuleValid() {
+		List<String> ruleInvalidationList = new ArrayList<String>();
+		if(StringUtils.isEmpty(ruleName)) {
+			ruleInvalidationList.add("Rule name empty");
+		}
+		if(!RulesEnum.isRuleValid(ruleName)) {
+			ruleInvalidationList.add("Invalid rule name " + ruleName);
+		}
+		return ruleInvalidationList;
 	}
 }

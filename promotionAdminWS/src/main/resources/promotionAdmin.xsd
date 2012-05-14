@@ -95,6 +95,7 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
   <xs:element name="promotionTO">
     <xs:complexType>
       <xs:sequence>
+      	<xs:element ref="promotionAdmin:promotionId"/>
         <xs:element ref="promotionAdmin:promotionName"/>
         <xs:element ref="promotionAdmin:description"/>
         <xs:element ref="promotionAdmin:isActive"/>
@@ -105,6 +106,8 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
         <xs:element ref="promotionAdmin:maxUsesPerUser"/>
         <xs:element ref="promotionAdmin:maxAmountPerUser"/>
         <xs:element ref="promotionAdmin:ruleName"/>
+        <xs:element ref="promotionAdmin:ruleId"/>
+        <xs:element ref="promotionAdmin:couponCount"/>
         <xs:element ref="promotionAdmin:ruleConfigItemTO" maxOccurs="unbounded"/>
       </xs:sequence>
     </xs:complexType>
@@ -120,6 +123,7 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
   <xs:element name="maxUsesPerUser" type="xs:int"/>
   <xs:element name="maxAmountPerUser" type="xs:decimal"/>
   <xs:element name="ruleName" type="xs:string"/>
+  <xs:element name="couponCount" type="xs:int"/>
   
   <xs:element name="ruleConfigItemTO">
     <xs:complexType>
@@ -164,11 +168,32 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
         <xs:element ref="promotionAdmin:promotionName"/>
         <xs:element ref="promotionAdmin:validFrom"/>
         <xs:element ref="promotionAdmin:validTill"/>
+        <xs:element ref="promotionAdmin:isActive"/>
+        <xs:element ref="promotionAdmin:searchPromotionOrderBy"/>
+        <xs:element ref="promotionAdmin:searchPromotionOrderByOrder"/>
         <xs:element ref="promotionAdmin:startRecord"/>
         <xs:element ref="promotionAdmin:batchSize"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  
+  <xs:element name="searchPromotionOrderBy" type="promotionAdmin:searchPromotionOrderBy"/>
+  <xs:simpleType name="searchPromotionOrderBy">
+  	<xs:restriction base="xs:string">
+    	<xs:enumeration value="NAME"/>
+      	<xs:enumeration value="VALID_FROM"/>
+      	<xs:enumeration value="VALID_TILL"/>
+      	<xs:enumeration value="IS_ACTIVE"/>
+	</xs:restriction>
+  </xs:simpleType>
+  
+  <xs:element name="searchPromotionOrderByOrder" type="promotionAdmin:searchPromotionOrderByOrder"/>
+  <xs:simpleType name="searchPromotionOrderByOrder">
+  	<xs:restriction base="xs:string">
+    	<xs:enumeration value="ASCENDING"/>
+      	<xs:enumeration value="DESCENDING"/>
+	</xs:restriction>
+  </xs:simpleType>
   
   <xs:element name="startRecord" type="xs:int"/>
   <xs:element name="batchSize" type="xs:int"/>
@@ -180,9 +205,12 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
         <xs:element ref="promotionAdmin:promotionViewTO" maxOccurs="unbounded"/>
         <xs:element ref="promotionAdmin:errorCause"/>
         <xs:element ref="promotionAdmin:searchPromotionEnum"/>
+        <xs:element ref="promotionAdmin:totalCount"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  
+  <xs:element name="totalCount" type="xs:int"/>
   
   <xs:element name="promotionViewTO">
     <xs:complexType>
@@ -242,6 +270,70 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
       <xs:enumeration value="INVALID_COUPON_TYPE"/>
       <xs:enumeration value="INVALID_COUPON_CODE"/>
     </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="viewPromotionRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotionAdmin:sessionToken"/>
+        <xs:element ref="promotionAdmin:promotionId"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="viewPromotionResponse">
+    <xs:complexType>
+      <xs:sequence>
+      	<xs:element ref="promotionAdmin:sessionToken"/>
+        <xs:element ref="promotionAdmin:promotionTO"/>
+        <xs:element ref="promotionAdmin:errorCause"/>
+        <xs:element ref="promotionAdmin:viewPromotionEnum"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="ruleId" type="xs:int"/>
+  
+  <xs:element name="viewPromotionEnum" type="promotionAdmin:viewPromotionEnum"/>
+  <xs:simpleType name="viewPromotionEnum">
+  	<xs:restriction base="xs:string">
+    	<xs:enumeration value="SUCCESS"/>
+      	<xs:enumeration value="NO_SESSION"/>
+      	<xs:enumeration value="NO_DATA_FOUND"/>
+      	<xs:enumeration value="INTERNAL_ERROR"/>
+      	<xs:enumeration value="INSUFFICIENT_DATA"/>
+	</xs:restriction>
+  </xs:simpleType>
+  
+  <xs:element name="updatePromotionRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotionAdmin:promotionTO"/>
+        <xs:element ref="promotionAdmin:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="updatePromotionResponse">
+    <xs:complexType>
+      <xs:sequence>
+      	<xs:element ref="promotionAdmin:sessionToken"/>
+        <xs:element ref="promotionAdmin:errorCause"/>
+        <xs:element ref="promotionAdmin:updatePromotionEnum"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="updatePromotionEnum" type="promotionAdmin:updatePromotionEnum"/>
+  <xs:simpleType name="updatePromotionEnum">
+  	<xs:restriction base="xs:string">
+    	<xs:enumeration value="SUCCESS"/>
+      	<xs:enumeration value="NO_SESSION"/>
+      	<xs:enumeration value="RULE_CONFIG_MISSING"/>
+      	<xs:enumeration value="INTERNAL_ERROR"/>
+      	<xs:enumeration value="INSUFFICIENT_DATA"/>
+      	<xs:enumeration value="NO_DATA_FOUND"/>
+	</xs:restriction>
   </xs:simpleType>
 
 </xs:schema>

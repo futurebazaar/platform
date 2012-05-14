@@ -48,8 +48,14 @@ import com.fb.platform.promotion.admin._1_0.FetchRuleRequest;
 import com.fb.platform.promotion.admin._1_0.FetchRuleResponse;
 import com.fb.platform.promotion.admin._1_0.PromotionTO;
 import com.fb.platform.promotion.admin._1_0.RuleConfigItemTO;
+import com.fb.platform.promotion.admin._1_0.SearchPromotionOrderBy;
+import com.fb.platform.promotion.admin._1_0.SearchPromotionOrderByOrder;
 import com.fb.platform.promotion.admin._1_0.SearchPromotionRequest;
 import com.fb.platform.promotion.admin._1_0.SearchPromotionResponse;
+import com.fb.platform.promotion.admin._1_0.UpdatePromotionRequest;
+import com.fb.platform.promotion.admin._1_0.UpdatePromotionResponse;
+import com.fb.platform.promotion.admin._1_0.ViewPromotionRequest;
+import com.fb.platform.promotion.admin._1_0.ViewPromotionResponse;
 /**
  * @author vinayak
  *
@@ -72,6 +78,8 @@ public class RestClient {
 		getAllPromotionRuleList(sessionToken);
 		createPromotion(sessionToken);
 		searchPromotion(sessionToken);
+		viewPromotion(sessionToken);
+		updatePromotion(sessionToken);
 		logout(sessionToken);
 	}
 
@@ -420,6 +428,9 @@ public class RestClient {
 		nameSearchPromotionRequest.setBatchSize(3);
 		nameSearchPromotionRequest.setStartRecord(0);
 		nameSearchPromotionRequest.setPromotionName("promotion");
+		nameSearchPromotionRequest.setSearchPromotionOrderBy(SearchPromotionOrderBy.VALID_FROM);
+		nameSearchPromotionRequest.setIsActive(true);
+		nameSearchPromotionRequest.setSearchPromotionOrderByOrder(SearchPromotionOrderByOrder.ASCENDING);
 		
 		GregorianCalendar gregCal = new GregorianCalendar();
 		gregCal.clear();
@@ -455,6 +466,134 @@ public class RestClient {
 			System.out.println(searchPromotionResponse.getErrorCause());
 		}
 		
+	}
+	
+	private static void viewPromotion(String sessionToken) throws Exception {
+		HttpClient httpClient = new HttpClient();
+
+		//PostMethod logoutMethod = new PostMethod("http://10.0.102.12:8082/userWS/auth/logout");
+		PostMethod viewPromotionMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/view");
+		ViewPromotionRequest viewPromotionRequest = new ViewPromotionRequest();
+		
+		viewPromotionRequest.setSessionToken(sessionToken);
+		viewPromotionRequest.setPromotionId(100);
+		
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
+		
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(viewPromotionRequest, sw);
+		
+		System.out.println("\n\nviewPromotionRequest : \n" + sw.toString());
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		viewPromotionMethod.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(viewPromotionMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the view promotion : " + statusCode);
+			return;
+		}
+		String viewPromotionResponseStr = viewPromotionMethod.getResponseBodyAsString();
+		System.out.println("Got the view promotion Response : \n\n" + viewPromotionResponseStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		ViewPromotionResponse viewPromotionResponse = (ViewPromotionResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(viewPromotionResponseStr)));
+		System.out.println(viewPromotionResponse.getViewPromotionEnum().toString());
+		if(!StringUtils.isEmpty(viewPromotionResponse.getErrorCause())) {
+			System.out.println(viewPromotionResponse.getErrorCause());
+		}
+	}
+	
+	private static void updatePromotion(String sessionToken) throws Exception {
+		HttpClient httpClient = new HttpClient();
+
+		//PostMethod logoutMethod = new PostMethod("http://10.0.102.12:8082/userWS/auth/logout");
+		PostMethod updatePromotionMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/update");
+		UpdatePromotionRequest updatePromotionRequest = new UpdatePromotionRequest();
+		PromotionTO updatePromotion = new PromotionTO();
+		
+		updatePromotion.setPromotionName("New Promotion NEHA");
+		
+		GregorianCalendar gregCal = new GregorianCalendar();
+		gregCal.set(2012, 01, 22);
+		updatePromotion.setValidFrom(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+		gregCal.set(2013, 01, 22);
+		updatePromotion.setValidTill(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+		updatePromotion.setDescription("Test new promotion NEHA");
+		updatePromotion.setIsActive(false);
+		updatePromotion.setMaxUses(22);
+		updatePromotion.setMaxUsesPerUser(2);
+		updatePromotion.setMaxAmount(new BigDecimal(2222.00));
+		updatePromotion.setMaxAmountPerUser(new BigDecimal(2222.00));
+		updatePromotion.setRuleName("FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF");
+		updatePromotion.setPromotionId(108);
+		
+		RuleConfigItemTO configItem = new RuleConfigItemTO();
+		configItem.setRuleConfigName("CLIENT_LIST");
+		configItem.setRuleConfigValue("1,2,3,4");
+		updatePromotion.getRuleConfigItemTO().add(configItem);
+		
+		configItem = new RuleConfigItemTO();
+		configItem.setRuleConfigName("MIN_ORDER_VALUE");
+		configItem.setRuleConfigValue("2222");
+		updatePromotion.getRuleConfigItemTO().add(configItem);
+		
+		configItem = new RuleConfigItemTO();
+		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
+		configItem.setRuleConfigValue("222");
+		updatePromotion.getRuleConfigItemTO().add(configItem);
+		
+		configItem = new RuleConfigItemTO();
+		configItem.setRuleConfigName("CATEGORY_LIST");
+		configItem.setRuleConfigValue("1");
+		updatePromotion.getRuleConfigItemTO().add(configItem);
+		
+		configItem = new RuleConfigItemTO();
+		configItem.setRuleConfigName("BRAND_LIST");
+		configItem.setRuleConfigValue("3,1");
+		updatePromotion.getRuleConfigItemTO().add(configItem);
+		
+		configItem = new RuleConfigItemTO();
+		configItem.setRuleConfigName("CATEGORY_INCLUDE_LIST");
+		configItem.setRuleConfigValue("1");
+		updatePromotion.getRuleConfigItemTO().add(configItem);
+		
+		configItem = new RuleConfigItemTO();
+		configItem.setRuleConfigName("CATEGORY_EXCLUDE_LIST");
+		configItem.setRuleConfigValue("10");
+		updatePromotion.getRuleConfigItemTO().add(configItem);
+		
+		configItem = new RuleConfigItemTO();
+		configItem.setRuleConfigName("DISCOUNT_PERCENTAGE");
+		configItem.setRuleConfigValue("2");
+		updatePromotion.getRuleConfigItemTO().add(configItem);
+		
+		updatePromotionRequest.setPromotionTO(updatePromotion);
+		updatePromotionRequest.setSessionToken(sessionToken);
+		
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(updatePromotionRequest, sw);
+
+		System.out.println("\n\n updatePromotion : \n" + sw.toString());
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		updatePromotionMethod.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(updatePromotionMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the updatePromotion method : " + statusCode);
+			System.exit(1);
+		}
+		String updatePromotionResponseStr = updatePromotionMethod.getResponseBodyAsString();
+		System.out.println("Got the updatePromotion Response : \n\n" + updatePromotionResponseStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		UpdatePromotionResponse updatePromotionResponse = (UpdatePromotionResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(updatePromotionResponseStr)));
+		System.out.println(updatePromotionResponse.getUpdatePromotionEnum().toString());
+		if(!StringUtils.isEmpty(updatePromotionResponse.getErrorCause())) {
+			System.out.println(updatePromotionResponse.getErrorCause());
+		}
 	}
 
 	private static void logout(String sessionToken) throws Exception {

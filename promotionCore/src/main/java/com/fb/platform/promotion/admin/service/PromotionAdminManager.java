@@ -1,5 +1,7 @@
 package com.fb.platform.promotion.admin.service;
 
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fb.platform.promotion.admin.to.AssignCouponToUserRequest;
 import com.fb.platform.promotion.admin.to.AssignCouponToUserResponse;
@@ -11,6 +13,10 @@ import com.fb.platform.promotion.admin.to.FetchRuleRequest;
 import com.fb.platform.promotion.admin.to.FetchRuleResponse;
 import com.fb.platform.promotion.admin.to.SearchPromotionRequest;
 import com.fb.platform.promotion.admin.to.SearchPromotionResponse;
+import com.fb.platform.promotion.admin.to.UpdatePromotionRequest;
+import com.fb.platform.promotion.admin.to.UpdatePromotionResponse;
+import com.fb.platform.promotion.admin.to.ViewPromotionRequest;
+import com.fb.platform.promotion.admin.to.ViewPromotionResponse;
 
 /**
  * @author nehaga
@@ -38,6 +44,21 @@ public interface PromotionAdminManager {
 	 * @return
 	 */
 	public SearchPromotionResponse searchPromotion(SearchPromotionRequest searchPromotionRequest);
+	
+	/**
+	 * Fetching a complete view of promotion. Including limits and rule config.
+	 * @param viewPromotionRequest
+	 * @return
+	 */
+	public ViewPromotionResponse viewPromotion(ViewPromotionRequest viewPromotionRequest);
+	
+	/**
+	 * This function updates an existing promotion.
+	 * @param promotion
+	 * @return
+	 */
+	@Transactional(propagation=Propagation.REQUIRED)
+	public UpdatePromotionResponse updatePromotion(UpdatePromotionRequest updatePromotionRequest);
 
 	/**
 	 * Creates the coupons as per the requirements specified in the request.

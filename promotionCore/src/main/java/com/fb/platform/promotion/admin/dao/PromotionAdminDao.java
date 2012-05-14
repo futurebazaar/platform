@@ -9,6 +9,8 @@ import org.joda.time.DateTime;
 
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.admin.to.PromotionTO;
+import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
+import com.fb.platform.promotion.admin.to.SearchPromotionOrderByOrder;
 
 /**
  * @author vinayak
@@ -17,15 +19,32 @@ import com.fb.platform.promotion.admin.to.PromotionTO;
 public interface PromotionAdminDao {
 
 
-	int createPromotion(String name, String description, int ruleId, DateTime validFrom, 
+	public int createPromotion(String name, String description, int ruleId, DateTime validFrom, 
 			DateTime validTill, int active);
 	
-	void createPromotionLimitConfig(int promotionId, int maxUses, Money maxAmount,
+	public int createPromotionLimitConfig(int promotionId, int maxUses, Money maxAmount,
 			int maxUsesPerUser, Money maxAmountPerUser);
 	
-	void createPromotionRuleConfig(String name, String value, int promotionId, int ruleId);
+	public int createPromotionRuleConfig(String name, String value, int promotionId, int ruleId);
 	
-	public List<PromotionTO> searchPromotion(String promotionName, DateTime validFrom, DateTime validTill, int startRecord, int batchSize);
+	public List<PromotionTO> searchPromotion(String promotionName, DateTime validFrom, DateTime validTill, int isActive, SearchPromotionOrderBy orderBy,
+			SearchPromotionOrderByOrder order, int startRecord, int batchSize);
+	
+	public int getPromotionCount(String promotionName, DateTime validFrom, DateTime validTill, int isActive);
+	
+	public PromotionTO viewPromotion(int promotionId);
+	
+	public int updatePromotion(int promotionId, String name, String description, DateTime validFrom, 
+			DateTime validTill, int active, int ruleId);
+	
+	public int updatePromotionLimitConfig(int promotionId, int maxUses, Money maxAmount,
+			int maxUsesPerUser, Money maxAmountPerUser);
+	
+	public int updatePromotionRuleConfig(String name, String value, int promotionId);
+	
+	public int deletePromotionRuleConfig(int promotionId);
+	
+	public int getCouponCount(int promotionId);
 	
 	boolean createCoupon(String couponCode,int promotionId, int maxUsesPerCoupon,String appliedOn,String DiscountType);
 	
