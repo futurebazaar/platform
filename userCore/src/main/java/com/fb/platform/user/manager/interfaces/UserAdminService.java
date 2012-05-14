@@ -32,7 +32,7 @@ public interface UserAdminService {
 	 * @throws PlatformException When an unrecoverable error happens.
 	 * @return User
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS)
+	@Transactional(propagation = Propagation.REQUIRED)
 	User getUser(String key) throws UserNotFoundException,PlatformException;
 	
 	/**
@@ -43,7 +43,7 @@ public interface UserAdminService {
 	 * @throws PlatformException When an unrecoverable error happens.
 	 * @return User
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS)
+	@Transactional(propagation = Propagation.REQUIRED)
 	User addUser(User user) throws UserAlreadyExistsException,InvalidUserNameException,PlatformException;
 	
 	/**
@@ -53,7 +53,7 @@ public interface UserAdminService {
 	 * @throws PlatformException When an unrecoverable error happens.
 	 * @return UpdateUserStatusEnum
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS)
+	@Transactional(propagation = Propagation.REQUIRED)
 	UpdateUserStatusEnum updateUser(User user) throws UserNotFoundException,PlatformException;
 	
 	/**
@@ -64,7 +64,7 @@ public interface UserAdminService {
 	 * @throws PlatformException When an unrecoverable error happens.
 	 * @return List of User Email 
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS)
+	@Transactional(propagation = Propagation.REQUIRED)
 	List<UserEmail> getUserEmail(int userId) throws UserNotFoundException,EmailNotFoundException,PlatformException;
 	
 	/**
@@ -75,7 +75,7 @@ public interface UserAdminService {
 	 * @throws PlatformException When an unrecoverable error happens.
 	 * @return AddUserEmailStatusEnum
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS)
+	@Transactional(propagation = Propagation.REQUIRED)
 	AddUserEmailStatusEnum addUserEmail(int userId,UserEmail userEmail) throws UserNotFoundException,PlatformException;
 	
 	/**
@@ -85,7 +85,7 @@ public interface UserAdminService {
 	 * @throws PlatformException When an unrecoverable error happens.
 	 * @return VerifyUserEmailStatusEnum
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS)
+	@Transactional(propagation = Propagation.REQUIRED)
 	VerifyUserEmailStatusEnum verifyUserEmail(int userId,String userEmail) throws PlatformException;
 	
 	/**
@@ -96,7 +96,7 @@ public interface UserAdminService {
 	 * @throws PlatformException When an unrecoverable error happens.
 	 * @return DeleteUserEmailStatusEnum
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS)
+	@Transactional(propagation = Propagation.REQUIRED)
 	DeleteUserEmailStatusEnum deleteUserEmail(int userId,String emailId) throws PlatformException;
 	
 	/**
@@ -107,7 +107,7 @@ public interface UserAdminService {
 	 * @throws PlatformException When an unrecoverable error happens.
 	 * @return List of User Phone 
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS)
+	@Transactional(propagation = Propagation.REQUIRED)
 	List<UserPhone> getUserPhone(int userId) throws UserNotFoundException,PhoneNotFoundException,PlatformException;
 	
 	/**
@@ -118,7 +118,7 @@ public interface UserAdminService {
 	 * @throws PlatformException When an unrecoverable error happens.
 	 * @return AddUserPhoneStatusEnum
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS)
+	@Transactional(propagation = Propagation.REQUIRED)
 	AddUserPhoneStatusEnum addUserPhone(int userId,UserPhone userPhone) throws UserNotFoundException,PlatformException;
 	
 	/**
@@ -129,7 +129,7 @@ public interface UserAdminService {
 	 * @throws PlatformException When an unrecoverable error happens.
 	 * @return VerifyUserPhoneStatusEnum
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS)
+	@Transactional(propagation = Propagation.REQUIRED)
 	VerifyUserPhoneStatusEnum verifyUserPhone(int userId,String userPhone) throws PlatformException;
 	
 	/**
@@ -140,7 +140,7 @@ public interface UserAdminService {
 	 * @throws PlatformException When an unrecoverable error happens.
 	 * @return DeleteUserPhoneStatusEnum
 	 */
-	@Transactional(propagation = Propagation.SUPPORTS)
+	@Transactional(propagation = Propagation.REQUIRED)
 	DeleteUserPhoneStatusEnum deleteUserPhone(int userId,String phone) throws PlatformException;
 
 }

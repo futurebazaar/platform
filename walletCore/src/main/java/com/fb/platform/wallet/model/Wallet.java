@@ -11,10 +11,10 @@ import com.fb.platform.wallet.to.RefundWalletStatus;
 
 public class Wallet implements Serializable {
 	
-	private int id;
-	private CashSubWallet cashSubWallet;
-	private GiftSubWallet giftSubWallet;
-	private RefundSubWallet refundSubWallet;
+	private long id;
+	private Money cashSubWallet;
+	private Money giftSubWallet;
+	private Money refundSubWallet;
 	private Money totalAmount;
 	private DateTime createdOn;
 	private DateTime modifiedOn;
@@ -25,11 +25,11 @@ public class Wallet implements Serializable {
 		if (amount.isPlus()){
 			totalAmount = totalAmount.plus(amount);
 			if(subWalletType.equals(SubWalletType.CASH_SUB_WALLET)){
-				cashSubWallet.amount = cashSubWallet.amount.plus(amount);		
+				cashSubWallet = cashSubWallet.plus(amount);		
 			}else if (subWalletType.equals(SubWalletType.GIFT_SUB_WALLET)){
-				giftSubWallet.amount = giftSubWallet.amount.plus(amount);				
+				giftSubWallet = giftSubWallet.plus(amount);				
 			}else if (subWalletType.equals(SubWalletType.REFUND_SUB_WALLET)){
-				refundSubWallet.amount = refundSubWallet.amount.plus(amount);				
+				refundSubWallet = refundSubWallet.plus(amount);				
 			}else{
 				return CreditWalletStatus.INVALID_SUBWALLET;
 			}
@@ -52,49 +52,49 @@ public class Wallet implements Serializable {
 	/**
 	 * @return the id
 	 */
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	/**
 	 * @return the cashSubWallet
 	 */
-	public CashSubWallet getCashSubWallet() {
+	public Money getCashSubWallet() {
 		return cashSubWallet;
 	}
 	/**
-	 * @param cashSubWallet the cashSubWallet to set
+	 * @param money the cashSubWallet to set
 	 */
-	public void setCashSubWallet(CashSubWallet cashSubWallet) {
-		this.cashSubWallet = cashSubWallet;
+	public void setCashSubWallet(Money money) {
+		this.cashSubWallet = money;
 	}
 	/**
 	 * @return the giftSubWallet
 	 */
-	public GiftSubWallet getGiftSubWallet() {
+	public Money getGiftSubWallet() {
 		return giftSubWallet;
 	}
 	/**
 	 * @param giftSubWallet the giftSubWallet to set
 	 */
-	public void setGiftSubWallet(GiftSubWallet giftSubWallet) {
+	public void setGiftSubWallet(Money giftSubWallet) {
 		this.giftSubWallet = giftSubWallet;
 	}
 	/**
 	 * @return the refundSubWallet
 	 */
-	public RefundSubWallet getRefundSubWallet() {
+	public Money getRefundSubWallet() {
 		return refundSubWallet;
 	}
 	/**
 	 * @param refundSubWallet the refundSubWallet to set
 	 */
-	public void setRefundSubWallet(RefundSubWallet refundSubWallet) {
+	public void setRefundSubWallet(Money refundSubWallet) {
 		this.refundSubWallet = refundSubWallet;
 	}
 	/**
