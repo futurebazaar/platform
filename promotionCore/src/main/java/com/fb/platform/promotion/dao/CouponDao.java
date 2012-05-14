@@ -34,5 +34,4 @@ public interface CouponDao {
 	public boolean isCouponApplicable(int couponId, int userId, int orderId);
 	
 	public UserCouponUsesEntry load(int couponId, int userId, int orderId);
-
 }

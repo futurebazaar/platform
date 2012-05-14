@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assignCouponToUserResponse xmlns="http://www.fb.com/platform/promotion/admin/1.0.0">
+	<sessionToken>xxxx1111yyyy-ee-02==</sessionToken>
+	<assignCouponToUserStatusEnum>SUCCESS</assignCouponToUserStatusEnum>
+</assignCouponToUserResponse>

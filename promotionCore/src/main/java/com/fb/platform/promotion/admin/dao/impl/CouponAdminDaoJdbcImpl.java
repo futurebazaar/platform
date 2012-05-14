@@ -4,17 +4,22 @@
 package com.fb.platform.promotion.admin.dao.impl;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
 import com.fb.commons.PlatformException;
 import com.fb.platform.promotion.admin.dao.CouponAdminDao;
+import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
 import com.fb.platform.promotion.model.coupon.CouponType;
 import com.fb.platform.promotion.service.CouponAlreadyAssignedToUserException;
@@ -33,6 +38,14 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 			"SELECT " +
 			"	id " +
 			"FROM coupon WHERE coupon_code = ?";
+
+	private static final String LOAD_COUPON_DATA_ONLY_QUERY = "" +
+			"SELECT " +
+			"	coupon_code," +
+			"	coupon_type " +
+			"FROM coupon " +
+			"WHERE coupon_code = ?";
+
 
 	private static final String ASSGIN_COUPON_TO_USER = 
 			"INSERT INTO platform_coupon_user (" +
@@ -109,6 +122,28 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 	public void createCouponsInBatch(List<String> couponCodes, int promotionId, CouponType couponType, CouponLimitsConfig limitsConfig) {
 		
 		
+	}
+
+	@Override
+	public Coupon loadCouponWithoutConfig(String couponCode) {
+		try {
+			Coupon coupon = jdbcTemplate.queryForObject(LOAD_COUPON_DATA_ONLY_QUERY, new SimpleCouponMapper(), couponCode);
+			return coupon;
+		} catch (IncorrectResultSizeDataAccessException e) {
+			//this coupon code does not exist in the DB
+			return null;
+		}
+	}
+
+	private static class SimpleCouponMapper implements RowMapper<Coupon> {
+
+		@Override
+		public Coupon mapRow(ResultSet rs, int rowNum) throws SQLException {
+			Coupon coupon = new Coupon();
+			coupon.setCode(rs.getString("coupon_code"));
+			coupon.setType(CouponType.valueOf(rs.getString("coupon_type")));
+			return coupon;
+		}
 	}
 
 	private static class CreateCouponBatchPSSetter implements BatchPreparedStatementSetter {

@@ -1,6 +1,8 @@
 package com.fb.platform.promotion.admin.service;
 
 
+import com.fb.platform.promotion.admin.to.AssignCouponToUserRequest;
+import com.fb.platform.promotion.admin.to.AssignCouponToUserResponse;
 import com.fb.platform.promotion.admin.to.CreateCouponRequest;
 import com.fb.platform.promotion.admin.to.CreateCouponResponse;
 import com.fb.platform.promotion.admin.to.CreatePromotionRequest;
@@ -43,4 +45,11 @@ public interface PromotionAdminManager {
 	 * @return 
 	 */
 	public CreateCouponResponse createCoupons(CreateCouponRequest createCouponRequest);
+
+	/**
+	 * 
+	 * @param request
+	 * @return
+	 */
+	public AssignCouponToUserResponse assignCouponToUser(AssignCouponToUserRequest request);
 }

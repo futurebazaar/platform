@@ -5,6 +5,7 @@ package com.fb.platform.promotion.admin.dao;
 
 import java.util.List;
 
+import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
 import com.fb.platform.promotion.model.coupon.CouponType;
 
@@ -25,4 +26,6 @@ public interface CouponAdminDao {
 	public List<String> findExistingCodes(List<String> newCodes);
 
 	public void createCouponsInBatch(List<String> couponCodes, int promotionId, CouponType couponType, CouponLimitsConfig limitsConfig);
+
+	public Coupon loadCouponWithoutConfig(String couponCode);
 }

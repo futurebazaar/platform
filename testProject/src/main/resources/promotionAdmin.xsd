@@ -208,5 +208,40 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
       	<xs:enumeration value="INSUFFICIENT_DATA"/>
 	</xs:restriction>
   </xs:simpleType>
-  
+
+  <xs:element name="assignCouponToUserRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotionAdmin:sessionToken"/>
+        <xs:element ref="promotionAdmin:couponCode"/>
+        <xs:element ref="promotionAdmin:userId"/>
+        <xs:element ref="promotionAdmin:overrideCouponUserLimit"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="couponCode" type="xs:string"/>
+  <xs:element name="userId" type="xs:int"/>
+  <xs:element name="overrideCouponUserLimit" type="xs:int"/>
+
+  <xs:element name="assignCouponToUserResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotionAdmin:sessionToken"/>
+        <xs:element ref="promotionAdmin:assignCouponToUserStatusEnum"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="assignCouponToUserStatusEnum" type="promotionAdmin:assignCouponToUserStatusEnum"/>
+  <xs:simpleType name="assignCouponToUserStatusEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+      <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INVALID_USER_ID"/>
+      <xs:enumeration value="COUPON_ALREADY_ASSIGNED_TO_USER"/>
+      <xs:enumeration value="INVALID_COUPON_TYPE"/>
+      <xs:enumeration value="INVALID_COUPON_CODE"/>
+    </xs:restriction>
+  </xs:simpleType>
+
 </xs:schema>

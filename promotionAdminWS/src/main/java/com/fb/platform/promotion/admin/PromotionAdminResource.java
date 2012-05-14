@@ -31,6 +31,9 @@ import org.springframework.stereotype.Component;
 
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
+import com.fb.platform.promotion.admin._1_0.AssignCouponToUserRequest;
+import com.fb.platform.promotion.admin._1_0.AssignCouponToUserResponse;
+import com.fb.platform.promotion.admin._1_0.AssignCouponToUserStatusEnum;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionEnum;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionRequest;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionResponse;
@@ -275,6 +278,7 @@ public class PromotionAdminResource {
 		sb.append("Future Platform Promotion Admin Websevice.\n");
 		sb.append("XSD : http://hostname:port/promotionAdminWS/promotionAdmin/xsd\n");
 		sb.append("To get all promotion rules post to : http://hostname:port/promotionAdminWS/promotionAdmin/getAllPromotionRules\n");
+		sb.append("To Assign a PRE_ISSUE coupon to user post to : http://hostname:port/promotionAdminWS/promotionAdmin/assgin/user\n");
 		return sb.toString();
 	}
 	
@@ -301,5 +305,44 @@ public class PromotionAdminResource {
 			logger.error("promotion.xsd loading error : " + exception.getMessage() );
 		}
 		return sb.toString();
+	}
+
+	@POST
+	@Path("/assign/user")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String assignCouponToUser(String assignCouponToUserXml) {
+		logger.info("assignCouponToUserXml : " + assignCouponToUserXml);
+		try {
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+
+			AssignCouponToUserRequest xmlRequest = (AssignCouponToUserRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(assignCouponToUserXml)));
+
+			com.fb.platform.promotion.admin.to.AssignCouponToUserRequest apiRequest = new com.fb.platform.promotion.admin.to.AssignCouponToUserRequest();
+			apiRequest.setCouponCode(xmlRequest.getCouponCode());
+			apiRequest.setOverrideCouponUserLimit(xmlRequest.getOverrideCouponUserLimit());
+			apiRequest.setSessionToken(xmlRequest.getSessionToken());
+			apiRequest.setUserId(xmlRequest.getUserId());
+
+			AssignCouponToUserResponse xmlResponse = new AssignCouponToUserResponse();
+			com.fb.platform.promotion.admin.to.AssignCouponToUserResponse apiResponse = promotionAdminManager.assignCouponToUser(apiRequest);
+
+			xmlResponse.setSessionToken(apiResponse.getSessionToken());
+			xmlResponse.setAssignCouponToUserStatusEnum(AssignCouponToUserStatusEnum.fromValue(apiResponse.getStatus().toString()));
+
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marsheller = context.createMarshaller();
+			marsheller.marshal(xmlResponse, outStringWriter);
+
+			String xmlResponseStr = outStringWriter.toString();
+			if (logger.isDebugEnabled()) {
+				logger.debug("assignCouponToUser response :\n" + xmlResponseStr);
+			}
+			return xmlResponseStr;
+
+		} catch (JAXBException e) {
+			logger.error("Error in the searchPromotion call.", e);
+			return "error"; //TODO return proper error response
+		}
 	}
 }
