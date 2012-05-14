@@ -42,6 +42,8 @@ import com.fb.platform.promotion._1_0.OrderRequest;
 import com.fb.platform.promotion._1_0.Product;
 import com.fb.platform.promotion._1_0.ReleaseCouponRequest;
 import com.fb.platform.promotion._1_0.ReleaseCouponResponse;
+import com.fb.platform.promotion.admin._1_0.AssignCouponToUserRequest;
+import com.fb.platform.promotion.admin._1_0.AssignCouponToUserResponse;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionRequest;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionResponse;
 import com.fb.platform.promotion.admin._1_0.FetchRuleRequest;
@@ -80,6 +82,7 @@ public class RestClient {
 		searchPromotion(sessionToken);
 		viewPromotion(sessionToken);
 		updatePromotion(sessionToken);
+		assignCouponToUser(sessionToken);
 		logout(sessionToken);
 	}
 
@@ -684,5 +687,39 @@ public class RestClient {
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		AddUserResponse addUserResponse = (AddUserResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(addUserResponseStr)));
 		return addUserResponse.getSessionToken();	
+	}
+
+	private static void assignCouponToUser(String sessionToken) throws Exception {
+		HttpClient httpClient = new HttpClient();
+
+		PostMethod postMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/assign/user");
+
+		AssignCouponToUserRequest request = new AssignCouponToUserRequest();
+		request.setSessionToken(sessionToken);
+		request.setCouponCode("pre_issued_1");
+		request.setUserId(-4);
+
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
+
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(request, sw);
+
+		System.out.println("\n\n assignCouponToUserRequest : \n" + sw.toString());
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		postMethod.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(postMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the assignCouponToUser method : " + statusCode);
+			System.exit(1);
+		}
+		String responseStr = postMethod.getResponseBodyAsString();
+		System.out.println("Got the assignCouponToUser Response : \n\n" + responseStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		AssignCouponToUserResponse response = (AssignCouponToUserResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(responseStr)));
+		System.out.println(response.getAssignCouponToUserStatusEnum());
+
 	}
 }
