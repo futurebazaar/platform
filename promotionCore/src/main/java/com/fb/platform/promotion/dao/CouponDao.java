@@ -19,6 +19,8 @@ public interface CouponDao {
 
 	public Coupon load(String couponCode, int userId);
 
+	public Coupon load(String couponCode);
+	
 	public GlobalCouponUses loadGlobalUses(int couponId);
 
 	public UserCouponUses loadUserUses(int couponId, int userId);

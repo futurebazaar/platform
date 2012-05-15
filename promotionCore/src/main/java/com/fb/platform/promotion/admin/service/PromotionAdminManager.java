@@ -11,10 +11,14 @@ import com.fb.platform.promotion.admin.to.CreatePromotionRequest;
 import com.fb.platform.promotion.admin.to.CreatePromotionResponse;
 import com.fb.platform.promotion.admin.to.FetchRuleRequest;
 import com.fb.platform.promotion.admin.to.FetchRuleResponse;
+import com.fb.platform.promotion.admin.to.SearchCouponRequest;
+import com.fb.platform.promotion.admin.to.SearchCouponResponse;
 import com.fb.platform.promotion.admin.to.SearchPromotionRequest;
 import com.fb.platform.promotion.admin.to.SearchPromotionResponse;
 import com.fb.platform.promotion.admin.to.UpdatePromotionRequest;
 import com.fb.platform.promotion.admin.to.UpdatePromotionResponse;
+import com.fb.platform.promotion.admin.to.ViewCouponRequest;
+import com.fb.platform.promotion.admin.to.ViewCouponResponse;
 import com.fb.platform.promotion.admin.to.ViewPromotionRequest;
 import com.fb.platform.promotion.admin.to.ViewPromotionResponse;
 
@@ -73,4 +77,17 @@ public interface PromotionAdminManager {
 	 * @return
 	 */
 	public AssignCouponToUserResponse assignCouponToUser(AssignCouponToUserRequest request);
+	/**
+	 * Searches coupons on the basis of the input given in the request.
+	 * @param searchCouponRequest
+	 * @return
+	 */
+	public SearchCouponResponse searchCoupons(SearchCouponRequest searchCouponRequest);
+	/**
+	 * The API returns the coupon detail for the given request.
+	 * @param viewCouponRequest
+	 * @return
+	 */
+	public ViewCouponResponse viewCoupon(ViewCouponRequest viewCouponRequest);
+	
 }

@@ -1,7 +1,13 @@
 package com.fb.platform.promotion.admin.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -10,10 +16,14 @@ import com.fb.commons.PlatformException;
 import com.fb.platform.promotion.admin.dao.CouponAdminDao;
 import com.fb.platform.promotion.admin.dao.PromotionAdminDao;
 import com.fb.platform.promotion.admin.service.PromotionAdminService;
+import com.fb.platform.promotion.admin.to.CouponBasicDetails;
+import com.fb.platform.promotion.admin.to.CouponTO;
 import com.fb.platform.promotion.admin.to.PromotionTO;
 import com.fb.platform.promotion.admin.to.RuleConfigItemTO;
+import com.fb.platform.promotion.admin.to.SearchCouponOrderBy;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderByOrder;
+import com.fb.platform.promotion.admin.to.SortOrder;
 import com.fb.platform.promotion.dao.RuleDao;
 import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
@@ -24,6 +34,8 @@ import com.fb.platform.promotion.service.CouponNotFoundException;
 import com.fb.platform.promotion.service.InvalidCouponTypeException;
 import com.fb.platform.promotion.service.PromotionService;
 import com.fb.platform.promotion.util.CouponCodeCreator;
+import com.fb.platform.user.dao.interfaces.UserAdminDao;
+import com.fb.platform.user.domain.UserBo;
 
 /**
  * 
@@ -32,6 +44,8 @@ import com.fb.platform.promotion.util.CouponCodeCreator;
  */
 public class PromotionAdminServiceImpl implements PromotionAdminService {
 
+	private Log log = LogFactory.getLog(PromotionAdminServiceImpl.class);
+	
 	@Autowired
 	private RuleDao ruleDao = null;
 
@@ -40,6 +54,9 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 
 	@Autowired
 	private PromotionAdminDao promotionAdminDao = null;
+	
+	@Autowired
+	public UserAdminDao userAdminDao = null;
 
 	@Autowired
 	private PromotionService promotionService = null;
@@ -176,10 +193,66 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 		return couponCodeCreator.getGeneratedCoupons();
 	}
 
-	private void createCouponsInBatch(List<String> batchOfCoupons, int promotionId, CouponType type, CouponLimitsConfig limits) {
-		
+	private void createCouponsInBatch(List<String> batchOfCoupons, int promotionId, CouponType couponType, CouponLimitsConfig limits) {
+		couponAdminDao.createCouponsInBatch(batchOfCoupons, promotionId, couponType, limits);
 	}
 
+	@Override
+	public Set<CouponBasicDetails> searchCoupons(String couponCode, String userName, SearchCouponOrderBy orderBy,
+			SortOrder sortOrder, int startRecord, int batchSize){
+		// 1) if userId is present then use it to get all
+		//		- couponId from the coupon_user table (PRE_ISSUE)
+		//		- couponId from the user_coupon_uses table (all kind coupons)
+		// combine these two sets of couponIds.
+		// 2) Use the above couponId set to get the coupons detail from coupon table
+		//		and use the couponCode input if present in request
+		int userId = -28; // a random negative value
+		boolean isUserValid = false;
+		if(StringUtils.isNotBlank(userName)){
+			try {
+				UserBo userBO = userAdminDao.load(userName);
+				if(userBO!=null){
+					userId = userBO.getUserid();
+					isUserValid = true;
+				}
+			} catch (Exception e) {
+				log.error("Error while getting userId for userName = "+userName, e);
+			}
+		}
+		Set<Integer> allCouponIdsForUser = new HashSet<Integer>(0);
+		if(isUserValid){
+			allCouponIdsForUser = couponAdminDao.loadAllCouponForUser(userId);
+		}
+		
+		List<CouponBasicDetails> allUserCoupons = new ArrayList<CouponBasicDetails>(0);
+		try {
+			allUserCoupons = couponAdminDao.searchCoupons(couponCode, allCouponIdsForUser, orderBy, sortOrder, startRecord, batchSize);
+		} catch (Exception e) {
+			log.error("Error while searching coupon details for userId = "+userId + " couponCode = "+ couponCode, e);
+			throw new PlatformException("Error while searching coupon details for userId = "+userId + " couponCode = "+ couponCode, e);
+		}
+		
+		return new HashSet<CouponBasicDetails>(allUserCoupons);
+	}
+	
+	public CouponTO viewCoupons(String couponCode){
+		log.info("Viewing coupon using coupon code = "+ couponCode);
+		CouponTO couponTO = null;
+		try {
+			couponTO = couponAdminDao.load(couponCode);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		return couponTO;
+	}
+	
+	public CouponTO viewCoupons(int couponId){
+		log.info("Viewing coupon using couponId = "+ couponId);
+		CouponTO couponTO = couponAdminDao.load(couponId);
+		return couponTO;
+	}
+	
 	public void setCouponAdminDao(CouponAdminDao couponAdminDao) {
 		this.couponAdminDao = couponAdminDao;
 	}
@@ -211,5 +284,9 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 		} catch (DataAccessException e) {
 			throw new PlatformException("Exception while assigning Coupon to user. CouponCode : " + couponCode + ". UserId : "  + userId, e);
 		}
+	}
+
+	public void setUserAdminDao(UserAdminDao userAdminDao) {
+		this.userAdminDao = userAdminDao;
 	}
 }

@@ -18,8 +18,8 @@ import com.fb.platform.promotion.admin.dao.CouponAdminDao;
  */
 public class CouponCodeCreator {
 
-	//excludes 0, 1, I and O.
-	private static final char [] chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789".toCharArray();
+	//excludes 0, 1, I, L and O.
+	private static final char [] chars = "ABCDEFGHJKMNPQRSTUVWXYZ23456789".toCharArray();
 
 	@Autowired
 	private CouponAdminDao couponAdminDao = null;
@@ -81,11 +81,11 @@ public class CouponCodeCreator {
 		Random random = new Random();
 
 		int effectiveLength = length;
-		if (!StringUtils.isBlank(startsWith)) {
+		if (StringUtils.isNotBlank(startsWith)) {
 			effectiveLength = effectiveLength - startsWith.length();
 		}
 
-		if (!StringUtils.isBlank(endsWith)) {
+		if (StringUtils.isNotBlank(endsWith)) {
 			effectiveLength = effectiveLength - endsWith.length();
 		}
 
@@ -104,7 +104,7 @@ public class CouponCodeCreator {
 	private String createSingleCoupon(int length, Random random, String startsWith, String endsWith) {
 		StringBuilder sb = new StringBuilder();
 
-		if (!StringUtils.isBlank(startsWith)) {
+		if (StringUtils.isNotBlank(startsWith)) {
 			sb.append(startsWith);
 		}
 
@@ -113,7 +113,7 @@ public class CouponCodeCreator {
 		    sb.append(c);
 		}
 
-		if (!StringUtils.isBlank(endsWith)) {
+		if (StringUtils.isNotBlank(endsWith)) {
 			sb.append(endsWith);
 		}
 
