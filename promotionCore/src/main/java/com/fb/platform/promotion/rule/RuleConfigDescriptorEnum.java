@@ -6,7 +6,6 @@ package com.fb.platform.promotion.rule;
  */
 public enum RuleConfigDescriptorEnum {
 	CLIENT_LIST("Comma separated list of supported client ids.", "String"),
-	//CATEGORY_LIST("Comma separated list of supported categories id.", "String"),
 	BRAND_LIST("Comma separated list of brands", "String"),
 	MIN_ORDER_VALUE("Minimum value of an order on which we apply this promotion.", "decimal"),
 	FIXED_DISCOUNT_RS_OFF("Fixed amount to be given off on any order.", "decimal"),

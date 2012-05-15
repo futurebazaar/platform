@@ -69,7 +69,6 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
   <xs:simpleType name="ruleConfigDescriptorEnum">
   	<xs:restriction base="xs:string">
     	<xs:enumeration value="CLIENT_LIST"/>
-      	<xs:enumeration value="CATEGORY_LIST"/>
       	<xs:enumeration value="BRAND_LIST"/>
       	<xs:enumeration value="MIN_ORDER_VALUE"/>
       	<xs:enumeration value="FIXED_DISCOUNT_RS_OFF"/>
