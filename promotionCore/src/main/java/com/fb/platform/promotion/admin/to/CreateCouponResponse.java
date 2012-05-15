@@ -15,6 +15,7 @@ public class CreateCouponResponse implements Serializable {
 	private int numberOfCouponsCreated = 0;
 	private String coupons = null;
 	private String sessionToken = null;
+	private String commaSeparatedCouponCodes;
 
 	public String getSessionToken() {
 		return sessionToken;
@@ -39,6 +40,12 @@ public class CreateCouponResponse implements Serializable {
 	}
 	public void setCoupons(String coupons) {
 		this.coupons = coupons;
+	}
+	public String getCommaSeparatedCouponCodes() {
+		return commaSeparatedCouponCodes;
+	}
+	public void setCommaSeparatedCouponCodes(String commaSeparatedCouponCodes) {
+		this.commaSeparatedCouponCodes = commaSeparatedCouponCodes;
 	}
 
 }

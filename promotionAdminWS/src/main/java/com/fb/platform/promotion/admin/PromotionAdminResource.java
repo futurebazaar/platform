@@ -21,6 +21,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
@@ -33,6 +34,13 @@ import com.fb.commons.to.Money;
 import com.fb.platform.promotion.admin._1_0.AssignCouponToUserRequest;
 import com.fb.platform.promotion.admin._1_0.AssignCouponToUserResponse;
 import com.fb.platform.promotion.admin._1_0.AssignCouponToUserStatusEnum;
+import com.fb.platform.promotion.admin._1_0.CodeDetails;
+import com.fb.platform.promotion.admin._1_0.CouponBasicDetails;
+import com.fb.platform.promotion.admin._1_0.CouponTO;
+import com.fb.platform.promotion.admin._1_0.CouponType;
+import com.fb.platform.promotion.admin._1_0.CreateCouponRequest;
+import com.fb.platform.promotion.admin._1_0.CreateCouponResponse;
+import com.fb.platform.promotion.admin._1_0.CreateCouponStatus;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionEnum;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionRequest;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionResponse;
@@ -47,18 +55,26 @@ import com.fb.platform.promotion.admin._1_0.RuleConfigDescriptorEnum;
 import com.fb.platform.promotion.admin._1_0.RuleConfigDescriptorItem;
 import com.fb.platform.promotion.admin._1_0.RuleConfigItemTO;
 import com.fb.platform.promotion.admin._1_0.RulesEnum;
+import com.fb.platform.promotion.admin._1_0.SearchCouponRequest;
+import com.fb.platform.promotion.admin._1_0.SearchCouponResponse;
+import com.fb.platform.promotion.admin._1_0.SearchCouponStatus;
 import com.fb.platform.promotion.admin._1_0.SearchPromotionEnum;
 import com.fb.platform.promotion.admin._1_0.SearchPromotionRequest;
 import com.fb.platform.promotion.admin._1_0.SearchPromotionResponse;
 import com.fb.platform.promotion.admin._1_0.UpdatePromotionEnum;
 import com.fb.platform.promotion.admin._1_0.UpdatePromotionRequest;
 import com.fb.platform.promotion.admin._1_0.UpdatePromotionResponse;
+import com.fb.platform.promotion.admin._1_0.ViewCouponRequest;
+import com.fb.platform.promotion.admin._1_0.ViewCouponResponse;
+import com.fb.platform.promotion.admin._1_0.ViewCouponStatus;
 import com.fb.platform.promotion.admin._1_0.ViewPromotionEnum;
 import com.fb.platform.promotion.admin._1_0.ViewPromotionRequest;
 import com.fb.platform.promotion.admin._1_0.ViewPromotionResponse;
 import com.fb.platform.promotion.admin.service.PromotionAdminManager;
+import com.fb.platform.promotion.admin.to.SearchCouponOrderBy;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderByOrder;
+import com.fb.platform.promotion.admin.to.SortOrder;
 
 /**
  * @author nehaga
@@ -516,4 +532,203 @@ public class PromotionAdminResource {
 			return "error"; //TODO return proper error response
 		}
 	}
+	
+	@POST
+	@Path("/viewCoupon")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String viewCoupon(String viewCouponXML) {
+		logger.info("viewCouponXML : " + viewCouponXML);
+		try {
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			GregorianCalendar gregCal = new GregorianCalendar();
+			
+			ViewCouponRequest viewCouponRequest = (ViewCouponRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(viewCouponXML)));
+			com.fb.platform.promotion.admin.to.ViewCouponRequest apiViewCouponRequest = new com.fb.platform.promotion.admin.to.ViewCouponRequest();
+			
+			apiViewCouponRequest.setSessionToken(viewCouponRequest.getSessionToken());
+			apiViewCouponRequest.setCouponCode(viewCouponRequest.getCouponCode());
+			apiViewCouponRequest.setCouponId(viewCouponRequest.getCouponId());
+			
+			ViewCouponResponse viewCouponResponse = new ViewCouponResponse();
+			com.fb.platform.promotion.admin.to.ViewCouponResponse apiViewCouponResponse = promotionAdminManager.viewCoupon(apiViewCouponRequest);
+			
+			viewCouponResponse.setSessionToken(apiViewCouponResponse.getSessionToken());
+			viewCouponResponse.setErrorCause(apiViewCouponResponse.getErrorCause());
+			viewCouponResponse.setViewCouponStatus(ViewCouponStatus.valueOf(apiViewCouponResponse.getStatus().toString()));
+			
+			CouponTO couponCompleteView = new CouponTO();
+			com.fb.platform.promotion.admin.to.CouponTO apiCouponCompleteView = apiViewCouponResponse.getCouponTO();
+			
+			if(apiCouponCompleteView != null) {
+				
+				couponCompleteView.setCouponCode(apiCouponCompleteView.getCouponCode());
+				couponCompleteView.setCouponId(apiCouponCompleteView.getCouponId());
+				couponCompleteView.setPromotionId(apiCouponCompleteView.getPromotionId());
+				couponCompleteView.setCouponType(CouponType.valueOf(apiCouponCompleteView.getCouponType().toString()));
+				couponCompleteView.setMaxUsesPerUser(apiCouponCompleteView.getMaxUsesPerUser());
+				couponCompleteView.setMaxUses(apiCouponCompleteView.getMaxUses());
+				couponCompleteView.setMaxAmount(apiCouponCompleteView.getMaxAmount().getAmount());
+				couponCompleteView.setMaxAmountPerUser(apiCouponCompleteView.getMaxAmountPerUser().getAmount());
+				
+				gregCal.set(apiCouponCompleteView.getCreatedOn().getYear(), apiCouponCompleteView.getCreatedOn().getMonthOfYear()-1, apiCouponCompleteView.getCreatedOn().getDayOfMonth(),0,0,0);
+				couponCompleteView.setCreatedOn(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+				
+				gregCal.set(apiCouponCompleteView.getLastModifiedOn().getYear(), apiCouponCompleteView.getLastModifiedOn().getMonthOfYear()-1, apiCouponCompleteView.getLastModifiedOn().getDayOfMonth(),0,0,0);
+				couponCompleteView.setLastModifiedOn(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+				
+			} else {
+				couponCompleteView = null;
+			}
+
+			viewCouponResponse.setCouponTO(couponCompleteView);
+			
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marshaller = context.createMarshaller();
+			marshaller.marshal(viewCouponResponse, outStringWriter);
+
+			String xmlResponse = outStringWriter.toString();
+			logger.info("viewCouponXML response :\n" + xmlResponse);
+			return xmlResponse;
+			
+		} catch (JAXBException e) {
+			logger.error("Error in the viewCoupon call.", e);
+			return "viewCoupon error"; //TODO return proper error response
+		} catch (DatatypeConfigurationException e) {
+			logger.error("Error in the viewCoupon call invalid date in database.", e);
+			return "viewCoupon error"; //TODO return proper error response
+		}
+	}
+	
+	@POST
+	@Path("/searchCoupon")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String searchCoupon(String searchCouponXML) {
+		logger.info("searchCouponXML : " + searchCouponXML);
+		try {
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			GregorianCalendar gregCal = new GregorianCalendar();
+			
+			SearchCouponRequest searchCouponRequest = (SearchCouponRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(searchCouponXML)));
+			com.fb.platform.promotion.admin.to.SearchCouponRequest apiSearchCouponRequest = new com.fb.platform.promotion.admin.to.SearchCouponRequest();
+			
+			apiSearchCouponRequest.setBatchSize(searchCouponRequest.getBatchSize());
+			apiSearchCouponRequest.setSessionToken(searchCouponRequest.getSessionToken());
+			apiSearchCouponRequest.setStartRecord(searchCouponRequest.getStartRecord());
+			
+			String inputCouponCode = StringUtils.isBlank(searchCouponRequest.getCouponCode()) ? null : searchCouponRequest.getCouponCode().trim();
+			apiSearchCouponRequest.setCouponCode(inputCouponCode);
+			
+			String inputUserName = StringUtils.isBlank(searchCouponRequest.getUserName()) ? null : searchCouponRequest.getUserName().trim();
+			apiSearchCouponRequest.setUserName(inputUserName);
+			
+			apiSearchCouponRequest.setOrderBy(SearchCouponOrderBy.valueOf(searchCouponRequest.getSearchCouponOrderBy().toString()));
+			apiSearchCouponRequest.setSortOrder(SortOrder.valueOf(searchCouponRequest.getSortOrder().toString()));
+			
+			SearchCouponResponse searchCouponResponse	= new SearchCouponResponse();
+			com.fb.platform.promotion.admin.to.SearchCouponResponse apiSearchPromotionResponse = promotionAdminManager.searchCoupons(apiSearchCouponRequest);
+			
+			searchCouponResponse.setErrorCause(apiSearchPromotionResponse.getErrorCause());
+			searchCouponResponse.setSessionToken(apiSearchPromotionResponse.getSessionToken());
+			searchCouponResponse.setSearchCouponStatus(SearchCouponStatus.valueOf(apiSearchPromotionResponse.getStatus().toString()));
+			//searchCouponResponse.setTotalCount(apiSearchPromotionResponse.getTotalCount());
+			
+			if(searchCouponResponse.getSearchCouponStatus().equals(SearchCouponStatus.SUCCESS)) {
+				for(com.fb.platform.promotion.admin.to.CouponBasicDetails apiCouponBasicDetails : apiSearchPromotionResponse.getCouponBasicDetailsList()) {
+					CouponBasicDetails couponBasicDetails = new CouponBasicDetails();
+					couponBasicDetails.setCouponCode(apiCouponBasicDetails.getCouponCode());
+					couponBasicDetails.setCouponId(apiCouponBasicDetails.getCouponId());
+					couponBasicDetails.setCouponType(CouponType.valueOf(apiCouponBasicDetails.getCouponType().toString()));
+					
+					searchCouponResponse.getCouponBasicDetails().add(couponBasicDetails);
+				}
+			}
+			
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marshaller = context.createMarshaller();
+			marshaller.marshal(searchCouponResponse, outStringWriter);
+
+			String xmlResponse = outStringWriter.toString();
+			logger.info("searchCouponXML response :\n" + xmlResponse);
+			return xmlResponse;
+			
+		} catch (JAXBException e) {
+			logger.error("Error in the searchCoupon call.", e);
+			return "searchCoupon error"; //TODO return proper error response
+		} 
+	}
+	
+	@POST
+	@Path("/createCoupon")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String createCoupon(String createCouponXML) {
+		logger.info("createCouponXML : " + createCouponXML);
+		try {
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			
+			CreateCouponRequest createCouponRequest = (CreateCouponRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(createCouponXML)));
+			com.fb.platform.promotion.admin.to.CreateCouponRequest apiCreateCouponRequest = new com.fb.platform.promotion.admin.to.CreateCouponRequest();
+			
+			apiCreateCouponRequest.setSessionToken(createCouponRequest.getSessionToken());
+			apiCreateCouponRequest.setCount(createCouponRequest.getNumberOfCoupon());
+			
+			//get the couponTO data
+			CouponTO couponTO = createCouponRequest.getCouponTO();
+			if(couponTO!=null){
+				apiCreateCouponRequest.setMaxUses(couponTO.getMaxUses());
+				apiCreateCouponRequest.setMaxUsesPerUser(couponTO.getMaxUsesPerUser());
+				apiCreateCouponRequest.setType(com.fb.platform.promotion.model.coupon.CouponType.valueOf(couponTO.getCouponType().toString()));
+				apiCreateCouponRequest.setPromotionId(couponTO.getPromotionId());
+				
+				if(couponTO.getMaxAmount() != null) {
+					apiCreateCouponRequest.setMaxAmount(couponTO.getMaxAmount());
+				} else {
+					apiCreateCouponRequest.setMaxAmount(null);
+				}
+				if(couponTO.getMaxAmountPerUser() != null) {
+					apiCreateCouponRequest.setMaxAmountPerUser(couponTO.getMaxAmountPerUser());
+				} else {
+					apiCreateCouponRequest.setMaxAmountPerUser(null);
+				}
+			}
+			
+			//set the coupon code details
+			CodeDetails codeDetails = createCouponRequest.getCodeDetails();
+			
+			if(codeDetails!=null){
+				String startsWith = codeDetails.getStartsWith()==null ? StringUtils.EMPTY : codeDetails.getStartsWith().trim();
+				String endsWith = codeDetails.getEndsWith()==null ? StringUtils.EMPTY : codeDetails.getEndsWith().trim();
+				
+				apiCreateCouponRequest.setStartsWith(startsWith);
+				apiCreateCouponRequest.setEndsWith(endsWith);
+				apiCreateCouponRequest.setLength(codeDetails.getCodeLength());
+				
+				// need to set the alphabetCase and coupon code alphabetCode type (currently not taken from user
+			}
+			
+			CreateCouponResponse createCouponResponse	= new CreateCouponResponse();	
+			com.fb.platform.promotion.admin.to.CreateCouponResponse apiCreateCouponResponse = promotionAdminManager.createCoupons(apiCreateCouponRequest);
+			
+			createCouponResponse.setSessionToken(apiCreateCouponResponse.getSessionToken());
+			createCouponResponse.setCreateCouponStatus(CreateCouponStatus.fromValue(apiCreateCouponResponse.getStatus().toString()));
+			createCouponResponse.setNumberOfCouponsCreated(apiCreateCouponResponse.getNumberOfCouponsCreated());
+			createCouponResponse.setCommaSeparatedCouponCodes(apiCreateCouponResponse.getCommaSeparatedCouponCodes());
+			
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marshaller = context.createMarshaller();
+			marshaller.marshal(createCouponResponse, outStringWriter);
+
+			String xmlResponse = outStringWriter.toString();
+			logger.info("createCouponXML response :\n" + xmlResponse);
+			return xmlResponse;
+			
+		} catch (JAXBException e) {
+			logger.error("Error in the createCoupon call.", e);
+			return "createCoupon error"; //TODO return proper error response
+		}
+		
+	}
+
 }
