@@ -12,12 +12,10 @@ import com.fb.platform.promotion.rule.PromotionRule;
 import com.fb.platform.promotion.rule.RuleConfigDescriptorItem;
 import com.fb.platform.promotion.rule.RuleConfiguration;
 import com.fb.platform.promotion.rule.RulesEnum;
-import com.fb.platform.promotion.rule.impl.BuyWorthXGetYPercentOffOnZCategoryRuleImpl;
+import com.fb.platform.promotion.rule.impl.BuyWorthXGetYPercentOffRuleImpl;
+import com.fb.platform.promotion.rule.impl.BuyWorthXGetYRsOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyXBrandGetYRsOffOnZProductRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyXGetYFreeRuleImpl;
-import com.fb.platform.promotion.rule.impl.BuyWorthXGetYRsOffRuleImpl;
-import com.fb.platform.promotion.rule.impl.BuyWorthXGetYPercentOffRuleImpl;
-import com.fb.platform.promotion.rule.impl.BuyWorthXGetYRsOffOnZCategoryRuleImpl;
 import com.fb.platform.promotion.rule.impl.FirstPurchaseBuyWorthXGetYRsOffRuleImpl;
 
 /**
@@ -51,18 +49,22 @@ public class PromotionRuleFactory {
 			rule = new BuyWorthXGetYPercentOffRuleImpl();
 			break;
 			
-		case BUY_WORTH_X_GET_Y_RS_OFF_ON_Z_CATEGORY:
+		/*case BUY_WORTH_X_GET_Y_RS_OFF_ON_Z_CATEGORY:
 			rule = new BuyWorthXGetYRsOffOnZCategoryRuleImpl();
 			break;
 			
+=======*/
 		case BUY_X_BRAND_GET_Y_RS_OFF_ON_Z_PRODUCT:
 			rule = new BuyXBrandGetYRsOffOnZProductRuleImpl();
 			break;
 			
+/*<<<<<<< HEAD
 		case BUY_WORTH_X_GET_Y_PERCENT_OFF_ON_Z_CATEGORY:
 			rule = new BuyWorthXGetYPercentOffOnZCategoryRuleImpl();
 			break;
 			
+=======*/
+
 		case FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF:
 			rule = new FirstPurchaseBuyWorthXGetYRsOffRuleImpl();
 			((FirstPurchaseBuyWorthXGetYRsOffRuleImpl)rule).setOrderDao(orderDao);

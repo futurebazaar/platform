@@ -4,12 +4,12 @@
     <parent>
         <groupId>com.fb</groupId>
         <artifactId>platform</artifactId>
-        <version>1.1.1</version>
+        <version>1.1.2</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>userWS</artifactId>
     <packaging>war</packaging>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <name>user Web Service</name>
     <build>
         <finalName>userWS</finalName>
@@ -112,7 +112,7 @@
 		<dependency>
 			<groupId>com.fb</groupId>
 			<artifactId>userCore</artifactId>
-			<version>1.1.1</version>
+			<version>1.1.2</version>
 		</dependency>
     </dependencies>
     <properties>

@@ -29,11 +29,13 @@ import com.fb.platform.promotion.util.StringToIntegerList;
 public class FirstPurchaseBuyWorthXGetYRsOffRuleImpl  implements PromotionRule, Serializable {
 
 	private static transient Log log = LogFactory.getLog(FirstPurchaseBuyWorthXGetYRsOffRuleImpl.class);
-	private Money minOrderValue;
-	private Money fixedRsOff;
-	private List<Integer> clientList;
-	private List<Integer> categories;
 	
+	private Money fixedRsOff;
+	private Money minOrderValue = null;
+	private List<Integer> clientList = null;
+	private List<Integer> includeCategoryList = null;
+	private List<Integer> excludeCategoryList = null;
+	private List<Integer> brands;	
 	private OrderDao orderDao = null;
 	
 	public void setOrderDao(OrderDao orderDao) {
@@ -42,12 +44,31 @@ public class FirstPurchaseBuyWorthXGetYRsOffRuleImpl  implements PromotionRule, 
 
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
-		minOrderValue = new Money(BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.MIN_ORDER_VALUE.name()))));
 		fixedRsOff = new Money (BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.FIXED_DISCOUNT_RS_OFF.name()))));
-		StrTokenizer strTokCategories = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.CATEGORY_LIST.name()),",");
-		categories = StringToIntegerList.convert((List<String>)strTokCategories.getTokenList());
-		StrTokenizer strTokClients = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.CLIENT_LIST.name()),",");
-		clientList = StringToIntegerList.convert((List<String>)strTokClients.getTokenList());
+		if(ruleConfig.isConfigItemPresent(RuleConfigDescriptorEnum.CATEGORY_INCLUDE_LIST.name())){
+			StrTokenizer strTokCategories = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.CATEGORY_INCLUDE_LIST.name()),",");
+			includeCategoryList = StringToIntegerList.convert((List<String>)strTokCategories.getTokenList());
+		}
+		if(ruleConfig.isConfigItemPresent(RuleConfigDescriptorEnum.CATEGORY_EXCLUDE_LIST.name())){
+			StrTokenizer strTokCategories = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.CATEGORY_EXCLUDE_LIST.name()),",");
+			excludeCategoryList = StringToIntegerList.convert((List<String>)strTokCategories.getTokenList());
+		}
+		if(ruleConfig.isConfigItemPresent(RuleConfigDescriptorEnum.CLIENT_LIST.name())){
+			StrTokenizer strTokClients = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.CLIENT_LIST.name()),",");
+			clientList = StringToIntegerList.convert((List<String>)strTokClients.getTokenList());
+		}
+		if(ruleConfig.isConfigItemPresent(RuleConfigDescriptorEnum.MIN_ORDER_VALUE.name())){
+			minOrderValue = new Money(BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.MIN_ORDER_VALUE.name()))));
+			log.info("minOrderValue : " + minOrderValue.toString());
+		}
+		else{
+			log.warn("Minimum Order Value not specified for this rule");
+		}
+		if(ruleConfig.isConfigItemPresent(RuleConfigDescriptorEnum.BRAND_LIST.name())){
+			StrTokenizer strTokCategories = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.BRAND_LIST.name()),",");
+			brands = StringToIntegerList.convert((List<String>)strTokCategories.getTokenList());
+		}
+
 		log.info("minOrderValue : " + minOrderValue.toString() + ", fixedRsOff : " + fixedRsOff.toString());
 	}
 
@@ -56,15 +77,20 @@ public class FirstPurchaseBuyWorthXGetYRsOffRuleImpl  implements PromotionRule, 
 		if(log.isDebugEnabled()) {
 			log.debug("Checking if FirstPurchaseBuyWorthXGetYRsOffRuleImpl applies on order : " + request.getOrderId());
 		}
-		ApplicableResponse ar = new ApplicableResponse();
 		Money orderValue = new Money(request.getOrderValue());
-		if(!request.isValidClient(clientList)){
+		if( clientList != null && !request.isValidClient(clientList)){
 			return PromotionStatusEnum.INVALID_CLIENT;
 		}
-		if(!request.isAllProductsInCategory(categories)){
+		if( includeCategoryList != null && !request.isAllProductsInCategory(includeCategoryList)){
 			return PromotionStatusEnum.CATEGORY_MISMATCH;
 		}
-		if(orderValue.lt(minOrderValue)){
+		if( excludeCategoryList != null && request.isAnyProductInCategory(excludeCategoryList)){
+			return PromotionStatusEnum.CATEGORY_MISMATCH;
+		}
+		if( brands != null && !request.isAllProductsInBrand(brands)){
+			return PromotionStatusEnum.BRAND_MISMATCH;
+		}
+		if(minOrderValue!=null && orderValue.lt(minOrderValue)){
 			return PromotionStatusEnum.LESS_ORDER_AMOUNT;
 		}
 		if(!isCouponCommitted){
@@ -87,14 +113,13 @@ public class FirstPurchaseBuyWorthXGetYRsOffRuleImpl  implements PromotionRule, 
 	public List<RuleConfigDescriptorItem> getRuleConfigs() {
 		List<RuleConfigDescriptorItem> ruleConfigs = new ArrayList<RuleConfigDescriptorItem>();
 		
-		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CATEGORY_LIST, true));
-		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.BRAND_LIST, true));
-		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.MIN_ORDER_VALUE, true));
-		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CATEGORY_INCLUDE_LIST, true));
-		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CATEGORY_EXCLUDE_LIST, true));
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.BRAND_LIST, false));
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.MIN_ORDER_VALUE, false));
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CATEGORY_INCLUDE_LIST, false));
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CATEGORY_EXCLUDE_LIST, false));
 		
 		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.FIXED_DISCOUNT_RS_OFF, true));
-		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CLIENT_LIST, true));
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CLIENT_LIST, false));
 		return ruleConfigs;
 	}
 	
