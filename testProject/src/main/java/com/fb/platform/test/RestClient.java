@@ -359,33 +359,8 @@ public class RestClient {
 		promotionTO.setRuleName("BUY_WORTH_X_GET_Y_RS_OFF");
 		
 		RuleConfigItemTO configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CLIENT_LIST");
-		configItem.setRuleConfigValue("1,2,5,8");
-		promotionTO.getRuleConfigItemTO().add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("MIN_ORDER_VALUE");
-		configItem.setRuleConfigValue("2000");
-		promotionTO.getRuleConfigItemTO().add(configItem);
-		
-		configItem = new RuleConfigItemTO();
 		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
 		configItem.setRuleConfigValue("100");
-		promotionTO.getRuleConfigItemTO().add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("BRAND_LIST");
-		configItem.setRuleConfigValue("3");
-		promotionTO.getRuleConfigItemTO().add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_INCLUDE_LIST");
-		configItem.setRuleConfigValue("1,2,3,4,5,6,7,8,9");
-		promotionTO.getRuleConfigItemTO().add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_EXCLUDE_LIST");
-		configItem.setRuleConfigValue("10,12,4,15,25");
 		promotionTO.getRuleConfigItemTO().add(configItem);
 		
 		createPromotionRequest.setCreatePromotionTO(promotionTO);
@@ -528,38 +503,8 @@ public class RestClient {
 		updatePromotion.setPromotionId(-4100);
 		
 		RuleConfigItemTO configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CLIENT_LIST");
-		configItem.setRuleConfigValue("1,2,3,4");
-		updatePromotion.getRuleConfigItemTO().add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("MIN_ORDER_VALUE");
-		configItem.setRuleConfigValue("2222");
-		updatePromotion.getRuleConfigItemTO().add(configItem);
-		
-		configItem = new RuleConfigItemTO();
 		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
 		configItem.setRuleConfigValue("222");
-		updatePromotion.getRuleConfigItemTO().add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("BRAND_LIST");
-		configItem.setRuleConfigValue("3,1");
-		updatePromotion.getRuleConfigItemTO().add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_INCLUDE_LIST");
-		configItem.setRuleConfigValue("1");
-		updatePromotion.getRuleConfigItemTO().add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_EXCLUDE_LIST");
-		configItem.setRuleConfigValue("10");
-		updatePromotion.getRuleConfigItemTO().add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("DISCOUNT_PERCENTAGE");
-		configItem.setRuleConfigValue("2");
 		updatePromotion.getRuleConfigItemTO().add(configItem);
 		
 		updatePromotionRequest.setPromotionTO(updatePromotion);
