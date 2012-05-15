@@ -191,7 +191,7 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
         <xs:element ref="promotionAdmin:validTill"/>
         <xs:element ref="promotionAdmin:isActive"/>
         <xs:element ref="promotionAdmin:searchPromotionOrderBy"/>
-        <xs:element ref="promotionAdmin:searchPromotionOrderByOrder"/>
+        <xs:element ref="promotionAdmin:sortOrder"/>
         <xs:element ref="promotionAdmin:startRecord"/>
         <xs:element ref="promotionAdmin:batchSize"/>
       </xs:sequence>
@@ -208,8 +208,8 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
 	</xs:restriction>
   </xs:simpleType>
   
-  <xs:element name="searchPromotionOrderByOrder" type="promotionAdmin:searchPromotionOrderByOrder"/>
-  <xs:simpleType name="searchPromotionOrderByOrder">
+  <xs:element name="sortOrder" type="promotionAdmin:sortOrder"/>
+  <xs:simpleType name="sortOrder">
   	<xs:restriction base="xs:string">
     	<xs:enumeration value="ASCENDING"/>
       	<xs:enumeration value="DESCENDING"/>

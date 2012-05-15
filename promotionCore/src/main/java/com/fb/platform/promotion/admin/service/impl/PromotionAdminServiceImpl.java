@@ -13,7 +13,7 @@ import com.fb.platform.promotion.admin.service.PromotionAdminService;
 import com.fb.platform.promotion.admin.to.PromotionTO;
 import com.fb.platform.promotion.admin.to.RuleConfigItemTO;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
-import com.fb.platform.promotion.admin.to.SearchPromotionOrderByOrder;
+import com.fb.platform.promotion.admin.to.SortOrder;
 import com.fb.platform.promotion.dao.RuleDao;
 import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
@@ -132,7 +132,7 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 	
 	@Override
 	public List<PromotionTO> searchPromotion(String promotionName, DateTime validFrom, DateTime validTill, int isActive, SearchPromotionOrderBy orderBy,
-			SearchPromotionOrderByOrder order, int startRecord, int batchSize) {
+			SortOrder order, int startRecord, int batchSize) {
 		List<PromotionTO> promotionsList = promotionAdminDao.searchPromotion(promotionName, validFrom, validTill, isActive, orderBy, order, startRecord, batchSize);
 		return promotionsList;
 	}

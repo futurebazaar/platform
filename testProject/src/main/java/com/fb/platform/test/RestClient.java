@@ -52,9 +52,9 @@ import com.fb.platform.promotion.admin._1_0.FetchRuleResponse;
 import com.fb.platform.promotion.admin._1_0.PromotionTO;
 import com.fb.platform.promotion.admin._1_0.RuleConfigItemTO;
 import com.fb.platform.promotion.admin._1_0.SearchPromotionOrderBy;
-import com.fb.platform.promotion.admin._1_0.SearchPromotionOrderByOrder;
 import com.fb.platform.promotion.admin._1_0.SearchPromotionRequest;
 import com.fb.platform.promotion.admin._1_0.SearchPromotionResponse;
+import com.fb.platform.promotion.admin._1_0.SortOrder;
 import com.fb.platform.promotion.admin._1_0.UpdatePromotionRequest;
 import com.fb.platform.promotion.admin._1_0.UpdatePromotionResponse;
 import com.fb.platform.promotion.admin._1_0.ViewPromotionRequest;
@@ -434,7 +434,7 @@ public class RestClient {
 		nameSearchPromotionRequest.setPromotionName("promotion");
 		nameSearchPromotionRequest.setSearchPromotionOrderBy(SearchPromotionOrderBy.VALID_FROM);
 		nameSearchPromotionRequest.setIsActive(true);
-		nameSearchPromotionRequest.setSearchPromotionOrderByOrder(SearchPromotionOrderByOrder.ASCENDING);
+		nameSearchPromotionRequest.setSortOrder(SortOrder.ASCENDING);
 		
 		GregorianCalendar gregCal = new GregorianCalendar();
 		gregCal.clear();

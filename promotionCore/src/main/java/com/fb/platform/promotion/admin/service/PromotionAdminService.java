@@ -6,11 +6,11 @@ import org.joda.time.DateTime;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
-import com.fb.platform.promotion.model.coupon.CouponType;
 import com.fb.platform.promotion.admin.to.PromotionTO;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
-import com.fb.platform.promotion.admin.to.SearchPromotionOrderByOrder;
+import com.fb.platform.promotion.admin.to.SortOrder;
+import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
+import com.fb.platform.promotion.model.coupon.CouponType;
 import com.fb.platform.promotion.rule.RulesEnum;
 
 /**
@@ -47,7 +47,7 @@ public interface PromotionAdminService {
 	 */
 	@Transactional(propagation=Propagation.REQUIRED)
 	public List<PromotionTO> searchPromotion(String promotionName, DateTime validFrom, DateTime validTill, int isActive, SearchPromotionOrderBy orderBy,
-			SearchPromotionOrderByOrder order, int startRecord, int batchSize);
+			SortOrder order, int startRecord, int batchSize);
 	
 	/**
 	 * This function fetches a count of all promotions that meet the specified search criteria.

@@ -58,7 +58,7 @@ import com.fb.platform.promotion.admin._1_0.ViewPromotionRequest;
 import com.fb.platform.promotion.admin._1_0.ViewPromotionResponse;
 import com.fb.platform.promotion.admin.service.PromotionAdminManager;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
-import com.fb.platform.promotion.admin.to.SearchPromotionOrderByOrder;
+import com.fb.platform.promotion.admin.to.SortOrder;
 
 /**
  * @author nehaga
@@ -227,7 +227,7 @@ public class PromotionAdminResource {
 			apiSearchPromotionRequest.setStartRecord(searchPromotionRequest.getStartRecord());
 			apiSearchPromotionRequest.setActive(searchPromotionRequest.isIsActive());
 			apiSearchPromotionRequest.setSearchPromotionOrderBy(SearchPromotionOrderBy.valueOf(searchPromotionRequest.getSearchPromotionOrderBy().toString()));
-			apiSearchPromotionRequest.setSearchPromotionOrderByOrder(SearchPromotionOrderByOrder.valueOf(searchPromotionRequest.getSearchPromotionOrderByOrder().toString()));
+			apiSearchPromotionRequest.setSortOrder(SortOrder.valueOf(searchPromotionRequest.getSortOrder().toString()));
 			if(searchPromotionRequest.getValidFrom() == null) {
 				apiSearchPromotionRequest.setValidFrom(null);
 			} else {

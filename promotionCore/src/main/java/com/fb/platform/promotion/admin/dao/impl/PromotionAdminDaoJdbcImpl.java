@@ -29,7 +29,7 @@ import com.fb.platform.promotion.admin.dao.PromotionAdminDao;
 import com.fb.platform.promotion.admin.to.PromotionTO;
 import com.fb.platform.promotion.admin.to.RuleConfigItemTO;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
-import com.fb.platform.promotion.admin.to.SearchPromotionOrderByOrder;
+import com.fb.platform.promotion.admin.to.SortOrder;
 
 /**
  * @author neha
@@ -384,7 +384,7 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 	 */
 	@Override
 	public List<PromotionTO> searchPromotion(String promotionName, DateTime validFrom, DateTime validTill, int isActive, SearchPromotionOrderBy orderBy,
-			SearchPromotionOrderByOrder order, int startRecord, int batchSize) {
+			SortOrder order, int startRecord, int batchSize) {
 		
 		if(log.isDebugEnabled()) {
 			log.debug("Search promotion with details => promotionName:" + promotionName + " , validFrom:" + validFrom + " ,validTill:" + validTill + " ,startRecord:" + " ,batchSize:" + batchSize);

@@ -18,7 +18,7 @@ public class SearchPromotionRequest {
 	private DateTime validTill;
 	private boolean isActive;
 	private SearchPromotionOrderBy searchPromotionOrderBy;
-	private SearchPromotionOrderByOrder searchPromotionOrderByOrder;
+	private SortOrder sortOrder;
 	private int startRecord;
 	private int batchSize;
 	
@@ -98,12 +98,11 @@ public class SearchPromotionRequest {
 			SearchPromotionOrderBy searchPromotionOrderBy) {
 		this.searchPromotionOrderBy = searchPromotionOrderBy;
 	}
-	public SearchPromotionOrderByOrder getSearchPromotionOrderByOrder() {
-		return searchPromotionOrderByOrder;
+	public SortOrder getSortOrder() {
+		return sortOrder;
 	}
-	public void setSearchPromotionOrderByOrder(
-			SearchPromotionOrderByOrder searchPromotionOrderByOrder) {
-		this.searchPromotionOrderByOrder = searchPromotionOrderByOrder;
+	public void setSortOrder(SortOrder sortOrder) {
+		this.sortOrder = sortOrder;
 	}
 	
 }

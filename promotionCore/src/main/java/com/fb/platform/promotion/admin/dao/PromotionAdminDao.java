@@ -10,7 +10,7 @@ import org.joda.time.DateTime;
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.admin.to.PromotionTO;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
-import com.fb.platform.promotion.admin.to.SearchPromotionOrderByOrder;
+import com.fb.platform.promotion.admin.to.SortOrder;
 
 /**
  * @author vinayak
@@ -28,7 +28,7 @@ public interface PromotionAdminDao {
 	public int createPromotionRuleConfig(String name, String value, int promotionId, int ruleId);
 	
 	public List<PromotionTO> searchPromotion(String promotionName, DateTime validFrom, DateTime validTill, int isActive, SearchPromotionOrderBy orderBy,
-			SearchPromotionOrderByOrder order, int startRecord, int batchSize);
+			SortOrder order, int startRecord, int batchSize);
 	
 	public int getPromotionCount(String promotionName, DateTime validFrom, DateTime validTill, int isActive);
 	

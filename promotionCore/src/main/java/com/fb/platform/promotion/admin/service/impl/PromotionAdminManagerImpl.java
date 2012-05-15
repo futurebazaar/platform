@@ -48,7 +48,6 @@ import com.fb.platform.promotion.service.CouponNotFoundException;
 import com.fb.platform.promotion.service.InvalidCouponTypeException;
 import com.fb.platform.promotion.service.PromotionNotFoundException;
 import com.fb.platform.promotion.util.PromotionRuleFactory;
-import com.fb.platform.user.domain.UserBo;
 import com.fb.platform.user.manager.exception.UserNotFoundException;
 import com.fb.platform.user.manager.interfaces.UserAdminService;
 
@@ -162,7 +161,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 																					searchPromotionRequest.getValidTill(),
 																					isActive,
 																					searchPromotionRequest.getSearchPromotionOrderBy(),
-																					searchPromotionRequest.getSearchPromotionOrderByOrder(),
+																					searchPromotionRequest.getSortOrder(),
 																					searchPromotionRequest.getStartRecord(), 
 																					searchPromotionRequest.getBatchSize());
 		if(promotionList.isEmpty()) {

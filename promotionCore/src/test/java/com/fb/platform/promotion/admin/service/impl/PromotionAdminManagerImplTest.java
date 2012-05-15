@@ -30,9 +30,9 @@ import com.fb.platform.promotion.admin.to.PromotionTO;
 import com.fb.platform.promotion.admin.to.RuleConfigItemTO;
 import com.fb.platform.promotion.admin.to.SearchPromotionEnum;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
-import com.fb.platform.promotion.admin.to.SearchPromotionOrderByOrder;
 import com.fb.platform.promotion.admin.to.SearchPromotionRequest;
 import com.fb.platform.promotion.admin.to.SearchPromotionResponse;
+import com.fb.platform.promotion.admin.to.SortOrder;
 import com.fb.platform.promotion.admin.to.UpdatePromotionEnum;
 import com.fb.platform.promotion.admin.to.UpdatePromotionRequest;
 import com.fb.platform.promotion.admin.to.UpdatePromotionResponse;
@@ -69,7 +69,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 	
 	private static int[] nameSearch = new int[] {-3001, -3002};
 	
-	private static int[] validFromSearch = new int[] {-3007, -3005};
+	private static int[] validFromSearch = new int[] {-3001, -3002};
 	
 	private static int[] validTillSearch = new int[] {-3, -3002};
 	
@@ -977,7 +977,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setValidFrom(new DateTime(2012, 1, 2, 0, 0));
 		searchPromotionRequest.setValidTill(new DateTime(2012, 6, 30, 0, 0));
 		searchPromotionRequest.setSearchPromotionOrderBy(SearchPromotionOrderBy.VALID_FROM);
-		searchPromotionRequest.setSearchPromotionOrderByOrder(SearchPromotionOrderByOrder.ASCENDING);
+		searchPromotionRequest.setSortOrder(SortOrder.ASCENDING);
 		
 		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		
@@ -1004,7 +1004,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setValidFrom(new DateTime(2012, 1, 2, 0, 0));
 		searchPromotionRequest.setValidTill(new DateTime(2012, 6, 30, 0, 0));
 		searchPromotionRequest.setSearchPromotionOrderBy(SearchPromotionOrderBy.VALID_FROM);
-		searchPromotionRequest.setSearchPromotionOrderByOrder(SearchPromotionOrderByOrder.DESCENDING);
+		searchPromotionRequest.setSortOrder(SortOrder.DESCENDING);
 		
 		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		
@@ -1031,7 +1031,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setValidFrom(new DateTime(2012, 1, 2, 0, 0));
 		searchPromotionRequest.setValidTill(new DateTime(2012, 6, 30, 0, 0));
 		searchPromotionRequest.setSearchPromotionOrderBy(SearchPromotionOrderBy.VALID_TILL);
-		searchPromotionRequest.setSearchPromotionOrderByOrder(SearchPromotionOrderByOrder.ASCENDING);
+		searchPromotionRequest.setSortOrder(SortOrder.ASCENDING);
 		
 		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		
@@ -1058,7 +1058,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setValidFrom(new DateTime(2012, 1, 2, 0, 0));
 		searchPromotionRequest.setValidTill(new DateTime(2012, 6, 30, 0, 0));
 		searchPromotionRequest.setSearchPromotionOrderBy(SearchPromotionOrderBy.VALID_TILL);
-		searchPromotionRequest.setSearchPromotionOrderByOrder(SearchPromotionOrderByOrder.DESCENDING);
+		searchPromotionRequest.setSortOrder(SortOrder.DESCENDING);
 		
 		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		
@@ -1085,7 +1085,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setValidFrom(new DateTime(2012, 1, 2, 0, 0));
 		searchPromotionRequest.setValidTill(new DateTime(2012, 6, 30, 0, 0));
 		searchPromotionRequest.setSearchPromotionOrderBy(SearchPromotionOrderBy.NAME);
-		searchPromotionRequest.setSearchPromotionOrderByOrder(SearchPromotionOrderByOrder.ASCENDING);
+		searchPromotionRequest.setSortOrder(SortOrder.ASCENDING);
 		
 		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		
@@ -1112,7 +1112,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setValidFrom(new DateTime(2012, 1, 2, 0, 0));
 		searchPromotionRequest.setValidTill(new DateTime(2012, 6, 30, 0, 0));
 		searchPromotionRequest.setSearchPromotionOrderBy(SearchPromotionOrderBy.NAME);
-		searchPromotionRequest.setSearchPromotionOrderByOrder(SearchPromotionOrderByOrder.DESCENDING);
+		searchPromotionRequest.setSortOrder(SortOrder.DESCENDING);
 		
 		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		
@@ -1157,13 +1157,13 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setBatchSize(2);
 		searchPromotionRequest.setStartRecord(0);
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
-		searchPromotionRequest.setValidFrom(new DateTime(2012, 4, 1, 0, 0));
+		searchPromotionRequest.setValidFrom(new DateTime(2012, 1, 2, 0, 0));
 		
 		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		
 		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
-		assertEquals(4, searchPromotionResponse.getTotalCount());
+		assertEquals(12, searchPromotionResponse.getTotalCount());
 		assertEquals(2, searchPromotionResponse.getPromotionsList().size());
 		
 		int count = 0;
