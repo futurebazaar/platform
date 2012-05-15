@@ -52,6 +52,8 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 			"	id, " +
 			"	coupon_code, " +
 			"	promotion_id, " +
+			"	created_on, " +
+			"	last_modified_on, " +
 			"	coupon_type " +
 			"FROM coupon WHERE coupon_code = ?";
 
@@ -60,6 +62,8 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 			"	id, " +
 			"	coupon_code, " +
 			"	promotion_id, " +
+			"	created_on, " +
+			"	last_modified_on, " +
 			"	coupon_type " +
 			"FROM coupon WHERE id = ?";
 	
@@ -95,6 +99,8 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 
 	private static final String COUPON_CODE_PLACEHOLDER = "COUPON_CODE_LIST";
 
+	private static final String COUPON_ID_PLACEHOLDER = "COUPON_ID_LIST";
+	
 	private static final String SELECT_EXISTING_COUPON_CODES_QUERY = 
 			"SELECT " +
 			"	coupon_code " +
@@ -117,7 +123,7 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 	private static final String CREATE_COUPON_LIMIT_SQL = 
 			"INSERT INTO " +
 			"	coupon_limits_config " +
-			"		(couponId, " +
+			"		(coupon_id, " +
 			"		max_uses, " +
 			"		max_amount, " +
 			"		max_uses_per_user, " +
@@ -136,7 +142,9 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 
 	private static final String SELECT_USER_COUPON_QUERY = 
 			"SELECT " +
-			"	coupon_id " +
+			"	id, " +
+			"	coupon_code, " +
+			"	coupon_type " +			
 			"FROM coupon WHERE ";
 
 	private static String AND_JOINT = " AND ";
@@ -145,7 +153,7 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 			" coupon_code LIKE ? ";
 	
 	private static String SELECT_COUPON_ID_FILTER_SQL = 
-			" coupon_id IN (?) ";
+			" id IN (" + COUPON_ID_PLACEHOLDER +") ";
 	
 	private static String ORDER_BY_CLAUSE = 
 			" ORDER BY ";
@@ -359,18 +367,19 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 		for (Integer couponId : allCouponIdsForUser) {
 			String couponIdString = couponId.toString();
 			if(StringUtils.isNotBlank(couponIdString)){
-				commaSeparatedCouponIds.append(couponIdString).append(",");
+				commaSeparatedCouponIds.append(couponIdString).append(COMMA);
 			}
 		}
 		
 		if(StringUtils.isNotBlank(commaSeparatedCouponIds.toString())){
+			String commaSeparatedCouponIdsClean = commaSeparatedCouponIds.toString();
+			if(commaSeparatedCouponIds.toString().endsWith(COMMA)){
+				commaSeparatedCouponIdsClean = commaSeparatedCouponIds.substring(0, commaSeparatedCouponIds.length()-1);
+			}
+			SELECT_COUPON_ID_FILTER_SQL = SELECT_COUPON_ID_FILTER_SQL.replace(COUPON_ID_PLACEHOLDER, commaSeparatedCouponIdsClean);
 			searchCouponFilterList.add(SELECT_COUPON_ID_FILTER_SQL);
-			args.add(commaSeparatedCouponIds.toString());
 		}
 		
-		args.add(startRecord);
-		args.add(batchSize);
-
 		searchCouponQuery += (StringUtils.join(searchCouponFilterList.toArray(), AND_JOINT));
 	
 		searchCouponQuery = searchCouponOrderByClause(orderBy, searchCouponQuery);
@@ -378,8 +387,11 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 		searchCouponQuery = searchCouponSortByClause(sortOrder, searchCouponQuery);
 	
 		searchCouponQuery += LIMIT_FILTER_SQL;
+		args.add(startRecord);
+		args.add(batchSize);
 		
 		List<CouponBasicDetails> couponsList = jdbcTemplate.query(searchCouponQuery, args.toArray(), new CouponBasicDetailMapper());
+		
 		
 		return couponsList;
 	}
@@ -427,7 +439,7 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 		public CouponBasicDetails mapRow(ResultSet resultSet, int rowNum) throws SQLException {
 			CouponBasicDetails couponBasicDetails = new CouponBasicDetails();
 			couponBasicDetails.setCouponCode(resultSet.getString("coupon_code"));
-			couponBasicDetails.setCouponId(resultSet.getInt("coupon_id"));
+			couponBasicDetails.setCouponId(resultSet.getInt("id"));
 			couponBasicDetails.setCouponType(CouponType.valueOf(resultSet.getString("coupon_type")));
 			return couponBasicDetails;
 		}

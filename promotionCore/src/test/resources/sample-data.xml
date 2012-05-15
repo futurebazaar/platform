@@ -833,6 +833,24 @@
                         <value name="created_on">2012-04-04 11:37:14</value>
                         <value name="last_modified_on">2012-04-04 11:37:14</value>
                 </row>
+                <row>
+                        <value name="id">-4</value>
+                        <value name="coupon_id">-3</value>
+                        <value name="user_id">-2</value>
+                        <value name="order_id">530</value>
+                        <value name="discount_amount">2000</value>
+                        <value name="created_on">2012-04-04 22:37:14</value>
+                        <value name="last_modified_on">2012-04-04 22:37:14</value>
+                </row>
+                <row>
+                        <value name="id">-5</value>
+                        <value name="coupon_id">-2</value>
+                        <value name="user_id">-2</value>
+                        <value name="order_id">520</value>
+                        <value name="discount_amount">2000</value>
+                        <value name="created_on">2012-04-04 22:37:14</value>
+                        <value name="last_modified_on">2012-04-04 22:37:14</value>
+                </row>
         </table>
         <table name="promotion_rule_config">
                 <column>id</column>
