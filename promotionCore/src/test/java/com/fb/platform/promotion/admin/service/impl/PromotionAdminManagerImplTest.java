@@ -82,13 +82,13 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 	private static int[] filterSearch = new int[] {-3001, -3002};
 	
 	private static List<RulesEnum> ruleList = new ArrayList<RulesEnum>() {{
-		add(RulesEnum.BUY_WORTH_X_GET_Y_PERCENT_OFF);
-		add(RulesEnum.BUY_WORTH_X_GET_Y_PERCENT_OFF_ON_Z_CATEGORY);
-		add(RulesEnum.BUY_WORTH_X_GET_Y_RS_OFF);
 		add(RulesEnum.BUY_WORTH_X_GET_Y_RS_OFF_ON_Z_CATEGORY);
+		add(RulesEnum.BUY_WORTH_X_GET_Y_RS_OFF);
+		add(RulesEnum.BUY_WORTH_X_GET_Y_PERCENT_OFF);
 		add(RulesEnum.BUY_X_BRAND_GET_Y_RS_OFF_ON_Z_PRODUCT);
-		add(RulesEnum.BUY_X_GET_Y_FREE);
+		add(RulesEnum.BUY_WORTH_X_GET_Y_PERCENT_OFF_ON_Z_CATEGORY);
 		add(RulesEnum.FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF);
+		add(RulesEnum.BUY_X_GET_Y_FREE);
 	}};
 	
 	@Before
@@ -121,7 +121,6 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 	
 	@Test
 	public void testFetchRules() {
-		int count = 0;
 		FetchRuleRequest fetchRuleRequest = new FetchRuleRequest();
 		fetchRuleRequest.setSessionToken(responseUser.getSessionToken());
 		
@@ -130,11 +129,10 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		assertEquals(FetchRulesEnum.SUCCESS, fetchRuleResponse.getFetchRulesEnum());
 		assertNotNull(fetchRuleResponse.getSessionToken());
 		assertNotNull(fetchRuleResponse.getRulesList());
-		assertEquals(7, fetchRuleResponse.getRulesList().size());
+		assertEquals(5, fetchRuleResponse.getRulesList().size());
 		assertNotNull(fetchRuleResponse.getSessionToken());
 		for(RuleConfigDescriptor ruleConfig : fetchRuleResponse.getRulesList()) {
-			assertEquals(ruleList.get(count), ruleConfig.getRulesEnum());
-			count++;
+			assertTrue(ruleList.contains(ruleConfig.getRulesEnum()));
 		}
 		
 	}
@@ -158,39 +156,9 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		
 		List<RuleConfigItemTO> ruleConfigList = new ArrayList<RuleConfigItemTO>();
 		RuleConfigItemTO configItem = new RuleConfigItemTO();
-
-		configItem.setRuleConfigName("CLIENT_LIST");
-		configItem.setRuleConfigValue("1,2,5,8");
-		ruleConfigList.add(configItem);
 		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("MIN_ORDER_VALUE");
-		configItem.setRuleConfigValue("2000");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
 		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
 		configItem.setRuleConfigValue("100");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_LIST");
-		configItem.setRuleConfigValue("1,2,3,4,5,6,7,8,9,10,12,4,15,25");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("BRAND_LIST");
-		configItem.setRuleConfigValue("3");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_INCLUDE_LIST");
-		configItem.setRuleConfigValue("1,2,3,4,5,6,7,8,9");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_EXCLUDE_LIST");
-		configItem.setRuleConfigValue("10,12,4,15,25");
 		ruleConfigList.add(configItem);
 		
 		promotionTO.setConfigItems(ruleConfigList);
@@ -249,38 +217,8 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		List<RuleConfigItemTO> ruleConfigList = new ArrayList<RuleConfigItemTO>();
 		RuleConfigItemTO configItem = new RuleConfigItemTO();
 
-		configItem.setRuleConfigName("CLIENT_LIST");
-		configItem.setRuleConfigValue("1,2,5,8");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("MIN_ORDER_VALUE");
-		configItem.setRuleConfigValue("2000");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
 		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
 		configItem.setRuleConfigValue("100");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_LIST");
-		configItem.setRuleConfigValue("1,2,3,4,5,6,7,8,9,10,12,4,15,25");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("BRAND_LIST");
-		configItem.setRuleConfigValue("3");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_INCLUDE_LIST");
-		configItem.setRuleConfigValue("1,2,3,4,5,6,7,8,9");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_EXCLUDE_LIST");
-		configItem.setRuleConfigValue("10,12,4,15,25");
 		ruleConfigList.add(configItem);
 		
 		promotionTO.setConfigItems(ruleConfigList);
@@ -313,47 +251,17 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		
 		List<RuleConfigItemTO> ruleConfigList = new ArrayList<RuleConfigItemTO>();
 		RuleConfigItemTO configItem = new RuleConfigItemTO();
-		
-		promotionTO.setConfigItems(ruleConfigList);
+		ruleConfigList.add(configItem);
 		
 		createPromotionRequest.setPromotion(promotionTO);
-
-		configItem.setRuleConfigName("CLIENT_LIST");
-		configItem.setRuleConfigValue("1,2,5,8");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("MIN_ORDER_VALUE");
-		configItem.setRuleConfigValue("2000");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
-		configItem.setRuleConfigValue("100");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_LIST");
-		configItem.setRuleConfigValue("1,2,3,4,5,6,7,8,9,10,12,4,15,25");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("BRAND_LIST");
-		configItem.setRuleConfigValue("3");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_INCLUDE_LIST");
-		configItem.setRuleConfigValue("1,2,3,4,5,6,7,8,9");
-		ruleConfigList.add(configItem);
 		
 		createPromotionResponse = promotionAdminManager.createPromotion(createPromotionRequest);
 		assertEquals(CreatePromotionEnum.RULE_CONFIG_MISSING, createPromotionResponse.getCreatePromotionEnum());
 		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_EXCLUDE_LIST");
-		configItem.setRuleConfigValue("10,12,4,15,25");
-		ruleConfigList.add(configItem);
+		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
+		configItem.setRuleConfigValue("100");
+		
+		promotionTO.setConfigItems(ruleConfigList);
 		
 		createPromotionResponse = promotionAdminManager.createPromotion(createPromotionRequest);
 		assertEquals(CreatePromotionEnum.SUCCESS, createPromotionResponse.getCreatePromotionEnum());
@@ -379,38 +287,8 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		List<RuleConfigItemTO> ruleConfigList = new ArrayList<RuleConfigItemTO>();
 		RuleConfigItemTO configItem = new RuleConfigItemTO();
 
-		configItem.setRuleConfigName("CLIENT_LIST");
-		configItem.setRuleConfigValue("1,2,5,8");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("MIN_ORDER_VALUE");
-		configItem.setRuleConfigValue("2000");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
 		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
 		configItem.setRuleConfigValue("100");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_LIST");
-		configItem.setRuleConfigValue("1,2,3,4,5,6,7,8,9,10,12,4,15,25");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("BRAND_LIST");
-		configItem.setRuleConfigValue("3");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_INCLUDE_LIST");
-		configItem.setRuleConfigValue("1,2,3,4,5,6,7,8,9");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_EXCLUDE_LIST");
-		configItem.setRuleConfigValue("10,12,4,15,25");
 		ruleConfigList.add(configItem);
 		
 		promotionTO.setConfigItems(ruleConfigList);
@@ -496,7 +374,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		assertEquals(1000, completePromotionView.getMaxAmountPerUser().getAmount().intValue());
 		assertEquals(-2, completePromotionView.getRuleId());
 		assertNotNull(completePromotionView.getConfigItems());
-		assertEquals(7, completePromotionView.getConfigItems().size());
+		assertEquals(6, completePromotionView.getConfigItems().size());
 		assertNotNull(viewPromotionResponse.getSessionToken());
 	}
 	
@@ -556,38 +434,9 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		promotionView.setConfigItems(ruleConfigList);
 		
 		RuleConfigItemTO configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CLIENT_LIST");
-		configItem.setRuleConfigValue("1,2,3,4");
-		ruleConfigList.add(configItem);
 		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("MIN_ORDER_VALUE");
-		configItem.setRuleConfigValue("2222");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
 		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
 		configItem.setRuleConfigValue("222");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_LIST");
-		configItem.setRuleConfigValue("1");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("BRAND_LIST");
-		configItem.setRuleConfigValue("3,1");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_INCLUDE_LIST");
-		configItem.setRuleConfigValue("1");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_EXCLUDE_LIST");
-		configItem.setRuleConfigValue("10");
 		ruleConfigList.add(configItem);
 		
 		promotionView.setConfigItems(ruleConfigList);
@@ -626,38 +475,9 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		promotionView.setConfigItems(ruleConfigList);
 		
 		RuleConfigItemTO configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CLIENT_LIST");
-		configItem.setRuleConfigValue("1,2,3,4");
-		ruleConfigList.add(configItem);
 		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("MIN_ORDER_VALUE");
-		configItem.setRuleConfigValue("2222");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
 		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
 		configItem.setRuleConfigValue("222");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_LIST");
-		configItem.setRuleConfigValue("1");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("BRAND_LIST");
-		configItem.setRuleConfigValue("3,1");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_INCLUDE_LIST");
-		configItem.setRuleConfigValue("1");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_EXCLUDE_LIST");
-		configItem.setRuleConfigValue("10");
 		ruleConfigList.add(configItem);
 		
 		promotionView.setPromotionId(promotionId);
@@ -698,41 +518,12 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		assertEquals(UpdatePromotionEnum.RULE_CONFIG_MISSING, updatePromotionResponse.getUpdatePromotionEnum());
 		
 		RuleConfigItemTO configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CLIENT_LIST");
-		configItem.setRuleConfigValue("1,2,3,4");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("MIN_ORDER_VALUE");
-		configItem.setRuleConfigValue("2222");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
-		configItem.setRuleConfigValue("222");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_LIST");
-		configItem.setRuleConfigValue("1");
-		ruleConfigList.add(configItem);
 		
 		updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
 		assertEquals(UpdatePromotionEnum.RULE_CONFIG_MISSING, updatePromotionResponse.getUpdatePromotionEnum());
 		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("BRAND_LIST");
-		configItem.setRuleConfigValue("3,1");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_INCLUDE_LIST");
-		configItem.setRuleConfigValue("1");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_EXCLUDE_LIST");
-		configItem.setRuleConfigValue("10");
+		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
+		configItem.setRuleConfigValue("222");
 		ruleConfigList.add(configItem);
 		
 		updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
@@ -764,43 +555,9 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		promotionView.setConfigItems(ruleConfigList);
 		
 		RuleConfigItemTO configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CLIENT_LIST");
-		configItem.setRuleConfigValue("1,2,3,4");
-		ruleConfigList.add(configItem);
 		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("MIN_ORDER_VALUE");
-		configItem.setRuleConfigValue("2222");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
 		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
 		configItem.setRuleConfigValue("222");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_LIST");
-		configItem.setRuleConfigValue("1");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("BRAND_LIST");
-		configItem.setRuleConfigValue("3,1");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_INCLUDE_LIST");
-		configItem.setRuleConfigValue("1");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_EXCLUDE_LIST");
-		configItem.setRuleConfigValue("10");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("DISCOUNT_PERCENTAGE");
-		configItem.setRuleConfigValue("2");
 		ruleConfigList.add(configItem);
 		
 		promotionView.setPromotionId(5000);
@@ -832,43 +589,9 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		promotionView.setConfigItems(ruleConfigList);
 		
 		RuleConfigItemTO configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CLIENT_LIST");
-		configItem.setRuleConfigValue("1,2,3,4");
-		ruleConfigList.add(configItem);
 		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("MIN_ORDER_VALUE");
-		configItem.setRuleConfigValue("2222");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
 		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
 		configItem.setRuleConfigValue("222");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_LIST");
-		configItem.setRuleConfigValue("1");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("BRAND_LIST");
-		configItem.setRuleConfigValue("3,1");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_INCLUDE_LIST");
-		configItem.setRuleConfigValue("1");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_EXCLUDE_LIST");
-		configItem.setRuleConfigValue("10");
-		ruleConfigList.add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("DISCOUNT_PERCENTAGE");
-		configItem.setRuleConfigValue("2");
 		ruleConfigList.add(configItem);
 		
 		promotionView.setPromotionId(promotionId);
@@ -899,7 +622,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		assertEquals(2222, completePromotionView.getMaxAmountPerUser().getAmount().intValue());
 		assertEquals(-7, completePromotionView.getRuleId());
 		assertNotNull(completePromotionView.getConfigItems());
-		assertEquals(8, completePromotionView.getConfigItems().size());
+		assertEquals(1, completePromotionView.getConfigItems().size());
 		assertNotNull(updatePromotionResponse.getSessionToken());
 		
 	}

@@ -374,11 +374,6 @@ public class RestClient {
 		promotionTO.getRuleConfigItemTO().add(configItem);
 		
 		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_LIST");
-		configItem.setRuleConfigValue("1,2,3,4,5,6,7,8,9,10,12,4,15,25");
-		promotionTO.getRuleConfigItemTO().add(configItem);
-		
-		configItem = new RuleConfigItemTO();
 		configItem.setRuleConfigName("BRAND_LIST");
 		configItem.setRuleConfigValue("3");
 		promotionTO.getRuleConfigItemTO().add(configItem);
@@ -545,11 +540,6 @@ public class RestClient {
 		configItem = new RuleConfigItemTO();
 		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
 		configItem.setRuleConfigValue("222");
-		updatePromotion.getRuleConfigItemTO().add(configItem);
-		
-		configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("CATEGORY_LIST");
-		configItem.setRuleConfigValue("1");
 		updatePromotion.getRuleConfigItemTO().add(configItem);
 		
 		configItem = new RuleConfigItemTO();
