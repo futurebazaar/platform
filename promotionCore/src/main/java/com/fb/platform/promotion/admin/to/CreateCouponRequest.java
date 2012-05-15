@@ -46,7 +46,8 @@ public class CreateCouponRequest implements Serializable {
 	 */
 	public CreateCouponResponse validate() {
 		CreateCouponResponse response = new CreateCouponResponse();
-
+		response.setSessionToken(getSessionToken());
+		
 		if (StringUtils.isBlank(sessionToken)) {
 			response.setStatus(CreateCouponStatusEnum.NO_SESSION);
 			return response;
