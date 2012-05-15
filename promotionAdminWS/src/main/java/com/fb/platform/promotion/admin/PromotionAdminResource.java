@@ -36,6 +36,7 @@ import com.fb.platform.promotion.admin._1_0.AssignCouponToUserStatusEnum;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionEnum;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionRequest;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionResponse;
+import com.fb.platform.promotion.admin._1_0.CreatePromotionTO;
 import com.fb.platform.promotion.admin._1_0.FetchRuleRequest;
 import com.fb.platform.promotion.admin._1_0.FetchRuleResponse;
 import com.fb.platform.promotion.admin._1_0.FetchRulesEnum;
@@ -147,7 +148,7 @@ public class PromotionAdminResource {
 			
 			apiCreatePromotionRequest.setSessionToken(createPromotionRequest.getSessionToken());
 			
-			PromotionTO promotionTO = createPromotionRequest.getPromotionTO();
+			CreatePromotionTO promotionTO = createPromotionRequest.getCreatePromotionTO();
 			com.fb.platform.promotion.admin.to.PromotionTO apiPromotionTO = new com.fb.platform.promotion.admin.to.PromotionTO();
 			apiPromotionTO.setActive(promotionTO.isIsActive());
 			apiPromotionTO.setDescription(promotionTO.getDescription());
@@ -164,7 +165,7 @@ public class PromotionAdminResource {
 			apiPromotionTO.setMaxUses(promotionTO.getMaxUses());
 			apiPromotionTO.setMaxUsesPerUser(promotionTO.getMaxUsesPerUser());
 			apiPromotionTO.setPromotionName(promotionTO.getPromotionName());
-			apiPromotionTO.setRuleName(createPromotionRequest.getPromotionTO().getRuleName());
+			apiPromotionTO.setRuleName(createPromotionRequest.getCreatePromotionTO().getRuleName());
 			if(promotionTO.getValidFrom() == null) {
 				apiPromotionTO.setValidFrom(null);
 			} else {
@@ -364,7 +365,7 @@ public class PromotionAdminResource {
 	}
 	
 	@POST
-	@Path("/update")
+	@Path("/updatePromotion")
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String updatePromotion(String updatePromotionXML) {

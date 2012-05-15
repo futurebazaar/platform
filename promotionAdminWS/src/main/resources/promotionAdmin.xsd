@@ -87,11 +87,31 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
   <xs:element name="createPromotionRequest">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="promotionAdmin:promotionTO"/>
+        <xs:element ref="promotionAdmin:createPromotionTO"/>
         <xs:element ref="promotionAdmin:sessionToken"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  
+  <xs:element name="createPromotionTO">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotionAdmin:promotionName"/>
+        <xs:element ref="promotionAdmin:description"/>
+        <xs:element ref="promotionAdmin:isActive"/>
+        <xs:element ref="promotionAdmin:validFrom"/>
+        <xs:element ref="promotionAdmin:validTill"/>
+        <xs:element ref="promotionAdmin:maxUses"/>
+        <xs:element ref="promotionAdmin:maxAmount"/>
+        <xs:element ref="promotionAdmin:maxUsesPerUser"/>
+        <xs:element ref="promotionAdmin:maxAmountPerUser"/>
+        <xs:element ref="promotionAdmin:ruleName"/>
+        <xs:element ref="promotionAdmin:ruleId"/>
+        <xs:element ref="promotionAdmin:ruleConfigItemTO" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
   <xs:element name="promotionTO">
     <xs:complexType>
       <xs:sequence>

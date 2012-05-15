@@ -46,6 +46,7 @@ import com.fb.platform.promotion.admin._1_0.AssignCouponToUserRequest;
 import com.fb.platform.promotion.admin._1_0.AssignCouponToUserResponse;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionRequest;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionResponse;
+import com.fb.platform.promotion.admin._1_0.CreatePromotionTO;
 import com.fb.platform.promotion.admin._1_0.FetchRuleRequest;
 import com.fb.platform.promotion.admin._1_0.FetchRuleResponse;
 import com.fb.platform.promotion.admin._1_0.PromotionTO;
@@ -340,7 +341,7 @@ public class RestClient {
 		//PostMethod logoutMethod = new PostMethod("http://10.0.102.12:8082/userWS/auth/logout");
 		PostMethod createPromotion = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/createPromotion");
 		CreatePromotionRequest createPromotionRequest = new CreatePromotionRequest();
-		PromotionTO promotionTO = new PromotionTO();
+		CreatePromotionTO promotionTO = new CreatePromotionTO();
 		
 		promotionTO.setPromotionName("New Promotion");
 		
@@ -392,7 +393,7 @@ public class RestClient {
 		configItem.setRuleConfigValue("10,12,4,15,25");
 		promotionTO.getRuleConfigItemTO().add(configItem);
 		
-		createPromotionRequest.setPromotionTO(promotionTO);
+		createPromotionRequest.setCreatePromotionTO(promotionTO);
 		createPromotionRequest.setSessionToken(sessionToken);
 		
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
@@ -511,7 +512,7 @@ public class RestClient {
 		HttpClient httpClient = new HttpClient();
 
 		//PostMethod logoutMethod = new PostMethod("http://10.0.102.12:8082/userWS/auth/logout");
-		PostMethod updatePromotionMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/update");
+		PostMethod updatePromotionMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/updatePromotion");
 		UpdatePromotionRequest updatePromotionRequest = new UpdatePromotionRequest();
 		PromotionTO updatePromotion = new PromotionTO();
 		
