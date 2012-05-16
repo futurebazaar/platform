@@ -21,21 +21,36 @@ public class Wallet implements Serializable {
 	private User user;
 	
 	
-	public CreditWalletStatus Credit(Money amount,SubWalletType subWalletType){
-		if (amount.isPlus()){
-			totalAmount = totalAmount.plus(amount);
-			if(subWalletType.equals(SubWalletType.CASH_SUB_WALLET)){
-				cashSubWallet = cashSubWallet.plus(amount);		
-			}else if (subWalletType.equals(SubWalletType.GIFT_SUB_WALLET)){
-				giftSubWallet = giftSubWallet.plus(amount);				
-			}else if (subWalletType.equals(SubWalletType.REFUND_SUB_WALLET)){
-				refundSubWallet = refundSubWallet.plus(amount);				
-			}else{
-				return CreditWalletStatus.INVALID_SUBWALLET;
+	public WalletTransaction Credit(Money amount,SubWalletType subWalletType,String refCode){
+		try {
+			if (amount.isPlus()) {
+				long refundId = 0;
+				long paymentId = 0;
+				long tansactionReverseId = 0;
+				String giftCode = null;
+				if (subWalletType.equals(SubWalletType.CASH_SUB_WALLET)) {
+					cashSubWallet = cashSubWallet.plus(amount);
+					paymentId = Long.parseLong(refCode);
+				} else if (subWalletType.equals(SubWalletType.GIFT_SUB_WALLET)) {
+					giftSubWallet = giftSubWallet.plus(amount);
+					giftCode = refCode;
+				} else if (subWalletType
+						.equals(SubWalletType.REFUND_SUB_WALLET)) {
+					refundSubWallet = refundSubWallet.plus(amount);
+					refundId = Long.parseLong(refCode);
+				} else {
+					return null;
+				}
+				totalAmount = totalAmount.plus(amount);
+				WalletTransaction walletTransaction = new WalletTransaction(
+						this, subWalletType, TransactionType.CREDIT, amount, 0,
+						refundId, paymentId, tansactionReverseId, giftCode);
+				return walletTransaction;
+			} else {
+				return null;
 			}
-			return CreditWalletStatus.SUCCESS;
-		}else{
-			return CreditWalletStatus.ZERO_AMOUNT;
+		} catch (Exception e) {
+			return null;
 		}
 	}
 	public DebitWalletStatus Debit(Money amount){

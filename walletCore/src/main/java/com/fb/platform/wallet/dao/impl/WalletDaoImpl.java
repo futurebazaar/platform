@@ -1,12 +1,10 @@
 package com.fb.platform.wallet.dao.impl;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -14,9 +12,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
-import com.fb.platform.user.domain.UserBo;
-import com.fb.platform.user.util.PasswordUtil;
 import com.fb.platform.wallet.dao.WalletDao;
 import com.fb.platform.wallet.model.Wallet;
 
@@ -73,12 +70,16 @@ public class WalletDaoImpl implements WalletDao {
 	@Override
 	public Wallet load(long userId, long clientId) {
 		try{
-			return load(jdbcTemplate.queryForLong(GET_WALLET_ID_USER_CLIENT,new Object[] {userId,clientId}));
-		}catch (Exception e) {
-			return create(userId, clientId);
+			Wallet wallet = load(jdbcTemplate.queryForLong(GET_WALLET_ID_USER_CLIENT,new Object[] {userId,clientId}));
+			if(wallet == null){
+				return create(userId, clientId);
+			}
+			return wallet;
+		}catch (PlatformException e) {
+			throw new PlatformException();
 		}
 	}
-
+	
 	private Wallet create(long userId, long clientId) {
 		try{
 			final KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -93,8 +94,8 @@ public class WalletDaoImpl implements WalletDao {
 			long walletId = keyHolder.getKey().longValue();
 			jdbcTemplate.update(CREATE_USER_CLIENT_WALLET, new Object[]{userId,clientId,walletId});
 			return load(walletId);
-		}catch (Exception e) {
-			return null;
+		}catch (PlatformException e) {
+			throw new PlatformException();
 		}
 	}
 

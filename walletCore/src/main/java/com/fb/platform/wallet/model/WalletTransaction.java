@@ -1,6 +1,8 @@
 package com.fb.platform.wallet.model;
 
-import java.util.Date;
+import org.joda.time.DateTime;
+
+import com.fb.commons.to.Money;
 
 public class WalletTransaction {
 	
@@ -8,11 +10,31 @@ public class WalletTransaction {
 	private String transactionId = null;
 	private SubWalletType subWalletType;
 	private TransactionType transactionType = null;
-	private Double amount;
+	private Money amount;
 	private long orderId;
+	private long refundId;
 	private long paymentId;
+	private long transactionReversalId;
+	private String giftCode;
 	private String notes;
-	private Date timeStamp;
+	private DateTime timeStamp;
+	
+	
+	
+	WalletTransaction(Wallet wallet, SubWalletType subWalletType,
+			TransactionType transactionType, Money amount, long orderId,
+			long refundId, long paymentId, long transactionReversalId,String giftCode) {
+		super();
+		this.wallet = wallet;
+		this.subWalletType = subWalletType;
+		this.transactionType = transactionType;
+		this.amount = amount;
+		this.orderId = orderId;
+		this.refundId = refundId;
+		this.paymentId = paymentId;
+		this.transactionReversalId = transactionReversalId;
+		this.giftCode = giftCode;
+	}
 	/**
 	 * @return the wallet
 	 */
@@ -52,13 +74,13 @@ public class WalletTransaction {
 	/**
 	 * @return the amount
 	 */
-	public Double getAmount() {
+	public Money getAmount() {
 		return amount;
 	}
 	/**
 	 * @param amount the amount to set
 	 */
-	public void setAmount(Double amount) {
+	public void setAmount(Money amount) {
 		this.amount = amount;
 	}
 	/**
@@ -100,13 +122,13 @@ public class WalletTransaction {
 	/**
 	 * @return the timeStamp
 	 */
-	public Date getTimeStamp() {
+	public DateTime getTimeStamp() {
 		return timeStamp;
 	}
 	/**
 	 * @param timeStamp the timeStamp to set
 	 */
-	public void setTimeStamp(Date timeStamp) {
+	public void setTimeStamp(DateTime timeStamp) {
 		this.timeStamp = timeStamp;
 	}
 	/**
@@ -121,7 +143,42 @@ public class WalletTransaction {
 	public void setSubWalletType(SubWalletType subWalletType) {
 		this.subWalletType = subWalletType;
 	}
+	/**
+	 * @return the transactionReversalId
+	 */
+	public long getTransactionReversalId() {
+		return transactionReversalId;
+	}
+	/**
+	 * @param transactionReversalId the transactionReversalId to set
+	 */
+	public void setTransactionReversalId(long transactionReversalId) {
+		this.transactionReversalId = transactionReversalId;
+	}
+	/**
+	 * @return the giftCode
+	 */
+	public String getGiftCode() {
+		return giftCode;
+	}
+	/**
+	 * @param giftCode the giftCode to set
+	 */
+	public void setGiftCode(String giftCode) {
+		this.giftCode = giftCode;
+	}
+	/**
+	 * @return the refundId
+	 */
+	public long getRefundId() {
+		return refundId;
+	}
+	/**
+	 * @param refundId the refundId to set
+	 */
+	public void setRefundId(long refundId) {
+		this.refundId = refundId;
+	}
 	
 	
-
 }

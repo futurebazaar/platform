@@ -9,7 +9,7 @@ import com.fb.platform.wallet.model.WalletTransaction;
 
 public interface WalletTransactionDao {
 	
-	public boolean insertTransaction(WalletTransaction walletTransaction);
+	public String insertTransaction(WalletTransaction walletTransaction);
 	
 	public List<WalletTransaction> walletHistory(Wallet wallet,DateTime fromDate,DateTime toDate);
 
