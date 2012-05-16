@@ -533,7 +533,7 @@ public class PromotionAdminResource {
 	}
 	
 	@POST
-	@Path("/viewCoupon")
+	@Path("/view/coupon")
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String viewCoupon(String viewCouponXML) {
@@ -570,11 +570,17 @@ public class PromotionAdminResource {
 				couponCompleteView.setMaxAmount(apiCouponCompleteView.getMaxAmount().getAmount());
 				couponCompleteView.setMaxAmountPerUser(apiCouponCompleteView.getMaxAmountPerUser().getAmount());
 				
-				gregCal.set(apiCouponCompleteView.getCreatedOn().getYear(), apiCouponCompleteView.getCreatedOn().getMonthOfYear()-1, apiCouponCompleteView.getCreatedOn().getDayOfMonth(),0,0,0);
-				couponCompleteView.setCreatedOn(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+				if(null != apiCouponCompleteView.getCreatedOn()){
+					gregCal.set(apiCouponCompleteView.getCreatedOn().getYear(), apiCouponCompleteView.getCreatedOn().getMonthOfYear()-1, 
+							apiCouponCompleteView.getCreatedOn().getDayOfMonth(),0,0,0);
+					couponCompleteView.setCreatedOn(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+				}
 				
-				gregCal.set(apiCouponCompleteView.getLastModifiedOn().getYear(), apiCouponCompleteView.getLastModifiedOn().getMonthOfYear()-1, apiCouponCompleteView.getLastModifiedOn().getDayOfMonth(),0,0,0);
-				couponCompleteView.setLastModifiedOn(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+				if(null != apiCouponCompleteView.getLastModifiedOn()){
+					gregCal.set(apiCouponCompleteView.getLastModifiedOn().getYear(), apiCouponCompleteView.getLastModifiedOn().getMonthOfYear()-1, 
+							apiCouponCompleteView.getLastModifiedOn().getDayOfMonth(),0,0,0);
+					couponCompleteView.setLastModifiedOn(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+				}
 				
 			} else {
 				couponCompleteView = null;
@@ -600,7 +606,7 @@ public class PromotionAdminResource {
 	}
 	
 	@POST
-	@Path("/searchCoupon")
+	@Path("/search/coupon")
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String searchCoupon(String searchCouponXML) {
@@ -622,8 +628,17 @@ public class PromotionAdminResource {
 			String inputUserName = StringUtils.isBlank(searchCouponRequest.getUserName()) ? null : searchCouponRequest.getUserName().trim();
 			apiSearchCouponRequest.setUserName(inputUserName);
 			
-			apiSearchCouponRequest.setOrderBy(SearchCouponOrderBy.valueOf(searchCouponRequest.getSearchCouponOrderBy().toString()));
-			apiSearchCouponRequest.setSortOrder(SortOrder.valueOf(searchCouponRequest.getSortOrder().toString()));
+			com.fb.platform.promotion.admin._1_0.SearchCouponOrderBy searchOrderByInRequest = searchCouponRequest.getSearchCouponOrderBy();
+			if(null==searchOrderByInRequest){
+				searchOrderByInRequest = com.fb.platform.promotion.admin._1_0.SearchCouponOrderBy.COUPON_CODE;
+			}
+			apiSearchCouponRequest.setOrderBy(SearchCouponOrderBy.valueOf(searchOrderByInRequest.toString()));
+			
+			com.fb.platform.promotion.admin._1_0.SortOrder sortOrderInRequest = searchCouponRequest.getSortOrder();
+			if(null==sortOrderInRequest){
+				sortOrderInRequest = com.fb.platform.promotion.admin._1_0.SortOrder.ASCENDING;
+			}
+			apiSearchCouponRequest.setSortOrder(SortOrder.valueOf(sortOrderInRequest.toString()));
 			
 			SearchCouponResponse searchCouponResponse	= new SearchCouponResponse();
 			com.fb.platform.promotion.admin.to.SearchCouponResponse apiSearchPromotionResponse = promotionAdminManager.searchCoupons(apiSearchCouponRequest);
@@ -659,7 +674,7 @@ public class PromotionAdminResource {
 	}
 	
 	@POST
-	@Path("/createCoupon")
+	@Path("/create/coupon")
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String createCoupon(String createCouponXML) {

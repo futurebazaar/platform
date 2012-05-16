@@ -44,6 +44,11 @@ import com.fb.platform.promotion._1_0.ReleaseCouponRequest;
 import com.fb.platform.promotion._1_0.ReleaseCouponResponse;
 import com.fb.platform.promotion.admin._1_0.AssignCouponToUserRequest;
 import com.fb.platform.promotion.admin._1_0.AssignCouponToUserResponse;
+import com.fb.platform.promotion.admin._1_0.CodeDetails;
+import com.fb.platform.promotion.admin._1_0.CouponTO;
+import com.fb.platform.promotion.admin._1_0.CouponType;
+import com.fb.platform.promotion.admin._1_0.CreateCouponRequest;
+import com.fb.platform.promotion.admin._1_0.CreateCouponResponse;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionRequest;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionResponse;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionTO;
@@ -51,12 +56,17 @@ import com.fb.platform.promotion.admin._1_0.FetchRuleRequest;
 import com.fb.platform.promotion.admin._1_0.FetchRuleResponse;
 import com.fb.platform.promotion.admin._1_0.PromotionTO;
 import com.fb.platform.promotion.admin._1_0.RuleConfigItemTO;
+import com.fb.platform.promotion.admin._1_0.SearchCouponOrderBy;
+import com.fb.platform.promotion.admin._1_0.SearchCouponRequest;
+import com.fb.platform.promotion.admin._1_0.SearchCouponResponse;
 import com.fb.platform.promotion.admin._1_0.SearchPromotionOrderBy;
 import com.fb.platform.promotion.admin._1_0.SearchPromotionRequest;
 import com.fb.platform.promotion.admin._1_0.SearchPromotionResponse;
 import com.fb.platform.promotion.admin._1_0.SortOrder;
 import com.fb.platform.promotion.admin._1_0.UpdatePromotionRequest;
 import com.fb.platform.promotion.admin._1_0.UpdatePromotionResponse;
+import com.fb.platform.promotion.admin._1_0.ViewCouponRequest;
+import com.fb.platform.promotion.admin._1_0.ViewCouponResponse;
 import com.fb.platform.promotion.admin._1_0.ViewPromotionRequest;
 import com.fb.platform.promotion.admin._1_0.ViewPromotionResponse;
 /**
@@ -84,6 +94,9 @@ public class RestClient {
 		viewPromotion(sessionToken);
 		updatePromotion(sessionToken);
 		assignCouponToUser(sessionToken);
+		searchCoupon(sessionToken);
+		viewCoupon(sessionToken);
+		createCoupon(sessionToken);
 		logout(sessionToken);
 	}
 
@@ -107,7 +120,14 @@ public class RestClient {
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
 		loginMethod.setRequestEntity(requestEntity);
 
-		int statusCode = httpClient.executeMethod(loginMethod);
+		int statusCode = 2;
+		
+		try{
+			statusCode = httpClient.executeMethod(loginMethod);
+		}catch (Exception e) {
+			System.out.println("login failing\n"+e);
+		}
+		
 		if (statusCode != HttpStatus.SC_OK) {
 			System.out.println("\n\n\nunable to execute the login method : \n\n" + statusCode);
 			System.exit(1);
@@ -657,5 +677,120 @@ public class RestClient {
 		AssignCouponToUserResponse response = (AssignCouponToUserResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(responseStr)));
 		System.out.println(response.getAssignCouponToUserStatusEnum());
 
+	}
+	
+	private static void searchCoupon(String sessionToken) throws Exception {
+		HttpClient httpClient = new HttpClient();
+
+		PostMethod postMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/search/coupon");
+
+		SearchCouponRequest request = new SearchCouponRequest();
+		request.setCouponCode("pre_issued_1");
+		request.setSessionToken(sessionToken);
+		request.setSearchCouponOrderBy(SearchCouponOrderBy.COUPON_CODE);
+		request.setSortOrder(SortOrder.ASCENDING);
+
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
+
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(request, sw);
+
+		System.out.println("\n\n searchCouponRequest : \n" + sw.toString());
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		postMethod.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(postMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the searchCoupon method : " + statusCode);
+			System.exit(1);
+		}
+		String responseStr = postMethod.getResponseBodyAsString();
+		System.out.println("Got the searchCoupon Response : \n\n" + responseStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		SearchCouponResponse response = (SearchCouponResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(responseStr)));
+		System.out.println(response.getSearchCouponStatus());
+
+	}
+	
+	private static void viewCoupon(String sessionToken) throws Exception {
+		HttpClient httpClient = new HttpClient();
+
+		PostMethod postMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/view/coupon");
+
+		ViewCouponRequest request = new ViewCouponRequest();
+		request.setSessionToken(sessionToken);
+		request.setCouponCode("DCBF78KT54");
+		
+
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
+
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(request, sw);
+
+		System.out.println("\n\n viewCouponRequest : \n" + sw.toString());
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		postMethod.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(postMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the viewCoupon method : " + statusCode);
+			System.exit(1);
+		}
+		String responseStr = postMethod.getResponseBodyAsString();
+		System.out.println("Got the viewCoupon Response : \n\n" + responseStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		ViewCouponResponse response = (ViewCouponResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(responseStr)));
+		System.out.println(response.getViewCouponStatus());
+	}
+	
+	private static void createCoupon(String sessionToken) throws Exception {
+		HttpClient httpClient = new HttpClient();
+
+		PostMethod postMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/create/coupon");
+
+		CreateCouponRequest request = new CreateCouponRequest();
+		request.setSessionToken(sessionToken);
+		request.setNumberOfCoupon(1010);
+		
+		CouponTO couponTO = new CouponTO();
+		couponTO.setPromotionId(-3005);
+		couponTO.setCouponType(CouponType.PRE_ISSUE);
+		couponTO.setMaxAmount(new BigDecimal(10000.00));
+		couponTO.setMaxAmountPerUser(new BigDecimal(1000.00));
+		couponTO.setMaxUses(20);
+		couponTO.setMaxUsesPerUser(4);
+
+		request.setCouponTO(couponTO);
+		
+		CodeDetails codeDetails = new CodeDetails();
+		codeDetails.setCodeLength(10);
+		
+		request.setCodeDetails(codeDetails);
+		
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
+
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(request, sw);
+
+		System.out.println("\n\n createCouponRequest : \n" + sw.toString());
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		postMethod.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(postMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the createCoupon method : " + statusCode);
+			System.exit(1);
+		}
+		String responseStr = postMethod.getResponseBodyAsString();
+		System.out.println("Got the createCoupon Response : \n\n" + responseStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		CreateCouponResponse response = (CreateCouponResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(responseStr)));
+		System.out.println(response.getCreateCouponStatus());
 	}
 }
