@@ -60,9 +60,6 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 	@Autowired
 	private PromotionService promotionService = null;
 
-	@Autowired
-	private CouponCodeCreator couponCodeCreator = null;
-
 	private static final int COUPON_GENERATION_BATCH_SIZE = 1000;
 
 	@Override
@@ -182,6 +179,9 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 		//see if the promotion is valid, if not this will throw promotion not found exception
 		promotionService.getPromotion(promotionId);
 
+		CouponCodeCreator couponCodeCreator = new CouponCodeCreator();
+		couponCodeCreator.setCouponAdminDao(couponAdminDao);
+
 		couponCodeCreator.init(count, length, startsWith, endsWith, COUPON_GENERATION_BATCH_SIZE);
 
 		while (couponCodeCreator.nextBatchAvailable()) {
@@ -258,10 +258,6 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 
 	public void setPromotionService(PromotionService promotionService) {
 		this.promotionService = promotionService;
-	}
-
-	public void setCouponCodeCreator(CouponCodeCreator couponCodeCreator) {
-		this.couponCodeCreator = couponCodeCreator;
 	}
 
 	@Override

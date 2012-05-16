@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.platform.promotion.admin.dao.CouponAdminDao;
 
@@ -21,7 +20,6 @@ public class CouponCodeCreator {
 	//excludes 0, 1, I, L and O.
 	private static final char [] chars = "ABCDEFGHJKMNPQRSTUVWXYZ23456789".toCharArray();
 
-	@Autowired
 	private CouponAdminDao couponAdminDao = null;
 
 	private List<String> generatedCoupons = null;
