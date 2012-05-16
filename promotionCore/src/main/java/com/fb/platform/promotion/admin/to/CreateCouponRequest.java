@@ -53,7 +53,7 @@ public class CreateCouponRequest implements Serializable {
 			return response;
 		}
 
-		if (count == 0) {
+		if (count <= 0) {
 			response.setStatus(CreateCouponStatusEnum.INVALID_COUNT);
 			return response;
 		}

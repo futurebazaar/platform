@@ -20,6 +20,7 @@ import com.fb.platform.promotion.admin.service.PromotionAdminManager;
 import com.fb.platform.promotion.admin.to.AssignCouponToUserRequest;
 import com.fb.platform.promotion.admin.to.AssignCouponToUserResponse;
 import com.fb.platform.promotion.admin.to.AssignCouponToUserStatusEnum;
+import com.fb.platform.promotion.admin.to.CouponBasicDetails;
 import com.fb.platform.promotion.admin.to.CreatePromotionEnum;
 import com.fb.platform.promotion.admin.to.CreatePromotionRequest;
 import com.fb.platform.promotion.admin.to.CreatePromotionResponse;
@@ -28,6 +29,9 @@ import com.fb.platform.promotion.admin.to.FetchRuleResponse;
 import com.fb.platform.promotion.admin.to.FetchRulesEnum;
 import com.fb.platform.promotion.admin.to.PromotionTO;
 import com.fb.platform.promotion.admin.to.RuleConfigItemTO;
+import com.fb.platform.promotion.admin.to.SearchCouponRequest;
+import com.fb.platform.promotion.admin.to.SearchCouponResponse;
+import com.fb.platform.promotion.admin.to.SearchCouponStatusEnum;
 import com.fb.platform.promotion.admin.to.SearchPromotionEnum;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
 import com.fb.platform.promotion.admin.to.SearchPromotionRequest;
@@ -39,6 +43,7 @@ import com.fb.platform.promotion.admin.to.UpdatePromotionResponse;
 import com.fb.platform.promotion.admin.to.ViewPromotionEnum;
 import com.fb.platform.promotion.admin.to.ViewPromotionRequest;
 import com.fb.platform.promotion.admin.to.ViewPromotionResponse;
+import com.fb.platform.promotion.model.coupon.CouponType;
 import com.fb.platform.promotion.rule.RuleConfigDescriptor;
 import com.fb.platform.promotion.rule.RulesEnum;
 import com.fb.platform.user.manager.interfaces.UserManager;
@@ -1197,6 +1202,74 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		assertNotNull(response.getSessionToken());
 	}
 
+	@Test
+	public void searchCouponDataFound(){
+		SearchCouponRequest searchCouponRequest = new SearchCouponRequest();
+		
+		searchCouponRequest.setCouponCode("GlobalCoupon1000Off4");
+		searchCouponRequest.setSessionToken(responseUser.getSessionToken());
+		
+		SearchCouponResponse response = promotionAdminManager.searchCoupons(searchCouponRequest);
+		
+		assertNotNull(response);
+		assertEquals(SearchCouponStatusEnum.SUCCESS, response.getStatus());
+		assertEquals(1, response.getCouponBasicDetailsList().size());
+		
+		CouponBasicDetails couponBasicDetails = response.getCouponBasicDetailsList().get(0);
+		assertEquals("GlobalCoupon1000Off4", couponBasicDetails.getCouponCode());
+		assertEquals(CouponType.GLOBAL, couponBasicDetails.getCouponType());
+		assertEquals(-2003, couponBasicDetails.getCouponId());
+	}
+	
+	@Test
+	public void searchCouponInsufficientData(){
+		SearchCouponRequest searchCouponRequest = new SearchCouponRequest();
+		
+		searchCouponRequest.setSessionToken(responseUser.getSessionToken());
+		
+		SearchCouponResponse response = promotionAdminManager.searchCoupons(searchCouponRequest);
+		
+		assertNotNull(response);
+		assertEquals(SearchCouponStatusEnum.INSUFFICIENT_DATA, response.getStatus());
+		assertEquals(0, response.getCouponBasicDetailsList().size());
+	}
+	
+	@Test
+	public void searchCouponNoDataFound(){
+		SearchCouponRequest searchCouponRequest = new SearchCouponRequest();
+		
+		searchCouponRequest.setCouponCode("invalid_coupon_code");
+		searchCouponRequest.setSessionToken(responseUser.getSessionToken());
+		
+		SearchCouponResponse response = promotionAdminManager.searchCoupons(searchCouponRequest);
+		
+		assertNotNull(response);
+		assertEquals(SearchCouponStatusEnum.NO_DATA_FOUND, response.getStatus());
+		assertEquals(0, response.getCouponBasicDetailsList().size());
+	}
+	
+	@Test
+	public void searchCouponNoSession(){
+		SearchCouponRequest searchCouponRequest = new SearchCouponRequest();
+		
+		searchCouponRequest.setCouponCode("invalid_coupon_code");
+		
+		SearchCouponResponse response = promotionAdminManager.searchCoupons(searchCouponRequest);
+		
+		assertNotNull(response);
+		assertEquals(SearchCouponStatusEnum.INSUFFICIENT_DATA, response.getStatus());
+		assertEquals(0, response.getCouponBasicDetailsList().size());
+	}
+	
+	@Test
+	public void searchCouponNullRequest(){
+		SearchCouponResponse response = promotionAdminManager.searchCoupons(null);
+		
+		assertNotNull(response);
+		assertEquals(SearchCouponStatusEnum.NO_SESSION, response.getStatus());
+		assertEquals(0, response.getCouponBasicDetailsList().size());
+	}
+	
 	public void setPromotionAdminManager(PromotionAdminManager promotionAdminManager) {
 		this.promotionAdminManager = promotionAdminManager;
 	}

@@ -145,8 +145,10 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 			"	id, " +
 			"	coupon_code, " +
 			"	coupon_type " +			
-			"FROM coupon WHERE ";
+			"FROM coupon ";
 
+	private static String WHERE_CLAUSE = " WHERE ";
+	
 	private static String AND_JOINT = " AND ";
 	
 	private static String SELECT_COUPON_CODE_FILTER_SQL = 
@@ -358,19 +360,24 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 		String searchCouponQuery = SELECT_USER_COUPON_QUERY;
 		List<Object> args = new ArrayList<Object>();
 		
+		//adding coupon code search criteria if input present
 		if(StringUtils.isNotBlank(couponCode)) {
 			searchCouponFilterList.add(SELECT_COUPON_CODE_FILTER_SQL);
-			args.add("%" + couponCode + "%");
+			args.add("%" + couponCode.trim() + "%");
 		}
 		
+		// building the comma separated coupon IDs
 		StringBuilder commaSeparatedCouponIds = new StringBuilder();
-		for (Integer couponId : allCouponIdsForUser) {
-			String couponIdString = couponId.toString();
-			if(StringUtils.isNotBlank(couponIdString)){
-				commaSeparatedCouponIds.append(couponIdString).append(COMMA);
+		if(!allCouponIdsForUser.isEmpty()){
+			for (Integer couponId : allCouponIdsForUser) {
+				String couponIdString = couponId.toString();
+				if(StringUtils.isNotBlank(couponIdString)){
+					commaSeparatedCouponIds.append(couponIdString).append(COMMA);
+				}
 			}
 		}
 		
+		//adding coupon IDs search criteria if value present
 		if(StringUtils.isNotBlank(commaSeparatedCouponIds.toString())){
 			String commaSeparatedCouponIdsClean = commaSeparatedCouponIds.toString();
 			if(commaSeparatedCouponIds.toString().endsWith(COMMA)){
@@ -380,20 +387,28 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 			searchCouponFilterList.add(SELECT_COUPON_ID_FILTER_SQL);
 		}
 		
-		searchCouponQuery += (StringUtils.join(searchCouponFilterList.toArray(), AND_JOINT));
-	
+		/*
+		 * If no search criteria present then do not query
+		 * rather return an empty result
+		 */
+		if(!searchCouponFilterList.isEmpty()){
+			searchCouponQuery += (WHERE_CLAUSE + StringUtils.join(searchCouponFilterList.toArray(), AND_JOINT));	
+		}else{
+			log.warn("No search criteria found so returning no data");
+			return new ArrayList<CouponBasicDetails>(0);
+		}
+		// add the order by clause
 		searchCouponQuery = searchCouponOrderByClause(orderBy, searchCouponQuery);
-		
+		// add the sort by clause		
 		searchCouponQuery = searchCouponSortByClause(sortOrder, searchCouponQuery);
-	
+		// add the SQL limit clause
 		searchCouponQuery += LIMIT_FILTER_SQL;
 		args.add(startRecord);
 		args.add(batchSize);
 		
 		List<CouponBasicDetails> couponsList = jdbcTemplate.query(searchCouponQuery, args.toArray(), new CouponBasicDetailMapper());
 		
-		
-		return couponsList;
+		return couponsList==null ? new ArrayList<CouponBasicDetails>(0) : couponsList;
 	}
 
 	private String searchCouponSortByClause(SortOrder sortOrder, String searchCouponQuery) {
