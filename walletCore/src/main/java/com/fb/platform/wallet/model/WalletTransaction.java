@@ -167,7 +167,6 @@ public class WalletTransaction {
 	public void setSubWalletType(SubWalletType subWalletType) {
 		this.subWalletType = subWalletType;
 	}
-<<<<<<< HEAD
 	/**
 	 * @return the transactionReversalId
 	 */
@@ -204,9 +203,4 @@ public class WalletTransaction {
 	public void setRefundId(long refundId) {
 		this.refundId = refundId;
 	}
-	
-	
-=======
-
->>>>>>> origin/ewallet
 }
