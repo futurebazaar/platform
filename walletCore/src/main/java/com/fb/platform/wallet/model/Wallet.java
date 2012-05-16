@@ -19,8 +19,7 @@ public class Wallet implements Serializable {
 	private DateTime createdOn;
 	private DateTime modifiedOn;
 	private User user;
-	
-	
+
 	public WalletTransaction Credit(Money amount,SubWalletType subWalletType,String refCode){
 		try {
 			if (amount.isPlus()) {
@@ -53,114 +52,136 @@ public class Wallet implements Serializable {
 			return null;
 		}
 	}
-	public DebitWalletStatus Debit(Money amount){
-		if(this.totalAmount.lt(amount)){
+
+	public DebitWalletStatus Debit(Money amount) {
+		if (this.totalAmount.lt(amount)) {
 			return DebitWalletStatus.INSUFFICIENT_FUND;
 		}
 		return null;
 	}
-	
-	public RefundWalletStatus Refund(double amount){
+
+	public RefundWalletStatus Refund(double amount) {
 		return null;
 	}
-	
+
 	/**
 	 * @return the id
 	 */
 	public long getId() {
 		return id;
 	}
+
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(long id) {
 		this.id = id;
 	}
+
 	/**
 	 * @return the cashSubWallet
 	 */
 	public Money getCashSubWallet() {
 		return cashSubWallet;
 	}
+
 	/**
-	 * @param money the cashSubWallet to set
+	 * @param cashSubWallet
+	 *            the cashSubWallet to set
 	 */
 	public void setCashSubWallet(Money money) {
 		this.cashSubWallet = money;
 	}
+
 	/**
 	 * @return the giftSubWallet
 	 */
 	public Money getGiftSubWallet() {
 		return giftSubWallet;
 	}
+
 	/**
-	 * @param giftSubWallet the giftSubWallet to set
+	 * @param giftSubWallet
+	 *            the giftSubWallet to set
 	 */
 	public void setGiftSubWallet(Money giftSubWallet) {
 		this.giftSubWallet = giftSubWallet;
 	}
+
 	/**
 	 * @return the refundSubWallet
 	 */
 	public Money getRefundSubWallet() {
 		return refundSubWallet;
 	}
+
 	/**
-	 * @param refundSubWallet the refundSubWallet to set
+	 * @param refundSubWallet
+	 *            the refundSubWallet to set
 	 */
 	public void setRefundSubWallet(Money refundSubWallet) {
 		this.refundSubWallet = refundSubWallet;
 	}
+
 	/**
 	 * @return the user
 	 */
 	public User getUser() {
 		return user;
 	}
+
 	/**
-	 * @param user the user to set
+	 * @param user
+	 *            the user to set
 	 */
 	public void setUser(User user) {
 		this.user = user;
 	}
+
 	/**
 	 * @return the createdOn
 	 */
 	public DateTime getCreatedOn() {
 		return createdOn;
 	}
+
 	/**
-	 * @param createdOn the createdOn to set
+	 * @param createdOn
+	 *            the createdOn to set
 	 */
 	public void setCreatedOn(DateTime createdOn) {
 		this.createdOn = createdOn;
 	}
+
 	/**
 	 * @return the modifiedOn
 	 */
 	public DateTime getModifiedOn() {
 		return modifiedOn;
 	}
+
 	/**
-	 * @param modifiedOn the modifiedOn to set
+	 * @param modifiedOn
+	 *            the modifiedOn to set
 	 */
 	public void setModifiedOn(DateTime modifiedOn) {
 		this.modifiedOn = modifiedOn;
 	}
+
 	/**
 	 * @return the totalAmount
 	 */
 	public Money getTotalAmount() {
 		return totalAmount;
 	}
+
 	/**
-	 * @param totalAmount the totalAmount to set
+	 * @param totalAmount
+	 *            the totalAmount to set
 	 */
 	public void setTotalAmount(Money totalAmount) {
 		this.totalAmount = totalAmount;
 	}
-	
-	
-	
+
 }

@@ -10,10 +10,18 @@
     <!-- Enable @Transactional support -->
     <tx:annotation-driven/>
     
+     <!-- This is to scan and load the CacheAccess classes -->
+    <context:component-scan base-package="com.fb.platform.wallet.cache"></context:component-scan>
+
     <!-- Add new services here -->
+    <bean id="walletService" class="com.fb.platform.wallet.service.impl.WalletServiceImpl">
+        <property name="walletDao" ref="walletDao"/>
+        <property name="walletTransactionDao" ref="walletTransactionDao"></property>
+    </bean>
 
     <!-- Add new Managers here -->
     <bean id="walletManager" class="com.fb.platform.wallet.manager.impl.WalletManagerImpl">
+    	<property name="walletService" ref="walletService"></property>
     	<property name="authenticationService" ref="authenticationService"></property>
     </bean>
 </beans>

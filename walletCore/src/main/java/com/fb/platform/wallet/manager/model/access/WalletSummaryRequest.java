@@ -1,38 +1,38 @@
 package com.fb.platform.wallet.manager.model.access;
 
-
 /**
  * 
  * @author kaushik
- *
+ * 
  */
 
-public class WalletSummaryRequest{
+public class WalletSummaryRequest {
 
-	private int userId;
-	private int clientId;
+	private long userId;
+	private long clientId;
 	private String sessionToken;
-	
-	public int getUserId(){
+
+	public long getUserId() {
 		return userId;
 	}
-	
-	public void setUserId(int userId){
+
+	public void setUserId(long userId) {
 		this.userId = userId;
 	}
-	
-	public int getClientId(){
+
+	public long getClientId() {
 		return clientId;
 	}
-	
-	public void setClientId(int clientId){
-		this.clientId = clientId;				
+
+	public void setClientId(long clientId) {
+		this.clientId = clientId;
 	}
-	
-	public String getSessionToken(){
+
+	public String getSessionToken() {
 		return sessionToken;
 	}
-	public void setSessionToken(String sessionToken){
+
+	public void setSessionToken(String sessionToken) {
 		this.sessionToken = sessionToken;
 	}
 }

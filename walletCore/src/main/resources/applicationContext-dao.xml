@@ -14,5 +14,11 @@
 	</bean>
 
     <!-- Add new DAOs here -->
+    <bean id="walletDao" class="com.fb.platform.wallet.dao.impl.WalletDaoImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+	<bean id="walletTransactionDao" class="com.fb.platform.wallet.dao.impl.WalletTransactionDaoImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
 
 </beans>
