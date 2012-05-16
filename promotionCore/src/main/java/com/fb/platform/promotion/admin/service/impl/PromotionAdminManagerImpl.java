@@ -423,7 +423,14 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 			response.setStatus(SearchCouponStatusEnum.INTERNAL_ERROR);
 			return response;
 		}
-		
+		// if no result then set response status as no data found
+		if(allUserCoupons.isEmpty()){
+			log.info("No coupon data found for search criteria coupon code = "+request.getCouponCode() + ", userName = "+request.getUserName());
+			response.setStatus(SearchCouponStatusEnum.NO_DATA_FOUND);
+			response.setErrorCause("No coupon data found for search criteria entered");
+			return response;
+		}
+		// success case
 		response.setCouponBasicDetailsList(new ArrayList<CouponBasicDetails>(allUserCoupons));
 		response.setStatus(SearchCouponStatusEnum.SUCCESS);
 		
@@ -457,7 +464,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		
 		Integer couponId = request.getCouponId(); 
 		boolean useCouponID = false;
-		if(couponId!=null){
+		if(couponId!=null && couponId > 0){
 			useCouponID = true;
 		}
 		
