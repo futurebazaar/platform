@@ -385,13 +385,13 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 			response.setStatus(CreateCouponStatusEnum.SUCCESS);
 			
 		} catch (PromotionNotFoundException e) {
-			log.debug("Promotion Not Found error in create coupon - "+e);
+			log.debug("Promotion Not Found error in create coupon - ", e);
 			response.setStatus(CreateCouponStatusEnum.INVALID_PROMOTION);
 		} catch (CouponCodeGenerationException e) {
-			log.debug("Coupon Code Generation error in create coupon - "+e);
+			log.debug("Coupon Code Generation error in create coupon - ", e);
 			response.setStatus(CreateCouponStatusEnum.CODE_GENERATION_FAILED);
 		} catch (PlatformException e) {
-			log.debug("Error in create coupon - "+e);
+			log.debug("Error in create coupon - ", e);
 			response.setStatus(CreateCouponStatusEnum.INTERNAL_ERROR);
 		}
 		
@@ -441,6 +441,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		} catch(UserNotFoundException e) {
 			response.setStatus(AssignCouponToUserStatusEnum.INVALID_USER_ID);
 		} catch (PlatformException e) {
+			log.error("Error while assigning coupon to user. CouponCode : " + request.getCouponCode() + ". UserId : " + request.getUserId(), e);
 			response.setStatus(AssignCouponToUserStatusEnum.INTERNAL_ERROR);
 		}
 		
