@@ -104,7 +104,6 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
         <xs:element ref="promotionAdmin:maxUsesPerUser"/>
         <xs:element ref="promotionAdmin:maxAmountPerUser"/>
         <xs:element ref="promotionAdmin:ruleName"/>
-        <xs:element ref="promotionAdmin:ruleId"/>
         <xs:element ref="promotionAdmin:ruleConfigItemTO" maxOccurs="unbounded"/>
       </xs:sequence>
     </xs:complexType>
@@ -511,6 +510,7 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
       	<xs:enumeration value="INVALID_LENGTH"/>
       	<xs:enumeration value="INVALID_PROMOTION"/>
       	<xs:enumeration value="INVALID_LIMITS_CONFIG"/>
+      	<xs:enumeration value="CODE_GENERATION_FAILED"/>
 	</xs:restriction>
   </xs:simpleType>
   

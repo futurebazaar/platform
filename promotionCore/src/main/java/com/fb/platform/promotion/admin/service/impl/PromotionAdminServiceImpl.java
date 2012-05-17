@@ -110,9 +110,6 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 			}
 		} catch (DataAccessException e) {
 			throw new PlatformException("Exception while creating new promotion", e);
-		} catch (PlatformException e) {
-			log.error("Error while creating new promotion.", e);
-			throw new PlatformException("Exception while creating new promotion", e);
 		}
 		return promotionId;
 	}
@@ -223,20 +220,24 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 	@Override
 	public List<String> createCoupons(int count, int length, String startsWith, String endsWith, int promotionId, CouponType type, CouponLimitsConfig limits) {
 
-		//see if the promotion is valid, if not this will throw promotion not found exception
-		promotionService.getPromotion(promotionId);
+		try {
+			//see if the promotion is valid, if not this will throw promotion not found exception
+			promotionService.getPromotion(promotionId);
 
-		CouponCodeCreator couponCodeCreator = new CouponCodeCreator();
-		couponCodeCreator.setCouponAdminDao(couponAdminDao);
+			CouponCodeCreator couponCodeCreator = new CouponCodeCreator();
+			couponCodeCreator.setCouponAdminDao(couponAdminDao);
 
-		couponCodeCreator.init(count, length, startsWith, endsWith, COUPON_GENERATION_BATCH_SIZE);
+			couponCodeCreator.init(count, length, startsWith, endsWith, COUPON_GENERATION_BATCH_SIZE);
 
-		while (couponCodeCreator.nextBatchAvailable()) {
-			List<String> batchOfCouponCodes = couponCodeCreator.getNextBatch();
-			createCouponsInBatch(batchOfCouponCodes, promotionId, type, limits);
+			while (couponCodeCreator.nextBatchAvailable()) {
+				List<String> batchOfCouponCodes = couponCodeCreator.getNextBatch();
+				createCouponsInBatch(batchOfCouponCodes, promotionId, type, limits);
+			}
+
+			return couponCodeCreator.getGeneratedCoupons();
+		} catch (DataAccessException e) {
+			throw new PlatformException("Error while creating coupons.", e);
 		}
-
-		return couponCodeCreator.getGeneratedCoupons();
 	}
 
 	private void createCouponsInBatch(List<String> batchOfCoupons, int promotionId, CouponType couponType, CouponLimitsConfig limits) {
