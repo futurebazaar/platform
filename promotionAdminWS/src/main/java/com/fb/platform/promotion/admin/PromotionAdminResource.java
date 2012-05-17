@@ -349,7 +349,7 @@ public class PromotionAdminResource {
 					
 					ruleConfigItemTO.setRuleConfigName(apiRuleConfigItemTO.getRuleConfigName());
 					
-					ruleConfigItemTO.setRuleConfigDescription(apiRuleConfigItemTO.getRuleConfigDescription());
+					ruleConfigItemTO.setRuleConfigDescription(com.fb.platform.promotion.rule.RuleConfigDescriptorEnum.valueOf(apiRuleConfigItemTO.getRuleConfigName()).getDescription());
 					
 					ruleConfigItemTO.setRuleConfigValue(apiRuleConfigItemTO.getRuleConfigValue());
 					
