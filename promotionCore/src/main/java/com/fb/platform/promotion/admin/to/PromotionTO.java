@@ -15,7 +15,7 @@ import com.fb.platform.promotion.rule.RulesEnum;
  */
 public class PromotionTO {
 	
-	private int promotionId;
+	private int id;
 	private int ruleId;
 	private String promotionName;
 	private String description;
@@ -96,12 +96,12 @@ public class PromotionTO {
 	public void setRuleName(String ruleName) {
 		this.ruleName = ruleName;
 	}
-	
-	public int getPromotionId() {
-		return promotionId;
+
+	public int getId() {
+		return id;
 	}
-	public void setPromotionId(int promotionId) {
-		this.promotionId = promotionId;
+	public void setId(int id) {
+		this.id = id;
 	}
 	public int getRuleId() {
 		return ruleId;

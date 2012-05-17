@@ -226,41 +226,44 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 	}
 	
 	@Override
-	public UpdatePromotionResponse updatePromotion(UpdatePromotionRequest updatePromotionRequest) {
-		UpdatePromotionResponse updatePromotionResponse = new UpdatePromotionResponse();
+	public UpdatePromotionResponse updatePromotion(UpdatePromotionRequest request) {
+		UpdatePromotionResponse response = new UpdatePromotionResponse();
 		
-		String requestInvalidationList = updatePromotionRequest.isValid();
+		String requestInvalidationList = request.isValid();
 		
 		if(!StringUtils.isEmpty(requestInvalidationList)) {
-			updatePromotionResponse.setUpdatePromotionEnum(UpdatePromotionEnum.INSUFFICIENT_DATA);
-			updatePromotionResponse.setErrorCause(requestInvalidationList);
-			return updatePromotionResponse;
+			response.setUpdatePromotionEnum(UpdatePromotionEnum.INSUFFICIENT_DATA);
+			response.setErrorCause(requestInvalidationList);
+			return response;
 		}
 		
-		//authenticate the session token and find out the userId
-		AuthenticationTO authentication = authenticationService.authenticate(updatePromotionRequest.getSessionToken());
+		//authenticate the admin session token
+		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
 		if (authentication == null) {
 			//invalid session token
-			updatePromotionResponse.setUpdatePromotionEnum(UpdatePromotionEnum.NO_SESSION);
-			return updatePromotionResponse;
+			response.setUpdatePromotionEnum(UpdatePromotionEnum.NO_SESSION);
+			return response;
 		}
 		
-		updatePromotionResponse.setSessionToken(updatePromotionRequest.getSessionToken());
-		String missingConfigsList = hasValidRuleConfig(updatePromotionRequest.getPromotion());
+		response.setSessionToken(request.getSessionToken());
+		String missingConfigsList = hasValidRuleConfig(request.getPromotion());
 		
 		if(!StringUtils.isEmpty(missingConfigsList)) {
-			updatePromotionResponse.setUpdatePromotionEnum(UpdatePromotionEnum.RULE_CONFIG_MISSING);
-			updatePromotionResponse.setErrorCause(missingConfigsList);
-			return updatePromotionResponse;
+			response.setUpdatePromotionEnum(UpdatePromotionEnum.RULE_CONFIG_MISSING);
+			response.setErrorCause(missingConfigsList);
+			return response;
 		}
 		
-		boolean updateSuccessful = promotionAdminService.updatePromotion(updatePromotionRequest.getPromotion());
-		if(updateSuccessful) {
-			updatePromotionResponse.setUpdatePromotionEnum(UpdatePromotionEnum.SUCCESS);
-		} else {
-			updatePromotionResponse.setUpdatePromotionEnum(UpdatePromotionEnum.NO_DATA_FOUND);
+		try {
+			promotionAdminService.updatePromotion(request.getPromotion());
+			response.setUpdatePromotionEnum(UpdatePromotionEnum.SUCCESS);
+		} catch (PromotionNotFoundException e) {
+			response.setUpdatePromotionEnum(UpdatePromotionEnum.INVALID_PROMOTION_ID);
+		} catch (PlatformException e) {
+			log.error("Exception while updating the promotion. Promotion Id : " + request.getPromotion().getId(), e);
+			response.setUpdatePromotionEnum(UpdatePromotionEnum.INTERNAL_ERROR);
 		}
-		return updatePromotionResponse;
+		return response;
 	}
 	
 	private String hasValidRuleConfig(PromotionTO promotionTo) {
@@ -268,11 +271,11 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		List<RuleConfigDescriptorItem> requiredConfigs = PromotionRuleFactory.getRuleConfig(RulesEnum.valueOf(promotionTo.getRuleName()));
 		HashMap<String, RuleConfigItemTO> receivedConfigsMap = new HashMap<String, RuleConfigItemTO>();
 		
-		for(RuleConfigItemTO ruleConfigItemTO:promotionTo.getConfigItems()) {
+		for (RuleConfigItemTO ruleConfigItemTO : promotionTo.getConfigItems()) {
 			receivedConfigsMap.put(ruleConfigItemTO.getRuleConfigName(), ruleConfigItemTO);
 		}
 		
-		for(RuleConfigDescriptorItem ruleConfigDescriptorItem : requiredConfigs) {
+		for (RuleConfigDescriptorItem ruleConfigDescriptorItem : requiredConfigs) {
 			if(ruleConfigDescriptorItem.isMandatory() && !receivedConfigsMap.containsKey(ruleConfigDescriptorItem.getRuleConfigDescriptorEnum().toString())) {
 				missingConfigsList.add(ruleConfigDescriptorItem.getRuleConfigDescriptorEnum().toString());
 			}
@@ -359,7 +362,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		response = new AssignCouponToUserResponse();
 		response.setSessionToken(request.getSessionToken());
 
-		//authenticate the session token
+		//authenticate the admin session token
 		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
 		if (authentication == null) {
 			//invalid session token
