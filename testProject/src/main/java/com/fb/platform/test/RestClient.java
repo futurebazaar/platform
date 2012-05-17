@@ -769,7 +769,7 @@ public class RestClient {
 
 		CreateCouponRequest request = new CreateCouponRequest();
 		request.setSessionToken(sessionToken);
-		request.setNumberOfCoupon(1010);
+		request.setNumberOfCoupon(1100);
 		
 		CouponTO couponTO = new CouponTO();
 		couponTO.setPromotionId(-3005);

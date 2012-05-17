@@ -64,8 +64,14 @@ public class CouponCodeCreator {
 	}
 
 	public boolean nextBatchAvailable() {
-		if (currentBatchNumber <= numberOfBatches) {
+		if (currentBatchNumber < numberOfBatches) {
 			return true;
+		}
+		if (currentBatchNumber == numberOfBatches) {
+			if ((generatedCoupons.size() % batchSize) > 0) {
+				return true;
+			}
+			return false;
 		}
 		return false;
 	}
