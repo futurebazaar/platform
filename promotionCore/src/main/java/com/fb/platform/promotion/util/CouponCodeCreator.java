@@ -8,8 +8,11 @@ import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.fb.platform.promotion.admin.dao.CouponAdminDao;
+import com.fb.platform.promotion.service.CouponCodeGenerationException;
 
 /**
  * @author vinayak
@@ -17,6 +20,7 @@ import com.fb.platform.promotion.admin.dao.CouponAdminDao;
  */
 public class CouponCodeCreator {
 
+	private Log log = LogFactory.getLog(CouponCodeCreator.class);
 	//excludes 0, 1, I, L and O.
 	private static final char [] chars = "ABCDEFGHJKMNPQRSTUVWXYZ23456789".toCharArray();
 
@@ -37,13 +41,25 @@ public class CouponCodeCreator {
 
 		removeExistingCodes(generatedCoupons, existingCoupons);
 
-		while (existingCoupons.size() != 0) {
+		/*
+		 * Theoretically the loop may run infinitely so putting a number to come out of the loop
+		 * As the max number of coupon to be created is 10000 and batch size is 1000, ideally the
+		 * the maximum number of of times the loop should run is 10 (ideally!!).
+		 * So putting a random number say 10 times 
+		 */
+		int i = 0;
+		while (existingCoupons.size() != 0 && i < 10) {
+			i++;
 			List<String> newCodes = create(existingCoupons.size(), length, startsWith, endsWith);
 			generatedCoupons.addAll(newCodes);
 			existingCoupons = findExistingCouponCodes(newCodes);
 			removeExistingCodes(generatedCoupons, existingCoupons);
 		}
 
+		if(generatedCoupons.size() != count){
+			log.error("Could not generate requested number of coupon codes - requested number of counpons = "+ count);
+			throw new CouponCodeGenerationException("Could not generate requested number of coupon codes - requested number of counpons = "+ count);
+		}
 		numberOfBatches = generatedCoupons.size() / batchSize;
 	}
 

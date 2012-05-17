@@ -56,6 +56,7 @@ import com.fb.platform.promotion.rule.RuleConfigDescriptor;
 import com.fb.platform.promotion.rule.RuleConfigDescriptorItem;
 import com.fb.platform.promotion.rule.RulesEnum;
 import com.fb.platform.promotion.service.CouponAlreadyAssignedToUserException;
+import com.fb.platform.promotion.service.CouponCodeGenerationException;
 import com.fb.platform.promotion.service.CouponNotFoundException;
 import com.fb.platform.promotion.service.InvalidCouponTypeException;
 import com.fb.platform.promotion.service.PromotionNotFoundException;
@@ -332,15 +333,22 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 			List<String> couponsCodes = promotionAdminService.createCoupons(request.getCount(), request.getLength(), request.getStartsWith(), request.getEndsWith(), request.getPromotionId(), request.getType(), limits);
 			numberOfCouponsCreated = couponsCodes.size();
 			commaSeparatedCouponCodes = StringUtils.join(couponsCodes, ",");
+			
+			response.setNumberOfCouponsCreated(numberOfCouponsCreated);
+			response.setCommaSeparatedCouponCodes(commaSeparatedCouponCodes);
+			response.setStatus(CreateCouponStatusEnum.SUCCESS);
+			
 		} catch (PromotionNotFoundException e) {
+			log.debug("Promotion Not Found error in create coupon - "+e);
 			response.setStatus(CreateCouponStatusEnum.INVALID_PROMOTION);
+		} catch (CouponCodeGenerationException e) {
+			log.debug("Coupon Code Generation error in create coupon - "+e);
+			response.setStatus(CreateCouponStatusEnum.CODE_GENERATION_FAILED);
 		} catch (PlatformException e) {
+			log.debug("Error in create coupon - "+e);
 			response.setStatus(CreateCouponStatusEnum.INTERNAL_ERROR);
 		}
 		
-		response.setNumberOfCouponsCreated(numberOfCouponsCreated);
-		response.setCommaSeparatedCouponCodes(commaSeparatedCouponCodes);
-		response.setStatus(CreateCouponStatusEnum.SUCCESS);
 		return response;
 	}
 
@@ -388,7 +396,6 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 			response.setStatus(AssignCouponToUserStatusEnum.INVALID_USER_ID);
 		} catch (PlatformException e) {
 			response.setStatus(AssignCouponToUserStatusEnum.INTERNAL_ERROR);
-			return response;
 		}
 		
 		return response;

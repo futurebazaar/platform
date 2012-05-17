@@ -511,6 +511,7 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
       	<xs:enumeration value="INVALID_LENGTH"/>
       	<xs:enumeration value="INVALID_PROMOTION"/>
       	<xs:enumeration value="INVALID_LIMITS_CONFIG"/>
+      	<xs:enumeration value="CODE_GENERATION_FAILED"/>
 	</xs:restriction>
   </xs:simpleType>
   
