@@ -80,7 +80,7 @@ public interface PromotionAdminService {
 	 * @return
 	 */
 	@Transactional(propagation=Propagation.REQUIRED)
-	public boolean updatePromotion(PromotionTO promotionTO);
+	public void updatePromotion(PromotionTO promotionTO);
 
 	/**
 	 * Create new coupons and stores them in the database. 

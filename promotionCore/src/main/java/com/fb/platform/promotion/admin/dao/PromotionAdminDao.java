@@ -25,7 +25,7 @@ public interface PromotionAdminDao {
 	public void createPromotionLimitConfig(int promotionId, int maxUses, Money maxAmount,
 			int maxUsesPerUser, Money maxAmountPerUser);
 	
-	public int createPromotionRuleConfig(String name, String value, int promotionId, int ruleId);
+	public void createPromotionRuleConfig(String name, String value, int promotionId, int ruleId);
 	
 	public List<PromotionTO> searchPromotion(String promotionName, DateTime validFrom, DateTime validTill, int isActive, SearchPromotionOrderBy orderBy,
 			SortOrder order, int startRecord, int batchSize);
@@ -34,15 +34,15 @@ public interface PromotionAdminDao {
 	
 	public PromotionTO viewPromotion(int promotionId);
 	
-	public int updatePromotion(int promotionId, String name, String description, DateTime validFrom, 
-			DateTime validTill, int active, int ruleId);
+	public void updatePromotion(int promotionId, String name, String description, DateTime validFrom, 
+			DateTime validTill, boolean active, int ruleId);
 	
-	public int updatePromotionLimitConfig(int promotionId, int maxUses, Money maxAmount,
+	public void updatePromotionLimitConfig(int promotionId, int maxUses, Money maxAmount,
 			int maxUsesPerUser, Money maxAmountPerUser);
 	
 	public int updatePromotionRuleConfig(String name, String value, int promotionId);
 	
-	public int deletePromotionRuleConfig(int promotionId);
+	public void deletePromotionRuleConfig(int promotionId);
 	
 	public int getCouponCount(int promotionId);
 	

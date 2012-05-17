@@ -118,46 +118,39 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 	}
 	
 	@Override
-	public boolean updatePromotion(PromotionTO promotionTO) {
-		int isActive = promotionTO.isActive() ? 1 : 0;
-		boolean updateSuccesfull = false;
-		int ruleId = ruleDao.getRuleId(promotionTO.getRuleName());
-		
-		int promotionUpdated = promotionAdminDao.updatePromotion(promotionTO.getPromotionId(), 
-				promotionTO.getPromotionName(), 
-				promotionTO.getDescription(), 
-				promotionTO.getValidFrom(), 
-				promotionTO.getValidTill(), 
-				isActive,
-				ruleId);
-		
-		updateSuccesfull = (promotionUpdated == 1) ? true : false;
-		 
-		if(updateSuccesfull) {
-			promotionAdminDao.updatePromotionLimitConfig(promotionTO.getPromotionId(), 
+	public void updatePromotion(PromotionTO promotionTO) throws PromotionNotFoundException {
+
+		//see if the promotion is valid, this will throw promotion not found exception
+		promotionService.getPromotion(promotionTO.getId());
+
+		try {
+			int ruleId = ruleDao.getRuleId(promotionTO.getRuleName());
+			
+			promotionAdminDao.updatePromotion(promotionTO.getId(), 
+					promotionTO.getPromotionName(), 
+					promotionTO.getDescription(), 
+					promotionTO.getValidFrom(), 
+					promotionTO.getValidTill(), 
+					promotionTO.isActive(),
+					ruleId);
+
+			promotionAdminDao.updatePromotionLimitConfig(promotionTO.getId(), 
 					promotionTO.getMaxUses(), 
 					promotionTO.getMaxAmount(), 
 					promotionTO.getMaxUsesPerUser(), 
 					promotionTO.getMaxAmountPerUser());
-			
-			int rowsDeleted = promotionAdminDao.deletePromotionRuleConfig(promotionTO.getPromotionId());
-			
+				
+			promotionAdminDao.deletePromotionRuleConfig(promotionTO.getId());
+				
 			for(RuleConfigItemTO ruleConfigItemTO : promotionTO.getConfigItems()) {
-				if(updateSuccesfull) {
-					int promotionRuleUpdated = promotionAdminDao.createPromotionRuleConfig(ruleConfigItemTO.getRuleConfigName(), 
+					promotionAdminDao.createPromotionRuleConfig(ruleConfigItemTO.getRuleConfigName(), 
 							ruleConfigItemTO.getRuleConfigValue(), 
-							promotionTO.getPromotionId(), 
+							promotionTO.getId(), 
 							ruleId);
-					updateSuccesfull = (promotionRuleUpdated == 1) ? true : false;
-				} else {
-					break;
-				}
 			}
+		} catch (DataAccessException e) {
+			throw new PlatformException("DataAccess Exception while updating the promotion, promotionId : " + promotionTO.getId(), e);
 		}
-		
-		
-		return updateSuccesfull;
-		
 	}
 	
 	@Override

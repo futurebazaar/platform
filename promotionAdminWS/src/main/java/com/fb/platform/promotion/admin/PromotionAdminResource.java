@@ -267,7 +267,7 @@ public class PromotionAdminResource {
 					PromotionViewTO promotionView = new PromotionViewTO();
 					promotionView.setDescription(apiPromotionView.getDescription());
 					promotionView.setIsActive(apiPromotionView.isActive());
-					promotionView.setPromotionId(apiPromotionView.getPromotionId());
+					promotionView.setPromotionId(apiPromotionView.getId());
 					promotionView.setPromotionName(apiPromotionView.getPromotionName());
 					promotionView.setRuleName(apiPromotionView.getRuleName());
 					
@@ -330,7 +330,7 @@ public class PromotionAdminResource {
 				promotionCompleteView.setIsActive(apiPromotionCompleteView.isActive());
 				promotionCompleteView.setMaxUses(apiPromotionCompleteView.getMaxUses());
 				promotionCompleteView.setMaxUsesPerUser(apiPromotionCompleteView.getMaxUsesPerUser());
-				promotionCompleteView.setPromotionId(apiPromotionCompleteView.getPromotionId());
+				promotionCompleteView.setPromotionId(apiPromotionCompleteView.getId());
 				promotionCompleteView.setPromotionName(apiPromotionCompleteView.getPromotionName());
 				promotionCompleteView.setRuleId(apiPromotionCompleteView.getRuleId());
 				promotionCompleteView.setRuleName(apiPromotionCompleteView.getRuleName());
@@ -396,7 +396,7 @@ public class PromotionAdminResource {
 			PromotionTO promotionTO = updatePromotionRequest.getPromotionTO();
 			com.fb.platform.promotion.admin.to.PromotionTO apiPromotionTO = new com.fb.platform.promotion.admin.to.PromotionTO();
 			
-			apiPromotionTO.setPromotionId(promotionTO.getPromotionId());
+			apiPromotionTO.setId(promotionTO.getPromotionId());
 			apiPromotionTO.setRuleName(promotionTO.getRuleName());
 			apiPromotionTO.setActive(promotionTO.isIsActive());
 			apiPromotionTO.setDescription(promotionTO.getDescription());
