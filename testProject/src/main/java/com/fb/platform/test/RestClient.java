@@ -116,6 +116,7 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(loginRequest, sw);
 
+		System.out.println("\n http://localhost:8080/userWS/auth/login");
 		System.out.println("\n\nLoginReq : \n" + sw.toString());
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
 		loginMethod.setRequestEntity(requestEntity);
@@ -158,6 +159,7 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(couponRequest, sw);
 
+		System.out.println("\n http://localhost:8080/promotionWS/coupon/apply");
 		System.out.println("\n\napplyPromotionReq : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -212,6 +214,7 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(commitCouponRequest, sw);
 
+		System.out.println("\n http://localhost:8080/promotionWS/coupon/commit");
 		System.out.println("\n\ncommitCouponReq : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -245,6 +248,7 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(releaseCouponRequest, sw);
 
+		System.out.println("\n http://localhost:8080/promotionWS/coupon/release");
 		System.out.println("\n\nreleaseCouponReq : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -275,7 +279,8 @@ public class RestClient {
 		Marshaller marshaller = context.createMarshaller();
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(clearCouponCacheRequest, sw);
-
+		
+		System.out.println("\n http://localhost:8080/promotionWS/coupon/clear/coupon");
 		System.out.println("\n\nclearCoupon : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -308,6 +313,7 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(clearPromotionCacheRequest, sw);
 
+		System.out.println("\n http://localhost:8080/promotionWS/coupon/clear/promotion");
 		System.out.println("\n\nclearPromotion : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -338,6 +344,7 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(fetchRuleRequest, sw);
 
+		System.out.println("\n http://localhost:8080/promotionAdminWS/promotionAdmin/rules");
 		System.out.println("\n\ngetAllPromotionRuleList : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -359,7 +366,7 @@ public class RestClient {
 		HttpClient httpClient = new HttpClient();
 
 		//PostMethod logoutMethod = new PostMethod("http://10.0.102.12:8082/userWS/auth/logout");
-		PostMethod createPromotion = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/createPromotion");
+		PostMethod createPromotion = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/promotion/create");
 		CreatePromotionRequest createPromotionRequest = new CreatePromotionRequest();
 		CreatePromotionTO promotionTO = new CreatePromotionTO();
 		
@@ -391,6 +398,7 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(createPromotionRequest, sw);
 
+		System.out.println("\n http://localhost:8080/promotionAdminWS/promotionAdmin/promotion/create");
 		System.out.println("\n\ncreatePromotion : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -415,7 +423,7 @@ public class RestClient {
 		HttpClient httpClient = new HttpClient();
 
 		//PostMethod logoutMethod = new PostMethod("http://10.0.102.12:8082/userWS/auth/logout");
-		PostMethod searchPromotionMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/search");
+		PostMethod searchPromotionMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/promotion/search");
 		
 		SearchPromotionRequest nameSearchPromotionRequest = new SearchPromotionRequest();
 		nameSearchPromotionRequest.setSessionToken(sessionToken);
@@ -441,6 +449,7 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(nameSearchPromotionRequest, sw);
 
+		System.out.println("\n http://localhost:8080/promotionAdminWS/promotionAdmin/promotion/search");
 		System.out.println("\n\nsearchPromotionRequest : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -466,7 +475,7 @@ public class RestClient {
 		HttpClient httpClient = new HttpClient();
 
 		//PostMethod logoutMethod = new PostMethod("http://10.0.102.12:8082/userWS/auth/logout");
-		PostMethod viewPromotionMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/view");
+		PostMethod viewPromotionMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/promotion/view");
 		ViewPromotionRequest viewPromotionRequest = new ViewPromotionRequest();
 		
 		viewPromotionRequest.setSessionToken(sessionToken);
@@ -478,6 +487,7 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(viewPromotionRequest, sw);
 		
+		System.out.println("\n http://localhost:8080/promotionAdminWS/promotionAdmin/promotion/view");
 		System.out.println("\n\nviewPromotionRequest : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -502,7 +512,7 @@ public class RestClient {
 		HttpClient httpClient = new HttpClient();
 
 		//PostMethod logoutMethod = new PostMethod("http://10.0.102.12:8082/userWS/auth/logout");
-		PostMethod updatePromotionMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/updatePromotion");
+		PostMethod updatePromotionMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/promotion/update");
 		UpdatePromotionRequest updatePromotionRequest = new UpdatePromotionRequest();
 		PromotionTO updatePromotion = new PromotionTO();
 		
@@ -535,6 +545,7 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(updatePromotionRequest, sw);
 
+		System.out.println("\n http://localhost:8080/promotionAdminWS/promotionAdmin/promotion/update");
 		System.out.println("\n\n updatePromotion : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -569,6 +580,7 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(logoutReq, sw);
 
+		System.out.println("\n http://localhost:8080/userWS/auth/logout");
 		System.out.println("\n\nLogoutReq : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -648,7 +660,7 @@ public class RestClient {
 	private static void assignCouponToUser(String sessionToken) throws Exception {
 		HttpClient httpClient = new HttpClient();
 
-		PostMethod postMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/assign/user");
+		PostMethod postMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/user/assign");
 
 		AssignCouponToUserRequest request = new AssignCouponToUserRequest();
 		request.setSessionToken(sessionToken);
@@ -661,6 +673,7 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(request, sw);
 
+		System.out.println("\n http://localhost:8080/promotionAdminWS/promotionAdmin/user/assign");
 		System.out.println("\n\n assignCouponToUserRequest : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -682,7 +695,7 @@ public class RestClient {
 	private static void searchCoupon(String sessionToken) throws Exception {
 		HttpClient httpClient = new HttpClient();
 
-		PostMethod postMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/search/coupon");
+		PostMethod postMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/coupon/search");
 
 		SearchCouponRequest request = new SearchCouponRequest();
 		request.setCouponCode("pre_issued_1");
@@ -696,6 +709,7 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(request, sw);
 
+		System.out.println("\n http://localhost:8080/promotionAdminWS/promotionAdmin/coupon/search");
 		System.out.println("\n\n searchCouponRequest : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -717,7 +731,7 @@ public class RestClient {
 	private static void viewCoupon(String sessionToken) throws Exception {
 		HttpClient httpClient = new HttpClient();
 
-		PostMethod postMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/view/coupon");
+		PostMethod postMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/coupon/view");
 
 		ViewCouponRequest request = new ViewCouponRequest();
 		request.setSessionToken(sessionToken);
@@ -730,6 +744,7 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(request, sw);
 
+		System.out.println("\n http://localhost:8080/promotionAdminWS/promotionAdmin/coupon/view");
 		System.out.println("\n\n viewCouponRequest : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -750,7 +765,7 @@ public class RestClient {
 	private static void createCoupon(String sessionToken) throws Exception {
 		HttpClient httpClient = new HttpClient();
 
-		PostMethod postMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/create/coupon");
+		PostMethod postMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/coupon/create");
 
 		CreateCouponRequest request = new CreateCouponRequest();
 		request.setSessionToken(sessionToken);
@@ -777,6 +792,7 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(request, sw);
 
+		System.out.println("\n http://localhost:8080/promotionAdminWS/promotionAdmin/coupon/create");
 		System.out.println("\n\n createCouponRequest : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());

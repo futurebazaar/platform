@@ -150,7 +150,7 @@ public class PromotionAdminResource {
 	}
 	
 	@POST
-	@Path("/createPromotion")
+	@Path("/promotion/create")
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String createPromotion(String createPromotionXML) {
@@ -224,7 +224,7 @@ public class PromotionAdminResource {
 	}
 	
 	@POST
-	@Path("/search")
+	@Path("/promotion/search")
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String searchPromotion(String searchPromotionXML) {
@@ -300,7 +300,7 @@ public class PromotionAdminResource {
 	}
 	
 	@POST
-	@Path("/view")
+	@Path("/promotion/view")
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String viewPromotion(String viewPromotionXML) {
@@ -380,7 +380,7 @@ public class PromotionAdminResource {
 	}
 	
 	@POST
-	@Path("/updatePromotion")
+	@Path("/promotion/update")
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String updatePromotion(String updatePromotionXML) {
@@ -459,12 +459,15 @@ public class PromotionAdminResource {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Future Platform Promotion Admin Websevice.\n");
 		sb.append("XSD : http://hostname:port/promotionAdminWS/promotionAdmin/xsd\n");
-		sb.append("To Assign a PRE_ISSUE coupon to user post to : http://hostname:port/promotionAdminWS/promotionAdmin/assgin/user\n");
-		sb.append("To get all promotion rules post to : http://localhost:8080/promotionAdminWS/promotionAdmin/rules\n");
-		sb.append("To create promotion post to : http://localhost:8080/promotionAdminWS/promotionAdmin/createPromotion\n");
-		sb.append("To search promotion post to : http://localhost:8080/promotionAdminWS/promotionAdmin/search\n");
-		sb.append("To view complete promotion post to : http://localhost:8080/promotionAdminWS/promotionAdmin/view\n");
-		sb.append("To update promotion post to : http://localhost:8080/promotionAdminWS/promotionAdmin/update\n");
+		sb.append("To Assign a PRE_ISSUE coupon to user post to : http://hostname:port/promotionAdminWS/promotionAdmin/user/assign\n");
+		sb.append("To get all promotion rules post to : http://hostname:port/promotionAdminWS/promotionAdmin/rules\n");
+		sb.append("To create promotion post to : http://hostname:port/promotionAdminWS/promotionAdmin/promotion/create\n");
+		sb.append("To search promotion post to : http://hostname:port/promotionAdminWS/promotionAdmin/promotion/search\n");
+		sb.append("To view complete promotion post to : http://hostname:port/promotionAdminWS/promotionAdmin/promotion/view\n");
+		sb.append("To update promotion post to : http://hostname:port/promotionAdminWS/promotionAdmin/promotion/update\n");
+		sb.append("To view coupon post to : http://hostname:port/promotionAdminWS/promotionAdmin/coupon/view\n");
+		sb.append("To search coupon post to : http://hostname:port/promotionAdminWS/promotionAdmin/coupon/search\n");
+		sb.append("To create coupon post to : http://hostname:port/promotionAdminWS/promotionAdmin/coupon/create\n");
 		return sb.toString();
 	}
 	
@@ -494,7 +497,7 @@ public class PromotionAdminResource {
 	}
 
 	@POST
-	@Path("/assign/user")
+	@Path("/user/assign")
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String assignCouponToUser(String assignCouponToUserXml) {
@@ -533,7 +536,7 @@ public class PromotionAdminResource {
 	}
 	
 	@POST
-	@Path("/view/coupon")
+	@Path("/coupon/view")
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String viewCoupon(String viewCouponXML) {
@@ -606,7 +609,7 @@ public class PromotionAdminResource {
 	}
 	
 	@POST
-	@Path("/search/coupon")
+	@Path("/coupon/search")
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String searchCoupon(String searchCouponXML) {
@@ -674,7 +677,7 @@ public class PromotionAdminResource {
 	}
 	
 	@POST
-	@Path("/create/coupon")
+	@Path("/coupon/create")
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String createCoupon(String createCouponXML) {
