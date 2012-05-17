@@ -386,7 +386,7 @@ public class RestClient {
 		promotionTO.setRuleName("BUY_WORTH_X_GET_Y_RS_OFF");
 		
 		RuleConfigItemTO configItem = new RuleConfigItemTO();
-		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF_WRONG");
+		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
 		configItem.setRuleConfigValue("100");
 		promotionTO.getRuleConfigItemTO().add(configItem);
 		

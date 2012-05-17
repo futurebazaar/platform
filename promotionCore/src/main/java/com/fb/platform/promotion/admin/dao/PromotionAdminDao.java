@@ -22,7 +22,7 @@ public interface PromotionAdminDao {
 	public int createPromotion(String name, String description, int ruleId, DateTime validFrom, 
 			DateTime validTill, int active);
 	
-	public int createPromotionLimitConfig(int promotionId, int maxUses, Money maxAmount,
+	public void createPromotionLimitConfig(int promotionId, int maxUses, Money maxAmount,
 			int maxUsesPerUser, Money maxAmountPerUser);
 	
 	public int createPromotionRuleConfig(String name, String value, int promotionId, int ruleId);

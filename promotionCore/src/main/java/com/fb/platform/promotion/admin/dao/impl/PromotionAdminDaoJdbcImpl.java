@@ -30,6 +30,7 @@ import com.fb.platform.promotion.admin.to.PromotionTO;
 import com.fb.platform.promotion.admin.to.RuleConfigItemTO;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
 import com.fb.platform.promotion.admin.to.SortOrder;
+import com.fb.platform.promotion.service.PromotionNotFoundException;
 
 /**
  * @author neha
@@ -310,7 +311,7 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 	}
 
 	@Override
-	public int createPromotionLimitConfig(int promotionId, int maxUses, Money maxAmount,
+	public void createPromotionLimitConfig(int promotionId, int maxUses, Money maxAmount,
 		 int maxUsesPerUser, Money maxAmountPerUser) {
 		
 		log.info("Insert in the promotion_limits_config table => promotionId " + promotionId + " , maxUses : " + maxUses + " , maxAmount : " + maxAmount + " , maxAmountPerUser : " + maxAmountPerUser);
@@ -326,8 +327,6 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 			log.error("Unable to create entry in promotion_limits_config for promotionId : " + promotionId);
 			throw new PlatformException("Unable to create entry in promotion_limits_config for promotionId : " + promotionId);
 		}
-		return rowsUpdated;
-		
 	}
 
 	@Override
@@ -505,21 +504,22 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 		if(log.isDebugEnabled()) {
 			log.debug("Fetch promotion details for promotion id : " + promotionId);
 		}
+		PromotionTO promotionCompleteView = null;
 		try {
-			PromotionTO promotionCompleteView = jdbcTemplate.queryForObject(SELECT_PROMOTION_COMPLETE_VIEW_SQL, 
+			promotionCompleteView = jdbcTemplate.queryForObject(SELECT_PROMOTION_COMPLETE_VIEW_SQL, 
 					new Object[] {promotionId}, 
 					new PromotionMapper());
-
+	
 			List<RuleConfigItemTO> ruleConfigList = jdbcTemplate.query(	SELECT_PROMOTION_RULE_CONFIG_SQL, 
 							new Object[] {promotionId, promotionCompleteView.getRuleId()}, 
 							new RuleConfigItemMapper());
 			promotionCompleteView.setConfigItems(ruleConfigList);
-			
-			return promotionCompleteView;
 		} catch (EmptyResultDataAccessException e) {
 			log.error("No promotion found for promotion id : " + promotionId);
-			return null;
+			throw new PlatformException("No promotion found for promotion id : " + promotionId);
 		}
+		
+		return promotionCompleteView;
 	}
 	
 	@Override

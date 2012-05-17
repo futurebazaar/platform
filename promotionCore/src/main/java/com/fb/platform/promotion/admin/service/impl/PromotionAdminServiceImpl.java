@@ -15,6 +15,7 @@ import org.springframework.dao.DataAccessException;
 import com.fb.commons.PlatformException;
 import com.fb.platform.promotion.admin.dao.CouponAdminDao;
 import com.fb.platform.promotion.admin.dao.PromotionAdminDao;
+import com.fb.platform.promotion.admin.service.NoDataFoundException;
 import com.fb.platform.promotion.admin.service.PromotionAdminService;
 import com.fb.platform.promotion.admin.to.CouponBasicDetails;
 import com.fb.platform.promotion.admin.to.CouponTO;
@@ -31,6 +32,7 @@ import com.fb.platform.promotion.rule.RulesEnum;
 import com.fb.platform.promotion.service.CouponAlreadyAssignedToUserException;
 import com.fb.platform.promotion.service.CouponNotFoundException;
 import com.fb.platform.promotion.service.InvalidCouponTypeException;
+import com.fb.platform.promotion.service.PromotionNotFoundException;
 import com.fb.platform.promotion.service.PromotionService;
 import com.fb.platform.promotion.util.CouponCodeCreator;
 import com.fb.platform.user.dao.interfaces.UserAdminDao;
@@ -64,7 +66,16 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 
 	@Override
 	public List<RulesEnum> getAllPromotionRules() {
-		List<RulesEnum> promotionRulesList = ruleDao.getAllPromotionRules();
+		
+		List<RulesEnum> promotionRulesList = null;
+		
+		try {
+			promotionRulesList = ruleDao.getAllPromotionRules();
+		} catch (DataAccessException e) {
+			log.error("Error while fetching promotion rules : " + e.getStackTrace());
+			throw new PlatformException("Exception while fetching promotion rules", e);
+		}
+		
 		return promotionRulesList;
 	}
 	
@@ -74,30 +85,36 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 		int ruleId = ruleDao.getRuleId(promotionTO.getRuleName());
 		int promotionId = 0;
 		
-		promotionId = promotionAdminDao.createPromotion(promotionTO.getPromotionName(), 
-				promotionTO.getDescription(), 
-				ruleId, 
-				promotionTO.getValidFrom(), 
-				promotionTO.getValidTill(),
-				isActive);
-		if(promotionId > 0) {
-			promotionAdminDao.createPromotionLimitConfig(	promotionId, 
-					promotionTO.getMaxUses(), 
-					promotionTO.getMaxAmount(), 
-					promotionTO.getMaxUsesPerUser(), 
-					promotionTO.getMaxAmountPerUser());
-			
-			for(RuleConfigItemTO ruleConfigItemTO : promotionTO.getConfigItems()) {
-				promotionAdminDao.createPromotionRuleConfig(ruleConfigItemTO.getRuleConfigName(), 
-						ruleConfigItemTO.getRuleConfigValue(), 
-						promotionId, 
-						ruleId);
+		try {
+			promotionId = promotionAdminDao.createPromotion(promotionTO.getPromotionName(), 
+					promotionTO.getDescription(), 
+					ruleId, 
+					promotionTO.getValidFrom(), 
+					promotionTO.getValidTill(),
+					isActive);
+			if(promotionId > 0) {
+				promotionAdminDao.createPromotionLimitConfig(	promotionId, 
+						promotionTO.getMaxUses(), 
+						promotionTO.getMaxAmount(), 
+						promotionTO.getMaxUsesPerUser(), 
+						promotionTO.getMaxAmountPerUser());
+				
+				for(RuleConfigItemTO ruleConfigItemTO : promotionTO.getConfigItems()) {
+					promotionAdminDao.createPromotionRuleConfig(ruleConfigItemTO.getRuleConfigName(), 
+							ruleConfigItemTO.getRuleConfigValue(), 
+							promotionId, 
+							ruleId);
+				}
+			} else {
+				throw new PlatformException("Unable to create new promotion");
 			}
-			
+		} catch (DataAccessException e) {
+			throw new PlatformException("Exception while creating new promotion", e);
+		} catch (PlatformException e) {
+			log.error("Error while creating new promotion : ", e);
+			throw new PlatformException("Exception while creating new promotion", e);
 		}
-		
 		return promotionId;
-		
 	}
 	
 	@Override
@@ -145,28 +162,64 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 	
 	@Override
 	public List<PromotionTO> searchPromotion(String promotionName, DateTime validFrom, DateTime validTill, int isActive, SearchPromotionOrderBy orderBy,
-			SortOrder order, int startRecord, int batchSize) {
-		List<PromotionTO> promotionsList = promotionAdminDao.searchPromotion(promotionName, validFrom, validTill, isActive, orderBy, order, startRecord, batchSize);
+			SortOrder order, int startRecord, int batchSize) throws NoDataFoundException{
+		
+		List<PromotionTO> promotionsList = null;
+		
+		try {
+			promotionsList = promotionAdminDao.searchPromotion(promotionName, validFrom, validTill, isActive, orderBy, order, startRecord, batchSize);
+			if(promotionsList == null || promotionsList.size() == 0) {
+				log.error("No promotions found for the search criteria promotionName : " + promotionName + " ,validFrom : " + validFrom + " ,validTill : " + validTill + " ,isActive : " + isActive );
+				throw new NoDataFoundException("No promotions found for the search criteria promotionName : " + promotionName + " ,validFrom : " + validFrom + " ,validTill : " + validTill + " ,isActive : " + isActive );
+			}
+		} catch (DataAccessException e) {
+			log.error("Exception while searching for promotion " + e.getStackTrace());
+			throw new PlatformException("Exception while searching for promotion.", e);
+		}
+		
 		return promotionsList;
 	}
 	@Override
 	public int getPromotionCount(String promotionName, DateTime validFrom, DateTime validTill, int isActive) {
-		int promotionsCount = promotionAdminDao.getPromotionCount(promotionName, validFrom, validTill, isActive);
+		int promotionsCount = 0;
+		try {
+			promotionsCount = promotionAdminDao.getPromotionCount(promotionName, validFrom, validTill, isActive);
+		} catch (DataAccessException e) {
+			log.error("Exception while fetching promotion count " + e.getStackTrace());
+			throw new PlatformException("Exception while fetching promotion count.", e);
+		}
 		return promotionsCount;
 	}
 	
 	@Override
 	public PromotionTO viewPromotion(int promotionId) {
-		PromotionTO promotionCompleteView = promotionAdminDao.viewPromotion(promotionId);
-		if(promotionCompleteView != null) {
-			int couponCount = promotionAdminDao.getCouponCount(promotionId);
-			promotionCompleteView.setCouponCount(couponCount);
+		PromotionTO promotionCompleteView = null;
+		try {
+			promotionCompleteView = promotionAdminDao.viewPromotion(promotionId);
+		} catch (PlatformException e) {
+			log.error("Promotion not found. Promotion Id : " + promotionId);
+			throw new PromotionNotFoundException("Promotion not found. Promotion Id : " + promotionId);
+		} catch (DataAccessException e) {
+			log.error("Exception while fetching promotion count " + e.getStackTrace());
+			throw new PlatformException("Exception while fetching promotion complete view.", e);
 		}
 		return promotionCompleteView;
 	}
 	
 	public void setRuleDao(RuleDao ruleDao) {
 		this.ruleDao = ruleDao;
+	}
+	
+	@Override
+	public int promotionCouponCount(int promotionId) {
+		int couponCount = 0;
+		try {
+			couponCount = promotionAdminDao.getCouponCount(promotionId);
+		} catch (DataAccessException e) {
+			log.error("Exception while fetching coupon count " + e.getStackTrace());
+			throw new PlatformException("Exception while fetching coupon count.", e);
+		}
+		return couponCount;
 	}
 	
 	public void setPromotionAdminDao(PromotionAdminDao promotionAdminDao) {

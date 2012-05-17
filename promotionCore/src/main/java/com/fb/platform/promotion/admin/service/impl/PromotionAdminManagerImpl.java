@@ -18,6 +18,7 @@ import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
+import com.fb.platform.promotion.admin.service.NoDataFoundException;
 import com.fb.platform.promotion.admin.service.PromotionAdminManager;
 import com.fb.platform.promotion.admin.service.PromotionAdminService;
 import com.fb.platform.promotion.admin.to.AssignCouponToUserRequest;
@@ -86,7 +87,9 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 	@Override
 	public FetchRuleResponse fetchRules(FetchRuleRequest fetchRuleRequest) {
 		FetchRuleResponse fetchRuleResponse = new FetchRuleResponse();
+		
 		if (fetchRuleRequest == null || StringUtils.isBlank(fetchRuleRequest.getSessionToken())) {
+			log.info("Session cannot be null or empty.");
 			fetchRuleResponse.setFetchRulesEnum(FetchRulesEnum.NO_SESSION);
 			return fetchRuleResponse;
 		}
@@ -94,22 +97,31 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		//authenticate the session token and find out the userId
 		AuthenticationTO authentication = authenticationService.authenticate(fetchRuleRequest.getSessionToken());
 		if (authentication == null) {
-			//invalid session token
+			log.info("Invalid session token : " + fetchRuleRequest.getSessionToken());
 			fetchRuleResponse.setFetchRulesEnum(FetchRulesEnum.NO_SESSION);
 			return fetchRuleResponse;
 		}
-		fetchRuleResponse.setSessionToken(fetchRuleRequest.getSessionToken());
-		fetchRuleResponse.setFetchRulesEnum(FetchRulesEnum.SUCCESS);
-		List<RulesEnum> rulesList = promotionAdminService.getAllPromotionRules();
-		List<RuleConfigDescriptor> rulesConfigList = new ArrayList<RuleConfigDescriptor>();
-		for(RulesEnum rulesEnum : rulesList) {
-			List<RuleConfigDescriptorItem> rulesConfigItemList = PromotionRuleFactory.getRuleConfig(rulesEnum);
-			RuleConfigDescriptor ruleConfigDescriptor = new RuleConfigDescriptor();
-			ruleConfigDescriptor.setRulesEnum(rulesEnum);
-			ruleConfigDescriptor.setRuleConfigItemsList(rulesConfigItemList);
-			rulesConfigList.add(ruleConfigDescriptor);
+		
+		try {
+			
+			List<RulesEnum> rulesList = promotionAdminService.getAllPromotionRules();
+			List<RuleConfigDescriptor> rulesConfigList = new ArrayList<RuleConfigDescriptor>();
+			for(RulesEnum rulesEnum : rulesList) {
+				List<RuleConfigDescriptorItem> rulesConfigItemList = PromotionRuleFactory.getRuleConfig(rulesEnum);
+				RuleConfigDescriptor ruleConfigDescriptor = new RuleConfigDescriptor();
+				ruleConfigDescriptor.setRulesEnum(rulesEnum);
+				ruleConfigDescriptor.setRuleConfigItemsList(rulesConfigItemList);
+				rulesConfigList.add(ruleConfigDescriptor);
+			}
+			fetchRuleResponse.setRulesList(rulesConfigList);
+			fetchRuleResponse.setSessionToken(fetchRuleRequest.getSessionToken());
+			fetchRuleResponse.setFetchRulesEnum(FetchRulesEnum.SUCCESS);
+			
+		} catch (PlatformException e) {
+			log.error("Internal error while fetching promotion rules.");
+			fetchRuleResponse.setFetchRulesEnum(FetchRulesEnum.INTERNAL_ERROR);
 		}
-		fetchRuleResponse.setRulesList(rulesConfigList);
+		
 		return fetchRuleResponse;
 	}
 	
@@ -120,6 +132,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		String requestInvalidationList = createPromotionRequest.isValid();
 		
 		if(!StringUtils.isEmpty(requestInvalidationList)) {
+			log.info("Create promotion request insufficient data : " + requestInvalidationList);
 			createPromotionResponse.setCreatePromotionEnum(CreatePromotionEnum.INSUFFICIENT_DATA);
 			createPromotionResponse.setErrorCause(requestInvalidationList);
 			return createPromotionResponse;
@@ -129,33 +142,44 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		AuthenticationTO authentication = authenticationService.authenticate(createPromotionRequest.getSessionToken());
 		if (authentication == null) {
 			//invalid session token
+			log.info("Invalid session token : " + createPromotionRequest.getSessionToken());
 			createPromotionResponse.setCreatePromotionEnum(CreatePromotionEnum.NO_SESSION);
 			return createPromotionResponse;
 		}
 		
-		createPromotionResponse.setSessionToken(createPromotionRequest.getSessionToken());
 		String missingConfigsList = hasValidRuleConfig(createPromotionRequest.getPromotion());
 		
 		if(!StringUtils.isEmpty(missingConfigsList)) {
+			log.info("Create promotion request rule config missing : " + missingConfigsList);
 			createPromotionResponse.setCreatePromotionEnum(CreatePromotionEnum.RULE_CONFIG_MISSING);
 			createPromotionResponse.setErrorCause(missingConfigsList);
 			return createPromotionResponse;
 		}
 		
-		int promotionId = promotionAdminService.createPromotion(createPromotionRequest.getPromotion());
-		if(promotionId > 0) {
-			createPromotionResponse.setPromotionId(promotionId);
-			createPromotionResponse.setCreatePromotionEnum(CreatePromotionEnum.SUCCESS);
-		} 
+		createPromotionResponse.setSessionToken(createPromotionRequest.getSessionToken());
+		
+		try {
+			int promotionId = promotionAdminService.createPromotion(createPromotionRequest.getPromotion());
+			if(promotionId > 0) {
+				createPromotionResponse.setPromotionId(promotionId);
+				createPromotionResponse.setCreatePromotionEnum(CreatePromotionEnum.SUCCESS);
+			} 
+		} catch (PlatformException e) {
+			log.error("Internal error while creating new promotion.");
+			createPromotionResponse.setCreatePromotionEnum(CreatePromotionEnum.INTERNAL_ERROR);
+		}
+		
 		return createPromotionResponse;
 	}
 	
 	@Override
 	public SearchPromotionResponse searchPromotion(SearchPromotionRequest searchPromotionRequest) {
+		
 		SearchPromotionResponse searchPromotionResponse = new SearchPromotionResponse();
 		String requestInvalidationList = searchPromotionRequest.isValid();
 		
 		if(!StringUtils.isEmpty(requestInvalidationList)) {
+			log.info("Cannot search for promotion insufficient data : " + requestInvalidationList);
 			searchPromotionResponse.setSearchPromotionEnum(SearchPromotionEnum.INSUFFICIENT_DATA);
 			searchPromotionResponse.setErrorCause(requestInvalidationList);
 			return searchPromotionResponse;
@@ -165,24 +189,23 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		AuthenticationTO authentication = authenticationService.authenticate(searchPromotionRequest.getSessionToken());
 		if (authentication == null) {
 			//invalid session token
+			log.info("Invalid session token : " + searchPromotionRequest.getSessionToken());
 			searchPromotionResponse.setSearchPromotionEnum(SearchPromotionEnum.NO_SESSION);
 			return searchPromotionResponse;
 		}
 		searchPromotionResponse.setSessionToken(searchPromotionRequest.getSessionToken());
+		
 		int isActive = searchPromotionRequest.isActive() ? 1 : 0;
-		List<PromotionTO> promotionList = promotionAdminService.searchPromotion(	searchPromotionRequest.getPromotionName(), 
-																					searchPromotionRequest.getValidFrom(), 
-																					searchPromotionRequest.getValidTill(),
-																					isActive,
-																					searchPromotionRequest.getSearchPromotionOrderBy(),
-																					searchPromotionRequest.getSortOrder(),
-																					searchPromotionRequest.getStartRecord(), 
-																					searchPromotionRequest.getBatchSize());
-		if(promotionList.isEmpty()) {
-			searchPromotionResponse.setPromotionsList(null);
-			searchPromotionResponse.setTotalCount(0);
-			searchPromotionResponse.setSearchPromotionEnum(SearchPromotionEnum.NO_DATA_FOUND);
-		} else {
+		try {
+			List<PromotionTO> promotionList = promotionAdminService.searchPromotion(	searchPromotionRequest.getPromotionName(), 
+					searchPromotionRequest.getValidFrom(), 
+					searchPromotionRequest.getValidTill(),
+					isActive,
+					searchPromotionRequest.getSearchPromotionOrderBy(),
+					searchPromotionRequest.getSortOrder(),
+					searchPromotionRequest.getStartRecord(), 
+					searchPromotionRequest.getBatchSize());
+			
 			searchPromotionResponse.setPromotionsList(promotionList);
 			int promotionCount = promotionAdminService.getPromotionCount(	searchPromotionRequest.getPromotionName(), 
 																			searchPromotionRequest.getValidFrom(), 
@@ -190,16 +213,26 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 																			isActive);
 			searchPromotionResponse.setTotalCount(promotionCount);
 			searchPromotionResponse.setSearchPromotionEnum(SearchPromotionEnum.SUCCESS);
+			
+		} catch (NoDataFoundException e) {
+			log.error("No promotion matching search criteria found.");
+			searchPromotionResponse.setSearchPromotionEnum(SearchPromotionEnum.NO_DATA_FOUND);
+		} catch (PlatformException e) {
+			log.error("Internal error while searching promotion.");
+			searchPromotionResponse.setSearchPromotionEnum(SearchPromotionEnum.INTERNAL_ERROR);
 		}
+		
 		return searchPromotionResponse;
 	}
 	
 	@Override
 	public ViewPromotionResponse viewPromotion(ViewPromotionRequest viewPromotionRequest) {
+		
 		ViewPromotionResponse viewPromotionResponse = new ViewPromotionResponse();
 		String requestInvalidationList = viewPromotionRequest.isValid();
 		
 		if(!StringUtils.isEmpty(requestInvalidationList)) {
+			log.info("Cannot fetch promotion details, insufficient data : " + requestInvalidationList);
 			viewPromotionResponse.setViewPromotionEnum(ViewPromotionEnum.INSUFFICIENT_DATA);
 			viewPromotionResponse.setErrorCause(requestInvalidationList);
 			return viewPromotionResponse;
@@ -209,19 +242,32 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		AuthenticationTO authentication = authenticationService.authenticate(viewPromotionRequest.getSessionToken());
 		if (authentication == null) {
 			//invalid session token
+			log.info("Invalid session token : " + viewPromotionRequest.getSessionToken());
 			viewPromotionResponse.setViewPromotionEnum(ViewPromotionEnum.NO_SESSION);
 			return viewPromotionResponse;
 		}
+		
 		viewPromotionResponse.setSessionToken(viewPromotionRequest.getSessionToken());
 		
-		PromotionTO promotionCompleteView = promotionAdminService.viewPromotion(viewPromotionRequest.getPromotionId());
-		if(promotionCompleteView != null) {
+		PromotionTO promotionCompleteView = null;
+		
+		try {
+			promotionCompleteView = promotionAdminService.viewPromotion(viewPromotionRequest.getPromotionId());
+			
+			int couponCount = promotionAdminService.promotionCouponCount(viewPromotionRequest.getPromotionId());
+			
+			promotionCompleteView.setCouponCount(couponCount);
 			viewPromotionResponse.setViewPromotionEnum(ViewPromotionEnum.SUCCESS);
 			viewPromotionResponse.setPromotionCompleteView(promotionCompleteView);
-		} else {
+			
+		} catch (PromotionNotFoundException e) {
+			log.error("Promotion not found. Promotion Id : " + viewPromotionRequest.getPromotionId());
 			viewPromotionResponse.setViewPromotionEnum(ViewPromotionEnum.NO_DATA_FOUND);
-			viewPromotionResponse.setPromotionCompleteView(null);
+		} catch (PlatformException e) {
+			log.error("Internal error while fetching promotion.");
+			viewPromotionResponse.setViewPromotionEnum(ViewPromotionEnum.INTERNAL_ERROR);
 		}
+		
 		return viewPromotionResponse;
 	}
 	
