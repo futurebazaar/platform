@@ -228,8 +228,8 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 	
 	@Override
 	public ViewPromotionResponse viewPromotion(ViewPromotionRequest viewPromotionRequest) {
-		
 		ViewPromotionResponse viewPromotionResponse = new ViewPromotionResponse();
+		
 		String requestInvalidationList = viewPromotionRequest.isValid();
 		
 		if(!StringUtils.isEmpty(requestInvalidationList)) {

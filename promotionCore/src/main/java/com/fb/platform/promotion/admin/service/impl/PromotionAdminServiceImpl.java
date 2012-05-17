@@ -72,7 +72,7 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 		try {
 			promotionRulesList = ruleDao.getAllPromotionRules();
 		} catch (DataAccessException e) {
-			log.error("Error while fetching promotion rules : " + e.getStackTrace());
+			log.error("Error while fetching promotion rules.",e);
 			throw new PlatformException("Exception while fetching promotion rules", e);
 		}
 		
@@ -111,7 +111,7 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 		} catch (DataAccessException e) {
 			throw new PlatformException("Exception while creating new promotion", e);
 		} catch (PlatformException e) {
-			log.error("Error while creating new promotion : ", e);
+			log.error("Error while creating new promotion.", e);
 			throw new PlatformException("Exception while creating new promotion", e);
 		}
 		return promotionId;
@@ -149,6 +149,7 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 							ruleId);
 			}
 		} catch (DataAccessException e) {
+			log.error("DataAccess Exception while updating the promotion, promotionId : " + promotionTO.getId(), e);
 			throw new PlatformException("DataAccess Exception while updating the promotion, promotionId : " + promotionTO.getId(), e);
 		}
 	}
@@ -166,7 +167,7 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 				throw new NoDataFoundException("No promotions found for the search criteria promotionName : " + promotionName + " ,validFrom : " + validFrom + " ,validTill : " + validTill + " ,isActive : " + isActive );
 			}
 		} catch (DataAccessException e) {
-			log.error("Exception while searching for promotion " + e.getStackTrace());
+			log.error("Exception while searching for promotion.", e);
 			throw new PlatformException("Exception while searching for promotion.", e);
 		}
 		
@@ -178,7 +179,7 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 		try {
 			promotionsCount = promotionAdminDao.getPromotionCount(promotionName, validFrom, validTill, isActive);
 		} catch (DataAccessException e) {
-			log.error("Exception while fetching promotion count " + e.getStackTrace());
+			log.error("Exception while fetching promotion count.",e);
 			throw new PlatformException("Exception while fetching promotion count.", e);
 		}
 		return promotionsCount;
@@ -193,8 +194,8 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 			log.error("Promotion not found. Promotion Id : " + promotionId);
 			throw new PromotionNotFoundException("Promotion not found. Promotion Id : " + promotionId);
 		} catch (DataAccessException e) {
-			log.error("Exception while fetching promotion count " + e.getStackTrace());
-			throw new PlatformException("Exception while fetching promotion complete view.", e);
+			log.error("Exception while fetching promotion complete view, promotion id : " + promotionId, e);
+			throw new PlatformException("Exception while fetching promotion complete view, promotion id : " + promotionId, e);
 		}
 		return promotionCompleteView;
 	}
@@ -209,7 +210,7 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 		try {
 			couponCount = promotionAdminDao.getCouponCount(promotionId);
 		} catch (DataAccessException e) {
-			log.error("Exception while fetching coupon count " + e.getStackTrace());
+			log.error("Exception while fetching coupon count.",e);
 			throw new PlatformException("Exception while fetching coupon count.", e);
 		}
 		return couponCount;
