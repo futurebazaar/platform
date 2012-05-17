@@ -5,18 +5,17 @@ package com.fb.platform.promotion.rule;
  *	This enum will store the rule configs, description and type.
  */
 public enum RuleConfigDescriptorEnum {
-	CLIENT_LIST("Comma separated list of supported client ids.", "String"),
-	BRAND_LIST("Comma separated list of brands", "String"),
-	MIN_ORDER_VALUE("Minimum value of an order on which we apply this promotion.", "decimal"),
-	FIXED_DISCOUNT_RS_OFF("Fixed amount to be given off on any order.", "decimal"),
-	DISCOUNT_PERCENTAGE("Discount percentage to be given on any order.", "decimal"),
-	MAX_DISCOUNT_CEIL_IN_VALUE("Maximum discount to be given on any order.", "decimal"),
-	PRODUCT_ID("Product Id on which the promotion has to be applied.", "String"),
-	PRODUCT_LIST("Comma separated list of products", "String"),
-	PRODUCT_DISCOUNT_RS_OFF("Fixed amount to be given off on a product.", "decimal"),
-	PRODUCT_DISCOUNTED_VALUE("", "decimal"),
-	CATEGORY_INCLUDE_LIST("Comma separated list of categories included.", "String"),
-	CATEGORY_EXCLUDE_LIST("Comma separated list of categories excluded.", "String");
+	CLIENT_LIST("Client Ids", "String"),
+	BRAND_LIST("Brand Ids", "String"),
+	MIN_ORDER_VALUE("Minimum order value", "decimal"),
+	FIXED_DISCOUNT_RS_OFF("Fixed discount", "decimal"),
+	DISCOUNT_PERCENTAGE("Discount percentage", "decimal"),
+	MAX_DISCOUNT_CEIL_IN_VALUE("Maximum discount in rupees", "decimal"),
+	PRODUCT_ID("Product Ids", "String"),
+	PRODUCT_DISCOUNT_RS_OFF("Product discount", "decimal"),
+	PRODUCT_DISCOUNTED_VALUE("Product discounted value", "decimal"),
+	CATEGORY_INCLUDE_LIST("Include category Ids", "String"),
+	CATEGORY_EXCLUDE_LIST("Exclude category Ids", "String");
 	
 	private String description = null;
 	

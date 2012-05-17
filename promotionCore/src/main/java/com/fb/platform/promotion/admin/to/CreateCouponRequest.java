@@ -53,7 +53,7 @@ public class CreateCouponRequest implements Serializable {
 			return response;
 		}
 
-		if (count == 0) {
+		if (count <= 0) {
 			response.setStatus(CreateCouponStatusEnum.INVALID_COUNT);
 			return response;
 		}
@@ -64,10 +64,11 @@ public class CreateCouponRequest implements Serializable {
 
 		if (promotionId == 0) {
 			response.setStatus(CreateCouponStatusEnum.INVALID_PROMOTION);
-			return response;
+			return response; 
 		}
 
-		if (length == 0) {
+		// the length is not allowed to be more than 25 char and less than 5 char
+		if (length <= 4 || length > 25) {
 			response.setStatus(CreateCouponStatusEnum.INVALID_LENGTH);
 			return response;
 		}

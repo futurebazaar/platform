@@ -30,6 +30,7 @@ import com.fb.platform.promotion.admin.to.PromotionTO;
 import com.fb.platform.promotion.admin.to.RuleConfigItemTO;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
 import com.fb.platform.promotion.admin.to.SortOrder;
+import com.fb.platform.promotion.service.PromotionNotFoundException;
 
 /**
  * @author neha
@@ -310,7 +311,7 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 	}
 
 	@Override
-	public int createPromotionLimitConfig(int promotionId, int maxUses, Money maxAmount,
+	public void createPromotionLimitConfig(int promotionId, int maxUses, Money maxAmount,
 		 int maxUsesPerUser, Money maxAmountPerUser) {
 		
 		log.info("Insert in the promotion_limits_config table => promotionId " + promotionId + " , maxUses : " + maxUses + " , maxAmount : " + maxAmount + " , maxAmountPerUser : " + maxAmountPerUser);
@@ -326,12 +327,10 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 			log.error("Unable to create entry in promotion_limits_config for promotionId : " + promotionId);
 			throw new PlatformException("Unable to create entry in promotion_limits_config for promotionId : " + promotionId);
 		}
-		return rowsUpdated;
-		
 	}
 
 	@Override
-	public int createPromotionRuleConfig(String name, String value, int promotionId, int ruleId) {
+	public void createPromotionRuleConfig(String name, String value, int promotionId, int ruleId) {
 		
 		log.info("Insert in the promotion_rule_config table => name " + name + " , value : " + value + " , promotionId : " + promotionId + " , ruleId : " + ruleId);
 		
@@ -345,8 +344,6 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 			log.error("Unable to create entry in promotion_rule_config for promotionId : " + promotionId);
 			throw new PlatformException("Unable to create entry in promotion_rule_config for promotionId : " + promotionId);
 		}
-		return rowsUpdated;
-		
 	}
 
 
@@ -505,21 +502,22 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 		if(log.isDebugEnabled()) {
 			log.debug("Fetch promotion details for promotion id : " + promotionId);
 		}
+		PromotionTO promotionCompleteView = null;
 		try {
-			PromotionTO promotionCompleteView = jdbcTemplate.queryForObject(SELECT_PROMOTION_COMPLETE_VIEW_SQL, 
+			promotionCompleteView = jdbcTemplate.queryForObject(SELECT_PROMOTION_COMPLETE_VIEW_SQL, 
 					new Object[] {promotionId}, 
 					new PromotionMapper());
-
+	
 			List<RuleConfigItemTO> ruleConfigList = jdbcTemplate.query(	SELECT_PROMOTION_RULE_CONFIG_SQL, 
 							new Object[] {promotionId, promotionCompleteView.getRuleId()}, 
 							new RuleConfigItemMapper());
 			promotionCompleteView.setConfigItems(ruleConfigList);
-			
-			return promotionCompleteView;
 		} catch (EmptyResultDataAccessException e) {
 			log.error("No promotion found for promotion id : " + promotionId);
-			return null;
+			throw new PlatformException("No promotion found for promotion id : " + promotionId);
 		}
+		
+		return promotionCompleteView;
 	}
 	
 	@Override
@@ -529,24 +527,28 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 	}
 	
 	@Override
-	public int updatePromotion(int promotionId, String name, String description, DateTime validFrom, 
-			DateTime validTill, int active, int ruleId) {
+	public void updatePromotion(int promotionId, String name, String description, DateTime validFrom, 
+			DateTime validTill, boolean active, int ruleId) {
 		
 		log.info("Update platform_promotion table => name " + name + " , description : " + description + " , validFrom : " + validFrom + " , validTill : " + validTill + " , active : " + active + " , ruleId : " + ruleId + " where promotionId : " + promotionId);
 		
 		Timestamp modifiedOnTimestamp = new java.sql.Timestamp(System.currentTimeMillis());
 		
 		int promotionUpdated = jdbcTemplate.update(UPDATE_PROMOTION_SQL, new Object[] {modifiedOnTimestamp, new Timestamp(validFrom.getMillis()), new Timestamp(validTill.getMillis()), name, description, active, ruleId, promotionId});
-		return promotionUpdated;
+		if (promotionUpdated != 1) {
+			throw new PlatformException("Error while updating the promotion id : " + promotionId);
+		}
 	}
 	
 	@Override
-	public int updatePromotionLimitConfig(int promotionId, int maxUses, Money maxAmount,
+	public void updatePromotionLimitConfig(int promotionId, int maxUses, Money maxAmount,
 			int maxUsesPerUser, Money maxAmountPerUser) {
 		log.info("Update promotion_limits_config table where promotionId :" + promotionId + " value maxUses : " + maxUses + " , maxAmount : " + maxAmount + " , maxAmountPerUser : " + maxAmountPerUser);
 		
 		int promotionLimitUpdated = jdbcTemplate.update(UPDATE_PROMOTION_LIMIT_CONFIG_SQL, new Object[] {maxUses, maxAmount.getAmount(), maxUsesPerUser, maxAmountPerUser.getAmount(), promotionId});
-		return promotionLimitUpdated;
+		if (promotionLimitUpdated != 1) {
+			throw new PlatformException("Unable to update the promotionLimitsConfig. promotionId : " + promotionId);
+		}
 	}
 	
 	@Override
@@ -559,9 +561,11 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 	}
 	
 	@Override
-	public int deletePromotionRuleConfig(int promotionId) {
+	public void deletePromotionRuleConfig(int promotionId) {
 		int rowsDeleted = jdbcTemplate.update(DELETE_PROMOTION_RULE_CONFIG, new Object[] {promotionId});
-		return rowsDeleted;
+		if (rowsDeleted == 0) {
+			throw new PlatformException("Unable to delete the limitsConfig for promotion id : " + promotionId);
+		}
 	}
 	
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate){
@@ -573,7 +577,7 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 		@Override
 		public PromotionTO mapRow(ResultSet resultSet, int rowNum) throws SQLException {
 			PromotionTO promotionView = new PromotionTO();
-			promotionView.setPromotionId(resultSet.getInt("promotionId"));
+			promotionView.setId(resultSet.getInt("promotionId"));
 			promotionView.setValidFrom(new DateTime(resultSet.getTimestamp("validFrom")));
 			promotionView.setValidTill(new DateTime(resultSet.getTimestamp("validTill")));
 			promotionView.setPromotionName(resultSet.getString("promotionName"));
@@ -609,7 +613,7 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 		@Override
 		public PromotionTO mapRow(ResultSet resultSet, int rowNum) throws SQLException {
 			PromotionTO promotionView = new PromotionTO();
-			promotionView.setPromotionId(resultSet.getInt("promotionId"));
+			promotionView.setId(resultSet.getInt("promotionId"));
 			promotionView.setValidFrom(new DateTime(resultSet.getTimestamp("validFrom")));
 			promotionView.setValidTill(new DateTime(resultSet.getTimestamp("validTill")));
 			promotionView.setPromotionName(resultSet.getString("promotionName"));

@@ -71,13 +71,16 @@ public interface PromotionAdminService {
 	@Transactional(propagation=Propagation.REQUIRED)
 	public PromotionTO viewPromotion(int promotionId);
 	
+	@Transactional(propagation=Propagation.REQUIRED)
+	public int promotionCouponCount(int promotionId); 
+	
 	/**
 	 * This function updates an existing promotion.
 	 * @param promotion
 	 * @return
 	 */
 	@Transactional(propagation=Propagation.REQUIRED)
-	public boolean updatePromotion(PromotionTO promotionTO);
+	public void updatePromotion(PromotionTO promotionTO);
 
 	/**
 	 * Create new coupons and stores them in the database. 

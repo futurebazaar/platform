@@ -75,7 +75,6 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
       	<xs:enumeration value="DISCOUNT_PERCENTAGE"/>
       	<xs:enumeration value="MAX_DISCOUNT_CEIL_IN_VALUE"/>
       	<xs:enumeration value="PRODUCT_ID"/>
-      	<xs:enumeration value="PRODUCT_LIST"/>
       	<xs:enumeration value="PRODUCT_DISCOUNT_RS_OFF"/>
       	<xs:enumeration value="PRODUCT_DISCOUNTED_VALUE"/>
       	<xs:enumeration value="CATEGORY_INCLUDE_LIST"/>
@@ -396,6 +395,7 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
       	<xs:enumeration value="RULE_CONFIG_MISSING"/>
       	<xs:enumeration value="INTERNAL_ERROR"/>
       	<xs:enumeration value="INSUFFICIENT_DATA"/>
+      	<xs:enumeration value="INVALID_PROMOTION_ID"/>
       	<xs:enumeration value="NO_DATA_FOUND"/>
 	</xs:restriction>
   </xs:simpleType>

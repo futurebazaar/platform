@@ -46,7 +46,7 @@ public class UpdatePromotionRequest {
 	
 	private List<String> isPromotionDetailsValid() {
 		List<String> sessionInvalidationList = new ArrayList<String>();
-		if(promotionTO.getPromotionId() == 0) {
+		if(promotionTO.getId() == 0) {
 			sessionInvalidationList.add("Incorrect Promotion Id");
 		}
 		return sessionInvalidationList;

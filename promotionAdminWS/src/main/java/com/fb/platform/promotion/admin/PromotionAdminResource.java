@@ -150,7 +150,7 @@ public class PromotionAdminResource {
 	}
 	
 	@POST
-	@Path("/createPromotion")
+	@Path("/promotion/create")
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String createPromotion(String createPromotionXML) {
@@ -224,7 +224,7 @@ public class PromotionAdminResource {
 	}
 	
 	@POST
-	@Path("/search")
+	@Path("/promotion/search")
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String searchPromotion(String searchPromotionXML) {
@@ -267,7 +267,7 @@ public class PromotionAdminResource {
 					PromotionViewTO promotionView = new PromotionViewTO();
 					promotionView.setDescription(apiPromotionView.getDescription());
 					promotionView.setIsActive(apiPromotionView.isActive());
-					promotionView.setPromotionId(apiPromotionView.getPromotionId());
+					promotionView.setPromotionId(apiPromotionView.getId());
 					promotionView.setPromotionName(apiPromotionView.getPromotionName());
 					promotionView.setRuleName(apiPromotionView.getRuleName());
 					
@@ -300,7 +300,7 @@ public class PromotionAdminResource {
 	}
 	
 	@POST
-	@Path("/view")
+	@Path("/promotion/view")
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String viewPromotion(String viewPromotionXML) {
@@ -330,7 +330,7 @@ public class PromotionAdminResource {
 				promotionCompleteView.setIsActive(apiPromotionCompleteView.isActive());
 				promotionCompleteView.setMaxUses(apiPromotionCompleteView.getMaxUses());
 				promotionCompleteView.setMaxUsesPerUser(apiPromotionCompleteView.getMaxUsesPerUser());
-				promotionCompleteView.setPromotionId(apiPromotionCompleteView.getPromotionId());
+				promotionCompleteView.setPromotionId(apiPromotionCompleteView.getId());
 				promotionCompleteView.setPromotionName(apiPromotionCompleteView.getPromotionName());
 				promotionCompleteView.setRuleId(apiPromotionCompleteView.getRuleId());
 				promotionCompleteView.setRuleName(apiPromotionCompleteView.getRuleName());
@@ -349,7 +349,7 @@ public class PromotionAdminResource {
 					
 					ruleConfigItemTO.setRuleConfigName(apiRuleConfigItemTO.getRuleConfigName());
 					
-					ruleConfigItemTO.setRuleConfigDescription(apiRuleConfigItemTO.getRuleConfigDescription());
+					ruleConfigItemTO.setRuleConfigDescription(com.fb.platform.promotion.rule.RuleConfigDescriptorEnum.valueOf(apiRuleConfigItemTO.getRuleConfigName()).getDescription());
 					
 					ruleConfigItemTO.setRuleConfigValue(apiRuleConfigItemTO.getRuleConfigValue());
 					
@@ -380,7 +380,7 @@ public class PromotionAdminResource {
 	}
 	
 	@POST
-	@Path("/updatePromotion")
+	@Path("/promotion/update")
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String updatePromotion(String updatePromotionXML) {
@@ -396,7 +396,7 @@ public class PromotionAdminResource {
 			PromotionTO promotionTO = updatePromotionRequest.getPromotionTO();
 			com.fb.platform.promotion.admin.to.PromotionTO apiPromotionTO = new com.fb.platform.promotion.admin.to.PromotionTO();
 			
-			apiPromotionTO.setPromotionId(promotionTO.getPromotionId());
+			apiPromotionTO.setId(promotionTO.getPromotionId());
 			apiPromotionTO.setRuleName(promotionTO.getRuleName());
 			apiPromotionTO.setActive(promotionTO.isIsActive());
 			apiPromotionTO.setDescription(promotionTO.getDescription());
@@ -459,12 +459,15 @@ public class PromotionAdminResource {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Future Platform Promotion Admin Websevice.\n");
 		sb.append("XSD : http://hostname:port/promotionAdminWS/promotionAdmin/xsd\n");
-		sb.append("To Assign a PRE_ISSUE coupon to user post to : http://hostname:port/promotionAdminWS/promotionAdmin/assgin/user\n");
-		sb.append("To get all promotion rules post to : http://localhost:8080/promotionAdminWS/promotionAdmin/rules\n");
-		sb.append("To create promotion post to : http://localhost:8080/promotionAdminWS/promotionAdmin/createPromotion\n");
-		sb.append("To search promotion post to : http://localhost:8080/promotionAdminWS/promotionAdmin/search\n");
-		sb.append("To view complete promotion post to : http://localhost:8080/promotionAdminWS/promotionAdmin/view\n");
-		sb.append("To update promotion post to : http://localhost:8080/promotionAdminWS/promotionAdmin/update\n");
+		sb.append("To Assign a PRE_ISSUE coupon to user post to : http://hostname:port/promotionAdminWS/promotionAdmin/user/assign\n");
+		sb.append("To get all promotion rules post to : http://hostname:port/promotionAdminWS/promotionAdmin/rules\n");
+		sb.append("To create promotion post to : http://hostname:port/promotionAdminWS/promotionAdmin/promotion/create\n");
+		sb.append("To search promotion post to : http://hostname:port/promotionAdminWS/promotionAdmin/promotion/search\n");
+		sb.append("To view complete promotion post to : http://hostname:port/promotionAdminWS/promotionAdmin/promotion/view\n");
+		sb.append("To update promotion post to : http://hostname:port/promotionAdminWS/promotionAdmin/promotion/update\n");
+		sb.append("To view coupon post to : http://hostname:port/promotionAdminWS/promotionAdmin/coupon/view\n");
+		sb.append("To search coupon post to : http://hostname:port/promotionAdminWS/promotionAdmin/coupon/search\n");
+		sb.append("To create coupon post to : http://hostname:port/promotionAdminWS/promotionAdmin/coupon/create\n");
 		return sb.toString();
 	}
 	
@@ -494,7 +497,7 @@ public class PromotionAdminResource {
 	}
 
 	@POST
-	@Path("/assign/user")
+	@Path("/user/assign")
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String assignCouponToUser(String assignCouponToUserXml) {
@@ -533,7 +536,7 @@ public class PromotionAdminResource {
 	}
 	
 	@POST
-	@Path("/viewCoupon")
+	@Path("/coupon/view")
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String viewCoupon(String viewCouponXML) {
@@ -570,11 +573,17 @@ public class PromotionAdminResource {
 				couponCompleteView.setMaxAmount(apiCouponCompleteView.getMaxAmount().getAmount());
 				couponCompleteView.setMaxAmountPerUser(apiCouponCompleteView.getMaxAmountPerUser().getAmount());
 				
-				gregCal.set(apiCouponCompleteView.getCreatedOn().getYear(), apiCouponCompleteView.getCreatedOn().getMonthOfYear()-1, apiCouponCompleteView.getCreatedOn().getDayOfMonth(),0,0,0);
-				couponCompleteView.setCreatedOn(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+				if(null != apiCouponCompleteView.getCreatedOn()){
+					gregCal.set(apiCouponCompleteView.getCreatedOn().getYear(), apiCouponCompleteView.getCreatedOn().getMonthOfYear()-1, 
+							apiCouponCompleteView.getCreatedOn().getDayOfMonth(),0,0,0);
+					couponCompleteView.setCreatedOn(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+				}
 				
-				gregCal.set(apiCouponCompleteView.getLastModifiedOn().getYear(), apiCouponCompleteView.getLastModifiedOn().getMonthOfYear()-1, apiCouponCompleteView.getLastModifiedOn().getDayOfMonth(),0,0,0);
-				couponCompleteView.setLastModifiedOn(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+				if(null != apiCouponCompleteView.getLastModifiedOn()){
+					gregCal.set(apiCouponCompleteView.getLastModifiedOn().getYear(), apiCouponCompleteView.getLastModifiedOn().getMonthOfYear()-1, 
+							apiCouponCompleteView.getLastModifiedOn().getDayOfMonth(),0,0,0);
+					couponCompleteView.setLastModifiedOn(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+				}
 				
 			} else {
 				couponCompleteView = null;
@@ -600,7 +609,7 @@ public class PromotionAdminResource {
 	}
 	
 	@POST
-	@Path("/searchCoupon")
+	@Path("/coupon/search")
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String searchCoupon(String searchCouponXML) {
@@ -622,8 +631,17 @@ public class PromotionAdminResource {
 			String inputUserName = StringUtils.isBlank(searchCouponRequest.getUserName()) ? null : searchCouponRequest.getUserName().trim();
 			apiSearchCouponRequest.setUserName(inputUserName);
 			
-			apiSearchCouponRequest.setOrderBy(SearchCouponOrderBy.valueOf(searchCouponRequest.getSearchCouponOrderBy().toString()));
-			apiSearchCouponRequest.setSortOrder(SortOrder.valueOf(searchCouponRequest.getSortOrder().toString()));
+			com.fb.platform.promotion.admin._1_0.SearchCouponOrderBy searchOrderByInRequest = searchCouponRequest.getSearchCouponOrderBy();
+			if(null==searchOrderByInRequest){
+				searchOrderByInRequest = com.fb.platform.promotion.admin._1_0.SearchCouponOrderBy.COUPON_CODE;
+			}
+			apiSearchCouponRequest.setOrderBy(SearchCouponOrderBy.valueOf(searchOrderByInRequest.toString()));
+			
+			com.fb.platform.promotion.admin._1_0.SortOrder sortOrderInRequest = searchCouponRequest.getSortOrder();
+			if(null==sortOrderInRequest){
+				sortOrderInRequest = com.fb.platform.promotion.admin._1_0.SortOrder.ASCENDING;
+			}
+			apiSearchCouponRequest.setSortOrder(SortOrder.valueOf(sortOrderInRequest.toString()));
 			
 			SearchCouponResponse searchCouponResponse	= new SearchCouponResponse();
 			com.fb.platform.promotion.admin.to.SearchCouponResponse apiSearchPromotionResponse = promotionAdminManager.searchCoupons(apiSearchCouponRequest);
@@ -659,7 +677,7 @@ public class PromotionAdminResource {
 	}
 	
 	@POST
-	@Path("/createCoupon")
+	@Path("/coupon/create")
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String createCoupon(String createCouponXML) {

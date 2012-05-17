@@ -44,6 +44,11 @@ import com.fb.platform.promotion._1_0.ReleaseCouponRequest;
 import com.fb.platform.promotion._1_0.ReleaseCouponResponse;
 import com.fb.platform.promotion.admin._1_0.AssignCouponToUserRequest;
 import com.fb.platform.promotion.admin._1_0.AssignCouponToUserResponse;
+import com.fb.platform.promotion.admin._1_0.CodeDetails;
+import com.fb.platform.promotion.admin._1_0.CouponTO;
+import com.fb.platform.promotion.admin._1_0.CouponType;
+import com.fb.platform.promotion.admin._1_0.CreateCouponRequest;
+import com.fb.platform.promotion.admin._1_0.CreateCouponResponse;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionRequest;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionResponse;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionTO;
@@ -51,12 +56,17 @@ import com.fb.platform.promotion.admin._1_0.FetchRuleRequest;
 import com.fb.platform.promotion.admin._1_0.FetchRuleResponse;
 import com.fb.platform.promotion.admin._1_0.PromotionTO;
 import com.fb.platform.promotion.admin._1_0.RuleConfigItemTO;
+import com.fb.platform.promotion.admin._1_0.SearchCouponOrderBy;
+import com.fb.platform.promotion.admin._1_0.SearchCouponRequest;
+import com.fb.platform.promotion.admin._1_0.SearchCouponResponse;
 import com.fb.platform.promotion.admin._1_0.SearchPromotionOrderBy;
 import com.fb.platform.promotion.admin._1_0.SearchPromotionRequest;
 import com.fb.platform.promotion.admin._1_0.SearchPromotionResponse;
 import com.fb.platform.promotion.admin._1_0.SortOrder;
 import com.fb.platform.promotion.admin._1_0.UpdatePromotionRequest;
 import com.fb.platform.promotion.admin._1_0.UpdatePromotionResponse;
+import com.fb.platform.promotion.admin._1_0.ViewCouponRequest;
+import com.fb.platform.promotion.admin._1_0.ViewCouponResponse;
 import com.fb.platform.promotion.admin._1_0.ViewPromotionRequest;
 import com.fb.platform.promotion.admin._1_0.ViewPromotionResponse;
 /**
@@ -84,6 +94,9 @@ public class RestClient {
 		viewPromotion(sessionToken);
 		updatePromotion(sessionToken);
 		assignCouponToUser(sessionToken);
+		searchCoupon(sessionToken);
+		viewCoupon(sessionToken);
+		createCoupon(sessionToken);
 		logout(sessionToken);
 	}
 
@@ -103,11 +116,19 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(loginRequest, sw);
 
+		System.out.println("\n http://localhost:8080/userWS/auth/login");
 		System.out.println("\n\nLoginReq : \n" + sw.toString());
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
 		loginMethod.setRequestEntity(requestEntity);
 
-		int statusCode = httpClient.executeMethod(loginMethod);
+		int statusCode = 2;
+		
+		try{
+			statusCode = httpClient.executeMethod(loginMethod);
+		}catch (Exception e) {
+			System.out.println("login failing\n"+e);
+		}
+		
 		if (statusCode != HttpStatus.SC_OK) {
 			System.out.println("\n\n\nunable to execute the login method : \n\n" + statusCode);
 			System.exit(1);
@@ -138,6 +159,7 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(couponRequest, sw);
 
+		System.out.println("\n http://localhost:8080/promotionWS/coupon/apply");
 		System.out.println("\n\napplyPromotionReq : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -192,6 +214,7 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(commitCouponRequest, sw);
 
+		System.out.println("\n http://localhost:8080/promotionWS/coupon/commit");
 		System.out.println("\n\ncommitCouponReq : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -225,6 +248,7 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(releaseCouponRequest, sw);
 
+		System.out.println("\n http://localhost:8080/promotionWS/coupon/release");
 		System.out.println("\n\nreleaseCouponReq : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -255,7 +279,8 @@ public class RestClient {
 		Marshaller marshaller = context.createMarshaller();
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(clearCouponCacheRequest, sw);
-
+		
+		System.out.println("\n http://localhost:8080/promotionWS/coupon/clear/coupon");
 		System.out.println("\n\nclearCoupon : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -288,6 +313,7 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(clearPromotionCacheRequest, sw);
 
+		System.out.println("\n http://localhost:8080/promotionWS/coupon/clear/promotion");
 		System.out.println("\n\nclearPromotion : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -318,6 +344,7 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(fetchRuleRequest, sw);
 
+		System.out.println("\n http://localhost:8080/promotionAdminWS/promotionAdmin/rules");
 		System.out.println("\n\ngetAllPromotionRuleList : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -339,7 +366,7 @@ public class RestClient {
 		HttpClient httpClient = new HttpClient();
 
 		//PostMethod logoutMethod = new PostMethod("http://10.0.102.12:8082/userWS/auth/logout");
-		PostMethod createPromotion = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/createPromotion");
+		PostMethod createPromotion = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/promotion/create");
 		CreatePromotionRequest createPromotionRequest = new CreatePromotionRequest();
 		CreatePromotionTO promotionTO = new CreatePromotionTO();
 		
@@ -371,6 +398,7 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(createPromotionRequest, sw);
 
+		System.out.println("\n http://localhost:8080/promotionAdminWS/promotionAdmin/promotion/create");
 		System.out.println("\n\ncreatePromotion : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -395,7 +423,7 @@ public class RestClient {
 		HttpClient httpClient = new HttpClient();
 
 		//PostMethod logoutMethod = new PostMethod("http://10.0.102.12:8082/userWS/auth/logout");
-		PostMethod searchPromotionMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/search");
+		PostMethod searchPromotionMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/promotion/search");
 		
 		SearchPromotionRequest nameSearchPromotionRequest = new SearchPromotionRequest();
 		nameSearchPromotionRequest.setSessionToken(sessionToken);
@@ -421,6 +449,7 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(nameSearchPromotionRequest, sw);
 
+		System.out.println("\n http://localhost:8080/promotionAdminWS/promotionAdmin/promotion/search");
 		System.out.println("\n\nsearchPromotionRequest : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -446,7 +475,7 @@ public class RestClient {
 		HttpClient httpClient = new HttpClient();
 
 		//PostMethod logoutMethod = new PostMethod("http://10.0.102.12:8082/userWS/auth/logout");
-		PostMethod viewPromotionMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/view");
+		PostMethod viewPromotionMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/promotion/view");
 		ViewPromotionRequest viewPromotionRequest = new ViewPromotionRequest();
 		
 		viewPromotionRequest.setSessionToken(sessionToken);
@@ -458,6 +487,7 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(viewPromotionRequest, sw);
 		
+		System.out.println("\n http://localhost:8080/promotionAdminWS/promotionAdmin/promotion/view");
 		System.out.println("\n\nviewPromotionRequest : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -482,7 +512,7 @@ public class RestClient {
 		HttpClient httpClient = new HttpClient();
 
 		//PostMethod logoutMethod = new PostMethod("http://10.0.102.12:8082/userWS/auth/logout");
-		PostMethod updatePromotionMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/updatePromotion");
+		PostMethod updatePromotionMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/promotion/update");
 		UpdatePromotionRequest updatePromotionRequest = new UpdatePromotionRequest();
 		PromotionTO updatePromotion = new PromotionTO();
 		
@@ -515,6 +545,7 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(updatePromotionRequest, sw);
 
+		System.out.println("\n http://localhost:8080/promotionAdminWS/promotionAdmin/promotion/update");
 		System.out.println("\n\n updatePromotion : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -549,6 +580,7 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(logoutReq, sw);
 
+		System.out.println("\n http://localhost:8080/userWS/auth/logout");
 		System.out.println("\n\nLogoutReq : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -628,7 +660,7 @@ public class RestClient {
 	private static void assignCouponToUser(String sessionToken) throws Exception {
 		HttpClient httpClient = new HttpClient();
 
-		PostMethod postMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/assign/user");
+		PostMethod postMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/user/assign");
 
 		AssignCouponToUserRequest request = new AssignCouponToUserRequest();
 		request.setSessionToken(sessionToken);
@@ -641,6 +673,7 @@ public class RestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(request, sw);
 
+		System.out.println("\n http://localhost:8080/promotionAdminWS/promotionAdmin/user/assign");
 		System.out.println("\n\n assignCouponToUserRequest : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -657,5 +690,123 @@ public class RestClient {
 		AssignCouponToUserResponse response = (AssignCouponToUserResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(responseStr)));
 		System.out.println(response.getAssignCouponToUserStatusEnum());
 
+	}
+	
+	private static void searchCoupon(String sessionToken) throws Exception {
+		HttpClient httpClient = new HttpClient();
+
+		PostMethod postMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/coupon/search");
+
+		SearchCouponRequest request = new SearchCouponRequest();
+		request.setCouponCode("pre_issued_1");
+		request.setSessionToken(sessionToken);
+		request.setSearchCouponOrderBy(SearchCouponOrderBy.COUPON_CODE);
+		request.setSortOrder(SortOrder.ASCENDING);
+
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
+
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(request, sw);
+
+		System.out.println("\n http://localhost:8080/promotionAdminWS/promotionAdmin/coupon/search");
+		System.out.println("\n\n searchCouponRequest : \n" + sw.toString());
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		postMethod.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(postMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the searchCoupon method : " + statusCode);
+			System.exit(1);
+		}
+		String responseStr = postMethod.getResponseBodyAsString();
+		System.out.println("Got the searchCoupon Response : \n\n" + responseStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		SearchCouponResponse response = (SearchCouponResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(responseStr)));
+		System.out.println(response.getSearchCouponStatus());
+
+	}
+	
+	private static void viewCoupon(String sessionToken) throws Exception {
+		HttpClient httpClient = new HttpClient();
+
+		PostMethod postMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/coupon/view");
+
+		ViewCouponRequest request = new ViewCouponRequest();
+		request.setSessionToken(sessionToken);
+		request.setCouponCode("DCBF78KT54");
+		
+
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
+
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(request, sw);
+
+		System.out.println("\n http://localhost:8080/promotionAdminWS/promotionAdmin/coupon/view");
+		System.out.println("\n\n viewCouponRequest : \n" + sw.toString());
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		postMethod.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(postMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the viewCoupon method : " + statusCode);
+			System.exit(1);
+		}
+		String responseStr = postMethod.getResponseBodyAsString();
+		System.out.println("Got the viewCoupon Response : \n\n" + responseStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		ViewCouponResponse response = (ViewCouponResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(responseStr)));
+		System.out.println(response.getViewCouponStatus());
+	}
+	
+	private static void createCoupon(String sessionToken) throws Exception {
+		HttpClient httpClient = new HttpClient();
+
+		PostMethod postMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/coupon/create");
+
+		CreateCouponRequest request = new CreateCouponRequest();
+		request.setSessionToken(sessionToken);
+		request.setNumberOfCoupon(1010);
+		
+		CouponTO couponTO = new CouponTO();
+		couponTO.setPromotionId(-3005);
+		couponTO.setCouponType(CouponType.PRE_ISSUE);
+		couponTO.setMaxAmount(new BigDecimal(10000.00));
+		couponTO.setMaxAmountPerUser(new BigDecimal(1000.00));
+		couponTO.setMaxUses(20);
+		couponTO.setMaxUsesPerUser(4);
+
+		request.setCouponTO(couponTO);
+		
+		CodeDetails codeDetails = new CodeDetails();
+		codeDetails.setCodeLength(10);
+		
+		request.setCodeDetails(codeDetails);
+		
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
+
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(request, sw);
+
+		System.out.println("\n http://localhost:8080/promotionAdminWS/promotionAdmin/coupon/create");
+		System.out.println("\n\n createCouponRequest : \n" + sw.toString());
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		postMethod.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(postMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the createCoupon method : " + statusCode);
+			System.exit(1);
+		}
+		String responseStr = postMethod.getResponseBodyAsString();
+		System.out.println("Got the createCoupon Response : \n\n" + responseStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		CreateCouponResponse response = (CreateCouponResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(responseStr)));
+		System.out.println(response.getCreateCouponStatus());
 	}
 }
