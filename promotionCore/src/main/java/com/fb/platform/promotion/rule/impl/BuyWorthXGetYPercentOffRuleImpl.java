@@ -42,14 +42,17 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule, Serializa
 		if(ruleConfig.isConfigItemPresent(RuleConfigConstants.CATEGORY_INCLUDE_LIST)){
 			StrTokenizer strTokCategories = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigConstants.CATEGORY_INCLUDE_LIST),",");
 			includeCategoryList = StringToIntegerList.convert((List<String>)strTokCategories.getTokenList());
+			log.info("includeCategoryList = "+ includeCategoryList);
 		}
 		if(ruleConfig.isConfigItemPresent(RuleConfigConstants.CATEGORY_EXCLUDE_LIST)){
 			StrTokenizer strTokCategories = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigConstants.CATEGORY_EXCLUDE_LIST),",");
 			excludeCategoryList = StringToIntegerList.convert((List<String>)strTokCategories.getTokenList());
+			log.info("excludeCategoryList = "+ excludeCategoryList);
 		}
 		if(ruleConfig.isConfigItemPresent(RuleConfigConstants.CLIENT_LIST)){
 			StrTokenizer strTokClients = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigConstants.CLIENT_LIST),",");
 			clientList = StringToIntegerList.convert((List<String>)strTokClients.getTokenList());
+			log.info("clientList = "+ clientList);
 		}
 		if(ruleConfig.isConfigItemPresent(RuleConfigConstants.MIN_ORDER_VALUE)){
 			minOrderValue = new Money(BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigConstants.MIN_ORDER_VALUE))));
@@ -61,6 +64,7 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule, Serializa
 		if(ruleConfig.isConfigItemPresent(RuleConfigConstants.BRAND_LIST)){
 			StrTokenizer strTokCategories = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigConstants.BRAND_LIST),",");
 			brands = StringToIntegerList.convert((List<String>)strTokCategories.getTokenList());
+			log.info("brandsList = "+ brands);
 		}
 		log.info("discountPercentage : " + discountPercentage.toString() + " ,maxDiscountPerUse" + maxDiscountPerUse.toString());
 	}
