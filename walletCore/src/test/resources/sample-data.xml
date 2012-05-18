@@ -1,5 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
+	<table name="accounts_client">
+		<column>id</column>
+		<column>name</column>
+		<column>confirmed_order_email</column>
+		<column>pending_order_email</column>
+		<column>share_product_email</column>
+		<column>signature</column>
+		<column>pending_order_helpline</column>
+		<column>confirmed_order_helpline</column>
+		<column>sms_mask</column>
+		<column>noreply_email</column>
+		<column>feedback_email</column>
+		<column>promotions_email</column>
+		<column>sale_pricelist</column>
+		<column>list_pricelist</column>
+		<column>clientdomain_name</column>
+		<column>slug</column>
+        <row>
+        	<value description="id">-4</value>
+        	<value description="name">Test Client 1</value>
+            <value description="confirmed_order_email">test confirmed_order_email 1</value>
+        	<value description="pending_order_email">test pending_order_email 1</value>
+            <value description="share_product_email">test share_product_email 1</value>
+            <value description="signature">test signature 1</value>
+        	<value description="pending_order_helpline">1111111111</value>
+            <value description="confirmed_order_helpline">12121212</value>
+        	<value description="sms_mask">test sms_mask 1</value>
+            <value description="noreply_email">test noreply_email 1</value>
+        	<value description="feedback_email">test feedback_email 1</value>
+            <value description="promotions_email">test promotions_email 1</value>
+        	<value description="sale_pricelist">12345678</value>
+            <value description="list_pricelist">123456789</value>
+        	<value description="clientdomain_name">test clientdomain_name 1</value>
+        	<value description="slug">test slug 1</value>
+        </row>
+        <row>
+        	<value description="id">-5</value>
+        	<value description="name">Test Client 2</value>
+            <value description="confirmed_order_email">test confirmed_order_email 2</value>
+        	<value description="pending_order_email">test pending_order_email 2</value>
+            <value description="share_product_email">test share_product_email 2</value>
+            <value description="signature">test signature 2</value>
+        	<value description="pending_order_helpline">2222222222</value>
+            <value description="confirmed_order_helpline">12121212</value>
+        	<value description="sms_mask">test sms_mask 2</value>
+            <value description="noreply_email">test noreply_email 2</value>
+        	<value description="feedback_email">test feedback_email 2</value>
+            <value description="promotions_email">test promotions_email 2</value>
+        	<value description="sale_pricelist">22345678</value>
+            <value description="list_pricelist">223456789</value>
+        	<value description="clientdomain_name">test clientdomain_name 2</value>
+        	<value description="slug">test slug 2</value>
+        </row>
+        <row>
+        	<value description="id">-6</value>
+        	<value description="name">Test Client 3</value>
+            <value description="confirmed_order_email">test confirmed_order_email 3</value>
+        	<value description="pending_order_email">test pending_order_email 3</value>
+            <value description="share_product_email">test share_product_email 3</value>
+            <value description="signature">test signature 3</value>
+        	<value description="pending_order_helpline">3333333333</value>
+            <value description="confirmed_order_helpline">32323232</value>
+        	<value description="sms_mask">test sms_mask 3</value>
+            <value description="noreply_email">test noreply_email 3</value>
+        	<value description="feedback_email">test feedback_email 3</value>
+            <value description="promotions_email">test promotions_email 3</value>
+        	<value description="sale_pricelist">32345678</value>
+            <value description="list_pricelist">323456789</value>
+        	<value description="clientdomain_name">test clientdomain_name 3</value>
+        	<value description="slug">test slug 3</value>
+        </row>
+	</table>
 	<table name="wallets_wallet">
 		<column>id</column>
 		<column>total_amount</column>
@@ -80,43 +152,43 @@
 		<row>
 			<value>1</value>
 			<value>-1</value>
-			<value>-1</value>
+			<value>-5</value>
 			<value>1</value>
 		</row>
 		<row>
 			<value>2</value>
 			<value>-1</value>
-			<value>-3</value>
+			<value>-6</value>
 			<value>2</value>
 		</row>
 		<row>
 			<value>3</value>
 			<value>-2</value>
-			<value>-1</value>
+			<value>-5</value>
 			<value>3</value>
 		</row>
 		<row>
 			<value>4</value>
 			<value>-5</value>
-			<value>-1</value>
+			<value>-4</value>
 			<value>4</value>
 		</row>
 		<row>
 			<value>5</value>
 			<value>-3</value>
-			<value>-1</value>
+			<value>-4</value>
 			<value>5</value>
 		</row>
 		<row>
 			<value>6</value>
 			<value>-4</value>
-			<value>-2</value>
+			<value>-6</value>
 			<value>6</value>
 		</row>
 		<row>
 			<value>7</value>
 			<value>-4</value>
-			<value>-3</value>
+			<value>-5</value>
 			<value>7</value>
 		</row>
 	</table>
@@ -176,7 +248,7 @@
 		<column>order_id</column>
 		<column>refund_id</column>
 		<column>payment_id</column>
-		<column>gift_id</column>
+		<column>gift_code</column>
 		<column>transaction_reversal_id</column>
 		<column>transaction_description</column>		
 		<row>

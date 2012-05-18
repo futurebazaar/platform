@@ -12,5 +12,9 @@ public interface WalletTransactionDao {
 	public String insertTransaction(WalletTransaction walletTransaction);
 	
 	public List<WalletTransaction> walletHistory(Wallet wallet,DateTime fromDate,DateTime toDate);
+	
+	public WalletTransaction transactionById(long walletId,String transactionId);
+
+	public WalletTransaction refundTransactionByRefundId(long walletId, long refundId);
 
 }

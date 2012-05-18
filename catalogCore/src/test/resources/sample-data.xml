@@ -50,42 +50,5 @@
         	<value description="clientdomain_name">test clientdomain_name 1</value>
         	<value description="slug">test slug 1</value>
         </row>
-        <row>
-        	<value description="id">-2</value>
-        	<value description="name">Test Client 2</value>
-            <value description="confirmed_order_email">test confirmed_order_email 2</value>
-        	<value description="pending_order_email">test pending_order_email 2</value>
-            <value description="share_product_email">test share_product_email 2</value>
-            <value description="signature">test signature 2</value>
-        	<value description="pending_order_helpline">2222222222</value>
-            <value description="confirmed_order_helpline">12121212</value>
-        	<value description="sms_mask">test sms_mask 2</value>
-            <value description="noreply_email">test noreply_email 2</value>
-        	<value description="feedback_email">test feedback_email 2</value>
-            <value description="promotions_email">test promotions_email 2</value>
-        	<value description="sale_pricelist">22345678</value>
-            <value description="list_pricelist">223456789</value>
-        	<value description="clientdomain_name">test clientdomain_name 2</value>
-        	<value description="slug">test slug 2</value>
-        </row>
-        <row>
-        	<value description="id">-3</value>
-        	<value description="name">Test Client 3</value>
-            <value description="confirmed_order_email">test confirmed_order_email 3</value>
-        	<value description="pending_order_email">test pending_order_email 3</value>
-            <value description="share_product_email">test share_product_email 3</value>
-            <value description="signature">test signature 3</value>
-        	<value description="pending_order_helpline">3333333333</value>
-            <value description="confirmed_order_helpline">32323232</value>
-        	<value description="sms_mask">test sms_mask 3</value>
-            <value description="noreply_email">test noreply_email 3</value>
-        	<value description="feedback_email">test feedback_email 3</value>
-            <value description="promotions_email">test promotions_email 3</value>
-        	<value description="sale_pricelist">32345678</value>
-            <value description="list_pricelist">323456789</value>
-        	<value description="clientdomain_name">test clientdomain_name 3</value>
-        	<value description="slug">test slug 3</value>
-        </row>
-	</table>
-
+	</table>       
 </dataset>

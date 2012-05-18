@@ -1,5 +1,8 @@
 package com.fb.platform.wallet.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.joda.time.DateTime;
 
 import com.fb.commons.to.Money;
@@ -7,32 +10,40 @@ import com.fb.commons.to.Money;
 public class WalletTransaction {
 
 	private Wallet wallet;
+	private long id;
 	private String transactionId = null;
-	private SubWalletType subWalletType;
 	private TransactionType transactionType = null;
+	private List<WalletSubTransaction> walletSubTransaction;
 	private Money amount;
-	private long orderId;
-	private long refundId;
-	private long paymentId;
-	private long transactionReversalId;
-	private String giftCode;
-	private String notes;
 	private DateTime timeStamp;
 
-	WalletTransaction(Wallet wallet, SubWalletType subWalletType,
-			TransactionType transactionType, Money amount, long orderId,
-			long refundId, long paymentId, long transactionReversalId,String giftCode) {
+	WalletTransaction(Wallet wallet,
+			TransactionType transactionType, Money amount ,DateTime datetime) {
 		super();
 		this.wallet = wallet;
-		this.subWalletType = subWalletType;
 		this.transactionType = transactionType;
 		this.amount = amount;
-		this.orderId = orderId;
-		this.refundId = refundId;
-		this.paymentId = paymentId;
-		this.transactionReversalId = transactionReversalId;
-		this.giftCode = giftCode;
+		this.timeStamp = datetime;
 	}
+	
+	public WalletTransaction() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	/**
+	 * @return the id
+	 */
+	public long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(long id) {
+		this.id = id;
+	}
+
 	/**
 	 * @return the wallet
 	 */
@@ -94,51 +105,6 @@ public class WalletTransaction {
 	}
 
 	/**
-	 * @return the orderId
-	 */
-	public long getOrderId() {
-		return orderId;
-	}
-
-	/**
-	 * @param orderId
-	 *            the orderId to set
-	 */
-	public void setOrderId(long orderId) {
-		this.orderId = orderId;
-	}
-
-	/**
-	 * @return the paymentId
-	 */
-	public long getPaymentId() {
-		return paymentId;
-	}
-
-	/**
-	 * @param paymentId
-	 *            the paymentId to set
-	 */
-	public void setPaymentId(long paymentId) {
-		this.paymentId = paymentId;
-	}
-
-	/**
-	 * @return the notes
-	 */
-	public String getNotes() {
-		return notes;
-	}
-
-	/**
-	 * @param notes
-	 *            the notes to set
-	 */
-	public void setNotes(String notes) {
-		this.notes = notes;
-	}
-
-	/**
 	 * @return the timeStamp
 	 */
 	public DateTime getTimeStamp() {
@@ -152,55 +118,121 @@ public class WalletTransaction {
 	public void setTimeStamp(DateTime timeStamp) {
 		this.timeStamp = timeStamp;
 	}
-
 	/**
-	 * @return the subWalletType
+	 * @return the walletSubTransaction
 	 */
-	public SubWalletType getSubWalletType() {
-		return subWalletType;
+	 public List<WalletSubTransaction> getWalletSubTransaction() {
+	        if (walletSubTransaction == null) {
+	        	walletSubTransaction = new ArrayList<WalletSubTransaction>();
+	        }
+	        return this.walletSubTransaction;
 	}
 
-	/**
-	 * @param subWalletType
-	 *            the subWalletType to set
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
 	 */
-	public void setSubWalletType(SubWalletType subWalletType) {
-		this.subWalletType = subWalletType;
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((amount == null) ? 0 : amount.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result
+				+ ((timeStamp == null) ? 0 : timeStamp.hashCode());
+		result = prime * result
+				+ ((transactionId == null) ? 0 : transactionId.hashCode());
+		result = prime * result
+				+ ((transactionType == null) ? 0 : transactionType.hashCode());
+		result = prime * result + ((wallet == null) ? 0 : wallet.hashCode());
+		result = prime
+				* result
+				+ ((walletSubTransaction == null) ? 0 : walletSubTransaction
+						.hashCode());
+		return result;
 	}
-	/**
-	 * @return the transactionReversalId
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
-	public long getTransactionReversalId() {
-		return transactionReversalId;
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		WalletTransaction other = (WalletTransaction) obj;
+		if (amount == null) {
+			if (other.amount != null) {
+				return false;
+			}
+		} else if (!amount.equals(other.amount)) {
+			return false;
+		}
+		if (id != other.id) {
+			return false;
+		}
+		if (timeStamp == null) {
+			if (other.timeStamp != null) {
+				return false;
+			}
+		} else if (!timeStamp.equals(other.timeStamp)) {
+			return false;
+		}
+		if (transactionId == null) {
+			if (other.transactionId != null) {
+				return false;
+			}
+		} else if (!transactionId.equals(other.transactionId)) {
+			return false;
+		}
+		if (transactionType != other.transactionType) {
+			return false;
+		}
+		if (wallet == null) {
+			if (other.wallet != null) {
+				return false;
+			}
+		} else if (!wallet.equals(other.wallet)) {
+			return false;
+		}
+		if (walletSubTransaction == null) {
+			if (other.walletSubTransaction != null) {
+				return false;
+			}
+		} else if (!walletSubTransaction.equals(other.walletSubTransaction)) {
+			return false;
+		}
+		return true;
 	}
-	/**
-	 * @param transactionReversalId the transactionReversalId to set
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
 	 */
-	public void setTransactionReversalId(long transactionReversalId) {
-		this.transactionReversalId = transactionReversalId;
-	}
-	/**
-	 * @return the giftCode
-	 */
-	public String getGiftCode() {
-		return giftCode;
-	}
-	/**
-	 * @param giftCode the giftCode to set
-	 */
-	public void setGiftCode(String giftCode) {
-		this.giftCode = giftCode;
-	}
-	/**
-	 * @return the refundId
-	 */
-	public long getRefundId() {
-		return refundId;
-	}
-	/**
-	 * @param refundId the refundId to set
-	 */
-	public void setRefundId(long refundId) {
-		this.refundId = refundId;
-	}
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("WalletTransaction [wallet=");
+		builder.append(wallet);
+		builder.append(", id=");
+		builder.append(id);
+		builder.append(", transactionId=");
+		builder.append(transactionId);
+		builder.append(", transactionType=");
+		builder.append(transactionType);
+		builder.append(", walletSubTransaction=");
+		builder.append(walletSubTransaction);
+		builder.append(", amount=");
+		builder.append(amount);
+		builder.append(", timeStamp=");
+		builder.append(timeStamp);
+		builder.append("]");
+		return builder.toString();
+	}	
+	 
+	
 }

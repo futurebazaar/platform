@@ -60,10 +60,10 @@ public interface WalletService {
 	 * @param giftCoupon : The coupon code if filled via an client gift or EGV.
 	 * @throws WalletNOtFoundException When no wallet is found matching the wallet.
 	 * @throws PlatformException When an unrecoverable error happens.
-	 * @return CreditWalletStatus
+	 * @return WalletTransaction
 	**/
 	@Transactional (propagation = Propagation.REQUIRED)
-	public CreditWalletStatus credit (long walletId, Money amount , SubWalletType subWalletType , long paymentId , long refundId , String gitfCoupon) throws WalletNOtFoundException,PlatformException;
+	public WalletTransaction credit (long walletId, Money amount , SubWalletType subWalletType , long paymentId , long refundId , String gitfCoupon) throws WalletNOtFoundException,PlatformException;
 	
 	/**
 	 * Debit the wallet with the given amount.

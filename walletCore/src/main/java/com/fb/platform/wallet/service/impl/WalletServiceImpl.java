@@ -9,13 +9,15 @@ import com.fb.commons.to.Money;
 import com.fb.platform.wallet.dao.WalletDao;
 import com.fb.platform.wallet.dao.WalletTransactionDao;
 import com.fb.platform.wallet.model.SubWalletType;
+import com.fb.platform.wallet.model.TransactionType;
 import com.fb.platform.wallet.model.Wallet;
+import com.fb.platform.wallet.model.WalletSubTransaction;
 import com.fb.platform.wallet.to.WalletTransaction;
 import com.fb.platform.wallet.service.WalletService;
 import com.fb.platform.wallet.service.exception.InSufficientFundsException;
 import com.fb.platform.wallet.service.exception.InvalidTransaction;
+import com.fb.platform.wallet.service.exception.RefundExpiredException;
 import com.fb.platform.wallet.service.exception.WalletNOtFoundException;
-import com.fb.platform.wallet.to.CreditWalletStatus;
 
 public class WalletServiceImpl implements WalletService {
 
@@ -59,12 +61,27 @@ public class WalletServiceImpl implements WalletService {
 	}
 
 	@Override
-	public CreditWalletStatus credit(long walletId, Money amount,
+	public WalletTransaction credit(long walletId, Money amount,
 			SubWalletType subWalletType, long paymentId, long refundId,
 			String gitfCoupon) throws WalletNOtFoundException,
 			PlatformException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			WalletTransaction walletTransactionRes = new WalletTransaction();
+			Wallet wallet = load(walletId);
+			if (wallet != null) {
+				com.fb.platform.wallet.model.WalletTransaction walletTransaction = wallet
+						.credit(amount, subWalletType, paymentId, refundId,gitfCoupon);
+				walletTransactionRes.setWallet(walletDao.update(wallet));
+				walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(walletTransaction));
+				return walletTransactionRes;
+			} else {
+				throw new WalletNOtFoundException(
+						"No wallet with this wallet id");
+			}
+		} catch (PlatformException e) {
+			throw new PlatformException(
+					"No wallet with this wallet id");
+		}
 	}
 
 	@Override
@@ -72,8 +89,27 @@ public class WalletServiceImpl implements WalletService {
 			long clientId, Money amount, long orderId)
 			throws WalletNOtFoundException, InSufficientFundsException,
 			PlatformException {
-		// TODO Auto-generated method stub
-		return null;
+		try{
+			WalletTransaction walletTransactionRes = new WalletTransaction();
+			Wallet wallet = load(userId,clientId);
+			if (wallet != null) {
+				if(wallet.isSufficientFund(amount)){
+					com.fb.platform.wallet.model.WalletTransaction walletTransaction = wallet
+							.debit(amount, orderId);
+					walletTransactionRes.setWallet(walletDao.update(wallet));
+					walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(walletTransaction));
+					return walletTransactionRes;
+				}else{
+					throw new InSufficientFundsException("Insufficient fund in wallet");
+				}
+			} else {
+				throw new WalletNOtFoundException(
+						"No wallet with this wallet id");
+			}			
+		}catch (Exception e) {
+			return null;
+		}
+		
 	}
 
 	@Override
@@ -81,8 +117,34 @@ public class WalletServiceImpl implements WalletService {
 			long clientId, Money amount, long refundId, boolean ignoreExpiry)
 			throws WalletNOtFoundException, InSufficientFundsException,
 			PlatformException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			WalletTransaction walletTransactionRes =  new WalletTransaction();
+			Wallet wallet = load(userId,clientId);
+			if (wallet != null) {
+				com.fb.platform.wallet.model.WalletTransaction walletTransaction = walletTransactionDao.refundTransactionByRefundId(wallet.getId(),refundId);
+				if(walletTransaction.getTransactionType().equals(TransactionType.CREDIT)){
+					WalletSubTransaction walletSubTransaction = walletTransaction.getWalletSubTransaction().get(0);
+					if(walletSubTransaction.getAmount().gteq(amount)){
+						if(ignoreExpiry || walletTransaction.getTimeStamp().plusDays(14).isAfterNow()){
+							walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(wallet.refund(amount)));
+							walletTransactionRes.setWallet(walletDao.update(wallet));							
+						}else {
+							throw new RefundExpiredException();
+						}
+					}else{
+						throw new InSufficientFundsException();
+					}
+				}else{
+					throw new PlatformException(); 
+				}
+			}else{
+				throw new WalletNOtFoundException(
+						"No wallet with this wallet id");
+			}
+			return walletTransactionRes;
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	@Override
@@ -90,8 +152,27 @@ public class WalletServiceImpl implements WalletService {
 			long userId, long clientId, String transactionId)
 			throws WalletNOtFoundException, InvalidTransaction,
 			PlatformException {
-		// TODO Auto-generated method stub
-		return null;
+		try{
+			WalletTransaction walletTransactionRes = new WalletTransaction();
+			Wallet wallet = load(userId,clientId);
+			if (wallet != null) {
+				com.fb.platform.wallet.model.WalletTransaction walletTransaction = walletTransactionDao.transactionById(wallet.getId(), transactionId);
+				com.fb.platform.wallet.model.WalletTransaction walletTransactionNew = wallet.reverseTransaction(walletTransaction);
+				walletTransactionRes.setWallet(walletDao.update(wallet));
+				walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(walletTransactionNew));
+				return walletTransactionRes;				
+			} else {
+				throw new WalletNOtFoundException(
+						"No wallet with this wallet id");
+			}			
+		}catch (Exception e) {
+			return null;
+		}
 	}
-	
+	public void setWalletDao(WalletDao walletDao) {
+		this.walletDao = walletDao;
+	}
+	public void setWalletTransactionDao(WalletTransactionDao walletTransactionDao) {
+		this.walletTransactionDao = walletTransactionDao;
+	}	
 }

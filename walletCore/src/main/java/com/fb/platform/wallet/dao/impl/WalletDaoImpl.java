@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.joda.time.DateTime;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,17 +20,17 @@ import com.fb.platform.wallet.model.Wallet;
 
 public class WalletDaoImpl implements WalletDao {
 
-	private final String SELECT_WALLET_ID = "Select"
-			+ " id,"
+	private final String SELECT_WALLET_ID = "Select "
+			+ "id, "
 			+ "total_amount, "
 			+ "cash_amount, "
 			+ "gift_amount, "
 			+ "refund_amount, "
 			+ "created_on "
-			+ "from wallets_wallet"
+			+ "from wallets_wallet "
 			+ "where id = ?";
 	
-	private final String UPDATE_WALLET_ID = "Update wallets_wallet set"
+	private final String UPDATE_WALLET_ID = "Update wallets_wallet set "
 			+ "total_amount = ?, "
 			+ "cash_amount = ?, "
 			+ "gift_amount =?, "
@@ -37,20 +38,20 @@ public class WalletDaoImpl implements WalletDao {
 			+ "modified_on = CURDATE() "
 			+ "where id = ?";
 	
-	private final String GET_WALLET_ID_USER_CLIENT = "Select"
+	private final String GET_WALLET_ID_USER_CLIENT = "Select "
 			+ "wallet_id " 
 			+ "from users_wallet "
 			+ "where user_id = ? and client_id = ?";
 	
 	private final String CREATE_NEW_WALLET = "Insert "
 			+ "into wallets_wallet"
-			+ "(total_amount,cash_amoount,gift_amount,refund_amount,created_on,modified_on) "
-			+ "values(0,0,0,0,CURDATE(),CURDATE())" ;
+			+ "(total_amount,cash_amount,gift_amount,refund_amount,created_on,modified_on) "
+			+ "values (0,0,0,0,CURDATE(),CURDATE())" ;
 	
-	private final String CREATE_USER_CLIENT_WALLET = "Insert"
-			+ "into users_wallet"
+	private final String CREATE_USER_CLIENT_WALLET = "Insert "
+			+ "into users_wallet "
 			+ "(user_id,client_id,wallet_id) "
-			+ "values(?,?,?)";
+			+ "values (?,?,?)";
 	
 	private JdbcTemplate jdbcTemplate;
 	
@@ -75,8 +76,10 @@ public class WalletDaoImpl implements WalletDao {
 				return create(userId, clientId);
 			}
 			return wallet;
-		}catch (PlatformException e) {
-			throw new PlatformException();
+		}catch (EmptyResultDataAccessException e) {
+			return create(userId, clientId);
+		}catch (Exception e) {
+			return null;
 		}
 	}
 	
@@ -94,8 +97,8 @@ public class WalletDaoImpl implements WalletDao {
 			long walletId = keyHolder.getKey().longValue();
 			jdbcTemplate.update(CREATE_USER_CLIENT_WALLET, new Object[]{userId,clientId,walletId});
 			return load(walletId);
-		}catch (PlatformException e) {
-			throw new PlatformException();
+		}catch (Exception e) {
+			return null;
 		}
 	}
 
@@ -113,6 +116,10 @@ public class WalletDaoImpl implements WalletDao {
 		}		
 	}
 
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+			this.jdbcTemplate = jdbcTemplate;
+	}
+	 
 	private static class WalletMapper implements RowMapper<Wallet> {
 
     	@Override
