@@ -260,7 +260,7 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
       <xs:sequence>
         <xs:element ref="promotionAdmin:sessionToken"/>
         <xs:element ref="promotionAdmin:couponCode"/>
-        <xs:element ref="promotionAdmin:userId"/>
+        <xs:element ref="promotionAdmin:userName"/>
         <xs:element ref="promotionAdmin:overrideCouponUserLimit"/>
       </xs:sequence>
     </xs:complexType>
@@ -283,7 +283,7 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
       <xs:enumeration value="SUCCESS"/>
       <xs:enumeration value="INTERNAL_ERROR"/>
       <xs:enumeration value="NO_SESSION"/>
-      <xs:enumeration value="INVALID_USER_ID"/>
+      <xs:enumeration value="INVALID_USER"/>
       <xs:enumeration value="COUPON_ALREADY_ASSIGNED_TO_USER"/>
       <xs:enumeration value="INVALID_COUPON_TYPE"/>
       <xs:enumeration value="INVALID_COUPON_CODE"/>
@@ -372,6 +372,7 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
         <xs:element ref="promotionAdmin:couponBasicDetails" maxOccurs="unbounded"/>
         <xs:element ref="promotionAdmin:errorCause"/>
         <xs:element ref="promotionAdmin:searchCouponStatus"/>
+        <xs:element ref="promotionAdmin:totalCount"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>

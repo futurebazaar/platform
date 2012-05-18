@@ -527,7 +527,7 @@ public class PromotionAdminResource {
 			apiRequest.setCouponCode(xmlRequest.getCouponCode());
 			apiRequest.setOverrideCouponUserLimit(xmlRequest.getOverrideCouponUserLimit());
 			apiRequest.setSessionToken(xmlRequest.getSessionToken());
-			apiRequest.setUserId(xmlRequest.getUserId());
+			apiRequest.setUserName(xmlRequest.getUserName());
 
 			AssignCouponToUserResponse xmlResponse = new AssignCouponToUserResponse();
 			com.fb.platform.promotion.admin.to.AssignCouponToUserResponse apiResponse = promotionAdminManager.assignCouponToUser(apiRequest);
@@ -665,7 +665,7 @@ public class PromotionAdminResource {
 			searchCouponResponse.setErrorCause(apiSearchPromotionResponse.getErrorCause());
 			searchCouponResponse.setSessionToken(apiSearchPromotionResponse.getSessionToken());
 			searchCouponResponse.setSearchCouponStatus(SearchCouponStatus.valueOf(apiSearchPromotionResponse.getStatus().toString()));
-			//searchCouponResponse.setTotalCount(apiSearchPromotionResponse.getTotalCount());
+			searchCouponResponse.setTotalCount(apiSearchPromotionResponse.getTotalCount());
 			
 			if(searchCouponResponse.getSearchCouponStatus().equals(SearchCouponStatus.SUCCESS)) {
 				for(com.fb.platform.promotion.admin.to.CouponBasicDetails apiCouponBasicDetails : apiSearchPromotionResponse.getCouponBasicDetailsList()) {
