@@ -5,8 +5,8 @@ package com.fb.platform.promotion.rule;
  *	This enum will store the rule configs, description and type.
  */
 public enum RuleConfigDescriptorEnum {
-	CLIENT_LIST("Client Ids", "String"),
-	BRAND_LIST("Brand Ids", "String"),
+	CLIENT_LIST("Client ID", "String"),
+	BRAND_LIST("Brand ID", "String"),
 	MIN_ORDER_VALUE("Minimum order value", "decimal"),
 	FIXED_DISCOUNT_RS_OFF("Fixed discount", "decimal"),
 	DISCOUNT_PERCENTAGE("Discount percentage", "decimal"),
@@ -14,8 +14,8 @@ public enum RuleConfigDescriptorEnum {
 	PRODUCT_ID("Product Ids", "String"),
 	PRODUCT_DISCOUNT_RS_OFF("Product discount", "decimal"),
 	PRODUCT_DISCOUNTED_VALUE("Product discounted value", "decimal"),
-	CATEGORY_INCLUDE_LIST("Include category Ids", "String"),
-	CATEGORY_EXCLUDE_LIST("Exclude category Ids", "String");
+	CATEGORY_INCLUDE_LIST("Include category ID", "String"),
+	CATEGORY_EXCLUDE_LIST("Exclude category ID", "String");
 	
 	private String description = null;
 	
