@@ -42,14 +42,17 @@ public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule, Serializable {
 		if(ruleConfig.isConfigItemPresent(RuleConfigDescriptorEnum.CATEGORY_INCLUDE_LIST)){
 			StrTokenizer strTokCategories = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.CATEGORY_INCLUDE_LIST),",");
 			includeCategoryList = StringToIntegerList.convert((List<String>)strTokCategories.getTokenList());
+			log.info("includeCategoryList = "+ includeCategoryList);
 		}
 		if(ruleConfig.isConfigItemPresent(RuleConfigDescriptorEnum.CATEGORY_EXCLUDE_LIST)){
 			StrTokenizer strTokCategories = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.CATEGORY_EXCLUDE_LIST),",");
 			excludeCategoryList = StringToIntegerList.convert((List<String>)strTokCategories.getTokenList());
+			log.info("excludeCategoryList = "+ excludeCategoryList);
 		}
 		if(ruleConfig.isConfigItemPresent(RuleConfigDescriptorEnum.CLIENT_LIST)){
 			StrTokenizer strTokClients = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.CLIENT_LIST),",");
 			clientList = StringToIntegerList.convert((List<String>)strTokClients.getTokenList());
+			log.info("clientList = "+ clientList);
 		}
 		if(ruleConfig.isConfigItemPresent(RuleConfigDescriptorEnum.MIN_ORDER_VALUE)){
 			minOrderValue = new Money(BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.MIN_ORDER_VALUE))));
@@ -61,6 +64,7 @@ public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule, Serializable {
 		if(ruleConfig.isConfigItemPresent(RuleConfigDescriptorEnum.BRAND_LIST)){
 			StrTokenizer strTokCategories = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.BRAND_LIST),",");
 			brands = StringToIntegerList.convert((List<String>)strTokCategories.getTokenList());
+			log.info("brandsList = "+ brands);
 		}
 		fixedRsOff = new Money (BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.FIXED_DISCOUNT_RS_OFF))));
 		log.info("fixedRsOff : " + fixedRsOff.toString());
