@@ -279,6 +279,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		String requestInvalidationList = request.isValid();
 		
 		if(!StringUtils.isEmpty(requestInvalidationList)) {
+			log.info("Cannot update promotion, insufficient data : " + requestInvalidationList);
 			response.setUpdatePromotionEnum(UpdatePromotionEnum.INSUFFICIENT_DATA);
 			response.setErrorCause(requestInvalidationList);
 			return response;
@@ -288,6 +289,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
 		if (authentication == null) {
 			//invalid session token
+			log.info("Invalid session token : " + request.getSessionToken());
 			response.setUpdatePromotionEnum(UpdatePromotionEnum.NO_SESSION);
 			return response;
 		}
@@ -296,6 +298,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		String missingConfigsList = hasValidRuleConfig(request.getPromotion());
 		
 		if(!StringUtils.isEmpty(missingConfigsList)) {
+			log.info("Update promotion request rule config missing : " + missingConfigsList);
 			response.setUpdatePromotionEnum(UpdatePromotionEnum.RULE_CONFIG_MISSING);
 			response.setErrorCause(missingConfigsList);
 			return response;
@@ -305,6 +308,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 			promotionAdminService.updatePromotion(request.getPromotion());
 			response.setUpdatePromotionEnum(UpdatePromotionEnum.SUCCESS);
 		} catch (PromotionNotFoundException e) {
+			log.error("Update promotion invalid promotion id : " + request.getPromotion().getId(), e);
 			response.setUpdatePromotionEnum(UpdatePromotionEnum.INVALID_PROMOTION_ID);
 		} catch (PlatformException e) {
 			log.error("Exception while updating the promotion. Promotion Id : " + request.getPromotion().getId(), e);
@@ -344,6 +348,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		CreateCouponResponse response = new CreateCouponResponse();
 		if (request == null) {
 			response = new CreateCouponResponse();
+			log.info("Empty request sent to create coupon.");
 			response.setStatus(CreateCouponStatusEnum.NO_SESSION);
 			return response;
 		}
@@ -359,6 +364,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
 		if (authentication == null) {
 			//invalid session token
+			log.info("Invalid session token : " + request.getSessionToken());
 			response.setStatus(CreateCouponStatusEnum.NO_SESSION);
 			return response;
 		}
@@ -385,13 +391,13 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 			response.setStatus(CreateCouponStatusEnum.SUCCESS);
 			
 		} catch (PromotionNotFoundException e) {
-			log.debug("Promotion Not Found error in create coupon - ", e);
+			log.error("Promotion Not Found error in create coupon - " + request.getPromotionId(), e);
 			response.setStatus(CreateCouponStatusEnum.INVALID_PROMOTION);
 		} catch (CouponCodeGenerationException e) {
-			log.debug("Coupon Code Generation error in create coupon - ", e);
+			log.error("Coupon Code Generation error in create coupon - ", e);
 			response.setStatus(CreateCouponStatusEnum.CODE_GENERATION_FAILED);
 		} catch (PlatformException e) {
-			log.debug("Error in create coupon - ", e);
+			log.error("Error in create coupon - ", e);
 			response.setStatus(CreateCouponStatusEnum.INTERNAL_ERROR);
 		}
 		
@@ -404,6 +410,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 
 		if (request == null) {
 			response = new AssignCouponToUserResponse();
+			log.info("Empty request sent to assign coupon to user.");
 			response.setStatus(AssignCouponToUserStatusEnum.NO_SESSION);
 			return response;
 		}
@@ -420,6 +427,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
 		if (authentication == null) {
 			//invalid session token
+			log.info("Invalid session token : " + request.getSessionToken());
 			response.setStatus(AssignCouponToUserStatusEnum.NO_SESSION);
 			return response;
 		}
@@ -433,12 +441,16 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 			response.setStatus(AssignCouponToUserStatusEnum.SUCCESS);
 
 		} catch (CouponNotFoundException e) {
+			log.error("Invalid coupon code : " + request.getCouponCode(), e);
 			response.setStatus(AssignCouponToUserStatusEnum.INVALID_COUPON_CODE);
 		} catch (CouponAlreadyAssignedToUserException e) {
+			log.error("Coupon already assigned to user : " + request.getCouponCode(), e);
 			response.setStatus(AssignCouponToUserStatusEnum.COUPON_ALREADY_ASSIGNED_TO_USER);
 		} catch (InvalidCouponTypeException e) {
+			log.error("Invalid coupon type.", e);
 			response.setStatus(AssignCouponToUserStatusEnum.INVALID_COUPON_TYPE);
 		} catch(UserNotFoundException e) {
+			log.error("Invalid user id : " + request.getUserId(), e);
 			response.setStatus(AssignCouponToUserStatusEnum.INVALID_USER_ID);
 		} catch (PlatformException e) {
 			log.error("Error while assigning coupon to user. CouponCode : " + request.getCouponCode() + ". UserId : " + request.getUserId(), e);
