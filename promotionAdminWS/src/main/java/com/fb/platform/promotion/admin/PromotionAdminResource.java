@@ -271,11 +271,19 @@ public class PromotionAdminResource {
 					promotionView.setPromotionName(apiPromotionView.getPromotionName());
 					promotionView.setRuleName(apiPromotionView.getRuleName());
 					
-					gregCal.set(apiPromotionView.getValidFrom().getYear(), apiPromotionView.getValidFrom().getMonthOfYear()-1, apiPromotionView.getValidFrom().getDayOfMonth(),0,0,0);
-					promotionView.setValidFrom(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+					if(apiPromotionView.getValidFrom() != null) {
+						gregCal.set(apiPromotionView.getValidFrom().getYear(), apiPromotionView.getValidFrom().getMonthOfYear()-1, apiPromotionView.getValidFrom().getDayOfMonth(),0,0,0);
+						promotionView.setValidFrom(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+					} else {
+						promotionView.setValidFrom(null);
+					}
 					
-					gregCal.set(apiPromotionView.getValidTill().getYear(), apiPromotionView.getValidTill().getMonthOfYear()-1, apiPromotionView.getValidTill().getDayOfMonth(),0,0,0);
-					promotionView.setValidTill(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+					if(apiPromotionView.getValidTill() != null) {
+						gregCal.set(apiPromotionView.getValidTill().getYear(), apiPromotionView.getValidTill().getMonthOfYear()-1, apiPromotionView.getValidTill().getDayOfMonth(),0,0,0);
+						promotionView.setValidTill(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+					} else {
+						promotionView.setValidTill(null);
+					}
 					
 					searchPromotionResponse.getPromotionViewTO().add(promotionView);
 				}
@@ -335,11 +343,19 @@ public class PromotionAdminResource {
 				promotionCompleteView.setRuleId(apiPromotionCompleteView.getRuleId());
 				promotionCompleteView.setRuleName(apiPromotionCompleteView.getRuleName());
 				
-				gregCal.set(apiPromotionCompleteView.getValidFrom().getYear(), apiPromotionCompleteView.getValidFrom().getMonthOfYear()-1, apiPromotionCompleteView.getValidFrom().getDayOfMonth(),0,0,0);
-				promotionCompleteView.setValidFrom(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+				if(apiPromotionCompleteView.getValidFrom() != null) {
+					gregCal.set(apiPromotionCompleteView.getValidFrom().getYear(), apiPromotionCompleteView.getValidFrom().getMonthOfYear()-1, apiPromotionCompleteView.getValidFrom().getDayOfMonth(),0,0,0);
+					promotionCompleteView.setValidFrom(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+				} else {
+					promotionCompleteView.setValidFrom(null);
+				}
 				
-				gregCal.set(apiPromotionCompleteView.getValidTill().getYear(), apiPromotionCompleteView.getValidTill().getMonthOfYear()-1, apiPromotionCompleteView.getValidTill().getDayOfMonth(),0,0,0);
-				promotionCompleteView.setValidTill(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+				if(apiPromotionCompleteView.getValidTill() != null) {
+					gregCal.set(apiPromotionCompleteView.getValidTill().getYear(), apiPromotionCompleteView.getValidTill().getMonthOfYear()-1, apiPromotionCompleteView.getValidTill().getDayOfMonth(),0,0,0);
+					promotionCompleteView.setValidTill(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+				} else {
+					promotionCompleteView.setValidTill(null);
+				}
 				
 				promotionCompleteView.setMaxAmount(apiPromotionCompleteView.getMaxAmount().getAmount());
 				promotionCompleteView.setMaxAmountPerUser(apiPromotionCompleteView.getMaxAmountPerUser().getAmount());

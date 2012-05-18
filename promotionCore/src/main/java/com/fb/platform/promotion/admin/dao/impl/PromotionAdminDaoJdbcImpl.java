@@ -578,8 +578,16 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 		public PromotionTO mapRow(ResultSet resultSet, int rowNum) throws SQLException {
 			PromotionTO promotionView = new PromotionTO();
 			promotionView.setId(resultSet.getInt("promotionId"));
-			promotionView.setValidFrom(new DateTime(resultSet.getTimestamp("validFrom")));
-			promotionView.setValidTill(new DateTime(resultSet.getTimestamp("validTill")));
+			if(resultSet.getTimestamp("validFrom") != null) {
+				promotionView.setValidFrom(new DateTime(resultSet.getTimestamp("validFrom")));
+			} else {
+				promotionView.setValidFrom(null);
+			}
+			if(resultSet.getTimestamp("validTill") != null) {
+				promotionView.setValidTill(new DateTime(resultSet.getTimestamp("validTill")));
+			} else {
+				promotionView.setValidTill(null);
+			}
 			promotionView.setPromotionName(resultSet.getString("promotionName"));
 			promotionView.setDescription(resultSet.getString("description"));
 			boolean isActive = false;
@@ -614,8 +622,16 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 		public PromotionTO mapRow(ResultSet resultSet, int rowNum) throws SQLException {
 			PromotionTO promotionView = new PromotionTO();
 			promotionView.setId(resultSet.getInt("promotionId"));
-			promotionView.setValidFrom(new DateTime(resultSet.getTimestamp("validFrom")));
-			promotionView.setValidTill(new DateTime(resultSet.getTimestamp("validTill")));
+			if(resultSet.getTimestamp("validFrom") != null) {
+				promotionView.setValidFrom(new DateTime(resultSet.getTimestamp("validFrom")));
+			} else {
+				promotionView.setValidFrom(null);
+			}
+			if(resultSet.getTimestamp("validTill") != null) {
+				promotionView.setValidTill(new DateTime(resultSet.getTimestamp("validTill")));
+			} else {
+				promotionView.setValidTill(null);
+			}
 			promotionView.setPromotionName(resultSet.getString("promotionName"));
 			promotionView.setDescription(resultSet.getString("description"));
 			boolean isActive = false;

@@ -69,7 +69,7 @@ public class FirstPurchaseBuyWorthXGetYRsOffRuleImpl  implements PromotionRule, 
 			brands = StringToIntegerList.convert((List<String>)strTokCategories.getTokenList());
 		}
 
-		log.info("minOrderValue : " + minOrderValue.toString() + ", fixedRsOff : " + fixedRsOff.toString());
+		//log.info("minOrderValue : " + minOrderValue.toString() + ", fixedRsOff : " + fixedRsOff.toString());
 	}
 
 	@Override
