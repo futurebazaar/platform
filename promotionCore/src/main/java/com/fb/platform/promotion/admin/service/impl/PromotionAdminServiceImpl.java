@@ -109,6 +109,7 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 				throw new PlatformException("Unable to create new promotion");
 			}
 		} catch (DataAccessException e) {
+			log.error("DataAccess Exception while creating promotion.", e);
 			throw new PlatformException("Exception while creating new promotion", e);
 		}
 		return promotionId;
@@ -236,6 +237,7 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 
 			return couponCodeCreator.getGeneratedCoupons();
 		} catch (DataAccessException e) {
+			log.error("DataAccess Exception while creating coupon for promotionId : " + promotionId, e);
 			throw new PlatformException("Error while creating coupons.", e);
 		}
 	}
@@ -325,6 +327,7 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 			couponAdminDao.assignToUser(userId, couponCode, overriddenUserLimit);
 
 		} catch (DataAccessException e) {
+			log.error("Exception while assigning Coupon to user. CouponCode : " + couponCode + ". UserId : "  + userId, e);
 			throw new PlatformException("Exception while assigning Coupon to user. CouponCode : " + couponCode + ". UserId : "  + userId, e);
 		}
 	}

@@ -383,14 +383,14 @@ public class PromotionAdminResource {
 			marshaller.marshal(viewPromotionResponse, outStringWriter);
 
 			String xmlResponse = outStringWriter.toString();
-			logger.info("searchPromotionXML response :\n" + xmlResponse);
+			logger.info("viewPromotionXML response :\n" + xmlResponse);
 			return xmlResponse;
 			
 		} catch (JAXBException e) {
-			logger.error("Error in the searchPromotion call.", e);
+			logger.error("Error in the viewPromotion call.", e);
 			return "error"; //TODO return proper error response
 		} catch (DatatypeConfigurationException e) {
-			logger.error("Error in the searchPromotion call invalid date in database.", e);
+			logger.error("Error in the viewPromotion call invalid date in database.", e);
 			return "error"; //TODO return proper error response
 		}
 	}
@@ -540,9 +540,9 @@ public class PromotionAdminResource {
 			marsheller.marshal(xmlResponse, outStringWriter);
 
 			String xmlResponseStr = outStringWriter.toString();
-			if (logger.isDebugEnabled()) {
-				logger.debug("assignCouponToUser response :\n" + xmlResponseStr);
-			}
+			
+			logger.info("assignCouponToUser response :\n" + xmlResponseStr);
+			
 			return xmlResponseStr;
 
 		} catch (JAXBException e) {
