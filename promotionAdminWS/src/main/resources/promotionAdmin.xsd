@@ -407,7 +407,7 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
   	<xs:restriction base="xs:string">
     	<xs:enumeration value="PRE_ISSUE"/>
       	<xs:enumeration value="GLOBAL"/>
-      	<xs:enumeration value="PRE_ISSUE"/>
+      	<xs:enumeration value="POST_ISSUE"/>
 	</xs:restriction>
   </xs:simpleType>
   
