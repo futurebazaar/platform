@@ -547,23 +547,21 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 				log.info("Viewing coupon by coupon code = "+request.getCouponCode());
 				couponTO = promotionAdminService.viewCoupons(request.getCouponCode());
 			}
+			
+			response.setCouponTO(couponTO);
+			response.setStatus(ViewCouponStatusEnum.SUCCESS);
+			
 		} catch (CouponNotFoundException e) {
 			log.error("Coupon not found", e);
 			response.setStatus(ViewCouponStatusEnum.INVALID_COUPON);
-			return response;
 		}catch (PlatformException e) {
 			log.error("Error while loading limits of coupon", e);
 			response.setStatus(ViewCouponStatusEnum.INTERNAL_ERROR);
-			return response;
 		}catch (Exception e) {
 			log.error("Unknow error occurred while loading coupon", e);
 			response.setStatus(ViewCouponStatusEnum.INTERNAL_ERROR);
-			return response;
 		}
 
-		response.setCouponTO(couponTO);
-		response.setStatus(ViewCouponStatusEnum.SUCCESS);
-		
 		return response;
 	}
 }

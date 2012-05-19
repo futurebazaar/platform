@@ -297,12 +297,8 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 	
 	public CouponTO viewCoupons(String couponCode){
 		log.info("Viewing coupon using coupon code = "+ couponCode);
-		CouponTO couponTO = null;
-		try {
-			couponTO = couponAdminDao.load(couponCode);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
+		// can throw COupon not found exception or platform exception
+		CouponTO couponTO = couponAdminDao.load(couponCode);
 		
 		return couponTO;
 	}
