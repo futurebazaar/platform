@@ -1071,7 +1071,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 	public void assignCouponToUser() {
 		AssignCouponToUserRequest request = new AssignCouponToUserRequest();
 		request.setCouponCode("pre_issued_1");
-		request.setUserId(-4);
+		request.setUserName("test@test.com");
 		request.setSessionToken(responseUser.getSessionToken());
 
 		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
@@ -1085,13 +1085,13 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 	public void assignCouponToInvalidUser() {
 		AssignCouponToUserRequest request = new AssignCouponToUserRequest();
 		request.setCouponCode("pre_issued_1");
-		request.setUserId(-2844);
+		request.setUserName("test@test");
 		request.setSessionToken(responseUser.getSessionToken());
 
 		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
 
 		assertNotNull(response);
-		assertEquals(AssignCouponToUserStatusEnum.INVALID_USER_ID, response.getStatus());
+		assertEquals(AssignCouponToUserStatusEnum.INVALID_USER, response.getStatus());
 		assertNotNull(response.getSessionToken());
 	}
 
@@ -1099,7 +1099,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 	public void assignInvalidCouponCode() {
 		AssignCouponToUserRequest request = new AssignCouponToUserRequest();
 		request.setCouponCode("i_am_garbage_i_am_not_there");
-		request.setUserId(-4);
+		request.setUserName("test@test.com");
 		request.setSessionToken(responseUser.getSessionToken());
 
 		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
@@ -1113,7 +1113,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 	public void assignGlobalCoupon() {
 		AssignCouponToUserRequest request = new AssignCouponToUserRequest();
 		request.setCouponCode("global_coupon_1");
-		request.setUserId(-4);
+		request.setUserName("test@test.com");
 		request.setSessionToken(responseUser.getSessionToken());
 
 		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
@@ -1126,8 +1126,8 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 	@Test
 	public void reAssign() {
 		AssignCouponToUserRequest request = new AssignCouponToUserRequest();
-		request.setCouponCode("pre_issued_1");
-		request.setUserId(-2);
+		request.setCouponCode("GLOBAL_COUPON_4448");
+		request.setUserName("jasvipul@gmail.com");
 		request.setSessionToken(responseUser.getSessionToken());
 
 		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
@@ -1141,8 +1141,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 	public void assignCouponNoSession() {
 		AssignCouponToUserRequest request = new AssignCouponToUserRequest();
 		request.setCouponCode("pre_issued_1");
-		request.setUserId(-4);
-		//request.setSessionToken(responseUser.getSessionToken());
+		request.setUserName("jasvipul@gmail.com");
 
 		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
 
@@ -1163,8 +1162,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 	@Test
 	public void assignNullCouponCode() {
 		AssignCouponToUserRequest request = new AssignCouponToUserRequest();
-		//request.setCouponCode("pre_issued_1");
-		request.setUserId(-4);
+		request.setUserName("jasvipul@gmail.com");
 		request.setSessionToken(responseUser.getSessionToken());
 
 		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
@@ -1178,7 +1176,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 	public void assignEmptyCouponCode() {
 		AssignCouponToUserRequest request = new AssignCouponToUserRequest();
 		request.setCouponCode("");
-		request.setUserId(-4);
+		request.setUserName("jasvipul@gmail.com");
 		request.setSessionToken(responseUser.getSessionToken());
 
 		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
@@ -1192,13 +1190,12 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 	public void assignNoUser() {
 		AssignCouponToUserRequest request = new AssignCouponToUserRequest();
 		request.setCouponCode("pre_issued_1");
-		//request.setUserId(-4);
 		request.setSessionToken(responseUser.getSessionToken());
 
 		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
 
 		assertNotNull(response);
-		assertEquals(AssignCouponToUserStatusEnum.INVALID_USER_ID, response.getStatus());
+		assertEquals(AssignCouponToUserStatusEnum.INVALID_USER, response.getStatus());
 		assertNotNull(response.getSessionToken());
 	}
 

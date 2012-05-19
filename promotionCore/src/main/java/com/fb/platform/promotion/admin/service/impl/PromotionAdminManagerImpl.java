@@ -5,9 +5,7 @@ package com.fb.platform.promotion.admin.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -39,6 +37,7 @@ import com.fb.platform.promotion.admin.to.PromotionTO;
 import com.fb.platform.promotion.admin.to.RuleConfigItemTO;
 import com.fb.platform.promotion.admin.to.SearchCouponRequest;
 import com.fb.platform.promotion.admin.to.SearchCouponResponse;
+import com.fb.platform.promotion.admin.to.SearchCouponResultBO;
 import com.fb.platform.promotion.admin.to.SearchCouponStatusEnum;
 import com.fb.platform.promotion.admin.to.SearchPromotionEnum;
 import com.fb.platform.promotion.admin.to.SearchPromotionRequest;
@@ -64,6 +63,7 @@ import com.fb.platform.promotion.service.PromotionNotFoundException;
 import com.fb.platform.promotion.util.PromotionRuleFactory;
 import com.fb.platform.user.manager.exception.UserNotFoundException;
 import com.fb.platform.user.manager.interfaces.UserAdminService;
+import com.fb.platform.user.manager.model.admin.User;
 
 /**
  * @author nehaga
@@ -433,10 +433,10 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		}
 
 		try {
-			//this will throw usernotfound exception if userid is invalid.
-			userAdminService.getUserByUserId(request.getUserId());
+			//this will throw usernotfound exception if username is invalid.
+			User user = userAdminService.getUser(request.getUserName());
 
-			promotionAdminService.assignCouponToUser(request.getCouponCode(), request.getUserId(), request.getOverrideCouponUserLimit());
+			promotionAdminService.assignCouponToUser(request.getCouponCode(), user.getUserId(), request.getOverrideCouponUserLimit());
 
 			response.setStatus(AssignCouponToUserStatusEnum.SUCCESS);
 
@@ -450,10 +450,10 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 			log.error("Invalid coupon type.", e);
 			response.setStatus(AssignCouponToUserStatusEnum.INVALID_COUPON_TYPE);
 		} catch(UserNotFoundException e) {
-			log.error("Invalid user id : " + request.getUserId(), e);
-			response.setStatus(AssignCouponToUserStatusEnum.INVALID_USER_ID);
+			log.error("Invalid user id : " + request.getUserName(), e);
+			response.setStatus(AssignCouponToUserStatusEnum.INVALID_USER);
 		} catch (PlatformException e) {
-			log.error("Error while assigning coupon to user. CouponCode : " + request.getCouponCode() + ". UserId : " + request.getUserId(), e);
+			log.error("Error while assigning coupon to user. CouponCode : " + request.getCouponCode() + ". UserId : " + request.getUserName(), e);
 			response.setStatus(AssignCouponToUserStatusEnum.INTERNAL_ERROR);
 		}
 		
@@ -485,22 +485,23 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 			return response;
 		}
 		
-		Set<CouponBasicDetails> allUserCoupons = new HashSet<CouponBasicDetails>(0);
+		SearchCouponResultBO searchCouponResultBO = null;
 		try {
-			allUserCoupons = promotionAdminService.searchCoupons(request.getCouponCode(), request.getUserName(), request.getOrderBy(), request.getSortOrder(), request.getStartRecord(), request.getBatchSize());
+			searchCouponResultBO = promotionAdminService.searchCoupons(request.getCouponCode(), request.getUserName(), request.getOrderBy(), request.getSortOrder(), request.getStartRecord(), request.getBatchSize());
 		} catch (Exception e) {
 			response.setStatus(SearchCouponStatusEnum.INTERNAL_ERROR);
 			return response;
 		}
 		// if no result then set response status as no data found
-		if(allUserCoupons.isEmpty()){
+		if(searchCouponResultBO.getCouponBasicDetailsSet().isEmpty()){
 			log.info("No coupon data found for search criteria coupon code = "+request.getCouponCode() + ", userName = "+request.getUserName());
 			response.setStatus(SearchCouponStatusEnum.NO_DATA_FOUND);
 			response.setErrorCause("No coupon data found for search criteria entered");
 			return response;
 		}
 		// success case
-		response.setCouponBasicDetailsList(new ArrayList<CouponBasicDetails>(allUserCoupons));
+		response.setCouponBasicDetailsList(new ArrayList<CouponBasicDetails>(searchCouponResultBO.getCouponBasicDetailsSet()));
+		response.setTotalCount(searchCouponResultBO.getTotalCount());
 		response.setStatus(SearchCouponStatusEnum.SUCCESS);
 		
 		return response;
