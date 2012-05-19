@@ -42,4 +42,6 @@ public interface CouponAdminDao {
 	public CouponTO load(int couponId);
 	
 	public CouponTO load(String couponCode);
+	
+	public int countCoupons(Integer userId);
 }

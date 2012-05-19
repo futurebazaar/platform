@@ -195,9 +195,25 @@ public class CouponAdminDaoTest extends BaseTestCase {
 		batchOfCoupons.add("jffbs12bgbd");
 		couponAdminDao.createCouponsInBatch(batchOfCoupons, -2100, CouponType.PRE_ISSUE, couponLimitsConfig);
 		
-		List<CouponBasicDetails> couponsForUser = couponAdminDao.searchCoupons("jffbs12", new HashSet<Integer>(0) , SearchCouponOrderBy.COUPON_CODE, SortOrder.ASCENDING, 0, 10);
-		assertNotNull(couponsForUser);
-		assertEquals(4, couponsForUser.size());
+		Coupon coupon1 = couponAdminDao.loadCouponWithoutConfig("jffbs12");
+		assertNotNull(coupon1);
+		assertEquals(CouponType.PRE_ISSUE, coupon1.getType());
+		assertEquals(coupon1.getCode(), "jffbs12");
+		
+		Coupon coupon2 = couponAdminDao.loadCouponWithoutConfig("jffbs12dsdffg");
+		assertNotNull(coupon2);
+		assertEquals(CouponType.PRE_ISSUE, coupon2.getType());
+		assertEquals(coupon2.getCode(), "jffbs12dsdffg");
+		
+		Coupon coupon3 = couponAdminDao.loadCouponWithoutConfig("jffbs12sdf434r");
+		assertNotNull(coupon3);
+		assertEquals(CouponType.PRE_ISSUE, coupon3.getType());
+		assertEquals(coupon3.getCode(), "jffbs12sdf434r");
+		
+		Coupon coupon4 = couponAdminDao.loadCouponWithoutConfig("jffbs12bgbd");
+		assertNotNull(coupon4);
+		assertEquals(CouponType.PRE_ISSUE, coupon4.getType());
+		assertEquals(coupon4.getCode(), "jffbs12bgbd");
 		
 		CouponTO createdCouponTO = couponAdminDao.load("jffbs12");
 		
@@ -209,9 +225,14 @@ public class CouponAdminDaoTest extends BaseTestCase {
 		assertEquals(0, createdCouponTO.getMaxAmountPerUser().compareTo(new Money(new BigDecimal(900.00))));
 		assertEquals(5, createdCouponTO.getMaxUses());
 		assertEquals(1, createdCouponTO.getMaxUsesPerUser());
-		/*assertEquals("2012-01-01:00:00:00", couponTO.getCreatedOn().toString("yyyy-mm-dd:HH:mm:ss"));
-		assertEquals("2012-05-31:00:00:00", couponTO.getLastModifiedOn().toString("yyyy-mm-dd:HH:mm:ss"));*/
 		
+	}
+	
+	@Test
+	public void countCouponForUser(){
+		int count = couponAdminDao.countCoupons(-2);
+		
+		assertEquals(3, count);
 	}
 	
 	@Test(expected = CouponAlreadyAssignedToUserException.class)
