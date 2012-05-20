@@ -1,7 +1,12 @@
 package com.test;
+import java.math.BigDecimal;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.fb.platform.payback.service.PointsManager;
+import com.fb.platform.payback.service.impl.PointsManagerImpl;
+import com.fb.platform.payback.to.OrderRequest;
 import com.fb.platform.payback.util.PointsUtil;
 
 
@@ -24,10 +29,14 @@ public class TestPayback {
 		String settlementDate = "2012-04-16";
 		String txnActionCode = "EARN_REVERSAL";
 		
-		//String[] serviceResources = {"applicationContext-dao.xml", "applicationContext-service.xml", 
-		//		"applicationContext-resources.xml"};	
+		String[] serviceResources = {"applicationContext-dao.xml", "applicationContext-service.xml", 
+				"applicationContext-resources.xml"};	
 
-		//ApplicationContext orderServiceContext = new ClassPathXmlApplicationContext(serviceResources);
+		ApplicationContext orderServiceContext = new ClassPathXmlApplicationContext(serviceResources);
+		Object manager = orderServiceContext.getBean("pointsManager");
+		PointsManager pm = new PointsManagerImpl();
+		//((PointsManagerImpl) manager).uploadEarnFilesOnSFTP();
+		//((PointsManagerImpl) manager).mailBurnData();
 		//Object earnManager = orderServiceContext.getBean("pointsEarnManager");
 		//((PointsEarnManagerImpl) manager).storeEarnData();
 		//int manager1 = ((PointsManagerImpl) manager).mailBurnData();
@@ -111,6 +120,16 @@ public class TestPayback {
 		String s ="123456781234567a";
 		System.out.println(s.matches("[0-9]{16}"));
 		System.out.println(s.length() == 16);
+		
+		OrderRequest or = new OrderRequest();
+		setPoints(or, 200);
+		System.out.println(or.getAmount());
+
+		System.out.println(pm.getClass().getCanonicalName());
+	}
+
+	private static void setPoints(OrderRequest or, int i) {
+		or.setAmount(new BigDecimal(i));
 		
 	}
 	

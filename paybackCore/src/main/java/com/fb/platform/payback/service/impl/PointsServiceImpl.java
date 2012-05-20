@@ -1,58 +1,57 @@
 package com.fb.platform.payback.service.impl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
 
 import org.joda.time.DateTime;
 
 import com.fb.commons.PlatformException;
 import com.fb.platform.payback.dao.PointsDao;
+import com.fb.platform.payback.dao.PointsRuleDao;
 import com.fb.platform.payback.exception.DefinitionNotFound;
 import com.fb.platform.payback.exception.InvalidActionCode;
 import com.fb.platform.payback.exception.PointsHeaderDoesNotExist;
 import com.fb.platform.payback.model.PointsHeader;
+import com.fb.platform.payback.rule.EarnPointsRuleEnum;
 import com.fb.platform.payback.rule.PointsRule;
+import com.fb.platform.payback.rule.PointsRuleConfigConstants;
 import com.fb.platform.payback.service.PointsService;
 import com.fb.platform.payback.to.OrderItemRequest;
 import com.fb.platform.payback.to.OrderRequest;
 import com.fb.platform.payback.to.PointsRequest;
 import com.fb.platform.payback.to.PointsResponseCodeEnum;
 import com.fb.platform.payback.to.PointsTxnClassificationCodeEnum;
-import com.fb.platform.payback.util.PointsUtil;
 
 public class PointsServiceImpl implements PointsService{
 	
 	private static int ROUND =BigDecimal.ROUND_HALF_DOWN; 
 	
-	private PointsUtil pointsUtil;
 	private PointsDao pointsDao;
+	private PointsRuleDao pointsRuleDao;
 	
 	public void setPointsDao(PointsDao pointsDao) {
 		this.pointsDao = pointsDao;
 	}
 
-	public void setPointsUtil(PointsUtil pointsUtil){
-		this.pointsUtil = pointsUtil;
+	public void setPointsRuleDao(PointsRuleDao pointsRuleDao) {
+		this.pointsRuleDao = pointsRuleDao;
 	}
 	
 	@Override
-	public PointsResponseCodeEnum doOperation(PointsRequest request, PointsRule rule){
+	public PointsResponseCodeEnum doOperation(PointsRequest request){
 		try{
-			
+			OrderRequest orderRequest = request.getOrderRequest();
 			BigDecimal txnPoints = getTxnPoints(request);
-			if (rule != null){
-				if (!rule.isBonus()){
-					txnPoints = rule.execute(request.getOrderRequest());
+			PointsTxnClassificationCodeEnum actionCode = PointsTxnClassificationCodeEnum.valueOf(request.getTxnActionCode());
+			String classificationCode = actionCode.toString().split(",")[0];
+			BigDecimal bonusPoints = orderRequest.getBonusPoints();
+			if (txnPoints.compareTo(BigDecimal.ZERO) ==1){
+				savePoints(orderRequest, txnPoints, actionCode, classificationCode);
+				if (bonusPoints.compareTo(BigDecimal.ZERO) ==1){
+					savePoints(orderRequest, txnPoints, actionCode, PointsRuleConfigConstants.BONUS_POINTS);
 				}
-				else{
-					saveBonusPoints(request, rule.execute(request.getOrderRequest()));
-				}
+				return PointsResponseCodeEnum.SUCCESS;
 			}
-			savePoints(request, txnPoints);
-			return PointsResponseCodeEnum.SUCCESS;
-			
+			return PointsResponseCodeEnum.INVALID_POINTS;
 		} catch (InvalidActionCode e){
 			return PointsResponseCodeEnum.INVALID_ACTION_CODE;
 		} catch (DefinitionNotFound e){
@@ -65,68 +64,32 @@ public class PointsServiceImpl implements PointsService{
 	}
 	
 	private BigDecimal getTxnPoints(PointsRequest request) {
-		PointsTxnClassificationCodeEnum txnActionCode = PointsTxnClassificationCodeEnum.valueOf(request.getTxnActionCode());
-		BigDecimal earnRatio = BigDecimal.ZERO;
-		switch (txnActionCode){
-			case PREALLOC_EARN:
-				earnRatio = getNormalEarnRatio(request);
-				break;
-			case EARN_REVERSAL:
-				earnRatio = getNormalEarnReversalRatio(request);
-			default:
-				throw new InvalidActionCode("No action is defined for action code : " + txnActionCode);
+		BigDecimal totalTxnPoint = BigDecimal.ZERO;
+		for (OrderItemRequest itemRequest : request.getOrderRequest().getOrderItemRequest()){
+			totalTxnPoint.add(itemRequest.getTxnPoints());
 		}
-		if (earnRatio.compareTo(BigDecimal.ZERO) == 1){
-			return earnRatio.multiply(request.getOrderRequest().getAmount());
-		}
-		throw new DefinitionNotFound("Earn Ratio Not Defined : " + earnRatio);
+			return totalTxnPoint;
 	}
 
-	private BigDecimal getNormalEarnReversalRatio(PointsRequest request ) {
-		PointsTxnClassificationCodeEnum txnActionCode = PointsTxnClassificationCodeEnum.EARN_REVERSAL;
-		String txnClassificationCode = txnActionCode.toString().split(",")[0];
-		PointsHeader pointsHeader = pointsDao.getHeaderDetails(request.getOrderRequest().getOrderId(), txnActionCode.name(), txnClassificationCode);
-		if (pointsHeader.getEarnRatio() != null && !pointsHeader.getEarnRatio().equals(BigDecimal.ZERO)){
-			return pointsHeader.getEarnRatio();
-		}
-		return getNormalEarnRatio(request);
-	}
-
-	private BigDecimal getNormalEarnRatio(PointsRequest request) {
-		Properties props = pointsUtil.getProperties("points.properties");
-		String earnPointsRatio = props.getProperty("EARN_RATIO");
-		if (earnPointsRatio != null && !earnPointsRatio.equals("")){
-			return new BigDecimal(earnPointsRatio);
-		}
-		return BigDecimal.ZERO;
-	}
-	
-	private void savePoints(PointsRequest pointsRequest, BigDecimal txnPoints){
-		OrderRequest request = pointsRequest.getOrderRequest();
-		BigDecimal earnRatio = txnPoints.divide(request.getAmount());
-		BigDecimal burnRatio = new BigDecimal(4);
+	private void savePoints(OrderRequest orderRequest, BigDecimal txnPoints, PointsTxnClassificationCodeEnum actionCode, String classificationCode){
 		PointsHeader pointsHeader = new PointsHeader();
-		pointsHeader.setDetails(request, txnPoints, earnRatio, burnRatio);
+		pointsHeader.setTxnClassificationCode(classificationCode);
+		pointsHeader.setTxnActionCode(actionCode.name());
+		pointsHeader.setTxnPoints(txnPoints.setScale(0, ROUND).intValue());
+		pointsHeader.setTxnValue(orderRequest.getAmount().setScale(0, ROUND).intValue());
+		pointsHeader.setDetails(orderRequest);
+		long headerId = pointsDao.insertPointsHeaderData(pointsHeader);
+		if (orderRequest.getOrderItemRequest() != null && !orderRequest.getOrderItemRequest().isEmpty()){
+			savePointsItems(orderRequest, headerId);
+		}
 		
 	}
 	
-	private void saveBonusPoints(PointsRequest pointsRequest, BigDecimal bonusPoints){
-		OrderRequest orderRequest = pointsRequest.getOrderRequest();
-		orderRequest.setAmount(BigDecimal.ZERO);
-		orderRequest.setIsBonus(true);
-		OrderItemRequest orderItem = new OrderItemRequest();
-		orderItem.setId(8000);
-		orderItem.setAmount(BigDecimal.ZERO);
-		orderItem.setArticleId("1111");
-		orderItem.setDepartmentCode(100);
-		orderItem.setDepartmentName("BONUS");
-		
-		List<OrderItemRequest> orderItemRequest = new ArrayList<OrderItemRequest>();
-		orderItemRequest.add(orderItem);
-		orderRequest.setOrderItemRequest(orderItemRequest);
-		pointsRequest.setOrderRequest(orderRequest);
-		
-		savePoints(pointsRequest, bonusPoints);
+	private void savePointsItems(OrderRequest orderRequest, long headerId) {
+		for (OrderItemRequest itemRequest : orderRequest.getOrderItemRequest()){
+			int txnPoints = itemRequest.getTxnPoints().setScale(0, ROUND).intValue();
+			pointsDao.insertPointsItemsData(itemRequest, headerId, txnPoints);
+		}
 		
 	}
 
@@ -139,6 +102,6 @@ public class PointsServiceImpl implements PointsService{
 			sequenceNumber = "0" + sequenceNumber;
 		}
 		return sequenceNumber;
-	}	
-	
+	}
+
 }

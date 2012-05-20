@@ -18,11 +18,9 @@
 
      
      <bean id="pointsService" class="com.fb.platform.payback.service.impl.PointsServiceImpl">
-        <property name="pointsUtil" ref="pointsUtil"></property>
         <property name="pointsDao" ref="pointsDao"></property>
     </bean>
     <bean id="pointsEarnService" class="com.fb.platform.payback.service.impl.PointsEarnServiceImpl">
-        <property name="pointsEarnDao" ref="pointsEarnDao"></property>
         <property name="pointsUtil" ref="pointsUtil"></property>
         <property name="pointsService" ref="pointsService"></property>
         <property name="pointsDao" ref="pointsDao"></property>
@@ -39,6 +37,9 @@
     <!-- Add new Managers here -->
      
      <bean id="pointsManager" class="com.fb.platform.payback.service.impl.PointsManagerImpl">
+     	<property name="pointsUtil" ref="pointsUtil"></property>
+        <property name="pointsEarnService" ref="pointsEarnService"></property>
+        <property name="pointsBurnService" ref="pointsBurnService"></property>
     </bean>
     
    <!-- =================================================================== -->

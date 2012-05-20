@@ -4,9 +4,14 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.fb.platform.payback.dao.PointsDao;
+import com.fb.platform.payback.dao.PointsRuleDao;
 import com.fb.platform.payback.model.PointsHeader;
+import com.fb.platform.payback.rule.BurnPointsRuleEnum;
+import com.fb.platform.payback.rule.PointsRule;
 import com.fb.platform.payback.service.PointsBurnService;
 import com.fb.platform.payback.service.PointsService;
+import com.fb.platform.payback.to.OrderItemRequest;
+import com.fb.platform.payback.to.OrderRequest;
 import com.fb.platform.payback.to.PointsRequest;
 import com.fb.platform.payback.to.PointsResponseCodeEnum;
 import com.fb.platform.payback.to.PointsTxnClassificationCodeEnum;
@@ -15,6 +20,7 @@ import com.fb.platform.payback.util.PointsUtil;
 public class PointsBurnServiceImpl implements PointsBurnService{
 	
 	private PointsDao pointsDao;
+	private PointsRuleDao pointsRuleDao;
 	private PointsUtil pointsUtil;
 	private PointsService pointsService;
 	
@@ -28,6 +34,10 @@ public class PointsBurnServiceImpl implements PointsBurnService{
 	
 	public void setPointsDao(PointsDao pointsDao){
 		this.pointsDao = pointsDao;
+	}
+	
+	public void setPointsRuleDao(PointsRuleDao pointsRuleDao){
+		this.pointsRuleDao = pointsRuleDao;
 	}
 
 	@Override
@@ -59,6 +69,28 @@ public class PointsBurnServiceImpl implements PointsBurnService{
 	@Override
 	public PointsResponseCodeEnum storeBurnPoints(PointsRequest request,
 			PointsTxnClassificationCodeEnum actionCode) {
-		return null;
+		
+		PointsRule  rule = null;
+		for (BurnPointsRuleEnum ruleName : BurnPointsRuleEnum.values()){
+			rule = loadEarnRule(ruleName);
+			OrderRequest orderRequest = request.getOrderRequest();
+			if (rule != null){
+				for (OrderItemRequest itemRequest : orderRequest.getOrderItemRequest()){
+					if (rule.isApplicable(orderRequest, itemRequest)){
+						itemRequest.setTxnPoints(rule.execute(orderRequest, itemRequest));
+					}
+				}
+			}
+			if (!rule.allowNext()){
+				break;
+			}
+		}
+			
+		return pointsService.doOperation(request);
 	}
+
+	private PointsRule loadEarnRule(BurnPointsRuleEnum ruleName) {
+		return pointsRuleDao.loadEarnRule(ruleName);
+	}
+	
 }

@@ -16,7 +16,22 @@ public class PointsItems implements Serializable{
 	private long itemId;
 	private long pointsHeaderId;
 	private String txnActionCode;
+	private BigDecimal txnPoints;
+	private BigDecimal earnRatio;
+	private BigDecimal burnRatio;
 	
+	public BigDecimal getEarnRatio() {
+		return earnRatio;
+	}
+	public void setEarnRatio(BigDecimal earnRatio) {
+		this.earnRatio = earnRatio;
+	}
+	public BigDecimal getBurnRatio() {
+		return burnRatio;
+	}
+	public void setBurnRatio(BigDecimal burnRatio) {
+		this.burnRatio = burnRatio;
+	}
 	public String getDepartmentName() {
 		return departmentName;
 	}
@@ -65,5 +80,11 @@ public class PointsItems implements Serializable{
 	}
 	public void setTxnActionCode(String txnActionCode) {
 		this.txnActionCode = txnActionCode;
+	}
+	public BigDecimal getTxnPoints() {
+		return txnPoints;
+	}
+	public void setTxnPoints(BigDecimal txnPoints) {
+		this.txnPoints = txnPoints;
 	}
 }

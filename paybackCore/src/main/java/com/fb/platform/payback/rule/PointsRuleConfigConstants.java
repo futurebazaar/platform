@@ -15,5 +15,9 @@ public class PointsRuleConfigConstants {
 	public static final String POINTS_FACTOR = "POINTS_FACTOR";
 	
 	public static final String EARN_RATIO = "EARN_RATIO";
+	
+	public static final String VALID_FROM = "VALID_FROM";
+	
+	public static final String VALID_TILL = "VALID_TILL";
 
 }

@@ -19,7 +19,7 @@ public class PointsManagerImpl implements PointsManager{
 	private PointsBurnService pointsBurnService;
 	private PointsUtil pointsUtil;
 	
-	public void setPointsEarnServicer(PointsEarnService pointsEarnService) {
+	public void setPointsEarnService(PointsEarnService pointsEarnService) {
 		this.pointsEarnService = pointsEarnService;
 	}
 	

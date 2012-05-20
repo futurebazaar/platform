@@ -1,7 +1,6 @@
 package com.fb.platform.payback.model;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import org.joda.time.DateTime;
 
 import com.fb.platform.payback.to.OrderRequest;
@@ -27,8 +26,6 @@ public class PointsHeader implements Serializable{
 	private String branchId;
 	private int txnPoints;
 	private String reason;
-	private BigDecimal burnRatio;
-	private BigDecimal earnRatio;
 	
 	public long getId() {
 		return id;
@@ -77,18 +74,6 @@ public class PointsHeader implements Serializable{
 	}
 	public void setBranchId(String branchId) {
 		this.branchId = branchId;
-	}
-	public BigDecimal getBurnRatio() {
-		return burnRatio;
-	}
-	public void setBurnRatio(BigDecimal burnRatio) {
-		this.burnRatio = burnRatio;
-	}
-	public BigDecimal getEarnRatio() {
-		return earnRatio;
-	}
-	public void setEarnRatio(BigDecimal earnRatio) {
-		this.earnRatio = earnRatio;
 	}
 	public long getOrderId() {
 		return orderId;
@@ -145,8 +130,8 @@ public class PointsHeader implements Serializable{
 		this.reason = reason;
 	}
 	
-	public void setDetails(OrderRequest request, BigDecimal txnPoints2,
-			BigDecimal earnRatio2, BigDecimal burnRatio2) {
+	public void setDetails(OrderRequest request) {
 		
 	}
+	
 }

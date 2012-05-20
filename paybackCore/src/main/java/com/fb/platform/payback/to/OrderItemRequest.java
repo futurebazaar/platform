@@ -10,6 +10,9 @@ public class OrderItemRequest {
 	private String departmentName;
 	private long departmentCode;
 	private long categoryId;
+	private BigDecimal txnPoints = BigDecimal.ZERO;
+	private BigDecimal earnRatio = BigDecimal.ZERO;
+	private BigDecimal burnRatio;
 	
 	public long getCategoryId() {
 		return categoryId;
@@ -52,6 +55,24 @@ public class OrderItemRequest {
 	}
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
+	}
+	public BigDecimal getTxnPoints() {
+		return txnPoints;
+	}
+	public void setTxnPoints(BigDecimal txnPoints) {
+		this.txnPoints = txnPoints;
+	}
+	public BigDecimal getEarnRatio() {
+		return earnRatio;
+	}
+	public void setEarnRatio(BigDecimal earnRatio) {
+		this.earnRatio = earnRatio;
+	}
+	public BigDecimal getBurnRatio() {
+		return burnRatio;
+	}
+	public void setBurnRatio(BigDecimal burnRatio) {
+		this.burnRatio = burnRatio;
 	}
 	
 }

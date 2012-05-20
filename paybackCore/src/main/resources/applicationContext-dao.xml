@@ -16,7 +16,4 @@
 	<bean id="pointsDao" class="com.fb.platform.payback.dao.impl.PointsDaoJdbcImpl">
 		<property name="jdbcTemplate" ref="jdbcTemplate"/>
 	</bean>
-	<bean id="pointsEarnDao" class="com.fb.platform.payback.dao.impl.PointsEarnDaoJdbcImpl">
-		<property name="jdbcTemplate" ref="jdbcTemplate"/>
-	</bean>
 </beans>

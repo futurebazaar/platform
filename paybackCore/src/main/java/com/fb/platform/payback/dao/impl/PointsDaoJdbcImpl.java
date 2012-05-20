@@ -14,9 +14,10 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-import com.fb.commons.PlatformException;
 import com.fb.platform.payback.dao.PointsDao;
 import com.fb.platform.payback.model.PointsHeader;
+import com.fb.platform.payback.model.PointsItems;
+import com.fb.platform.payback.to.OrderItemRequest;
 
 public class PointsDaoJdbcImpl implements PointsDao{
 	
@@ -40,9 +41,7 @@ public class PointsDaoJdbcImpl implements PointsDao{
 			"branch_id, " +
 			"txn_points, " +
 			"status, " +
-			"reason, " +
-			"burn_ratio, " +
-			"earn_ratio) " +
+			"reason) " +
 			"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " +
 			"?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
@@ -67,12 +66,35 @@ public class PointsDaoJdbcImpl implements PointsDao{
 			"status = 'FRESH' AND " +
 			"txn_action_code = ? AND " +
 			"settlement_date = ? AND " +
-			"partner_merchant_id = ? " +
+			"partner_merchant_id = ?  " +
 			"order by id desc";
 	
+	
+	private static final String LOAD_EARN_DATA_QUERY = 
+			"SELECT * FROM " +
+			"payments_pointsitems " +
+			"WHERE points_header_id = ? " +
+			"order by id desc";
+	
+	private static final String INSERT_POINTS_ITEMS_SQL = 
+			"INSERT INTO payments_pointsitems " +
+			"(points_header_id, " +
+			"quantity, " +
+			"department_code, " +
+			"department_name, " +
+			"item_amount, " +
+			"article_id, " +
+			"txn_points, " +
+			"order_item_id, " +
+			"earnRatio, " +
+			"burnRatio) " +
+			"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
-	}
+	}	
+	
+
 	
 	@Override
 	public Long insertPointsHeaderData(final PointsHeader pointsHeader) {
@@ -102,8 +124,6 @@ public class PointsDaoJdbcImpl implements PointsDao{
 				ps.setInt(15, pointsHeader.getTxnPoints());
 				ps.setString(16, "FRESH");
 				ps.setString(17, pointsHeader.getReason());
-				ps.setBigDecimal(18, pointsHeader.getBurnRatio());
-				ps.setBigDecimal(19, pointsHeader.getEarnRatio());
 				
 				return ps;
 			}
@@ -136,7 +156,7 @@ public class PointsDaoJdbcImpl implements PointsDao{
 		if (pointsHeader != null && pointsHeader.size() == 1){
 			return pointsHeader.get(0);
 		}
-		throw new PlatformException("No PointsHeader element exists/ More than one exists.");
+		return null;
 	}
 	
 	@Override
@@ -151,8 +171,6 @@ public class PointsDaoJdbcImpl implements PointsDao{
 		public PointsHeader mapRow(ResultSet rs, int rowNum) throws SQLException {
 			PointsHeader pointsHeader = new PointsHeader();
 			pointsHeader.setId(rs.getLong("id"));
-			pointsHeader.setBurnRatio(rs.getBigDecimal("burn_ratio"));
-			pointsHeader.setEarnRatio(rs.getBigDecimal("earn_ratio"));
 			pointsHeader.setOrderId(rs.getLong("order_id"));
 			pointsHeader.setTxnActionCode(rs.getString("txn_action_code"));
 			pointsHeader.setTxnTimestamp(new DateTime(rs.getTimestamp("txn_timstamp").getTime()));
@@ -172,6 +190,63 @@ public class PointsDaoJdbcImpl implements PointsDao{
 			
 			return pointsHeader;
 		}
+		
+	}
+	
+	@Override
+	public Collection<PointsItems> loadPointsItemData(long pointsHeaderId) {
+		Collection<PointsItems> earnPointsList = jdbcTemplate.query(LOAD_EARN_DATA_QUERY, new Object[]{pointsHeaderId}, 
+				new EarnDataMapper());
+		return earnPointsList;
+		
+	}
+	
+	@Override
+	public PointsItems getEarnData(String txnActionCode, long orderId) {
+		
+		return null;
+	}
+	
+	private static class EarnDataMapper implements RowMapper<PointsItems>{
+
+		@Override
+		public PointsItems mapRow(ResultSet rs, int rowNum) throws SQLException {
+			PointsItems earnPoints = new PointsItems();
+			earnPoints.setArticleId(rs.getString("article_id"));
+			earnPoints.setDepartmentCode(rs.getLong("department_code"));
+			earnPoints.setDepartmentName(rs.getString("department_name"));
+			earnPoints.setItemAmount(rs.getBigDecimal("item_amount"));
+			earnPoints.setItemId(rs.getLong("order_item_id"));
+			earnPoints.setQuantity(rs.getInt("quantity"));
+			earnPoints.setPointsHeaderId(rs.getLong("points_header_id"));
+			return earnPoints;
+		}
+		
+	}
+
+
+	@Override
+	public void insertPointsItemsData(final OrderItemRequest itemRequest,
+			final long headerId, final int txnPoints) {
+		jdbcTemplate.update(new PreparedStatementCreator() {
+			
+			@Override
+			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+				PreparedStatement ps = con.prepareStatement(INSERT_POINTS_ITEMS_SQL, new String [] {"id"});
+				ps.setLong(1, headerId);
+				ps.setInt(2, itemRequest.getQuantity());
+				ps.setLong(3, itemRequest.getDepartmentCode());
+				ps.setString(4, itemRequest.getDepartmentName());
+				ps.setInt(5, itemRequest.getAmount().intValue());
+				ps.setString(6, itemRequest.getArticleId());
+				ps.setInt(7, txnPoints);
+				ps.setLong(8, itemRequest.getId());
+				ps.setBigDecimal(9, itemRequest.getEarnRatio());
+				ps.setBigDecimal(10, itemRequest.getBurnRatio());
+				
+				return ps;
+			}
+		});
 		
 	}
 }

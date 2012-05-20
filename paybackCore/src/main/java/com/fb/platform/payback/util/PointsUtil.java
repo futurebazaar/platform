@@ -22,12 +22,23 @@ public class PointsUtil {
 		return fmt.print(datetime);
 	}
 	
-	public String convertDateToFormat(String settlementDate, String string) {
+	public String convertDateToFormat(String settlementDate, String pattern) {
 		DateTimeFormatter format = DateTimeFormat.forPattern("yyyy-MM-dd");
 		DateTime datetime = format.parseDateTime(settlementDate);
-		format = DateTimeFormat.forPattern(string);
+		format = DateTimeFormat.forPattern(pattern);
 		String newSettlementDate = format.print(datetime);
 		return newSettlementDate;
+	}
+	
+	public DateTime getDateTimeFromString(String date, String pattern){
+		try{
+			DateTimeFormatter format = DateTimeFormat.forPattern(pattern);
+			DateTime datetime = format.parseDateTime(date);
+			return datetime;
+		} catch (Exception e){
+			return null;
+		}
+				
 	}
 	
 	public String convertDateToFormat(DateTime currentTime, String dateFormat) {
