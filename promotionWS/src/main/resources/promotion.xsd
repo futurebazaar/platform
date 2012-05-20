@@ -7,6 +7,7 @@
         <xs:element ref="promotion:orderRequest"/>
         <xs:element ref="promotion:sessionToken"/>
         <xs:element ref="promotion:couponCommitted"/>
+        <xs:element ref="promotion:orderBookingDate"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -48,6 +49,7 @@
   <xs:element name="clientId" type="xs:int"/>
   <xs:element name="sessionToken" type="xs:string"/>
   <xs:element name="price" type="xs:decimal"/>
+  <xs:element name="orderBookingDate" type="xs:string"/>
 
   <xs:element name="applyCouponResponse">
     <xs:complexType>
@@ -95,6 +97,7 @@
       <xs:enumeration value="PRODUCT_NOT_PRESENT"/>
       <xs:enumeration value="LESS_ORDER_AMOUNT_OF_BRAND_PRODUCTS"/>
       <xs:enumeration value="LESS_ORDER_AMOUNT_OF_CATEGORY_PRODUCTS"/>
+      <xs:enumeration value="NOT_FIRST_PURCHASE"/>
     </xs:restriction>
   </xs:simpleType>
 
@@ -105,6 +108,7 @@
         <xs:element ref="promotion:couponCode"/>
         <xs:element ref="promotion:discountValue"/>
         <xs:element ref="promotion:sessionToken"/>
+        <xs:element ref="promotion:orderBookingDate"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>

@@ -6,12 +6,12 @@
     <parent>
         <groupId>com.fb</groupId>
         <artifactId>platform</artifactId>
-        <version>1.0</version>
+        <version>1.1.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
 	<artifactId>platformCommons</artifactId>
-	<version>1.0</version>
+	<version>1.1.0</version>
 	<packaging>jar</packaging>
 	
 	<name>Common Classes</name>

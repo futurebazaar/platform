@@ -23,6 +23,9 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -90,6 +93,8 @@ public class CouponResource {
 			apiCouponRequest.setCouponCode(xmlCouponRequest.getCouponCode());
 			apiCouponRequest.setSessionToken(xmlCouponRequest.getSessionToken());
 			apiCouponRequest.setIsOrderCommitted(xmlCouponRequest.isCouponCommitted());
+			//order booking date if null will mean that the value of the date is TODAY. This is the DateTime class behaviour
+			apiCouponRequest.setOrderBookingDate(convertToDateTime(xmlCouponRequest.getOrderBookingDate()));
 
 			OrderRequest xmlOrderRequest = xmlCouponRequest.getOrderRequest();
 			com.fb.platform.promotion.to.OrderRequest apiOrderRequest = getApiOrderRequest(xmlOrderRequest);
@@ -141,7 +146,9 @@ public class CouponResource {
 			apiCommitCouponRequest.setDiscountValue(xmlCommitCouponRequest.getDiscountValue());
 			apiCommitCouponRequest.setOrderId(xmlCommitCouponRequest.getOrderId());
 			apiCommitCouponRequest.setSessionToken(xmlCommitCouponRequest.getSessionToken());
-
+			//order booking date if null will mean that the value of the date is TODAY. This is the DateTime class behaviour
+			apiCommitCouponRequest.setOrderBookingDate(convertToDateTime(xmlCommitCouponRequest.getOrderBookingDate()));
+			
 			com.fb.platform.promotion.to.CommitCouponResponse apiCommitCouponResponse = promotionManager.commitCouponUse(apiCommitCouponRequest);
 
 			CommitCouponResponse xmlCommitCouponResponse = new CommitCouponResponse();
@@ -364,5 +371,16 @@ public class CouponResource {
 		apiProduct.setPrice(xmlProduct.getPrice());
 		apiProduct.setProductId(xmlProduct.getProductId());
 		return apiProduct;
+	}
+	
+	private DateTime convertToDateTime(String inputDate){
+		DateTime convertedDateTime = null;
+		try {
+			DateTimeFormatter fmt = ISODateTimeFormat.date();
+			convertedDateTime = fmt.parseDateTime(inputDate);
+		} catch (Exception e) {
+			logger.error("Error in converting input date-time field into DateTime object while parsing. Input Date-time receieved in request is - "+inputDate);
+		}
+		return convertedDateTime;
 	}
 }

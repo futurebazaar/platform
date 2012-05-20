@@ -3,6 +3,8 @@ package com.fb.platform.promotion.to;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import org.joda.time.DateTime;
+
 /**
  * 
  * @author vinayak
@@ -14,7 +16,14 @@ public class ApplyCouponRequest implements Serializable {
 	private OrderRequest orderReq;
 	private String sessionToken = null;
 	private Boolean isCouponCommitted;
+	private DateTime orderBookingDate;
 	
+	public DateTime getOrderBookingDate() {
+		return orderBookingDate;
+	}
+	public void setOrderBookingDate(DateTime orderBookingDate) {
+		this.orderBookingDate = orderBookingDate;
+	}
 	public String getCouponCode() {
 		return couponCode;
 	}

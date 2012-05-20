@@ -26,7 +26,7 @@ public class Promotion implements Serializable {
 
 	private PromotionRule rule;
 
-	public PromotionStatusEnum isApplicable(OrderRequest request) {
+	public PromotionStatusEnum isApplicable(OrderRequest request,int userId,boolean isCouponCommitted) {
 		if (!isActive) {
 			return PromotionStatusEnum.INACTIVE_COUPON;
 		}
@@ -36,7 +36,7 @@ public class Promotion implements Serializable {
 		}
 		
 		if(null!=request)
-			return rule.isApplicable(request);
+			return rule.isApplicable(request,userId,isCouponCommitted);
 		
 		return PromotionStatusEnum.SUCCESS;
 	}

@@ -42,7 +42,7 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule, Serializa
 	}
 
 	@Override
-	public PromotionStatusEnum isApplicable(OrderRequest request) {
+	public PromotionStatusEnum isApplicable(OrderRequest request,int userId,boolean isCouponCommitted) {
 		if(log.isDebugEnabled()) {
 			log.debug("Checking if BuyWorthXGetYPercentOffRuleImpl applies on order : " + request.getOrderId());
 		}

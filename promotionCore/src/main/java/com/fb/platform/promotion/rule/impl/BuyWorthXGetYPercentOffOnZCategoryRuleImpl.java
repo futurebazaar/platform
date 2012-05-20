@@ -23,29 +23,30 @@ import com.fb.platform.promotion.util.StringToIntegerList;
  * @author keith
  *
  */
-public class BuyWorthXGetYRsOffOnZCategoryRuleImpl implements PromotionRule, Serializable {
+public class BuyWorthXGetYPercentOffOnZCategoryRuleImpl implements PromotionRule, Serializable {
 
-	private static transient Log log = LogFactory.getLog(BuyWorthXGetYRsOffOnZCategoryRuleImpl.class);
+	private static transient Log log = LogFactory.getLog(BuyWorthXGetYPercentOffOnZCategoryRuleImpl.class);
 	private Money minOrderValue;
-	private Money fixedRsOff;
+	private BigDecimal discountPercentage;
 	private List<Integer> categories;
 	private List<Integer> clientList;
+	private Money maxDiscountPerUse;
 	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
 		minOrderValue = new Money(BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigConstants.MIN_ORDER_VALUE))));
-		fixedRsOff = new Money (BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigConstants.FIXED_DISCOUNT_RS_OFF))));
+		discountPercentage = BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigConstants.DISCOUNT_PERCENTAGE)));
 		StrTokenizer strTokCategories = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigConstants.CATEGORY_LIST),",");
 		categories = StringToIntegerList.convert((List<String>)strTokCategories.getTokenList());
 		StrTokenizer strTokClients = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigConstants.CLIENT_LIST),",");
 		clientList = StringToIntegerList.convert((List<String>)strTokClients.getTokenList());
-		log.info("minOrderValue : " + minOrderValue.toString() + ", fixedRsOff : " + fixedRsOff.toString());
+		maxDiscountPerUse = new Money (BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigConstants.MAX_DISCOUNT_CEIL_IN_VALUE))));
 	}
 
 	@Override
 	public PromotionStatusEnum isApplicable(OrderRequest request,int userId,boolean isCouponCommitted) {
 		if(log.isDebugEnabled()) {
-			log.debug("Checking if BuyWorthXGetYRsOffOnZCategoryRuleImpl applies on order : " + request.getOrderId());
+			log.debug("Checking if BuyWorthXGetYPercentOffOnZCategoryRuleImpl applies on order : " + request.getOrderId());
 		}
 		Money orderValue = new Money(request.getOrderValue());
 		if(request.isValidClient(clientList)){
@@ -63,8 +64,15 @@ public class BuyWorthXGetYRsOffOnZCategoryRuleImpl implements PromotionRule, Ser
 	@Override
 	public Money execute(OrderRequest request) {
 		if(log.isDebugEnabled()) {
-			log.debug("Executing BuyWorthXGetYRsOffOnZCategoryRuleImpl on order : " + request.getOrderId());
+			log.debug("Executing BuyWorthXGetYPercentOffOnZCategoryRuleImpl on order : " + request.getOrderId());
 		}
-		return fixedRsOff;
+		Money orderVal = new Money(request.getOrderValue());
+		Money discountAmount = (orderVal.times(discountPercentage.doubleValue())).div(100); 
+		if(discountAmount.gteq(maxDiscountPerUse)){
+			return maxDiscountPerUse;
+		}
+		else{
+			return discountAmount;
+		}
 	}
 }
