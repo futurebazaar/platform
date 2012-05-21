@@ -74,7 +74,7 @@ public class WalletDaoTest extends BaseTestCase {
 		Wallet wallet2 = wallet;
 		assertEquals(wallet2, wallet);
 		
-		WalletTransaction walletTransaction = wallet.credit(new Money(new BigDecimal(100.00)), SubWalletType.GIFT_SUB_WALLET, 0, 0, "EGV");
+		WalletTransaction walletTransaction = wallet.credit(new Money(new BigDecimal(100.00)), SubWalletType.GIFT, 0, 0, "EGV");
 		assertNotNull(walletTransaction);
 		
 		Wallet walletPostUpdate = walletDao.update(wallet);
@@ -97,7 +97,7 @@ public class WalletDaoTest extends BaseTestCase {
 		Wallet wallet2 = wallet;
 		assertEquals(wallet2, wallet);
 		
-		WalletTransaction walletTransaction = wallet.credit(new Money(new BigDecimal(100.00)), SubWalletType.GIFT_SUB_WALLET, 0, 0, "EGV");
+		WalletTransaction walletTransaction = wallet.credit(new Money(new BigDecimal(100.00)), SubWalletType.GIFT, 0, 0, "EGV");
 		assertNotNull(walletTransaction);
 		
 		wallet.setId(10293L); // setting an invalid id to fail the wallet test

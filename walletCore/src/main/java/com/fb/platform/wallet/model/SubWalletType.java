@@ -1,8 +1,7 @@
 package com.fb.platform.wallet.model;
 
 public enum SubWalletType {
-	CASH_SUB_WALLET("CASH"), GIFT_SUB_WALLET("GIFT"), REFUND_SUB_WALLET(
-			"REFUND");
+	CASH("CASH"), GIFT("GIFT"), REFUND("REFUND");
 
 	private String subWalletType = null;
 

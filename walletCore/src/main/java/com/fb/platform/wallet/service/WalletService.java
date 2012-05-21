@@ -64,7 +64,7 @@ public interface WalletService {
 	 * @return WalletTransaction
 	**/
 	@Transactional (propagation = Propagation.REQUIRED)
-	public WalletTransaction credit (long walletId, Money amount , SubWalletType subWalletType , long paymentId , long refundId , String gitfCoupon) throws WalletNotFoundException,PlatformException;
+	public WalletTransaction credit (long walletId, Money amount , String subWalletType , long paymentId , long refundId , String gitfCoupon) throws WalletNotFoundException,PlatformException;
 	
 	/**
 	 * Debit the wallet with the given amount.

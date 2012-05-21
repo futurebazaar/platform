@@ -88,14 +88,14 @@ public class WalletServiceImpl implements WalletService {
 
 	@Override
 	public WalletTransaction credit(long walletId, Money amount,
-			SubWalletType subWalletType, long paymentId, long refundId,
+			String subWalletType, long paymentId, long refundId,
 			String gitfCoupon) throws WalletNotFoundException,
 			PlatformException {
 		try {
 			WalletTransaction walletTransactionRes = new WalletTransaction();
 			Wallet wallet = load(walletId);
 			com.fb.platform.wallet.model.WalletTransaction walletTransaction = wallet
-					.credit(amount, subWalletType, paymentId, refundId,gitfCoupon);
+					.credit(amount, SubWalletType.valueOf(subWalletType), paymentId, refundId,gitfCoupon);
 			walletTransactionRes.setWallet(walletDao.update(wallet));
 			walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(walletTransaction));
 			return walletTransactionRes;

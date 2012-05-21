@@ -49,7 +49,7 @@ public class WalletServiceTest extends BaseTestCase {
 		Wallet wallet = walletService.load(6, -5);
 		assertNotNull(wallet);
 		assertEquals(new BigDecimal("0.00"), wallet.getTotalAmount().getAmount());		
-		WalletTransaction walletTransaction = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.CASH_SUB_WALLET, 2, 0, null);
+		WalletTransaction walletTransaction = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.CASH.toString(), 2, 0, null);
 		assertNotNull(walletTransaction);
 		assertNotNull(walletTransaction.getTransactionId());
 		assertNotNull(walletTransaction.getWallet());
@@ -60,7 +60,7 @@ public class WalletServiceTest extends BaseTestCase {
 	@Test
 	public void wrongWalletIdCredit(){
 		try{
-			WalletTransaction walletTransaction = walletService.credit(100000L, new Money(new BigDecimal("200.00")), SubWalletType.CASH_SUB_WALLET, 2, 0, null);
+			WalletTransaction walletTransaction = walletService.credit(100000L, new Money(new BigDecimal("200.00")), SubWalletType.CASH.toString(), 2, 0, null);
 		}catch (Exception e) {
 			assertEquals("com.fb.platform.wallet.service.exception.WalletNotFoundException",e.getClass().getCanonicalName());
 		}	
@@ -71,7 +71,7 @@ public class WalletServiceTest extends BaseTestCase {
 		Wallet wallet = walletService.load(6, -5);
 		assertNotNull(wallet);
 		assertEquals(new BigDecimal("0.00"), wallet.getTotalAmount().getAmount());		
-		WalletTransaction walletTransaction = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.CASH_SUB_WALLET, 2, 0, null);
+		WalletTransaction walletTransaction = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.CASH.toString(), 2, 0, null);
 		assertNotNull(walletTransaction);
 		assertNotNull(walletTransaction.getTransactionId());
 		assertNotNull(walletTransaction.getWallet());
@@ -97,7 +97,7 @@ public class WalletServiceTest extends BaseTestCase {
 		Wallet wallet = walletService.load(6, -5);
 		assertNotNull(wallet);
 		assertEquals(new BigDecimal("0.00"), wallet.getTotalAmount().getAmount());		
-		WalletTransaction walletTransaction = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.CASH_SUB_WALLET, 2, 0, null);
+		WalletTransaction walletTransaction = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.CASH.toString(), 2, 0, null);
 		assertNotNull(walletTransaction);
 		assertNotNull(walletTransaction.getTransactionId());
 		assertNotNull(walletTransaction.getWallet());
@@ -118,9 +118,9 @@ public class WalletServiceTest extends BaseTestCase {
 		Wallet wallet = walletService.load(6, -5);
 		assertNotNull(wallet);
 		assertEquals(new BigDecimal("0.00"), wallet.getTotalAmount().getAmount());		
-		WalletTransaction walletTransactionCr1 = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.CASH_SUB_WALLET, 2, 0, null);
-		WalletTransaction walletTransactionCr2 = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.GIFT_SUB_WALLET, 0, 0, "EGV");
-		WalletTransaction walletTransactionCr3 = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.REFUND_SUB_WALLET, 0, 3, null);
+		WalletTransaction walletTransactionCr1 = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.CASH.toString(), 2, 0, null);
+		WalletTransaction walletTransactionCr2 = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.GIFT.toString(), 0, 0, "EGV");
+		WalletTransaction walletTransactionCr3 = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.REFUND.toString(), 0, 3, null);
 		WalletTransaction walletTransactionDebit1 = walletService.debit(6,-5,new Money(new BigDecimal("100.00")),30);
 		WalletTransaction walletTransactionDebit2 = walletService.debit(6,-5,new Money(new BigDecimal("100.00")),36);
 		assertNotNull(walletTransactionCr1);
@@ -149,7 +149,7 @@ public class WalletServiceTest extends BaseTestCase {
 		Wallet wallet = walletService.load(6, -5);
 		assertNotNull(wallet);
 		assertEquals(new BigDecimal("0.00"), wallet.getTotalAmount().getAmount());		
-		WalletTransaction walletTransactionCr3 = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.REFUND_SUB_WALLET, 0, 3, null);
+		WalletTransaction walletTransactionCr3 = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.REFUND.toString(), 0, 3, null);
 		assertNotNull(walletTransactionCr3);
 		
 		WalletTransaction walletTransactionrefund = walletService.refund(6, -5, new Money(new BigDecimal("200.00")), 3, false,14);
@@ -167,7 +167,7 @@ public class WalletServiceTest extends BaseTestCase {
 		Wallet wallet = walletService.load(6, -5);
 		assertNotNull(wallet);
 		assertEquals(new BigDecimal("0.00"), wallet.getTotalAmount().getAmount());		
-		WalletTransaction walletTransactionCr3 = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.REFUND_SUB_WALLET, 0, 3, null);
+		WalletTransaction walletTransactionCr3 = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.REFUND.toString(), 0, 3, null);
 		assertNotNull(walletTransactionCr3);
 		
 		WalletTransaction walletTransactionrefund = walletService.refund(6, -5, new Money(new BigDecimal("200.00")), 3, false,14);
@@ -191,7 +191,7 @@ public class WalletServiceTest extends BaseTestCase {
 		Wallet wallet = walletService.load(6, -5);
 		assertNotNull(wallet);
 		assertEquals(new BigDecimal("0.00"), wallet.getTotalAmount().getAmount());		
-		WalletTransaction walletTransactionCr3 = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.REFUND_SUB_WALLET, 0, 3, null);
+		WalletTransaction walletTransactionCr3 = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.REFUND.toString(), 0, 3, null);
 		assertNotNull(walletTransactionCr3);
 		try{
 			WalletTransaction walletTransactionrefund = walletService.refund(6, -5, new Money(new BigDecimal("100.00")), 3, false,14);
@@ -213,7 +213,7 @@ public class WalletServiceTest extends BaseTestCase {
 		Wallet wallet = walletService.load(6, -5);
 		assertNotNull(wallet);
 		assertEquals(new BigDecimal("0.00"), wallet.getTotalAmount().getAmount());		
-		WalletTransaction walletTransactionCr3 = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.REFUND_SUB_WALLET, 0, 3, null);
+		WalletTransaction walletTransactionCr3 = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.REFUND.toString(), 0, 3, null);
 		assertNotNull(walletTransactionCr3);
 		try{
 			WalletTransaction walletTransactionrefund = walletService.refund(6, -5, new Money(new BigDecimal("200.00")), 3, false,-1);
@@ -227,7 +227,7 @@ public class WalletServiceTest extends BaseTestCase {
 		Wallet wallet = walletService.load(6, -5);
 		assertNotNull(wallet);
 		assertEquals(new BigDecimal("0.00"), wallet.getTotalAmount().getAmount());		
-		WalletTransaction walletTransactionCr3 = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.REFUND_SUB_WALLET, 0, 3, null);
+		WalletTransaction walletTransactionCr3 = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.REFUND.toString(), 0, 3, null);
 		assertNotNull(walletTransactionCr3);
 		WalletTransaction walletTransactionrefund = walletService.refund(6, -5, new Money(new BigDecimal("200.00")), 3, true,-1);
 		
@@ -245,9 +245,9 @@ public class WalletServiceTest extends BaseTestCase {
 		Wallet wallet = walletService.load(6, -5);
 		assertNotNull(wallet);
 		assertEquals(new BigDecimal("0.00"), wallet.getTotalAmount().getAmount());		
-		WalletTransaction walletTransactionCr1 = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.CASH_SUB_WALLET, 2, 0, null);
-		WalletTransaction walletTransactionCr2 = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.GIFT_SUB_WALLET, 0, 0, "EGV");
-		WalletTransaction walletTransactionCr3 = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.REFUND_SUB_WALLET, 0, 3, null);
+		WalletTransaction walletTransactionCr1 = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.CASH.toString(), 2, 0, null);
+		WalletTransaction walletTransactionCr2 = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.GIFT.toString(), 0, 0, "EGV");
+		WalletTransaction walletTransactionCr3 = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.REFUND.toString(), 0, 3, null);
 		WalletTransaction walletTransactionDebit1 = walletService.debit(6,-5,new Money(new BigDecimal("100.00")),30);
 		WalletTransaction walletTransactionDebit2 = walletService.debit(6,-5,new Money(new BigDecimal("100.00")),36);
 		assertNotNull(walletTransactionCr1);
