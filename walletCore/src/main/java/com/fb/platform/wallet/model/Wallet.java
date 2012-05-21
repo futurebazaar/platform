@@ -6,9 +6,6 @@ import org.joda.time.DateTime;
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.user.manager.model.admin.User;
-import com.fb.platform.wallet.to.CreditWalletStatus;
-import com.fb.platform.wallet.to.DebitWalletStatus;
-import com.fb.platform.wallet.to.RefundWalletStatus;
 
 public class Wallet implements Serializable {
 	
@@ -22,115 +19,90 @@ public class Wallet implements Serializable {
 	private User user;
 
 	public WalletTransaction credit(Money amount,SubWalletType subWalletType,long paymentId,long refundId,String giftCode){
-		try {
-			if (amount.isPlus()) {
-				if (subWalletType.equals(SubWalletType.CASH_SUB_WALLET)) {
-					cashSubWallet = cashSubWallet.plus(amount);
-				} else if (subWalletType.equals(SubWalletType.GIFT_SUB_WALLET)) {
-					giftSubWallet = giftSubWallet.plus(amount);
-				} else if (subWalletType
-						.equals(SubWalletType.REFUND_SUB_WALLET)) {
-					refundSubWallet = refundSubWallet.plus(amount);
-				} else {
-					return null;
-				}
-				totalAmount = totalAmount.plus(amount);
-				WalletTransaction walletTransaction = new WalletTransaction(
-						this, TransactionType.CREDIT, amount,DateTime.now());
-				walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(subWalletType, amount, 0, refundId, paymentId,0, giftCode));
-				return walletTransaction;
-			} else {
-				return null;
+		if (subWalletType.equals(SubWalletType.CASH_SUB_WALLET)) {
+				cashSubWallet = cashSubWallet.plus(amount);
+			} else if (subWalletType.equals(SubWalletType.GIFT_SUB_WALLET)) {
+				giftSubWallet = giftSubWallet.plus(amount);
+			} else if (subWalletType.equals(SubWalletType.REFUND_SUB_WALLET)) {
+				refundSubWallet = refundSubWallet.plus(amount);
 			}
-		} catch (Exception e) {
-			return null;
-		}
+			totalAmount = totalAmount.plus(amount);
+			WalletTransaction walletTransaction = new WalletTransaction(
+					this, TransactionType.CREDIT, amount,DateTime.now());
+			walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(subWalletType, amount, 0, refundId, paymentId,0, giftCode));
+			return walletTransaction;
 	}
 	
 	public WalletTransaction reverseTransaction(WalletTransaction walletTransaction) {
-		try{
-			WalletTransaction walletTransactionRes = new WalletTransaction(
-					this, TransactionType.CREDIT, walletTransaction.getAmount(),DateTime.now());
-			for(WalletSubTransaction walletSubTransaction : walletTransaction.getWalletSubTransaction()){
-				if (walletSubTransaction.getSubWalletType().equals(SubWalletType.CASH_SUB_WALLET)) {
-					cashSubWallet = cashSubWallet.plus(walletSubTransaction.getAmount());
-					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.CASH_SUB_WALLET,walletSubTransaction.getAmount(),0,0,0,walletTransaction.getId(),null));
-				} else if (walletSubTransaction.getSubWalletType().equals(SubWalletType.GIFT_SUB_WALLET)) {
-					giftSubWallet = giftSubWallet.plus(walletSubTransaction.getAmount());
-					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.GIFT_SUB_WALLET,walletSubTransaction.getAmount(),0,0,0,walletTransaction.getId(),null));
-				} else if (walletSubTransaction.getSubWalletType().equals(SubWalletType.REFUND_SUB_WALLET)) {
-					refundSubWallet = refundSubWallet.plus(walletSubTransaction.getAmount());
-					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND_SUB_WALLET,walletSubTransaction.getAmount(),0,0,0,walletTransaction.getId(),null));
-				}
+		WalletTransaction walletTransactionRes = new WalletTransaction(
+				this, TransactionType.CREDIT, walletTransaction.getAmount(),DateTime.now());
+		for(WalletSubTransaction walletSubTransaction : walletTransaction.getWalletSubTransaction()){
+			if (walletSubTransaction.getSubWalletType().equals(SubWalletType.CASH_SUB_WALLET)) {
+				cashSubWallet = cashSubWallet.plus(walletSubTransaction.getAmount());
+				walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.CASH_SUB_WALLET,walletSubTransaction.getAmount(),0,0,0,walletTransaction.getId(),null));
+			} else if (walletSubTransaction.getSubWalletType().equals(SubWalletType.GIFT_SUB_WALLET)) {
+				giftSubWallet = giftSubWallet.plus(walletSubTransaction.getAmount());
+				walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.GIFT_SUB_WALLET,walletSubTransaction.getAmount(),0,0,0,walletTransaction.getId(),null));
+			} else if (walletSubTransaction.getSubWalletType().equals(SubWalletType.REFUND_SUB_WALLET)) {
+				refundSubWallet = refundSubWallet.plus(walletSubTransaction.getAmount());
+				walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND_SUB_WALLET,walletSubTransaction.getAmount(),0,0,0,walletTransaction.getId(),null));
 			}
-			this.totalAmount.plus(walletTransaction.getAmount());
-			return walletTransactionRes;
-		}catch (Exception e) {
-			return null;
 		}
+		totalAmount = totalAmount.plus(walletTransaction.getAmount());
+		return walletTransactionRes;
 	}
 
 	public WalletTransaction debit(Money amount,long orderId) {
-		try{
-			WalletTransaction walletTransaction = new WalletTransaction(this, TransactionType.DEBIT, amount,DateTime.now());
-			Money amountLeftToBeDebited = amount;
-			if(giftSubWallet.isPlus()){
-				if(giftSubWallet.gteq(amountLeftToBeDebited)){
-					totalAmount.minus(amountLeftToBeDebited);
-					giftSubWallet.minus(amountLeftToBeDebited);
-					walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.GIFT_SUB_WALLET,amountLeftToBeDebited,orderId,0,0,0,null));
-				}else{
-					totalAmount.minus(giftSubWallet);
-					giftSubWallet.minus(giftSubWallet);
-					amountLeftToBeDebited = amount.minus(giftSubWallet);
-					walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.GIFT_SUB_WALLET,giftSubWallet,orderId,0,0,0,null));
-				}
+		WalletTransaction walletTransaction = new WalletTransaction(this, TransactionType.DEBIT, amount,DateTime.now());
+		Money amountLeftToBeDebited = amount;
+		if(giftSubWallet.isPlus()){
+			if(giftSubWallet.gteq(amountLeftToBeDebited)){
+				totalAmount = totalAmount.minus(amountLeftToBeDebited);
+				giftSubWallet =giftSubWallet.minus(amountLeftToBeDebited);
+				walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.GIFT_SUB_WALLET,amountLeftToBeDebited,orderId,0,0,0,null));
+				amountLeftToBeDebited = amountLeftToBeDebited.minus(amountLeftToBeDebited);
+			}else{
+				totalAmount = totalAmount.minus(giftSubWallet);
+				amountLeftToBeDebited = amountLeftToBeDebited.minus(giftSubWallet);
+				walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.GIFT_SUB_WALLET,giftSubWallet,orderId,0,0,0,null));
+				giftSubWallet = giftSubWallet.minus(giftSubWallet);
 			}
-			if(cashSubWallet.isPlus()){
-				if(cashSubWallet.gteq(amountLeftToBeDebited)){
-					totalAmount.minus(amountLeftToBeDebited);
-					cashSubWallet.minus(amountLeftToBeDebited);
-					walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.CASH_SUB_WALLET,amountLeftToBeDebited,orderId,0,0,0,null));
-				}else{
-					totalAmount.minus(cashSubWallet);
-					cashSubWallet.minus(cashSubWallet);
-					amountLeftToBeDebited = amount.minus(cashSubWallet);
-					walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.CASH_SUB_WALLET,cashSubWallet,orderId,0,0,0,null));
-				}
-			}
-			if(refundSubWallet.isPlus()){
-				if(refundSubWallet.gteq(amountLeftToBeDebited)){
-					totalAmount.minus(amountLeftToBeDebited);
-					refundSubWallet.minus(amountLeftToBeDebited);
-					walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND_SUB_WALLET,amountLeftToBeDebited,orderId,0,0,0,null));
-				}else{
-					totalAmount.minus(refundSubWallet);
-					cashSubWallet.minus(refundSubWallet);
-					amountLeftToBeDebited = amount.minus(refundSubWallet);
-					walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND_SUB_WALLET,refundSubWallet,orderId,0,0,0,null));
-				}
-			}
-			return walletTransaction;
-		}catch (PlatformException pe){
-			return null;
 		}
+		if(cashSubWallet.isPlus() && amountLeftToBeDebited.isPlus()){
+			if(cashSubWallet.gteq(amountLeftToBeDebited)){
+				totalAmount = totalAmount.minus(amountLeftToBeDebited);
+				cashSubWallet = cashSubWallet.minus(amountLeftToBeDebited);
+				walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.CASH_SUB_WALLET,amountLeftToBeDebited,orderId,0,0,0,null));
+				amountLeftToBeDebited = amountLeftToBeDebited.minus(amountLeftToBeDebited);
+			}else{
+				totalAmount = totalAmount.minus(cashSubWallet);
+				amountLeftToBeDebited = amountLeftToBeDebited.minus(cashSubWallet);
+				walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.CASH_SUB_WALLET,cashSubWallet,orderId,0,0,0,null));
+				cashSubWallet = cashSubWallet.minus(cashSubWallet);
+			}
+		}
+		if(refundSubWallet.isPlus() && amountLeftToBeDebited.isPlus()){
+			if(refundSubWallet.gteq(amountLeftToBeDebited)){
+				totalAmount = totalAmount.minus(amountLeftToBeDebited);
+				refundSubWallet = refundSubWallet.minus(amountLeftToBeDebited);
+				walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND_SUB_WALLET,amountLeftToBeDebited,orderId,0,0,0,null));
+				amountLeftToBeDebited = amountLeftToBeDebited.minus(amountLeftToBeDebited);
+			}
+		}
+		return walletTransaction;
 	}
 	public boolean isSufficientFund(Money amount) {
-		if (totalAmount.lt(amount) && !amount.isPlus()) {
-			return false;
+		if (totalAmount.gteq(amount) && amount.isPlus()) {
+			return true;
 		}
-		return true;
+		return false;
 	}
-	public WalletTransaction refund(Money amount){
-		try{
-			WalletTransaction walletTransaction = new WalletTransaction(this, TransactionType.DEBIT, amount,DateTime.now());
-			totalAmount.minus(amount);
-			refundSubWallet.minus(amount);
-			walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND_SUB_WALLET,refundSubWallet,0,0,0,0,null));
-			return walletTransaction;
-		}catch (Exception e) {
-			return null;
-		}
+	public WalletTransaction refund(Money amount,long refundId){
+		WalletTransaction walletTransaction = new WalletTransaction(this, TransactionType.DEBIT, amount,DateTime.now());
+		totalAmount = totalAmount.minus(amount);
+		refundSubWallet = refundSubWallet.minus(amount);
+		walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND_SUB_WALLET,amount,0,refundId,0,0,null));
+		return walletTransaction;
 	}
 
 	/**

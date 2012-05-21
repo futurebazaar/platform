@@ -9,12 +9,14 @@ import java.util.List;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.wallet.dao.WalletDao;
 import com.fb.platform.wallet.dao.WalletTransactionDao;
@@ -23,6 +25,9 @@ import com.fb.platform.wallet.model.TransactionType;
 import com.fb.platform.wallet.model.Wallet;
 import com.fb.platform.wallet.model.WalletSubTransaction;
 import com.fb.platform.wallet.model.WalletTransaction;
+import com.fb.platform.wallet.service.exception.InvalidTransactionIdException;
+import com.fb.platform.wallet.service.exception.WalletRefundMismatchException;
+import com.fb.platform.wallet.service.exception.WorngRefundIdException;
 
 public class WalletTransactionDaoImpl implements WalletTransactionDao {
 	
@@ -101,7 +106,7 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			+ "transaction_reversal_id, "
 			+ "transaction_description "
 			+ "from wallets_sub_transaction "
-			+ "where refund_id= ? limit 0,1 order by id desc" ;
+			+ "where refund_id= ? order by id desc limit 0,1" ;
 	
 	@Override
 	public String insertTransaction(final WalletTransaction walletTransaction) {
@@ -146,11 +151,12 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 	@Override
 	public List<WalletTransaction> walletHistory(Wallet wallet,DateTime fromDateTime, DateTime toDate) {
 		try {
+			Date fromdate = (fromDateTime != null) ? new Date(fromDateTime.getMillis()) : new Date(DateTime.now().minusYears(1).getMillis());
+			Date todate = toDate != null ? new Date(toDate.getMillis()) : new Date(DateTime.now().getMillis());
 			List<WalletTransaction> walletTransactions = jdbcTemplate.query(GET_TRANSACTION_HISTORY,
-					new Object[]{wallet.getId(),
-					fromDateTime != null ? new Date(fromDateTime.getMillis()) : new Date(DateTime.now().minusYears(1).getMillis()),
-					toDate != null ? new Date(toDate.getMillis()) : new Date(DateTime.now().minusYears(1).getMillis())},
+					new Object[]{wallet.getId(),fromdate,todate},
 					new WalletTransactionMapper());
+			
 			for(WalletTransaction walletTransaction : walletTransactions){
 				List<WalletSubTransaction> walletSubTransactions = jdbcTemplate.query(GET_SUB_TRANSACTIONS_BY_TRANID,
 						new Object[] {walletTransaction.getId()},
@@ -167,16 +173,17 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 	public WalletTransaction transactionById(long walletId, String transactionId) {
 		try {
 			WalletTransaction walletTransaction = jdbcTemplate.queryForObject(GET_TRANSACTION_BY_TRANSACTIONID,
-					new Object[]{transactionId,walletId},
-					new WalletTransactionMapper());			
+				new Object[]{transactionId,walletId},
+				new WalletTransactionMapper());	
 			List<WalletSubTransaction> walletSubTransactions = jdbcTemplate.query(GET_SUB_TRANSACTIONS_BY_TRANID,
 					new Object[] {walletTransaction.getId()},
 					new WalletSubTransactionMapper());
 			walletTransaction.getWalletSubTransaction().addAll(walletSubTransactions);			
 			return walletTransaction;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+		} catch (EmptyResultDataAccessException e) {
+			throw new InvalidTransactionIdException();
+		} catch (PlatformException e) {
+			throw new PlatformException();
 		}
 	}
 	
@@ -219,18 +226,31 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 	}
 	@Override
 	public WalletTransaction refundTransactionByRefundId(long walletId,
-			long refundId) {
-		try {
-			WalletSubTransaction walletSubTransaction = jdbcTemplate.queryForObject(GET_SUB_TRANSACTIONS_BY_REFUNDID,
-					new Object[] {refundId},
-					new WalletSubTransactionMapper());			
-			WalletTransaction walletTransaction = jdbcTemplate.queryForObject(GET_TRANSACTION_BY_ID,
-					new Object[]{walletSubTransaction.getTransactionId(),walletId},
-					new WalletTransactionMapper());			
-			walletTransaction.getWalletSubTransaction().add(walletSubTransaction);
-			return walletTransaction;
-		} catch (Exception e) {
-			return null;
-		}
+			long refundId) {		
+		try{
+			WalletSubTransaction walletSubTransaction = null;
+			try {
+				walletSubTransaction = jdbcTemplate.queryForObject(GET_SUB_TRANSACTIONS_BY_REFUNDID,
+						new Object[] {refundId},
+						new WalletSubTransactionMapper());
+			}catch (EmptyResultDataAccessException e){
+				throw new WorngRefundIdException("No available refund with this id");
+			}
+			try {
+				WalletTransaction walletTransaction = jdbcTemplate.queryForObject(GET_TRANSACTION_BY_ID,
+							new Object[]{walletSubTransaction.getTransactionId(),walletId},
+							new WalletTransactionMapper());
+				walletTransaction.getWalletSubTransaction().add(walletSubTransaction);
+				return walletTransaction;
+			}catch (EmptyResultDataAccessException e){
+				throw new WalletRefundMismatchException("This refundId not associated with this wallet");
+			}			
+		}catch (WorngRefundIdException e) {
+			throw new WorngRefundIdException("No available refund with this id");
+		}catch (WalletRefundMismatchException e) {
+			throw new WalletRefundMismatchException("This refundId not associated with this wallet");
+		}catch (PlatformException e) {
+			throw new PlatformException("No available refund with this id");
+		}		
 	}
 }

@@ -17,6 +17,8 @@ import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.wallet.dao.WalletDao;
 import com.fb.platform.wallet.model.Wallet;
+import com.fb.platform.wallet.service.exception.WalletCreationError;
+import com.fb.platform.wallet.service.exception.WalletNOtFoundException;
 
 public class WalletDaoImpl implements WalletDao {
 
@@ -63,23 +65,27 @@ public class WalletDaoImpl implements WalletDao {
 					new WalletMapper());
 			// TODO Auto-generated method stub
 			return wallet;
-		}catch (Exception e) {
-			return null;
+		}catch (EmptyResultDataAccessException e) {
+			throw new WalletNOtFoundException();
 		}
 	}
 
 	@Override
-	public Wallet load(long userId, long clientId) {
+	public Wallet load(long userId, long clientId ,boolean isCreateNew) {
 		try{
 			Wallet wallet = load(jdbcTemplate.queryForLong(GET_WALLET_ID_USER_CLIENT,new Object[] {userId,clientId}));
-			if(wallet == null){
-				return create(userId, clientId);
-			}
 			return wallet;
 		}catch (EmptyResultDataAccessException e) {
-			return create(userId, clientId);
-		}catch (Exception e) {
-			return null;
+			if(isCreateNew){
+				Wallet wallet = create(userId, clientId);
+				if(wallet != null){
+					return wallet;
+				}else{
+					throw new WalletCreationError("Either UserId or ClientId is wrong");
+				}
+			}else{
+				throw new WalletNOtFoundException();
+			}
 		}
 	}
 	

@@ -11,8 +11,10 @@ import com.fb.commons.to.Money;
 import com.fb.platform.wallet.model.SubWalletType;
 import com.fb.platform.wallet.model.Wallet;
 import com.fb.platform.wallet.to.WalletTransaction;
+import com.fb.platform.wallet.service.exception.AlreadyRefundedException;
 import com.fb.platform.wallet.service.exception.InSufficientFundsException;
 import com.fb.platform.wallet.service.exception.InvalidTransaction;
+import com.fb.platform.wallet.service.exception.RefundExpiredException;
 import com.fb.platform.wallet.service.exception.WalletNOtFoundException;
 import com.fb.platform.wallet.to.CreditWalletStatus;
 
@@ -85,14 +87,16 @@ public interface WalletService {
 	 * @param clientId : Client Id though which the refund request is initiated.
 	 * @param amount : The amount to be refunded to the user.
 	 * @param refundId : The refundId for which the refund needs to be processed.
-	 * @param ignoreExpiry :The expiry date for refund should be considered for the rufund process or not. DEFAULT : True.
+	 * @param ignoreExpiry :The expiry date for refund should be considered for the refund process or not. DEFAULT : True.
 	 * @throws WalletNOtFoundException When no wallet is found matching the wallet.
 	 * @throws InSufficientFundsException When  refund not having enough funds.
+	 * @throws AlreadyRefundedException When the given refund Id is already refunded.
+	 * @throws RefundExpiredException refund period has expired and cannot be taken out of the wallet.
 	 * @throws PlatformException When an unrecoverable error happens.
 	 * @return WalletTransaction 
 	**/
 	@Transactional (propagation = Propagation.REQUIRED)
-	public WalletTransaction refund (long userId, long clientId , Money amount , long refundId , boolean ignoreExpiry) throws WalletNOtFoundException,InSufficientFundsException ,PlatformException;
+	public WalletTransaction refund (long userId, long clientId , Money amount , long refundId , boolean ignoreExpiry, int expiryDays) throws WalletNOtFoundException, AlreadyRefundedException,RefundExpiredException,InSufficientFundsException,PlatformException;
 	
 	/**
 	 * Reverse the transaction if an order is cancelled which is paid via the wallet.
@@ -100,7 +104,7 @@ public interface WalletService {
 	 * @param clientId : Client Id though which the cancellation request is initiated.
 	 * @param transactionId : The transactionId which needs to be reversed.
 	 * @throws WalletNOtFoundException When no wallet is found matching the wallet.
-	 * @throws InvalidTransaction When the transaction doesnot exist.
+	 * @throws InvalidTransaction When the transaction doesn't exist.
 	 * @throws PlatformException When an unrecoverable error happens.
 	 * @return WalletTransaction 
 	**/

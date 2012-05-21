@@ -21,28 +21,29 @@ public class WalletDaoTest extends BaseTestCase {
 	
 	@Test
 	public void testLoadWallet(){
-		Wallet wallet = walletDao.load(6, -5);
+		Wallet wallet = walletDao.load(6, -5,true);
 		assertNotNull(wallet);
 		assertNotNull(wallet.getId());
 	}
 	
 	@Test
 	public void testLoadWalletAlredyCreated(){
-		Wallet wallet = walletDao.load(1, -5);
+		Wallet wallet = walletDao.load(1, -5,true);
 		assertNotNull(wallet);
 		assertNotNull(wallet.getId());
 		
-		Wallet walletReLoad = walletDao.load(1, -5);
+		Wallet walletReLoad = walletDao.load(1, -5,false);
 		assertNotNull(walletReLoad);
 		assertNotNull(walletReLoad.getId());
 		
 		assertEquals(wallet.getId(), walletReLoad.getId());
-		assertEquals(wallet, walletReLoad);
+		assertEquals(true, walletReLoad.equals(wallet));
+		assertEquals(wallet.toString(), walletReLoad.toString());
 	}
 	
 	@Test
 	public void testLoadWalletById(){
-		Wallet wallet = walletDao.load(3, -5);
+		Wallet wallet = walletDao.load(3, -5,true);
 		assertNotNull(wallet);
 		assertNotNull(wallet.getId());
 		
@@ -59,7 +60,7 @@ public class WalletDaoTest extends BaseTestCase {
 	
 	@Test
 	public void testUpdateWallet(){
-		Wallet wallet = walletDao.load(2, -5);
+		Wallet wallet = walletDao.load(2, -5,true);
 		assertNotNull(wallet);
 		assertNotNull(wallet.getId());
 		assertEquals(new Money(new BigDecimal(BigInteger.ZERO,2)), wallet.getTotalAmount());
@@ -82,7 +83,7 @@ public class WalletDaoTest extends BaseTestCase {
 	
 	@Test
 	public void testUpdateWalletFailure(){
-		Wallet wallet = walletDao.load(2, -5);
+		Wallet wallet = walletDao.load(2, -5,true);
 		assertNotNull(wallet);
 		assertNotNull(wallet.getId());
 		assertEquals(new Money(new BigDecimal(BigInteger.ZERO,2)), wallet.getTotalAmount());
@@ -95,10 +96,9 @@ public class WalletDaoTest extends BaseTestCase {
 		WalletTransaction walletTransaction = wallet.credit(new Money(new BigDecimal(100.00)), SubWalletType.GIFT_SUB_WALLET, 0, 0, "EGV");
 		assertNotNull(walletTransaction);
 		
-		wallet.setId(100); // setting an invalid id to fail the wallet test
+		wallet.setId(10293L); // setting an invalid id to fail the wallet test
 		
 		Wallet walletPostUpdate = walletDao.update(wallet);
 		assertNull(walletPostUpdate);
-		
 	}
 }
