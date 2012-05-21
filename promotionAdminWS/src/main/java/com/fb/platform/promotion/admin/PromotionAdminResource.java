@@ -74,6 +74,8 @@ import com.fb.platform.promotion.admin.service.PromotionAdminManager;
 import com.fb.platform.promotion.admin.to.SearchCouponOrderBy;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
 import com.fb.platform.promotion.admin.to.SortOrder;
+import com.fb.platform.promotion.to.AlphaNumericType;
+import com.fb.platform.promotion.to.AlphabetCase;
 
 /**
  * @author nehaga
@@ -179,7 +181,7 @@ public class PromotionAdminResource {
 			}
 			apiPromotionTO.setMaxUses(promotionTO.getMaxUses());
 			apiPromotionTO.setMaxUsesPerUser(promotionTO.getMaxUsesPerUser());
-			apiPromotionTO.setPromotionName(promotionTO.getPromotionName());
+			apiPromotionTO.setPromotionName(StringUtils.trim(promotionTO.getPromotionName()));
 			apiPromotionTO.setRuleName(createPromotionRequest.getCreatePromotionTO().getRuleName());
 			if(promotionTO.getValidFrom() == null) {
 				apiPromotionTO.setValidFrom(null);
@@ -430,7 +432,7 @@ public class PromotionAdminResource {
 			}
 			apiPromotionTO.setMaxUses(promotionTO.getMaxUses());
 			apiPromotionTO.setMaxUsesPerUser(promotionTO.getMaxUsesPerUser());
-			apiPromotionTO.setPromotionName(promotionTO.getPromotionName());
+			apiPromotionTO.setPromotionName(StringUtils.trim(promotionTO.getPromotionName()));
 			if(promotionTO.getValidFrom() == null) {
 				apiPromotionTO.setValidFrom(null);
 			} else {
@@ -745,7 +747,14 @@ public class PromotionAdminResource {
 				apiCreateCouponRequest.setEndsWith(endsWith);
 				apiCreateCouponRequest.setLength(codeDetails.getCodeLength());
 				
-				// need to set the alphabetCase and coupon code alphabetCode type (currently not taken from user
+				com.fb.platform.promotion.admin._1_0.AlphaNumericType inputAlphaNumericType = codeDetails.getAlphaNumericType()==null ? 
+						com.fb.platform.promotion.admin._1_0.AlphaNumericType.ALPHA_NUMERIC : codeDetails.getAlphaNumericType();
+				
+				com.fb.platform.promotion.admin._1_0.AlphabetCase inputAlphabetCase = codeDetails.getAlphabetCase()==null ? 
+						com.fb.platform.promotion.admin._1_0.AlphabetCase.MIXED : codeDetails.getAlphabetCase();
+				
+				apiCreateCouponRequest.setAlphaNumericType(AlphaNumericType.valueOf(inputAlphaNumericType.toString()));
+				apiCreateCouponRequest.setAlphabetCase(AlphabetCase.valueOf(inputAlphabetCase.toString()));
 			}
 			
 			CreateCouponResponse createCouponResponse	= new CreateCouponResponse();	

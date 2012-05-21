@@ -13,6 +13,9 @@ import org.apache.commons.logging.LogFactory;
 
 import com.fb.platform.promotion.admin.dao.CouponAdminDao;
 import com.fb.platform.promotion.service.CouponCodeGenerationException;
+import com.fb.platform.promotion.to.AlphaNumericType;
+import com.fb.platform.promotion.to.AlphabetCase;
+import com.fb.platform.promotion.to.CouponCodeCharEnum;
 
 /**
  * @author vinayak
@@ -21,8 +24,8 @@ import com.fb.platform.promotion.service.CouponCodeGenerationException;
 public class CouponCodeCreator {
 
 	private Log log = LogFactory.getLog(CouponCodeCreator.class);
-	//excludes 0, 1, I, L and O.
-	private static final char [] chars = "ABCDEFGHJKMNPQRSTUVWXYZ23456789".toCharArray();
+	
+	private static char [] chars;
 
 	private CouponAdminDao couponAdminDao = null;
 
@@ -32,9 +35,11 @@ public class CouponCodeCreator {
 	private int currentBatchNumber = 0;
 	private int numberOfBatches = 0;
 
-	public void init(int count, int length, String startsWith, String endsWith, int batchSize) {
+	public void init(int count, int length, String startsWith, String endsWith, int batchSize, AlphabetCase alphabetCase, AlphaNumericType alphaNumericType) {
 		this.batchSize = batchSize;
 
+		// this API can throw InvalidAlphaNumericTypeException exception
+		chars = CouponCodeCharEnum.from(alphaNumericType, alphabetCase);
 		//generate the coupon codes
 		generatedCoupons = create(count, length, startsWith, endsWith);
 		List<String> existingCoupons = findExistingCouponCodes(generatedCoupons);

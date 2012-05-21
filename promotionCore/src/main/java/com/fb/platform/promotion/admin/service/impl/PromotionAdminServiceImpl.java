@@ -10,12 +10,14 @@ import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import com.fb.commons.PlatformException;
 import com.fb.platform.promotion.admin.dao.CouponAdminDao;
 import com.fb.platform.promotion.admin.dao.PromotionAdminDao;
 import com.fb.platform.promotion.admin.service.NoDataFoundException;
 import com.fb.platform.promotion.admin.service.PromotionAdminService;
+import com.fb.platform.promotion.admin.service.PromotionNameDuplicateException;
 import com.fb.platform.promotion.admin.to.CouponBasicDetails;
 import com.fb.platform.promotion.admin.to.CouponTO;
 import com.fb.platform.promotion.admin.to.PromotionTO;
@@ -34,6 +36,8 @@ import com.fb.platform.promotion.service.CouponNotFoundException;
 import com.fb.platform.promotion.service.InvalidCouponTypeException;
 import com.fb.platform.promotion.service.PromotionNotFoundException;
 import com.fb.platform.promotion.service.PromotionService;
+import com.fb.platform.promotion.to.AlphaNumericType;
+import com.fb.platform.promotion.to.AlphabetCase;
 import com.fb.platform.promotion.util.CouponCodeCreator;
 import com.fb.platform.user.dao.interfaces.UserAdminDao;
 import com.fb.platform.user.domain.UserBo;
@@ -108,9 +112,11 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 			} else {
 				throw new PlatformException("Unable to create new promotion");
 			}
+		} catch (PromotionNameDuplicateException e) {
+			throw e;
 		} catch (DataAccessException e) {
 			log.error("DataAccess Exception while creating promotion.", e);
-			throw new PlatformException("Exception while creating new promotion", e);
+			throw new PlatformException("Exception while creating new promotion.", e);
 		}
 		return promotionId;
 	}
@@ -146,6 +152,8 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 							promotionTO.getId(), 
 							ruleId);
 			}
+		} catch (PromotionNameDuplicateException e) {
+			throw e;
 		} catch (DataAccessException e) {
 			log.error("DataAccess Exception while updating the promotion, promotionId : " + promotionTO.getId(), e);
 			throw new PlatformException("DataAccess Exception while updating the promotion, promotionId : " + promotionTO.getId(), e);
@@ -219,7 +227,8 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 	}
 
 	@Override
-	public List<String> createCoupons(int count, int length, String startsWith, String endsWith, int promotionId, CouponType type, CouponLimitsConfig limits) {
+	public List<String> createCoupons(int count, int length, String startsWith, String endsWith, int promotionId, 
+			CouponType type, CouponLimitsConfig limits, AlphabetCase alphabetCase, AlphaNumericType alphaNumericType) {
 
 		try {
 			//see if the promotion is valid, if not this will throw promotion not found exception
@@ -228,7 +237,7 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 			CouponCodeCreator couponCodeCreator = new CouponCodeCreator();
 			couponCodeCreator.setCouponAdminDao(couponAdminDao);
 
-			couponCodeCreator.init(count, length, startsWith, endsWith, COUPON_GENERATION_BATCH_SIZE);
+			couponCodeCreator.init(count, length, startsWith, endsWith, COUPON_GENERATION_BATCH_SIZE, alphabetCase, alphaNumericType);
 
 			while (couponCodeCreator.nextBatchAvailable()) {
 				List<String> batchOfCouponCodes = couponCodeCreator.getNextBatch();

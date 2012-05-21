@@ -61,4 +61,6 @@ public interface PromotionAdminDao {
 	 * @return
 	 */
 	boolean createPromotionUses();
+	
+	PromotionTO loadPromotionByName(String name);
 }
