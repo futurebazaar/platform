@@ -133,6 +133,8 @@ public class PromotionTO {
 		List<String> nameInvalidationList = new ArrayList<String>();
 		if(StringUtils.isBlank(promotionName)) {
 			nameInvalidationList.add("Promotion Name cannot be blank");
+		} else if(promotionName.length() > 50) {
+			nameInvalidationList.add("Promotion Name cannot contain more than 50 characters");
 		}
 		return nameInvalidationList;
 	}

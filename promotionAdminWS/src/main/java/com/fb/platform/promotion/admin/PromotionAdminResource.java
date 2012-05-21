@@ -179,7 +179,7 @@ public class PromotionAdminResource {
 			}
 			apiPromotionTO.setMaxUses(promotionTO.getMaxUses());
 			apiPromotionTO.setMaxUsesPerUser(promotionTO.getMaxUsesPerUser());
-			apiPromotionTO.setPromotionName(promotionTO.getPromotionName());
+			apiPromotionTO.setPromotionName(StringUtils.trim(promotionTO.getPromotionName()));
 			apiPromotionTO.setRuleName(createPromotionRequest.getCreatePromotionTO().getRuleName());
 			if(promotionTO.getValidFrom() == null) {
 				apiPromotionTO.setValidFrom(null);
@@ -430,7 +430,7 @@ public class PromotionAdminResource {
 			}
 			apiPromotionTO.setMaxUses(promotionTO.getMaxUses());
 			apiPromotionTO.setMaxUsesPerUser(promotionTO.getMaxUsesPerUser());
-			apiPromotionTO.setPromotionName(promotionTO.getPromotionName());
+			apiPromotionTO.setPromotionName(StringUtils.trim(promotionTO.getPromotionName()));
 			if(promotionTO.getValidFrom() == null) {
 				apiPromotionTO.setValidFrom(null);
 			} else {
