@@ -61,7 +61,6 @@ public interface PromotionAdminManager {
 	 * @param promotion
 	 * @return
 	 */
-	@Transactional(propagation=Propagation.REQUIRED)
 	public UpdatePromotionResponse updatePromotion(UpdatePromotionRequest updatePromotionRequest);
 
 	/**

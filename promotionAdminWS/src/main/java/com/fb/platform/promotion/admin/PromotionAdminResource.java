@@ -192,10 +192,12 @@ public class PromotionAdminResource {
 				apiPromotionTO.setValidTill(new DateTime(promotionTO.getValidTill().toGregorianCalendar()));
 			}
 			for(RuleConfigItemTO ruleConfigItemTO : promotionTO.getRuleConfigItemTO()) {
-				com.fb.platform.promotion.admin.to.RuleConfigItemTO apiRuleConfigItemTO = new com.fb.platform.promotion.admin.to.RuleConfigItemTO();
-				apiRuleConfigItemTO.setRuleConfigName(ruleConfigItemTO.getRuleConfigName());
-				apiRuleConfigItemTO.setRuleConfigValue(ruleConfigItemTO.getRuleConfigValue());
-				apiPromotionTO.getConfigItems().add(apiRuleConfigItemTO);
+				if(StringUtils.isNotBlank(ruleConfigItemTO.getRuleConfigValue())) {
+					com.fb.platform.promotion.admin.to.RuleConfigItemTO apiRuleConfigItemTO = new com.fb.platform.promotion.admin.to.RuleConfigItemTO();
+					apiRuleConfigItemTO.setRuleConfigName(ruleConfigItemTO.getRuleConfigName());
+					apiRuleConfigItemTO.setRuleConfigValue(ruleConfigItemTO.getRuleConfigValue());
+					apiPromotionTO.getConfigItems().add(apiRuleConfigItemTO);
+				}
 			}
 			
 			apiCreatePromotionRequest.setPromotion(apiPromotionTO);
@@ -440,10 +442,12 @@ public class PromotionAdminResource {
 				apiPromotionTO.setValidTill(new DateTime(promotionTO.getValidTill().toGregorianCalendar()));
 			}
 			for(RuleConfigItemTO ruleConfigItemTO : promotionTO.getRuleConfigItemTO()) {
-				com.fb.platform.promotion.admin.to.RuleConfigItemTO apiRuleConfigItemTO = new com.fb.platform.promotion.admin.to.RuleConfigItemTO();
-				apiRuleConfigItemTO.setRuleConfigName(ruleConfigItemTO.getRuleConfigName());
-				apiRuleConfigItemTO.setRuleConfigValue(ruleConfigItemTO.getRuleConfigValue());
-				apiPromotionTO.getConfigItems().add(apiRuleConfigItemTO);
+				if(StringUtils.isNotBlank(ruleConfigItemTO.getRuleConfigValue())) {
+					com.fb.platform.promotion.admin.to.RuleConfigItemTO apiRuleConfigItemTO = new com.fb.platform.promotion.admin.to.RuleConfigItemTO();
+					apiRuleConfigItemTO.setRuleConfigName(ruleConfigItemTO.getRuleConfigName());
+					apiRuleConfigItemTO.setRuleConfigValue(ruleConfigItemTO.getRuleConfigValue());
+					apiPromotionTO.getConfigItems().add(apiRuleConfigItemTO);
+				}
 			}
 			
 			apiUpdatePromotionRequest.setPromotion(apiPromotionTO);
@@ -465,6 +469,9 @@ public class PromotionAdminResource {
 			
 		} catch (JAXBException e) {
 			logger.error("Error in the updatePromotion call.", e);
+			return "error"; //TODO return proper error response
+		} catch (Exception e) {
+			logger.error("General error in the updatePromotion call.", e);
 			return "error"; //TODO return proper error response
 		}
 		
