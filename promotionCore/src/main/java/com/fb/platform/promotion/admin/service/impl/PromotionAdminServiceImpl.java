@@ -1,6 +1,5 @@
 package com.fb.platform.promotion.admin.service.impl;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,6 +21,7 @@ import com.fb.platform.promotion.admin.to.CouponTO;
 import com.fb.platform.promotion.admin.to.PromotionTO;
 import com.fb.platform.promotion.admin.to.RuleConfigItemTO;
 import com.fb.platform.promotion.admin.to.SearchCouponOrderBy;
+import com.fb.platform.promotion.admin.to.SearchCouponResultBO;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
 import com.fb.platform.promotion.admin.to.SortOrder;
 import com.fb.platform.promotion.dao.RuleDao;
@@ -247,7 +247,7 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 	}
 
 	@Override
-	public Set<CouponBasicDetails> searchCoupons(String couponCode, String userName, SearchCouponOrderBy orderBy,
+	public SearchCouponResultBO searchCoupons(String couponCode, String userName, SearchCouponOrderBy orderBy,
 			SortOrder sortOrder, int startRecord, int batchSize){
 		// 1) if userId is present then use it to get all
 		//		- couponId from the coupon_user table (PRE_ISSUE)
@@ -273,25 +273,32 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 			allCouponIdsForUser = couponAdminDao.loadAllCouponForUser(userId);
 		}
 		
-		List<CouponBasicDetails> allUserCoupons = new ArrayList<CouponBasicDetails>(0);
+		SearchCouponResultBO searchCouponResultBO = new SearchCouponResultBO();
 		try {
-			allUserCoupons = couponAdminDao.searchCoupons(couponCode, allCouponIdsForUser, orderBy, sortOrder, startRecord, batchSize);
+			List<CouponBasicDetails> allUserCoupons = couponAdminDao.searchCoupons(couponCode, allCouponIdsForUser, orderBy, sortOrder, startRecord, batchSize);
+			int totalCount = -1;
+			// if user Id was present in search criteria then there can be more than one coupon in the result otherwise
+			// if coupon code is present in the search criteria then the result size can only be zero or one.
+			if(isUserValid){
+				totalCount = couponAdminDao.countCoupons(userId);
+			}else{
+				totalCount = allUserCoupons.size();
+			}
+			
+			searchCouponResultBO.setCouponBasicDetailsSet(new HashSet<CouponBasicDetails>(allUserCoupons));
+			searchCouponResultBO.setTotalCount(totalCount);
 		} catch (Exception e) {
 			log.error("Error while searching coupon details for userId = "+userId + " couponCode = "+ couponCode, e);
 			throw new PlatformException("Error while searching coupon details for userId = "+userId + " couponCode = "+ couponCode, e);
 		}
 		
-		return new HashSet<CouponBasicDetails>(allUserCoupons);
+		return searchCouponResultBO;
 	}
 	
 	public CouponTO viewCoupons(String couponCode){
 		log.info("Viewing coupon using coupon code = "+ couponCode);
-		CouponTO couponTO = null;
-		try {
-			couponTO = couponAdminDao.load(couponCode);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
+		// can throw COupon not found exception or platform exception
+		CouponTO couponTO = couponAdminDao.load(couponCode);
 		
 		return couponTO;
 	}

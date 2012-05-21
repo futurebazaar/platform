@@ -11,6 +11,7 @@ import com.fb.platform.promotion.admin.to.CouponBasicDetails;
 import com.fb.platform.promotion.admin.to.CouponTO;
 import com.fb.platform.promotion.admin.to.PromotionTO;
 import com.fb.platform.promotion.admin.to.SearchCouponOrderBy;
+import com.fb.platform.promotion.admin.to.SearchCouponResultBO;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
 import com.fb.platform.promotion.admin.to.SortOrder;
 import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
@@ -105,7 +106,7 @@ public interface PromotionAdminService {
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void assignCouponToUser(String couponCode, int userId, int overriddenUserLimit);
 	
-	public Set<CouponBasicDetails> searchCoupons(String couponCode, String userName, SearchCouponOrderBy orderBy, SortOrder sortOrder, int startRecord, int batchSize);
+	public SearchCouponResultBO searchCoupons(String couponCode, String userName, SearchCouponOrderBy orderBy, SortOrder sortOrder, int startRecord, int batchSize);
 	
 	public CouponTO viewCoupons(String couponCode);
 	
