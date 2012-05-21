@@ -83,7 +83,7 @@ public class RestClient {
 		String sessionToken = login();
 		//String username = getUser(sessionToken);
 		int orderId = RandomUtils.nextInt();
-		BigDecimal discountValue = applyPromotion(sessionToken, orderId);
+		BigDecimal discountValue = applyCoupon(sessionToken, orderId, "GlobalCoupon1000Off");
 		commitCouupon(sessionToken, orderId, discountValue);
 		releaseCoupon(sessionToken, orderId);
 		clearCoupon(sessionToken);
@@ -94,6 +94,7 @@ public class RestClient {
 		viewPromotion(sessionToken);
 		updatePromotion(sessionToken);
 		assignCouponToUser(sessionToken);
+		//applyCoupon(sessionToken, orderId, "preIssuedNoCouponUserEntry");
 		searchCoupon(sessionToken);
 		viewCoupon(sessionToken);
 		createCoupon(sessionToken);
@@ -141,13 +142,13 @@ public class RestClient {
 		return loginResponse.getSessionToken();
 	}
 
-	private static BigDecimal applyPromotion(String sessionToken, int orderId) throws Exception {
+	private static BigDecimal applyCoupon(String sessionToken, int orderId, String couponCode) throws Exception {
 		HttpClient httpClient = new HttpClient();
 
 		PostMethod applyPromotionMethod = new PostMethod("http://localhost:8080/promotionWS/coupon/apply");
 
 		ApplyCouponRequest couponRequest = new ApplyCouponRequest();
-		couponRequest.setCouponCode("GlobalCoupon1000Off");
+		couponRequest.setCouponCode(couponCode);
 		couponRequest.setSessionToken(sessionToken);
 
 		OrderRequest orderRequest = createSampleOrderRequest(orderId);
@@ -664,8 +665,8 @@ public class RestClient {
 
 		AssignCouponToUserRequest request = new AssignCouponToUserRequest();
 		request.setSessionToken(sessionToken);
-		request.setCouponCode("pre_issued_1");
-		request.setUserId(-4);
+		request.setCouponCode("preIssuedNoCouponUserEntry");
+		request.setUserId(6);
 
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
 
