@@ -40,7 +40,7 @@
                         <null/>
                         <null/>
                         <value name="valid_from">2012-01-01 00:00:00</value>
-                        <value name="valid_till">2012-05-31 00:00:00</value>
+                        <value name="valid_till">2013-05-31 00:00:00</value>
                         <value name="name">Test Promotion 1</value>
                         <value name="description">try1_desc</value>
                         <value name="is_coupon">0</value>
@@ -100,7 +100,7 @@
                         <null/>
                         <null/>
                         <value name="valid_from">2012-01-01 00:00:00</value>
-                        <value name="valid_till">2012-05-31 00:00:00</value>
+                        <value name="valid_till">2013-05-31 00:00:00</value>
                         <value name="name">Inactive Promotion</value>
                         <value name="description">This promotion is not active</value>
                         <value name="is_coupon">0</value>
@@ -112,7 +112,7 @@
                         <null/>
                         <null/>
                         <value name="valid_from">2012-01-01 00:00:00</value>
-                        <value name="valid_till">2012-05-31 00:00:00</value>
+                        <value name="valid_till">2013-05-31 00:00:00</value>
                         <value name="name">Rule 2 Test Promotion 1</value>
                         <value name="description">try1_desc</value>
                         <value name="is_coupon">0</value>
@@ -124,7 +124,7 @@
                         <null/>
                         <null/>
                         <value name="valid_from">2012-01-01 00:00:00</value>
-                        <value name="valid_till">2012-05-31 00:00:00</value>
+                        <value name="valid_till">2013-05-31 00:00:00</value>
                         <value name="name">Rule 3 Test Promotion 1</value>
                         <value name="description">try1_desc</value>
                         <value name="is_coupon">0</value>
@@ -136,7 +136,7 @@
                         <null/>
                         <null/>
                         <value name="valid_from">2012-01-01 00:00:00</value>
-                        <value name="valid_till">2012-05-31 00:00:00</value>
+                        <value name="valid_till">2013-05-31 00:00:00</value>
                         <value name="name">Rule 4 Test Promotion 1</value>
                         <value name="description">try1_desc</value>
                         <value name="is_coupon">0</value>
@@ -148,7 +148,7 @@
                         <null/>
                         <null/>
                         <value name="valid_from">2012-01-02 00:00:00</value>
-                        <value name="valid_till">2012-05-23 00:00:00</value>
+                        <value name="valid_till">2013-05-23 00:00:00</value>
                         <value name="name">End to End Test Promotion 1</value>
                         <value name="description">end to end promo 1</value>
                         <value name="is_coupon">0</value>
@@ -160,7 +160,7 @@
                         <null/>
                         <null/>
                         <value name="valid_from">2012-01-03 00:00:00</value>
-                        <value name="valid_till">2012-05-21 00:00:00</value>
+                        <value name="valid_till">2013-05-21 00:00:00</value>
                         <value name="name">End to End Test Promotion 2</value>
                         <value name="description">end to end promo 2</value>
                         <value name="is_coupon">0</value>
@@ -172,7 +172,7 @@
                         <null/>
                         <null/>
                         <value name="valid_from">2012-01-04 00:00:00</value>
-                        <value name="valid_till">2012-05-20 00:00:00</value>
+                        <value name="valid_till">2013-05-20 00:00:00</value>
                         <value name="name">End to End Test Promotion 3</value>
                         <value name="description">end to end promo 3</value>
                         <value name="is_coupon">0</value>
@@ -243,7 +243,7 @@
                         <value name="id">-4000</value>
                         <null/>
                         <null/>
-                        <value name="valid_from">2012-02-29 00:00:00</value>
+                        <value name="valid_from">2012-11-29 00:00:00</value>
                         <value name="valid_till">2013-03-01 00:00:00</value>
                         <value name="name">New Promotion Original</value>
                         <value name="description">Test new promotion via Promotion Admin</value>
@@ -255,7 +255,7 @@
                         <value name="id">-4100</value>
                         <null/>
                         <null/>
-                        <value name="valid_from">2012-02-29 00:00:00</value>
+                        <value name="valid_from">2012-12-29 00:00:00</value>
                         <value name="valid_till">2013-03-01 00:00:00</value>
                         <value name="name">New Promotion Copy</value>
                         <value name="description">Test new promotion via Promotion Admin</value>
@@ -512,7 +512,7 @@
                 <row>
                         <value name="id">-5</value>
                         <value name="created_on">2012-01-01 00:00:00</value>
-                        <value name="last_modified_on">2012-05-31 00:00:00</value>
+                        <value name="last_modified_on">2013-05-31 00:00:00</value>
                         <value name="coupon_code">preIssuedNoCouponUserEntry</value>
                         <value name="promotion_id">-5</value>
                         <value name="coupon_type">PRE_ISSUE</value>

@@ -319,6 +319,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 	
 	private String hasValidRuleConfig(PromotionTO promotionTo) {
 		java.util.List<String> missingConfigsList = new ArrayList<String>();
+		
 		List<RuleConfigDescriptorItem> requiredConfigs = PromotionRuleFactory.getRuleConfig(RulesEnum.valueOf(promotionTo.getRuleName()));
 		HashMap<String, RuleConfigItemTO> receivedConfigsMap = new HashMap<String, RuleConfigItemTO>();
 		
