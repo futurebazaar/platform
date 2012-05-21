@@ -13,12 +13,11 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.wallet.dao.WalletDao;
 import com.fb.platform.wallet.model.Wallet;
 import com.fb.platform.wallet.service.exception.WalletCreationError;
-import com.fb.platform.wallet.service.exception.WalletNOtFoundException;
+import com.fb.platform.wallet.service.exception.WalletNotFoundException;
 
 public class WalletDaoImpl implements WalletDao {
 
@@ -66,7 +65,7 @@ public class WalletDaoImpl implements WalletDao {
 			// TODO Auto-generated method stub
 			return wallet;
 		}catch (EmptyResultDataAccessException e) {
-			throw new WalletNOtFoundException();
+			throw new WalletNotFoundException();
 		}
 	}
 
@@ -84,7 +83,7 @@ public class WalletDaoImpl implements WalletDao {
 					throw new WalletCreationError("Either UserId or ClientId is wrong");
 				}
 			}else{
-				throw new WalletNOtFoundException();
+				throw new WalletNotFoundException();
 			}
 		}
 	}

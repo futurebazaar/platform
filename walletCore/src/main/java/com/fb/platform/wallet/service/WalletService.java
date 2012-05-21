@@ -15,8 +15,7 @@ import com.fb.platform.wallet.service.exception.AlreadyRefundedException;
 import com.fb.platform.wallet.service.exception.InSufficientFundsException;
 import com.fb.platform.wallet.service.exception.InvalidTransaction;
 import com.fb.platform.wallet.service.exception.RefundExpiredException;
-import com.fb.platform.wallet.service.exception.WalletNOtFoundException;
-import com.fb.platform.wallet.to.CreditWalletStatus;
+import com.fb.platform.wallet.service.exception.WalletNotFoundException;
 
 @Transactional
 public interface WalletService {
@@ -24,12 +23,12 @@ public interface WalletService {
 	/**
 	 * Returns the Wallet associated with a walletId.
 	 * @param walletId
-	 * @throws WalletNOtFoundException When no wallet is found matching the walletId.
+	 * @throws WalletNotFoundException When no wallet is found matching the walletId.
 	 * @throws PlatformException When an unrecoverable error happens.
 	 * @return Wallet
 	 */
 	@Transactional(propagation = Propagation.REQUIRED)
-	public Wallet load(long walletId) throws WalletNOtFoundException,PlatformException;
+	public Wallet load(long walletId) throws WalletNotFoundException,PlatformException;
 	
 	/**
 	 * Returns the Wallet associated with a userId,ClientId.
@@ -45,7 +44,7 @@ public interface WalletService {
 	/**
 	 * Returns the Wallet Transactions associated with a wallet.
 	 * @param walletId
-	 * @throws WalletNOtFoundException When no wallet is found matching the walletId.
+	 * @throws WalletNotFoundException When no wallet is found matching the walletId.
 	 * @throws PlatformException When an unrecoverable error happens.
 	 * @return List of Wallet Transactions
 	**/
@@ -60,12 +59,12 @@ public interface WalletService {
 	 * @param paymentId  : The payment Id of the payment for a cash transaction. 
 	 * @param refundId : The refund Id if the credit via the refund mechanism.
 	 * @param giftCoupon : The coupon code if filled via an client gift or EGV.
-	 * @throws WalletNOtFoundException When no wallet is found matching the wallet.
+	 * @throws WalletNotFoundException When no wallet is found matching the wallet.
 	 * @throws PlatformException When an unrecoverable error happens.
 	 * @return WalletTransaction
 	**/
 	@Transactional (propagation = Propagation.REQUIRED)
-	public WalletTransaction credit (long walletId, Money amount , SubWalletType subWalletType , long paymentId , long refundId , String gitfCoupon) throws WalletNOtFoundException,PlatformException;
+	public WalletTransaction credit (long walletId, Money amount , SubWalletType subWalletType , long paymentId , long refundId , String gitfCoupon) throws WalletNotFoundException,PlatformException;
 	
 	/**
 	 * Debit the wallet with the given amount.
@@ -73,13 +72,13 @@ public interface WalletService {
 	 * @param clientId : Client Id though which the payment request is initiated.
 	 * @param amount : The amount to be debited to the wallet.
 	 * @param orderId : The order Id for which the wallet has to be credited.
-	 * @throws WalletNOtFoundException When no wallet is found matching the wallet.
+	 * @throws WalletNotFoundException When no wallet is found matching the wallet.
 	 * @throws InSufficientFundsException When  wallet not having enough funds.
 	 * @throws PlatformException When an unrecoverable error happens.
 	 * @return WalletTransaction 
 	**/
 	@Transactional (propagation = Propagation.REQUIRED)
-	public WalletTransaction debit (long userId, long clientId , Money amount , long orderId) throws WalletNOtFoundException,InSufficientFundsException ,PlatformException;
+	public WalletTransaction debit (long userId, long clientId , Money amount , long orderId) throws WalletNotFoundException,InSufficientFundsException ,PlatformException;
 	
 	/**
 	 * Refund requested from the wallet.
@@ -88,7 +87,7 @@ public interface WalletService {
 	 * @param amount : The amount to be refunded to the user.
 	 * @param refundId : The refundId for which the refund needs to be processed.
 	 * @param ignoreExpiry :The expiry date for refund should be considered for the refund process or not. DEFAULT : True.
-	 * @throws WalletNOtFoundException When no wallet is found matching the wallet.
+	 * @throws WalletNotFoundException When no wallet is found matching the wallet.
 	 * @throws InSufficientFundsException When  refund not having enough funds.
 	 * @throws AlreadyRefundedException When the given refund Id is already refunded.
 	 * @throws RefundExpiredException refund period has expired and cannot be taken out of the wallet.
@@ -96,19 +95,19 @@ public interface WalletService {
 	 * @return WalletTransaction 
 	**/
 	@Transactional (propagation = Propagation.REQUIRED)
-	public WalletTransaction refund (long userId, long clientId , Money amount , long refundId , boolean ignoreExpiry, int expiryDays) throws WalletNOtFoundException, AlreadyRefundedException,RefundExpiredException,InSufficientFundsException,PlatformException;
+	public WalletTransaction refund (long userId, long clientId , Money amount , long refundId , boolean ignoreExpiry, int expiryDays) throws WalletNotFoundException, AlreadyRefundedException,RefundExpiredException,InSufficientFundsException,PlatformException;
 	
 	/**
 	 * Reverse the transaction if an order is cancelled which is paid via the wallet.
 	 * @param userId : User Id of the for whom to the wallet transaction to be reversed.
 	 * @param clientId : Client Id though which the cancellation request is initiated.
 	 * @param transactionId : The transactionId which needs to be reversed.
-	 * @throws WalletNOtFoundException When no wallet is found matching the wallet.
+	 * @throws WalletNotFoundException When no wallet is found matching the wallet.
 	 * @throws InvalidTransaction When the transaction doesn't exist.
 	 * @throws PlatformException When an unrecoverable error happens.
 	 * @return WalletTransaction 
 	**/
-	public WalletTransaction reverseTransaction(long userId, long clientId,String transactionId) throws WalletNOtFoundException,InvalidTransaction ,PlatformException;
+	public WalletTransaction reverseTransaction(long userId, long clientId,String transactionId) throws WalletNotFoundException,InvalidTransaction ,PlatformException;
 	
 	
 }

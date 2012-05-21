@@ -21,7 +21,7 @@ import com.fb.platform.wallet.service.exception.AlreadyRefundedException;
 import com.fb.platform.wallet.service.exception.InSufficientFundsException;
 import com.fb.platform.wallet.service.exception.InvalidTransaction;
 import com.fb.platform.wallet.service.exception.RefundExpiredException;
-import com.fb.platform.wallet.service.exception.WalletNOtFoundException;
+import com.fb.platform.wallet.service.exception.WalletNotFoundException;
 
 public class WalletServiceImpl implements WalletService {
 
@@ -33,17 +33,17 @@ public class WalletServiceImpl implements WalletService {
 	private WalletCacheAccess walletCacheAccess;
 	
 	@Override
-	public Wallet load(long walletId) throws WalletNOtFoundException,PlatformException {
+	public Wallet load(long walletId) throws WalletNotFoundException,PlatformException {
 		Wallet wallet = walletCacheAccess.get(walletId);
 		try{
 			wallet = walletDao.load(walletId);
-		}catch (WalletNOtFoundException e){
-			throw new WalletNOtFoundException("No wallet found with this walletId");
+		}catch (WalletNotFoundException e){
+			throw new WalletNotFoundException("No wallet found with this walletId");
 		}
 		if (wallet != null){
 			cacheWallet(walletId, wallet);
 		}else{
-			throw new WalletNOtFoundException("No wallet found with this walletId");
+			throw new WalletNotFoundException("No wallet found with this walletId");
 		}
 		return wallet;
 	}
@@ -54,7 +54,7 @@ public class WalletServiceImpl implements WalletService {
 	}
 	
 	private Wallet load(long userId,long clientId,boolean createNew) 
-			throws WalletNOtFoundException,PlatformException {
+			throws WalletNotFoundException,PlatformException {
 		try{
 			Wallet wallet = walletDao.load(userId,clientId,createNew);
 			if(wallet != null){
@@ -62,8 +62,8 @@ public class WalletServiceImpl implements WalletService {
 			}else{
 				throw new PlatformException("No wallet found or created with this userId:" + userId + " and clientId ::" + clientId);
 			}
-		}catch (WalletNOtFoundException e) {
-			throw new WalletNOtFoundException();
+		}catch (WalletNotFoundException e) {
+			throw new WalletNotFoundException();
 		}catch (PlatformException e){
 			throw new PlatformException();
 		}
@@ -79,8 +79,8 @@ public class WalletServiceImpl implements WalletService {
 				walletTransactions.add(walletTransactionModeltoTO(walletTransaction));
 			}
 			return walletTransactions;
-		}catch (WalletNOtFoundException e){
-			throw new WalletNOtFoundException("Exception no wallet for this wallet id");
+		}catch (WalletNotFoundException e){
+			throw new WalletNotFoundException("Exception no wallet for this wallet id");
 		}catch (PlatformException e) {
 			throw new PlatformException("Exception while loading wallet transactions");
 		}
@@ -89,7 +89,7 @@ public class WalletServiceImpl implements WalletService {
 	@Override
 	public WalletTransaction credit(long walletId, Money amount,
 			SubWalletType subWalletType, long paymentId, long refundId,
-			String gitfCoupon) throws WalletNOtFoundException,
+			String gitfCoupon) throws WalletNotFoundException,
 			PlatformException {
 		try {
 			WalletTransaction walletTransactionRes = new WalletTransaction();
@@ -99,8 +99,8 @@ public class WalletServiceImpl implements WalletService {
 			walletTransactionRes.setWallet(walletDao.update(wallet));
 			walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(walletTransaction));
 			return walletTransactionRes;
-		} catch (WalletNOtFoundException e){
-			throw new WalletNOtFoundException("No wallet with this wallet id");
+		} catch (WalletNotFoundException e){
+			throw new WalletNotFoundException("No wallet with this wallet id");
 		}
 		catch (PlatformException e) {
 			throw new PlatformException("No wallet with this wallet id");
@@ -110,7 +110,7 @@ public class WalletServiceImpl implements WalletService {
 	@Override
 	public WalletTransaction debit(long userId,
 			long clientId, Money amount, long orderId)
-			throws WalletNOtFoundException, InSufficientFundsException,
+			throws WalletNotFoundException, InSufficientFundsException,
 			PlatformException {
 		try{
 			WalletTransaction walletTransactionRes = new WalletTransaction();
@@ -127,8 +127,8 @@ public class WalletServiceImpl implements WalletService {
 		} catch (InSufficientFundsException e){
 			throw new InSufficientFundsException("Not enough fund in the wallet");
 		} 
-		catch (WalletNOtFoundException e){
-			throw new WalletNOtFoundException("No wallet with this wallet id");
+		catch (WalletNotFoundException e){
+			throw new WalletNotFoundException("No wallet with this wallet id");
 		}
 		catch (PlatformException e) {
 			throw new PlatformException("No wallet with this wallet id");
@@ -139,7 +139,7 @@ public class WalletServiceImpl implements WalletService {
 	@Override
 	public WalletTransaction refund(long userId,
 			long clientId, Money amount, long refundId, boolean ignoreExpiry,int expiryDays)
-			throws WalletNOtFoundException, AlreadyRefundedException,RefundExpiredException,InSufficientFundsException,
+			throws WalletNotFoundException, AlreadyRefundedException,RefundExpiredException,InSufficientFundsException,
 			PlatformException {
 		try {
 			WalletTransaction walletTransactionRes =  new WalletTransaction();
@@ -167,8 +167,8 @@ public class WalletServiceImpl implements WalletService {
 			throw new RefundExpiredException("Refund Period has expired");
 		} catch (InSufficientFundsException e){
 			throw new InSufficientFundsException("Not enough fund in the wallet");
-		} catch (WalletNOtFoundException e){
-			throw new WalletNOtFoundException("No wallet with this wallet id");
+		} catch (WalletNotFoundException e){
+			throw new WalletNotFoundException("No wallet with this wallet id");
 		} catch (PlatformException e) {
 			throw new PlatformException("An unrecoverable exception has occured while refund");
 		}
@@ -177,7 +177,7 @@ public class WalletServiceImpl implements WalletService {
 	@Override
 	public WalletTransaction reverseTransaction(
 			long userId, long clientId, String transactionId)
-			throws WalletNOtFoundException, InvalidTransaction,
+			throws WalletNotFoundException, InvalidTransaction,
 			PlatformException {
 		try{
 			WalletTransaction walletTransactionRes = new WalletTransaction();
@@ -187,8 +187,8 @@ public class WalletServiceImpl implements WalletService {
 			walletTransactionRes.setWallet(walletDao.update(wallet));
 			walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(walletTransactionNew));
 			return walletTransactionRes;				
-		} catch (WalletNOtFoundException e){
-			throw new WalletNOtFoundException("No wallet with this wallet id");		
+		} catch (WalletNotFoundException e){
+			throw new WalletNotFoundException("No wallet with this wallet id");		
 		} catch (PlatformException e) {
 			throw new PlatformException("an unhandeled exception has occured while trnasaction reversal");
 		}
@@ -208,7 +208,6 @@ public class WalletServiceImpl implements WalletService {
 	}
 	
 	private void cacheWallet(long walletId, Wallet wallet) {
-		//TODO need to figure out which promotions to cache
 		try {
 			walletCacheAccess.lock(walletId);
 			if (walletCacheAccess.get(walletId) == null) {

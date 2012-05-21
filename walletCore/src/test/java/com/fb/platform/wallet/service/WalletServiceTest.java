@@ -40,7 +40,7 @@ public class WalletServiceTest extends BaseTestCase {
 		try{
 			Wallet wallet = walletService.load(100000L);
 		}catch (Exception e) {
-			assertEquals("com.fb.platform.wallet.service.exception.WalletNOtFoundException",e.getClass().getCanonicalName());
+			assertEquals("com.fb.platform.wallet.service.exception.WalletNotFoundException",e.getClass().getCanonicalName());
 		}	
 	}
 	
@@ -62,7 +62,7 @@ public class WalletServiceTest extends BaseTestCase {
 		try{
 			WalletTransaction walletTransaction = walletService.credit(100000L, new Money(new BigDecimal("200.00")), SubWalletType.CASH_SUB_WALLET, 2, 0, null);
 		}catch (Exception e) {
-			assertEquals("com.fb.platform.wallet.service.exception.WalletNOtFoundException",e.getClass().getCanonicalName());
+			assertEquals("com.fb.platform.wallet.service.exception.WalletNotFoundException",e.getClass().getCanonicalName());
 		}	
 	}
 	
@@ -88,7 +88,7 @@ public class WalletServiceTest extends BaseTestCase {
 		try{
 			WalletTransaction walletTransaction = walletService.debit(1,-5,new Money(new BigDecimal("100.00")),32);
 		}catch (Exception e) {
-			assertEquals("com.fb.platform.wallet.service.exception.WalletNOtFoundException",e.getClass().getCanonicalName());
+			assertEquals("com.fb.platform.wallet.service.exception.WalletNotFoundException",e.getClass().getCanonicalName());
 		}	
 	}
 	
@@ -141,7 +141,7 @@ public class WalletServiceTest extends BaseTestCase {
 		try{
 			walletService.walletHistory(100000L, null, null, null);
 		}catch (Exception e) {
-			assertEquals("com.fb.platform.wallet.service.exception.WalletNOtFoundException",e.getClass().getCanonicalName());
+			assertEquals("com.fb.platform.wallet.service.exception.WalletNotFoundException",e.getClass().getCanonicalName());
 		}	
 	}
 	@Test 
@@ -204,7 +204,7 @@ public class WalletServiceTest extends BaseTestCase {
 		try{
 			WalletTransaction walletTransactionrefund = walletService.refund(7, -5, new Money(new BigDecimal("100.00")), 3, false,14);
 		}catch (Exception e) {
-			assertEquals("com.fb.platform.wallet.service.exception.WalletNOtFoundException",e.getClass().getCanonicalName());
+			assertEquals("com.fb.platform.wallet.service.exception.WalletNotFoundException",e.getClass().getCanonicalName());
 		}		
 	}
 	
@@ -265,7 +265,7 @@ public class WalletServiceTest extends BaseTestCase {
 		try{
 			WalletTransaction walletTransactionRev = walletService.reverseTransaction(6,-5, "adfsadf");
 		} catch (Exception e) {
-			assertEquals("com.fb.platform.wallet.service.exception.WalletNOtFoundException",e.getClass().getCanonicalName());
+			assertEquals("com.fb.platform.wallet.service.exception.WalletNotFoundException",e.getClass().getCanonicalName());
 		}			
 	}
 }
