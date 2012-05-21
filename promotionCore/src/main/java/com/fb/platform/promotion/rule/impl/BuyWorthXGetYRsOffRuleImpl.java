@@ -19,6 +19,7 @@ import com.fb.platform.promotion.rule.RuleConfigDescriptorEnum;
 import com.fb.platform.promotion.rule.RuleConfiguration;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.PromotionStatusEnum;
+import com.fb.platform.promotion.util.RuleValidatorUtils;
 import com.fb.platform.promotion.util.StringToIntegerList;
 
 /**
@@ -42,14 +43,17 @@ public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule, Serializable {
 		if(ruleConfig.isConfigItemPresent(RuleConfigDescriptorEnum.CATEGORY_INCLUDE_LIST)){
 			StrTokenizer strTokCategories = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.CATEGORY_INCLUDE_LIST),",");
 			includeCategoryList = StringToIntegerList.convert((List<String>)strTokCategories.getTokenList());
+			log.info("includeCategoryList = "+ includeCategoryList);
 		}
 		if(ruleConfig.isConfigItemPresent(RuleConfigDescriptorEnum.CATEGORY_EXCLUDE_LIST)){
 			StrTokenizer strTokCategories = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.CATEGORY_EXCLUDE_LIST),",");
 			excludeCategoryList = StringToIntegerList.convert((List<String>)strTokCategories.getTokenList());
+			log.info("excludeCategoryList = "+ excludeCategoryList);
 		}
 		if(ruleConfig.isConfigItemPresent(RuleConfigDescriptorEnum.CLIENT_LIST)){
 			StrTokenizer strTokClients = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.CLIENT_LIST),",");
 			clientList = StringToIntegerList.convert((List<String>)strTokClients.getTokenList());
+			log.info("clientList = "+ clientList);
 		}
 		if(ruleConfig.isConfigItemPresent(RuleConfigDescriptorEnum.MIN_ORDER_VALUE)){
 			minOrderValue = new Money(BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.MIN_ORDER_VALUE))));
@@ -61,6 +65,7 @@ public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule, Serializable {
 		if(ruleConfig.isConfigItemPresent(RuleConfigDescriptorEnum.BRAND_LIST)){
 			StrTokenizer strTokCategories = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.BRAND_LIST),",");
 			brands = StringToIntegerList.convert((List<String>)strTokCategories.getTokenList());
+			log.info("brandsList = "+ brands);
 		}
 		fixedRsOff = new Money (BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.FIXED_DISCOUNT_RS_OFF))));
 		log.info("fixedRsOff : " + fixedRsOff.toString());
@@ -73,16 +78,16 @@ public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule, Serializable {
 			log.debug("Checking if BuyWorthXGetYRsOffRuleImpl applies on order : " + request.getOrderId());
 		}
 		Money orderValue = new Money(request.getOrderValue());
-		if( clientList != null && !request.isValidClient(clientList)){
+		if (RuleValidatorUtils.isValidList(clientList) && !request.isValidClient(clientList)){
 			return PromotionStatusEnum.INVALID_CLIENT;
 		}
-		if( includeCategoryList != null && !request.isAllProductsInCategory(includeCategoryList)){
+		if(RuleValidatorUtils.isValidList(includeCategoryList) && !request.isAllProductsInCategory(includeCategoryList)){
 			return PromotionStatusEnum.CATEGORY_MISMATCH;
 		}
-		if( excludeCategoryList != null && request.isAnyProductInCategory(excludeCategoryList)){
+		if(RuleValidatorUtils.isValidList(excludeCategoryList) && request.isAnyProductInCategory(excludeCategoryList)){
 			return PromotionStatusEnum.CATEGORY_MISMATCH;
 		}
-		if( brands != null && !request.isAllProductsInBrand(brands)){
+		if(RuleValidatorUtils.isValidList(brands) && !request.isAllProductsInBrand(brands)){
 			return PromotionStatusEnum.BRAND_MISMATCH;
 		}
 		if(minOrderValue!=null && orderValue.lt(minOrderValue)){
@@ -103,13 +108,13 @@ public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule, Serializable {
 	public List<RuleConfigDescriptorItem> getRuleConfigs() {
 		List<RuleConfigDescriptorItem> ruleConfigs = new ArrayList<RuleConfigDescriptorItem>();
 		
-		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.BRAND_LIST, false));
-		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.MIN_ORDER_VALUE, false));
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CLIENT_LIST, false));
 		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CATEGORY_INCLUDE_LIST, false));
 		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CATEGORY_EXCLUDE_LIST, false));
-		
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.BRAND_LIST, false));
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.MIN_ORDER_VALUE, false));
 		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.FIXED_DISCOUNT_RS_OFF, true));
-		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CLIENT_LIST, false));
+		
 		return ruleConfigs;
 	}
 }

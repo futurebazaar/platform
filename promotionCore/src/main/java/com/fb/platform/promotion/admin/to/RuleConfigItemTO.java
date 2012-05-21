@@ -32,11 +32,19 @@ public class RuleConfigItemTO {
 	
 	public String isValid() {
 		List<String> ruleNameInvalidationList = new ArrayList<String>();
-		if(StringUtils.isEmpty(ruleConfigName)) {
+		RuleConfigDescriptorEnum ruleDescriptor = null;
+		if(StringUtils.isBlank(ruleConfigName)) {
 			ruleNameInvalidationList.add("Rule name empty");
 		}
 		if(!RuleConfigDescriptorEnum.isRuleConfigValid(ruleConfigName)) {
 			ruleNameInvalidationList.add("Invalid rule config name " + ruleConfigName);
+		} else {
+			ruleDescriptor = RuleConfigDescriptorEnum.valueOf(ruleConfigName);
+			if(ruleDescriptor.getType().equals("decimal")) {
+				if(new Long(ruleConfigValue) < 0) {
+					ruleNameInvalidationList.add(ruleDescriptor.getDescription() + " value cannot be negative.");
+				}
+			}
 		}
 		return StringUtils.join(ruleNameInvalidationList.toArray(), ",");
 	}

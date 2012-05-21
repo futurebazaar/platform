@@ -88,13 +88,12 @@ public class BuyXBrandGetYRsOffOnZProductRuleImpl implements PromotionRule, Seri
 	public List<RuleConfigDescriptorItem> getRuleConfigs() {
 		List<RuleConfigDescriptorItem> ruleConfigs = new ArrayList<RuleConfigDescriptorItem>();
 		
-		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.BRAND_LIST, false));
-		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.MIN_ORDER_VALUE, false));
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CLIENT_LIST, false));
 		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CATEGORY_INCLUDE_LIST, false));
 		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CATEGORY_EXCLUDE_LIST, false));
-		
-		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CLIENT_LIST, false));
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.BRAND_LIST, false));
 		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.PRODUCT_ID, true));
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.MIN_ORDER_VALUE, false));
 		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.PRODUCT_DISCOUNTED_VALUE, true));
 		return ruleConfigs;
 	}

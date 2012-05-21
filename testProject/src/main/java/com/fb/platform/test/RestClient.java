@@ -374,9 +374,9 @@ public class RestClient {
 		promotionTO.setPromotionName("New Promotion");
 		
 		GregorianCalendar gregCal = new GregorianCalendar();
-		gregCal.set(2012, 01, 29);
+		gregCal.set(2012, 01, 29, 00, 00, 00);
 		promotionTO.setValidFrom(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
-		gregCal.set(2013, 01, 29);
+		gregCal.set(2013, 01, 29, 00, 00, 00);
 		promotionTO.setValidTill(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
 		promotionTO.setDescription("Test new promotion");
 		promotionTO.setIsActive(true);

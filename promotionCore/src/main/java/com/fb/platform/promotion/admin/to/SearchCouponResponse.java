@@ -14,6 +14,7 @@ public class SearchCouponResponse implements Serializable{
 	private SearchCouponStatusEnum status = null;
 	private List<CouponBasicDetails> couponBasicDetailsList = new ArrayList<CouponBasicDetails>();
 	private String errorCause;
+	private int totalCount;
 	
 	public String getSessionToken() {
 		return sessionToken;
@@ -38,6 +39,12 @@ public class SearchCouponResponse implements Serializable{
 	}
 	public void setStatus(SearchCouponStatusEnum status) {
 		this.status = status;
+	}
+	public int getTotalCount() {
+		return totalCount;
+	}
+	public void setTotalCount(int totalCount) {
+		this.totalCount = totalCount;
 	}
 	
 }

@@ -1,21 +1,22 @@
 package com.fb.platform.promotion.admin.service;
 
 import java.util.List;
-import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fb.platform.promotion.admin.to.CouponBasicDetails;
 import com.fb.platform.promotion.admin.to.CouponTO;
 import com.fb.platform.promotion.admin.to.PromotionTO;
 import com.fb.platform.promotion.admin.to.SearchCouponOrderBy;
+import com.fb.platform.promotion.admin.to.SearchCouponResultBO;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
 import com.fb.platform.promotion.admin.to.SortOrder;
 import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
 import com.fb.platform.promotion.model.coupon.CouponType;
 import com.fb.platform.promotion.rule.RulesEnum;
+import com.fb.platform.promotion.to.AlphaNumericType;
+import com.fb.platform.promotion.to.AlphabetCase;
 
 /**
  * @author nehaga
@@ -94,7 +95,8 @@ public interface PromotionAdminService {
 	 * @return the newly generated coupon codes
 	 */
 	@Transactional(propagation=Propagation.REQUIRED)
-	public List<String> createCoupons(int count, int length, String startsWith, String endsWith, int promotionId, CouponType type, CouponLimitsConfig limits);
+	public List<String> createCoupons(int count, int length, String startsWith, String endsWith, int promotionId, 
+			CouponType type, CouponLimitsConfig limits, AlphabetCase alphabetCase, AlphaNumericType alphaNumericType);
 
 	/**
 	 * Assigns the PRE_ISSUE couponCode to user identified by the userId
@@ -105,7 +107,7 @@ public interface PromotionAdminService {
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void assignCouponToUser(String couponCode, int userId, int overriddenUserLimit);
 	
-	public Set<CouponBasicDetails> searchCoupons(String couponCode, String userName, SearchCouponOrderBy orderBy, SortOrder sortOrder, int startRecord, int batchSize);
+	public SearchCouponResultBO searchCoupons(String couponCode, String userName, SearchCouponOrderBy orderBy, SortOrder sortOrder, int startRecord, int batchSize);
 	
 	public CouponTO viewCoupons(String couponCode);
 	

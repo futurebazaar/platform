@@ -27,11 +27,11 @@ import org.springframework.jdbc.core.RowMapper;
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.admin.dao.CouponAdminDao;
-import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.admin.to.CouponBasicDetails;
 import com.fb.platform.promotion.admin.to.CouponTO;
 import com.fb.platform.promotion.admin.to.SearchCouponOrderBy;
 import com.fb.platform.promotion.admin.to.SortOrder;
+import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
 import com.fb.platform.promotion.model.coupon.CouponType;
 import com.fb.platform.promotion.service.CouponAlreadyAssignedToUserException;
@@ -152,7 +152,7 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 	private static String AND_JOINT = " AND ";
 	
 	private static String SELECT_COUPON_CODE_FILTER_SQL = 
-			" coupon_code LIKE ? ";
+			" coupon_code = ? ";
 	
 	private static String SELECT_COUPON_ID_FILTER_SQL = 
 			" id IN (" + COUPON_ID_PLACEHOLDER +") ";
@@ -171,6 +171,28 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 	
 	private static String LIMIT_FILTER_SQL = 
 			" LIMIT ?,? ";
+	
+	private static final String COUNT_USER_PRE_ISSUE_COUPON_QUERY = 
+			"SELECT " +
+			"	count(*) " +
+			" FROM coupon c ,platform_coupon_user pcu " +
+			" WHERE c.id=pcu.coupon_id " +
+			" AND  pcu.user_id= ? ";
+	
+	private static final String COUNT_USER_NON_PRE_ISSUE_COUPON_QUERY = 
+			"SELECT " +
+			"	count(*) " +
+			" FROM coupon c ,user_coupon_uses ucu " +
+			" WHERE c.id=ucu.coupon_id " +
+			" AND c.coupon_type <> 'PRE_ISSUE' " +
+			" AND  ucu.user_id= ? ";
+	
+	private static String SEARCH_USER_COUPON_COUNT = 
+			" SELECT " +
+			" ( " + COUNT_USER_PRE_ISSUE_COUPON_QUERY + " )" +
+			" + " +
+			" ( " + COUNT_USER_NON_PRE_ISSUE_COUPON_QUERY + " )" +
+			" as totalCouponsSearchResult ";
 	
 	@Override
 	public void assignToUser(int userId, String couponCode, int overriddenUserLimit) {
@@ -363,7 +385,7 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 		//adding coupon code search criteria if input present
 		if(StringUtils.isNotBlank(couponCode)) {
 			searchCouponFilterList.add(SELECT_COUPON_CODE_FILTER_SQL);
-			args.add("%" + couponCode.trim() + "%");
+			args.add(couponCode.trim());
 		}
 		
 		// building the comma separated coupon IDs
@@ -446,6 +468,29 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 			searchCouponQuery += (ORDER_BY_CLAUSE + ORDER_BY_COUPON_CODE);
 		}
 		return searchCouponQuery;
+	}
+	
+	/**
+	 * The API returns the total number of coupons assigned to a user whose id is provided.
+	 * In case the userId passed is null then the API throws NullPointerException.
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public int countCoupons(Integer userId){
+		log.info("Count coupons assigned for userId :" + userId);
+		if(userId == null){
+			throw new NullPointerException("User ID passed is null. user ID = "+userId);
+		}
+		int count = -1;
+		try {
+			count = jdbcTemplate.queryForInt(SEARCH_USER_COUPON_COUNT, new Object [] {userId, userId});
+		} catch (DataAccessException e) {
+			log.error(" Error while getting the number of coupons count for user ID " + userId,e);
+			throw new PlatformException(" Error while getting the number of coupons count for user ID " + userId,e);
+		}
+		
+		return count;
 	}
 	
 	private static class CouponBasicDetailMapper implements RowMapper<CouponBasicDetails> {

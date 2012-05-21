@@ -15,7 +15,7 @@ public class AssignCouponToUserRequest implements Serializable {
 
 	private String sessionToken = null;
 
-	private int userId = 0;
+	private String userName;
 	private int overrideCouponUserLimit = 0;
 	private String couponCode = null;
 
@@ -28,8 +28,8 @@ public class AssignCouponToUserRequest implements Serializable {
 			return response;
 		}
 
-		if (userId == 0) {
-			response.setStatus(AssignCouponToUserStatusEnum.INVALID_USER_ID);
+		if (StringUtils.isBlank(userName)) {
+			response.setStatus(AssignCouponToUserStatusEnum.INVALID_USER);
 			return response;
 		}
 
@@ -47,11 +47,11 @@ public class AssignCouponToUserRequest implements Serializable {
 	public void setSessionToken(String sessionToken) {
 		this.sessionToken = sessionToken;
 	}
-	public int getUserId() {
-		return userId;
+	public String getUserName() {
+		return userName;
 	}
-	public void setUserId(int userId) {
-		this.userId = userId;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 	public String getCouponCode() {
 		return couponCode;

@@ -74,6 +74,8 @@ import com.fb.platform.promotion.admin.service.PromotionAdminManager;
 import com.fb.platform.promotion.admin.to.SearchCouponOrderBy;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
 import com.fb.platform.promotion.admin.to.SortOrder;
+import com.fb.platform.promotion.to.AlphaNumericType;
+import com.fb.platform.promotion.to.AlphabetCase;
 
 /**
  * @author nehaga
@@ -179,7 +181,7 @@ public class PromotionAdminResource {
 			}
 			apiPromotionTO.setMaxUses(promotionTO.getMaxUses());
 			apiPromotionTO.setMaxUsesPerUser(promotionTO.getMaxUsesPerUser());
-			apiPromotionTO.setPromotionName(promotionTO.getPromotionName());
+			apiPromotionTO.setPromotionName(StringUtils.trim(promotionTO.getPromotionName()));
 			apiPromotionTO.setRuleName(createPromotionRequest.getCreatePromotionTO().getRuleName());
 			if(promotionTO.getValidFrom() == null) {
 				apiPromotionTO.setValidFrom(null);
@@ -192,10 +194,12 @@ public class PromotionAdminResource {
 				apiPromotionTO.setValidTill(new DateTime(promotionTO.getValidTill().toGregorianCalendar()));
 			}
 			for(RuleConfigItemTO ruleConfigItemTO : promotionTO.getRuleConfigItemTO()) {
-				com.fb.platform.promotion.admin.to.RuleConfigItemTO apiRuleConfigItemTO = new com.fb.platform.promotion.admin.to.RuleConfigItemTO();
-				apiRuleConfigItemTO.setRuleConfigName(ruleConfigItemTO.getRuleConfigName());
-				apiRuleConfigItemTO.setRuleConfigValue(ruleConfigItemTO.getRuleConfigValue());
-				apiPromotionTO.getConfigItems().add(apiRuleConfigItemTO);
+				if(StringUtils.isNotBlank(ruleConfigItemTO.getRuleConfigValue())) {
+					com.fb.platform.promotion.admin.to.RuleConfigItemTO apiRuleConfigItemTO = new com.fb.platform.promotion.admin.to.RuleConfigItemTO();
+					apiRuleConfigItemTO.setRuleConfigName(ruleConfigItemTO.getRuleConfigName());
+					apiRuleConfigItemTO.setRuleConfigValue(ruleConfigItemTO.getRuleConfigValue());
+					apiPromotionTO.getConfigItems().add(apiRuleConfigItemTO);
+				}
 			}
 			
 			apiCreatePromotionRequest.setPromotion(apiPromotionTO);
@@ -271,11 +275,19 @@ public class PromotionAdminResource {
 					promotionView.setPromotionName(apiPromotionView.getPromotionName());
 					promotionView.setRuleName(apiPromotionView.getRuleName());
 					
-					gregCal.set(apiPromotionView.getValidFrom().getYear(), apiPromotionView.getValidFrom().getMonthOfYear()-1, apiPromotionView.getValidFrom().getDayOfMonth(),0,0,0);
-					promotionView.setValidFrom(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+					if(apiPromotionView.getValidFrom() != null) {
+						gregCal.set(apiPromotionView.getValidFrom().getYear(), apiPromotionView.getValidFrom().getMonthOfYear()-1, apiPromotionView.getValidFrom().getDayOfMonth(),0,0,0);
+						promotionView.setValidFrom(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+					} else {
+						promotionView.setValidFrom(null);
+					}
 					
-					gregCal.set(apiPromotionView.getValidTill().getYear(), apiPromotionView.getValidTill().getMonthOfYear()-1, apiPromotionView.getValidTill().getDayOfMonth(),0,0,0);
-					promotionView.setValidTill(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+					if(apiPromotionView.getValidTill() != null) {
+						gregCal.set(apiPromotionView.getValidTill().getYear(), apiPromotionView.getValidTill().getMonthOfYear()-1, apiPromotionView.getValidTill().getDayOfMonth(),0,0,0);
+						promotionView.setValidTill(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+					} else {
+						promotionView.setValidTill(null);
+					}
 					
 					searchPromotionResponse.getPromotionViewTO().add(promotionView);
 				}
@@ -335,11 +347,19 @@ public class PromotionAdminResource {
 				promotionCompleteView.setRuleId(apiPromotionCompleteView.getRuleId());
 				promotionCompleteView.setRuleName(apiPromotionCompleteView.getRuleName());
 				
-				gregCal.set(apiPromotionCompleteView.getValidFrom().getYear(), apiPromotionCompleteView.getValidFrom().getMonthOfYear()-1, apiPromotionCompleteView.getValidFrom().getDayOfMonth(),0,0,0);
-				promotionCompleteView.setValidFrom(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+				if(apiPromotionCompleteView.getValidFrom() != null) {
+					gregCal.set(apiPromotionCompleteView.getValidFrom().getYear(), apiPromotionCompleteView.getValidFrom().getMonthOfYear()-1, apiPromotionCompleteView.getValidFrom().getDayOfMonth(),0,0,0);
+					promotionCompleteView.setValidFrom(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+				} else {
+					promotionCompleteView.setValidFrom(null);
+				}
 				
-				gregCal.set(apiPromotionCompleteView.getValidTill().getYear(), apiPromotionCompleteView.getValidTill().getMonthOfYear()-1, apiPromotionCompleteView.getValidTill().getDayOfMonth(),0,0,0);
-				promotionCompleteView.setValidTill(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+				if(apiPromotionCompleteView.getValidTill() != null) {
+					gregCal.set(apiPromotionCompleteView.getValidTill().getYear(), apiPromotionCompleteView.getValidTill().getMonthOfYear()-1, apiPromotionCompleteView.getValidTill().getDayOfMonth(),0,0,0);
+					promotionCompleteView.setValidTill(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+				} else {
+					promotionCompleteView.setValidTill(null);
+				}
 				
 				promotionCompleteView.setMaxAmount(apiPromotionCompleteView.getMaxAmount().getAmount());
 				promotionCompleteView.setMaxAmountPerUser(apiPromotionCompleteView.getMaxAmountPerUser().getAmount());
@@ -367,14 +387,14 @@ public class PromotionAdminResource {
 			marshaller.marshal(viewPromotionResponse, outStringWriter);
 
 			String xmlResponse = outStringWriter.toString();
-			logger.info("searchPromotionXML response :\n" + xmlResponse);
+			logger.info("viewPromotionXML response :\n" + xmlResponse);
 			return xmlResponse;
 			
 		} catch (JAXBException e) {
-			logger.error("Error in the searchPromotion call.", e);
+			logger.error("Error in the viewPromotion call.", e);
 			return "error"; //TODO return proper error response
 		} catch (DatatypeConfigurationException e) {
-			logger.error("Error in the searchPromotion call invalid date in database.", e);
+			logger.error("Error in the viewPromotion call invalid date in database.", e);
 			return "error"; //TODO return proper error response
 		}
 	}
@@ -412,7 +432,7 @@ public class PromotionAdminResource {
 			}
 			apiPromotionTO.setMaxUses(promotionTO.getMaxUses());
 			apiPromotionTO.setMaxUsesPerUser(promotionTO.getMaxUsesPerUser());
-			apiPromotionTO.setPromotionName(promotionTO.getPromotionName());
+			apiPromotionTO.setPromotionName(StringUtils.trim(promotionTO.getPromotionName()));
 			if(promotionTO.getValidFrom() == null) {
 				apiPromotionTO.setValidFrom(null);
 			} else {
@@ -424,10 +444,12 @@ public class PromotionAdminResource {
 				apiPromotionTO.setValidTill(new DateTime(promotionTO.getValidTill().toGregorianCalendar()));
 			}
 			for(RuleConfigItemTO ruleConfigItemTO : promotionTO.getRuleConfigItemTO()) {
-				com.fb.platform.promotion.admin.to.RuleConfigItemTO apiRuleConfigItemTO = new com.fb.platform.promotion.admin.to.RuleConfigItemTO();
-				apiRuleConfigItemTO.setRuleConfigName(ruleConfigItemTO.getRuleConfigName());
-				apiRuleConfigItemTO.setRuleConfigValue(ruleConfigItemTO.getRuleConfigValue());
-				apiPromotionTO.getConfigItems().add(apiRuleConfigItemTO);
+				if(StringUtils.isNotBlank(ruleConfigItemTO.getRuleConfigValue())) {
+					com.fb.platform.promotion.admin.to.RuleConfigItemTO apiRuleConfigItemTO = new com.fb.platform.promotion.admin.to.RuleConfigItemTO();
+					apiRuleConfigItemTO.setRuleConfigName(ruleConfigItemTO.getRuleConfigName());
+					apiRuleConfigItemTO.setRuleConfigValue(ruleConfigItemTO.getRuleConfigValue());
+					apiPromotionTO.getConfigItems().add(apiRuleConfigItemTO);
+				}
 			}
 			
 			apiUpdatePromotionRequest.setPromotion(apiPromotionTO);
@@ -449,6 +471,9 @@ public class PromotionAdminResource {
 			
 		} catch (JAXBException e) {
 			logger.error("Error in the updatePromotion call.", e);
+			return "error"; //TODO return proper error response
+		} catch (Exception e) {
+			logger.error("General error in the updatePromotion call.", e);
 			return "error"; //TODO return proper error response
 		}
 		
@@ -511,7 +536,7 @@ public class PromotionAdminResource {
 			apiRequest.setCouponCode(xmlRequest.getCouponCode());
 			apiRequest.setOverrideCouponUserLimit(xmlRequest.getOverrideCouponUserLimit());
 			apiRequest.setSessionToken(xmlRequest.getSessionToken());
-			apiRequest.setUserId(xmlRequest.getUserId());
+			apiRequest.setUserName(xmlRequest.getUserName());
 
 			AssignCouponToUserResponse xmlResponse = new AssignCouponToUserResponse();
 			com.fb.platform.promotion.admin.to.AssignCouponToUserResponse apiResponse = promotionAdminManager.assignCouponToUser(apiRequest);
@@ -524,9 +549,9 @@ public class PromotionAdminResource {
 			marsheller.marshal(xmlResponse, outStringWriter);
 
 			String xmlResponseStr = outStringWriter.toString();
-			if (logger.isDebugEnabled()) {
-				logger.debug("assignCouponToUser response :\n" + xmlResponseStr);
-			}
+			
+			logger.info("assignCouponToUser response :\n" + xmlResponseStr);
+			
 			return xmlResponseStr;
 
 		} catch (JAXBException e) {
@@ -649,7 +674,7 @@ public class PromotionAdminResource {
 			searchCouponResponse.setErrorCause(apiSearchPromotionResponse.getErrorCause());
 			searchCouponResponse.setSessionToken(apiSearchPromotionResponse.getSessionToken());
 			searchCouponResponse.setSearchCouponStatus(SearchCouponStatus.valueOf(apiSearchPromotionResponse.getStatus().toString()));
-			//searchCouponResponse.setTotalCount(apiSearchPromotionResponse.getTotalCount());
+			searchCouponResponse.setTotalCount(apiSearchPromotionResponse.getTotalCount());
 			
 			if(searchCouponResponse.getSearchCouponStatus().equals(SearchCouponStatus.SUCCESS)) {
 				for(com.fb.platform.promotion.admin.to.CouponBasicDetails apiCouponBasicDetails : apiSearchPromotionResponse.getCouponBasicDetailsList()) {
@@ -722,7 +747,14 @@ public class PromotionAdminResource {
 				apiCreateCouponRequest.setEndsWith(endsWith);
 				apiCreateCouponRequest.setLength(codeDetails.getCodeLength());
 				
-				// need to set the alphabetCase and coupon code alphabetCode type (currently not taken from user
+				com.fb.platform.promotion.admin._1_0.AlphaNumericType inputAlphaNumericType = codeDetails.getAlphaNumericType()==null ? 
+						com.fb.platform.promotion.admin._1_0.AlphaNumericType.ALPHA_NUMERIC : codeDetails.getAlphaNumericType();
+				
+				com.fb.platform.promotion.admin._1_0.AlphabetCase inputAlphabetCase = codeDetails.getAlphabetCase()==null ? 
+						com.fb.platform.promotion.admin._1_0.AlphabetCase.MIXED : codeDetails.getAlphabetCase();
+				
+				apiCreateCouponRequest.setAlphaNumericType(AlphaNumericType.valueOf(inputAlphaNumericType.toString()));
+				apiCreateCouponRequest.setAlphabetCase(AlphabetCase.valueOf(inputAlphabetCase.toString()));
 			}
 			
 			CreateCouponResponse createCouponResponse	= new CreateCouponResponse();	

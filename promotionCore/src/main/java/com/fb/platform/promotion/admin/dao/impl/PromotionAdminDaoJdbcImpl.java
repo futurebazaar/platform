@@ -15,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,11 +27,11 @@ import org.springframework.jdbc.support.KeyHolder;
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.admin.dao.PromotionAdminDao;
+import com.fb.platform.promotion.admin.service.PromotionNameDuplicateException;
 import com.fb.platform.promotion.admin.to.PromotionTO;
 import com.fb.platform.promotion.admin.to.RuleConfigItemTO;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
 import com.fb.platform.promotion.admin.to.SortOrder;
-import com.fb.platform.promotion.service.PromotionNotFoundException;
 
 /**
  * @author neha
@@ -240,6 +241,18 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 			"WHERE" +
 			"	id=?";
 
+	private static final String SELECT_PROMOTION_BY_NAME = 
+			"SELECT " +
+				"	id, " +
+				"	valid_from, " +
+				"	valid_till, " +
+				"	name, " +
+				"	description, " +
+				"	is_coupon, " +
+				"	is_active," +
+				"	rule_id " +
+				"FROM platform_promotion where name = ?";
+	
 	private static final String UPDATE_PROMOTION_RULE_CONFIG = 
 			"UPDATE " +
 			"	promotion_rule_config " +
@@ -302,9 +315,11 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 					}
 				}, promotionKeyHolder);
 			} catch (DuplicateKeyException e) {
-				log.error("Duplicate key insertion exception " + e);
-				throw new PlatformException("Duplicate key insertion exception "+e);
+				log.error("Duplicate promotion name insertion exception.", e);
+				throw new PromotionNameDuplicateException("Duplicate promotion name insertion exception.", e);
 			}
+			
+			log.info("Promotion created, id :" + promotionKeyHolder.getKey().intValue());
 			
 			return promotionKeyHolder.getKey().intValue();
 
@@ -383,9 +398,8 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 	public List<PromotionTO> searchPromotion(String promotionName, DateTime validFrom, DateTime validTill, int isActive, SearchPromotionOrderBy orderBy,
 			SortOrder order, int startRecord, int batchSize) {
 		
-		if(log.isDebugEnabled()) {
-			log.debug("Search promotion with details => promotionName:" + promotionName + " , validFrom:" + validFrom + " ,validTill:" + validTill + " ,startRecord:" + " ,batchSize:" + batchSize);
-		}
+		log.info("Search promotion with details => promotionName:" + promotionName + " , validFrom:" + validFrom + " ,validTill:" + validTill + " ,startRecord:" + " ,batchSize:" + batchSize);
+		
 		List<String> searchPromotionFilterList = new ArrayList<String>();
 		String searchPromotionQuery = SELECT_PROMOTION_FIELDS;
 		List<Object> args = new ArrayList<Object>();
@@ -453,6 +467,9 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 		
 		searchPromotionQuery += LIMIT_FILTER_SQL;
 		
+		log.info("Search query : " + searchPromotionQuery);
+		log.info("Arguments : " + args.toArray().toString());
+		
 		List<PromotionTO> promotionsList = jdbcTemplate.query(searchPromotionQuery, args.toArray(), new PromotionViewMapper());
 		
 		return promotionsList;
@@ -464,9 +481,8 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 	@Override
 	public int getPromotionCount(String promotionName, DateTime validFrom, DateTime validTill, int isActive) {
 		
-		if(log.isDebugEnabled()) {
-			log.debug("Get promotion count with details => promotionName:" + promotionName + " , validFrom:" + validFrom + " ,validTill:" + validTill );
-		}
+		log.info("Get promotion count with details => promotionName:" + promotionName + " , validFrom:" + validFrom + " ,validTill:" + validTill );
+		
 		List<String> searchPromotionFilterList = new ArrayList<String>();
 		String countPromotionQuery = SELECT_PROMOTION_COUNT;
 		List<Object> args = new ArrayList<Object>();
@@ -498,10 +514,27 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 	}
 	
 	@Override
-	public PromotionTO viewPromotion(int promotionId) {
-		if(log.isDebugEnabled()) {
-			log.debug("Fetch promotion details for promotion id : " + promotionId);
+	public PromotionTO loadPromotionByName(String name) {
+		log.info("Fetch promotion details for promotion with name : " + name);
+		
+		PromotionTO promotionCompleteView = null;
+		try {
+			promotionCompleteView = jdbcTemplate.queryForObject(SELECT_PROMOTION_BY_NAME, 
+					new Object[] {name}, 
+					new PromotionNameMapper());
+	
+		} catch (EmptyResultDataAccessException e) {
+			log.error("No promotion found by promotion name : " + name);
+			throw new PlatformException("No promotion found by promotion name : " + name);
 		}
+		
+		return promotionCompleteView;
+	}
+	
+	@Override
+	public PromotionTO viewPromotion(int promotionId) {
+		log.info("Fetch promotion details for promotion id : " + promotionId);
+		
 		PromotionTO promotionCompleteView = null;
 		try {
 			promotionCompleteView = jdbcTemplate.queryForObject(SELECT_PROMOTION_COMPLETE_VIEW_SQL, 
@@ -533,10 +566,15 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 		log.info("Update platform_promotion table => name " + name + " , description : " + description + " , validFrom : " + validFrom + " , validTill : " + validTill + " , active : " + active + " , ruleId : " + ruleId + " where promotionId : " + promotionId);
 		
 		Timestamp modifiedOnTimestamp = new java.sql.Timestamp(System.currentTimeMillis());
-		
-		int promotionUpdated = jdbcTemplate.update(UPDATE_PROMOTION_SQL, new Object[] {modifiedOnTimestamp, new Timestamp(validFrom.getMillis()), new Timestamp(validTill.getMillis()), name, description, active, ruleId, promotionId});
-		if (promotionUpdated != 1) {
-			throw new PlatformException("Error while updating the promotion id : " + promotionId);
+		try {
+			int promotionUpdated = jdbcTemplate.update(UPDATE_PROMOTION_SQL, new Object[] {modifiedOnTimestamp, new Timestamp(validFrom.getMillis()), new Timestamp(validTill.getMillis()), name, description, active, ruleId, promotionId});
+			if (promotionUpdated != 1) {
+				log.error("Error while updating the promotion id : " + promotionId);
+				throw new PlatformException("Error while updating the promotion id : " + promotionId);
+			}
+		} catch (DuplicateKeyException e) {
+			log.error("Duplicate promotion name update exception.", e);
+			throw new PromotionNameDuplicateException("Duplicate promotion name update exception.", e);
 		}
 	}
 	
@@ -547,6 +585,7 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 		
 		int promotionLimitUpdated = jdbcTemplate.update(UPDATE_PROMOTION_LIMIT_CONFIG_SQL, new Object[] {maxUses, maxAmount.getAmount(), maxUsesPerUser, maxAmountPerUser.getAmount(), promotionId});
 		if (promotionLimitUpdated != 1) {
+			log.error("Unable to update the promotionLimitsConfig. promotionId : " + promotionId);
 			throw new PlatformException("Unable to update the promotionLimitsConfig. promotionId : " + promotionId);
 		}
 	}
@@ -564,6 +603,7 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 	public void deletePromotionRuleConfig(int promotionId) {
 		int rowsDeleted = jdbcTemplate.update(DELETE_PROMOTION_RULE_CONFIG, new Object[] {promotionId});
 		if (rowsDeleted == 0) {
+			log.error("Unable to delete the limitsConfig for promotion id : " + promotionId);
 			throw new PlatformException("Unable to delete the limitsConfig for promotion id : " + promotionId);
 		}
 	}
@@ -578,8 +618,16 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 		public PromotionTO mapRow(ResultSet resultSet, int rowNum) throws SQLException {
 			PromotionTO promotionView = new PromotionTO();
 			promotionView.setId(resultSet.getInt("promotionId"));
-			promotionView.setValidFrom(new DateTime(resultSet.getTimestamp("validFrom")));
-			promotionView.setValidTill(new DateTime(resultSet.getTimestamp("validTill")));
+			if(resultSet.getTimestamp("validFrom") != null) {
+				promotionView.setValidFrom(new DateTime(resultSet.getTimestamp("validFrom")));
+			} else {
+				promotionView.setValidFrom(null);
+			}
+			if(resultSet.getTimestamp("validTill") != null) {
+				promotionView.setValidTill(new DateTime(resultSet.getTimestamp("validTill")));
+			} else {
+				promotionView.setValidTill(null);
+			}
 			promotionView.setPromotionName(resultSet.getString("promotionName"));
 			promotionView.setDescription(resultSet.getString("description"));
 			boolean isActive = false;
@@ -597,6 +645,34 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 		}
 	}
 	
+	private static class PromotionNameMapper implements RowMapper<PromotionTO> {
+		
+		@Override
+		public PromotionTO mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+			PromotionTO promotionView = new PromotionTO();
+			promotionView.setId(resultSet.getInt("id"));
+			if(resultSet.getTimestamp("valid_from") != null) {
+				promotionView.setValidFrom(new DateTime(resultSet.getTimestamp("valid_from")));
+			} else {
+				promotionView.setValidFrom(null);
+			}
+			if(resultSet.getTimestamp("valid_till") != null) {
+				promotionView.setValidTill(new DateTime(resultSet.getTimestamp("valid_till")));
+			} else {
+				promotionView.setValidTill(null);
+			}
+			promotionView.setPromotionName(resultSet.getString("name"));
+			promotionView.setDescription(resultSet.getString("description"));
+			boolean isActive = false;
+			if(resultSet.getInt("isActive") == 1) {
+				isActive = true;
+			}
+			promotionView.setActive(isActive);
+			promotionView.setRuleId(resultSet.getInt("rule_id"));
+			return promotionView;
+		}
+	}
+
 	private static class RuleConfigItemMapper implements RowMapper<RuleConfigItemTO> {
 		
 		@Override
@@ -614,8 +690,16 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 		public PromotionTO mapRow(ResultSet resultSet, int rowNum) throws SQLException {
 			PromotionTO promotionView = new PromotionTO();
 			promotionView.setId(resultSet.getInt("promotionId"));
-			promotionView.setValidFrom(new DateTime(resultSet.getTimestamp("validFrom")));
-			promotionView.setValidTill(new DateTime(resultSet.getTimestamp("validTill")));
+			if(resultSet.getTimestamp("validFrom") != null) {
+				promotionView.setValidFrom(new DateTime(resultSet.getTimestamp("validFrom")));
+			} else {
+				promotionView.setValidFrom(null);
+			}
+			if(resultSet.getTimestamp("validTill") != null) {
+				promotionView.setValidTill(new DateTime(resultSet.getTimestamp("validTill")));
+			} else {
+				promotionView.setValidTill(null);
+			}
 			promotionView.setPromotionName(resultSet.getString("promotionName"));
 			promotionView.setDescription(resultSet.getString("description"));
 			boolean isActive = false;
