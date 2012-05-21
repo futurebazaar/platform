@@ -19,6 +19,7 @@ import com.fb.platform.promotion.rule.RuleConfigDescriptorItem;
 import com.fb.platform.promotion.rule.RuleConfiguration;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.PromotionStatusEnum;
+import com.fb.platform.promotion.util.RuleValidatorUtils;
 import com.fb.platform.promotion.util.StringToIntegerList;
 
 /**
@@ -74,20 +75,20 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule, Serializa
 
 	@Override
 	public PromotionStatusEnum isApplicable(OrderRequest request,int userId,boolean isCouponCommitted) {
-		if(log.isDebugEnabled()) {
+		if (log.isDebugEnabled()) {
 			log.debug("Checking if BuyWorthXGetYPercentOffRuleImpl applies on order : " + request.getOrderId());
 		}
 		Money orderValue = new Money(request.getOrderValue());
-		if( clientList != null && !request.isValidClient(clientList)){
+		if (RuleValidatorUtils.isValidList(clientList) && !request.isValidClient(clientList)) {
 			return PromotionStatusEnum.INVALID_CLIENT;
 		}
-		if( includeCategoryList != null && !request.isAllProductsInCategory(includeCategoryList)){
+		if (RuleValidatorUtils.isValidList(includeCategoryList) && !request.isAllProductsInCategory(includeCategoryList)) {
 			return PromotionStatusEnum.CATEGORY_MISMATCH;
 		}
-		if( excludeCategoryList != null && request.isAnyProductInCategory(excludeCategoryList)){
+		if (RuleValidatorUtils.isValidList(excludeCategoryList) && request.isAnyProductInCategory(excludeCategoryList)){
 			return PromotionStatusEnum.CATEGORY_MISMATCH;
 		}
-		if( brands != null && !request.isAllProductsInBrand(brands)){
+		if (RuleValidatorUtils.isValidList(brands) && !request.isAllProductsInBrand(brands)){
 			return PromotionStatusEnum.BRAND_MISMATCH;
 		}
 		if(minOrderValue!=null && orderValue.lt(minOrderValue)){

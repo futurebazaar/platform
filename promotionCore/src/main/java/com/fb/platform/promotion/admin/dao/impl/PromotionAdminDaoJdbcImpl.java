@@ -241,6 +241,18 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 			"WHERE" +
 			"	id=?";
 
+	private static final String SELECT_PROMOTION_BY_NAME = 
+			"SELECT " +
+				"	id, " +
+				"	valid_from, " +
+				"	valid_till, " +
+				"	name, " +
+				"	description, " +
+				"	is_coupon, " +
+				"	is_active," +
+				"	rule_id " +
+				"FROM platform_promotion where name = ?";
+	
 	private static final String UPDATE_PROMOTION_RULE_CONFIG = 
 			"UPDATE " +
 			"	promotion_rule_config " +
@@ -502,6 +514,24 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 	}
 	
 	@Override
+	public PromotionTO loadPromotionByName(String name) {
+		log.info("Fetch promotion details for promotion with name : " + name);
+		
+		PromotionTO promotionCompleteView = null;
+		try {
+			promotionCompleteView = jdbcTemplate.queryForObject(SELECT_PROMOTION_BY_NAME, 
+					new Object[] {name}, 
+					new PromotionNameMapper());
+	
+		} catch (EmptyResultDataAccessException e) {
+			log.error("No promotion found by promotion name : " + name);
+			throw new PlatformException("No promotion found by promotion name : " + name);
+		}
+		
+		return promotionCompleteView;
+	}
+	
+	@Override
 	public PromotionTO viewPromotion(int promotionId) {
 		log.info("Fetch promotion details for promotion id : " + promotionId);
 		
@@ -615,6 +645,34 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 		}
 	}
 	
+	private static class PromotionNameMapper implements RowMapper<PromotionTO> {
+		
+		@Override
+		public PromotionTO mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+			PromotionTO promotionView = new PromotionTO();
+			promotionView.setId(resultSet.getInt("id"));
+			if(resultSet.getTimestamp("valid_from") != null) {
+				promotionView.setValidFrom(new DateTime(resultSet.getTimestamp("valid_from")));
+			} else {
+				promotionView.setValidFrom(null);
+			}
+			if(resultSet.getTimestamp("valid_till") != null) {
+				promotionView.setValidTill(new DateTime(resultSet.getTimestamp("valid_till")));
+			} else {
+				promotionView.setValidTill(null);
+			}
+			promotionView.setPromotionName(resultSet.getString("name"));
+			promotionView.setDescription(resultSet.getString("description"));
+			boolean isActive = false;
+			if(resultSet.getInt("isActive") == 1) {
+				isActive = true;
+			}
+			promotionView.setActive(isActive);
+			promotionView.setRuleId(resultSet.getInt("rule_id"));
+			return promotionView;
+		}
+	}
+
 	private static class RuleConfigItemMapper implements RowMapper<RuleConfigItemTO> {
 		
 		@Override

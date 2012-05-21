@@ -391,7 +391,8 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		int numberOfCouponsCreated = 0;
 		String commaSeparatedCouponCodes = null;
 		try {
-			List<String> couponsCodes = promotionAdminService.createCoupons(request.getCount(), request.getLength(), request.getStartsWith(), request.getEndsWith(), request.getPromotionId(), request.getType(), limits);
+			List<String> couponsCodes = promotionAdminService.createCoupons(request.getCount(), request.getLength(), request.getStartsWith(), 
+					request.getEndsWith(), request.getPromotionId(), request.getType(), limits, request.getAlphabetCase(), request.getAlphaNumericType());
 			numberOfCouponsCreated = couponsCodes.size();
 			commaSeparatedCouponCodes = StringUtils.join(couponsCodes, ",");
 			
@@ -405,6 +406,9 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		} catch (CouponCodeGenerationException e) {
 			log.error("Coupon Code Generation error in create coupon - ", e);
 			response.setStatus(CreateCouponStatusEnum.CODE_GENERATION_FAILED);
+		} catch (InvalidCouponTypeException e) {
+			log.error("Coupon Code alphabet character and case type combination is invali = ", e);
+			response.setStatus(CreateCouponStatusEnum.CODE_CHAR_TYPE_CASE_INVALID);
 		} catch (PlatformException e) {
 			log.error("Error in create coupon - ", e);
 			response.setStatus(CreateCouponStatusEnum.INTERNAL_ERROR);
