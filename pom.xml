@@ -355,8 +355,8 @@
         <module>userWS</module>
         <module>authenticationCore</module>
 		<module>promotionCore</module>
-		<module>promotionWS</module>
 		<module>promotionAdminWS</module>
+		<module>promotionWS</module>
     </modules>
 
     <reporting>
