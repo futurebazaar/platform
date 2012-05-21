@@ -42,7 +42,7 @@ public class RuleConfigItemTO {
 			ruleDescriptor = RuleConfigDescriptorEnum.valueOf(ruleConfigName);
 			if(ruleDescriptor.getType().equals("decimal")) {
 				if(new Long(ruleConfigValue) < 0) {
-					ruleNameInvalidationList.add(ruleConfigName + " value cannot be negative.");
+					ruleNameInvalidationList.add(ruleDescriptor.getDescription() + " value cannot be negative.");
 				}
 			}
 		}

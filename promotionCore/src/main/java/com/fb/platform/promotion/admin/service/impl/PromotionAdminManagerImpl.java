@@ -11,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
@@ -19,6 +20,7 @@ import com.fb.platform.auth.AuthenticationTO;
 import com.fb.platform.promotion.admin.service.NoDataFoundException;
 import com.fb.platform.promotion.admin.service.PromotionAdminManager;
 import com.fb.platform.promotion.admin.service.PromotionAdminService;
+import com.fb.platform.promotion.admin.service.PromotionNameDuplicateException;
 import com.fb.platform.promotion.admin.to.AssignCouponToUserRequest;
 import com.fb.platform.promotion.admin.to.AssignCouponToUserResponse;
 import com.fb.platform.promotion.admin.to.AssignCouponToUserStatusEnum;
@@ -165,6 +167,9 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 				createPromotionResponse.setPromotionId(promotionId);
 				createPromotionResponse.setCreatePromotionEnum(CreatePromotionEnum.SUCCESS);
 			} 
+		} catch (PromotionNameDuplicateException e) {
+			log.error("Duplicate promotion name insertion exception.");
+			createPromotionResponse.setCreatePromotionEnum(CreatePromotionEnum.DUPLICATE_PROMOTION_NAME);
 		} catch (PlatformException e) {
 			log.error("Internal error while creating new promotion.");
 			createPromotionResponse.setCreatePromotionEnum(CreatePromotionEnum.INTERNAL_ERROR);
@@ -310,6 +315,9 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		} catch (PromotionNotFoundException e) {
 			log.error("Update promotion invalid promotion id : " + request.getPromotion().getId(), e);
 			response.setUpdatePromotionEnum(UpdatePromotionEnum.INVALID_PROMOTION_ID);
+		} catch (PromotionNameDuplicateException e) {
+			log.error("Duplicate promotion name update exception.");
+			response.setUpdatePromotionEnum(UpdatePromotionEnum.DUPLICATE_PROMOTION_NAME);
 		} catch (PlatformException e) {
 			log.error("Exception while updating the promotion. Promotion Id : " + request.getPromotion().getId(), e);
 			response.setUpdatePromotionEnum(UpdatePromotionEnum.INTERNAL_ERROR);

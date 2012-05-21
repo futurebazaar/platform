@@ -10,12 +10,14 @@ import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import com.fb.commons.PlatformException;
 import com.fb.platform.promotion.admin.dao.CouponAdminDao;
 import com.fb.platform.promotion.admin.dao.PromotionAdminDao;
 import com.fb.platform.promotion.admin.service.NoDataFoundException;
 import com.fb.platform.promotion.admin.service.PromotionAdminService;
+import com.fb.platform.promotion.admin.service.PromotionNameDuplicateException;
 import com.fb.platform.promotion.admin.to.CouponBasicDetails;
 import com.fb.platform.promotion.admin.to.CouponTO;
 import com.fb.platform.promotion.admin.to.PromotionTO;
@@ -108,9 +110,11 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 			} else {
 				throw new PlatformException("Unable to create new promotion");
 			}
+		} catch (PromotionNameDuplicateException e) {
+			throw e;
 		} catch (DataAccessException e) {
 			log.error("DataAccess Exception while creating promotion.", e);
-			throw new PlatformException("Exception while creating new promotion", e);
+			throw new PlatformException("Exception while creating new promotion.", e);
 		}
 		return promotionId;
 	}
@@ -146,6 +150,8 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 							promotionTO.getId(), 
 							ruleId);
 			}
+		} catch (PromotionNameDuplicateException e) {
+			throw e;
 		} catch (DataAccessException e) {
 			log.error("DataAccess Exception while updating the promotion, promotionId : " + promotionTO.getId(), e);
 			throw new PlatformException("DataAccess Exception while updating the promotion, promotionId : " + promotionTO.getId(), e);
