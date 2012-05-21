@@ -12,5 +12,9 @@
 	<cache name="sessionCache" maxElementsInMemory="10000" maxElementsOnDisk="1000" eternal="false" 
     	overflowToDisk="true" diskSpoolBufferSizeMB="20" timeToIdleSeconds="3000" timeToLiveSeconds="6000" 
     	memoryStoreEvictionPolicy="LFU" transactionalMode="off"/>
+    	
+    <cache name="walletCache" maxElementsInMemory="1000" maxElementsOnDisk="1000" eternal="false" 
+    	overflowToDisk="true" diskSpoolBufferSizeMB="20" timeToIdleSeconds="3000" timeToLiveSeconds="6000" 
+    	memoryStoreEvictionPolicy="LFU" transactionalMode="off"/>
 
 </ehcache>

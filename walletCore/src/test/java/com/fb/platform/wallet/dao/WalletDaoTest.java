@@ -54,8 +54,12 @@ public class WalletDaoTest extends BaseTestCase {
 
 	@Test
 	public void testLoadWalletByWrongId(){
-		Wallet walletById = walletDao.load(0);
-		assertNull(walletById);
+		try{
+			Wallet walletById = walletDao.load(0);
+		}catch (Exception e) {
+			assertEquals("com.fb.platform.wallet.service.exception.WalletNOtFoundException",e.getClass().getCanonicalName());
+		}
+		
 	}
 	
 	@Test

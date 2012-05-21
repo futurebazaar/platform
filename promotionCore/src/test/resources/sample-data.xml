@@ -156,7 +156,7 @@
                         <null/>
                         <null/>
                         <value name="valid_from">2012-01-02 00:00:00</value>
-                        <value name="valid_till">2012-05-23 00:00:00</value>
+                        <value name="valid_till">2013-05-23 00:00:00</value>
                         <value name="name">End to End Test Promotion 1</value>
                         <value name="description">end to end promo 1</value>
                         <value name="is_coupon">0</value>
@@ -168,7 +168,7 @@
                         <null/>
                         <null/>
                         <value name="valid_from">2012-01-03 00:00:00</value>
-                        <value name="valid_till">2012-05-21 00:00:00</value>
+                        <value name="valid_till">2013-05-21 00:00:00</value>
                         <value name="name">End to End Test Promotion 2</value>
                         <value name="description">end to end promo 2</value>
                         <value name="is_coupon">0</value>
@@ -180,7 +180,7 @@
                         <null/>
                         <null/>
                         <value name="valid_from">2012-01-04 00:00:00</value>
-                        <value name="valid_till">2012-05-20 00:00:00</value>
+                        <value name="valid_till">2013-05-20 00:00:00</value>
                         <value name="name">End to End Test Promotion 3</value>
                         <value name="description">end to end promo 3</value>
                         <value name="is_coupon">0</value>
@@ -192,7 +192,7 @@
                         <null/>
                         <null/>
                         <value name="valid_from">2012-04-01 00:00:00</value>
-                        <value name="valid_till">2012-06-30 00:00:00</value>
+                        <value name="valid_till">2013-06-30 00:00:00</value>
                         <value name="name">Brand Based promotion Testing</value>
                         <value name="description">end to end promo 4</value>
                         <value name="is_coupon">0</value>
@@ -204,7 +204,7 @@
                         <null/>
                         <null/>
                         <value name="valid_from">2012-04-01 00:00:00</value>
-                        <value name="valid_till">2012-06-30 00:00:00</value>
+                        <value name="valid_till">2013-06-30 00:00:00</value>
                         <value name="name">Category Based Percent Off promotion Testing</value>
                         <value name="description">end to end promo 5</value>
                         <value name="is_coupon">0</value>
@@ -216,7 +216,7 @@
                         <null/>
                         <null/>
                         <value name="valid_from">2012-04-01 00:00:00</value>
-                        <value name="valid_till">2012-06-30 00:00:00</value>
+                        <value name="valid_till">2013-06-30 00:00:00</value>
                         <value name="name">First Purchase Rs Off promotion Testing</value>
                         <value name="description">end to end promo 7</value>
                         <value name="is_coupon">1</value>
@@ -228,7 +228,7 @@
                         <null/>
                         <null/>
                         <value name="valid_from">2012-02-01 00:00:00</value>
-                        <value name="valid_till">2012-08-31 00:00:00</value>
+                        <value name="valid_till">2013-08-31 00:00:00</value>
                         <value name="name">GlobalCouponPromotion</value>
                         <value name="description">This promotion is asscociated with a global coupon</value>
                         <value name="is_coupon">1</value>
@@ -240,7 +240,7 @@
                         <null/>
                         <null/>
                         <value name="valid_from">2012-02-01 00:00:00</value>
-                        <value name="valid_till">2012-08-31 00:00:00</value>
+                        <value name="valid_till">2013-08-31 00:00:00</value>
                         <value name="name">ScratchCard Response</value>
                         <value name="description">This promotion is asscociated with a scratch coupon</value>
                         <value name="is_coupon">1</value>
