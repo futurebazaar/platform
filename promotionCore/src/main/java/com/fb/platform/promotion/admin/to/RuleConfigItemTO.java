@@ -38,15 +38,23 @@ public class RuleConfigItemTO {
 		}
 		if(!RuleConfigDescriptorEnum.isRuleConfigValid(ruleConfigName)) {
 			ruleNameInvalidationList.add("Invalid rule config name " + ruleConfigName);
-		} else {
+		} else if(StringUtils.isNotBlank(ruleConfigValue)){
 			ruleDescriptor = RuleConfigDescriptorEnum.valueOf(ruleConfigName);
 			if(ruleDescriptor.getType().equals("decimal")) {
-				if(new Long(ruleConfigValue) < 0) {
+				if(isDecimalValid(ruleConfigValue) && new Long(ruleConfigValue) < 0) {
 					ruleNameInvalidationList.add(ruleDescriptor.getDescription() + " value cannot be negative.");
+				} else if(!isDecimalValid(ruleConfigValue)){
+					ruleNameInvalidationList.add(ruleDescriptor.getDescription() + " invalid number.");
 				}
+			} else {
+				
 			}
 		}
 		return StringUtils.join(ruleNameInvalidationList.toArray(), ",");
+	}
+	
+	private boolean isDecimalValid(String str) {
+		return str.matches("([0-9]+(\\.[0-9]+)?)+");
 	}
 	
 }

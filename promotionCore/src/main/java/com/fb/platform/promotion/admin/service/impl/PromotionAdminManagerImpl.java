@@ -331,8 +331,13 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		List<RuleConfigDescriptorItem> requiredConfigs = PromotionRuleFactory.getRuleConfig(RulesEnum.valueOf(promotionTo.getRuleName()));
 		HashMap<String, RuleConfigItemTO> receivedConfigsMap = new HashMap<String, RuleConfigItemTO>();
 		
-		for (RuleConfigItemTO ruleConfigItemTO : promotionTo.getConfigItems()) {
-			receivedConfigsMap.put(ruleConfigItemTO.getRuleConfigName(), ruleConfigItemTO);
+		for (int i = promotionTo.getConfigItems().size() - 1 ; i >= 0 ; i--) {
+			RuleConfigItemTO ruleConfigItemTO = promotionTo.getConfigItems().get(i);
+			if(StringUtils.isBlank(ruleConfigItemTO.getRuleConfigValue())) {
+				promotionTo.getConfigItems().remove(ruleConfigItemTO);
+			} else {
+				receivedConfigsMap.put(ruleConfigItemTO.getRuleConfigName(), ruleConfigItemTO);
+			}
 		}
 		
 		for (RuleConfigDescriptorItem ruleConfigDescriptorItem : requiredConfigs) {

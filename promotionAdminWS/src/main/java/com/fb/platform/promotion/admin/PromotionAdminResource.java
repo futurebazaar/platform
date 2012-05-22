@@ -192,12 +192,10 @@ public class PromotionAdminResource {
 				apiPromotionTO.setValidTill(new DateTime(promotionTO.getValidTill().toGregorianCalendar()));
 			}
 			for(RuleConfigItemTO ruleConfigItemTO : promotionTO.getRuleConfigItemTO()) {
-				if(StringUtils.isNotBlank(ruleConfigItemTO.getRuleConfigValue())) {
-					com.fb.platform.promotion.admin.to.RuleConfigItemTO apiRuleConfigItemTO = new com.fb.platform.promotion.admin.to.RuleConfigItemTO();
-					apiRuleConfigItemTO.setRuleConfigName(ruleConfigItemTO.getRuleConfigName());
-					apiRuleConfigItemTO.setRuleConfigValue(ruleConfigItemTO.getRuleConfigValue());
-					apiPromotionTO.getConfigItems().add(apiRuleConfigItemTO);
-				}
+				com.fb.platform.promotion.admin.to.RuleConfigItemTO apiRuleConfigItemTO = new com.fb.platform.promotion.admin.to.RuleConfigItemTO();
+				apiRuleConfigItemTO.setRuleConfigName(ruleConfigItemTO.getRuleConfigName());
+				apiRuleConfigItemTO.setRuleConfigValue(ruleConfigItemTO.getRuleConfigValue());
+				apiPromotionTO.getConfigItems().add(apiRuleConfigItemTO);
 			}
 			
 			apiCreatePromotionRequest.setPromotion(apiPromotionTO);
@@ -442,12 +440,10 @@ public class PromotionAdminResource {
 				apiPromotionTO.setValidTill(new DateTime(promotionTO.getValidTill().toGregorianCalendar()));
 			}
 			for(RuleConfigItemTO ruleConfigItemTO : promotionTO.getRuleConfigItemTO()) {
-				if(StringUtils.isNotBlank(ruleConfigItemTO.getRuleConfigValue())) {
-					com.fb.platform.promotion.admin.to.RuleConfigItemTO apiRuleConfigItemTO = new com.fb.platform.promotion.admin.to.RuleConfigItemTO();
-					apiRuleConfigItemTO.setRuleConfigName(ruleConfigItemTO.getRuleConfigName());
-					apiRuleConfigItemTO.setRuleConfigValue(ruleConfigItemTO.getRuleConfigValue());
-					apiPromotionTO.getConfigItems().add(apiRuleConfigItemTO);
-				}
+				com.fb.platform.promotion.admin.to.RuleConfigItemTO apiRuleConfigItemTO = new com.fb.platform.promotion.admin.to.RuleConfigItemTO();
+				apiRuleConfigItemTO.setRuleConfigName(ruleConfigItemTO.getRuleConfigName());
+				apiRuleConfigItemTO.setRuleConfigValue(ruleConfigItemTO.getRuleConfigValue());
+				apiPromotionTO.getConfigItems().add(apiRuleConfigItemTO);
 			}
 			
 			apiUpdatePromotionRequest.setPromotion(apiPromotionTO);

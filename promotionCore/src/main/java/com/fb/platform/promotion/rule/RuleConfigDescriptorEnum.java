@@ -10,7 +10,7 @@ public enum RuleConfigDescriptorEnum {
 	CATEGORY_INCLUDE_LIST("Include category ID", "String"),
 	CATEGORY_EXCLUDE_LIST("Exclude category ID", "String"),
 	BRAND_LIST("Brand ID", "String"),
-	PRODUCT_ID("Product Ids", "String"),
+	PRODUCT_ID("Product ID", "String"),
 	MIN_ORDER_VALUE("Minimum order value", "decimal"),
 	FIXED_DISCOUNT_RS_OFF("Fixed discount", "decimal"),
 	DISCOUNT_PERCENTAGE("Discount percentage", "decimal"),
