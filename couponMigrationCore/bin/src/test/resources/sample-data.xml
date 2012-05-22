@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+<!-- 
+        <table name="promotion_rule">
+                <column>id</column>
+                <column>name</column>
+        <row>
+                        <value name="id">-1</value>
+                        <value name="name">BUY_X_GET_Y_FREE</value>
+        </row>
+        <row>
+                        <value name="id">-2</value>
+                        <value name="name">BUY_WORTH_X_GET_Y_RS_OFF</value>
+        </row>
+        <row>
+                        <value name="id">-3</value>
+                        <value name="name">BUY_WORTH_X_GET_Y_PERCENT_OFF</value>
+        </row>
+        <row>
+                        <value name="id">-4</value>
+                        <value name="name">BUY_WORTH_X_GET_Y_RS_OFF_ON_Z_CATEGORY</value>
+        </row>
+        </table>
+-->
+</dataset>

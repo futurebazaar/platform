@@ -4,12 +4,16 @@
 package com.fb.platform.promotion.rule.impl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.rule.PromotionRule;
+import com.fb.platform.promotion.rule.RuleConfigDescriptorEnum;
+import com.fb.platform.promotion.rule.RuleConfigDescriptorItem;
 import com.fb.platform.promotion.rule.RuleConfiguration;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.Product;
@@ -45,5 +49,17 @@ public class BuyXGetYFreeRuleImpl implements PromotionRule, Serializable{
 			log.debug("Executing BuyXGetYFreeRuleImpl on order : " + request.getOrderId());
 		}
 		return null;
+	}
+	
+	@Override
+	public List<RuleConfigDescriptorItem> getRuleConfigs() {
+		List<RuleConfigDescriptorItem> ruleConfigs = new ArrayList<RuleConfigDescriptorItem>();
+		
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CATEGORY_INCLUDE_LIST, false));
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CATEGORY_EXCLUDE_LIST, false));
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.BRAND_LIST, false));
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.MIN_ORDER_VALUE, false));
+		
+		return ruleConfigs;
 	}
 }

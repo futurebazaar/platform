@@ -26,7 +26,7 @@ import com.fb.platform.promotion.util.PromotionRuleFactory;
  */
 public class RuleDaoJdbcImpl implements RuleDao {
 
-	private Log log = LogFactory.getLog(PromotionDaoJdbcImpl.class);
+	private Log log = LogFactory.getLog(RuleDaoJdbcImpl.class);
 
 	private JdbcTemplate jdbcTemplate;
 
@@ -44,6 +44,27 @@ public class RuleDaoJdbcImpl implements RuleDao {
 			"	promotion_id, " +
 			"	rule_id " +
 			"FROM promotion_rule_config WHERE promotion_id = ?";
+	/**
+	 * QUERY
+	 * SELECT id,name FROM promotion_rule
+	 */
+	private static final String LOAD_ALL_PROMOTION_RULES =
+			"SELECT " +
+			"	id," +
+			"	name " +
+			"FROM promotion_rule ";
+	
+	/**
+	 * SELECT id FROM promotion_rule where name = 'BUY_X_GET_Y_FREE'
+	 */
+	
+	private static final String GET_RULE_ID = 
+			"SELECT " +
+			"	id " +
+			"FROM " +
+			"	promotion_rule " +
+			"WHERE " +
+			"	name = ?";
 
 	/* (non-Javadoc)
 	 * @see com.fb.platform.promotion.dao.RuleDao#load(int, int)
@@ -67,6 +88,18 @@ public class RuleDaoJdbcImpl implements RuleDao {
 		PromotionRule rule = PromotionRuleFactory.createRule(ruleName, ruleConfig);
 
 		return rule;
+	}
+	
+	@Override
+	public List<RulesEnum> getAllPromotionRules() {
+		List<RulesEnum> promotionRulesList = jdbcTemplate.query(LOAD_ALL_PROMOTION_RULES, new PromotionAllRulesRowCallBackHandler());
+		return promotionRulesList;
+	}
+	
+	@Override
+	public int getRuleId(String ruleName) {
+		int ruleId = jdbcTemplate.queryForInt(GET_RULE_ID, ruleName);
+		return ruleId;
 	}
 
 	public RuleConfiguration loadRuleConfiguration(int promotionId, int ruleId) {
@@ -93,6 +126,13 @@ public class RuleDaoJdbcImpl implements RuleDao {
 			//ruleId = rs.getInt("id");
 			ruleName = rs.getString("name");
 			ruleFound = true;
+		}
+	}
+	
+	private class PromotionAllRulesRowCallBackHandler implements RowMapper<RulesEnum> {
+		@Override
+		public RulesEnum mapRow(ResultSet rs, int rowNum) throws SQLException {
+			return RulesEnum.valueOf(rs.getString("name"));
 		}
 	}
 

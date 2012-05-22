@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fb.commons.PlatformException;
+import com.fb.platform.user.domain.UserBo;
 import com.fb.platform.user.manager.exception.EmailNotFoundException;
 import com.fb.platform.user.manager.exception.InvalidUserNameException;
 import com.fb.platform.user.manager.exception.PhoneNotFoundException;
@@ -143,4 +144,6 @@ public interface UserAdminService {
 	@Transactional(propagation = Propagation.SUPPORTS)
 	DeleteUserPhoneStatusEnum deleteUserPhone(int userId,String phone) throws PlatformException;
 
+	@Transactional(propagation = Propagation.SUPPORTS)
+	public UserBo getUserByUserId(int userId);
 }

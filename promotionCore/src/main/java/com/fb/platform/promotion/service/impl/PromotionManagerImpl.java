@@ -9,7 +9,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.PlatformException;
@@ -35,6 +34,7 @@ import com.fb.platform.promotion.to.ApplyScratchCardRequest;
 import com.fb.platform.promotion.to.ApplyScratchCardResponse;
 import com.fb.platform.promotion.to.ApplyScratchCardStatus;
 import com.fb.platform.promotion.to.ClearCacheEnum;
+import com.fb.platform.promotion.to.ClearCouponCacheRequest;
 import com.fb.platform.promotion.to.ClearCouponCacheResponse;
 import com.fb.platform.promotion.to.ClearPromotionCacheRequest;
 import com.fb.platform.promotion.to.ClearPromotionCacheResponse;
@@ -180,6 +180,10 @@ public class PromotionManagerImpl implements PromotionManager {
 		try {
 			coupon = promotionService.getCoupon(request.getCouponCode(), userId);
 			promotion = promotionService.getPromotion(coupon.getPromotionId());
+
+			// check if the order booking date is one which is before today
+			//if yes, then don't check the promotion valid till date by setting the validTill date as todays
+			orderIdCheck(request.getOrderBookingDate(), promotion);
 
 			PromotionStatusEnum isApplicableStatus = promotionService.isApplicable(userId, request.getOrderId(), new Money(request.getDiscountValue()), coupon, promotion, false);
 			if(PromotionStatusEnum.SUCCESS.compareTo(isApplicableStatus)!=0){
@@ -354,7 +358,7 @@ public class PromotionManagerImpl implements PromotionManager {
 	}
 
 	@Override
-	public ClearCouponCacheResponse clearCache(com.fb.platform.promotion.to.ClearCouponCacheRequest clearCouponCacheRequest) {
+	public ClearCouponCacheResponse clearCache(ClearCouponCacheRequest clearCouponCacheRequest) {
 		ClearCouponCacheResponse clearCouponCacheResponse = new ClearCouponCacheResponse();
 		if (clearCouponCacheRequest == null || StringUtils.isBlank(clearCouponCacheRequest.getSessionToken())) {
 			clearCouponCacheResponse.setClearCacheEnum(ClearCacheEnum.NO_SESSION);
@@ -385,9 +389,7 @@ public class PromotionManagerImpl implements PromotionManager {
 		// check if the order is one among those which had issue after promotion migration
 		logger.info("The orderBookingDate receieved is orderBookingDate = "+orderBookingDate);
 		PromotionDates promotionDates = promotion.getDates();
-		DateTime promotionValidTillDate = promotionDates.getValidTill();
-		DateTimeComparator dateComparator = DateTimeComparator.getDateOnlyInstance();
-		if(dateComparator.compare(null, orderBookingDate) > 1){
+		if(orderBookingDate.isBeforeNow()){
 			logger.info("Order Booking Date is an old date, before today so allow the promotion date check to pass");
 			promotionDates.setValidTill(DateTime.now());
 		}

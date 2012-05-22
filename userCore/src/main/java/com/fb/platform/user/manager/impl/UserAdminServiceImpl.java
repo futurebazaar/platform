@@ -324,8 +324,9 @@ public class UserAdminServiceImpl implements UserAdminService {
 		user.setUserName(userBo.getName());
 		return user;
 	}
-	
-	private UserBo getUserByUserId(int userId) throws UserNotFoundException,
+
+	@Override
+	public UserBo getUserByUserId(int userId) throws UserNotFoundException,
 	PlatformException {
 		UserBo userBo = new UserBo();
 		try{

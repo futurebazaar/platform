@@ -16,9 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.fb.commons.test.BaseTestCase;
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.dao.RuleDao;
-import com.fb.platform.promotion.rule.impl.BuyWorthXGetYPercentOffOnZCategoryRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyWorthXGetYPercentOffRuleImpl;
-import com.fb.platform.promotion.rule.impl.BuyWorthXGetYRsOffOnZCategoryRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyWorthXGetYRsOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyXBrandGetYRsOffOnZProductRuleImpl;
 import com.fb.platform.promotion.rule.impl.FirstPurchaseBuyWorthXGetYRsOffRuleImpl;
@@ -237,7 +235,6 @@ public class RuleImplTest extends BaseTestCase {
 		RuleConfiguration yPercentOffRuleConfiguration = ruleDao.loadRuleConfiguration(-8, -3);
 
 		assertNotNull(yPercentOffRuleConfiguration);
-		assertEquals(4, yPercentOffRuleConfiguration.getConfigItems().size());
 
 		assertEquals(buyWorthXGetYPercentOffRule.isApplicable(orderReq1,userId,isCouponCommitted),PromotionStatusEnum.SUCCESS);
 		assertEquals(buyWorthXGetYPercentOffRule.isApplicable(orderReq2,userId,isCouponCommitted),PromotionStatusEnum.LESS_ORDER_AMOUNT);
@@ -248,15 +245,14 @@ public class RuleImplTest extends BaseTestCase {
 		assertTrue(new Money(new BigDecimal(100)).eq(buyWorthXGetYPercentOffRule.execute(orderReq3)));
 		
 		//BuyWorthXGetYRsOffOnZCategoryRuleImpl
-		PromotionRule buyWorthXGetYRsOffOnZCategoryRule = ruleDao.load(-9, -4);
+		PromotionRule buyWorthXGetYRsOffOnZCategoryRule = ruleDao.load(-9, -2);
 
 		assertNotNull(buyWorthXGetYRsOffOnZCategoryRule);
-		assertTrue(buyWorthXGetYRsOffOnZCategoryRule instanceof BuyWorthXGetYRsOffOnZCategoryRuleImpl);
+		assertTrue(buyWorthXGetYRsOffOnZCategoryRule instanceof BuyWorthXGetYRsOffRuleImpl);
 		
 		RuleConfiguration yRsOffOnZCategoryRuleConfiguration = ruleDao.loadRuleConfiguration(-9, -4);
 
 		assertNotNull(yRsOffOnZCategoryRuleConfiguration);
-		assertEquals(4, yRsOffOnZCategoryRuleConfiguration.getConfigItems().size());
 
 		assertEquals(buyWorthXGetYRsOffOnZCategoryRule.isApplicable(orderReq1,userId,isCouponCommitted),PromotionStatusEnum.SUCCESS);
 		assertEquals(buyWorthXGetYRsOffOnZCategoryRule.isApplicable(orderReq2,userId,isCouponCommitted),PromotionStatusEnum.LESS_ORDER_AMOUNT);
@@ -287,15 +283,14 @@ public class RuleImplTest extends BaseTestCase {
 
 
 		//BuyWorthXGetYRsOffOnZCategoryRuleImpl
-		PromotionRule buyWorthXGetYPercentOffOnZCategoryRule = ruleDao.load(-3005, -6);
+		PromotionRule buyWorthXGetYPercentOffOnZCategoryRule = ruleDao.load(-3005, -3);
 
 		assertNotNull(buyWorthXGetYPercentOffOnZCategoryRule);
-		assertTrue(buyWorthXGetYPercentOffOnZCategoryRule instanceof BuyWorthXGetYPercentOffOnZCategoryRuleImpl);
+		assertTrue(buyWorthXGetYPercentOffOnZCategoryRule instanceof BuyWorthXGetYPercentOffRuleImpl);
 		
 		RuleConfiguration yPerentOffOnZCategoryRuleConfiguration = ruleDao.loadRuleConfiguration(-3005, -6);
 
 		assertNotNull(yPerentOffOnZCategoryRuleConfiguration);
-		assertEquals(5, yPerentOffOnZCategoryRuleConfiguration.getConfigItems().size());
 
 		assertEquals(buyWorthXGetYPercentOffOnZCategoryRule.isApplicable(orderReq1,userId,isCouponCommitted),PromotionStatusEnum.SUCCESS);
 		assertEquals(buyWorthXGetYPercentOffOnZCategoryRule.isApplicable(orderReq2,userId,isCouponCommitted),PromotionStatusEnum.LESS_ORDER_AMOUNT);
@@ -315,7 +310,6 @@ public class RuleImplTest extends BaseTestCase {
 		RuleConfiguration firstPurchaseBuyWorthXGetYRsOffRuleConfig = ruleDao.loadRuleConfiguration(-3007, -7);
 
 		assertNotNull(firstPurchaseBuyWorthXGetYRsOffRuleConfig);
-		assertEquals(4, firstPurchaseBuyWorthXGetYRsOffRuleConfig.getConfigItems().size());
 
 		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(orderReq1,1,isCouponCommitted),PromotionStatusEnum.NOT_FIRST_PURCHASE);
 		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(orderReq2,3,isCouponCommitted),PromotionStatusEnum.LESS_ORDER_AMOUNT);
@@ -328,8 +322,6 @@ public class RuleImplTest extends BaseTestCase {
 		
 		assertTrue(new Money(new BigDecimal(300)).eq(buyWorthXGetYRsOffRule.execute(orderReq1)));
 		assertTrue(new Money(new BigDecimal(300)).eq(buyWorthXGetYRsOffRule.execute(orderReq3)));
-						
-
 		
 	}
 

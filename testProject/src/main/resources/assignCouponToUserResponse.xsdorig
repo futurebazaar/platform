@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:admin="http://www.fb.com/platform/promotion/admin/1.0.0">
+  <xs:element name="assignCouponToUserResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="admin:sessionToken"/>
+        <xs:element ref="admin:assignCouponToUserStatusEnum"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="sessionToken" type="xs:string"/>
+  <xs:element name="assignCouponToUserStatusEnum" type="xs:NCName"/>
+</xs:schema>

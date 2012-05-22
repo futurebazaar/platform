@@ -53,4 +53,16 @@ public class RuleConfiguration {
 		}
 		throw new PlatformException("Config Item Value not found for the key - "+key);
 	}
+
+	public String getConfigItemValue(RuleConfigDescriptorEnum ruleEnum) {
+		return getConfigItemValue(ruleEnum.name());
+	}
+
+	public boolean isConfigItemPresent(RuleConfigDescriptorEnum ruleEnum) {
+		return isConfigItemPresent(ruleEnum.name());
+	}
+
+	public boolean isConfigItemPresent(String key){
+		return (getConfigItem(key) !=null);
+	}
 }
