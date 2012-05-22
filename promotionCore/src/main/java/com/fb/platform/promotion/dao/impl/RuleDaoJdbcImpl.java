@@ -26,7 +26,7 @@ import com.fb.platform.promotion.util.PromotionRuleFactory;
  */
 public class RuleDaoJdbcImpl implements RuleDao {
 
-	private Log log = LogFactory.getLog(PromotionDaoJdbcImpl.class);
+	private Log log = LogFactory.getLog(RuleDaoJdbcImpl.class);
 
 	private JdbcTemplate jdbcTemplate;
 

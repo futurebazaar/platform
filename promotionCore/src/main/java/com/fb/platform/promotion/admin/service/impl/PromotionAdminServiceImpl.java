@@ -36,6 +36,8 @@ import com.fb.platform.promotion.service.CouponNotFoundException;
 import com.fb.platform.promotion.service.InvalidCouponTypeException;
 import com.fb.platform.promotion.service.PromotionNotFoundException;
 import com.fb.platform.promotion.service.PromotionService;
+import com.fb.platform.promotion.to.AlphaNumericType;
+import com.fb.platform.promotion.to.AlphabetCase;
 import com.fb.platform.promotion.util.CouponCodeCreator;
 import com.fb.platform.user.dao.interfaces.UserAdminDao;
 import com.fb.platform.user.domain.UserBo;
@@ -225,7 +227,8 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 	}
 
 	@Override
-	public List<String> createCoupons(int count, int length, String startsWith, String endsWith, int promotionId, CouponType type, CouponLimitsConfig limits) {
+	public List<String> createCoupons(int count, int length, String startsWith, String endsWith, int promotionId, 
+			CouponType type, CouponLimitsConfig limits, AlphabetCase alphabetCase, AlphaNumericType alphaNumericType) {
 
 		try {
 			//see if the promotion is valid, if not this will throw promotion not found exception
@@ -234,7 +237,7 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 			CouponCodeCreator couponCodeCreator = new CouponCodeCreator();
 			couponCodeCreator.setCouponAdminDao(couponAdminDao);
 
-			couponCodeCreator.init(count, length, startsWith, endsWith, COUPON_GENERATION_BATCH_SIZE);
+			couponCodeCreator.init(count, length, startsWith, endsWith, COUPON_GENERATION_BATCH_SIZE, alphabetCase, alphaNumericType);
 
 			while (couponCodeCreator.nextBatchAvailable()) {
 				List<String> batchOfCouponCodes = couponCodeCreator.getNextBatch();

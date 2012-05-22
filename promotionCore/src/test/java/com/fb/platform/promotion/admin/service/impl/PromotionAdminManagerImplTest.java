@@ -40,6 +40,8 @@ import com.fb.platform.promotion.admin.to.SortOrder;
 import com.fb.platform.promotion.admin.to.UpdatePromotionEnum;
 import com.fb.platform.promotion.admin.to.UpdatePromotionRequest;
 import com.fb.platform.promotion.admin.to.UpdatePromotionResponse;
+import com.fb.platform.promotion.admin.to.ViewCouponRequest;
+import com.fb.platform.promotion.admin.to.ViewCouponResponse;
 import com.fb.platform.promotion.admin.to.ViewPromotionEnum;
 import com.fb.platform.promotion.admin.to.ViewPromotionRequest;
 import com.fb.platform.promotion.admin.to.ViewPromotionResponse;
@@ -1265,7 +1267,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		assertEquals(SearchCouponStatusEnum.NO_SESSION, response.getStatus());
 		assertEquals(0, response.getCouponBasicDetailsList().size());
 	}
-	
+
 	public void setPromotionAdminManager(PromotionAdminManager promotionAdminManager) {
 		this.promotionAdminManager = promotionAdminManager;
 	}

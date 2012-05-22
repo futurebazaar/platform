@@ -10,8 +10,9 @@ public class StringToIntegerList {
 	public static List<Integer> convert(List<String> strList){
 		List<Integer> intList = new ArrayList<Integer>();
 		for(String str : strList){
-			str = StringUtils.trim(str);
-			intList.add(Integer.valueOf(str));
+			if(StringUtils.isNotBlank(str)){
+				intList.add(Integer.valueOf(str.trim()));	
+			}
 		}
 		return intList;
 	}

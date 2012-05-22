@@ -60,6 +60,7 @@ import com.fb.platform.promotion.rule.RulesEnum;
 import com.fb.platform.promotion.service.CouponAlreadyAssignedToUserException;
 import com.fb.platform.promotion.service.CouponCodeGenerationException;
 import com.fb.platform.promotion.service.CouponNotFoundException;
+import com.fb.platform.promotion.service.InvalidAlphaNumericTypeException;
 import com.fb.platform.promotion.service.InvalidCouponTypeException;
 import com.fb.platform.promotion.service.PromotionNotFoundException;
 import com.fb.platform.promotion.util.PromotionRuleFactory;
@@ -396,7 +397,8 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		int numberOfCouponsCreated = 0;
 		String commaSeparatedCouponCodes = null;
 		try {
-			List<String> couponsCodes = promotionAdminService.createCoupons(request.getCount(), request.getLength(), request.getStartsWith(), request.getEndsWith(), request.getPromotionId(), request.getType(), limits);
+			List<String> couponsCodes = promotionAdminService.createCoupons(request.getCount(), request.getLength(), request.getStartsWith(), 
+					request.getEndsWith(), request.getPromotionId(), request.getType(), limits, request.getAlphabetCase(), request.getAlphaNumericType());
 			numberOfCouponsCreated = couponsCodes.size();
 			commaSeparatedCouponCodes = StringUtils.join(couponsCodes, ",");
 			
@@ -410,6 +412,9 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		} catch (CouponCodeGenerationException e) {
 			log.error("Coupon Code Generation error in create coupon - ", e);
 			response.setStatus(CreateCouponStatusEnum.CODE_GENERATION_FAILED);
+		} catch (InvalidAlphaNumericTypeException e) {
+			log.error("Coupon Code alphabet character and case type combination is invali = ", e);
+			response.setStatus(CreateCouponStatusEnum.CODE_CHAR_TYPE_CASE_INVALID);
 		} catch (PlatformException e) {
 			log.error("Error in create coupon - ", e);
 			response.setStatus(CreateCouponStatusEnum.INTERNAL_ERROR);
