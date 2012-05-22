@@ -146,7 +146,7 @@ public class PointsEarnServiceImpl implements PointsEarnService{
 
 	@Override
 	public PointsResponseCodeEnum storeEarnPoints(PointsRequest request,
-			PointsTxnClassificationCodeEnum actionCode) {
+			PointsTxnClassificationCodeEnum actionCode, String merchantId, String terminalId) {
 		
 		if (!pointsUtil.isValidLoyaltyCard(request.getOrderRequest().getLoyaltyCard())){
 			return PointsResponseCodeEnum.INVALID_CARD_NO;
@@ -197,13 +197,6 @@ public class PointsEarnServiceImpl implements PointsEarnService{
 	private PointsResponseCodeEnum savePreallocEarnPoints(PointsRequest request) {
 		
 		PointsRule rule = null;
-		boolean allowNext = true;
-		
-		//need to check for the DOD. as to it has to be implemented.
-		/*
-		 * 1) change the value every day in the DB 
-		 * 2) Hit the DB get the DOD and set in cache
-		 */
 		
 		for (EarnPointsRuleEnum ruleName : EarnPointsRuleEnum.values()){
 			rule = loadEarnRule(ruleName);

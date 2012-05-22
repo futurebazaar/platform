@@ -143,6 +143,12 @@ public class UserAdminDaoTest extends BaseTestCase {
 	@Test
 	public void testDeleteUserEmail(){
 		UserBo usettest = userAdminDao.load(key);
+		
+		UserEmailBo userEmail = new UserEmailBo();
+		userEmail.setEmail("tetsaddingemail@tets.com");
+		userEmail.setType("primary");
+		assertEquals(true, userAdminDao.addUserEmail(usettest.getUserid(), userEmail));
+		
 		assertNotNull(usettest);
 		int userid = usettest.getUserid();
 		assertTrue(userAdminDao.deleteUserEmail(userid, "tetsaddingemail@tets.com"));
@@ -163,6 +169,12 @@ public class UserAdminDaoTest extends BaseTestCase {
 		UserBo usettest = userAdminDao.load(key);
 		assertNotNull(usettest);
 		int userid = usettest.getUserid();
+		
+		UserPhoneBo userPhone = new UserPhoneBo();
+		userPhone.setPhoneno("09876654546");
+		userPhone.setType("secondary");
+		assertEquals(true, userAdminDao.addUserPhone(userid, userPhone));
+		
 		assertTrue( userAdminDao.deleteUserPhone(userid, "09876654546"));
 		assertFalse( userAdminDao.deleteUserEmail(userid, "09876654546"));
 		UserBo usettest1 = userAdminDao.load(key);

@@ -6,13 +6,10 @@ import org.joda.time.DateTime;
 
 import com.fb.commons.PlatformException;
 import com.fb.platform.payback.dao.PointsDao;
-import com.fb.platform.payback.dao.PointsRuleDao;
 import com.fb.platform.payback.exception.DefinitionNotFound;
 import com.fb.platform.payback.exception.InvalidActionCode;
 import com.fb.platform.payback.exception.PointsHeaderDoesNotExist;
 import com.fb.platform.payback.model.PointsHeader;
-import com.fb.platform.payback.rule.EarnPointsRuleEnum;
-import com.fb.platform.payback.rule.PointsRule;
 import com.fb.platform.payback.rule.PointsRuleConfigConstants;
 import com.fb.platform.payback.service.PointsService;
 import com.fb.platform.payback.to.OrderItemRequest;
@@ -26,16 +23,11 @@ public class PointsServiceImpl implements PointsService{
 	private static int ROUND =BigDecimal.ROUND_HALF_DOWN; 
 	
 	private PointsDao pointsDao;
-	private PointsRuleDao pointsRuleDao;
 	
 	public void setPointsDao(PointsDao pointsDao) {
 		this.pointsDao = pointsDao;
 	}
 
-	public void setPointsRuleDao(PointsRuleDao pointsRuleDao) {
-		this.pointsRuleDao = pointsRuleDao;
-	}
-	
 	@Override
 	public PointsResponseCodeEnum doOperation(PointsRequest request){
 		try{

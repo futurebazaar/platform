@@ -44,6 +44,9 @@ DROP TABLE IF EXISTS payback_rule_config;
 DROP TABLE IF EXISTS lists_listitem;
 DROP TABLE IF EXISTS lists_list;
 DROP TABLE IF EXISTS catalog_sellerratechart;
+DROP TABLE IF EXISTS points_item;
+DROP TABLE IF EXISTS points_header;
+DROP TABLE IF EXISTS orders_orderitem;
 
 --  ******************** CREATE TABLE *****************
 

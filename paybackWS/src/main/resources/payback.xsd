@@ -4,13 +4,13 @@
     <xs:complexType>
       <xs:sequence>
       	<xs:element ref="payback:actionCode"/>
-      	<xs:element ref="payback:clientId" />
+      	<xs:element ref="payback:clientName" />
       	<xs:element ref="payback:orderRequest" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="actionCode" type="xs:string"/>
-  <xs:element name="clientId" type="xs:long"/>
+  <xs:element name="clientName" type="xs:string"/>
   <xs:element name="orderRequest">
     <xs:complexType>
       <xs:sequence>
@@ -37,13 +37,15 @@
          <xs:element ref="payback:articleId"/>
         <xs:element ref="payback:quantity"/>
         <xs:element ref="payback:amount"/>
-        <xs:element ref="payback:categoryId"/> 
+        <xs:element ref="payback:categoryId"/>
+        <xs:element ref="payback:sellerRateChartId"/>
         <xs:element ref="payback:departmentName"/>
         <xs:element ref="payback:departmentCode" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="categoryId" type="xs:long"/>
+  <xs:element name="sellerRateChartId" type="xs:long"/>
   <xs:element name="itemId" type="xs:long"/>
   <xs:element name="articleId" type="xs:string"/>
   <xs:element name="quantity" type="xs:int"/>

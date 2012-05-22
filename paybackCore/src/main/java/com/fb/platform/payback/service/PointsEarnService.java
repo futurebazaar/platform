@@ -15,6 +15,6 @@ public interface PointsEarnService {
 
 	@Transactional
 	public PointsResponseCodeEnum storeEarnPoints(PointsRequest request,
-			PointsTxnClassificationCodeEnum actionCode);
+			PointsTxnClassificationCodeEnum actionCode, String merchantId, String terminalId);
 
 }

@@ -3,8 +3,6 @@ package com.fb.platform.payback.service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fb.platform.payback.rule.EarnPointsRuleEnum;
-import com.fb.platform.payback.rule.PointsRule;
 import com.fb.platform.payback.to.PointsRequest;
 import com.fb.platform.payback.to.PointsResponseCodeEnum;
 

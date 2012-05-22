@@ -1,11 +1,18 @@
 package com.fb.platform.payback.rule.impl;
 
+import com.fb.platform.payback.dao.ListDao;
 import com.fb.platform.payback.rule.BurnPointsRuleEnum;
 import com.fb.platform.payback.rule.PointsRule;
 import com.fb.platform.payback.rule.EarnPointsRuleEnum;
 import com.fb.platform.payback.rule.RuleConfiguration;
 
 public class PointsRuleFactory {
+	
+		private static ListDao listDao;
+		
+		public void setListDao(ListDao listDao){
+			PointsRuleFactory.listDao = listDao;
+		}
 
 		public static PointsRule createRule(EarnPointsRuleEnum ruleName, RuleConfiguration ruleConfig){
 			PointsRule rule = null;
@@ -32,6 +39,12 @@ public class PointsRuleFactory {
 					rule.init(ruleConfig);
 					break;
 					
+				case BUY_DOD_EARN_Y_POINTS:
+					rule = new BuyDODEarnYPoints();
+					((BuyDODEarnYPoints) rule).setListDao(listDao);
+					rule.init(ruleConfig);
+					break;
+					
 				default:
 					throw new IllegalArgumentException("Unkown RulesEnum object found : " + ruleName);
 			
@@ -45,8 +58,8 @@ public class PointsRuleFactory {
 			
 			switch(ruleName){
 			
-				case CANCEL_ORDER_REVERSE_X_BURN_POINTS:
-					rule = new CancelOrderReverseXBurnPoints();
+				case PURCHASE_ORDER_BURN_X_POINTS:
+					rule = new PurchaseOrderBurnXPoints();
 					rule.init(ruleConfig);
 					break;
 					

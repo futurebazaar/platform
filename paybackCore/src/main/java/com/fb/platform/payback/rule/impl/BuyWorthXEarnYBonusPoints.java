@@ -47,7 +47,7 @@ public class BuyWorthXEarnYBonusPoints implements PointsRule {
 		if (minimumOrderValue.compareTo(request.getAmount()) == 1){
 			return false;
 		}
-		if(!request.getTxnTimestamp().isAfter(validFrom.getMillis()) || !request.getTxnTimestamp().isBefore(validTill.getMillis())){
+		if(request.getTxnTimestamp().toDate().compareTo(validFrom.toDate()) <0 || request.getTxnTimestamp().toDate().compareTo(validTill.toDate()) > 0){
 			return false;
 		}
 		return true;

@@ -14,7 +14,7 @@ public interface PointsBurnService {
 
 	@Transactional(propagation=Propagation.REQUIRED)
 	PointsResponseCodeEnum storeBurnPoints(PointsRequest request,
-			PointsTxnClassificationCodeEnum actionCode);
+			PointsTxnClassificationCodeEnum actionCode, String merchantId, String terminalId);
 	
 
 }

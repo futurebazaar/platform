@@ -9,7 +9,7 @@
     <dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/asm/asm/3.3.1/asm-3.3.1.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/com/fb/paybackCore/1.0/paybackCore-1.0.jar">
+    <dependent-module deploy-path="/WEB-INF/lib" handle="module:/resource/paybackCore/paybackCore">
       <dependency-type>uses</dependency-type>
     </dependent-module>
     <dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/com/fb/platformCommons/1.0/platformCommons-1.0.jar">

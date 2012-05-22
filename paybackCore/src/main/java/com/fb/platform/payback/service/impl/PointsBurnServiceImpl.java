@@ -68,7 +68,7 @@ public class PointsBurnServiceImpl implements PointsBurnService{
 	
 	@Override
 	public PointsResponseCodeEnum storeBurnPoints(PointsRequest request,
-			PointsTxnClassificationCodeEnum actionCode) {
+			PointsTxnClassificationCodeEnum actionCode, String merchantId, String terminalId) {
 		
 		PointsRule  rule = null;
 		for (BurnPointsRuleEnum ruleName : BurnPointsRuleEnum.values()){

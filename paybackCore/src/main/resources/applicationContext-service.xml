@@ -48,4 +48,10 @@
     <!-- Add new Utilities here -->
     <bean id="pointsUtil" class="com.fb.platform.payback.util.PointsUtil">
     </bean>
+    
+    <!-- Add new Factory Beans here -->
+    <bean id="pointsRuleFactory" class="com.fb.platform.payback.rule.impl.PointsRuleFactory">
+    	<property name="listDao" ref="listDao"/>
+    </bean>
+    
 </beans>

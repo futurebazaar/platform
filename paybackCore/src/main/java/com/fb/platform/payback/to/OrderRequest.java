@@ -38,7 +38,7 @@ public class OrderRequest {
 		return orderItemRequest;
 	}
 	public DateTime getTxnTimestamp() {
-		return txnTimestamp;
+		return new DateTime(txnTimestamp.getYear(), txnTimestamp.getMonthOfYear(), txnTimestamp.getDayOfMonth(), 0, 0);
 	}
 	public void setTxnTimestamp(DateTime txnTimestamp) {
 		this.txnTimestamp = txnTimestamp;
@@ -58,14 +58,4 @@ public class OrderRequest {
 	public BigDecimal getBonusPoints(){
 		return bonusPoints;
 	}
-	
-	public boolean isInExcludedCategory(List<Long> categoryList){
-		for (OrderItemRequest orderItem : orderItemRequest){
-			if (categoryList.contains(orderItem.getCategoryId())){
-				return true;
-			}
-		}
-		return false;
-	}
-
 }
