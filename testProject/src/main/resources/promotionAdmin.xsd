@@ -472,6 +472,7 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
   	<xs:restriction base="xs:string">
     	<xs:enumeration value="ALPHABETS"/>
       	<xs:enumeration value="ALPHA_NUMERIC"/>
+      	<xs:enumeration value="NUMBERS"/>
 	</xs:restriction>
   </xs:simpleType>
   
@@ -481,6 +482,7 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
     	<xs:enumeration value="UPPER"/>
       	<xs:enumeration value="LOWER"/>
       	<xs:enumeration value="MIXED"/>
+      	<xs:enumeration value="INVARIANT"/>
 	</xs:restriction>
   </xs:simpleType>
   
@@ -514,6 +516,7 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
       	<xs:enumeration value="INVALID_PROMOTION"/>
       	<xs:enumeration value="INVALID_LIMITS_CONFIG"/>
       	<xs:enumeration value="CODE_GENERATION_FAILED"/>
+      	<xs:enumeration value="CODE_CHAR_TYPE_CASE_INVALID"/>
 	</xs:restriction>
   </xs:simpleType>
   

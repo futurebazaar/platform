@@ -666,7 +666,7 @@ public class RestClient {
 		AssignCouponToUserRequest request = new AssignCouponToUserRequest();
 		request.setSessionToken(sessionToken);
 		request.setCouponCode("preIssuedNoCouponUserEntry");
-		request.setUserId(6);
+		request.setUserName("neha.garani@gmail.com");
 
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
 
