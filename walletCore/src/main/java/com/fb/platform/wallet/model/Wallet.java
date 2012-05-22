@@ -6,6 +6,7 @@ import org.joda.time.DateTime;
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.user.manager.model.admin.User;
+import com.fb.platform.wallet.service.exception.InSufficientFundsException;
 
 public class Wallet implements Serializable {
 	
@@ -33,23 +34,44 @@ public class Wallet implements Serializable {
 			return walletTransaction;
 	}
 	
-	public WalletTransaction reverseTransaction(WalletTransaction walletTransaction) {
-		WalletTransaction walletTransactionRes = new WalletTransaction(
-				this, TransactionType.CREDIT, walletTransaction.getAmount(),DateTime.now());
-		for(WalletSubTransaction walletSubTransaction : walletTransaction.getWalletSubTransaction()){
-			if (walletSubTransaction.getSubWalletType().equals(SubWalletType.CASH)) {
-				cashSubWallet = cashSubWallet.plus(walletSubTransaction.getAmount());
-				walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.CASH,walletSubTransaction.getAmount(),0,0,0,walletTransaction.getId(),null));
-			} else if (walletSubTransaction.getSubWalletType().equals(SubWalletType.GIFT)) {
-				giftSubWallet = giftSubWallet.plus(walletSubTransaction.getAmount());
-				walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.GIFT,walletSubTransaction.getAmount(),0,0,0,walletTransaction.getId(),null));
-			} else if (walletSubTransaction.getSubWalletType().equals(SubWalletType.REFUND)) {
-				refundSubWallet = refundSubWallet.plus(walletSubTransaction.getAmount());
-				walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,walletSubTransaction.getAmount(),0,0,0,walletTransaction.getId(),null));
+	public WalletTransaction reverseTransaction(WalletTransaction walletTransaction,Money amount) {
+			WalletTransaction walletTransactionRes = new WalletTransaction(
+					this, TransactionType.CREDIT, amount,DateTime.now());
+			Money amountTobeReversed = amount;
+			WalletSubTransaction walletSubTransactionRefund = walletTransaction.subTransactionBySubWallet(SubWalletType.REFUND);
+			WalletSubTransaction walletSubTransactionCash = walletTransaction.subTransactionBySubWallet(SubWalletType.CASH);
+			WalletSubTransaction walletSubTransactionGift = walletTransaction.subTransactionBySubWallet(SubWalletType.GIFT);
+			if(walletSubTransactionRefund != null){
+				if(amountTobeReversed.lteq(walletSubTransactionRefund.getAmount())){
+					refundSubWallet = refundSubWallet.plus(amountTobeReversed);
+					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,amountTobeReversed,0,0,0,walletTransaction.getId(),null));
+					amountTobeReversed = amountTobeReversed.minus(amountTobeReversed);
+				}else{
+					refundSubWallet = refundSubWallet.plus(walletSubTransactionRefund.getAmount());
+					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,walletSubTransactionRefund.getAmount(),0,0,0,walletTransaction.getId(),null));
+					amountTobeReversed = amountTobeReversed.minus(walletSubTransactionRefund.getAmount());
+				}
 			}
-		}
-		totalAmount = totalAmount.plus(walletTransaction.getAmount());
-		return walletTransactionRes;
+			if(walletSubTransactionCash != null){
+				if(amountTobeReversed.lteq(walletSubTransactionCash.getAmount())){
+					cashSubWallet = cashSubWallet.plus(amountTobeReversed);
+					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.CASH,amountTobeReversed,0,0,0,walletTransaction.getId(),null));
+					amountTobeReversed = amountTobeReversed.minus(amountTobeReversed);
+				}else{
+					cashSubWallet = cashSubWallet.plus(walletSubTransactionCash.getAmount());
+					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.CASH,walletSubTransactionCash.getAmount(),0,0,0,walletTransaction.getId(),null));
+					amountTobeReversed = amountTobeReversed.minus(walletSubTransactionCash.getAmount());
+				}
+			}
+			if(walletSubTransactionGift != null){
+				if(amountTobeReversed.lteq(walletSubTransactionGift.getAmount())){
+					giftSubWallet = giftSubWallet.plus(amountTobeReversed);
+					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.GIFT,amountTobeReversed,0,0,0,walletTransaction.getId(),null));
+					amountTobeReversed = amountTobeReversed.minus(amountTobeReversed);
+				}
+			}
+			totalAmount = totalAmount.plus(amount);
+			return walletTransactionRes;
 	}
 
 	public WalletTransaction debit(Money amount,long orderId) {

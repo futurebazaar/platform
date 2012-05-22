@@ -1,10 +1,9 @@
 package com.fb.platform.wallet.model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-
 import org.joda.time.DateTime;
-
 import com.fb.commons.to.Money;
 
 public class WalletTransaction {
@@ -117,6 +116,34 @@ public class WalletTransaction {
 	 */
 	public void setTimeStamp(DateTime timeStamp) {
 		this.timeStamp = timeStamp;
+	}
+	
+	public boolean isSubTransactionBySubWallet(SubWalletType subWalletType){
+		if(this.walletSubTransaction.isEmpty()){
+			return false;
+		}else{
+			for (Iterator<WalletSubTransaction> iterator = walletSubTransaction.iterator(); iterator.hasNext(); ) {
+				WalletSubTransaction walletSubTransactionItr = (WalletSubTransaction) iterator.next();
+				if(walletSubTransactionItr.getSubWalletType().equals(subWalletType)){
+					return true;
+				}
+			}
+			return false;
+		}
+	}
+	
+	public WalletSubTransaction subTransactionBySubWallet(SubWalletType subWalletType){
+		if(this.walletSubTransaction.isEmpty()){
+			return null;
+		}else{
+			for (Iterator<WalletSubTransaction> iterator = walletSubTransaction.iterator(); iterator.hasNext(); ) {
+				WalletSubTransaction walletSubTransactionItr = (WalletSubTransaction) iterator.next();
+				if(walletSubTransactionItr.getSubWalletType().equals(subWalletType)){
+					return walletSubTransactionItr;
+				}
+			}
+			return null;
+		}
 	}
 	/**
 	 * @return the walletSubTransaction

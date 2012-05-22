@@ -20,6 +20,7 @@ import com.fb.platform.wallet.service.WalletService;
 import com.fb.platform.wallet.service.exception.AlreadyRefundedException;
 import com.fb.platform.wallet.service.exception.InSufficientFundsException;
 import com.fb.platform.wallet.service.exception.InvalidTransaction;
+import com.fb.platform.wallet.service.exception.InvalidTransactionIdException;
 import com.fb.platform.wallet.service.exception.RefundExpiredException;
 import com.fb.platform.wallet.service.exception.WalletNotFoundException;
 
@@ -29,23 +30,15 @@ public class WalletServiceImpl implements WalletService {
 	private WalletDao walletDao;
 	@Autowired
 	private WalletTransactionDao walletTransactionDao;
-	@Autowired
-	private WalletCacheAccess walletCacheAccess;
 	
 	@Override
 	public Wallet load(long walletId) throws WalletNotFoundException,PlatformException {
-		Wallet wallet = walletCacheAccess.get(walletId);
 		try{
-			wallet = walletDao.load(walletId);
+			Wallet wallet = walletDao.load(walletId);
+			return wallet;
 		}catch (WalletNotFoundException e){
 			throw new WalletNotFoundException("No wallet found with this walletId");
-		}
-		if (wallet != null){
-			cacheWallet(walletId, wallet);
-		}else{
-			throw new WalletNotFoundException("No wallet found with this walletId");
-		}
-		return wallet;
+		}	
 	}
 
 	@Override
@@ -176,20 +169,29 @@ public class WalletServiceImpl implements WalletService {
 
 	@Override
 	public WalletTransaction reverseTransaction(
-			long userId, long clientId, String transactionId)
-			throws WalletNotFoundException, InvalidTransaction,
+			long userId, long clientId, String transactionId,Money amount)
+			throws WalletNotFoundException, InvalidTransactionIdException,
 			PlatformException {
 		try{
 			WalletTransaction walletTransactionRes = new WalletTransaction();
 			Wallet wallet = load(userId,clientId,false);
 			com.fb.platform.wallet.model.WalletTransaction walletTransaction = walletTransactionDao.transactionById(wallet.getId(), transactionId);
-			com.fb.platform.wallet.model.WalletTransaction walletTransactionNew = wallet.reverseTransaction(walletTransaction);
-			walletTransactionRes.setWallet(walletDao.update(wallet));
-			walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(walletTransactionNew));
-			return walletTransactionRes;				
+			Money amountToBeReversed = amount != null ? amount : walletTransaction.getAmount();
+			if(walletTransaction.getAmount().gteq(amountToBeReversed)){
+				com.fb.platform.wallet.model.WalletTransaction walletTransactionNew = wallet.reverseTransaction(walletTransaction,amountToBeReversed);
+				walletTransactionRes.setWallet(walletDao.update(wallet));
+				walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(walletTransactionNew));
+				return walletTransactionRes;
+			}else{
+				throw new InSufficientFundsException();
+			}
+		}  catch (InSufficientFundsException e){
+			throw new InSufficientFundsException("The amount is invalid for reversing the transaction");		
 		} catch (WalletNotFoundException e){
 			throw new WalletNotFoundException("No wallet with this wallet id");		
-		} catch (PlatformException e) {
+		}  catch (InvalidTransactionIdException e) {
+			throw new InvalidTransactionIdException("This is an invalid transaction Id");
+		} 	catch (PlatformException e) {
 			throw new PlatformException("an unhandeled exception has occured while trnasaction reversal");
 		}
 	}
@@ -205,16 +207,5 @@ public class WalletServiceImpl implements WalletService {
 		walletTransactionRes.setTransactionId(walletTransaction.getTransactionId());
 		walletTransactionRes.setWallet(walletTransaction.getWallet());
 		return walletTransactionRes;
-	}
-	
-	private void cacheWallet(long walletId, Wallet wallet) {
-		try {
-			walletCacheAccess.lock(walletId);
-			if (walletCacheAccess.get(walletId) == null) {
-				walletCacheAccess.put(walletId, wallet);
-			}
-		} finally {
-			walletCacheAccess.unlock(walletId);
-		}
 	}
 }

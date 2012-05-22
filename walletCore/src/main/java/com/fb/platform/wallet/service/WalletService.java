@@ -14,6 +14,7 @@ import com.fb.platform.wallet.to.WalletTransaction;
 import com.fb.platform.wallet.service.exception.AlreadyRefundedException;
 import com.fb.platform.wallet.service.exception.InSufficientFundsException;
 import com.fb.platform.wallet.service.exception.InvalidTransaction;
+import com.fb.platform.wallet.service.exception.InvalidTransactionIdException;
 import com.fb.platform.wallet.service.exception.RefundExpiredException;
 import com.fb.platform.wallet.service.exception.WalletNotFoundException;
 
@@ -102,12 +103,12 @@ public interface WalletService {
 	 * @param userId : User Id of the for whom to the wallet transaction to be reversed.
 	 * @param clientId : Client Id though which the cancellation request is initiated.
 	 * @param transactionId : The transactionId which needs to be reversed.
+	 * @param amount : The amount for which the order was cancelled if only part of the order is cancelled.
 	 * @throws WalletNotFoundException When no wallet is found matching the wallet.
-	 * @throws InvalidTransaction When the transaction doesn't exist.
+	 * @throws InvalidTransactionIdException When the transaction doesn't exist.
 	 * @throws PlatformException When an unrecoverable error happens.
 	 * @return WalletTransaction 
 	**/
-	public WalletTransaction reverseTransaction(long userId, long clientId,String transactionId) throws WalletNotFoundException,InvalidTransaction ,PlatformException;
-	
+	public WalletTransaction reverseTransaction(long userId, long clientId,String transactionId,Money amount) throws WalletNotFoundException,InvalidTransactionIdException ,PlatformException;
 	
 }

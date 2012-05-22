@@ -255,7 +255,7 @@ public class WalletServiceTest extends BaseTestCase {
 		assertNotNull(walletTransactionCr3);
 		assertNotNull(walletTransactionDebit1);
 		assertNotNull(walletTransactionDebit2);
-		WalletTransaction walletTransactionRev = walletService.reverseTransaction(6, -5, walletTransactionDebit2.getTransactionId());
+		WalletTransaction walletTransactionRev = walletService.reverseTransaction(6, -5, walletTransactionDebit2.getTransactionId(),null);
 		assertNotNull(walletTransactionRev);
 		assertEquals(new BigDecimal("500.00"), walletTransactionRev.getWallet().getTotalAmount().getAmount());		
 	}
@@ -263,7 +263,7 @@ public class WalletServiceTest extends BaseTestCase {
 	@Test 
 	public void walletNotFoundTransactionRevTest(){
 		try{
-			WalletTransaction walletTransactionRev = walletService.reverseTransaction(6,-5, "adfsadf");
+			WalletTransaction walletTransactionRev = walletService.reverseTransaction(6,-5, "adfsadf",null);
 		} catch (Exception e) {
 			assertEquals("com.fb.platform.wallet.service.exception.WalletNotFoundException",e.getClass().getCanonicalName());
 		}			
