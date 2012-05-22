@@ -74,6 +74,8 @@ import com.fb.platform.promotion.admin.service.PromotionAdminManager;
 import com.fb.platform.promotion.admin.to.SearchCouponOrderBy;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
 import com.fb.platform.promotion.admin.to.SortOrder;
+import com.fb.platform.promotion.to.AlphaNumericType;
+import com.fb.platform.promotion.to.AlphabetCase;
 
 /**
  * @author nehaga
@@ -179,7 +181,7 @@ public class PromotionAdminResource {
 			}
 			apiPromotionTO.setMaxUses(promotionTO.getMaxUses());
 			apiPromotionTO.setMaxUsesPerUser(promotionTO.getMaxUsesPerUser());
-			apiPromotionTO.setPromotionName(promotionTO.getPromotionName());
+			apiPromotionTO.setPromotionName(StringUtils.trim(promotionTO.getPromotionName()));
 			apiPromotionTO.setRuleName(createPromotionRequest.getCreatePromotionTO().getRuleName());
 			if(promotionTO.getValidFrom() == null) {
 				apiPromotionTO.setValidFrom(null);
@@ -192,10 +194,12 @@ public class PromotionAdminResource {
 				apiPromotionTO.setValidTill(new DateTime(promotionTO.getValidTill().toGregorianCalendar()));
 			}
 			for(RuleConfigItemTO ruleConfigItemTO : promotionTO.getRuleConfigItemTO()) {
-				com.fb.platform.promotion.admin.to.RuleConfigItemTO apiRuleConfigItemTO = new com.fb.platform.promotion.admin.to.RuleConfigItemTO();
-				apiRuleConfigItemTO.setRuleConfigName(ruleConfigItemTO.getRuleConfigName());
-				apiRuleConfigItemTO.setRuleConfigValue(ruleConfigItemTO.getRuleConfigValue());
-				apiPromotionTO.getConfigItems().add(apiRuleConfigItemTO);
+				if(StringUtils.isNotBlank(ruleConfigItemTO.getRuleConfigValue())) {
+					com.fb.platform.promotion.admin.to.RuleConfigItemTO apiRuleConfigItemTO = new com.fb.platform.promotion.admin.to.RuleConfigItemTO();
+					apiRuleConfigItemTO.setRuleConfigName(ruleConfigItemTO.getRuleConfigName());
+					apiRuleConfigItemTO.setRuleConfigValue(ruleConfigItemTO.getRuleConfigValue());
+					apiPromotionTO.getConfigItems().add(apiRuleConfigItemTO);
+				}
 			}
 			
 			apiCreatePromotionRequest.setPromotion(apiPromotionTO);
@@ -428,7 +432,7 @@ public class PromotionAdminResource {
 			}
 			apiPromotionTO.setMaxUses(promotionTO.getMaxUses());
 			apiPromotionTO.setMaxUsesPerUser(promotionTO.getMaxUsesPerUser());
-			apiPromotionTO.setPromotionName(promotionTO.getPromotionName());
+			apiPromotionTO.setPromotionName(StringUtils.trim(promotionTO.getPromotionName()));
 			if(promotionTO.getValidFrom() == null) {
 				apiPromotionTO.setValidFrom(null);
 			} else {
@@ -440,10 +444,12 @@ public class PromotionAdminResource {
 				apiPromotionTO.setValidTill(new DateTime(promotionTO.getValidTill().toGregorianCalendar()));
 			}
 			for(RuleConfigItemTO ruleConfigItemTO : promotionTO.getRuleConfigItemTO()) {
-				com.fb.platform.promotion.admin.to.RuleConfigItemTO apiRuleConfigItemTO = new com.fb.platform.promotion.admin.to.RuleConfigItemTO();
-				apiRuleConfigItemTO.setRuleConfigName(ruleConfigItemTO.getRuleConfigName());
-				apiRuleConfigItemTO.setRuleConfigValue(ruleConfigItemTO.getRuleConfigValue());
-				apiPromotionTO.getConfigItems().add(apiRuleConfigItemTO);
+				if(StringUtils.isNotBlank(ruleConfigItemTO.getRuleConfigValue())) {
+					com.fb.platform.promotion.admin.to.RuleConfigItemTO apiRuleConfigItemTO = new com.fb.platform.promotion.admin.to.RuleConfigItemTO();
+					apiRuleConfigItemTO.setRuleConfigName(ruleConfigItemTO.getRuleConfigName());
+					apiRuleConfigItemTO.setRuleConfigValue(ruleConfigItemTO.getRuleConfigValue());
+					apiPromotionTO.getConfigItems().add(apiRuleConfigItemTO);
+				}
 			}
 			
 			apiUpdatePromotionRequest.setPromotion(apiPromotionTO);
@@ -465,6 +471,9 @@ public class PromotionAdminResource {
 			
 		} catch (JAXBException e) {
 			logger.error("Error in the updatePromotion call.", e);
+			return "error"; //TODO return proper error response
+		} catch (Exception e) {
+			logger.error("General error in the updatePromotion call.", e);
 			return "error"; //TODO return proper error response
 		}
 		
@@ -738,7 +747,14 @@ public class PromotionAdminResource {
 				apiCreateCouponRequest.setEndsWith(endsWith);
 				apiCreateCouponRequest.setLength(codeDetails.getCodeLength());
 				
-				// need to set the alphabetCase and coupon code alphabetCode type (currently not taken from user
+				com.fb.platform.promotion.admin._1_0.AlphaNumericType inputAlphaNumericType = codeDetails.getAlphaNumericType()==null ? 
+						com.fb.platform.promotion.admin._1_0.AlphaNumericType.ALPHA_NUMERIC : codeDetails.getAlphaNumericType();
+				
+				com.fb.platform.promotion.admin._1_0.AlphabetCase inputAlphabetCase = codeDetails.getAlphabetCase()==null ? 
+						com.fb.platform.promotion.admin._1_0.AlphabetCase.MIXED : codeDetails.getAlphabetCase();
+				
+				apiCreateCouponRequest.setAlphaNumericType(AlphaNumericType.valueOf(inputAlphaNumericType.toString()));
+				apiCreateCouponRequest.setAlphabetCase(AlphabetCase.valueOf(inputAlphabetCase.toString()));
 			}
 			
 			CreateCouponResponse createCouponResponse	= new CreateCouponResponse();	

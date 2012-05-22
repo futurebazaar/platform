@@ -9,6 +9,8 @@ import java.math.BigDecimal;
 import org.apache.commons.lang.StringUtils;
 
 import com.fb.platform.promotion.model.coupon.CouponType;
+import com.fb.platform.promotion.to.AlphaNumericType;
+import com.fb.platform.promotion.to.AlphabetCase;
 
 /**
  * @author vinayak
@@ -33,6 +35,9 @@ public class CreateCouponRequest implements Serializable {
 	//do all the couponCodes end with a specific string?
 	private String endsWith;
 
+	private AlphabetCase alphabetCase;
+	private AlphaNumericType alphaNumericType;
+	
 	private int promotionId;
 
 	private int maxUses = 0;
@@ -156,5 +161,21 @@ public class CreateCouponRequest implements Serializable {
 	}
 	public void setMaxAmountPerUser(BigDecimal maxAmountPerUser) {
 		this.maxAmountPerUser = maxAmountPerUser;
+	}
+
+	public AlphabetCase getAlphabetCase() {
+		return alphabetCase;
+	}
+
+	public void setAlphabetCase(AlphabetCase alphabetCase) {
+		this.alphabetCase = alphabetCase;
+	}
+
+	public AlphaNumericType getAlphaNumericType() {
+		return alphaNumericType;
+	}
+
+	public void setAlphaNumericType(AlphaNumericType alphaNumericType) {
+		this.alphaNumericType = alphaNumericType;
 	}
 }

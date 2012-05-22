@@ -15,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,11 +27,11 @@ import org.springframework.jdbc.support.KeyHolder;
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.admin.dao.PromotionAdminDao;
+import com.fb.platform.promotion.admin.service.PromotionNameDuplicateException;
 import com.fb.platform.promotion.admin.to.PromotionTO;
 import com.fb.platform.promotion.admin.to.RuleConfigItemTO;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
 import com.fb.platform.promotion.admin.to.SortOrder;
-import com.fb.platform.promotion.service.PromotionNotFoundException;
 
 /**
  * @author neha
@@ -240,6 +241,18 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 			"WHERE" +
 			"	id=?";
 
+	private static final String SELECT_PROMOTION_BY_NAME = 
+			"SELECT " +
+				"	id, " +
+				"	valid_from, " +
+				"	valid_till, " +
+				"	name, " +
+				"	description, " +
+				"	is_coupon, " +
+				"	is_active," +
+				"	rule_id " +
+				"FROM platform_promotion where name = ?";
+	
 	private static final String UPDATE_PROMOTION_RULE_CONFIG = 
 			"UPDATE " +
 			"	promotion_rule_config " +
@@ -302,8 +315,8 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 					}
 				}, promotionKeyHolder);
 			} catch (DuplicateKeyException e) {
-				log.error("Duplicate key insertion exception " + e);
-				throw new PlatformException("Duplicate key insertion exception "+e);
+				log.error("Duplicate promotion name insertion exception.", e);
+				throw new PromotionNameDuplicateException("Duplicate promotion name insertion exception.", e);
 			}
 			
 			log.info("Promotion created, id :" + promotionKeyHolder.getKey().intValue());
@@ -501,6 +514,24 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 	}
 	
 	@Override
+	public PromotionTO loadPromotionByName(String name) {
+		log.info("Fetch promotion details for promotion with name : " + name);
+		
+		PromotionTO promotionCompleteView = null;
+		try {
+			promotionCompleteView = jdbcTemplate.queryForObject(SELECT_PROMOTION_BY_NAME, 
+					new Object[] {name}, 
+					new PromotionNameMapper());
+	
+		} catch (EmptyResultDataAccessException e) {
+			log.error("No promotion found by promotion name : " + name);
+			throw new PlatformException("No promotion found by promotion name : " + name);
+		}
+		
+		return promotionCompleteView;
+	}
+	
+	@Override
 	public PromotionTO viewPromotion(int promotionId) {
 		log.info("Fetch promotion details for promotion id : " + promotionId);
 		
@@ -535,11 +566,15 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 		log.info("Update platform_promotion table => name " + name + " , description : " + description + " , validFrom : " + validFrom + " , validTill : " + validTill + " , active : " + active + " , ruleId : " + ruleId + " where promotionId : " + promotionId);
 		
 		Timestamp modifiedOnTimestamp = new java.sql.Timestamp(System.currentTimeMillis());
-		
-		int promotionUpdated = jdbcTemplate.update(UPDATE_PROMOTION_SQL, new Object[] {modifiedOnTimestamp, new Timestamp(validFrom.getMillis()), new Timestamp(validTill.getMillis()), name, description, active, ruleId, promotionId});
-		if (promotionUpdated != 1) {
-			log.error("Error while updating the promotion id : " + promotionId);
-			throw new PlatformException("Error while updating the promotion id : " + promotionId);
+		try {
+			int promotionUpdated = jdbcTemplate.update(UPDATE_PROMOTION_SQL, new Object[] {modifiedOnTimestamp, new Timestamp(validFrom.getMillis()), new Timestamp(validTill.getMillis()), name, description, active, ruleId, promotionId});
+			if (promotionUpdated != 1) {
+				log.error("Error while updating the promotion id : " + promotionId);
+				throw new PlatformException("Error while updating the promotion id : " + promotionId);
+			}
+		} catch (DuplicateKeyException e) {
+			log.error("Duplicate promotion name update exception.", e);
+			throw new PromotionNameDuplicateException("Duplicate promotion name update exception.", e);
 		}
 	}
 	
@@ -610,6 +645,34 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 		}
 	}
 	
+	private static class PromotionNameMapper implements RowMapper<PromotionTO> {
+		
+		@Override
+		public PromotionTO mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+			PromotionTO promotionView = new PromotionTO();
+			promotionView.setId(resultSet.getInt("id"));
+			if(resultSet.getTimestamp("valid_from") != null) {
+				promotionView.setValidFrom(new DateTime(resultSet.getTimestamp("valid_from")));
+			} else {
+				promotionView.setValidFrom(null);
+			}
+			if(resultSet.getTimestamp("valid_till") != null) {
+				promotionView.setValidTill(new DateTime(resultSet.getTimestamp("valid_till")));
+			} else {
+				promotionView.setValidTill(null);
+			}
+			promotionView.setPromotionName(resultSet.getString("name"));
+			promotionView.setDescription(resultSet.getString("description"));
+			boolean isActive = false;
+			if(resultSet.getInt("isActive") == 1) {
+				isActive = true;
+			}
+			promotionView.setActive(isActive);
+			promotionView.setRuleId(resultSet.getInt("rule_id"));
+			return promotionView;
+		}
+	}
+
 	private static class RuleConfigItemMapper implements RowMapper<RuleConfigItemTO> {
 		
 		@Override

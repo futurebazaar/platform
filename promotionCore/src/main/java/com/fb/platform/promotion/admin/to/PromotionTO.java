@@ -122,7 +122,7 @@ public class PromotionTO {
 		invalidationList.addAll(isDateConfigValid());
 		invalidationList.addAll(isLimitsConfigValid());
 		for(RuleConfigItemTO ruleConfigItem : configItems) {
-			if(!StringUtils.isEmpty(ruleConfigItem.isValid())) {
+			if(StringUtils.isNotBlank(ruleConfigItem.isValid())) {
 				invalidationList.add(ruleConfigItem.isValid());
 			}
 		}
@@ -133,6 +133,8 @@ public class PromotionTO {
 		List<String> nameInvalidationList = new ArrayList<String>();
 		if(StringUtils.isBlank(promotionName)) {
 			nameInvalidationList.add("Promotion Name cannot be blank");
+		} else if(promotionName.length() > 50) {
+			nameInvalidationList.add("Promotion Name cannot contain more than 50 characters");
 		}
 		return nameInvalidationList;
 	}
@@ -158,7 +160,7 @@ public class PromotionTO {
 	
 	private List<String> isRuleValid() {
 		List<String> ruleInvalidationList = new ArrayList<String>();
-		if(StringUtils.isEmpty(ruleName)) {
+		if(StringUtils.isBlank(ruleName)) {
 			ruleInvalidationList.add("Rule name empty");
 		}
 		if(!RulesEnum.isRuleValid(ruleName)) {
