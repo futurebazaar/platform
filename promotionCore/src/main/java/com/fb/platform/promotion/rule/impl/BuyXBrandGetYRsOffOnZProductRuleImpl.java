@@ -41,14 +41,16 @@ public class BuyXBrandGetYRsOffOnZProductRuleImpl implements PromotionRule, Seri
 		minOrderValue = new Money(BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.MIN_ORDER_VALUE.name()))));
 		StrTokenizer strTokCategories = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.BRAND_LIST.name()),",");
 		brands = StringToIntegerList.convert((List<String>)strTokCategories.getTokenList());
-		StrTokenizer strTokClients = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.CLIENT_LIST.name()),",");
-		clientList = StringToIntegerList.convert((List<String>)strTokClients.getTokenList());
+		if (ruleConfig.isConfigItemPresent(RuleConfigDescriptorEnum.CLIENT_LIST)) {
+			StrTokenizer strTokClients = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.CLIENT_LIST.name()),",");
+			clientList = StringToIntegerList.convert((List<String>)strTokClients.getTokenList());
+			log.info("clientList = "+ clientList);
+		}
 		productId = Integer.valueOf(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.PRODUCT_ID.name())).intValue();
 		productDiscountValue = new Money (BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.PRODUCT_DISCOUNTED_VALUE.name()))));
 		log.info("minOrderValue : " + minOrderValue.toString() 
 				+ ", productId : " + productId 
 				+ ", productDiscountValue : " + productDiscountValue 
-				+ ", clientList : " + clientList
 				+ ", brandList : " + brands);
 	}
 
