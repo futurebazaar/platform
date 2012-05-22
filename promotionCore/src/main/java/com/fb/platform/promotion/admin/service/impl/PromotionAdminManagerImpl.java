@@ -60,6 +60,7 @@ import com.fb.platform.promotion.rule.RulesEnum;
 import com.fb.platform.promotion.service.CouponAlreadyAssignedToUserException;
 import com.fb.platform.promotion.service.CouponCodeGenerationException;
 import com.fb.platform.promotion.service.CouponNotFoundException;
+import com.fb.platform.promotion.service.InvalidAlphaNumericTypeException;
 import com.fb.platform.promotion.service.InvalidCouponTypeException;
 import com.fb.platform.promotion.service.PromotionNotFoundException;
 import com.fb.platform.promotion.util.PromotionRuleFactory;
@@ -406,7 +407,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		} catch (CouponCodeGenerationException e) {
 			log.error("Coupon Code Generation error in create coupon - ", e);
 			response.setStatus(CreateCouponStatusEnum.CODE_GENERATION_FAILED);
-		} catch (InvalidCouponTypeException e) {
+		} catch (InvalidAlphaNumericTypeException e) {
 			log.error("Coupon Code alphabet character and case type combination is invali = ", e);
 			response.setStatus(CreateCouponStatusEnum.CODE_CHAR_TYPE_CASE_INVALID);
 		} catch (PlatformException e) {
