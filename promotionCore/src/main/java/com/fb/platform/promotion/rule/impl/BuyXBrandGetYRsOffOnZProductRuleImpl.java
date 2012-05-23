@@ -19,6 +19,7 @@ import com.fb.platform.promotion.rule.RuleConfigDescriptorEnum;
 import com.fb.platform.promotion.rule.RuleConfiguration;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.PromotionStatusEnum;
+import com.fb.platform.promotion.util.RuleValidatorUtils;
 import com.fb.platform.promotion.util.StringToIntegerList;
 
 /**
@@ -40,14 +41,16 @@ public class BuyXBrandGetYRsOffOnZProductRuleImpl implements PromotionRule, Seri
 		minOrderValue = new Money(BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.MIN_ORDER_VALUE.name()))));
 		StrTokenizer strTokCategories = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.BRAND_LIST.name()),",");
 		brands = StringToIntegerList.convert((List<String>)strTokCategories.getTokenList());
-		StrTokenizer strTokClients = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.CLIENT_LIST.name()),",");
-		clientList = StringToIntegerList.convert((List<String>)strTokClients.getTokenList());
+		if (ruleConfig.isConfigItemPresent(RuleConfigDescriptorEnum.CLIENT_LIST)) {
+			StrTokenizer strTokClients = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.CLIENT_LIST.name()),",");
+			clientList = StringToIntegerList.convert((List<String>)strTokClients.getTokenList());
+			log.info("clientList = "+ clientList);
+		}
 		productId = Integer.valueOf(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.PRODUCT_ID.name())).intValue();
 		productDiscountValue = new Money (BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.PRODUCT_DISCOUNTED_VALUE.name()))));
 		log.info("minOrderValue : " + minOrderValue.toString() 
 				+ ", productId : " + productId 
 				+ ", productDiscountValue : " + productDiscountValue 
-				+ ", clientList : " + clientList
 				+ ", brandList : " + brands);
 	}
 
@@ -57,7 +60,7 @@ public class BuyXBrandGetYRsOffOnZProductRuleImpl implements PromotionRule, Seri
 			log.debug("Checking if BuyXBrandGetYRsOffOnZProductRuleImpl applies on order : " + request.getOrderId());
 		}
 		Money orderValue = new Money(request.getOrderValue());
-		if(!request.isValidClient(clientList)){
+		if(RuleValidatorUtils.isValidList(clientList) && !request.isValidClient(clientList)){
 			return PromotionStatusEnum.INVALID_CLIENT;
 		}
 		if(orderValue.lt(minOrderValue)){
