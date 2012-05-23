@@ -19,7 +19,7 @@ import com.fb.platform.promotion.rule.RuleConfigDescriptorEnum;
 import com.fb.platform.promotion.rule.RuleConfiguration;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.PromotionStatusEnum;
-import com.fb.platform.promotion.util.RuleValidatorUtils;
+import com.fb.platform.promotion.util.ListUtil;
 import com.fb.platform.promotion.util.StringToIntegerList;
 
 /**
@@ -77,19 +77,19 @@ public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule, Serializable {
 		if(log.isDebugEnabled()) {
 			log.debug("Checking if BuyWorthXGetYRsOffRuleImpl applies on order : " + request.getOrderId());
 		}
-		Money orderValue = new Money(request.getOrderValue());
-		if (RuleValidatorUtils.isValidList(clientList) && !request.isValidClient(clientList)){
+		if (ListUtil.isValidList(clientList) && !request.isValidClient(clientList)){
 			return PromotionStatusEnum.INVALID_CLIENT;
 		}
-		if(RuleValidatorUtils.isValidList(includeCategoryList) && !request.isAllProductsInCategory(includeCategoryList)){
+		if(ListUtil.isValidList(includeCategoryList) && !request.isAnyProductInCategory(includeCategoryList)){
 			return PromotionStatusEnum.CATEGORY_MISMATCH;
 		}
-		if(RuleValidatorUtils.isValidList(excludeCategoryList) && request.isAnyProductInCategory(excludeCategoryList)){
+		if(ListUtil.isValidList(excludeCategoryList) && request.isAnyProductInCategory(excludeCategoryList)){
 			return PromotionStatusEnum.CATEGORY_MISMATCH;
 		}
-		if(RuleValidatorUtils.isValidList(brands) && !request.isAllProductsInBrand(brands)){
+		if(ListUtil.isValidList(brands) && !request.isAnyProductInBrand(brands)){
 			return PromotionStatusEnum.BRAND_MISMATCH;
 		}
+		Money orderValue = request.getOrderValueForRelevantProducts(brands, includeCategoryList, excludeCategoryList);
 		if(minOrderValue!=null && orderValue.lt(minOrderValue)){
 			return PromotionStatusEnum.LESS_ORDER_AMOUNT;
 		}
