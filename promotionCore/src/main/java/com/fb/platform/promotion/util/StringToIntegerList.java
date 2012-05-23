@@ -16,4 +16,19 @@ public class StringToIntegerList {
 		}
 		return intList;
 	}
+	
+	public static boolean isListValid(String[] idList){
+		List<Integer> intList = new ArrayList<Integer>();
+		boolean isValid = true;
+		try {
+			for(String str : idList){
+				str = str.trim();
+				intList.add(Integer.valueOf(str.trim()));	
+			}
+		} catch (NumberFormatException e) {
+			isValid = false;
+		}
+		
+		return isValid;
+	}
 }

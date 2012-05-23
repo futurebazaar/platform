@@ -20,4 +20,10 @@ public class RuleValidatorUtils {
 		}
 		return true;
 	}
+	
+
+	public static boolean isValidPositiveDecimal(String decimalNumber) {
+		String expression = "[0-9]+(\\.[0-9]+)?+";
+		return decimalNumber.matches(expression);
+	}
 }

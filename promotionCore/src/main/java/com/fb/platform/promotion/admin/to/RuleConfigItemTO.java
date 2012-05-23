@@ -6,6 +6,8 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 import com.fb.platform.promotion.rule.RuleConfigDescriptorEnum;
+import com.fb.platform.promotion.util.RuleValidatorUtils;
+import com.fb.platform.promotion.util.StringToIntegerList;
 
 
 /**
@@ -40,21 +42,33 @@ public class RuleConfigItemTO {
 			ruleNameInvalidationList.add("Invalid rule config name " + ruleConfigName);
 		} else if(StringUtils.isNotBlank(ruleConfigValue)){
 			ruleDescriptor = RuleConfigDescriptorEnum.valueOf(ruleConfigName);
-			if(ruleDescriptor.getType().equals("decimal")) {
-				if(isDecimalValid(ruleConfigValue) && new Long(ruleConfigValue) < 0) {
-					ruleNameInvalidationList.add(ruleDescriptor.getDescription() + " value cannot be negative.");
-				} else if(!isDecimalValid(ruleConfigValue)){
-					ruleNameInvalidationList.add(ruleDescriptor.getDescription() + " invalid number.");
+			switch(ruleDescriptor.getType()) {
+			case CSI:
+					if(!StringToIntegerList.isListValid(ruleConfigValue.split(","))) {
+						ruleNameInvalidationList.add(ruleDescriptor.getDescription() + " invalid value : " + ruleConfigValue);
+					} else {
+						List<String> idList = new ArrayList<String>();
+						for (String id : StringUtils.split(ruleConfigValue, ",")) {
+							idList.add(id.trim());
+						}
+						ruleConfigValue = StringUtils.join(idList.toArray(), ",");
+					}
+				break;
+			case DECIMAL:
+				if(!RuleValidatorUtils.isValidPositiveDecimal(ruleConfigValue)) {
+					ruleNameInvalidationList.add(ruleDescriptor.getDescription() + " invalid number");
 				}
-			} else {
-				
+				break;
+			case PERCENT:
+				if(!RuleValidatorUtils.isValidPositiveDecimal(ruleConfigValue)) {
+					ruleNameInvalidationList.add(ruleDescriptor.getDescription() + " invalid number.");
+				} else if (RuleValidatorUtils.isValidPositiveDecimal(ruleConfigValue) && new Float(ruleConfigValue) > 100) {
+					ruleNameInvalidationList.add(ruleDescriptor.getDescription() + " cannot be greater than 100%");
+				}
+				break;
 			}
 		}
 		return StringUtils.join(ruleNameInvalidationList.toArray(), ",");
-	}
-	
-	private boolean isDecimalValid(String str) {
-		return str.matches("([0-9]+(\\.[0-9]+)?)+");
 	}
 	
 }
