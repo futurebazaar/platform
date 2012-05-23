@@ -7,6 +7,7 @@ public class RefundRequest {
 	private String sessionToken;
 	private long userId;
 	private long clientId;
+	private long refundId;
 	private BigDecimal amount;
 	private boolean ignoreExpiry;
 
@@ -33,7 +34,15 @@ public class RefundRequest {
 	public void setClientId(long clientId) {
 		this.clientId = clientId;
 	}
-	
+
+	public long getRefundId() {
+		return refundId;
+	}
+
+	public void setRefundId(long refundId) {
+		this.refundId = refundId;
+	}
+
 	public BigDecimal getAmount() {
 		return amount;
 	}

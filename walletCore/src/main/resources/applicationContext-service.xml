@@ -21,9 +21,8 @@
         <property name="walletTransactionDao" ref="walletTransactionDao"></property>
     </bean>
 
-    <!-- Add new Managers here 
+    <!-- Add new Managers here --> 
     <bean id="walletManager" class="com.fb.platform.wallet.manager.impl.WalletManagerImpl">
-    	<property name="walletService" ref="walletService"></property>
     	<property name="authenticationService" ref="authenticationService"></property>
-    </bean>-->
+    </bean>
 </beans>

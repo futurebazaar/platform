@@ -4,6 +4,7 @@ public class FillWalletResponse {
 	
 	private String sessionToken;
 	private long walletId;
+	private String transactionId;
 	private FillWalletStatusEnum status;
 
 	public String getSessionToken(){
@@ -20,6 +21,14 @@ public class FillWalletResponse {
 
 	public void setWalletId(long walletId){
 		this.walletId = walletId;
+	}
+
+	public String getTransactionId(){
+		return transactionId;
+	}
+
+	public void setTransactionId(String transactionId){
+		this.transactionId = transactionId;
 	}
 	
 	public FillWalletStatusEnum getStatus(){

@@ -10,7 +10,6 @@ public class FillWalletRequest {
 	private SubWalletEnum subwallet;
 	private long paymentId;
 	private long refundId;
-	private long egvId;
 	
 	public long getWalletId(){
 		return walletId;
@@ -57,13 +56,6 @@ public class FillWalletRequest {
 
 	public void setRefundId(long refundId){
 		this.refundId = refundId;
-	}
-	public long getEgvId(){
-		return egvId;
-	}
-
-	public void setEgvId(long egvId){
-		this.egvId = egvId;
 	}
 
 }

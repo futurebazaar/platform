@@ -10,6 +10,8 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.DateTime;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -31,13 +33,14 @@ import com.fb.commons.PlatformException;
 import com.fb.platform.wallet._1_0.WalletSummaryRequest;
 import com.fb.platform.wallet._1_0.WalletSummaryResponse;
 import com.fb.platform.wallet._1_0.WalletSummaryStatus;
-import com.fb.platform.wallet._1_0.WalletSummaryDetails;
+import com.fb.platform.wallet._1_0.WalletDetails;
 
 import com.fb.platform.wallet._1_0.WalletHistoryRequest;
 import com.fb.platform.wallet._1_0.WalletHistoryResponse;
 import com.fb.platform.wallet._1_0.WalletHistoryStatus;
 import com.fb.platform.wallet._1_0.SubWallet;
 import com.fb.platform.wallet._1_0.Transaction;
+import com.fb.platform.wallet._1_0.SubTransaction;
 
 import com.fb.platform.wallet._1_0.FillWalletRequest;
 import com.fb.platform.wallet._1_0.FillWalletResponse;
@@ -106,21 +109,23 @@ public class WalletResource {
 			WalletSummaryResponse xmlWalletSummaryResponse = new WalletSummaryResponse();
 			xmlWalletSummaryResponse.setSessionToken(apiWalletSummaryResp.getSessionToken());
 			xmlWalletSummaryResponse.setWalletSummaryStatus(WalletSummaryStatus.fromValue(apiWalletSummaryResp.getWalletSummaryStatus().name() ));
-			WalletSummaryDetails walletDetails = new WalletSummaryDetails();
-			com.fb.platform.wallet.manager.model.access.WalletSummaryDetails apiWalletDetails = apiWalletSummaryResp.getWalletSummaryDetails();
+			WalletDetails walletDetails = new WalletDetails();
+			com.fb.platform.wallet.manager.model.access.WalletDetails apiWalletDetails = apiWalletSummaryResp.getWalletDetails();
 			if(apiWalletDetails != null){
+				walletDetails.setWalletId(apiWalletDetails.getWalletId());
+				walletDetails.setCashAmount(apiWalletDetails.getCashAmount());
 				walletDetails.setRefundAmount(apiWalletDetails.getRefundAmount());
 				walletDetails.setGiftAmount(apiWalletDetails.getGiftAmount());
 				walletDetails.setTotalAmount(apiWalletDetails.getTotalAmount());
 			}
-			xmlWalletSummaryResponse.setWalletSummaryDetails(walletDetails);
+			xmlWalletSummaryResponse.setWalletDetails(walletDetails);
 			
 			StringWriter outStringWriter = new StringWriter();
 			Marshaller marsheller = context.createMarshaller();
 			marsheller.marshal(xmlWalletSummaryResponse, outStringWriter);
 
 			String xmlResponse = outStringWriter.toString();
-			logger.info("walletHistoryXml response :\n" + xmlResponse);
+			logger.info("walletSummaryryXml response :\n" + xmlResponse);
 			return xmlResponse;
 
 		} catch (JAXBException e) {
@@ -141,7 +146,11 @@ public class WalletResource {
 			WalletHistoryRequest xmlWalletHistoryReq = (WalletHistoryRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(walletHistoryXml)));
 
 			com.fb.platform.wallet.manager.model.access.WalletHistoryRequest apiWalletHistoryReq = new com.fb.platform.wallet.manager.model.access.WalletHistoryRequest();
+			apiWalletHistoryReq.setWalletId(xmlWalletHistoryReq.getWalletId());
 			apiWalletHistoryReq.setSessionToken(xmlWalletHistoryReq.getSessionToken());
+			apiWalletHistoryReq.setSubWallet(SubWalletEnum.valueOf(xmlWalletHistoryReq.getSubWallet().value()));
+			apiWalletHistoryReq.setFromDate(xmlWalletHistoryReq.getFromDate());
+			apiWalletHistoryReq.setToDate(xmlWalletHistoryReq.getToDate());
 
 			com.fb.platform.wallet.manager.model.access.WalletHistoryResponse apiWalletHistoryResp = walletManager.getWalletHistory(apiWalletHistoryReq);
 
@@ -149,21 +158,36 @@ public class WalletResource {
 			xmlWalletHistoryResponse.setSessionToken(apiWalletHistoryResp.getSessionToken());
 			xmlWalletHistoryResponse.setWalletHistoryStatus(WalletHistoryStatus.fromValue(apiWalletHistoryResp.getWalletHistoryStatus().name() ));
 			
-			List<Transaction> transactionLst = new ArrayList<Transaction>();
-			if(apiWalletHistoryResp.getTransaction() != null){
-				for (com.fb.platform.wallet.manager.model.access.Transaction apiTransaction : apiWalletHistoryResp.getTransaction()){
-					Transaction tns = new Transaction();
-					tns.setTransactionId(apiTransaction.getTransactionId());
-					tns.setType(apiTransaction.getType());
-					tns.setSubWallet(SubWallet.fromValue(apiTransaction.getSubWallet().name()) );
-					tns.setAmount(apiTransaction.getAmount());
-					tns.setTimestamp(apiTransaction.getTimestamp());
-					tns.setOrderId(apiTransaction.getOrderId());
-					tns.setPaymentId(apiTransaction.getPaymentId());
-					transactionLst.add(tns);
+			
+			List<Transaction> transactionList = new ArrayList<Transaction>();
+			if(apiWalletHistoryResp.getTransactionList() != null){
+				for (com.fb.platform.wallet.to.WalletTransaction apiTransaction : apiWalletHistoryResp.getTransactionList()){
+					Transaction transaction = new Transaction();
+					transaction.setTransactionId(apiTransaction.getTransactionId());
+					transaction.setType(apiTransaction.getTransactionType().name());
+					transaction.setAmount(apiTransaction.getAmount().getAmount());
+					transaction.setTimestamp(apiTransaction.getTimeStamp());
+					List<SubTransaction> subTransactionList = new ArrayList<SubTransaction>();
+					if (apiTransaction.getWalletSubTransaction() != null){
+						for (com.fb.platform.wallet.to.WalletSubTransaction apiSubTransaction : apiTransaction.getWalletSubTransaction()){
+							SubTransaction subTransaction = new SubTransaction();
+							subTransaction.setSubWallet(SubWallet.fromValue(apiSubTransaction.getSubWalletType().toString()));
+							subTransaction.setAmount(apiSubTransaction.getAmount().getAmount());
+							subTransaction.setOrderId(apiSubTransaction.getOrderId());
+							subTransaction.setPaymentId(apiSubTransaction.getPaymentId());
+							subTransaction.setRefundId(apiSubTransaction.getRefundId());
+							subTransaction.setPaymentReversalId(apiSubTransaction.getPaymentReversalId());
+							subTransaction.setEgvCode(apiSubTransaction.getGiftCode());
+							
+							subTransactionList.add(subTransaction);
+						}
+						transaction.getSubTransaction().addAll(subTransactionList);
+					}
+					transactionList.add(transaction);
 				}
+				
 			}
-			xmlWalletHistoryResponse.getTransaction().addAll(transactionLst);	
+			xmlWalletHistoryResponse.getTransaction().addAll(transactionList);	
 			
 			StringWriter outStringWriter = new StringWriter();
 			Marshaller marsheller = context.createMarshaller();
@@ -198,13 +222,13 @@ public class WalletResource {
 			apiFillWalletReq.setSubWallet(SubWalletEnum.valueOf(xmlFillWalletReq.getSubWallet().value()));
 			apiFillWalletReq.setPaymentId(xmlFillWalletReq.getPaymentId());
 			apiFillWalletReq.setRefundId(xmlFillWalletReq.getPaymentId());
-			apiFillWalletReq.setEgvId(xmlFillWalletReq.getEgvId());
 
 			com.fb.platform.wallet.manager.model.access.FillWalletResponse apiFillWalletResp = walletManager.fillWallet(apiFillWalletReq);
 
 			FillWalletResponse xmlFillWalletResponse = new FillWalletResponse();
 			xmlFillWalletResponse.setSessionToken(apiFillWalletResp.getSessionToken());
 			xmlFillWalletResponse.setWalletId(apiFillWalletResp.getWalletId());
+			xmlFillWalletResponse.setTransactionId(apiFillWalletResp.getTransactionId());
 			xmlFillWalletResponse.setFillWalletStatus(FillWalletStatus.fromValue(apiFillWalletResp.getStatus().name() ));
 			
 			
@@ -278,6 +302,7 @@ public class WalletResource {
 			apiRefundReq.setSessionToken(xmlRefundReq.getSessionToken());
 			apiRefundReq.setUserId(xmlRefundReq.getUserId());
 			apiRefundReq.setClientId(xmlRefundReq.getClientId());
+			apiRefundReq.setRefundId(xmlRefundReq.getRefundId());
 			apiRefundReq.setAmount(xmlRefundReq.getAmount());
 			apiRefundReq.setIgnoreExpiry(xmlRefundReq.isIgnoreExpiry());
 
@@ -297,7 +322,7 @@ public class WalletResource {
 			return xmlResponse;
 
 		} catch (JAXBException e) {
-			logger.error("Error in paying from the Wallet:", e);
+			logger.error("Error in refunding from the Wallet:", e);
 			return "error"; //TODO return proper error response
 		}
 	}
@@ -308,7 +333,7 @@ public class WalletResource {
 	@Produces("application/xml")
 	public String revertRequest(String revertRequestXml) {
 		
-		logger.debug("REFUND REQUEST XML request: \n" + revertRequestXml);
+		logger.debug("REVERT REQUEST XML request: \n" + revertRequestXml);
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			RevertRequest xmlRevertReq = (RevertRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(revertRequestXml)));
@@ -317,6 +342,7 @@ public class WalletResource {
 			apiRevertReq.setSessionToken(xmlRevertReq.getSessionToken());
 			apiRevertReq.setUserId(xmlRevertReq.getUserId());
 			apiRevertReq.setClientId(xmlRevertReq.getClientId());
+			apiRevertReq.setAmount(xmlRevertReq.getAmount());
 			apiRevertReq.setTransactionId(xmlRevertReq.getTransactionId());
 
 			com.fb.platform.wallet.manager.model.access.RevertResponse apiRevertResponse = walletManager.revertWalletTransaction(apiRevertReq);
@@ -335,7 +361,7 @@ public class WalletResource {
 			return xmlResponse;
 
 		} catch (JAXBException e) {
-			logger.error("Error in paying from the Wallet:", e);
+			logger.error("Error in reverting wallet transaction:", e);
 			return "error"; //TODO return proper error response
 		}
 	}
