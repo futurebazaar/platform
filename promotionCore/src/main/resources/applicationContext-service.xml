@@ -52,12 +52,9 @@
     </bean>
     
     <bean id="messageSource"
-		class="org.springframework.context.support.ResourceBundleMessageSource">
-		<property name="basename">
-			<value>pa_messages</value>
-<!-- 			<value>classpath:</value> -->
-		</property>
-<!-- 		<property name="cacheSeconds" value="10" /> -->
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="classpath:pa_messages"/>
+		<property name="cacheSeconds" value="43200" />
 	</bean>
     
 </beans>
