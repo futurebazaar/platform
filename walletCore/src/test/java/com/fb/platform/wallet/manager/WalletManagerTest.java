@@ -483,7 +483,7 @@ public class WalletManagerTest extends BaseTestCase{
 		RevertResponse revertResponse = walletManager.revertWalletTransaction(revertRequest);
 		
 		assertNotNull(response);
-		assertEquals("SUCCESS", response.getStatus().toString());
+		assertEquals("SUCCESS", revertResponse.getStatus().toString());
 		
 		summaryRequest = new WalletSummaryRequest();
 		summaryRequest.setUserId(userId);
@@ -538,7 +538,7 @@ public class WalletManagerTest extends BaseTestCase{
 		RevertResponse revertResponse = walletManager.revertWalletTransaction(revertRequest);
 		
 		assertNotNull(response);
-		assertEquals("SUCCESS", response.getStatus().toString());
+		assertEquals("SUCCESS", revertResponse.getStatus().toString());
 		
 		summaryRequest = new WalletSummaryRequest();
 		summaryRequest.setUserId(userId);
@@ -594,7 +594,7 @@ public class WalletManagerTest extends BaseTestCase{
 		RevertResponse revertResponse = walletManager.revertWalletTransaction(revertRequest);
 		
 		assertNotNull(response);
-		assertEquals("SUCCESS", response.getStatus().toString());
+		assertEquals("SUCCESS", revertResponse.getStatus().toString());
 		
 		summaryRequest = new WalletSummaryRequest();
 		summaryRequest.setUserId(userId);
@@ -652,7 +652,7 @@ public class WalletManagerTest extends BaseTestCase{
 		RevertResponse revertResponse = walletManager.revertWalletTransaction(revertRequest);
 		
 		assertNotNull(response);
-		assertEquals("SUCCESS", response.getStatus().toString());
+		assertEquals("SUCCESS", revertResponse.getStatus().toString());
 		
 		summaryRequest = new WalletSummaryRequest();
 		summaryRequest.setUserId(userId);
@@ -678,7 +678,7 @@ public class WalletManagerTest extends BaseTestCase{
 		revertResponse = walletManager.revertWalletTransaction(revertRequest);
 		
 		assertNotNull(response);
-		assertEquals("SUCCESS", response.getStatus().toString());
+		assertEquals("SUCCESS", revertResponse.getStatus().toString());
 		
 		summaryRequest = new WalletSummaryRequest();
 		summaryRequest.setUserId(userId);
@@ -736,9 +736,9 @@ public class WalletManagerTest extends BaseTestCase{
 		RevertResponse revertResponse = walletManager.revertWalletTransaction(revertRequest);
 		
 		assertNotNull(response);
-		assertEquals("SUCCESS", response.getStatus().toString());
+		assertEquals("BALANCE UNAVAILABLE", revertResponse.getStatus().toString());
 		
-/*		summaryRequest = new WalletSummaryRequest();
+		summaryRequest = new WalletSummaryRequest();
 		summaryRequest.setUserId(userId);
 		summaryRequest.setClientId(-5);
 		summaryRequest.setSessionToken(sessionToken);
@@ -747,11 +747,11 @@ public class WalletManagerTest extends BaseTestCase{
 		
 		assertNotNull(summaryResponse);
 		assertEquals("SUCCESS", summaryResponse.getWalletSummaryStatus().toString());
-		assertEquals(new BigDecimal("150.00"), summaryResponse.getWalletDetails().getTotalAmount());
-		assertEquals(new BigDecimal("50.00"), summaryResponse.getWalletDetails().getCashAmount());
+		assertEquals(new BigDecimal("200.00"), summaryResponse.getWalletDetails().getTotalAmount());
+		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getCashAmount());
 		assertEquals(new BigDecimal("0.00"), summaryResponse.getWalletDetails().getGiftAmount());
 		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getRefundAmount());
-*/
+
 	}
 
 }
