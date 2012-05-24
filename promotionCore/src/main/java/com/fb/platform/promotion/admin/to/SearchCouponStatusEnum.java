@@ -5,6 +5,7 @@ public enum SearchCouponStatusEnum {
 	INTERNAL_ERROR("INTERNAL_ERROR"),
 	NO_SESSION("NO_SESSION"),
 	INSUFFICIENT_DATA("INSUFFICIENT_DATA"),
+	INVALID_USER("INVALID_USER"),
 	NO_DATA_FOUND("NO_DATA_FOUND");
 	
 	private String status = null;
