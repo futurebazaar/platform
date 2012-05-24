@@ -420,6 +420,7 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
       	<xs:enumeration value="NO_SESSION"/>
       	<xs:enumeration value="NO_DATA_FOUND"/>
       	<xs:enumeration value="INTERNAL_ERROR"/>
+      	<xs:enumeration value="INVALID_USER"/>
       	<xs:enumeration value="INSUFFICIENT_DATA"/>
 	</xs:restriction>
   </xs:simpleType>

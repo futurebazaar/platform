@@ -112,4 +112,6 @@ public interface PromotionAdminService {
 	public CouponTO viewCoupons(String couponCode);
 	
 	public CouponTO viewCoupons(int couponId);
+	
+	public void renamePromotionName();
 }
