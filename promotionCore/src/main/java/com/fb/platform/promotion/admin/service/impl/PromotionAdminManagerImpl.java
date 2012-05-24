@@ -64,6 +64,7 @@ import com.fb.platform.promotion.service.InvalidCouponTypeException;
 import com.fb.platform.promotion.service.PromotionNotFoundException;
 import com.fb.platform.promotion.util.MessageTranslatorUtility;
 import com.fb.platform.promotion.util.PromotionRuleFactory;
+import com.fb.platform.user.manager.exception.InvalidUserNameException;
 import com.fb.platform.user.manager.exception.UserNotFoundException;
 import com.fb.platform.user.manager.interfaces.UserAdminService;
 import com.fb.platform.user.manager.model.admin.User;
@@ -514,6 +515,9 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		SearchCouponResultBO searchCouponResultBO = null;
 		try {
 			searchCouponResultBO = promotionAdminService.searchCoupons(request.getCouponCode(), request.getUserName(), request.getOrderBy(), request.getSortOrder(), request.getStartRecord(), request.getBatchSize());
+		} catch (InvalidUserNameException e) {
+			response.setStatus(SearchCouponStatusEnum.INVALID_USER);
+			return response;
 		} catch (Exception e) {
 			response.setStatus(SearchCouponStatusEnum.INTERNAL_ERROR);
 			return response;

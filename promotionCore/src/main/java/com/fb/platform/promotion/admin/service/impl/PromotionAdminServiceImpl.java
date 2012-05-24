@@ -10,7 +10,6 @@ import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.DataIntegrityViolationException;
 
 import com.fb.commons.PlatformException;
 import com.fb.platform.promotion.admin.dao.CouponAdminDao;
@@ -41,6 +40,7 @@ import com.fb.platform.promotion.to.AlphabetCase;
 import com.fb.platform.promotion.util.CouponCodeCreator;
 import com.fb.platform.user.dao.interfaces.UserAdminDao;
 import com.fb.platform.user.domain.UserBo;
+import com.fb.platform.user.manager.exception.InvalidUserNameException;
 
 /**
  * 
@@ -260,22 +260,20 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 			SortOrder sortOrder, int startRecord, int batchSize){
 		// 1) if userId is present then use it to get all
 		//		- couponId from the coupon_user table (PRE_ISSUE)
-		//		- couponId from the user_coupon_uses table (all kind coupons)
+		//		- couponId from the user_coupon_uses table (all kind coupons except PRE_ISSUE)
 		// combine these two sets of couponIds.
 		// 2) Use the above couponId set to get the coupons detail from coupon table
 		//		and use the couponCode input if present in request
 		int userId = -28; // a random negative value
 		boolean isUserValid = false;
 		if(StringUtils.isNotBlank(userName)){
-			try {
-				UserBo userBO = userAdminDao.load(userName);
-				if(userBO!=null){
-					userId = userBO.getUserid();
-					isUserValid = true;
-				}
-			} catch (Exception e) {
-				log.error("Error while getting userId for userName = "+userName, e);
+			UserBo userBO = userAdminDao.load(userName);
+			if(null==userBO){
+				log.info("In searching coupon, user is not valid. userName = "+userName);
+				throw new InvalidUserNameException("User name in search coupon is invalid");
 			}
+			userId = userBO.getUserid();
+			isUserValid = true;
 		}
 		Set<Integer> allCouponIdsForUser = new HashSet<Integer>(0);
 		if(isUserValid){
@@ -288,12 +286,11 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 			int totalCount = -1;
 			// if user Id was present in search criteria then there can be more than one coupon in the result otherwise
 			// if coupon code is present in the search criteria then the result size can only be zero or one.
-			if(isUserValid){
+			if(isUserValid && StringUtils.isBlank(couponCode)){
 				totalCount = couponAdminDao.countCoupons(userId);
 			}else{
 				totalCount = allUserCoupons.size();
 			}
-			
 			searchCouponResultBO.setCouponBasicDetailsSet(new HashSet<CouponBasicDetails>(allUserCoupons));
 			searchCouponResultBO.setTotalCount(totalCount);
 		} catch (Exception e) {
@@ -350,5 +347,25 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 
 	public void setUserAdminDao(UserAdminDao userAdminDao) {
 		this.userAdminDao = userAdminDao;
+	}
+	
+	@Override
+	public void renamePromotionName(){
+		try{
+			List<PromotionTO> promotionNameRenameList = promotionAdminDao.loadPromotionByName("Scratch Card Year 2012 - Rs.150 Gift Voucher!");
+			System.out.println("Number of promotions to be renamed = "+promotionNameRenameList.size());
+			
+			for (PromotionTO promotionTO : promotionNameRenameList) {
+				try {
+					if(promotionTO!=null)
+						promotionAdminDao.updatePromotionName(promotionTO.getId(), promotionTO.getPromotionName() + " " + promotionTO.getId());
+				} catch (Exception e) {
+					log.error("Error while renaming promotionName for promotion with id = "+promotionTO.getId()+"\n"+e);
+				}
+			}
+			
+		}catch(Exception e){
+			log.error("Error while renaming promotionName = \n"+e);
+		}
 	}
 }
