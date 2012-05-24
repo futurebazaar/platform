@@ -310,6 +310,7 @@ public class WalletResource {
 
 			RefundResponse xmlRefundResponse = new RefundResponse();
 			xmlRefundResponse.setSessionToken(apiRefundResponse.getSessionToken());
+			xmlRefundResponse.setTransactionId(apiRefundResponse.getTransactionId());
 			xmlRefundResponse.setRefundStatus(RefundStatus.fromValue(apiRefundResponse.getStatus().name() ));
 			
 			
@@ -349,6 +350,7 @@ public class WalletResource {
 
 			RevertResponse xmlRevertResponse = new RevertResponse();
 			xmlRevertResponse.setSessionToken(apiRevertResponse.getSessionToken());
+			xmlRevertResponse.setTransactionId(apiRevertResponse.getTransactionId());
 			xmlRevertResponse.setRevertStatus(RevertStatus.fromValue(apiRevertResponse.getStatus().name() ));
 			
 			

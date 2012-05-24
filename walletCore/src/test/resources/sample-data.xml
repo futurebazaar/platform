@@ -143,6 +143,16 @@
 			<value>2011-04-18 20:42:57</value>
 			<value>2011-04-18 20:42:57</value>
 		</row>
+		<row>
+			<value>8</value>
+			<value>300.00</value>
+			<value>100.00</value>
+			<value>100.00</value>
+			<value>100.00</value>
+			<value>2011-04-18 20:42:57</value>
+			<value>2011-04-18 20:42:57</value>
+		</row>
+		
 	</table>
 	<table name="users_wallet">
 		<column>id</column>
@@ -191,6 +201,13 @@
 			<value>-5</value>
 			<value>7</value>
 		</row>
+		<row>
+			<value>8</value>
+			<value>1</value>
+			<value>-5</value>
+			<value>8</value>
+		</row>
+		
 	</table>
 	<table name="wallets_transaction">
 		<column>id</column>
@@ -239,6 +256,31 @@
 			<value>D</value>
 			<value>2011-04-18 20:42:57</value>
 		</row>
+		<row>
+			<value>6</value>
+			<value>ABSCDFADF1231lp0bg2SASzcva</value>
+			<value>8</value>
+			<value>100</value>
+			<value>CREDIT</value>
+			<value>2011-04-18 20:42:57</value>
+		</row>
+		<row>
+			<value>7</value>
+			<value>ABSCDFADF1231lp0bg2SASzcvab</value>
+			<value>8</value>
+			<value>100</value>
+			<value>CREDIT</value>
+			<value>2011-04-18 20:42:57</value>
+		</row>
+		<row>
+			<value>8</value>
+			<value>ABSCDFADF1231lp0bg2SASzcvac</value>
+			<value>8</value>
+			<value>100</value>
+			<value>CREDIT</value>
+			<value>2011-04-18 20:42:57</value>
+		</row>
+		
 	</table>
 	<table name="wallets_sub_transaction">
 		<column>id</column>
@@ -299,5 +341,54 @@
 			<null/>
 			<value>This is a test trnasaction</value>
 		</row>
+		<row>
+			<value>5</value>
+			<value>3</value>
+			<value>REFUND</value>
+			<value>100</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<value>This is a test trnasaction</value>
+		</row>
+		<row>
+			<value>6</value>
+			<value>6</value>
+			<value>CASH</value>
+			<value>100</value>
+			<null/>
+			<null/>
+			<value>1</value>
+			<null/>
+			<null/>
+			<value>This is a test transaction</value>
+		</row>
+		<row>
+			<value>7</value>
+			<value>7</value>
+			<value>REFUND</value>
+			<value>100</value>
+			<null/>
+			<value>1</value>
+			<null/>
+			<null/>
+			<null/>
+			<value>This is a test transaction</value>
+		</row>
+		<row>
+			<value>8</value>
+			<value>8</value>
+			<value>GIFT</value>
+			<value>100</value>
+			<null/>
+			<null/>
+			<null/>
+			<value>xyzxyz</value>
+			<null/>
+			<value>This is a test transaction</value>
+		</row>
+		
 	</table>
 </dataset>
