@@ -2,11 +2,8 @@ package com.fb.platform.wallet.model;
 
 import java.io.Serializable;
 import org.joda.time.DateTime;
-
-import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.user.manager.model.admin.User;
-import com.fb.platform.wallet.service.exception.InSufficientFundsException;
 
 public class Wallet implements Serializable {
 	

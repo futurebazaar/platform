@@ -14,6 +14,7 @@ import com.fb.platform.wallet.model.SubWalletType;
 import com.fb.platform.wallet.model.Wallet;
 import com.fb.platform.wallet.model.WalletTransaction;
 
+@SuppressWarnings("unused")
 public class WalletDaoTest extends BaseTestCase {
 	
 	@Autowired

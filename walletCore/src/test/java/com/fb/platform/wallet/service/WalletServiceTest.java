@@ -12,6 +12,7 @@ import com.fb.platform.wallet.model.SubWalletType;
 import com.fb.platform.wallet.model.Wallet;
 import com.fb.platform.wallet.to.WalletTransaction;
 
+@SuppressWarnings("unused")
 public class WalletServiceTest extends BaseTestCase {
 
 	@Autowired

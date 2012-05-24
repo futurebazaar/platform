@@ -18,7 +18,6 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
-import com.fb.platform.wallet.dao.WalletDao;
 import com.fb.platform.wallet.dao.WalletTransactionDao;
 import com.fb.platform.wallet.model.SubWalletType;
 import com.fb.platform.wallet.model.TransactionType;

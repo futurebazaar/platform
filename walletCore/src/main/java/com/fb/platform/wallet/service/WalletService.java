@@ -13,7 +13,6 @@ import com.fb.platform.wallet.model.Wallet;
 import com.fb.platform.wallet.to.WalletTransaction;
 import com.fb.platform.wallet.service.exception.AlreadyRefundedException;
 import com.fb.platform.wallet.service.exception.InSufficientFundsException;
-import com.fb.platform.wallet.service.exception.InvalidTransaction;
 import com.fb.platform.wallet.service.exception.InvalidTransactionIdException;
 import com.fb.platform.wallet.service.exception.RefundExpiredException;
 import com.fb.platform.wallet.service.exception.WalletNotFoundException;

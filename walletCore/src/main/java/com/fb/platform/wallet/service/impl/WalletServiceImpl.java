@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
-import com.fb.platform.wallet.cache.WalletCacheAccess;
 import com.fb.platform.wallet.dao.WalletDao;
 import com.fb.platform.wallet.dao.WalletTransactionDao;
 import com.fb.platform.wallet.model.SubWalletType;
@@ -19,7 +18,6 @@ import com.fb.platform.wallet.to.WalletTransaction;
 import com.fb.platform.wallet.service.WalletService;
 import com.fb.platform.wallet.service.exception.AlreadyRefundedException;
 import com.fb.platform.wallet.service.exception.InSufficientFundsException;
-import com.fb.platform.wallet.service.exception.InvalidTransaction;
 import com.fb.platform.wallet.service.exception.InvalidTransactionIdException;
 import com.fb.platform.wallet.service.exception.RefundExpiredException;
 import com.fb.platform.wallet.service.exception.WalletNotFoundException;
