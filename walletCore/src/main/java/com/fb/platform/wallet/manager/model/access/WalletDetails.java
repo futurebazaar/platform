@@ -2,13 +2,22 @@ package com.fb.platform.wallet.manager.model.access;
 
 import java.math.BigDecimal;
 
-public class WalletSummaryDetails {
+public class WalletDetails {
 
+	long walletId;
 	private BigDecimal cashAmount;
 	private BigDecimal refundAmount;
 	private BigDecimal giftAmount;
 	private BigDecimal totalAmount;
 
+	public long getWalletId(){
+		return walletId;
+	}
+	
+	public void setWalletId(long walletId){
+		this.walletId = walletId;
+	}
+	
 	public BigDecimal getCashAmount() {
 		return cashAmount;
 	}

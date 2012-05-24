@@ -1,12 +1,13 @@
 package com.fb.platform.wallet.manager.model.access;
 
 import java.util.List;
+import com.fb.platform.wallet.to.WalletTransaction;
 
 public class WalletHistoryResponse {
 
 	private String sessionToken;
 	private WalletHistoryStatusEnum walletHistoryStatus;
-	private List<Transaction> transaction;
+	private List<WalletTransaction> transactionList;
 
 	public String getSessionToken() {
 		return sessionToken;
@@ -25,11 +26,11 @@ public class WalletHistoryResponse {
 		this.walletHistoryStatus = walletHistoryStatus;
 	}
 
-	public List<Transaction> getTransaction() {
-		return transaction;
+	public List<WalletTransaction> getTransactionList() {
+		return transactionList;
 	}
 
-	public void setTransaction(List<Transaction> transaction) {
-		this.transaction = transaction;
+	public void setTransactionList(List<WalletTransaction> transactionList) {
+		this.transactionList = transactionList;
 	}
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-	targetNamespace="http://www.fb.com/platform/wallet/1.0.0" xmlns:tns="http://www.fb.com/platform/wallet/1.0.0" 
-	elementFormDefault="qualified">
-
+	targetNamespace="http://www.fb.com/platform/wallet/1.0.0" xmlns:tns="http://www.fb.com/platform/wallet/1.0.0"
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0" elementFormDefault="qualified"> 
+	
   <xs:element name="userId" type="xs:long"/>
   <xs:element name="clientId" type="xs:long"/>
   <xs:element name="sessionToken" type="xs:string"/>
@@ -28,7 +28,7 @@
       <xs:sequence>
       	<xs:element ref="tns:sessionToken"/>
       	<xs:element ref="tns:walletSummaryStatus"/>      	
-        <xs:element ref="tns:walletSummaryDetails"/>
+        <xs:element ref="tns:walletDetails"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -44,7 +44,7 @@
   </xs:simpleType>
   
   
-  <xs:element name="walletSummaryDetails">
+  <xs:element name="walletDetails">
   	<xs:complexType>
   	  <xs:sequence>
   	  	<xs:element ref="tns:walletId"/>
@@ -57,6 +57,7 @@
   </xs:element>
 
   <xs:element name="transactionId" type="xs:string"/>
+  <xs:element name="notes" type="xs:string"/>
   <xs:element name="amount" type="xs:decimal"/>
   <xs:element name="toDate" type="xs:dateTime"/>
   <xs:element name="fromDate" type="xs:dateTime"/>
@@ -64,6 +65,8 @@
   <xs:element name="type" type="xs:string"/>
   <xs:element name="orderId" type="xs:long"/>
   <xs:element name="paymentId" type="xs:long"/>
+  <xs:element name="refundId" type="xs:long"/>
+  <xs:element name="paymentReversalId" type="xs:long"/>
   
   <xs:element name="walletHistoryRequest">
     <xs:complexType>
@@ -101,6 +104,7 @@
     <xs:restriction base="xs:string">
       <xs:enumeration value="SUCCESS"/>
       <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INVALID_WALLET"/>
       <xs:enumeration value="ERROR_RETRIVING_WALLET_HISTORY"/>
     </xs:restriction>
   </xs:simpleType>
@@ -111,18 +115,27 @@
   	  <xs:sequence>
   	  	<xs:element ref="tns:transactionId"/>
   	  	<xs:element ref="tns:type"/>
-  	  	<xs:element ref="tns:subWallet"/>
+  	  	<xs:element ref="tns:notes"/>
   		<xs:element ref="tns:amount"/>
         <xs:element ref="tns:timestamp"/>
-        <xs:element ref="tns:orderId"/>  			
-        <xs:element ref="tns:paymentId"/>
+        <xs:element maxOccurs="unbounded" ref="tns:subTransaction"/>
   	  </xs:sequence>
   	</xs:complexType>
   </xs:element>
      
-     
-  <xs:element name="refundId" type="xs:long"/>
-  <xs:element name="egvId" type="xs:long"/>
+  <xs:element name="subTransaction">
+  	<xs:complexType>
+  	  <xs:sequence>
+  	    <xs:element ref="tns:subWallet"/>
+  		<xs:element ref="tns:amount"/>
+        <xs:element ref="tns:orderId"/>  			
+        <xs:element ref="tns:paymentId"/>
+        <xs:element ref="tns:refundId"/>
+        <xs:element ref="tns:paymentReversalId"/>
+        <xs:element ref="tns:egvCode"/>
+  	  </xs:sequence>
+  	</xs:complexType>
+  </xs:element>
   
   <xs:element name="fillWalletRequest">
     <xs:complexType>
@@ -133,7 +146,6 @@
         <xs:element ref="tns:subWallet"/>
         <xs:element ref="tns:paymentId"/>
         <xs:element ref="tns:refundId"/>
-        <xs:element ref="tns:egvId"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -143,6 +155,7 @@
       <xs:sequence>
         <xs:element ref="tns:sessionToken"/>
         <xs:element ref="tns:walletId"/>
+        <xs:element ref="tns:transactionId"/>
         <xs:element ref="tns:fillWalletStatus"/>        
       </xs:sequence>
     </xs:complexType>
@@ -154,6 +167,45 @@
     <xs:restriction base="xs:string">
       <xs:enumeration value="SUCCESS"/>
       <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INVALID_WALLET"/>
+      <xs:enumeration value="FAILED_TRANSACTION"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:element name="egvCode" type="xs:string" />
+  <xs:element name="egvPin" type="xs:string" />
+  <xs:element name="password" type="xs:string" />
+  
+  <xs:element name="fillWalletByEGVRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:walletId"/>
+        <xs:element ref="tns:sessionToken"/>
+        <xs:element ref="tns:egvCode"/>
+        <xs:element ref="tns:egvPin"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+     
+  <xs:element name="fillWalletByEGVResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:sessionToken"/>
+        <xs:element ref="tns:walletId"/>
+        <xs:element ref="tns:fillEgvStatus"/>        
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="fillEgvStatus" type="tns:fillEgvStatus"/>
+  
+  <xs:simpleType name="fillEgvStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INVALID_COUPON_CODE"/>
+      <xs:enumeration value="INVALID_PIN_CODE"/>
+      <xs:enumeration value="COUPON_EXPIRED"/>
       <xs:enumeration value="FAILED_TRANSACTION"/>
     </xs:restriction>
   </xs:simpleType>
@@ -164,6 +216,7 @@
         <xs:element ref="tns:sessionToken"/>
         <xs:element ref="tns:userId"/>
         <xs:element ref="tns:clientId"/>
+        <xs:element ref="tns:password"/>
         <xs:element ref="tns:orderId"/>
         <xs:element ref="tns:amount"/>
       </xs:sequence>
@@ -186,6 +239,7 @@
     <xs:restriction base="xs:string">
       <xs:enumeration value="SUCCESS"/>
       <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INVALID_WALLET"/>
       <xs:enumeration value="BALANCE_UNAVAILABLE"/>
       <xs:enumeration value="FAILED_TRANSACTION"/>
     </xs:restriction>
@@ -199,6 +253,7 @@
         <xs:element ref="tns:sessionToken"/>
         <xs:element ref="tns:userId"/>
         <xs:element ref="tns:clientId"/>
+        <xs:element ref="tns:refundId"/>
         <xs:element ref="tns:amount"/>
         <xs:element ref="tns:ignoreExpiry"/>
       </xs:sequence>
@@ -220,6 +275,9 @@
     <xs:restriction base="xs:string">
       <xs:enumeration value="SUCCESS"/>
       <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INVALID_WALLET"/>
+      <xs:enumeration value="ALREADY_REFUNDED"/>
+      <xs:enumeration value="DUPLICATE_REFUND_REQUEST"/>
       <xs:enumeration value="BALANCE_UNAVAILABLE"/>
       <xs:enumeration value="FAILED_TRANSACTION"/>
     </xs:restriction>
@@ -231,6 +289,7 @@
         <xs:element ref="tns:sessionToken"/>
         <xs:element ref="tns:userId"/>
         <xs:element ref="tns:clientId"/>
+        <xs:element ref="tns:amount"/>
         <xs:element ref="tns:transactionId"/>
       </xs:sequence>
     </xs:complexType>
@@ -251,8 +310,21 @@
     <xs:restriction base="xs:string">
       <xs:enumeration value="SUCCESS"/>
       <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INVALID_WALLET"/>
+      <xs:enumeration value="BALANCE_UNAVAILABLE"/>
+      <xs:enumeration value="INVALID_TRANSACTION_ID"/>
       <xs:enumeration value="FAILED_TRANSACTION"/>
     </xs:restriction>
   </xs:simpleType>
      
+  <xs:annotation>
+  	<xs:appinfo>
+    	<jaxb:globalBindings>
+	      	<jaxb:javaType name="org.joda.time.DateTime" xmlType="xs:dateTime"
+	        	parseMethod="com.fb.platform.wallet.util.DateAdapter.parse"
+	        	printMethod="com.fb.platform.wallet.util.DateAdapter.print"
+	        />
+   		</jaxb:globalBindings>
+  	</xs:appinfo>
+  </xs:annotation>
 </xs:schema>

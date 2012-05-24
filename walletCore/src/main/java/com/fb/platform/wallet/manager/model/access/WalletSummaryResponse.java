@@ -10,7 +10,7 @@ public class WalletSummaryResponse {
 
 	private String sessionToken;
 	private WalletSummaryStatusEnum walletSummaryStatus;
-	private WalletSummaryDetails walletSummaryDetails = null;
+	private WalletDetails walletDetails = null;
 
 	public String getSessionToken() {
 		return sessionToken;
@@ -29,12 +29,12 @@ public class WalletSummaryResponse {
 		this.walletSummaryStatus = walletSummaryStatus;
 	}
 
-	public WalletSummaryDetails getWalletSummaryDetails() {
-		return walletSummaryDetails;
+	public WalletDetails getWalletDetails() {
+		return walletDetails;
 	}
 
-	public void setWalletSummaryDetails(
-			WalletSummaryDetails walletSummaryDetails) {
-		this.walletSummaryDetails = walletSummaryDetails;
+	public void setWalletDetails(
+			WalletDetails walletDetails) {
+		this.walletDetails = walletDetails;
 	}
 }
