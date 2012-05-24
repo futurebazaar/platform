@@ -7,6 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 
 import com.fb.commons.to.Money;
+import com.fb.commons.to.PlatformMessage;
 import com.fb.platform.promotion.rule.RulesEnum;
 
 /**
@@ -115,56 +116,54 @@ public class PromotionTO {
 	public void setCouponCount(int couponCount) {
 		this.couponCount = couponCount;
 	}
-	public String isValid() {
-		List<String> invalidationList = new ArrayList<String>();
+	public List<PlatformMessage> isValid() {
+		List<PlatformMessage> invalidationList = new ArrayList<PlatformMessage>();
 		invalidationList.addAll(isNameValid());
 		invalidationList.addAll(isRuleValid());
 		invalidationList.addAll(isDateConfigValid());
 		invalidationList.addAll(isLimitsConfigValid());
 		for(RuleConfigItemTO ruleConfigItem : configItems) {
-			if(StringUtils.isNotBlank(ruleConfigItem.isValid())) {
-				invalidationList.add(ruleConfigItem.isValid());
-			}
+			invalidationList.addAll(ruleConfigItem.isValid());
 		}
-		return StringUtils.join(invalidationList.toArray(), ",");
+		return invalidationList;
 	}
 	
-	private List<String> isNameValid() {
-		List<String> nameInvalidationList = new ArrayList<String>();
+	private List<PlatformMessage> isNameValid() {
+		List<PlatformMessage> nameInvalidationList = new ArrayList<PlatformMessage>();
 		if(StringUtils.isBlank(promotionName)) {
-			nameInvalidationList.add("Promotion Name cannot be blank");
+			nameInvalidationList.add(new PlatformMessage("EPA2", null));
 		} else if(promotionName.length() > 50) {
-			nameInvalidationList.add("Promotion Name cannot contain more than 50 characters");
+			nameInvalidationList.add(new PlatformMessage("EPA3", null));
 		}
 		return nameInvalidationList;
 	}
 	
-	private List<String> isLimitsConfigValid() {
-		List<String> limitsConfigInvalidationList = new ArrayList<String>();
+	private List<PlatformMessage> isLimitsConfigValid() {
+		List<PlatformMessage> limitsConfigInvalidationList = new ArrayList<PlatformMessage>();
 		if(maxAmount == null) {
-			limitsConfigInvalidationList.add("Max amount cannot be empty");
+			limitsConfigInvalidationList.add(new PlatformMessage("EPA4", null));
 		}
 		if(maxAmountPerUser == null) {
-			limitsConfigInvalidationList.add("Max amount per user cannot be empty");
+			limitsConfigInvalidationList.add(new PlatformMessage("EPA5", null));
 		}
 		return limitsConfigInvalidationList;
 	}
 	
-	private List<String> isDateConfigValid() {
-		List<String> dateInvalidationList = new ArrayList<String>();
+	private List<PlatformMessage> isDateConfigValid() {
+		List<PlatformMessage> dateInvalidationList = new ArrayList<PlatformMessage>();
 		if(getValidFrom() != null && getValidTill() != null && getValidTill().isBefore(getValidFrom())) {
-			dateInvalidationList.add("Valid Till date before Valid From");
+			dateInvalidationList.add(new PlatformMessage("EPA6", null));
 		}
 		return dateInvalidationList;
 	}
 	
-	private List<String> isRuleValid() {
-		List<String> ruleInvalidationList = new ArrayList<String>();
+	private List<PlatformMessage> isRuleValid() {
+		List<PlatformMessage> ruleInvalidationList = new ArrayList<PlatformMessage>();
 		if(StringUtils.isBlank(ruleName)) {
-			ruleInvalidationList.add("Rule name empty");
+			ruleInvalidationList.add(new PlatformMessage("EPA7", null));
 		}
 		if(!RulesEnum.isRuleValid(ruleName)) {
-			ruleInvalidationList.add("Invalid rule name " + ruleName);
+			ruleInvalidationList.add(new PlatformMessage("EPA8", new Object[]{ruleName}));
 		}
 		return ruleInvalidationList;
 	}

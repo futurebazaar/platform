@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.fb.commons.to.PlatformMessage;
+
 
 /**
  * @author nehaga
@@ -28,26 +30,26 @@ public class UpdatePromotionRequest {
 		this.promotionTO = promotionTO;
 	}
 	
-	public String isValid() {
-		List<String> requestInvalidationList = new ArrayList<String>();
+	public List<PlatformMessage> isValid() {
+		List<PlatformMessage> requestInvalidationList = new ArrayList<PlatformMessage>();
 		requestInvalidationList.addAll(isSessionTokenValid());
 		requestInvalidationList.addAll(isPromotionDetailsValid());
-		requestInvalidationList.add(promotionTO.isValid());
-		return StringUtils.join(requestInvalidationList.toArray(), ",");
+		requestInvalidationList.addAll(promotionTO.isValid());
+		return requestInvalidationList;
 	}
 	
-	private List<String> isSessionTokenValid() {
-		List<String> sessionInvalidationList = new ArrayList<String>();
+	private List<PlatformMessage> isSessionTokenValid() {
+		List<PlatformMessage> sessionInvalidationList = new ArrayList<PlatformMessage>();
 		if(StringUtils.isEmpty(sessionToken)) {
-			sessionInvalidationList.add("Session token cannot be empty");
+			sessionInvalidationList.add(new PlatformMessage("EPA1", null));
 		}
 		return sessionInvalidationList;
 	}
 	
-	private List<String> isPromotionDetailsValid() {
-		List<String> sessionInvalidationList = new ArrayList<String>();
+	private List<PlatformMessage> isPromotionDetailsValid() {
+		List<PlatformMessage> sessionInvalidationList = new ArrayList<PlatformMessage>();
 		if(promotionTO.getId() == 0) {
-			sessionInvalidationList.add("Incorrect Promotion Id");
+			sessionInvalidationList.add(new PlatformMessage("EPA13", null));
 		}
 		return sessionInvalidationList;
 	}
