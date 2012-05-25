@@ -264,7 +264,8 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="tns:sessionToken"/>
-        <xs:element ref="tns:refundStatus"/>        
+        <xs:element ref="tns:refundStatus"/> 
+        <xs:element ref="tns:transactionId"/>       
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -299,6 +300,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="tns:sessionToken"/>
+        <xs:element ref="tns:transactionId"/>
         <xs:element ref="tns:revertStatus"/>        
       </xs:sequence>
     </xs:complexType>

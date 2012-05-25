@@ -92,7 +92,7 @@ public class WalletManagerImpl implements WalletManager {
 
 		walletSummaryResponse.setSessionToken(walletSummaryRequest.getSessionToken());
 
-		long userId = authentication.getUserID();
+		long userId =  walletSummaryRequest.getUserId();
 		long clientId = walletSummaryRequest.getClientId();
 		
 		try {
@@ -100,6 +100,7 @@ public class WalletManagerImpl implements WalletManager {
 			
 			walletSummaryResponse.setWalletSummaryStatus(WalletSummaryStatusEnum.SUCCESS);
 			WalletDetails walletDetails = new WalletDetails();
+			walletDetails.setWalletId(wallet.getId());
 			walletDetails.setCashAmount(wallet.getCashSubWallet().getAmount());
 			walletDetails.setRefundAmount(wallet.getRefundSubWallet().getAmount());
 			walletDetails.setGiftAmount(wallet.getGiftSubWallet().getAmount());
@@ -259,7 +260,7 @@ public class WalletManagerImpl implements WalletManager {
 			Money amount = new Money(refundRequest.getAmount());
 			int refundExpiryLimit = 14;		// number of days
 			WalletTransaction transaction = walletService.refund(refundRequest.getUserId(), refundRequest.getClientId(), amount, refundRequest.getRefundId(), refundRequest.getIgnoreExpiry(), refundExpiryLimit);
-			
+			response.setTransactionId(transaction.getTransactionId());
 			response.setStatus(RefundStatusEnum.SUCCESS);
 			
 		} catch (WalletNotFoundException pe) {
@@ -306,7 +307,7 @@ public class WalletManagerImpl implements WalletManager {
 			Money amount = new Money(revertRequest.getAmount());
 			
 			WalletTransaction transaction = walletService.reverseTransaction(revertRequest.getUserId(), revertRequest.getClientId(), revertRequest.getTransactionId(), amount);
-			
+			response.setTransactionId(transaction.getTransactionId());
 			response.setStatus(RevertStatusEnum.SUCCESS);
 			
 		} catch (WalletNotFoundException pe) {
