@@ -174,9 +174,10 @@ public class WalletServiceImpl implements WalletService {
 			WalletTransaction walletTransactionRes = new WalletTransaction();
 			Wallet wallet = load(userId,clientId,false);
 			com.fb.platform.wallet.model.WalletTransaction walletTransaction = walletTransactionDao.transactionById(wallet.getId(), transactionId);
+			Money moneyAlreadyReversed = walletTransactionDao.amountAlreadyReversedByTransactionId(wallet.getId(), walletTransaction.getId());
 			Money amountToBeReversed = amount != null ? amount : walletTransaction.getAmount();
-			if(walletTransaction.getAmount().gteq(amountToBeReversed)){
-				com.fb.platform.wallet.model.WalletTransaction walletTransactionNew = wallet.reverseTransaction(walletTransaction,amountToBeReversed);
+			if(walletTransaction.getAmount().gteq(amountToBeReversed.plus(moneyAlreadyReversed))){
+				com.fb.platform.wallet.model.WalletTransaction walletTransactionNew = wallet.reverseTransaction(walletTransaction,amountToBeReversed,moneyAlreadyReversed);
 				walletTransactionRes.setWallet(walletDao.update(wallet));
 				walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(walletTransactionNew));
 				return walletTransactionRes;

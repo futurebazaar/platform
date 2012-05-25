@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
+import com.fb.commons.to.Money;
 import com.fb.platform.wallet.model.Wallet;
 import com.fb.platform.wallet.model.WalletTransaction;
 
@@ -16,5 +17,8 @@ public interface WalletTransactionDao {
 	public WalletTransaction transactionById(long walletId,String transactionId);
 
 	public WalletTransaction refundTransactionByRefundId(long walletId, long refundId);
+
+	public Money amountAlreadyReversedByTransactionId(long walletId,
+			long transactionId);
 
 }

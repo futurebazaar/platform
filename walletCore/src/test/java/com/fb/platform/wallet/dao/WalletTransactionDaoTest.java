@@ -228,7 +228,7 @@ public class WalletTransactionDaoTest extends BaseTestCase {
 		assertNotNull(wallet4);
 		
 		WalletTransaction debitWalletTranFetch = walletTransactionDao.transactionById(wallet4.getId(), debitTranString);
-		WalletTransaction walletTransactionNew = wallet4.reverseTransaction(debitWalletTranFetch,debitWalletTranFetch.getAmount());
+		WalletTransaction walletTransactionNew = wallet4.reverseTransaction(debitWalletTranFetch,debitWalletTranFetch.getAmount(),new Money(new BigDecimal("0.00")));
 		String transactionReversal = walletTransactionDao.insertTransaction(walletTransactionNew);
 		Wallet wallet5  = walletDao.update(wallet4);
 		assertNotNull(transactionReversal);
@@ -276,7 +276,7 @@ public class WalletTransactionDaoTest extends BaseTestCase {
 		assertNotNull(wallet4);
 		
 		WalletTransaction debitWalletTranFetch = walletTransactionDao.transactionById(wallet4.getId(), debitTranString);
-		WalletTransaction walletTransactionNew = wallet4.reverseTransaction(debitWalletTranFetch,debitWalletTranFetch.getAmount());
+		WalletTransaction walletTransactionNew = wallet4.reverseTransaction(debitWalletTranFetch,debitWalletTranFetch.getAmount(),new Money(new BigDecimal("0.00")));
 		String transactionReversal = walletTransactionDao.insertTransaction(walletTransactionNew);
 		Wallet wallet5  = walletDao.update(wallet4);
 		assertNotNull(transactionReversal);

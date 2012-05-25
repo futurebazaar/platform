@@ -31,44 +31,54 @@ public class Wallet implements Serializable {
 			return walletTransaction;
 	}
 	
-	public WalletTransaction reverseTransaction(WalletTransaction walletTransaction,Money amount) {
+	public WalletTransaction reverseTransaction(WalletTransaction walletTransaction,Money amount,Money alreadyReversed) {
 		    if(walletTransaction.getTransactionType().equals(TransactionType.CREDIT)){
 		    	return reverseTransactionCredit(walletTransaction, amount);
 		    }else{
-		    	return reverseTransactionDebit(walletTransaction, amount);
+		    	return reverseTransactionDebit(walletTransaction, amount,alreadyReversed);
 		    }
 			
 	}
-	private WalletTransaction reverseTransactionDebit(WalletTransaction walletTransaction , Money amount){
+	private WalletTransaction reverseTransactionDebit(WalletTransaction walletTransaction , Money amount,Money alreadyReversed){
 		WalletTransaction walletTransactionRes = new WalletTransaction(this, TransactionType.CREDIT, amount,DateTime.now());
 		Money amountTobeReversed = amount;
 		WalletSubTransaction walletSubTransactionRefund = walletTransaction.subTransactionBySubWallet(SubWalletType.REFUND);
 		WalletSubTransaction walletSubTransactionCash = walletTransaction.subTransactionBySubWallet(SubWalletType.CASH);
 		WalletSubTransaction walletSubTransactionGift = walletTransaction.subTransactionBySubWallet(SubWalletType.GIFT);
 		if(walletSubTransactionRefund != null){
-			if(amountTobeReversed.lteq(walletSubTransactionRefund.getAmount())){
-				refundSubWallet = refundSubWallet.plus(amountTobeReversed);
-				walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,amountTobeReversed,0,0,0,walletTransaction.getId(),null));
-				amountTobeReversed = amountTobeReversed.minus(amountTobeReversed);
+			if(walletSubTransactionRefund.getAmount().gt(alreadyReversed)){
+				if(amountTobeReversed.lteq(walletSubTransactionRefund.getAmount().minus(alreadyReversed))){
+					refundSubWallet = refundSubWallet.plus(amountTobeReversed);
+					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,amountTobeReversed,0,0,0,walletTransaction.getId(),null));
+					amountTobeReversed = amountTobeReversed.minus(amountTobeReversed);
+				}else{
+					refundSubWallet = refundSubWallet.plus(walletSubTransactionRefund.getAmount().minus(alreadyReversed));
+					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,walletSubTransactionRefund.getAmount().minus(alreadyReversed),0,0,0,walletTransaction.getId(),null));
+					amountTobeReversed = amountTobeReversed.minus(walletSubTransactionRefund.getAmount().minus(alreadyReversed));
+				}
+				alreadyReversed = alreadyReversed.minus(alreadyReversed);
 			}else{
-				refundSubWallet = refundSubWallet.plus(walletSubTransactionRefund.getAmount());
-				walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,walletSubTransactionRefund.getAmount(),0,0,0,walletTransaction.getId(),null));
-				amountTobeReversed = amountTobeReversed.minus(walletSubTransactionRefund.getAmount());
+				alreadyReversed = alreadyReversed.minus(walletSubTransactionRefund.getAmount());
 			}
 		}
 		if(walletSubTransactionCash != null){
-			if(amountTobeReversed.lteq(walletSubTransactionCash.getAmount())){
-				cashSubWallet = cashSubWallet.plus(amountTobeReversed);
-				walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.CASH,amountTobeReversed,0,0,0,walletTransaction.getId(),null));
-				amountTobeReversed = amountTobeReversed.minus(amountTobeReversed);
+			if(walletSubTransactionCash.getAmount().gt(alreadyReversed)){
+				if(amountTobeReversed.lteq(walletSubTransactionCash.getAmount().minus(alreadyReversed))){
+					cashSubWallet = cashSubWallet.plus(amountTobeReversed);
+					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.CASH,amountTobeReversed,0,0,0,walletTransaction.getId(),null));
+					amountTobeReversed = amountTobeReversed.minus(amountTobeReversed);
+				}else{
+					cashSubWallet = cashSubWallet.plus(walletSubTransactionCash.getAmount().minus(alreadyReversed));
+					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.CASH,walletSubTransactionCash.getAmount().minus(alreadyReversed),0,0,0,walletTransaction.getId(),null));
+					amountTobeReversed = amountTobeReversed.minus(walletSubTransactionCash.getAmount().minus(alreadyReversed));
+				}
+				alreadyReversed = alreadyReversed.minus(alreadyReversed);
 			}else{
-				cashSubWallet = cashSubWallet.plus(walletSubTransactionCash.getAmount());
-				walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.CASH,walletSubTransactionCash.getAmount(),0,0,0,walletTransaction.getId(),null));
-				amountTobeReversed = amountTobeReversed.minus(walletSubTransactionCash.getAmount());
+				alreadyReversed = alreadyReversed.minus(walletSubTransactionCash.getAmount());
 			}
 		}
 		if(walletSubTransactionGift != null){
-			if(amountTobeReversed.lteq(walletSubTransactionGift.getAmount())){
+			if(amountTobeReversed.lteq(walletSubTransactionGift.getAmount().minus(alreadyReversed))){
 				giftSubWallet = giftSubWallet.plus(amountTobeReversed);
 				walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.GIFT,amountTobeReversed,0,0,0,walletTransaction.getId(),null));
 				amountTobeReversed = amountTobeReversed.minus(amountTobeReversed);

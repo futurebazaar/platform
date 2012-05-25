@@ -1,5 +1,6 @@
 package com.fb.platform.wallet.dao.impl;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -106,6 +107,20 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			+ "transaction_description "
 			+ "from wallets_sub_transaction "
 			+ "where refund_id= ? order by id desc limit 0,1" ;
+	
+	private final String GET_SUB_TRANSACTIONS_BY_TRANSACTION_REVERSAL_ID = "Select "
+			+ "id, "
+			+ "tran_id, "
+			+ "transaction_subwallet, "
+			+ "amount, "
+			+ "order_id, "
+			+ "refund_id, "
+			+ "payment_id,"
+			+ "gift_code, "
+			+ "transaction_reversal_id, "
+			+ "transaction_description "
+			+ "from wallets_sub_transaction "
+			+ "where transaction_reversal_id= ?" ;
 	
 	@Override
 	public String insertTransaction(final WalletTransaction walletTransaction) {
@@ -251,5 +266,24 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 		}catch (PlatformException e) {
 			throw new PlatformException("No available refund with this id");
 		}		
+	}
+
+	@Override
+	public Money amountAlreadyReversedByTransactionId(long id,
+			long transactionId) {
+		try{
+			Money amount = new Money(new BigDecimal("0.00"));
+			List<WalletSubTransaction> walletSubTransactions = jdbcTemplate.query(GET_SUB_TRANSACTIONS_BY_TRANSACTION_REVERSAL_ID,
+					new Object[] {transactionId},
+					new WalletSubTransactionMapper());
+			for(WalletSubTransaction walletSubTransaction : walletSubTransactions){
+				amount = amount.plus(walletSubTransaction.getAmount());
+			}
+			return amount;
+		}catch (EmptyResultDataAccessException e) {
+			return new Money(new BigDecimal("0.00"));
+		} catch (PlatformException e) {
+			return new Money(new BigDecimal("0.00"));
+		}
 	}
 }
