@@ -47,7 +47,7 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 
 	private Log log = LogFactory.getLog(CouponAdminDaoJdbcImpl.class);
 
-	private static final String LOAD_COUPON_QUERY = 
+	private static String LOAD_COUPON_QUERY = 
 			"SELECT " +
 			"	id, " +
 			"	coupon_code, " +
@@ -57,7 +57,7 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 			"	coupon_type " +
 			"FROM coupon WHERE coupon_code = ?";
 
-	private static final String LOAD_COUPON_BY_ID_QUERY = 
+	private static String LOAD_COUPON_BY_ID_QUERY = 
 			"SELECT " +
 			"	id, " +
 			"	coupon_code, " +
@@ -67,12 +67,12 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 			"	coupon_type " +
 			"FROM coupon WHERE id = ?";
 	
-	private static final String LOAD_COUPON_ID_QUERY = 
+	private static String LOAD_COUPON_ID_QUERY = 
 			"SELECT " +
 			"	id " +
 			"FROM coupon WHERE coupon_code = ?";
 
-	private static final String LOAD_COUPON_DATA_ONLY_QUERY = "" +
+	private static String LOAD_COUPON_DATA_ONLY_QUERY = "" +
 			"SELECT " +
 			"	coupon_code," +
 			"	coupon_type " +
@@ -80,7 +80,7 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 			"WHERE coupon_code = ?";
 
 
-	private static final String LOAD_COUPON_LIMITS_QUERY = 
+	private static String LOAD_COUPON_LIMITS_QUERY = 
 			"SELECT " +
 			"	id, " +
 			"	coupon_id, " +
@@ -90,18 +90,18 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 			"	max_amount_per_user " +
 			"FROM coupon_limits_config WHERE coupon_id = ?";
 	
-	private static final String ASSGIN_COUPON_TO_USER = 
+	private static String ASSGIN_COUPON_TO_USER = 
 			"INSERT INTO platform_coupon_user (" +
 			"	coupon_id, " +
 			"	user_id, " +
 			"	override_user_uses_limit) " +
 			"VALUES (?, ?, ?)";
 
-	private static final String COUPON_CODE_PLACEHOLDER = "COUPON_CODE_LIST";
+	private static String COUPON_CODE_PLACEHOLDER = "COUPON_CODE_LIST";
 
-	private static final String COUPON_ID_PLACEHOLDER = "COUPON_ID_LIST";
+	private static String COUPON_ID_PLACEHOLDER = "COUPON_ID_LIST";
 	
-	private static final String SELECT_EXISTING_COUPON_CODES_QUERY = 
+	private static String SELECT_EXISTING_COUPON_CODES_QUERY = 
 			"SELECT " +
 			"	coupon_code " +
 			"FROM coupon " +
@@ -110,7 +110,7 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 	private static final String APPOSTROPHE = "'";
 	private static final String COMMA = ",";
 
-	private static final String CREATE_COUPON_SQL = 
+	private static String CREATE_COUPON_SQL = 
 			"INSERT INTO " +
 			"	coupon " +
 			"		(created_on, " +
@@ -120,7 +120,7 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 			"		coupon_type) " +
 			"VALUES (?, ?, ?, ?, ?)";
 
-	private static final String CREATE_COUPON_LIMIT_SQL = 
+	private static String CREATE_COUPON_LIMIT_SQL = 
 			"INSERT INTO " +
 			"	coupon_limits_config " +
 			"		(coupon_id, " +
@@ -130,17 +130,17 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 			"		max_amount_per_user) " +
 			"VALUES (?, ?, ?, ?, ?)";
 
-	private static final String LOAD_PRE_ISSUE_COUPON_USER_QUERY = 
+	private static String LOAD_PRE_ISSUE_COUPON_USER_QUERY = 
 			"SELECT " +
 			"	coupon_id " +
 			"FROM platform_coupon_user WHERE user_id = ?";
 
-	private static final String LOAD_USED_COUPON_USER_QUERY = 
+	private static String LOAD_USED_COUPON_USER_QUERY = 
 			"SELECT " +
 			"	coupon_id " +
 			"FROM user_coupon_uses WHERE user_id = ?";
 
-	private static final String SELECT_USER_COUPON_QUERY = 
+	private static String SELECT_USER_COUPON_QUERY = 
 			"SELECT " +
 			"	id, " +
 			"	coupon_code, " +
@@ -172,20 +172,21 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 	private static String LIMIT_FILTER_SQL = 
 			" LIMIT ?,? ";
 	
-	private static final String COUNT_USER_PRE_ISSUE_COUPON_QUERY = 
+	private static String COUNT_USER_PRE_ISSUE_COUPON_QUERY = 
 			"SELECT " +
 			"	count(*) " +
 			" FROM coupon c ,platform_coupon_user pcu " +
 			" WHERE c.id=pcu.coupon_id " +
 			" AND  pcu.user_id= ? ";
 	
-	private static final String COUNT_USER_NON_PRE_ISSUE_COUPON_QUERY = 
+	private static String COUNT_USER_NON_PRE_ISSUE_COUPON_QUERY = 
 			"SELECT " +
-			"	count(*) " +
-			" FROM coupon c ,user_coupon_uses ucu " +
+			"	count(DISTINCT temp.cid) " +
+			"  FROM " +
+			" (SELECT c.id as cid FROM coupon c ,user_coupon_uses ucu " +
 			" WHERE c.id=ucu.coupon_id " +
 			" AND c.coupon_type <> 'PRE_ISSUE' " +
-			" AND  ucu.user_id= ? ";
+			" AND  ucu.user_id= ?) as temp ";
 	
 	private static String SEARCH_USER_COUPON_COUNT = 
 			" SELECT " +
@@ -398,17 +399,15 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 				}
 			}
 		}
-		
 		//adding coupon IDs search criteria if value present
 		if(StringUtils.isNotBlank(commaSeparatedCouponIds.toString())){
 			String commaSeparatedCouponIdsClean = commaSeparatedCouponIds.toString();
 			if(commaSeparatedCouponIds.toString().endsWith(COMMA)){
 				commaSeparatedCouponIdsClean = commaSeparatedCouponIds.substring(0, commaSeparatedCouponIds.length()-1);
 			}
-			SELECT_COUPON_ID_FILTER_SQL = SELECT_COUPON_ID_FILTER_SQL.replace(COUPON_ID_PLACEHOLDER, commaSeparatedCouponIdsClean);
-			searchCouponFilterList.add(SELECT_COUPON_ID_FILTER_SQL);
+			String couponIdFilter = SELECT_COUPON_ID_FILTER_SQL.replace(COUPON_ID_PLACEHOLDER, commaSeparatedCouponIdsClean);
+			searchCouponFilterList.add(couponIdFilter);
 		}
-		
 		/*
 		 * If no search criteria present then do not query
 		 * rather return an empty result
@@ -428,8 +427,10 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 		args.add(startRecord);
 		args.add(batchSize);
 		
+		if(log.isDebugEnabled()){
+			log.info("Search Coupon - query - "+searchCouponQuery);
+		}
 		List<CouponBasicDetails> couponsList = jdbcTemplate.query(searchCouponQuery, args.toArray(), new CouponBasicDetailMapper());
-		
 		return couponsList==null ? new ArrayList<CouponBasicDetails>(0) : couponsList;
 	}
 
@@ -489,7 +490,7 @@ public class CouponAdminDaoJdbcImpl implements CouponAdminDao {
 			log.error(" Error while getting the number of coupons count for user ID " + userId,e);
 			throw new PlatformException(" Error while getting the number of coupons count for user ID " + userId,e);
 		}
-		
+		log.info("Numbers of coupons found for userId :" + userId + " is count = "+count);
 		return count;
 	}
 	

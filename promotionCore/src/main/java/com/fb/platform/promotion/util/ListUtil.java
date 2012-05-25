@@ -9,7 +9,7 @@ import java.util.List;
  * @author ashish
  *
  */
-public class RuleValidatorUtils {
+public class ListUtil {
 
 	public static boolean isValidList(List<?> list) {
 		if (list == null) {
@@ -19,11 +19,5 @@ public class RuleValidatorUtils {
 			return false;
 		}
 		return true;
-	}
-	
-
-	public static boolean isValidPositiveDecimal(String decimalNumber) {
-		String expression = "[0-9]+(\\.[0-9]+)?+";
-		return decimalNumber.matches(expression);
 	}
 }

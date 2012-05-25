@@ -77,7 +77,7 @@ public class CreateCouponRequest implements Serializable {
 			response.setStatus(CreateCouponStatusEnum.INVALID_LENGTH);
 			return response;
 		}
-
+		
 		int startsWithLength = 0;
 		if (!StringUtils.isBlank(startsWith)) {
 			startsWithLength = startsWith.length();

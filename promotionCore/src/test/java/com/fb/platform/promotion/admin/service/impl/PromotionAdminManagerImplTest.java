@@ -21,6 +21,9 @@ import com.fb.platform.promotion.admin.to.AssignCouponToUserRequest;
 import com.fb.platform.promotion.admin.to.AssignCouponToUserResponse;
 import com.fb.platform.promotion.admin.to.AssignCouponToUserStatusEnum;
 import com.fb.platform.promotion.admin.to.CouponBasicDetails;
+import com.fb.platform.promotion.admin.to.CreateCouponRequest;
+import com.fb.platform.promotion.admin.to.CreateCouponResponse;
+import com.fb.platform.promotion.admin.to.CreateCouponStatusEnum;
 import com.fb.platform.promotion.admin.to.CreatePromotionEnum;
 import com.fb.platform.promotion.admin.to.CreatePromotionRequest;
 import com.fb.platform.promotion.admin.to.CreatePromotionResponse;
@@ -48,6 +51,8 @@ import com.fb.platform.promotion.admin.to.ViewPromotionResponse;
 import com.fb.platform.promotion.model.coupon.CouponType;
 import com.fb.platform.promotion.rule.RuleConfigDescriptor;
 import com.fb.platform.promotion.rule.RulesEnum;
+import com.fb.platform.promotion.to.AlphaNumericType;
+import com.fb.platform.promotion.to.AlphabetCase;
 import com.fb.platform.user.manager.interfaces.UserManager;
 import com.fb.platform.user.manager.model.auth.LoginRequest;
 import com.fb.platform.user.manager.model.auth.LoginResponse;
@@ -1220,6 +1225,137 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 	}
 	
 	@Test
+	public void searchCouponUserNameCouponCode(){
+		SearchCouponRequest request = new SearchCouponRequest();
+		
+		request.setUserName("test.admin@gmail.com");
+		request.setSessionToken(responseUser.getSessionToken());
+		request.setCouponCode("WINFUTURE");
+		
+		SearchCouponResponse response = promotionAdminManager.searchCoupons(request);
+		
+		assertNotNull(response);
+		assertEquals(SearchCouponStatusEnum.SUCCESS, response.getStatus());
+		assertEquals(1, response.getCouponBasicDetailsList().size());
+		assertEquals(1, response.getTotalCount());
+		
+	}
+	
+	@Test
+	public void searchCouponOnlyUserName(){
+		SearchCouponRequest searchCouponRequest = new SearchCouponRequest();
+		
+		searchCouponRequest.setUserName("test.admin@gmail.com");
+		searchCouponRequest.setSessionToken(responseUser.getSessionToken());
+		searchCouponRequest.setStartRecord(0);;
+		searchCouponRequest.setBatchSize(100);
+		
+		SearchCouponResponse response = promotionAdminManager.searchCoupons(searchCouponRequest);
+		
+		assertNotNull(response);
+		assertEquals(SearchCouponStatusEnum.SUCCESS, response.getStatus());
+		assertEquals(8, response.getCouponBasicDetailsList().size());
+		assertEquals(8, response.getTotalCount());
+	}
+	
+	@Test
+	public void searchCouponOnlyUserNameBatchSize(){
+		SearchCouponRequest request = new SearchCouponRequest();
+		
+		request.setUserName("test.admin@gmail.com");
+		request.setSessionToken(responseUser.getSessionToken());
+		request.setBatchSize(4);
+		
+		SearchCouponResponse response = promotionAdminManager.searchCoupons(request);
+		
+		assertNotNull(response);
+		assertEquals(SearchCouponStatusEnum.SUCCESS, response.getStatus());
+		assertEquals(4, response.getCouponBasicDetailsList().size());
+		assertEquals(8, response.getTotalCount());
+		
+	}
+	
+	@Test
+	public void searchCouponOnlyCouponCode(){
+		SearchCouponRequest request = new SearchCouponRequest();
+		
+		request.setSessionToken(responseUser.getSessionToken());
+		request.setCouponCode("WINFUTURE");
+		
+		SearchCouponResponse response = promotionAdminManager.searchCoupons(request);
+		
+		assertNotNull(response);
+		assertEquals(SearchCouponStatusEnum.SUCCESS, response.getStatus());
+		assertEquals(1, response.getCouponBasicDetailsList().size());
+		assertEquals(1, response.getTotalCount());
+		
+	}
+	
+	@Test
+	public void searchCouponInvalidCouponCode(){
+		SearchCouponRequest request = new SearchCouponRequest();
+		
+		request.setSessionToken(responseUser.getSessionToken());
+		request.setCouponCode("WINFUTU");
+		
+		SearchCouponResponse response = promotionAdminManager.searchCoupons(request);
+		
+		assertNotNull(response);
+		assertEquals(SearchCouponStatusEnum.NO_DATA_FOUND, response.getStatus());
+		assertEquals(0, response.getCouponBasicDetailsList().size());
+		assertEquals(0, response.getTotalCount());
+		
+	}
+	
+	@Test
+	public void searchCouponUserNameInvalidCouponCode(){
+		SearchCouponRequest request = new SearchCouponRequest();
+		
+		request.setUserName("test.admin@gmail.com");
+		request.setSessionToken(responseUser.getSessionToken());
+		request.setCouponCode("WINFUTU");
+		
+		SearchCouponResponse response = promotionAdminManager.searchCoupons(request);
+		
+		assertNotNull(response);
+		assertEquals(SearchCouponStatusEnum.NO_DATA_FOUND, response.getStatus());
+		assertEquals(0, response.getCouponBasicDetailsList().size());
+		assertEquals(0, response.getTotalCount());
+	}
+	
+	@Test
+	public void searchCouponCouponCodeInvalidUserName(){
+		SearchCouponRequest request = new SearchCouponRequest();
+		
+		request.setUserName("test.admin@gmail.");
+		request.setSessionToken(responseUser.getSessionToken());
+		request.setCouponCode("WINFUTURE");
+		
+		SearchCouponResponse response = promotionAdminManager.searchCoupons(request);
+		
+		assertNotNull(response);
+		assertEquals(SearchCouponStatusEnum.INVALID_USER, response.getStatus());
+		assertEquals(0, response.getCouponBasicDetailsList().size());
+		assertEquals(0, response.getTotalCount());
+	}
+	
+	@Test
+	public void searchCouponBothInvalidCouponCodeUserName(){
+		SearchCouponRequest request = new SearchCouponRequest();
+		
+		request.setUserName("test.admin@gmail.");
+		request.setSessionToken(responseUser.getSessionToken());
+		request.setCouponCode("WINFUTE");
+		
+		SearchCouponResponse response = promotionAdminManager.searchCoupons(request);
+		
+		assertNotNull(response);
+		assertEquals(SearchCouponStatusEnum.INVALID_USER, response.getStatus());
+		assertEquals(0, response.getCouponBasicDetailsList().size());
+		assertEquals(0, response.getTotalCount());
+	}
+	
+	@Test
 	public void searchCouponInsufficientData(){
 		SearchCouponRequest searchCouponRequest = new SearchCouponRequest();
 		
@@ -1266,6 +1402,28 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		assertNotNull(response);
 		assertEquals(SearchCouponStatusEnum.NO_SESSION, response.getStatus());
 		assertEquals(0, response.getCouponBasicDetailsList().size());
+	}
+
+	@Test
+	public void createCouponValid(){
+		CreateCouponRequest request = new CreateCouponRequest();
+		request.setSessionToken(responseUser.getSessionToken());
+		request.setAlphabetCase(AlphabetCase.MIXED);
+		request.setAlphaNumericType(AlphaNumericType.ALPHA_NUMERIC);
+		request.setCount(10);
+		request.setLength(10);
+		request.setPromotionId(-3003);
+		request.setType(CouponType.POST_ISSUE);
+		request.setMaxAmount(new BigDecimal(10000));
+		request.setMaxAmountPerUser(new BigDecimal(1000));
+		request.setMaxUses(4);
+		request.setMaxUsesPerUser(2);
+		
+		CreateCouponResponse response = promotionAdminManager.createCoupons(request);
+		
+		assertNotNull(response);
+		assertEquals(CreateCouponStatusEnum.SUCCESS, response.getStatus());
+		assertEquals(10, response.getNumberOfCouponsCreated());
 	}
 
 	public void setPromotionAdminManager(PromotionAdminManager promotionAdminManager) {

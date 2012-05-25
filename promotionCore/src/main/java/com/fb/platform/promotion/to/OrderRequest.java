@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fb.commons.to.Money;
+import com.fb.platform.promotion.util.ListUtil;
 
 /**
  * @author vinayak
@@ -95,10 +96,10 @@ public class OrderRequest implements Serializable {
 		return false;
 	}
 
-	public Money getOrderValueForCategory(List<Integer> clientList){
+	public Money getOrderValueForCategory(List<Integer> catList){
 		Money orderValueForCategoryProducts = new Money(new BigDecimal(0)); 
 		for(OrderItem o:orderItems){
-			if(o.isOrderItemInCategory(clientList)){
+			if(o.isOrderItemInCategory(catList)){
 				orderValueForCategoryProducts = orderValueForCategoryProducts.plus(new Money(o.getPrice()));
 			}
 		}
@@ -123,6 +124,16 @@ public class OrderRequest implements Serializable {
 		}
 		//TODO : Change to throw exception accordingly
 		return new Money(new BigDecimal(0));
+	}
+	
+	public Money getOrderValueForRelevantProducts(List<Integer> brandList,List<Integer> catIncludeList,List<Integer> catExcludeList){
+		Money orderValueForBrandProducts = new Money(new BigDecimal(0)); 
+		for(OrderItem o:orderItems){
+			if( (!ListUtil.isValidList(brandList)|| o.isOrderItemInBrand(brandList)) && (!ListUtil.isValidList(catIncludeList) || o.isOrderItemInCategory(catIncludeList)) &&  (!ListUtil.isValidList(catExcludeList) || !o.isOrderItemInCategory(catExcludeList))){
+				orderValueForBrandProducts = orderValueForBrandProducts.plus(new Money(o.getPrice()));
+			}
+		}
+		return orderValueForBrandProducts;
 	}
 	
 }
