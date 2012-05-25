@@ -9,6 +9,7 @@ import org.joda.time.DateTime;
 public class OrderRequest {
 
 	private long orderId;
+	private String referenceId;
 	private BigDecimal amount;
 	private String reason;
 	private List<OrderItemRequest> orderItemRequest = new ArrayList<OrderItemRequest>();
@@ -57,5 +58,11 @@ public class OrderRequest {
 	}
 	public BigDecimal getBonusPoints(){
 		return bonusPoints;
+	}
+	public String getReferenceId() {
+		return referenceId;
+	}
+	public void setReferenceId(String referenceId) {
+		this.referenceId = referenceId;
 	}
 }

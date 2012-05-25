@@ -35,7 +35,6 @@ import com.fb.platform.payback._1_0.ActionCode;
 import com.fb.platform.payback._1_0.OrderItemRequest;
 import com.fb.platform.payback._1_0.PointsRequest;
 import com.fb.platform.payback._1_0.PointsResponse;
-import com.fb.platform.payback._1_0.PointsStatus;
 import com.fb.platform.payback.service.PointsManager;
 
 
@@ -77,12 +76,15 @@ public class PointsResource {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			PointsRequest xmlPointsRequest = (PointsRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(pointsXml)));
 			com.fb.platform.payback.to.PointsRequest pointsHeaderRequest = new com.fb.platform.payback.to.PointsRequest();
-			pointsHeaderRequest.setTxnActionCode(xmlPointsRequest.getActionCode());
+			pointsHeaderRequest.setTxnActionCode(xmlPointsRequest.getActionCode().name());
+			pointsHeaderRequest.setClientName(xmlPointsRequest.getClientName());
+			
 			com.fb.platform.payback.to.OrderRequest orderRequest = new com.fb.platform.payback.to.OrderRequest();
 			orderRequest.setAmount(xmlPointsRequest.getOrderRequest().getAmount());
 			orderRequest.setLoyaltyCard(xmlPointsRequest.getOrderRequest().getLoyaltyCard());
 			orderRequest.setOrderId(xmlPointsRequest.getOrderRequest().getOrderId());
 			orderRequest.setTxnTimestamp(new DateTime(xmlPointsRequest.getOrderRequest().getTimestamp().getMillisecond()));
+			orderRequest.setReferenceId(xmlPointsRequest.getOrderRequest().getReferenceId());
 			orderRequest.setReason(xmlPointsRequest.getOrderRequest().getReason());
 			
 			for (OrderItemRequest xmlOrderItem : xmlPointsRequest.getOrderRequest().getOrderItemRequest()) {
@@ -92,8 +94,7 @@ public class PointsResource {
 			
 			com.fb.platform.payback.to.PointsResponse pointsResponse = pointsManager.getPointsReponse(pointsHeaderRequest);
 			PointsResponse xmlPointsResponse = new PointsResponse();	
-			xmlPointsResponse.setActionCode(pointsResponse.getActionCode().name());
-			xmlPointsResponse.setPointsStatus(PointsStatus.valueOf(pointsResponse.getPointsResponseCodeEnum().name()));
+			xmlPointsResponse.setActionCode(ActionCode.valueOf(pointsResponse.getActionCode().name()));
 			xmlPointsResponse.setMessage(pointsResponse.getStatusMessage());
 			StringWriter outStringWriter = new StringWriter();
 			Marshaller marsheller = context.createMarshaller();
@@ -116,12 +117,18 @@ public class PointsResource {
 		pointsItemRequest.setDepartmentCode(xmlOrderItem.getDepartmentCode());
 		pointsItemRequest.setDepartmentName(xmlOrderItem.getDepartmentName());
 		pointsItemRequest.setArticleId(xmlOrderItem.getArticleId());
+		//pointsItemRequest.setSellerRateChartId(xmlOrderItem.getSellerRateChartId);
 		return pointsItemRequest;
 	}
 	
 	@GET
-	public String uploadEarnOnSFTP(){
-		return null;
+	public void sendToPayback(){
+		/*if (!getIp().startsWith("10.0.101.") || !getIp().equals("127.0.0.1")){
+			return null;
+		}*/
+		pointsManager.mailBurnData();
+		pointsManager.uploadEarnFilesOnSFTP();
+		
 	}
 	
 	@GET

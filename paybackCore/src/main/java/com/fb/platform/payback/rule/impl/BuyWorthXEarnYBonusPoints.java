@@ -20,6 +20,12 @@ public class BuyWorthXEarnYBonusPoints implements PointsRule {
 	private BigDecimal minimumOrderValue;
 	private DateTime validFrom;
 	private DateTime validTill;
+	private PointsUtil pointsUtil;
+	
+	@Override
+	public void setPointsUtil(PointsUtil pointsUtil) {
+		this.pointsUtil = pointsUtil;
+	}
 
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
@@ -36,7 +42,6 @@ public class BuyWorthXEarnYBonusPoints implements PointsRule {
 		String startsOn = ruleConfig.getConfigItemValue(PointsRuleConfigConstants.VALID_FROM);
 		String endsOn = ruleConfig.getConfigItemValue(PointsRuleConfigConstants.VALID_TILL);
 		
-		PointsUtil pointsUtil = new PointsUtil();
 		this.validFrom = pointsUtil.getDateTimeFromString(startsOn, "yyyy-MM-dd");
 		this.validTill = pointsUtil.getDateTimeFromString(endsOn, "yyyy-MM-dd");
 		

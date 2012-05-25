@@ -16,9 +16,7 @@ public interface PointsDao {
 
 	public Collection<PointsHeader> loadPointsHeaderData(String txnActionCode, String settlementDate, String merchantId);
 
-	PointsItems getEarnData(String txnActionCode, long orderId);
-
-	Collection<PointsItems> loadPointsItemData(long pointsHeaderId);
+	public Collection<PointsItems> loadPointsItemData(long pointsHeaderId);
 
 	public void insertPointsItemsData(OrderItemRequest itemRequest,
 			long headerId, int txnPoints);

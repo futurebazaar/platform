@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.fb.platform.caching.AbstractCacheAccess;
 import com.fb.platform.caching.NamedCachesEnum;
+import com.fb.platform.payback.rule.PointsRule;
 
 /**
  * @author vinayak
@@ -15,24 +16,24 @@ import com.fb.platform.caching.NamedCachesEnum;
 @Component
 public class RuleCacheAccess extends AbstractCacheAccess {
 
-	public void put(Integer promotionId) {
-		platformCachingManager.put(NamedCachesEnum.PROMOTION_CACHE, promotionId, null);
+	public void put(String ruleName, PointsRule rule) {
+		platformCachingManager.put(NamedCachesEnum.POINTS_CACHE, ruleName, rule);
 	}
 
-	/*public  get(Integer promotionId) {
-		return (Promotion) platformCachingManager.get(NamedCachesEnum.PROMOTION_CACHE, promotionId);
-	}*/
-
-	public boolean clear(Integer promotionId) {
-		return platformCachingManager.remove(NamedCachesEnum.PROMOTION_CACHE, promotionId);
+	public  PointsRule get(String ruleName) {
+		return (PointsRule) platformCachingManager.get(NamedCachesEnum.POINTS_CACHE, ruleName);
 	}
 
-	public void lock(Integer promotionId) {
-        platformCachingManager.lock(NamedCachesEnum.PROMOTION_CACHE, promotionId);
+	public boolean clear(String ruleName) {
+		return platformCachingManager.remove(NamedCachesEnum.POINTS_CACHE, ruleName);
+	}
+
+	public void lock(String ruleName) {
+        platformCachingManager.lock(NamedCachesEnum.POINTS_CACHE, ruleName);
     }
     
-    public void unlock(Integer promotionId) {
-        platformCachingManager.unlock(NamedCachesEnum.PROMOTION_CACHE, promotionId);
+    public void unlock(String ruleName) {
+        platformCachingManager.unlock(NamedCachesEnum.POINTS_CACHE, ruleName);
     }
 
 }

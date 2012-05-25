@@ -1,22 +1,20 @@
 package com.fb.platform.payback.dao.impl;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
+import java.sql.Date;
 
+import org.joda.time.DateTime;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 
 import com.fb.platform.payback.dao.ListDao;
 
 public class ListDaoJdbcImpl implements ListDao {
 	
 	private static String GET_DOD_QUERY = 
-			"SELECT li.sku  FROM " +
+			"SELECT li.sku_id  FROM " +
 			"lists_list ll, lists_listitem li WHERE " +
 			"ll.id = li.list_id AND " +
-			"DATE(ll.starts_on) == DATE(NOW()) AND " +
-			"DATE(ll.ends_on) == DATE(NOW()) AND " +
+			"DATE(ll.starts_on) <= ? AND " +
+			"DATE(ll.ends_on) >= ? AND " +
 			"type = 'hero_deal' ";
 	
 	private JdbcTemplate jdbcTemplate;
@@ -26,21 +24,9 @@ public class ListDaoJdbcImpl implements ListDao {
 	}
 	
 	@Override
-	public Long getHeroDealSellerRateChart(){
-		List<Long> sellerRateChartId = jdbcTemplate.query(GET_DOD_QUERY, new Object[]{}, new ListMapper());
-		if (sellerRateChartId != null && !sellerRateChartId.isEmpty()){
-			return sellerRateChartId.get(0);
-		}
-		return null;
-		
+	public Long getHeroDealSellerRateChart(DateTime orderDate){
+		Date date = new Date(orderDate.getMillis());
+		return jdbcTemplate.queryForLong(GET_DOD_QUERY, new Object[]{date, date});
 	}
 	
-	private class ListMapper implements RowMapper<Long>{
-			
-		public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
-			return rs.getLong("sku");
-		}
-	
-	}
-
 }

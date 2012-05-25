@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+		
+        <table name="orders_order">
+        	<column>id</column>
+        	<column>user_id</column>
+        	<column>state</column>
+        	<column>payable_amount</column>
+        	<column>timestamp</column>
+        	<column>modified_on</column>
+        	<column>payment_realized_on</column>
+        	<column>payment_mode</column>
+        	<column>coupon_discount</column>
+        	<column>coupon_id</column>
+        	<column>call_id</column>
+        	<column>list_price_total</column>
+        	<column>total</column>
+        	<column>shipping_charges</column>
+        	<column>taxes</column>
+        	<column>transaction_charges</column>
+        	<column>payment_realized_mode</column>
+        	<column>medium</column>
+        	<column>partner</column>
+        	<column>reference_order_id</column>
+        	<column>ga_tracked</column>
+        	<column>wstore_id</column>
+        	<column>client_id</column>
+        	<column>top10_discount</column>
+        	<column>auto_promotions_discount</column>
+        	<column>verify_code</column>
+        	<column>notes</column>
+        	<column>payback_id</column>
+        	<column>cashback_amount_total</column>
+        	<column>booking_agent_id</column>
+        	<column>confirming_agent_id</column>
+        	<column>booking_timestamp</column>
+        	<column>confirming_timestamp</column>
+        	<column>agent_id</column>
+        	<column>support_state</column>
+        	<column>client_domain_id</column>
+        	<column>sap_date</column>
+		<row>
+    		<value name="id">1</value>
+        	<value name="user_id">1</value>
+        	<value name="state">confirmed</value>
+        	<value name="payable_amount">33200.00</value>
+        	<value name="timestamp">2009-08-01 00:00:00</value>
+        	<value name="modified_on">2010-03-08 23:58:34</value>
+        	<null/>
+        	<value name="payment_mode">card-web</value>
+        	<value name="coupon_discount">0.00</value>
+        	<value name="coupon_id">-3002</value>
+        	<value name="call_id"></value>
+        	<value name="list_price_total">33200.00</value>
+        	<value name="total">33200.00</value>
+        	<value name="shipping_charges">0.00</value>
+        	<value name="taxes">0.00</value>
+        	<value name="transaction_charges">0.00</value>
+        	<value name="payment_realized_mode"></value>
+        	<value name="medium">cc</value>
+        	<value name="partner"></value>
+        	<value name="reference_order_id">133826</value>
+        	<value name="ga_tracked">0</value>
+        	<value name="wstore_id">78</value>
+        	<value name="client_id">1</value>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<value name="notes">notes</value>
+        	<value name="payback_id"></value>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<value name="booking_timestamp">2010-03-08 23:58:34</value>
+        	<value name="confirming_timestamp">2010-03-08 23:58:34</value>
+        	<null/>
+        	<value name="support_state">delivered</value>
+        	<null/>
+        	<null/>
+    	</row>
+    	
+    	<row>
+    		<value name="id">2</value>
+        	<value name="user_id">2</value>
+        	<value name="state">cancelled</value>
+        	<value name="payable_amount">33200.00</value>
+        	<value name="timestamp">2009-08-01 00:00:00</value>
+        	<value name="modified_on">2010-03-08 23:58:34</value>
+        	<null/>
+        	<value name="payment_mode">card-web</value>
+        	<value name="coupon_discount">0.00</value>
+        	<null/>
+        	<value name="call_id"></value>
+        	<value name="list_price_total">33200.00</value>
+        	<value name="total">33200.00</value>
+        	<value name="shipping_charges">0.00</value>
+        	<value name="taxes">0.00</value>
+        	<value name="transaction_charges">0.00</value>
+        	<value name="payment_realized_mode"></value>
+        	<value name="medium">cc</value>
+        	<value name="partner"></value>
+        	<value name="reference_order_id">133826</value>
+        	<value name="ga_tracked">0</value>
+        	<value name="wstore_id">78</value>
+        	<value name="client_id">1</value>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<value name="notes">notes</value>
+        	<value name="payback_id"></value>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<value name="booking_timestamp">2010-03-08 23:58:34</value>
+        	<value name="confirming_timestamp">2010-03-08 23:58:34</value>
+        	<null/>
+        	<value name="support_state">cancelled</value>
+        	<null/>
+        	<null/>
+    	</row>
+    	
+    	<row>
+    		<value name="id">3</value>
+        	<value name="user_id">2</value>
+        	<value name="state">booked</value>
+        	<value name="payable_amount">33200.00</value>
+        	<value name="timestamp">2009-08-01 00:00:00</value>
+        	<value name="modified_on">2010-03-08 23:58:34</value>
+        	<null/>
+        	<value name="payment_mode">card-web</value>
+        	<value name="coupon_discount">0.00</value>
+        	<null/>
+        	<value name="call_id"></value>
+        	<value name="list_price_total">33200.00</value>
+        	<value name="total">33200.00</value>
+        	<value name="shipping_charges">0.00</value>
+        	<value name="taxes">0.00</value>
+        	<value name="transaction_charges">0.00</value>
+        	<value name="payment_realized_mode"></value>
+        	<value name="medium">cc</value>
+        	<value name="partner"></value>
+        	<value name="reference_order_id">133826</value>
+        	<value name="ga_tracked">0</value>
+        	<value name="wstore_id">78</value>
+        	<value name="client_id">1</value>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<value name="notes">notes</value>
+        	<value name="payback_id"></value>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<value name="booking_timestamp">2010-03-08 23:58:34</value>
+        	<value name="confirming_timestamp">2010-03-08 23:58:34</value>
+        	<null/>
+        	<value name="support_state">booked</value>
+        	<null/>
+        	<null/>
+    	</row>
+    	
+    	<row>
+    		<value name="id">4</value>
+        	<value name="user_id">2</value>
+        	<value name="state">returned</value>
+        	<value name="payable_amount">33200.00</value>
+        	<value name="timestamp">2009-08-01 00:00:00</value>
+        	<value name="modified_on">2010-03-08 23:58:34</value>
+        	<null/>
+        	<value name="payment_mode">card-web</value>
+        	<value name="coupon_discount">0.00</value>
+        	<null/>
+        	<value name="call_id"></value>
+        	<value name="list_price_total">33200.00</value>
+        	<value name="total">33200.00</value>
+        	<value name="shipping_charges">0.00</value>
+        	<value name="taxes">0.00</value>
+        	<value name="transaction_charges">0.00</value>
+        	<value name="payment_realized_mode"></value>
+        	<value name="medium">cc</value>
+        	<value name="partner"></value>
+        	<value name="reference_order_id">133826</value>
+        	<value name="ga_tracked">0</value>
+        	<value name="wstore_id">78</value>
+        	<value name="client_id">1</value>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<value name="notes">notes</value>
+        	<value name="payback_id"></value>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<value name="booking_timestamp">2010-03-08 23:58:34</value>
+        	<value name="confirming_timestamp">2010-03-08 23:58:34</value>
+        	<null/>
+        	<value name="support_state">returned</value>
+        	<null/>
+        	<null/>
+    	</row>
+    	
+    	<row>
+    		<value name="id">5</value>
+        	<value name="user_id">1</value>
+        	<value name="state">cancelled</value>
+        	<value name="payable_amount">33200.00</value>
+        	<value name="timestamp">2009-08-01 00:00:00</value>
+        	<value name="modified_on">2010-03-08 23:58:34</value>
+        	<null/>
+        	<value name="payment_mode">card-web</value>
+        	<value name="coupon_discount">0.00</value>
+        	<null/>
+        	<value name="call_id"></value>
+        	<value name="list_price_total">33200.00</value>
+        	<value name="total">33200.00</value>
+        	<value name="shipping_charges">0.00</value>
+        	<value name="taxes">0.00</value>
+        	<value name="transaction_charges">0.00</value>
+        	<value name="payment_realized_mode"></value>
+        	<value name="medium">cc</value>
+        	<value name="partner"></value>
+        	<value name="reference_order_id">133826</value>
+        	<value name="ga_tracked">0</value>
+        	<value name="wstore_id">78</value>
+        	<value name="client_id">1</value>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<value name="notes">notes</value>
+        	<value name="payback_id"></value>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<value name="booking_timestamp">2010-03-08 23:58:34</value>
+        	<value name="confirming_timestamp">2010-03-08 23:58:34</value>
+        	<null/>
+        	<value name="support_state">cancelled</value>
+        	<null/>
+        	<null/>
+    	</row>
+    	
+    	<row>
+    		<value name="id">6</value>
+        	<value name="user_id">1</value>
+        	<value name="state">booked</value>
+        	<value name="payable_amount">33200.00</value>
+        	<value name="timestamp">2009-08-01 00:00:00</value>
+        	<value name="modified_on">2010-03-08 23:58:34</value>
+        	<null/>
+        	<value name="payment_mode">card-web</value>
+        	<value name="coupon_discount">0.00</value>
+        	<null/>
+        	<value name="call_id"></value>
+        	<value name="list_price_total">33200.00</value>
+        	<value name="total">33200.00</value>
+        	<value name="shipping_charges">0.00</value>
+        	<value name="taxes">0.00</value>
+        	<value name="transaction_charges">0.00</value>
+        	<value name="payment_realized_mode"></value>
+        	<value name="medium">cc</value>
+        	<value name="partner"></value>
+        	<value name="reference_order_id">133826</value>
+        	<value name="ga_tracked">0</value>
+        	<value name="wstore_id">78</value>
+        	<value name="client_id">1</value>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<value name="notes">notes</value>
+        	<value name="payback_id"></value>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<value name="booking_timestamp">2010-03-08 23:58:34</value>
+        	<value name="confirming_timestamp">2010-03-08 23:58:34</value>
+        	<null/>
+        	<value name="support_state">booked</value>
+        	<null/>
+        	<null/>
+    	</row>
+    	
+    	<row>
+    		<value name="id">7</value>
+        	<value name="user_id">1</value>
+        	<value name="state">returned</value>
+        	<value name="payable_amount">33200.00</value>
+        	<value name="timestamp">2009-08-01 00:00:00</value>
+        	<value name="modified_on">2010-03-08 23:58:34</value>
+        	<null/>
+        	<value name="payment_mode">card-web</value>
+        	<value name="coupon_discount">0.00</value>
+        	<null/>
+        	<value name="call_id"></value>
+        	<value name="list_price_total">33200.00</value>
+        	<value name="total">33200.00</value>
+        	<value name="shipping_charges">0.00</value>
+        	<value name="taxes">0.00</value>
+        	<value name="transaction_charges">0.00</value>
+        	<value name="payment_realized_mode"></value>
+        	<value name="medium">cc</value>
+        	<value name="partner"></value>
+        	<value name="reference_order_id">133826</value>
+        	<value name="ga_tracked">0</value>
+        	<value name="wstore_id">78</value>
+        	<value name="client_id">1</value>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<value name="notes">notes</value>
+        	<value name="payback_id"></value>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<value name="booking_timestamp">2010-03-08 23:58:34</value>
+        	<value name="confirming_timestamp">2010-03-08 23:58:34</value>
+        	<null/>
+        	<value name="support_state">returned</value>
+        	<null/>
+        	<null/>
+    	</row>
+    	
+    	<row>
+    		<value name="id">9</value>
+        	<value name="user_id">5</value>
+        	<value name="state">confirmed</value>
+        	<value name="payable_amount">33200.00</value>
+        	<value name="timestamp">2009-08-01 00:00:00</value>
+        	<value name="modified_on">2010-03-08 23:58:34</value>
+        	<null/>
+        	<value name="payment_mode">card-web</value>
+        	<value name="coupon_discount">0.00</value>
+        	<value name="coupon_id">-3002</value>
+        	<value name="call_id"></value>
+        	<value name="list_price_total">33200.00</value>
+        	<value name="total">33200.00</value>
+        	<value name="shipping_charges">0.00</value>
+        	<value name="taxes">0.00</value>
+        	<value name="transaction_charges">0.00</value>
+        	<value name="payment_realized_mode"></value>
+        	<value name="medium">cc</value>
+        	<value name="partner"></value>
+        	<value name="reference_order_id">133826</value>
+        	<value name="ga_tracked">0</value>
+        	<value name="wstore_id">78</value>
+        	<value name="client_id">1</value>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<value name="notes">notes</value>
+        	<value name="payback_id"></value>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<value name="booking_timestamp">2010-03-08 23:58:34</value>
+        	<value name="confirming_timestamp">2010-03-08 23:58:34</value>
+        	<null/>
+        	<value name="support_state">confirmed</value>
+        	<null/>
+        	<null/>
+    	</row>
+    </table>
+    
+    <table name = "catalog_sellerratechart">
+	<column>id</column>
+	<column>sku</column>
+	<column>list_price</column>
+	<column>transfer_price</column>
+	<column>offer_price</column>
+	
+	<row>
+		<value name="id">1</value>
+		<value name="sku">2577243</value>
+		<value name="list_price">639.00</value>
+		<value name="transfer_price">0.00</value>
+		<value name="offer_price">639.00</value>
+	</row>
+	
+	<row>
+	<value name="id">2</value>
+	<value name="sku">2577244</value>
+	<value name="list_price">639.00</value>
+	<value name="transfer_price">0.00</value>
+	<value name="offer_price">639.00</value>
+</row>
+</table>
+
+<table name = "orders_orderitem">
+	<column>id</column>
+	<column>order_id</column>
+	<column>qty</column>
+	<column>seller_rate_chart_id</column>
+	<column>item_title</column>
+	<column>gift_title</column>
+	<column>list_price</column>
+	<column>sale_price</column>
+	<column>state</column>
+	<column>created_on</column>
+	<column>cashback_amount</column>
+	<column>is_inventory_blocked</column>
+	<column>total_amount</column>
+	<column>received_by</column>
+	<column>receivers_contact</column>
+	<column>delivery_days</column>
+	<column>notes</column>
+	<column>discount</column>
+	
+	<row>
+	<value name="id">1</value>
+	<value name="order_id">1</value>
+	<value name="qty">1</value>
+	<value name="seller_rate_chart_id">1</value>
+	<value name="item_title">Pooh</value>
+	<value name="gift_title"></value>
+	<value name="list_price">639.00</value>
+	<value name="sale_price">639.00</value>
+	<value name="state">confirmed</value>
+	<value name="created_on">2012-05-22 00:00:00</value>
+	<value name="cashback_amount">0</value>
+	<value name="is_inventory_blocked">1</value>
+	<value name="total_amount">639.00</value>
+	<value name="received_by"></value>
+	<value name="receivers_contact"></value>
+	<value name="delivery_days">7</value>
+	<value name="notes"></value>
+	<value name="discount">0</value>
+	</row>
+	
+	<row>
+	<value name="id">2</value>
+	<value name="order_id">1</value>
+	<value name="qty">1</value>
+	<value name="seller_rate_chart_id">2</value>
+	<value name="item_title">Pooh</value>
+	<value name="gift_title"></value>
+	<value name="list_price">639.00</value>
+	<value name="sale_price">639.00</value>
+	<value name="state">confirmed</value>
+	<value name="created_on">2012-05-22 00:00:00</value>
+	<value name="cashback_amount">0</value>
+	<value name="is_inventory_blocked">1</value>
+	<value name="total_amount">639.00</value>
+	<value name="received_by"></value>
+	<value name="receivers_contact"></value>
+	<value name="delivery_days">7</value>
+	<value name="notes"></value>
+	<value name="discount">0</value>
+	</row>
+	
+</table>
+
+
+
+<table name = "lists_list">
+	<column>id</column>
+	<column>title</column>
+	<column>description</column>
+	<column>banner_image</column>
+	<column>starts_on</column>
+	<column>ends_on</column>
+	<column>type</column>
+	<column>visibility</column>
+	<column>percent_on_10</column>
+	<column>percent_on_5</column>
+	<column>detail_page_banner</column>
+	<column>detail_page_thumb_banner</column>
+	<column>tagline</column>
+	<column>redirect_to</column>
+	<column>banner_type</column>
+	<column>sort_order</column>
+	<column>location</column>
+	
+	<row>
+    	<value name="id">1</value>
+    	<value name="title">DOD</value>
+    	<value name="description">Deal of the Day</value>
+    	<value name="banner_image"></value>
+    	<value name="starts_on">2012-05-24 00:00:00</value>
+    	<value name="ends_on">2012-05-24 23:59:59</value>
+    	<value name="type">hero_deal</value>
+    	<value name="visibility"></value>
+    	<value name="percent_on_10">0</value>
+    	<value name="percent_on_5">0</value>
+    	<value name="detail_page_banner"></value>
+    	<value name="detail_page_thumb_banner"></value>
+    	<value name="tagline"></value>
+    	<value name="redirect_to"></value>
+    	<value name="banner_type"></value>
+    	<value name="sort_order">1</value>
+    	<value name="location"></value>
+	</row>
+		
+</table>
+<table name = "lists_listitem">
+<column>id</column>
+	<column>list_id</column>
+	<column>sku_id</column>
+	<column>user_description</column>
+	<column>user_title</column>
+	<column>user_image</column>
+	<column>status</column>
+	<column>user_features</column>
+	
+	<row>
+		<value name="id">1</value>
+		<value name="list_id">1</value>
+		<value name="sku_id">1</value>
+		<value name="user_description"></value>
+		<value name="user_title"></value>
+		<value name="user_image"></value>
+		<value name="status"></value>
+		<value name="user_features"></value>
+	</row>
+	
+</table>
+
+</dataset>

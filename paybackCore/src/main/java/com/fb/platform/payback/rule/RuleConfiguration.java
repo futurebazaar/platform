@@ -51,6 +51,6 @@ public class RuleConfiguration {
 				return rci.getValue();
 			}
 		}
-		throw new PlatformException("Config Item Value not found for the key - "+key);
+		return null;
 	}
 }

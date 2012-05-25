@@ -9,7 +9,14 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="actionCode" type="xs:string"/>
+  <xs:element name="actionCode" type="payback:actionCode"/>
+  <xs:simpleType name="actionCode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="PREALLOC_EARN"/>
+      <xs:enumeration value="EARN_REVERSAL"/>
+      <xs:enumeration value="BURN_REVERSAL"/>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:element name="clientName" type="xs:string"/>
   <xs:element name="orderRequest">
     <xs:complexType>
@@ -51,13 +58,6 @@
   <xs:element name="quantity" type="xs:int"/>
   <xs:element name="departmentName" type="xs:string"/>
   <xs:element name="departmentCode" type="xs:long"/>
-  <xs:simpleType name="pointsStatus">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="SUCCESS"/>
-      <xs:enumeration value="INTERNAL_ERROR"/>
-      <xs:enumeration value="FAILURE"/>
-    </xs:restriction>
-  </xs:simpleType>
   <xs:element name="pointsResponse">
   	<xs:complexType>
       <xs:sequence>
@@ -67,13 +67,6 @@
 	  </xs:sequence>
 	</xs:complexType>
   </xs:element>
-  <xs:element name="pointsStatus" type="payback:pointsStatus"/>
-   <xs:element name="message" type="xs:string"/>
-   <xs:simpleType name="actionCode">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="PREALLOC_EARN"/>
-      <xs:enumeration value="EARN_REVERSAL"/>
-      <xs:enumeration value="BURN_REVERSAL"/>
-    </xs:restriction>
-  </xs:simpleType>
+  <xs:element name="pointsStatus" type="xs:string"/>
+  <xs:element name="message" type="xs:string"/>
 </xs:schema>

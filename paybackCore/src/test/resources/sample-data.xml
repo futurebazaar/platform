@@ -1,5 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dataset>        
+<dataset>
+		
+		<table name = "accounts_client">
+			<column>id</column>
+			<column>name</column>
+			<column>confirmed_order_email</column>
+			<column>pending_order_email</column>
+			<column>share_product_email</column>
+			<column>signature</column>
+			<column>pending_order_helpline</column>
+			<column>confirmed_order_helpline</column>
+			<column>sms_mask</column>
+			<column>noreply_email</column>
+			<column>feedback_email</column>
+			<column>promotions_email</column>
+			<column>sale_pricelist</column>
+			<column>list_pricelist</column>
+			<column>clientdomain_name</column>
+			<column>slug</column>
+			
+			<row>
+				<value name="id">5</value>
+				<value name="name">Future Bazaar</value>
+				<value name="confirmed_order_email">anubhav.jain@futuregroup.in</value>
+				<value name="pending_order_email">anubhav.jain@futuregroup.in</value>
+				<value name="share_product_email">anubhav.jain@futuregroup.in</value>
+				<value name="signature">Anubhav</value>
+				<value name="pending_order_helpline">7498410764</value>
+				<value name="confirmed_order_helpline">7498410764</value>
+				<value name="sms_mask">Anubhav</value>
+				<value name="noreply_email">anubhav.jain@futuregroup.in</value>
+				<value name="feedback_email">anubhav.jain@futuregroup.in</value>
+				<value name="promotions_email">anubhav.jain@futuregroup.in</value>
+				<value name="sale_pricelist">TEST_PRICELIST</value>
+				<value name="list_pricelist">TEST_PRICELIST</value>
+				<value name="clientdomain_name">abcd</value>
+				<value name="slug">TEST</value>
+				
+			</row>
+			
+		</table>
+		
         <table name="accounts_clientdomain">
         	<column>id</column>
         	<column>client_id</column>
@@ -35,8 +76,8 @@
         		<value name="is_public">1</value>
         		<value name="custom_home_page">web/home/home.html</value>
         		<value name="domain">fb.phonepedeal.com</value>
-        		<value name="default_redirect_to">http://ezone.futurebazaar.com/homeEzone.jsp</value>
-        		<value name="code">chaupaati</value>
+        		<value name="default_redirect_to">http://fb.phonepedeal.com/</value>
+        		<value name="code">future</value>
         		<value name="sale_pricelist"></value>
         		<value name="list_pricelist"></value>
         		<value name="is_second_factor_auth_reqd">0</value>
@@ -44,85 +85,195 @@
         	</row>
         </table>
         
-        <table name="orders_order">
+        
+       
+        
+        <table name = "lists_listitem">
         	<column>id</column>
-        	<column>user_id</column>
-        	<column>state</column>
-        	<column>payable_amount</column>
-        	<column>timestamp</column>
-        	<column>modified_on</column>
-        	<column>payment_realized_on</column>
-        	<column>payment_mode</column>
-        	<column>coupon_discount</column>
-        	<column>coupon_id</column>
-        	<column>call_id</column>
-        	<column>list_price_total</column>
-        	<column>total</column>
-        	<column>shipping_charges</column>
-        	<column>taxes</column>
-        	<column>transaction_charges</column>
-        	<column>payment_realized_mode</column>
-        	<column>medium</column>
-        	<column>partner</column>
-        	<column>reference_order_id</column>
-        	<column>ga_tracked</column>
-        	<column>wstore_id</column>
-        	<column>client_id</column>
-        	<column>top10_discount</column>
-        	<column>auto_promotions_discount</column>
-        	<column>verify_code</column>
-        	<column>notes</column>
-        	<column>payback_id</column>
-        	<column>cashback_amount_total</column>
-        	<column>booking_agent_id</column>
-        	<column>confirming_agent_id</column>
-        	<column>booking_timestamp</column>
-        	<column>confirming_timestamp</column>
-        	<column>agent_id</column>
-        	<column>support_state</column>
-        	<column>client_domain_id</column>
-        	<column>sap_date</column>
-        	
+        	<column>list_id</column>
+        	<column>sku_id</column>
+        	<column>user_description</column>
+        	<column>user_title</column>
+        	<column>user_image</column>
+        	<column>status</column>
+        	<column>user_features</column>
+    
         	<row>
-        		<value name="id">2</value>
-	        	<value name="user_id">2</value>
-	        	<value name="state">confirmed</value>
-	        	<value name="payable_amount">33200.00</value>
-	        	<value name="timestamp">2009-08-01 00:00:00</value>
-	        	<value name="modified_on">2010-03-08 23:58:34</value>
-	        	<null/>
-	        	<value name="payment_mode">payback</value>
-	        	<value name="coupon_discount">0.00</value>
-	        	<null/>
-	        	<value name="call_id"></value>
-	        	<value name="list_price_total">33200.00</value>
-	        	<value name="total">33200.00</value>
-	        	<value name="shipping_charges">0.00</value>
-	        	<value name="taxes">0.00</value>
-	        	<value name="transaction_charges">0.00</value>
-	        	<value name="payment_realized_mode"></value>
-	        	<value name="medium">website</value>
-	        	<value name="partner"></value>
-	        	<value name="reference_order_id">133826</value>
-	        	<value name="ga_tracked">0</value>
-	        	<value name="wstore_id">78</value>
-	        	<value name="client_id">5</value>
-	        	<null/>
-	        	<null/>
-	        	<null/>
-	        	<value name="notes">Order Confirmed</value>
-	        	<value name="payback_id">1234567812345678</value>
-	        	<null/>
-	        	<null/>
-	        	<null/>
-	        	<value name="booking_timestamp">2010-03-08 23:58:34</value>
-	        	<value name="confirming_timestamp">2010-03-08 23:58:34</value>
-	        	<null/>
-	        	<value name="support_state">cancelled</value>
-	        	<null/>
-	        	<null/>
+	        	<value name="id">1</value>
+	        	<value name="list_id">1</value>
+	        	<value name="sku_id">1</value>
+	        	<value name="user_description"></value>
+	        	<value name="user_title"></value>
+	        	<value name="user_image"></value>
+	        	<value name="status"></value>
+	        	<value name="user_features"></value>
         	</row>
-        	
+        		
         </table>
+        
+		<table name="rules">        
+			<column>id</column>
+			<column>name</column>
+			
+			<row>
+				<value name="id">1</value>
+				<value name="name">ENTER_LOYALTY_CARD_EARN_X_POINTS</value>
+			</row>
+			<row>
+				<value name="id">2</value>
+				<value name="name">EARN_X_POINTS_ON_Y_DAY</value>
+			</row>
+			<row>
+				<value name="id">3</value>
+				<value name="name">BUY_PRODUCT_X_EARN_Y_POINTS</value>
+			</row>
+			<row>
+				<value name="id">4</value>
+				<value name="name">BUY_DOD_EARN_Y_POINTS</value>
+			</row>
+			<row>
+				<value name="id">5</value>
+				<value name="name">BUY_WORTH_X_EARN_Y_BONUS_POINTS</value>
+			</row>
+			<row>
+			<value name="id">6</value>
+			<value name="name">PURCHASE_ORDER_BURN_X_POINTS</value>
+		</row>
+	
+		</table>
+        	
+        	<table name="payback_rule_config">
+        		<column>id</column>
+        		<column>name</column>
+        		<column>value</column>
+        		<column>rule_id</column>
+        	
+        		<row>
+        			<value name="id">1</value>
+        			<value name="name">EARN_RATIO</value>
+        			<value name="value">0.03</value>
+        			<value name="rule_id">1</value>
+        		</row>
+        		
+        		<row>
+	    			<value name="id">2</value>
+	    			<value name="name">BONUS_POINTS</value>
+	    			<value name="value">200</value>
+	    			<value name="rule_id">5</value>
+	    		</row>
+	    			<row>
+								<value name="id">3</value>
+								<value name="name">MIN_ORDER_VALUE</value>
+								<value name="value">0.03</value>
+								<value name="rule_id">5</value>
+						</row>
+						<row>
+						<value name="id">4</value>
+						<value name="name">VALID_FROM</value>
+						<value name="value">2012-05-22</value>
+						<value name="rule_id">5</value>
+					</row>
+					<row>
+						<value name="id">5</value>
+						<value name="name">VALID_TILL</value>
+						<value name="value">9999-12-31</value>
+						<value name="rule_id">5</value>
+					</row>
+        	
+					<row>
+	    			<value name="id">6</value>
+	    			<value name="name">OFFER_DAY</value>
+	    			<value name="value">Friday</value>
+	    			<value name="rule_id">2</value>
+	    		</row>
+	    			<row>
+								<value name="id">7</value>
+								<value name="name">EARN_RATIO</value>
+								<value name="value">0.03</value>
+								<value name="rule_id">2</value>
+						</row>
+						<row>
+							<value name="id">8</value>
+							<value name="name">POINTS_FACTOR</value>
+							<value name="value">2</value>
+							<value name="rule_id">2</value>
+						</row>
+						<row>
+						<value name="id">9</value>
+						<value name="name">VALID_FROM</value>
+						<value name="value">2012-05-22</value>
+						<value name="rule_id">2</value>
+					</row>
+					<row>
+						<value name="id">10</value>
+						<value name="name">VALID_TILL</value>
+						<value name="value">9999-12-31</value>
+						<value name="rule_id">2</value>
+					</row>
+					
+					<row>
+	    			<value name="id">11</value>
+	    			<value name="name">INCLUDED_CATEGORY_LIST</value>
+	    			<value name="value">1234, 2345</value>
+	    			<value name="rule_id">3</value>
+	    		</row>
+	    			<row>
+								<value name="id">12</value>
+								<value name="name">EARN_RATIO</value>
+								<value name="value">0.03</value>
+								<value name="rule_id">3</value>
+						</row>
+						<row>
+							<value name="id">13</value>
+							<value name="name">POINTS_FACTOR</value>
+							<value name="value">2</value>
+							<value name="rule_id">3</value>
+						</row>
+						<row>
+						<value name="id">14</value>
+						<value name="name">VALID_FROM</value>
+						<value name="value">2012-05-22</value>
+						<value name="rule_id">3</value>
+					</row>
+					<row>
+						<value name="id">15</value>
+						<value name="name">VALID_TILL</value>
+						<value name="value">9999-12-31</value>
+						<value name="rule_id">3</value>
+					</row>
+					
+	    			<row>
+								<value name="id">16</value>
+								<value name="name">EARN_RATIO</value>
+								<value name="value">0.03</value>
+								<value name="rule_id">4</value>
+						</row>
+						<row>
+							<value name="id">18</value>
+							<value name="name">POINTS_FACTOR</value>
+							<value name="value">2</value>
+							<value name="rule_id">4</value>
+						</row>
+						<row>
+						<value name="id">19</value>
+						<value name="name">VALID_FROM</value>
+						<value name="value">2012-05-22</value>
+						<value name="rule_id">4</value>
+					</row>
+					<row>
+						<value name="id">20</value>
+						<value name="name">VALID_TILL</value>
+						<value name="value">9999-12-31</value>
+						<value name="rule_id">4</value>
+					</row>
+					
+					<row>
+        			<value name="id">21</value>
+        			<value name="name">BURN_RATIO</value>
+        			<value name="value">4</value>
+        			<value name="rule_id">6</value>
+        		</row>
+        	
+			</table>
 
 </dataset>

@@ -16,6 +16,9 @@
 	<bean id="pointsDao" class="com.fb.platform.payback.dao.impl.PointsDaoJdbcImpl">
 		<property name="jdbcTemplate" ref="jdbcTemplate"/>
 	</bean>
+	<bean id="pointsRuleDao" class="com.fb.platform.payback.dao.impl.PointsRuleDaoJdbcImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
 	<bean id="listDao" class="com.fb.platform.payback.dao.impl.ListDaoJdbcImpl">
 		<property name="jdbcTemplate" ref="jdbcTemplate"/>
 	</bean>

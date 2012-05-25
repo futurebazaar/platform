@@ -2,9 +2,12 @@ package com.fb.platform.payback.service.impl;
 
 import java.util.Properties;
 
-import com.fb.platform.payback.service.PointsBurnService;
-import com.fb.platform.payback.service.PointsEarnService;
+import com.fb.commons.PlatformException;
+import com.fb.platform.payback.exception.DefinitionNotFound;
+import com.fb.platform.payback.exception.InvalidActionCode;
+import com.fb.platform.payback.exception.PointsHeaderDoesNotExist;
 import com.fb.platform.payback.service.PointsManager;
+import com.fb.platform.payback.service.PointsService;
 import com.fb.platform.payback.to.BurnActionCodesEnum;
 import com.fb.platform.payback.to.EarnActionCodesEnum;
 import com.fb.platform.payback.to.PointsRequest;
@@ -15,20 +18,14 @@ import com.fb.platform.payback.util.PointsUtil;
 
 public class PointsManagerImpl implements PointsManager{
 	
-	private PointsEarnService pointsEarnService;
-	private PointsBurnService pointsBurnService;
 	private PointsUtil pointsUtil;
-	
-	public void setPointsEarnService(PointsEarnService pointsEarnService) {
-		this.pointsEarnService = pointsEarnService;
-	}
-	
-	public void setPointsBurnService(PointsBurnService pointsBurnService) {
-		this.pointsBurnService = pointsBurnService;
-	}
+	private PointsService pointsService;
 	
 	public void setPointsUtil(PointsUtil pointsUtil){
 		this.pointsUtil = pointsUtil;
+	}
+	public void setPointsService(PointsService pointsService){
+		this.pointsService = pointsService;
 	}
 
 	
@@ -37,20 +34,15 @@ public class PointsManagerImpl implements PointsManager{
 		PointsTxnClassificationCodeEnum actionCode = PointsTxnClassificationCodeEnum.valueOf(request.getTxnActionCode());
 		PointsResponseCodeEnum responseEnum = PointsResponseCodeEnum.FAILURE;
 		try {
-			Properties props = pointsUtil.getProperties("payback.properties");
-			String client = request.getClientName();
-			String merchantId = props.getProperty(client + "_MERCHANT_ID");
-			String terminalId = props.getProperty(client + "_TERMINAL_ID");
-			switch(actionCode){
-				
-				case PREALLOC_EARN : case EARN_REVERSAL:
-					responseEnum = pointsEarnService.storeEarnPoints(request, actionCode, merchantId, terminalId);
-					break;
-				
-				case BURN_REVERSAL:
-					responseEnum = pointsBurnService.storeBurnPoints(request, actionCode,  merchantId, terminalId);
-					break;
-			}
+			responseEnum = pointsService.storePoints(request);
+		} catch (InvalidActionCode e){
+			responseEnum =  PointsResponseCodeEnum.INVALID_ACTION_CODE;
+		} catch (DefinitionNotFound e){
+			responseEnum =  PointsResponseCodeEnum.INVALID_POINTS;
+		}catch (PointsHeaderDoesNotExist e){
+			responseEnum =  PointsResponseCodeEnum.FAILURE;
+		}catch (PlatformException e){
+			responseEnum =  PointsResponseCodeEnum.INTERNAL_ERROR;
 		} catch(Exception e){
 			responseEnum = PointsResponseCodeEnum.INTERNAL_ERROR;
 		}
@@ -63,38 +55,38 @@ public class PointsManagerImpl implements PointsManager{
 
 	@Override
 	public void uploadEarnFilesOnSFTP() {
-		try {
-			Properties props = pointsUtil.getProperties("payback.properties");
-			String[] clients =  props.getProperty("CLIENTS").split(",");
-			for(String client : clients){
-				String merchantId = props.getProperty(client + "_MERCHANT_ID");
-				for (EarnActionCodesEnum txnActionCode : EarnActionCodesEnum.values()){
-					String dataToUpload = pointsEarnService.postEarnData(txnActionCode, merchantId);
+		Properties props = pointsUtil.getProperties("payback.properties");
+		String[] clients =  props.getProperty("CLIENTS").split(",");
+		for(String client : clients){
+			String merchantId = props.getProperty(client + "_MERCHANT_ID");
+			for (EarnActionCodesEnum txnActionCode : EarnActionCodesEnum.values()){
+				try{
+					String dataToUpload = pointsService.postEarnData(txnActionCode, merchantId, client);
 					if (dataToUpload != null && !dataToUpload.equals("")){
-						pointsUtil.sendMail(txnActionCode.name(), merchantId, txnActionCode.toString()+ ".txt", dataToUpload);
+						pointsUtil.sendMail(txnActionCode.name(), merchantId, txnActionCode.toString()+ ".txt", dataToUpload, "POINTS");
 					}
-					
+				} catch (Exception e){
+					// send  mail to check the exception
+					pointsUtil.sendMail(txnActionCode.name(), merchantId, "ERROR_OCCURRED" + ".txt", e.toString(), "ERROR");
 				}
+				
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-
 	}
 
 	@Override
 	public void mailBurnData() {
-		try {
-			Properties props = pointsUtil.getProperties("payback.properties");
-			String[] clients =  props.getProperty("CLIENTS").split(",");
-			for(String client : clients){
-				String merchantId = props.getProperty(client + "_MERCHANT_ID");
-				for (BurnActionCodesEnum txnActionCode : BurnActionCodesEnum.values()){
-					pointsBurnService.mailBurnData(txnActionCode.name(), merchantId);
+		Properties props = pointsUtil.getProperties("payback.properties");
+		String[] clients =  props.getProperty("CLIENTS").split(",");
+		for(String client : clients){
+			String merchantId = props.getProperty(client + "_MERCHANT_ID");
+			for (BurnActionCodesEnum txnActionCode : BurnActionCodesEnum.values()){
+				try {
+					pointsService.mailBurnData(txnActionCode, merchantId);
+				} catch (Exception e) {
+					pointsUtil.sendMail(txnActionCode.name(), merchantId, "ERROR_OCCURRED" + ".txt", e.toString(), "ERROR");
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 

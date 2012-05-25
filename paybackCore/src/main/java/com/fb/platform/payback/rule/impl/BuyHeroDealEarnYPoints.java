@@ -3,8 +3,12 @@ package com.fb.platform.payback.rule.impl;
 import java.math.BigDecimal;
 
 import org.joda.time.DateTime;
+import org.springframework.dao.DataAccessException;
 
+import com.fb.platform.payback.cache.ListCacheAccess;
+import com.fb.platform.payback.cache.PointsCacheConstants;
 import com.fb.platform.payback.dao.ListDao;
+import com.fb.platform.payback.exception.DealNotFoundException;
 import com.fb.platform.payback.rule.PointsRule;
 import com.fb.platform.payback.rule.PointsRuleConfigConstants;
 import com.fb.platform.payback.rule.RuleConfiguration;
@@ -12,16 +16,26 @@ import com.fb.platform.payback.to.OrderItemRequest;
 import com.fb.platform.payback.to.OrderRequest;
 import com.fb.platform.payback.util.PointsUtil;
 
-public class BuyDODEarnYPoints implements PointsRule {
+public class BuyHeroDealEarnYPoints implements PointsRule {
 
 	private BigDecimal earnFactor;
 	private BigDecimal earnRatio;
 	private DateTime validFrom;
 	private DateTime validTill;
 	private ListDao listDao;
+	private ListCacheAccess listCacheAccess;
+	private PointsUtil pointsUtil;
 	
 	public void setListDao(ListDao listDao){
 		this.listDao = listDao;
+	}
+
+	public void setListCacheAccess(ListCacheAccess listCacheAccess) {
+		this.listCacheAccess = listCacheAccess;
+	}
+	
+	public void setPointsUtil(PointsUtil pointsUtil){
+		this.pointsUtil = pointsUtil;
 	}
 	
 	@Override
@@ -33,7 +47,6 @@ public class BuyDODEarnYPoints implements PointsRule {
 		String startsOn = ruleConfig.getConfigItemValue(PointsRuleConfigConstants.VALID_FROM);
 		String endsOn = ruleConfig.getConfigItemValue(PointsRuleConfigConstants.VALID_TILL);
 
-		PointsUtil pointsUtil = new PointsUtil();
 		this.validFrom = pointsUtil.getDateTimeFromString(startsOn, "yyyy-MM-dd");
 		this.validTill = pointsUtil.getDateTimeFromString(endsOn, "yyyy-MM-dd");
 		
@@ -45,16 +58,47 @@ public class BuyDODEarnYPoints implements PointsRule {
 			return false;
 		}
 		
-		if (itemRequest.getSellerRateChartId() != getHeroDealSellerRateChart()){
+		if (itemRequest.getSellerRateChartId() != getHeroDealSellerRateChart(request.getTxnTimestamp())){
 			return false;
 		}
 		
 		return true;
 	}
 
-	//need to implement the cache
-	private Long getHeroDealSellerRateChart() {
-		return listDao.getHeroDealSellerRateChart();
+	private Long getHeroDealSellerRateChart(DateTime orderDate) {
+		String bookingDate = pointsUtil.convertDateToFormat(orderDate, "yyyy-MM-dd");
+		String key = PointsCacheConstants.HERO_DEAL +  "#" + bookingDate;
+		String sellerRateChartId = listCacheAccess.get(key);
+		if (sellerRateChartId == null){
+			try {
+				sellerRateChartId = String.valueOf(listDao.getHeroDealSellerRateChart(orderDate));
+			} catch (DataAccessException e) {
+				e.printStackTrace();
+				throw new DealNotFoundException("Error loading Hero Deal");
+			}
+
+			if (sellerRateChartId != null) {
+				cacheHeroDeal(sellerRateChartId, key);
+			} else {
+				throw new DealNotFoundException("Todays Deal Not Found");
+			}
+	
+		}
+		
+		return Long.parseLong(sellerRateChartId);
+	}
+
+	//Caches Deal Id and Deal Date
+	private void cacheHeroDeal(String sellerRateChartId, String key) {
+		try {
+			listCacheAccess.lock(key);
+			if (listCacheAccess.get(key) == null) {
+				listCacheAccess.put(sellerRateChartId, key);
+			}
+		} finally {
+			listCacheAccess.unlock(key);
+		}
+		
 	}
 
 	@Override
@@ -66,5 +110,5 @@ public class BuyDODEarnYPoints implements PointsRule {
 	public boolean allowNext() {
 		return true;
 	}
-	
+
 }

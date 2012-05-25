@@ -20,4 +20,6 @@ public class PointsRuleConfigConstants {
 	
 	public static final String VALID_TILL = "VALID_TILL";
 
+	public static final String BURN_RATIO = "BURN_RATIO";
+
 }

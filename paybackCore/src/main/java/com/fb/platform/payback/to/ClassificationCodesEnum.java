@@ -1,6 +1,6 @@
 package com.fb.platform.payback.to;
 
-public enum ClassificationCodeSEnum {
+public enum ClassificationCodesEnum {
 
 	CASH_CASH, 
 	BONUS_POINTS, 

@@ -7,10 +7,17 @@ import com.fb.platform.payback.rule.PointsRuleConfigConstants;
 import com.fb.platform.payback.rule.RuleConfiguration;
 import com.fb.platform.payback.to.OrderItemRequest;
 import com.fb.platform.payback.to.OrderRequest;
+import com.fb.platform.payback.util.PointsUtil;
 
 public class CancelOrderReverseXBurnPoints implements PointsRule{
 	private BigDecimal earnRatio;
-
+	private PointsUtil pointsUtil;
+	
+	@Override
+	public void setPointsUtil(PointsUtil pointsUtil) {
+		this.pointsUtil = pointsUtil;
+	}
+	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
 		this.earnRatio = new BigDecimal(ruleConfig.getConfigItemValue(PointsRuleConfigConstants.EARN_RATIO));

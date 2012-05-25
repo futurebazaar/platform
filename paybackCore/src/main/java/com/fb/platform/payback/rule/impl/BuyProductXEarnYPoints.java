@@ -21,6 +21,12 @@ public class BuyProductXEarnYPoints implements PointsRule {
 	private BigDecimal earnRatio;
 	private DateTime validFrom;
 	private DateTime validTill;
+	private PointsUtil pointsUtil;
+	
+	@Override
+	public void setPointsUtil(PointsUtil pointsUtil) {
+		this.pointsUtil = pointsUtil;
+	}
 	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
@@ -31,14 +37,13 @@ public class BuyProductXEarnYPoints implements PointsRule {
 		if (commaSeparatedIncludedCategoryList != null && !commaSeparatedIncludedCategoryList.equals("")){
 			StringTokenizer categoryTokenizer = new StringTokenizer(commaSeparatedIncludedCategoryList, ",");
 			while (categoryTokenizer.hasMoreTokens()){
-				this.includedCategoryList.add(Long.parseLong(categoryTokenizer.nextToken()));
+				this.includedCategoryList.add(Long.parseLong(categoryTokenizer.nextToken().replaceAll(" ", "")));
 			}
 		}
 		
 		String startsOn = ruleConfig.getConfigItemValue(PointsRuleConfigConstants.VALID_FROM);
 		String endsOn = ruleConfig.getConfigItemValue(PointsRuleConfigConstants.VALID_TILL);
 
-		PointsUtil pointsUtil = new PointsUtil();
 		this.validFrom = pointsUtil.getDateTimeFromString(startsOn, "yyyy-MM-dd");
 		this.validTill = pointsUtil.getDateTimeFromString(endsOn, "yyyy-MM-dd");
 		

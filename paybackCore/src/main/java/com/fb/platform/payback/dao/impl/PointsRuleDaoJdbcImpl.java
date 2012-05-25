@@ -29,8 +29,8 @@ public class PointsRuleDaoJdbcImpl implements PointsRuleDao{
 	
 	private static String LOAD_RULE_QUERY = 
 			"SELECT * FROM " +
-			"promotion_rule WHERE " +
-			"name = ?";
+			"rules WHERE " +
+			"name = ? ";
 	
 	private JdbcTemplate jdbcTemplate;
 
@@ -44,7 +44,7 @@ public class PointsRuleDaoJdbcImpl implements PointsRuleDao{
 			log.debug("Geting the promotion rule details for the rule id : " + ruleName );
 		}
 		PointsRuleRowCallBackHandler rcbh = new PointsRuleRowCallBackHandler();
-		jdbcTemplate.query(LOAD_RULE_QUERY, rcbh, ruleName);
+		jdbcTemplate.query(LOAD_RULE_QUERY, rcbh, ruleName.name());
 
 		if (!rcbh.ruleFound) {
 			return null;
@@ -73,8 +73,7 @@ public class PointsRuleDaoJdbcImpl implements PointsRuleDao{
 		}
 	}
 
-	@Override
-	public RuleConfiguration loadRuleConfiguration(long ruleId) {
+	private RuleConfiguration loadRuleConfiguration(long ruleId) {
 		if(log.isDebugEnabled()) {
 			log.debug("Geting the rule details for the promotion rule id : " + ruleId );
 		}
@@ -93,12 +92,12 @@ public class PointsRuleDaoJdbcImpl implements PointsRuleDao{
 	}
 
 	@Override
-	public PointsRule loadEarnRule(BurnPointsRuleEnum ruleName) {
+	public PointsRule loadBurnRule(BurnPointsRuleEnum ruleName) {
 		if(log.isDebugEnabled()) {
 			log.debug("Geting the promotion rule details for the rule id : " + ruleName );
 		}
 		PointsRuleRowCallBackHandler rcbh = new PointsRuleRowCallBackHandler();
-		jdbcTemplate.query(LOAD_RULE_QUERY, rcbh, ruleName);
+		jdbcTemplate.query(LOAD_RULE_QUERY, rcbh, ruleName.name());
 
 		if (!rcbh.ruleFound) {
 			return null;

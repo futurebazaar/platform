@@ -13,7 +13,7 @@ public class OrderItemRequest {
 	private BigDecimal txnPoints = BigDecimal.ZERO;
 	private BigDecimal earnRatio = BigDecimal.ZERO;
 	private BigDecimal burnRatio;
-	private Long sellerRateChartId;
+	private long sellerRateChartId;
 	
 	public long getCategoryId() {
 		return categoryId;
@@ -75,10 +75,10 @@ public class OrderItemRequest {
 	public void setBurnRatio(BigDecimal burnRatio) {
 		this.burnRatio = burnRatio;
 	}
-	public Long getSellerRateChartId() {
+	public long getSellerRateChartId() {
 		return sellerRateChartId;
 	}
-	public void setSellerRateChartId(Long sellerRateChartId) {
+	public void setSellerRateChartId(long sellerRateChartId) {
 		this.sellerRateChartId = sellerRateChartId;
 	}
 	

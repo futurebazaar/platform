@@ -19,16 +19,9 @@
      
      <bean id="pointsService" class="com.fb.platform.payback.service.impl.PointsServiceImpl">
         <property name="pointsDao" ref="pointsDao"></property>
-    </bean>
-    <bean id="pointsEarnService" class="com.fb.platform.payback.service.impl.PointsEarnServiceImpl">
         <property name="pointsUtil" ref="pointsUtil"></property>
-        <property name="pointsService" ref="pointsService"></property>
-        <property name="pointsDao" ref="pointsDao"></property>
-    </bean>
-     <bean id="pointsBurnService" class="com.fb.platform.payback.service.impl.PointsBurnServiceImpl">
-        <property name="pointsUtil" ref="pointsUtil"></property>
-        <property name="pointsDao" ref="pointsDao"></property>
-        <property name="pointsService" ref="pointsService"></property>
+        <property name="ruleCacheAccess" ref="ruleCacheAccess"/>
+        <property name="pointsRuleDao" ref="pointsRuleDao"></property>
     </bean>
     
 	 <!-- =================================================================== -->
@@ -38,20 +31,27 @@
      
      <bean id="pointsManager" class="com.fb.platform.payback.service.impl.PointsManagerImpl">
      	<property name="pointsUtil" ref="pointsUtil"></property>
-        <property name="pointsEarnService" ref="pointsEarnService"></property>
-        <property name="pointsBurnService" ref="pointsBurnService"></property>
+        <property name="pointsService" ref="pointsService"></property>
     </bean>
     
-   <!-- =================================================================== -->
-    <!-- Utilities: For general methods                                      -->
-    <!-- =================================================================== -->
+     <!-- Add new Factory Beans here -->
+    
+    <bean id="pointsRuleFactory" class="com.fb.platform.payback.rule.impl.PointsRuleFactory">
+    	<property name="pointsUtil" ref="pointsUtil"></property>
+    	<property name="listCacheAccess" ref="listCacheAccess"/>
+    	<property name="listDao" ref="listDao"></property>
+    </bean>
+    
     <!-- Add new Utilities here -->
+    
     <bean id="pointsUtil" class="com.fb.platform.payback.util.PointsUtil">
     </bean>
     
-    <!-- Add new Factory Beans here -->
-    <bean id="pointsRuleFactory" class="com.fb.platform.payback.rule.impl.PointsRuleFactory">
-    	<property name="listDao" ref="listDao"/>
+    <!-- Add new Cache Beans here -->
+    
+    <bean id="ruleCacheAccess" class="com.fb.platform.payback.cache.RuleCacheAccess">
+    </bean>
+    <bean id="listCacheAccess" class="com.fb.platform.payback.cache.ListCacheAccess">
     </bean>
     
 </beans>

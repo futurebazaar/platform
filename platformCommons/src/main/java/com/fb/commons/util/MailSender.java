@@ -2,8 +2,6 @@ package com.fb.commons.util;
 
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
@@ -35,7 +33,8 @@ public class MailSender {
 		Properties properties = new Properties();
 		properties.put("mail.smtp.host", host);
 		properties.put("mail.smtp.port", port);
-		
+		//properties.put("mail.smtp.timeout", "1000");
+		properties.put("mail.smtp.connectiontimeout", "5000");
 		Session session = Session.getInstance(properties);
 		if ((username != null && !username.equals("")) && (password != null && !password.equals(""))){
 			properties.put("mail.smtp.auth", "true");

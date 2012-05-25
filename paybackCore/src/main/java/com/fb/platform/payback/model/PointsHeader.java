@@ -3,6 +3,8 @@ package com.fb.platform.payback.model;
 import java.io.Serializable;
 import org.joda.time.DateTime;
 
+import com.fb.platform.payback.rule.PointsRuleConfigConstants;
+import com.fb.platform.payback.to.ClassificationCodesEnum;
 import com.fb.platform.payback.to.OrderRequest;
 
 public class PointsHeader implements Serializable{
@@ -130,8 +132,11 @@ public class PointsHeader implements Serializable{
 		this.reason = reason;
 	}
 	
-	public void setDetails(OrderRequest request) {
-		
+	public int hasSKUItems() {
+		if (txnClassificationCode.equals(PointsRuleConfigConstants.BONUS_POINTS)){
+			return 0;
+		}
+		return 1;
 	}
 	
 }

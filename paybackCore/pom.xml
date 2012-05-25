@@ -17,12 +17,12 @@
 	  	<dependency>
 	  		<groupId>com.fb</groupId>
 			<artifactId>platformCommons</artifactId>
-			<version>1.1.0</version>
+			<version>${platform.version}</version>
 	  	</dependency>
 	  	<dependency>
 	  		<groupId>com.fb</groupId>
 			<artifactId>platformCaching</artifactId>
-			<version>1.1.0</version>
+			<version>${platform.version}</version>
 	  	</dependency>
 	</dependencies>
 	

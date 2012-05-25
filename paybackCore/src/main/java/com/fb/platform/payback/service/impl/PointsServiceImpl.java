@@ -1,77 +1,284 @@
 package com.fb.platform.payback.service.impl;
 
 import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Properties;
 
 import org.joda.time.DateTime;
+import org.springframework.dao.DataAccessException;
 
 import com.fb.commons.PlatformException;
+import com.fb.commons.util.SFTPConnector;
+import com.fb.platform.payback.cache.RuleCacheAccess;
 import com.fb.platform.payback.dao.PointsDao;
-import com.fb.platform.payback.exception.DefinitionNotFound;
-import com.fb.platform.payback.exception.InvalidActionCode;
-import com.fb.platform.payback.exception.PointsHeaderDoesNotExist;
+import com.fb.platform.payback.dao.PointsRuleDao;
+import com.fb.platform.payback.exception.DealNotFoundException;
+import com.fb.platform.payback.exception.RuleNotFoundException;
 import com.fb.platform.payback.model.PointsHeader;
+import com.fb.platform.payback.model.PointsItems;
+import com.fb.platform.payback.rule.BurnPointsRuleEnum;
+import com.fb.platform.payback.rule.EarnPointsRuleEnum;
+import com.fb.platform.payback.rule.PointsRule;
 import com.fb.platform.payback.rule.PointsRuleConfigConstants;
 import com.fb.platform.payback.service.PointsService;
+import com.fb.platform.payback.to.BurnActionCodesEnum;
+import com.fb.platform.payback.to.EarnActionCodesEnum;
 import com.fb.platform.payback.to.OrderItemRequest;
 import com.fb.platform.payback.to.OrderRequest;
 import com.fb.platform.payback.to.PointsRequest;
 import com.fb.platform.payback.to.PointsResponseCodeEnum;
 import com.fb.platform.payback.to.PointsTxnClassificationCodeEnum;
+import com.fb.platform.payback.util.PointsUtil;
 
 public class PointsServiceImpl implements PointsService{
 	
 	private static int ROUND =BigDecimal.ROUND_HALF_DOWN; 
 	
 	private PointsDao pointsDao;
+	private PointsRuleDao pointsRuleDao;
+	private RuleCacheAccess ruleCacheAccess;
+	private PointsUtil pointsUtil;
 	
 	public void setPointsDao(PointsDao pointsDao) {
 		this.pointsDao = pointsDao;
 	}
-
+	public void setPointsRuleDao(PointsRuleDao pointsRuleDao) {
+		this.pointsRuleDao = pointsRuleDao;
+	}
+	public void setPointsUtil(PointsUtil pointsUtil){
+		this.pointsUtil = pointsUtil;
+	}
+	public void setRuleCacheAccess (RuleCacheAccess ruleCacheAccess){
+		this.ruleCacheAccess = ruleCacheAccess;
+	}
+	
 	@Override
-	public PointsResponseCodeEnum doOperation(PointsRequest request){
+	public PointsResponseCodeEnum storePoints(PointsRequest request) {
+		
+		PointsTxnClassificationCodeEnum actionCode = PointsTxnClassificationCodeEnum.valueOf(request.getTxnActionCode());
+		if (request.getOrderRequest().getLoyaltyCard()==null || !pointsUtil.isValidLoyaltyCard(request.getOrderRequest().getLoyaltyCard())){
+			return PointsResponseCodeEnum.INVALID_CARD_NO;
+		}
+		
+		if (actionCode.equals(PointsTxnClassificationCodeEnum.PREALLOC_EARN)){
+			return savePreallocEarnPoints(request);
+		}
+		else if (actionCode.equals(PointsTxnClassificationCodeEnum.EARN_REVERSAL)){
+			return saveEarnReversalPoints(request);
+		}
+		else if (actionCode.equals(PointsTxnClassificationCodeEnum.BURN_REVERSAL)){
+			return saveBurnReversalPoints(request);
+		}
+		return PointsResponseCodeEnum.INVALID_REQUEST;
+	}
+
+	
+	@Override	
+	public String postEarnData(EarnActionCodesEnum txnActionCode, String merchantId, String client){
+		String dataToUpload = "";
 		try{
-			OrderRequest orderRequest = request.getOrderRequest();
-			BigDecimal txnPoints = getTxnPoints(request);
-			PointsTxnClassificationCodeEnum actionCode = PointsTxnClassificationCodeEnum.valueOf(request.getTxnActionCode());
-			String classificationCode = actionCode.toString().split(",")[0];
-			BigDecimal bonusPoints = orderRequest.getBonusPoints();
-			if (txnPoints.compareTo(BigDecimal.ZERO) ==1){
-				savePoints(orderRequest, txnPoints, actionCode, classificationCode);
-				if (bonusPoints.compareTo(BigDecimal.ZERO) ==1){
-					savePoints(orderRequest, txnPoints, actionCode, PointsRuleConfigConstants.BONUS_POINTS);
-				}
-				return PointsResponseCodeEnum.SUCCESS;
+			Properties props = pointsUtil.getProperties("payback.properties");
+			String sequenceNumber = pointsUtil.getSequenceNumber();
+			String settlementDate = pointsUtil.getPreviousDayDate();
+		
+			// SFTP Connection
+			SFTPConnector sftpConnector = new SFTPConnector();
+			sftpConnector.setHost(props.getProperty("sftpHost"));
+
+			String sftpUsername = props.getProperty(client + "_sftpUsername");
+			sftpConnector.setUsername(sftpUsername);
+			sftpConnector.setPassword(props.getProperty(client + "_sftpPassword"));
+			if (!sftpConnector.isConnected()){
+				// false determines that host key checking will be disabled
+				sftpConnector.connect(false);
 			}
-			return PointsResponseCodeEnum.INVALID_POINTS;
-		} catch (InvalidActionCode e){
-			return PointsResponseCodeEnum.INVALID_ACTION_CODE;
-		} catch (DefinitionNotFound e){
-			return PointsResponseCodeEnum.INVALID_POINTS;
-		}catch (PointsHeaderDoesNotExist e){
-			return PointsResponseCodeEnum.FAILURE;
-		}catch (PlatformException e){
-			return PointsResponseCodeEnum.INTERNAL_ERROR;
-		} 
+			
+			DateTime newSettlementDate = DateTime.now();
+			dataToUpload = getEarnDataToUpload(txnActionCode.name(), settlementDate, newSettlementDate, merchantId, sequenceNumber);
+			if (dataToUpload != null && !dataToUpload.equals("")){
+				String fileName = txnActionCode.toString() + "_" + String.valueOf(merchantId) + 
+						"_"+ pointsUtil.convertDateToFormat(settlementDate, "ddMMyyyy") + "_" + sequenceNumber + ".txt";
+				String remoteDirectory = props.getProperty("sftpRemoteDirectory");
+				sftpConnector.upload(dataToUpload, fileName, remoteDirectory);
+				fileName = fileName.replace("txt", "chk");
+				sftpConnector.upload("", fileName, remoteDirectory);
+				pointsDao.updateStatus(txnActionCode.name(), settlementDate, merchantId);
+			}
+			sftpConnector.closeConnection();			
+			
+		}catch (PlatformException pe) {
+			pe.printStackTrace();
+		}
+		return dataToUpload;
+		
+	}
+
+	private String getEarnDataToUpload(String txnActionCode, String settlementDate, DateTime currentTime, String partnerMerchantId, String sequenceNumber) {
+		int headerRows = 0;
+		int totalTxnPoints = 0;
+		int totalTxnValue = 0;
+		String rowData = "";
+		int itemRows = 0;
+		
+		Collection<PointsHeader> earnHeaderList = pointsDao.loadPointsHeaderData(txnActionCode, settlementDate, partnerMerchantId);
+		Iterator<PointsHeader> EarnIterator = earnHeaderList.iterator();
+		while(EarnIterator.hasNext()){
+			PointsHeader earnHeader = EarnIterator.next();
+			Collection<PointsItems> pointsItems = pointsDao.loadPointsItemData(earnHeader.getId());
+			if (!pointsItems.isEmpty() || earnHeader.hasSKUItems() == 0){
+				headerRows++;
+				totalTxnPoints += earnHeader.getTxnPoints();
+				totalTxnValue += earnHeader.getTxnValue();
+				rowData += earnHeader.getLoyaltyCard() + "||||" + earnHeader.getPartnerMerchantId() + "||" +
+						earnHeader.getPartnerTerminalId() + "||" + earnHeader.getOrderId() + "|||" +
+						earnHeader.getTxnActionCode() + "|" + earnHeader.getTxnClassificationCode() + "|||" +
+						earnHeader.getTxnPaymentType().trim() + "|" + 
+						pointsUtil.convertDateToFormat(earnHeader.getTxnDate(), "ddMMyyyy") + "|" + 
+						pointsUtil.convertDateToFormat(earnHeader.getTxnTimestamp(), "hhmmss") + "|" + 
+						new BigDecimal(earnHeader.getTxnValue()).setScale(2) + "||" + earnHeader.getMarketingCode() + "|" +
+						earnHeader.getTxnPoints() + "|" + earnHeader.hasSKUItems() + "|" + 
+						pointsUtil.convertDateToFormat(earnHeader.getSettlementDate(), "ddMMyyyy")	+ "|||||||" + 
+						new BigDecimal(earnHeader.getTxnValue()).setScale(2) + "|" + earnHeader.getBranchId() + 
+						"||||||||||||||||||||||";
+				rowData += "\n";
+				
+				Iterator<PointsItems> itemIterator = pointsItems.iterator();
+				while(itemIterator.hasNext() && earnHeader.hasSKUItems() > 0){
+					itemRows++;
+					PointsItems pointsItem = itemIterator.next();
+					String departmentName = pointsItem.getDepartmentName();
+					//Check for length as it is required to send only 30 characters
+					if (departmentName.length() > 29){
+						departmentName = departmentName.substring(0, 29);
+					}
+					rowData += "|" + pointsItem.getItemAmount().setScale(2) + "|" + 
+							pointsItem.getItemAmount().setScale(2) + "||" +	earnHeader.getPartnerMerchantId() + "||" + 
+							new BigDecimal(pointsItem.getQuantity()).setScale(2) + "|AMOUNT|" + 
+							earnHeader.getOrderId() + "|" +	String.valueOf(itemRows) + "||||||||" + pointsItem.getDepartmentCode() + "|" + 
+							departmentName + "|||" + pointsItem.getArticleId() + "|2|" + //This no shows that is an item level quantity 
+							"||||||||||||||||||||||||||||||";
+					rowData += "\n";
+				}
+			}
+		}
+		if (rowData.length() > 0){
+			rowData += "PB_ACT_1.1|" + currentTime + "|" + sequenceNumber + "|" + partnerMerchantId + "||" + headerRows + "|" + 
+							totalTxnValue + "|" + totalTxnPoints + "|||||||||||||||9|||||||||||||||||||||||||||||||"; //The no 9 shows that it is the end of file
+			return rowData;
+		}
+		return null;
+	}
+
+	private PointsResponseCodeEnum saveEarnReversalPoints(PointsRequest request) {
+		PointsTxnClassificationCodeEnum actionCode = PointsTxnClassificationCodeEnum.PREALLOC_EARN;
+		String classificationCode = actionCode.toString().split(",")[0];
+		PointsHeader pointsHeader = pointsDao.getHeaderDetails(request.getOrderRequest().getOrderId(), actionCode.name(), classificationCode);
+		Collection<PointsItems> pointsItems = pointsDao.loadPointsItemData(pointsHeader.getId());
+		for (OrderItemRequest itemRequest : request.getOrderRequest().getOrderItemRequest()){
+			Iterator<PointsItems> itemIterator = pointsItems.iterator();
+			while (itemIterator.hasNext()){
+				PointsItems pointsItem = itemIterator.next();
+				if (pointsItem.getItemId() == itemRequest.getId()){
+					if (pointsItem.getEarnRatio().compareTo(BigDecimal.ZERO) == 1){
+						itemRequest.setTxnPoints(pointsItem.getEarnRatio().multiply(itemRequest.getAmount()));
+						itemRequest.setEarnRatio(pointsItem.getEarnRatio());
+						continue;
+					}
+					return PointsResponseCodeEnum.FAILURE;
+				}
+			}
+		}
+		// Check for Bonus Points
+		PointsHeader bonusPointsHeader = pointsDao.getHeaderDetails(request.getOrderRequest().getOrderId(), 
+				actionCode.name(), PointsRuleConfigConstants.BONUS_POINTS);
+		if (bonusPointsHeader != null){
+			EarnPointsRuleEnum ruleName = EarnPointsRuleEnum.BUY_WORTH_X_EARN_Y_BONUS_POINTS;
+			PointsRule rule = loadEarnRule(ruleName);
+			// Reverse Bonus Points only when rule is not applicable.
+			if (!rule.isApplicable(request.getOrderRequest(), null)){
+				request.getOrderRequest().setBonusPoints(new BigDecimal(bonusPointsHeader.getTxnPoints()));
+			}
+		}
+		return doOperation(request);
+	}
+
+	private PointsResponseCodeEnum savePreallocEarnPoints(PointsRequest request) {
+		
+		PointsRule rule = null;
+		for (EarnPointsRuleEnum ruleName : EarnPointsRuleEnum.values()){
+			boolean applied = false;
+			rule = loadEarnRule(ruleName);
+			OrderRequest orderRequest = request.getOrderRequest();
+			if (rule != null){
+				for (OrderItemRequest itemRequest : orderRequest.getOrderItemRequest()){
+					if (rule.isApplicable(orderRequest, itemRequest)){
+						BigDecimal points = rule.execute(orderRequest, itemRequest);
+						if (points.compareTo(itemRequest.getTxnPoints()) > 0){
+							itemRequest.setTxnPoints(points);
+							itemRequest.setEarnRatio(points.divide(itemRequest.getAmount()));
+						}
+						applied = true;
+					}
+				}
+				if (!rule.allowNext() && applied){
+					break;
+				}
+			}
+		}
+		return doOperation(request);
+		
+	}
+
+	private PointsResponseCodeEnum doOperation(PointsRequest request){
+		String clientName = request.getClientName();
+		OrderRequest orderRequest = request.getOrderRequest();
+		BigDecimal txnPoints = getTxnPoints(request);
+		PointsTxnClassificationCodeEnum actionCode = PointsTxnClassificationCodeEnum.valueOf(request.getTxnActionCode());
+		String classificationCode = actionCode.toString().split(",")[0];
+		String paymentType = actionCode.toString().split(",")[1];
+		BigDecimal bonusPoints = orderRequest.getBonusPoints();
+		if (txnPoints.compareTo(BigDecimal.ZERO) ==1){
+			savePoints(orderRequest, txnPoints, actionCode, classificationCode, paymentType, clientName);
+			if (bonusPoints.compareTo(BigDecimal.ZERO) ==1){
+				savePoints(orderRequest, bonusPoints, actionCode, PointsRuleConfigConstants.BONUS_POINTS, paymentType, clientName);
+			}
+			return PointsResponseCodeEnum.SUCCESS;
+		}
+		return PointsResponseCodeEnum.INVALID_POINTS;
 	}
 	
 	private BigDecimal getTxnPoints(PointsRequest request) {
 		BigDecimal totalTxnPoint = BigDecimal.ZERO;
 		for (OrderItemRequest itemRequest : request.getOrderRequest().getOrderItemRequest()){
-			totalTxnPoint.add(itemRequest.getTxnPoints());
+			totalTxnPoint = totalTxnPoint.add(itemRequest.getTxnPoints());
 		}
 			return totalTxnPoint;
 	}
 
-	private void savePoints(OrderRequest orderRequest, BigDecimal txnPoints, PointsTxnClassificationCodeEnum actionCode, String classificationCode){
+	private void savePoints(OrderRequest orderRequest, BigDecimal txnPoints, PointsTxnClassificationCodeEnum actionCode, String classificationCode,  String paymentType, String client){
+		Properties props = pointsUtil.getProperties("payback.properties");
+		String partnerMerchantId = props.getProperty(client + "_MERCHANT_ID");
+		String partnerTerminalId = props.getProperty(client + "_TERMINAL_ID");
+		
 		PointsHeader pointsHeader = new PointsHeader();
+		pointsHeader.setPartnerMerchantId(partnerMerchantId);
+		pointsHeader.setPartnerTerminalId(partnerTerminalId);
 		pointsHeader.setTxnClassificationCode(classificationCode);
+		pointsHeader.setTxnPaymentType(paymentType);
 		pointsHeader.setTxnActionCode(actionCode.name());
 		pointsHeader.setTxnPoints(txnPoints.setScale(0, ROUND).intValue());
 		pointsHeader.setTxnValue(orderRequest.getAmount().setScale(0, ROUND).intValue());
-		pointsHeader.setDetails(orderRequest);
+		pointsHeader.setReferenceId(orderRequest.getReferenceId());
+		pointsHeader.setLoyaltyCard(orderRequest.getLoyaltyCard());
+		pointsHeader.setReason(orderRequest.getReason());
+		pointsHeader.setSettlementDate(DateTime.now());
+		pointsHeader.setTxnDate(orderRequest.getTxnTimestamp());
+		pointsHeader.setOrderId(orderRequest.getOrderId());
+		
 		long headerId = pointsDao.insertPointsHeaderData(pointsHeader);
-		if (orderRequest.getOrderItemRequest() != null && !orderRequest.getOrderItemRequest().isEmpty()){
+		if (orderRequest.getOrderItemRequest() != null && !orderRequest.getOrderItemRequest().isEmpty() && 
+				pointsHeader.hasSKUItems() > 0){
 			savePointsItems(orderRequest, headerId);
 		}
 		
@@ -85,15 +292,107 @@ public class PointsServiceImpl implements PointsService{
 		
 	}
 
-	@Override
-	public String getSequenceNumber() {
-		DateTime datetime = new DateTime();
-		int seconds = (datetime.getSecondOfDay()%999999) + 1;
-		String sequenceNumber = String.valueOf(seconds);
-		while(sequenceNumber.length() < 6){
-			sequenceNumber = "0" + sequenceNumber;
+	private PointsRule loadEarnRule(EarnPointsRuleEnum ruleName) {
+		PointsRule rule = ruleCacheAccess.get(ruleName.name());
+		if (rule == null){
+			try {
+				rule = pointsRuleDao.loadEarnRule(ruleName);
+			} catch (DataAccessException e) {
+				e.printStackTrace();
+				throw new RuleNotFoundException("Error loading Rule " + ruleName);
+			}
+
+			if (rule != null) {
+				cacheRule(ruleName.name(), rule);
+			} else {
+				throw new RuleNotFoundException("Rule Not Found " + ruleName);
+			}
+	
 		}
-		return sequenceNumber;
+		
+		return rule;
+	}
+	
+	private PointsRule loadBurnRule(BurnPointsRuleEnum ruleName) {
+		PointsRule rule = ruleCacheAccess.get(ruleName.name());
+		if (rule == null){
+			try {
+				rule = pointsRuleDao.loadBurnRule(ruleName);
+			} catch (DataAccessException e) {
+				throw new DealNotFoundException("Error loading Hero Deal");
+			}
+
+			if (rule != null) {
+				cacheRule(ruleName.name(), rule);
+			} else {
+				throw new DealNotFoundException("Todays Deal Not Found");
+			}
+	
+		}
+		
+		return rule;
+	}
+	
+	//Caches Deal Id and Deal Date
+	private void cacheRule(String ruleName, PointsRule rule) {
+		
+		try {
+			ruleCacheAccess.lock(ruleName);
+			if (ruleCacheAccess.get(ruleName) == null) {
+				ruleCacheAccess.put(ruleName, rule);
+			}
+		} finally {
+			ruleCacheAccess.unlock(ruleName);
+		}
+		
+	}
+	
+	@Override
+	public String mailBurnData(BurnActionCodesEnum txnActionCode, String merchantId) {
+		String settlementDate = pointsUtil.getPreviousDayDate();
+		String fileName = "Burn Reversal_" + settlementDate +  ".csv";
+		String header = "Transaction ID, Transaction Date, Merchant ID, Points, Reason \n";
+		String fileBody = "";
+		Collection<PointsHeader> burnList = pointsDao.loadPointsHeaderData(txnActionCode.name(), settlementDate, merchantId);
+		Iterator<PointsHeader> burnIterator = burnList.iterator();
+		while(burnIterator.hasNext()){
+			PointsHeader burnValues = burnIterator.next();
+			String transactionID = burnValues.getReferenceId();
+			String transactionDate = pointsUtil.convertDateToFormat(burnValues.getTxnDate(), "yyyy-MM-dd");
+			String points = String.valueOf(burnValues.getTxnPoints());
+			String reason = burnValues.getReason();
+			
+			fileBody += transactionID + ", " + transactionDate + ", " + merchantId + ", " +
+					points + ", " + reason + "\n";
+		}
+		
+		if (fileBody != null && !fileBody.equals("")){
+			fileBody = header + fileBody;
+			pointsDao.updateStatus(txnActionCode.name(), settlementDate, merchantId);
+			pointsUtil.sendMail(txnActionCode.name(), merchantId, fileName, fileBody, "POINTS");
+		}	
+		return fileBody;
+	}
+	
+	private PointsResponseCodeEnum saveBurnReversalPoints(PointsRequest request) {
+		
+		PointsRule  rule = null;
+		for (BurnPointsRuleEnum ruleName : BurnPointsRuleEnum.values()){
+			rule = loadBurnRule(ruleName);
+			OrderRequest orderRequest = request.getOrderRequest();
+			if (rule != null){
+				for (OrderItemRequest itemRequest : orderRequest.getOrderItemRequest()){
+					if (rule.isApplicable(orderRequest, itemRequest)){
+						itemRequest.setTxnPoints(rule.execute(orderRequest, itemRequest));
+					}
+				}
+			}
+			if (!rule.allowNext()){
+				break;
+			}
+		}
+			
+		return doOperation(request);
 	}
 
 }

@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import com.fb.commons.PlatformException;
 import com.fb.platform.payback.dao.PointsDao;
 import com.fb.platform.payback.model.PointsHeader;
 import com.fb.platform.payback.model.PointsItems;
@@ -24,7 +25,7 @@ public class PointsDaoJdbcImpl implements PointsDao{
 	private JdbcTemplate jdbcTemplate;
 	
 	private static final String INSERT_POINTS_HEADER_SQL =
-			"INSERT INTO payments_pointsheader " +
+			"INSERT INTO points_header " +
 			"(order_id, " +
 			"reference_id, " +
 			"loyalty_card, " +
@@ -35,17 +36,14 @@ public class PointsDaoJdbcImpl implements PointsDao{
 			"txn_payment_type, " +
 			"txn_date, " +
 			"settlement_date, " +
-			"txn_timstamp, " +
+			"txn_timestamp, " +
 			"txn_value, " +
-			"marketing_code, " +
-			"branch_id, " +
 			"txn_points, " +
 			"status, " +
 			"reason) " +
-			"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " +
-			"?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
-	private static final String UPDATE_STATUS_SQL = 
+	/*private static final String UPDATE_STATUS_SQL = 
 			"UPDATE payments_pointsheader SET " +
 			"txn_timstamp = ?, " +
 			"status = 'DONE' WHERE " +
@@ -67,17 +65,48 @@ public class PointsDaoJdbcImpl implements PointsDao{
 			"txn_action_code = ? AND " +
 			"settlement_date = ? AND " +
 			"partner_merchant_id = ?  " +
-			"order by id desc";
-	
+			"order by id";
 	
 	private static final String LOAD_EARN_DATA_QUERY = 
 			"SELECT * FROM " +
 			"payments_pointsitems " +
 			"WHERE points_header_id = ? " +
+			"order by id desc";*/
+	
+	private static final String UPDATE_STATUS_SQL = 
+			"UPDATE points_header SET " +
+			"txn_timestamp = ?, " +
+			"status = 'DONE' WHERE " +
+			"txn_action_code = ? AND " +
+			"settlement_date = ? AND " +
+			"partner_merchant_id = ? ";
+	
+	
+	private static final String LOAD_POINTS_HEADER_SQL = 
+			" SELECT * FROM points_header WHERE " +
+			"txn_action_code = ? AND " +
+			"order_id = ? AND " +
+			"txn_classification_code = ? " +
+			"order by id desc";
+	
+	
+	private static final String LOAD_HEADER_DATA_QUERY = 
+			"SELECT * FROM " +
+			"points_header WHERE " +
+			"status = 'FRESH' AND " +
+			"txn_action_code = ? AND " +
+			"settlement_date = ? AND " +
+			"partner_merchant_id = ?  " +
+			"order by id ";
+	
+	private static final String LOAD_EARN_DATA_QUERY = 
+			"SELECT * FROM " +
+			"points_items " +
+			"WHERE points_header_id = ? " +
 			"order by id desc";
 	
 	private static final String INSERT_POINTS_ITEMS_SQL = 
-			"INSERT INTO payments_pointsitems " +
+			"INSERT INTO points_items " +
 			"(points_header_id, " +
 			"quantity, " +
 			"department_code, " +
@@ -86,9 +115,9 @@ public class PointsDaoJdbcImpl implements PointsDao{
 			"article_id, " +
 			"txn_points, " +
 			"order_item_id, " +
-			"earnRatio, " +
-			"burnRatio) " +
-			"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			"earn_ratio, " +
+			"burn_ratio) " +
+			"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
@@ -116,14 +145,12 @@ public class PointsDaoJdbcImpl implements PointsDao{
 				
 				ps.setDate(9, new java.sql.Date(pointsHeader.getTxnDate().getMillis()));
 				ps.setDate(10, new java.sql.Date(pointsHeader.getSettlementDate().getMillis()));
-				ps.setTimestamp(11, new java.sql.Timestamp(pointsHeader.getTxnTimestamp().getMillis()));				
+				ps.setTimestamp(11, new java.sql.Timestamp(pointsHeader.getTxnDate().getMillis()));				
 			
 				ps.setInt(12, pointsHeader.getTxnValue());
-				ps.setString(13, pointsHeader.getMarketingCode());
-				ps.setString(14, pointsHeader.getBranchId());
-				ps.setInt(15, pointsHeader.getTxnPoints());
-				ps.setString(16, "FRESH");
-				ps.setString(17, pointsHeader.getReason());
+				ps.setInt(13, pointsHeader.getTxnPoints());
+				ps.setString(14, "FRESH");
+				ps.setString(15, pointsHeader.getReason());
 				
 				return ps;
 			}
@@ -134,7 +161,7 @@ public class PointsDaoJdbcImpl implements PointsDao{
 
 	@Override
 	public void updateStatus(final String txnActionCode, final String settlementDate, final String merchantId) {
-		jdbcTemplate.update(new PreparedStatementCreator() {
+		int rowUpdated =  jdbcTemplate.update(new PreparedStatementCreator() {
 			
 			@Override
 			public PreparedStatement createPreparedStatement(Connection con)
@@ -147,16 +174,15 @@ public class PointsDaoJdbcImpl implements PointsDao{
 				return ps;
 			}
 		});
+		if (rowUpdated <= 0){
+			throw new PlatformException("Unable to update the status for merchant : " + merchantId + 
+					" with txnActionCode : "+ txnActionCode +  " on settlement_date : "+ settlementDate);
+		}
 	}
 	
 	@Override
 	public PointsHeader getHeaderDetails(long orderId, String txnActionCode, String txnClassificationCode){
-		List<PointsHeader> pointsHeader = jdbcTemplate.query(LOAD_POINTS_HEADER_SQL, 
-				new Object[]{txnActionCode, orderId, txnClassificationCode}, new HeaderMapper());
-		if (pointsHeader != null && pointsHeader.size() == 1){
-			return pointsHeader.get(0);
-		}
-		return null;
+		return jdbcTemplate.queryForObject(LOAD_POINTS_HEADER_SQL, new Object[]{txnActionCode, orderId, txnClassificationCode}, new HeaderMapper());
 	}
 	
 	@Override
@@ -173,7 +199,7 @@ public class PointsDaoJdbcImpl implements PointsDao{
 			pointsHeader.setId(rs.getLong("id"));
 			pointsHeader.setOrderId(rs.getLong("order_id"));
 			pointsHeader.setTxnActionCode(rs.getString("txn_action_code"));
-			pointsHeader.setTxnTimestamp(new DateTime(rs.getTimestamp("txn_timstamp").getTime()));
+			//pointsHeader.setTxnTimestamp(new DateTime(rs.getTimestamp("txn_timstamp").getTime()));
 			pointsHeader.setSettlementDate(new DateTime(rs.getDate("settlement_date").getTime()));
 			pointsHeader.setTxnDate(new DateTime(rs.getDate("txn_date").getTime()));
 			pointsHeader.setTxnPoints(rs.getInt("txn_points"));
@@ -201,12 +227,6 @@ public class PointsDaoJdbcImpl implements PointsDao{
 		
 	}
 	
-	@Override
-	public PointsItems getEarnData(String txnActionCode, long orderId) {
-		
-		return null;
-	}
-	
 	private static class EarnDataMapper implements RowMapper<PointsItems>{
 
 		@Override
@@ -219,6 +239,7 @@ public class PointsDaoJdbcImpl implements PointsDao{
 			earnPoints.setItemId(rs.getLong("order_item_id"));
 			earnPoints.setQuantity(rs.getInt("quantity"));
 			earnPoints.setPointsHeaderId(rs.getLong("points_header_id"));
+			earnPoints.setEarnRatio(rs.getBigDecimal("earn_ratio"));
 			return earnPoints;
 		}
 		

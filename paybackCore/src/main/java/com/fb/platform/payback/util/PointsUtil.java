@@ -71,15 +71,15 @@ public class PointsUtil {
 	}
 	
 
-	public void sendMail(String txnActionCode, String merchantId, String fileName, String fileContent) {
+	public void sendMail(String txnActionCode, String merchantId, String fileName, String fileContent, String type) {
 		try{
 			Properties props = getProperties("payback.properties");					
 			String host = props.getProperty("mailHost");
 			int port = Integer.parseInt(props.getProperty("mailPort"));
 			MailSender mailSender = new MailSender(host, port, props.getProperty("mailUsername"),props.getProperty("mailPassword"));
-			mailSender.setFrom(props.getProperty("from"));
-			mailSender.setTO(props.getProperty("to"));
-			mailSender.setCC(props.getProperty("cc"));
+			mailSender.setFrom(props.getProperty(type + "_FROM"));
+			mailSender.setTO(props.getProperty(type + "_TO"));
+			mailSender.setCC(props.getProperty(type + "_CC"));
 			mailSender.setSubject(txnActionCode + " " + merchantId + " " + getPreviousDayDate());
 			mailSender.setText("Please find the attached " + txnActionCode + " file");
 			if (fileContent != null) mailSender.setFileContent(fileContent, fileName);
@@ -97,6 +97,18 @@ public class PointsUtil {
 	public boolean isValidLoyaltyCard(String cardNumber){
 		return cardNumber.matches("[0-9]{16}");
 	}
+	
+
+	public String getSequenceNumber() {
+		DateTime datetime = new DateTime();
+		int seconds = (datetime.getSecondOfDay()%999999) + 1;
+		String sequenceNumber = String.valueOf(seconds);
+		while(sequenceNumber.length() < 6){
+			sequenceNumber = "0" + sequenceNumber;
+		}
+		return sequenceNumber;
+	}
+
 
 	
 }

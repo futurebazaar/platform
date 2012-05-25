@@ -21,6 +21,14 @@ public class EarnXPointsOnYDay implements PointsRule {
 	private BigDecimal earnRatio;
 	private DateTime validTill;
 	private DateTime validFrom;
+	private PointsUtil pointsUtil;
+	
+	@Override
+	public void setPointsUtil(PointsUtil pointsUtil) {
+		this.pointsUtil = pointsUtil;
+	}
+	
+	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
 		this.offerDay = ruleConfig.getConfigItemValue(PointsRuleConfigConstants.OFFER_DAY);
@@ -36,7 +44,6 @@ public class EarnXPointsOnYDay implements PointsRule {
 		String startsOn = ruleConfig.getConfigItemValue(PointsRuleConfigConstants.VALID_FROM);
 		String endsOn = ruleConfig.getConfigItemValue(PointsRuleConfigConstants.VALID_TILL);
 		
-		PointsUtil pointsUtil = new PointsUtil();
 		this.validFrom = pointsUtil.getDateTimeFromString(startsOn, "yyyy-MM-dd");
 		this.validTill = pointsUtil.getDateTimeFromString(endsOn, "yyyy-MM-dd");
 		
