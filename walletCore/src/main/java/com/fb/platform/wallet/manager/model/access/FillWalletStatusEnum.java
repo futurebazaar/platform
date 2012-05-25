@@ -4,6 +4,7 @@ public enum FillWalletStatusEnum {
 
 	SUCCESS("SUCCESS"),
 	NO_SESSION("NO SESSION"),
+	INVALID_WALLET("INVALID WALLET"),
 	FAILED_TRANSACTION("FAILED TRANSACTION");
 
 	private String status = null;

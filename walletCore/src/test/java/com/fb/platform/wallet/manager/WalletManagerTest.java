@@ -105,6 +105,7 @@ public class WalletManagerTest extends BaseTestCase{
 		assertEquals(new BigDecimal("100.00"), response.getWalletDetails().getRefundAmount());
 		assertEquals(8, response.getWalletDetails().getWalletId());
 	}
+
 	@Test
 	public void testWalletSummary3() {
 		WalletSummaryRequest request = new WalletSummaryRequest();
@@ -120,15 +121,55 @@ public class WalletManagerTest extends BaseTestCase{
 	}
 
 	@Test
+	public void testWalletHistory() {
+		WalletHistoryRequest request = new WalletHistoryRequest();
+		request.setWalletId(100);
+		request.setSessionToken(sessionToken + "abcd");
+
+		WalletHistoryResponse response = walletManager.getWalletHistory(request);
+		
+		assertNotNull(response);
+		assertEquals("NO SESSION", response.getWalletHistoryStatus().toString());
+		
+		request.setWalletId(100);
+		request.setSessionToken(sessionToken);
+		
+		response = walletManager.getWalletHistory(request);
+		
+		assertNotNull(response);
+		assertEquals("INVALID WALLET", response.getWalletHistoryStatus().toString());
+	}
+
+	@Test
+	public void testWalletHistory2() {
+		WalletHistoryRequest request = new WalletHistoryRequest();
+		request.setWalletId(8);
+		request.setSessionToken(sessionToken);
+
+		WalletHistoryResponse response = walletManager.getWalletHistory(request);
+		
+		assertNotNull(response);
+		assertEquals("SUCCESS", response.getWalletHistoryStatus().toString());
+		assertEquals(3,response.getTransactionList().size());
+	}
+
+	@Test
 	public void testWalletCreditWithCash() {
 		FillWalletRequest request = new FillWalletRequest();
 		request.setAmount(new BigDecimal("100.00"));
 		request.setWalletId(8);
 		request.setPaymentId(1);
 		request.setSubWallet(SubWalletEnum.CASH);
-		request.setSessionToken(sessionToken);
+		request.setSessionToken(sessionToken + "abcd");
 
 		FillWalletResponse response = walletManager.fillWallet(request);
+		
+		assertNotNull(response);
+		assertEquals("NO SESSION", response.getStatus().toString());
+		
+		request.setSessionToken(sessionToken);
+		
+		response = walletManager.fillWallet(request);
 		
 		assertNotNull(response);
 		assertEquals("SUCCESS", response.getStatus().toString());
@@ -178,6 +219,22 @@ public class WalletManagerTest extends BaseTestCase{
 		assertEquals(new BigDecimal("200.00"), summaryResponse.getWalletDetails().getRefundAmount());
 		
 	}
+	
+	@Test
+	public void testWalletCreditWithRefund1() {
+		FillWalletRequest request = new FillWalletRequest();
+		request.setAmount(new BigDecimal("100.00"));
+		request.setWalletId(100);
+		request.setRefundId(1);
+		request.setSubWallet(SubWalletEnum.REFUND);
+		request.setSessionToken(sessionToken);
+
+		FillWalletResponse response = walletManager.fillWallet(request);
+		
+		assertNotNull(response);
+		assertEquals("INVALID WALLET", response.getStatus().toString());
+	}
+
 	@Test
 	public void testWalletDebit() {
 		PayRequest request = new PayRequest();
@@ -185,13 +242,20 @@ public class WalletManagerTest extends BaseTestCase{
 		request.setUserId(userId);
 		request.setClientId(-5);
 		request.setOrderId(1);
-		request.setSessionToken(sessionToken);
+		request.setSessionToken(sessionToken + "abcd");
 
 		PayResponse response = walletManager.payFromWallet(request);
 		
 		assertNotNull(response);
-		assertEquals("SUCCESS", response.getStatus().toString());
+		assertEquals("NO SESSION", response.getStatus().toString());
+
+		request.setSessionToken(sessionToken);
+
+		response = walletManager.payFromWallet(request);
 		
+		assertNotNull(response);
+		assertEquals("SUCCESS", response.getStatus().toString());
+
 		WalletSummaryRequest summaryRequest = new WalletSummaryRequest();
 		summaryRequest.setUserId(userId);
 		summaryRequest.setClientId(-5);
@@ -313,6 +377,20 @@ public class WalletManagerTest extends BaseTestCase{
 		assertEquals("BALANCE UNAVAILABLE", response.getStatus().toString());
 	}
 	
+	@Test
+	public void testWalletDebit6() {
+		PayRequest request = new PayRequest();
+		request.setAmount(new BigDecimal("400.00"));
+		request.setUserId(userId);
+		request.setClientId(-155);
+		request.setOrderId(1);
+		request.setSessionToken(sessionToken);
+
+		PayResponse response = walletManager.payFromWallet(request);
+		
+		assertNotNull(response);
+		assertEquals("INVALID WALLET", response.getStatus().toString());
+	}
 	
 	@Test
 	public void testRefundFromWallet() {
@@ -322,13 +400,20 @@ public class WalletManagerTest extends BaseTestCase{
 		request.setClientId(-5);
 		request.setRefundId(1);
 		request.setIgnoreExpiry(true);
-		request.setSessionToken(sessionToken);
+		request.setSessionToken(sessionToken + "abcd");
 
 		RefundResponse response = walletManager.refundFromWallet(request);
 		
 		assertNotNull(response);
-		assertEquals("SUCCESS", response.getStatus().toString());
+		assertEquals("NO SESSION", response.getStatus().toString());
+
+		request.setSessionToken(sessionToken);
+
+		response = walletManager.refundFromWallet(request);
 		
+		assertNotNull(response);
+		assertEquals("SUCCESS", response.getStatus().toString());
+
 		request.setAmount(new BigDecimal("100.00"));
 		request.setUserId(userId);
 		request.setClientId(-5);
@@ -399,7 +484,23 @@ public class WalletManagerTest extends BaseTestCase{
 		assertNotNull(response);
 		assertEquals("FAILED TRANSACTION", response.getStatus().toString());
 	}
-	
+
+	@Test
+	public void testRefundFromWallet4() {
+		RefundRequest request = new RefundRequest();
+		request.setAmount(new BigDecimal("100.00"));
+		request.setUserId(userId);
+		request.setClientId(-155);
+		request.setRefundId(2);		// Invalid refund id
+		request.setIgnoreExpiry(true);
+		request.setSessionToken(sessionToken);
+
+		RefundResponse response = walletManager.refundFromWallet(request);
+		
+		assertNotNull(response);
+		assertEquals("INVALID WALLET", response.getStatus().toString());
+	}
+
 	@Test
 	public void testRevertTransaction() {
 		RevertRequest request = new RevertRequest();
@@ -413,6 +514,15 @@ public class WalletManagerTest extends BaseTestCase{
 		
 		assertNotNull(response);
 		assertEquals("INVALID TRANSACTION ID", response.getStatus().toString());
+		
+		request.setSessionToken(sessionToken + "abcd");
+		request.setTransactionId("akjsdasdjj");
+
+		response = walletManager.revertWalletTransaction(request);
+		
+		assertNotNull(response);
+		assertEquals("NO SESSION", response.getStatus().toString());
+
 	}
 
 	@Test
@@ -420,11 +530,18 @@ public class WalletManagerTest extends BaseTestCase{
 		RevertRequest request = new RevertRequest();
 		request.setAmount(new BigDecimal("100.00"));
 		request.setUserId(userId);
-		request.setClientId(-5);
+		request.setClientId(-155);
 		request.setSessionToken(sessionToken);
 		request.setTransactionId("ABSCDFADF1231lp0bg2SASzcvab");
 
 		RevertResponse response = walletManager.revertWalletTransaction(request);
+		
+		assertNotNull(response);
+		assertEquals("INVALID WALLET", response.getStatus().toString());
+		
+		request.setClientId(-5);
+		
+		response = walletManager.revertWalletTransaction(request);
 		
 		assertNotNull(response);
 		assertEquals("SUCCESS", response.getStatus().toString());
@@ -668,7 +785,7 @@ public class WalletManagerTest extends BaseTestCase{
 		assertEquals(new BigDecimal("0.00"), summaryResponse.getWalletDetails().getGiftAmount());
 		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getRefundAmount());
 
-/*		revertRequest = new RevertRequest();
+		revertRequest = new RevertRequest();
 		revertRequest.setAmount(new BigDecimal("150.00"));
 		revertRequest.setUserId(userId);
 		revertRequest.setClientId(-5);
@@ -693,7 +810,7 @@ public class WalletManagerTest extends BaseTestCase{
 		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getCashAmount());
 		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getGiftAmount());
 		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getRefundAmount());
-*/
+
 	}
 
 	@Test

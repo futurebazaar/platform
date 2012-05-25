@@ -74,11 +74,9 @@ public class WalletManagerImpl implements WalletManager {
 	@Override
 	public WalletSummaryResponse getWalletSummary(
 			WalletSummaryRequest walletSummaryRequest) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Trying to retrieve wallet summary for userid : "
-					+ walletSummaryRequest.getUserId());
-		}
-
+	
+		logger.info("Trying to retrieve wallet summary for userid : " + walletSummaryRequest.getUserId());
+	
 		WalletSummaryResponse walletSummaryResponse = new WalletSummaryResponse();
 
 		// authenticate the session token and find out the userId
@@ -119,10 +117,8 @@ public class WalletManagerImpl implements WalletManager {
 	@Override
 	public WalletHistoryResponse getWalletHistory(
 			WalletHistoryRequest walletHistoryRequest) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Trying to retrieve wallet history for wallet id : "
-					+ walletHistoryRequest.getWalletId());
-		}
+		
+		logger.info("Trying to retrieve wallet history for wallet id : " + walletHistoryRequest.getWalletId());			
 		WalletHistoryResponse response = new WalletHistoryResponse();
 
 		// authenticate the session token and find out the userId
@@ -157,10 +153,8 @@ public class WalletManagerImpl implements WalletManager {
 	@Override
 	public FillWalletResponse fillWallet(
 			FillWalletRequest fillWalletRequest) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Trying to fill wallet : "
-					+ fillWalletRequest.getWalletId());
-		}
+		
+		logger.info("Trying to fill wallet : " + fillWalletRequest.getWalletId());
 		FillWalletResponse response = new FillWalletResponse();
 
 		// authenticate the session token and find out the userId
@@ -184,7 +178,7 @@ public class WalletManagerImpl implements WalletManager {
 			
 		} catch (WalletNotFoundException pe) {
 			logger.error("No wallet exists with id : " + fillWalletRequest.getWalletId(), pe);
-			response.setStatus(FillWalletStatusEnum.FAILED_TRANSACTION);
+			response.setStatus(FillWalletStatusEnum.INVALID_WALLET);
 		} catch (PlatformException pe) {
 			logger.error("Exception in fillwallet for wallet id: " + fillWalletRequest.getWalletId(), pe);
 			response.setStatus(FillWalletStatusEnum.FAILED_TRANSACTION);
@@ -198,10 +192,9 @@ public class WalletManagerImpl implements WalletManager {
 	@Override
 	public PayResponse payFromWallet(
 			PayRequest payRequest) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Trying to pay from wallet for order "
-					+ payRequest.getOrderId());
-		}
+		
+		logger.info("Trying to pay from wallet for order " + payRequest.getOrderId());
+		
 		PayResponse response = new PayResponse();
 
 		// authenticate the session token and find out the userId
@@ -240,10 +233,9 @@ public class WalletManagerImpl implements WalletManager {
 	@Override
 	public RefundResponse refundFromWallet(
 			RefundRequest refundRequest) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Trying to refund from wallet for amount "
-					+ refundRequest.getAmount());
-		}
+
+		logger.debug("Trying to refund from wallet for amount "	+ refundRequest.getAmount());
+
 		RefundResponse response = new RefundResponse();
 
 		// authenticate the session token and find out the userId
@@ -288,10 +280,9 @@ public class WalletManagerImpl implements WalletManager {
 	@Override
 	public RevertResponse revertWalletTransaction(
 			RevertRequest revertRequest) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Trying to revert wallet transaction "
-					+ revertRequest.getTransactionId());
-		}
+		
+		logger.debug("Trying to revert wallet transaction "	+ revertRequest.getTransactionId());
+		
 		RevertResponse response = new RevertResponse();
 
 		// authenticate the session token and find out the userId
