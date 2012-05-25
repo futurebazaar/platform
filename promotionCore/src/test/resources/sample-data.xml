@@ -853,6 +853,60 @@
                         <value name="created_on">2012-04-04 22:37:14</value>
                         <value name="last_modified_on">2012-04-04 22:37:14</value>
                 </row>
+                <row>
+                        <value name="id">-6</value>
+                        <value name="coupon_id">-1</value>
+                        <value name="user_id">24</value>
+                        <value name="order_id">502</value>
+                        <value name="discount_amount">201</value>
+                        <value name="created_on">2012-04-04 22:37:14</value>
+                        <value name="last_modified_on">2012-04-04 22:37:14</value>
+                </row>
+                <row>
+                        <value name="id">-7</value>
+                        <value name="coupon_id">-2</value>
+                        <value name="user_id">24</value>
+                        <value name="order_id">505</value>
+                        <value name="discount_amount">21</value>
+                        <value name="created_on">2012-04-04 22:37:14</value>
+                        <value name="last_modified_on">2012-04-04 22:37:14</value>
+                </row>
+                <row>
+                        <value name="id">-8</value>
+                        <value name="coupon_id">-3</value>
+                        <value name="user_id">24</value>
+                        <value name="order_id">230</value>
+                        <value name="discount_amount">20</value>
+                        <value name="created_on">2012-04-04 22:37:14</value>
+                        <value name="last_modified_on">2012-04-04 22:37:14</value>
+                </row>
+                <row>
+                        <value name="id">-9</value>
+                        <value name="coupon_id">-4</value>
+                        <value name="user_id">24</value>
+                        <value name="order_id">2302</value>
+                        <value name="discount_amount">210</value>
+                        <value name="created_on">2012-04-04 22:37:14</value>
+                        <value name="last_modified_on">2012-04-04 22:37:14</value>
+                </row>
+                <row>
+                        <value name="id">-10</value>
+                        <value name="coupon_id">-2200</value>
+                        <value name="user_id">24</value>
+                        <value name="order_id">52340</value>
+                        <value name="discount_amount">210</value>
+                        <value name="created_on">2012-04-04 22:37:14</value>
+                        <value name="last_modified_on">2012-04-04 22:37:14</value>
+                </row>
+                <row>
+                        <value name="id">-11</value>
+                        <value name="coupon_id">-4444</value>
+                        <value name="user_id">24</value>
+                        <value name="order_id">534341</value>
+                        <null></null>
+                        <value name="created_on">2012-04-04 12:37:14</value>
+                        <value name="last_modified_on">2012-04-04 12:37:14</value>
+                </row>
         </table>
         <table name="promotion_rule_config">
                 <column>id</column>
@@ -1390,6 +1444,36 @@
                         <value name="coupon_id">-4448</value>
                         <value name="user_id">1</value>
                         <value name="override_user_uses_limit">4</value>
+                </row>
+                <row>
+                        <value name="id">-2443</value>
+                        <value name="coupon_id">-2200</value>
+                        <value name="user_id">24</value>
+                        <value name="override_user_uses_limit">2</value>
+                </row>
+                <row>
+                        <value name="id">-254</value>
+                        <value name="coupon_id">-2</value>
+                        <value name="user_id">24</value>
+                        <value name="override_user_uses_limit">0</value>
+                </row>
+                <row>
+                        <value name="id">-354</value>
+                        <value name="coupon_id">-3002</value>
+                        <value name="user_id">24</value>
+                        <value name="override_user_uses_limit">3</value>
+                </row>
+                 <row>
+                        <value name="id">-234</value>
+                        <value name="coupon_id">-2100</value>
+                        <value name="user_id">24</value>
+                        <value name="override_user_uses_limit">0</value>
+                </row>
+                <row>
+                        <value name="id">-3524</value>
+                        <value name="coupon_id">-4444</value>
+                        <value name="user_id">24</value>
+                        <value name="override_user_uses_limit">3</value>
                 </row>
         </table>
         <table name="promotions_scratchcard">

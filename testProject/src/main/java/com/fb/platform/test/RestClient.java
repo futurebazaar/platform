@@ -42,6 +42,8 @@ import com.fb.platform.promotion._1_0.OrderRequest;
 import com.fb.platform.promotion._1_0.Product;
 import com.fb.platform.promotion._1_0.ReleaseCouponRequest;
 import com.fb.platform.promotion._1_0.ReleaseCouponResponse;
+import com.fb.platform.promotion.admin._1_0.AlphaNumericType;
+import com.fb.platform.promotion.admin._1_0.AlphabetCase;
 import com.fb.platform.promotion.admin._1_0.AssignCouponToUserRequest;
 import com.fb.platform.promotion.admin._1_0.AssignCouponToUserResponse;
 import com.fb.platform.promotion.admin._1_0.CodeDetails;
@@ -74,6 +76,12 @@ import com.fb.platform.promotion.admin._1_0.ViewPromotionResponse;
  *
  */
 public class RestClient {
+	
+	private static String QAURL = "http://10.0.102.21:8082/";
+	
+	private static String localhost = "http://localhost:8080/";
+	
+	private static String url = localhost;
 
 	/**
 	 * @param args
@@ -83,7 +91,7 @@ public class RestClient {
 		String sessionToken = login();
 		//String username = getUser(sessionToken);
 		int orderId = RandomUtils.nextInt();
-		BigDecimal discountValue = applyPromotion(sessionToken, orderId);
+		BigDecimal discountValue = applyCoupon(sessionToken, orderId, "GlobalCoupon1000Off");
 		commitCouupon(sessionToken, orderId, discountValue);
 		releaseCoupon(sessionToken, orderId);
 		clearCoupon(sessionToken);
@@ -94,6 +102,7 @@ public class RestClient {
 		viewPromotion(sessionToken);
 		updatePromotion(sessionToken);
 		assignCouponToUser(sessionToken);
+		//applyCoupon(sessionToken, orderId, "preIssuedNoCouponUserEntry");
 		searchCoupon(sessionToken);
 		viewCoupon(sessionToken);
 		createCoupon(sessionToken);
@@ -103,13 +112,15 @@ public class RestClient {
 	public static String login() throws Exception {
 		HttpClient httpClient = new HttpClient();
 		//PostMethod loginMethod = new PostMethod("http://10.0.102.12:8082/userWS/auth/login");
-		PostMethod loginMethod = new PostMethod("http://localhost:8080/userWS/auth/login");
+		PostMethod loginMethod = new PostMethod(url + "userWS/auth/login");
 		//StringRequestEntity requestEntity = new StringRequestEntity("<loginRequest><username>vinayak</username><password>password</password></loginRequest>", "application/xml", null);
 		LoginRequest loginRequest = new LoginRequest();
 		//loginRequest.setUsername("9920694762");
 		//loginRequest.setPassword("test");
 		loginRequest.setUsername("neha.garani@gmail.com");
 		loginRequest.setPassword("testpass");
+//		loginRequest.setUsername("1010101010");
+//		loginRequest.setPassword("shagunankush");
 
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.auth._1_0");
 		Marshaller marshaller = context.createMarshaller();
@@ -141,13 +152,13 @@ public class RestClient {
 		return loginResponse.getSessionToken();
 	}
 
-	private static BigDecimal applyPromotion(String sessionToken, int orderId) throws Exception {
+	private static BigDecimal applyCoupon(String sessionToken, int orderId, String couponCode) throws Exception {
 		HttpClient httpClient = new HttpClient();
 
-		PostMethod applyPromotionMethod = new PostMethod("http://localhost:8080/promotionWS/coupon/apply");
+		PostMethod applyPromotionMethod = new PostMethod(url + "promotionWS/coupon/apply");
 
 		ApplyCouponRequest couponRequest = new ApplyCouponRequest();
-		couponRequest.setCouponCode("GlobalCoupon1000Off");
+		couponRequest.setCouponCode(couponCode);
 		couponRequest.setSessionToken(sessionToken);
 
 		OrderRequest orderRequest = createSampleOrderRequest(orderId);
@@ -200,7 +211,7 @@ public class RestClient {
 	private static void commitCouupon(String sessionToken, int orderId, BigDecimal discountValue) throws Exception {
 		HttpClient httpClient = new HttpClient();
 
-		PostMethod commitCouponMethod = new PostMethod("http://localhost:8080/promotionWS/coupon/commit");
+		PostMethod commitCouponMethod = new PostMethod(url + "promotionWS/coupon/commit");
 
 		CommitCouponRequest commitCouponRequest = new CommitCouponRequest();
 		commitCouponRequest.setSessionToken(sessionToken);
@@ -235,7 +246,7 @@ public class RestClient {
 	private static void releaseCoupon(String sessionToken, int orderId) throws Exception {
 		HttpClient httpClient = new HttpClient();
 
-		PostMethod releaseCouponMethod = new PostMethod("http://localhost:8080/promotionWS/coupon/release");
+		PostMethod releaseCouponMethod = new PostMethod(url + "promotionWS/coupon/release");
 
 		ReleaseCouponRequest releaseCouponRequest = new ReleaseCouponRequest();
 		releaseCouponRequest.setSessionToken(sessionToken);
@@ -269,7 +280,7 @@ public class RestClient {
 	private static void clearCoupon(String sessionToken) throws Exception {
 		HttpClient httpClient = new HttpClient();
 		//PostMethod logoutMethod = new PostMethod("http://10.0.102.12:8082/promotionWS/coupon/clear/coupon");
-		PostMethod clearCoupon = new PostMethod("http://localhost:8080/promotionWS/coupon/clear/coupon");
+		PostMethod clearCoupon = new PostMethod(url + "promotionWS/coupon/clear/coupon");
 		ClearCouponCacheRequest clearCouponCacheRequest = new ClearCouponCacheRequest();
 		clearCouponCacheRequest.setCouponCode("GlobalCoupon1000Off");
 		clearCouponCacheRequest.setSessionToken(sessionToken);
@@ -302,7 +313,7 @@ public class RestClient {
 	private static void clearPromotion(String sessionToken) throws Exception {
 		HttpClient httpClient = new HttpClient();
 		//PostMethod logoutMethod = new PostMethod("http://10.0.102.12:8082/promotionWS/coupon/clear/promotion");
-		PostMethod clearPromotion = new PostMethod("http://localhost:8080/promotionWS/coupon/clear/promotion");
+		PostMethod clearPromotion = new PostMethod(url + "promotionWS/coupon/clear/promotion");
 		ClearPromotionCacheRequest clearPromotionCacheRequest = new ClearPromotionCacheRequest();
 		clearPromotionCacheRequest.setPromotionId(-2000);
 		clearPromotionCacheRequest.setSessionToken(sessionToken);
@@ -334,7 +345,7 @@ public class RestClient {
 	
 	private static void getAllPromotionRuleList(String sessionToken) throws Exception {
 		HttpClient httpClient = new HttpClient();
-		PostMethod getAllPromotionRuleList = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/rules");
+		PostMethod getAllPromotionRuleList = new PostMethod(url + "promotionAdminWS/promotionAdmin/rules");
 		FetchRuleRequest fetchRuleRequest = new FetchRuleRequest();
 		fetchRuleRequest.setSessionToken(sessionToken);
 		
@@ -366,7 +377,7 @@ public class RestClient {
 		HttpClient httpClient = new HttpClient();
 
 		//PostMethod logoutMethod = new PostMethod("http://10.0.102.12:8082/userWS/auth/logout");
-		PostMethod createPromotion = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/promotion/create");
+		PostMethod createPromotion = new PostMethod(url + "promotionAdminWS/promotionAdmin/promotion/create");
 		CreatePromotionRequest createPromotionRequest = new CreatePromotionRequest();
 		CreatePromotionTO promotionTO = new CreatePromotionTO();
 		
@@ -377,7 +388,7 @@ public class RestClient {
 		promotionTO.setValidFrom(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
 		gregCal.set(2013, 01, 29, 00, 00, 00);
 		promotionTO.setValidTill(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
-		promotionTO.setDescription("Test new promotion");
+		promotionTO.setDescription("Test new promotion 2");
 		promotionTO.setIsActive(true);
 		promotionTO.setMaxUses(20);
 		promotionTO.setMaxUsesPerUser(1);
@@ -388,6 +399,11 @@ public class RestClient {
 		RuleConfigItemTO configItem = new RuleConfigItemTO();
 		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
 		configItem.setRuleConfigValue("100");
+		promotionTO.getRuleConfigItemTO().add(configItem);
+		
+		configItem = new RuleConfigItemTO();
+		configItem.setRuleConfigName("CATEGORY_INCLUDE_LIST");
+		configItem.setRuleConfigValue("1,2");
 		promotionTO.getRuleConfigItemTO().add(configItem);
 		
 		createPromotionRequest.setCreatePromotionTO(promotionTO);
@@ -423,7 +439,7 @@ public class RestClient {
 		HttpClient httpClient = new HttpClient();
 
 		//PostMethod logoutMethod = new PostMethod("http://10.0.102.12:8082/userWS/auth/logout");
-		PostMethod searchPromotionMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/promotion/search");
+		PostMethod searchPromotionMethod = new PostMethod(url + "promotionAdminWS/promotionAdmin/promotion/search");
 		
 		SearchPromotionRequest nameSearchPromotionRequest = new SearchPromotionRequest();
 		nameSearchPromotionRequest.setSessionToken(sessionToken);
@@ -475,7 +491,7 @@ public class RestClient {
 		HttpClient httpClient = new HttpClient();
 
 		//PostMethod logoutMethod = new PostMethod("http://10.0.102.12:8082/userWS/auth/logout");
-		PostMethod viewPromotionMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/promotion/view");
+		PostMethod viewPromotionMethod = new PostMethod(url + "promotionAdminWS/promotionAdmin/promotion/view");
 		ViewPromotionRequest viewPromotionRequest = new ViewPromotionRequest();
 		
 		viewPromotionRequest.setSessionToken(sessionToken);
@@ -512,11 +528,11 @@ public class RestClient {
 		HttpClient httpClient = new HttpClient();
 
 		//PostMethod logoutMethod = new PostMethod("http://10.0.102.12:8082/userWS/auth/logout");
-		PostMethod updatePromotionMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/promotion/update");
+		PostMethod updatePromotionMethod = new PostMethod(url + "promotionAdminWS/promotionAdmin/promotion/update");
 		UpdatePromotionRequest updatePromotionRequest = new UpdatePromotionRequest();
 		PromotionTO updatePromotion = new PromotionTO();
 		
-		updatePromotion.setPromotionName("New Promotion NEHA");
+		updatePromotion.setPromotionName("End to End Test Promoti");
 		
 		GregorianCalendar gregCal = new GregorianCalendar();
 		gregCal.set(2012, 01, 22);
@@ -535,6 +551,16 @@ public class RestClient {
 		RuleConfigItemTO configItem = new RuleConfigItemTO();
 		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
 		configItem.setRuleConfigValue("222");
+		updatePromotion.getRuleConfigItemTO().add(configItem);
+		
+		configItem = new RuleConfigItemTO();
+		configItem.setRuleConfigName("CATEGORY_INCLUDE_LIST");
+		configItem.setRuleConfigValue("1,	3");
+		updatePromotion.getRuleConfigItemTO().add(configItem);
+		
+		configItem = new RuleConfigItemTO();
+		configItem.setRuleConfigName("CATEGORY_EXCLUDE_LIST");
+		configItem.setRuleConfigValue(null);
 		updatePromotion.getRuleConfigItemTO().add(configItem);
 		
 		updatePromotionRequest.setPromotionTO(updatePromotion);
@@ -570,7 +596,7 @@ public class RestClient {
 		HttpClient httpClient = new HttpClient();
 
 		//PostMethod logoutMethod = new PostMethod("http://10.0.102.12:8082/userWS/auth/logout");
-		PostMethod logoutMethod = new PostMethod("http://localhost:8080/userWS/auth/logout");
+		PostMethod logoutMethod = new PostMethod(url + "userWS/auth/logout");
 		LogoutRequest logoutReq = new LogoutRequest();
 		logoutReq.setSessionToken(sessionToken);
 		
@@ -603,7 +629,7 @@ public class RestClient {
 		HttpClient httpClient = new HttpClient();
 
 		//PostMethod getUserMethod = new PostMethod("http://10.0.102.12:8082/userWS/user/get");
-		PostMethod getUserMethod = new PostMethod("http://localhost:8080/userWS/user/get");
+		PostMethod getUserMethod = new PostMethod(url + "userWS/user/get");
 		GetUserRequest getUserRequest = new GetUserRequest();
 		//getUserRequest.setKey("9920694762");
 		getUserRequest.setKey("jasvipul@gmail.com");
@@ -660,12 +686,13 @@ public class RestClient {
 	private static void assignCouponToUser(String sessionToken) throws Exception {
 		HttpClient httpClient = new HttpClient();
 
-		PostMethod postMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/user/assign");
+		PostMethod postMethod = new PostMethod(url + "promotionAdminWS/promotionAdmin/user/assign");
 
 		AssignCouponToUserRequest request = new AssignCouponToUserRequest();
 		request.setSessionToken(sessionToken);
-		request.setCouponCode("pre_issued_1");
-		request.setUserId(-4);
+		
+		request.setCouponCode("preIssuedNoCouponUserEntry");
+		request.setUserName("neha.garani@gmail.com");
 
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
 
@@ -695,7 +722,7 @@ public class RestClient {
 	private static void searchCoupon(String sessionToken) throws Exception {
 		HttpClient httpClient = new HttpClient();
 
-		PostMethod postMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/coupon/search");
+		PostMethod postMethod = new PostMethod(url + "promotionAdminWS/promotionAdmin/coupon/search");
 
 		SearchCouponRequest request = new SearchCouponRequest();
 		request.setCouponCode("pre_issued_1");
@@ -731,7 +758,7 @@ public class RestClient {
 	private static void viewCoupon(String sessionToken) throws Exception {
 		HttpClient httpClient = new HttpClient();
 
-		PostMethod postMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/coupon/view");
+		PostMethod postMethod = new PostMethod(url + "promotionAdminWS/promotionAdmin/coupon/view");
 
 		ViewCouponRequest request = new ViewCouponRequest();
 		request.setSessionToken(sessionToken);
@@ -765,7 +792,7 @@ public class RestClient {
 	private static void createCoupon(String sessionToken) throws Exception {
 		HttpClient httpClient = new HttpClient();
 
-		PostMethod postMethod = new PostMethod("http://localhost:8080/promotionAdminWS/promotionAdmin/coupon/create");
+		PostMethod postMethod = new PostMethod(url + "promotionAdminWS/promotionAdmin/coupon/create");
 
 		CreateCouponRequest request = new CreateCouponRequest();
 		request.setSessionToken(sessionToken);
@@ -778,11 +805,15 @@ public class RestClient {
 		couponTO.setMaxAmountPerUser(new BigDecimal(1000.00));
 		couponTO.setMaxUses(20);
 		couponTO.setMaxUsesPerUser(4);
-
-		request.setCouponTO(couponTO);
 		
 		CodeDetails codeDetails = new CodeDetails();
+		codeDetails.setAlphabetCase(AlphabetCase.LOWER);
+		codeDetails.setAlphaNumericType(AlphaNumericType.ALPHA_NUMERIC);
 		codeDetails.setCodeLength(10);
+		codeDetails.setEndsWith("1");
+		codeDetails.setStartsWith("1");
+
+		request.setCouponTO(couponTO);
 		
 		request.setCodeDetails(codeDetails);
 		

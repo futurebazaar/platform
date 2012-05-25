@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.fb.commons.to.PlatformMessage;
+
 /**
  * @author nehaga
  *
@@ -27,16 +29,16 @@ public class ViewPromotionRequest {
 		this.promotionId = promotionId;
 	}
 	
-	public String isValid() {
-		List<String> requestInvalidationList = new ArrayList<String>();
+	public List<PlatformMessage> isValid() {
+		List<PlatformMessage> requestInvalidationList = new ArrayList<PlatformMessage>();
 		requestInvalidationList.addAll(isSessionTokenValid());
-		return StringUtils.join(requestInvalidationList.toArray(), ",");
+		return requestInvalidationList;
 	}
 	
-	private List<String> isSessionTokenValid() {
-		List<String> sessionInvalidationList = new ArrayList<String>();
+	private List<PlatformMessage> isSessionTokenValid() {
+		List<PlatformMessage> sessionInvalidationList = new ArrayList<PlatformMessage>();
 		if(StringUtils.isBlank(sessionToken)) {
-			sessionInvalidationList.add("Session token cannot be empty");
+			sessionInvalidationList.add(new PlatformMessage("EPA1", null));
 		}
 		return sessionInvalidationList;
 	}

@@ -6,6 +6,8 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 
+import com.fb.commons.to.PlatformMessage;
+
 /**
  * @author nehaga
  *
@@ -60,28 +62,28 @@ public class SearchPromotionRequest {
 		this.batchSize = batchSize;
 	}
 	
-	public String isValid() {
-		List<String> requestInvalidationList = new ArrayList<String>();
+	public List<PlatformMessage> isValid() {
+		List<PlatformMessage> requestInvalidationList = new ArrayList<PlatformMessage>();
 		requestInvalidationList.addAll(isSessionTokenValid());
 		requestInvalidationList.addAll(isLimitValid());
-		return StringUtils.join(requestInvalidationList.toArray(), ",");
+		return requestInvalidationList;
 	}
 	
-	private List<String> isLimitValid() {
-		List<String> limitInvalidationList = new ArrayList<String>();
+	private List<PlatformMessage> isLimitValid() {
+		List<PlatformMessage> limitInvalidationList = new ArrayList<PlatformMessage>();
 		if(startRecord < 0) {
-			limitInvalidationList.add("Start record cannot be negative");
+			limitInvalidationList.add(new PlatformMessage("EPA14", new Object[] {startRecord}));
 		}
 		if(batchSize <= 0) {
-			limitInvalidationList.add("Batch size cannot be negative or zero");
+			limitInvalidationList.add(new PlatformMessage("EPA15", new Object[] {batchSize}));
 		}
 		return limitInvalidationList;
 	}
 	
-	private List<String> isSessionTokenValid() {
-		List<String> sessionInvalidationList = new ArrayList<String>();
+	private List<PlatformMessage> isSessionTokenValid() {
+		List<PlatformMessage> sessionInvalidationList = new ArrayList<PlatformMessage>();
 		if(StringUtils.isBlank(sessionToken)) {
-			sessionInvalidationList.add("Session token cannot be empty");
+			sessionInvalidationList.add(new PlatformMessage("EPA1", null));
 		}
 		return sessionInvalidationList;
 	}

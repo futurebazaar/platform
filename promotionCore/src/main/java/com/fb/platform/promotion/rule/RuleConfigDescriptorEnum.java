@@ -6,28 +6,28 @@ package com.fb.platform.promotion.rule;
  */
 public enum RuleConfigDescriptorEnum {
 	
-	CLIENT_LIST("Client ID", "String"),
-	CATEGORY_INCLUDE_LIST("Include category ID", "String"),
-	CATEGORY_EXCLUDE_LIST("Exclude category ID", "String"),
-	BRAND_LIST("Brand ID", "String"),
-	PRODUCT_ID("Product Ids", "String"),
-	MIN_ORDER_VALUE("Minimum order value", "decimal"),
-	FIXED_DISCOUNT_RS_OFF("Fixed discount", "decimal"),
-	DISCOUNT_PERCENTAGE("Discount percentage", "decimal"),
-	MAX_DISCOUNT_CEIL_IN_VALUE("Maximum discount in rupees", "decimal"),
-	PRODUCT_DISCOUNT_RS_OFF("Product discount", "decimal"),
-	PRODUCT_DISCOUNTED_VALUE("Product discounted value", "decimal");
+	CLIENT_LIST("Client ID", RuleConfigDescriptorType.CSI),
+	CATEGORY_INCLUDE_LIST("Include category ID", RuleConfigDescriptorType.CSI),
+	CATEGORY_EXCLUDE_LIST("Exclude category ID", RuleConfigDescriptorType.CSI),
+	BRAND_LIST("Brand ID", RuleConfigDescriptorType.CSI),
+	PRODUCT_ID("Product ID", RuleConfigDescriptorType.CSI),
+	MIN_ORDER_VALUE("Minimum order value", RuleConfigDescriptorType.DECIMAL),
+	FIXED_DISCOUNT_RS_OFF("Fixed discount", RuleConfigDescriptorType.DECIMAL),
+	DISCOUNT_PERCENTAGE("Discount percentage", RuleConfigDescriptorType.PERCENT),
+	MAX_DISCOUNT_CEIL_IN_VALUE("Maximum discount in rupees", RuleConfigDescriptorType.DECIMAL),
+	PRODUCT_DISCOUNT_RS_OFF("Product discount", RuleConfigDescriptorType.DECIMAL),
+	PRODUCT_DISCOUNTED_VALUE("Product discounted value", RuleConfigDescriptorType.DECIMAL);
 	
 	private String description = null;
 	
-	private String type = null;
+	private RuleConfigDescriptorType type = null;
 	
-	private RuleConfigDescriptorEnum(String description, String type) {
+	private RuleConfigDescriptorEnum(String description, RuleConfigDescriptorType type) {
 		this.description = description;
 		this.type = type;
 	}
 	
-	public String getType() {
+	public RuleConfigDescriptorType getType() {
 		return this.type;
 	}
 	

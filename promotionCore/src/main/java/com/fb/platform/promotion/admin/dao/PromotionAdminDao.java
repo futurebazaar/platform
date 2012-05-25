@@ -62,5 +62,6 @@ public interface PromotionAdminDao {
 	 */
 	boolean createPromotionUses();
 	
-	PromotionTO loadPromotionByName(String name);
+	List<PromotionTO> loadPromotionByName(String name);
+	public void updatePromotionName(int promotionId, String name);
 }
