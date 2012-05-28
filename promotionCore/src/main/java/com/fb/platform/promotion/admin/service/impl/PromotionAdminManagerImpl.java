@@ -11,7 +11,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
@@ -63,7 +62,9 @@ import com.fb.platform.promotion.service.CouponNotFoundException;
 import com.fb.platform.promotion.service.InvalidAlphaNumericTypeException;
 import com.fb.platform.promotion.service.InvalidCouponTypeException;
 import com.fb.platform.promotion.service.PromotionNotFoundException;
+import com.fb.platform.promotion.util.MessageTranslatorUtility;
 import com.fb.platform.promotion.util.PromotionRuleFactory;
+import com.fb.platform.user.manager.exception.InvalidUserNameException;
 import com.fb.platform.user.manager.exception.UserNotFoundException;
 import com.fb.platform.user.manager.interfaces.UserAdminService;
 import com.fb.platform.user.manager.model.admin.User;
@@ -81,10 +82,13 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 	
 	@Autowired
 	private PromotionAdminService promotionAdminService = null;
+	
+	@Autowired
+	private MessageTranslatorUtility messageTranslatorUtility = null;
 
 	@Autowired
 	private UserAdminService userAdminService = null;
-
+	
 	/* 
 	 * @see com.fb.platform.promotion.service.PromotionAdminManager#fetchRules(com.fb.platform.promotion.to.FetchRuleRequest)
 	 */
@@ -133,12 +137,12 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 	public CreatePromotionResponse createPromotion(CreatePromotionRequest createPromotionRequest) {
 		CreatePromotionResponse createPromotionResponse = new CreatePromotionResponse();
 		
-		String requestInvalidationList = createPromotionRequest.isValid();
+		String requestInvalidationString = messageTranslatorUtility.translate(createPromotionRequest.isValid());
 		
-		if(!StringUtils.isEmpty(requestInvalidationList)) {
-			log.info("Create promotion request insufficient data : " + requestInvalidationList);
+		if(StringUtils.isNotBlank(requestInvalidationString)) {
+			log.info("Create promotion request insufficient data : " + requestInvalidationString);
 			createPromotionResponse.setCreatePromotionEnum(CreatePromotionEnum.INSUFFICIENT_DATA);
-			createPromotionResponse.setErrorCause(requestInvalidationList);
+			createPromotionResponse.setErrorCause(requestInvalidationString);
 			return createPromotionResponse;
 		}
 		
@@ -183,7 +187,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 	public SearchPromotionResponse searchPromotion(SearchPromotionRequest searchPromotionRequest) {
 		
 		SearchPromotionResponse searchPromotionResponse = new SearchPromotionResponse();
-		String requestInvalidationList = searchPromotionRequest.isValid();
+		String requestInvalidationList = messageTranslatorUtility.translate(searchPromotionRequest.isValid());
 		
 		if(!StringUtils.isEmpty(requestInvalidationList)) {
 			log.info("Cannot search for promotion insufficient data : " + requestInvalidationList);
@@ -236,7 +240,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 	public ViewPromotionResponse viewPromotion(ViewPromotionRequest viewPromotionRequest) {
 		ViewPromotionResponse viewPromotionResponse = new ViewPromotionResponse();
 		
-		String requestInvalidationList = viewPromotionRequest.isValid();
+		String requestInvalidationList = messageTranslatorUtility.translate(viewPromotionRequest.isValid());
 		
 		if(!StringUtils.isEmpty(requestInvalidationList)) {
 			log.info("Cannot fetch promotion details, insufficient data : " + requestInvalidationList);
@@ -282,7 +286,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 	public UpdatePromotionResponse updatePromotion(UpdatePromotionRequest request) {
 		UpdatePromotionResponse response = new UpdatePromotionResponse();
 		
-		String requestInvalidationList = request.isValid();
+		String requestInvalidationList = messageTranslatorUtility.translate(request.isValid());
 		
 		if(!StringUtils.isEmpty(requestInvalidationList)) {
 			log.info("Cannot update promotion, insufficient data : " + requestInvalidationList);
@@ -332,8 +336,13 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		List<RuleConfigDescriptorItem> requiredConfigs = PromotionRuleFactory.getRuleConfig(RulesEnum.valueOf(promotionTo.getRuleName()));
 		HashMap<String, RuleConfigItemTO> receivedConfigsMap = new HashMap<String, RuleConfigItemTO>();
 		
-		for (RuleConfigItemTO ruleConfigItemTO : promotionTo.getConfigItems()) {
-			receivedConfigsMap.put(ruleConfigItemTO.getRuleConfigName(), ruleConfigItemTO);
+		for (int i = promotionTo.getConfigItems().size() - 1 ; i >= 0 ; i--) {
+			RuleConfigItemTO ruleConfigItemTO = promotionTo.getConfigItems().get(i);
+			if(StringUtils.isBlank(ruleConfigItemTO.getRuleConfigValue())) {
+				promotionTo.getConfigItems().remove(ruleConfigItemTO);
+			} else {
+				receivedConfigsMap.put(ruleConfigItemTO.getRuleConfigName(), ruleConfigItemTO);
+			}
 		}
 		
 		for (RuleConfigDescriptorItem ruleConfigDescriptorItem : requiredConfigs) {
@@ -351,6 +360,10 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 
 	public void setPromotionAdminService(PromotionAdminService promotionAdminService) {
 		this.promotionAdminService = promotionAdminService;
+	}
+	
+	public void setMessageTranslatorUtility(MessageTranslatorUtility messageTranslatorUtility) {
+		this.messageTranslatorUtility = messageTranslatorUtility;
 	}
 
 	@Override
@@ -502,6 +515,9 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		SearchCouponResultBO searchCouponResultBO = null;
 		try {
 			searchCouponResultBO = promotionAdminService.searchCoupons(request.getCouponCode(), request.getUserName(), request.getOrderBy(), request.getSortOrder(), request.getStartRecord(), request.getBatchSize());
+		} catch (InvalidUserNameException e) {
+			response.setStatus(SearchCouponStatusEnum.INVALID_USER);
+			return response;
 		} catch (Exception e) {
 			response.setStatus(SearchCouponStatusEnum.INTERNAL_ERROR);
 			return response;
@@ -578,4 +594,5 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 
 		return response;
 	}
+
 }

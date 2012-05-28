@@ -15,7 +15,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -241,6 +240,15 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 			"WHERE" +
 			"	id=?";
 
+	private static final String UPDATE_PROMOTION_NAME_SQL = 
+			"UPDATE " +
+			"	platform_promotion " +
+			"SET " +
+			"	last_modified_on=?, " +
+			"	name=? " +
+			"WHERE" +
+			"	id=?";
+	
 	private static final String SELECT_PROMOTION_BY_NAME = 
 			"SELECT " +
 				"	id, " +
@@ -514,12 +522,12 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 	}
 	
 	@Override
-	public PromotionTO loadPromotionByName(String name) {
+	public List<PromotionTO> loadPromotionByName(String name) {
 		log.info("Fetch promotion details for promotion with name : " + name);
 		
-		PromotionTO promotionCompleteView = null;
+		List<PromotionTO> promotionCompleteView = null;
 		try {
-			promotionCompleteView = jdbcTemplate.queryForObject(SELECT_PROMOTION_BY_NAME, 
+			promotionCompleteView = jdbcTemplate.query(SELECT_PROMOTION_BY_NAME, 
 					new Object[] {name}, 
 					new PromotionNameMapper());
 	
@@ -710,6 +718,24 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 			promotionView.setRuleName(resultSet.getString("ruleName"));
 			promotionView.setRuleId(resultSet.getInt("ruleId"));
 			return promotionView;
+		}
+	}
+	
+	@Override
+	public void updatePromotionName(int promotionId, String name) {
+		
+		log.info("Update platform_promotion table => name " + name + " , id : " + promotionId);
+		
+		Timestamp modifiedOnTimestamp = new java.sql.Timestamp(System.currentTimeMillis());
+		try {
+			int promotionUpdated = jdbcTemplate.update(UPDATE_PROMOTION_NAME_SQL, new Object[] {modifiedOnTimestamp, name, promotionId});
+			if (promotionUpdated != 1) {
+				log.error("Error while updating the promotion id : " + promotionId);
+				throw new PlatformException("Error while updating the promotion id : " + promotionId);
+			}
+		} catch (DuplicateKeyException e) {
+			log.error("Duplicate promotion name update exception.", e);
+			throw new PromotionNameDuplicateException("Duplicate promotion name update exception.", e);
 		}
 	}
 

@@ -58,4 +58,5 @@ public class PromotionAdminServiceTest extends BaseTestCase {
 	public void assignInvalidCouponCode() {
 		promotionAdminService.assignCouponToUser("i_am_not_there_in_db", -2, 0);
 	}
+	
 }

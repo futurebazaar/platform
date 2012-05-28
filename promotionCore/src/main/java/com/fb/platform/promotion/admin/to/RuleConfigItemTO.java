@@ -5,7 +5,10 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.fb.commons.to.PlatformMessage;
 import com.fb.platform.promotion.rule.RuleConfigDescriptorEnum;
+import com.fb.platform.promotion.util.RuleValidatorUtils;
+import com.fb.platform.promotion.util.StringToIntegerList;
 
 
 /**
@@ -30,23 +33,43 @@ public class RuleConfigItemTO {
 		this.ruleConfigName = ruleConfigName;
 	}
 	
-	public String isValid() {
-		List<String> ruleNameInvalidationList = new ArrayList<String>();
+	public List<PlatformMessage> isValid() {
+		List<PlatformMessage> ruleNameInvalidationList = new ArrayList<PlatformMessage>();
 		RuleConfigDescriptorEnum ruleDescriptor = null;
 		if(StringUtils.isBlank(ruleConfigName)) {
-			ruleNameInvalidationList.add("Rule name empty");
+			ruleNameInvalidationList.add(new PlatformMessage("EPA7", null));
 		}
 		if(!RuleConfigDescriptorEnum.isRuleConfigValid(ruleConfigName)) {
-			ruleNameInvalidationList.add("Invalid rule config name " + ruleConfigName);
-		} else {
+			ruleNameInvalidationList.add(new PlatformMessage("EPA9", new Object[] {ruleConfigName}));
+		} else if(StringUtils.isNotBlank(ruleConfigValue)){
 			ruleDescriptor = RuleConfigDescriptorEnum.valueOf(ruleConfigName);
-			if(ruleDescriptor.getType().equals("decimal")) {
-				if(new Long(ruleConfigValue) < 0) {
-					ruleNameInvalidationList.add(ruleDescriptor.getDescription() + " value cannot be negative.");
+			switch(ruleDescriptor.getType()) {
+			case CSI:
+					if(!StringToIntegerList.isListValid(ruleConfigValue.split(","))) {
+						ruleNameInvalidationList.add(new PlatformMessage("EPA10", new Object[] {ruleDescriptor.getDescription(), ruleConfigValue}));
+					} else {
+						List<String> idList = new ArrayList<String>();
+						for (String id : StringUtils.split(ruleConfigValue, ",")) {
+							idList.add(id.trim());
+						}
+						ruleConfigValue = StringUtils.join(idList.toArray(), ",");
+					}
+				break;
+			case DECIMAL:
+				if(!RuleValidatorUtils.isValidPositiveDecimal(ruleConfigValue)) {
+					ruleNameInvalidationList.add(new PlatformMessage("EPA11", new Object[] {ruleDescriptor.getDescription()}));
 				}
+				break;
+			case PERCENT:
+				if(!RuleValidatorUtils.isValidPositiveDecimal(ruleConfigValue)) {
+					ruleNameInvalidationList.add(new PlatformMessage("EPA11", new Object[] {ruleDescriptor.getDescription()}));
+				} else if (RuleValidatorUtils.isValidPositiveDecimal(ruleConfigValue) && new Float(ruleConfigValue) > 100) {
+					ruleNameInvalidationList.add(new PlatformMessage("EPA12", new Object[] {ruleDescriptor.getDescription()}));
+				}
+				break;
 			}
 		}
-		return StringUtils.join(ruleNameInvalidationList.toArray(), ",");
+		return ruleNameInvalidationList;
 	}
 	
 }
