@@ -32,7 +32,7 @@
         <property name="username" value="fbdev"/>
         <property name="password" value="apps&amp;*hg"/>-->
         
-        <!--<property name="url" value="jdbc:mysql://localhost/platform"/>
+        <property name="url" value="jdbc:mysql://localhost/platform"/>
         <property name="username" value="root"/>
         <property name="password" value="root"/>
         

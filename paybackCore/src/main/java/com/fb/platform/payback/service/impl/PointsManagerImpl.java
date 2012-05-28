@@ -54,7 +54,8 @@ public class PointsManagerImpl implements PointsManager{
 	}
 
 	@Override
-	public void uploadEarnFilesOnSFTP() {
+	public String uploadEarnFilesOnSFTP() {
+		String failedCodes = "";
 		Properties props = pointsUtil.getProperties("payback.properties");
 		String[] clients =  props.getProperty("CLIENTS").split(",");
 		for(String client : clients){
@@ -66,16 +67,20 @@ public class PointsManagerImpl implements PointsManager{
 						pointsUtil.sendMail(txnActionCode.name(), merchantId, txnActionCode.toString()+ ".txt", dataToUpload, "POINTS");
 					}
 				} catch (Exception e){
+					failedCodes += txnActionCode.name() + "; " ;
 					// send  mail to check the exception
 					pointsUtil.sendMail(txnActionCode.name(), merchantId, "ERROR_OCCURRED" + ".txt", e.toString(), "ERROR");
+					
 				}
 				
 			}
 		}
+		return failedCodes;
 	}
 
 	@Override
-	public void mailBurnData() {
+	public String mailBurnData() {
+		String failedCodes = "";
 		Properties props = pointsUtil.getProperties("payback.properties");
 		String[] clients =  props.getProperty("CLIENTS").split(",");
 		for(String client : clients){
@@ -84,10 +89,12 @@ public class PointsManagerImpl implements PointsManager{
 				try {
 					pointsService.mailBurnData(txnActionCode, merchantId);
 				} catch (Exception e) {
+					failedCodes += txnActionCode.name() + "; " ;
 					pointsUtil.sendMail(txnActionCode.name(), merchantId, "ERROR_OCCURRED" + ".txt", e.toString(), "ERROR");
 				}
 			}
 		}
+		return failedCodes;
 	}
 
 }

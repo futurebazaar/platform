@@ -1,6 +1,7 @@
 package com.fb.platform.payback.rule.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -15,7 +16,7 @@ import com.fb.platform.payback.util.PointsUtil;
 
 public class BuyWorthXEarnYBonusPoints implements PointsRule {
 	
-	private List<Long> excludedCategoryList;
+	private List<Long> excludedCategoryList = new ArrayList<Long>();
 	private BigDecimal bonusPoints;
 	private BigDecimal minimumOrderValue;
 	private DateTime validFrom;

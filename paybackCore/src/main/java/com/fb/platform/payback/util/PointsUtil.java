@@ -76,7 +76,8 @@ public class PointsUtil {
 			Properties props = getProperties("payback.properties");					
 			String host = props.getProperty("mailHost");
 			int port = Integer.parseInt(props.getProperty("mailPort"));
-			MailSender mailSender = new MailSender(host, port, props.getProperty("mailUsername"),props.getProperty("mailPassword"));
+			MailSender mailSender = new MailSender(host, port, props.getProperty("mailUsername"), 
+					props.getProperty("mailPassword"), 5000);
 			mailSender.setFrom(props.getProperty(type + "_FROM"));
 			mailSender.setTO(props.getProperty(type + "_TO"));
 			mailSender.setCC(props.getProperty(type + "_CC"));

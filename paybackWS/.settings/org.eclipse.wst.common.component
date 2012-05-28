@@ -12,7 +12,7 @@
     <dependent-module deploy-path="/WEB-INF/lib" handle="module:/resource/paybackCore/paybackCore">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/com/fb/platformCommons/1.0/platformCommons-1.0.jar">
+    <dependent-module deploy-path="/WEB-INF/lib" handle="module:/resource/platformCommons/platformCommons">
       <dependency-type>uses</dependency-type>
     </dependent-module>
     <dependent-module deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/mysql/mysql-connector-java/5.0.5/mysql-connector-java-5.0.5.jar">

@@ -1,5 +1,6 @@
 package com.fb.platform.payback.service.impl;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Iterator;
@@ -30,6 +31,7 @@ import com.fb.platform.payback.to.PointsRequest;
 import com.fb.platform.payback.to.PointsResponseCodeEnum;
 import com.fb.platform.payback.to.PointsTxnClassificationCodeEnum;
 import com.fb.platform.payback.util.PointsUtil;
+import com.jcraft.jsch.SftpException;
 
 public class PointsServiceImpl implements PointsService{
 	
@@ -75,28 +77,28 @@ public class PointsServiceImpl implements PointsService{
 
 	
 	@Override	
-	public String postEarnData(EarnActionCodesEnum txnActionCode, String merchantId, String client){
+	public String postEarnData(EarnActionCodesEnum txnActionCode, String merchantId, String client) throws PlatformException{
 		String dataToUpload = "";
 		try{
 			Properties props = pointsUtil.getProperties("payback.properties");
 			String sequenceNumber = pointsUtil.getSequenceNumber();
 			String settlementDate = pointsUtil.getPreviousDayDate();
-		
-			// SFTP Connection
-			SFTPConnector sftpConnector = new SFTPConnector();
-			sftpConnector.setHost(props.getProperty("sftpHost"));
-
-			String sftpUsername = props.getProperty(client + "_sftpUsername");
-			sftpConnector.setUsername(sftpUsername);
-			sftpConnector.setPassword(props.getProperty(client + "_sftpPassword"));
-			if (!sftpConnector.isConnected()){
-				// false determines that host key checking will be disabled
-				sftpConnector.connect(false);
-			}
-			
 			DateTime newSettlementDate = DateTime.now();
 			dataToUpload = getEarnDataToUpload(txnActionCode.name(), settlementDate, newSettlementDate, merchantId, sequenceNumber);
 			if (dataToUpload != null && !dataToUpload.equals("")){
+				
+				// SFTP Connection
+				SFTPConnector sftpConnector = new SFTPConnector();
+				sftpConnector.setHost(props.getProperty("sftpHost"));
+
+				String sftpUsername = props.getProperty(client + "_sftpUsername");
+				sftpConnector.setUsername(sftpUsername);
+				sftpConnector.setPassword(props.getProperty(client + "_sftpPassword"));
+				if (!sftpConnector.isConnected()){
+					// false determines that host key checking will be disabled
+					sftpConnector.connect(false, 5000);
+				}
+				
 				String fileName = txnActionCode.toString() + "_" + String.valueOf(merchantId) + 
 						"_"+ pointsUtil.convertDateToFormat(settlementDate, "ddMMyyyy") + "_" + sequenceNumber + ".txt";
 				String remoteDirectory = props.getProperty("sftpRemoteDirectory");
@@ -104,11 +106,16 @@ public class PointsServiceImpl implements PointsService{
 				fileName = fileName.replace("txt", "chk");
 				sftpConnector.upload("", fileName, remoteDirectory);
 				pointsDao.updateStatus(txnActionCode.name(), settlementDate, merchantId);
-			}
-			sftpConnector.closeConnection();			
 			
-		}catch (PlatformException pe) {
-			pe.printStackTrace();
+				sftpConnector.closeConnection();
+			}			
+			
+		}catch (SftpException se) {
+			se.printStackTrace();
+			throw new PlatformException(" SFTP connection Failed");
+		} catch (UnsupportedEncodingException ue) {
+			ue.printStackTrace();
+			throw new PlatformException("Encoding not suppported");
 		}
 		return dataToUpload;
 		
@@ -165,9 +172,8 @@ public class PointsServiceImpl implements PointsService{
 		if (rowData.length() > 0){
 			rowData += "PB_ACT_1.1|" + currentTime + "|" + sequenceNumber + "|" + partnerMerchantId + "||" + headerRows + "|" + 
 							totalTxnValue + "|" + totalTxnPoints + "|||||||||||||||9|||||||||||||||||||||||||||||||"; //The no 9 shows that it is the end of file
-			return rowData;
 		}
-		return null;
+		return rowData;
 	}
 
 	private PointsResponseCodeEnum saveEarnReversalPoints(PointsRequest request) {
@@ -274,6 +280,7 @@ public class PointsServiceImpl implements PointsService{
 		pointsHeader.setReason(orderRequest.getReason());
 		pointsHeader.setSettlementDate(DateTime.now());
 		pointsHeader.setTxnDate(orderRequest.getTxnTimestamp());
+		pointsHeader.setTxnTimestamp(orderRequest.getTxnTimestamp());
 		pointsHeader.setOrderId(orderRequest.getOrderId());
 		
 		long headerId = pointsDao.insertPointsHeaderData(pointsHeader);

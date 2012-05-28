@@ -5,7 +5,6 @@ package com.fb.platform.payback.rule;
 
 import java.util.List;
 
-import com.fb.commons.PlatformException;
 
 
 /**

@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.List;
 
 import org.joda.time.DateTime;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -145,7 +144,7 @@ public class PointsDaoJdbcImpl implements PointsDao{
 				
 				ps.setDate(9, new java.sql.Date(pointsHeader.getTxnDate().getMillis()));
 				ps.setDate(10, new java.sql.Date(pointsHeader.getSettlementDate().getMillis()));
-				ps.setTimestamp(11, new java.sql.Timestamp(pointsHeader.getTxnDate().getMillis()));				
+				ps.setTimestamp(11, new java.sql.Timestamp(pointsHeader.getTxnTimestamp().getMillis()));				
 			
 				ps.setInt(12, pointsHeader.getTxnValue());
 				ps.setInt(13, pointsHeader.getTxnPoints());
@@ -199,7 +198,7 @@ public class PointsDaoJdbcImpl implements PointsDao{
 			pointsHeader.setId(rs.getLong("id"));
 			pointsHeader.setOrderId(rs.getLong("order_id"));
 			pointsHeader.setTxnActionCode(rs.getString("txn_action_code"));
-			//pointsHeader.setTxnTimestamp(new DateTime(rs.getTimestamp("txn_timstamp").getTime()));
+			pointsHeader.setTxnTimestamp(new DateTime(rs.getTimestamp("txn_timestamp").getTime()));
 			pointsHeader.setSettlementDate(new DateTime(rs.getDate("settlement_date").getTime()));
 			pointsHeader.setTxnDate(new DateTime(rs.getDate("txn_date").getTime()));
 			pointsHeader.setTxnPoints(rs.getInt("txn_points"));

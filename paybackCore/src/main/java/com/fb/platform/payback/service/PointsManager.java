@@ -7,8 +7,8 @@ public interface PointsManager {
 
 	public PointsResponse getPointsReponse(PointsRequest request);
 	
-	public void uploadEarnFilesOnSFTP();
+	public String uploadEarnFilesOnSFTP();
 	
-	public void mailBurnData();
+	public String mailBurnData();
 
 }

@@ -49,6 +49,7 @@ public class DaoTest extends BaseTestCase{
 		pointsHeader.setReason("TEST ORDER");
 		pointsHeader.setSettlementDate(DateTime.now());
 		pointsHeader.setTxnDate(DateTime.now());
+		pointsHeader.setTxnTimestamp(DateTime.now());
 		pointsHeader.setOrderId(1);
 		
 		long headerId = pointsDao.insertPointsHeaderData(pointsHeader);
@@ -102,6 +103,7 @@ public class DaoTest extends BaseTestCase{
 		pointsHeader.setReason("TEST ORDER");
 		pointsHeader.setSettlementDate(DateTime.now());
 		pointsHeader.setTxnDate(DateTime.now());
+		pointsHeader.setTxnTimestamp(DateTime.now());
 		pointsHeader.setOrderId(1);
 		
 		pointsDao.insertPointsHeaderData(pointsHeader);
@@ -132,6 +134,7 @@ public class DaoTest extends BaseTestCase{
 		pointsHeader.setReason("TEST ORDER");
 		pointsHeader.setSettlementDate(new DateTime(2012, 05, 24, 0, 0, 0));
 		pointsHeader.setTxnDate(new DateTime(2012, 05, 24, 0, 0, 0));
+		pointsHeader.setTxnTimestamp(DateTime.now());
 		pointsHeader.setOrderId(1);
 		
 		pointsDao.insertPointsHeaderData(pointsHeader);
@@ -158,6 +161,7 @@ public class DaoTest extends BaseTestCase{
 		pointsHeader.setReason("TEST ORDER");
 		pointsHeader.setSettlementDate(new DateTime(2012, 05, 24, 0, 0, 0));
 		pointsHeader.setTxnDate(new DateTime(2012, 05, 24, 0, 0, 0));
+		pointsHeader.setTxnTimestamp(DateTime.now());
 		pointsHeader.setOrderId(1);
 		
 		long headerId = pointsDao.insertPointsHeaderData(pointsHeader);

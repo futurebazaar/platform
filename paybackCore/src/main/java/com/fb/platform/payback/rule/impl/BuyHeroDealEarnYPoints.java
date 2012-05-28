@@ -8,7 +8,6 @@ import org.springframework.dao.DataAccessException;
 import com.fb.platform.payback.cache.ListCacheAccess;
 import com.fb.platform.payback.cache.PointsCacheConstants;
 import com.fb.platform.payback.dao.ListDao;
-import com.fb.platform.payback.exception.DealNotFoundException;
 import com.fb.platform.payback.rule.PointsRule;
 import com.fb.platform.payback.rule.PointsRuleConfigConstants;
 import com.fb.platform.payback.rule.RuleConfiguration;
@@ -68,32 +67,32 @@ public class BuyHeroDealEarnYPoints implements PointsRule {
 	private Long getHeroDealSellerRateChart(DateTime orderDate) {
 		String bookingDate = pointsUtil.convertDateToFormat(orderDate, "yyyy-MM-dd");
 		String key = PointsCacheConstants.HERO_DEAL +  "#" + bookingDate;
-		String sellerRateChartId = listCacheAccess.get(key);
+		Long sellerRateChartId = listCacheAccess.get(key);
 		if (sellerRateChartId == null){
 			try {
-				sellerRateChartId = String.valueOf(listDao.getHeroDealSellerRateChart(orderDate));
+				sellerRateChartId = listDao.getHeroDealSellerRateChart(orderDate);
 			} catch (DataAccessException e) {
 				e.printStackTrace();
-				throw new DealNotFoundException("Error loading Hero Deal");
+				return new Long(-1);
 			}
 
 			if (sellerRateChartId != null) {
 				cacheHeroDeal(sellerRateChartId, key);
 			} else {
-				throw new DealNotFoundException("Todays Deal Not Found");
+				return new Long(-1);
 			}
 	
 		}
 		
-		return Long.parseLong(sellerRateChartId);
+		return sellerRateChartId;
 	}
 
 	//Caches Deal Id and Deal Date
-	private void cacheHeroDeal(String sellerRateChartId, String key) {
+	private void cacheHeroDeal(Long sellerRateChartId, String key) {
 		try {
 			listCacheAccess.lock(key);
 			if (listCacheAccess.get(key) == null) {
-				listCacheAccess.put(sellerRateChartId, key);
+				listCacheAccess.put(key, sellerRateChartId);
 			}
 		} finally {
 			listCacheAccess.unlock(key);

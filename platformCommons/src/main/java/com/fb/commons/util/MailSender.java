@@ -29,12 +29,11 @@ public class MailSender {
 	BodyPart messageBodyPart = null;
 	
 	
-	public MailSender(String host, int port, final String username, final String password){
+	public MailSender(String host, int port, final String username, final String password, final int timeout){
 		Properties properties = new Properties();
 		properties.put("mail.smtp.host", host);
 		properties.put("mail.smtp.port", port);
-		//properties.put("mail.smtp.timeout", "1000");
-		properties.put("mail.smtp.connectiontimeout", "5000");
+		properties.put("mail.smtp.connectiontimeout",  String.valueOf(timeout));
 		Session session = Session.getInstance(properties);
 		if ((username != null && !username.equals("")) && (password != null && !password.equals(""))){
 			properties.put("mail.smtp.auth", "true");

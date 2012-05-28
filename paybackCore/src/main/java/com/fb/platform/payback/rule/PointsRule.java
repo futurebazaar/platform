@@ -1,12 +1,13 @@
 package com.fb.platform.payback.rule;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import com.fb.platform.payback.to.OrderItemRequest;
 import com.fb.platform.payback.to.OrderRequest;
 import com.fb.platform.payback.util.PointsUtil;
 
-public interface PointsRule {
+public interface PointsRule extends Serializable{
 	
 	public void init(RuleConfiguration ruleConfig);
 

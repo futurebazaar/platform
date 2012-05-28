@@ -5,12 +5,12 @@ import com.fb.platform.caching.NamedCachesEnum;
 
 public class ListCacheAccess extends AbstractCacheAccess{
 	
-	public void put(String key, String value) {
+	public void put(String key, Long value) {
 		platformCachingManager.put(NamedCachesEnum.POINTS_CACHE, key, value);
 	}
 
-	public  String  get(String key) {
-		return (String) platformCachingManager.get(NamedCachesEnum.POINTS_CACHE, key);
+	public  Long  get(String key) {
+		return (Long) platformCachingManager.get(NamedCachesEnum.POINTS_CACHE, key);
 	}
 
 	public boolean clear(String key) {

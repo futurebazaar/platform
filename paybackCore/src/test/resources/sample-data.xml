@@ -88,28 +88,7 @@
         
        
         
-        <table name = "lists_listitem">
-        	<column>id</column>
-        	<column>list_id</column>
-        	<column>sku_id</column>
-        	<column>user_description</column>
-        	<column>user_title</column>
-        	<column>user_image</column>
-        	<column>status</column>
-        	<column>user_features</column>
-    
-        	<row>
-	        	<value name="id">1</value>
-	        	<value name="list_id">1</value>
-	        	<value name="sku_id">1</value>
-	        	<value name="user_description"></value>
-	        	<value name="user_title"></value>
-	        	<value name="user_image"></value>
-	        	<value name="status"></value>
-	        	<value name="user_features"></value>
-        	</row>
-        		
-        </table>
+        
         
 		<table name="rules">        
 			<column>id</column>
@@ -273,6 +252,27 @@
         			<value name="value">4</value>
         			<value name="rule_id">6</value>
         		</row>
+        		
+        		<row>
+				<value name="id">22</value>
+				<value name="name">VALID_FROM</value>
+				<value name="value">2012-05-22</value>
+				<value name="rule_id">1</value>
+			</row>
+			
+			<row>
+				<value name="id">23</value>
+				<value name="name">VALID_TILL</value>
+				<value name="value">9999-12-31</value>
+				<value name="rule_id">1</value>
+			</row>
+			
+			<row>
+			<value name="id">24</value>
+			<value name="name">EXCLUDED_CATEGORY_LIST</value>
+			<value name="value">0</value>
+			<value name="rule_id">1</value>
+		</row>
         	
 			</table>
 

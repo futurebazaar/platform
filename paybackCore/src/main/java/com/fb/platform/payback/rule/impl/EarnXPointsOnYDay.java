@@ -1,6 +1,7 @@
 package com.fb.platform.payback.rule.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -17,7 +18,7 @@ public class EarnXPointsOnYDay implements PointsRule {
 	
 	private String offerDay;
 	private BigDecimal earnFactor;
-	private List<Long> excludedCategoryList;
+	private List<Long> excludedCategoryList = new ArrayList<Long>();
 	private BigDecimal earnRatio;
 	private DateTime validTill;
 	private DateTime validFrom;
@@ -52,12 +53,9 @@ public class EarnXPointsOnYDay implements PointsRule {
 	@Override
 	public boolean isApplicable(OrderRequest request, OrderItemRequest itemRequest){
 		if(request.getTxnTimestamp().toDate().compareTo(validFrom.toDate()) <0 || request.getTxnTimestamp().toDate().compareTo(validTill.toDate()) > 0){
-			System.out.println(validFrom);
-			System.out.println(request.getTxnTimestamp().toDate());
-			System.out.println(validTill.toDate());
 			return false;
 		}
-		if (!request.getTxnTimestamp().dayOfWeek().getAsText().equals(this.offerDay)){
+		if (!request.getTxnTimestamp().dayOfWeek().getAsText().toUpperCase().equals(this.offerDay.toUpperCase())){
 			return false;
 		}
 		if (this.excludedCategoryList != null && !this.excludedCategoryList.isEmpty() && excludedCategoryList.contains(itemRequest.getCategoryId())){

@@ -4,8 +4,6 @@ import java.io.Serializable;
 import org.joda.time.DateTime;
 
 import com.fb.platform.payback.rule.PointsRuleConfigConstants;
-import com.fb.platform.payback.to.ClassificationCodesEnum;
-import com.fb.platform.payback.to.OrderRequest;
 
 public class PointsHeader implements Serializable{
 	
