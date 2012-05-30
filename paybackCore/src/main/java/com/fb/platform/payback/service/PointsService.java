@@ -18,5 +18,9 @@ public interface PointsService {
 	@Transactional(propagation=Propagation.REQUIRED)
 	PointsResponseCodeEnum storePoints(PointsRequest request);
 
+	PointsResponseCodeEnum clearPointsCache(String ruleName);
+
+	PointsRequest getPointsToBeDisplayed(PointsRequest request);
+
 	
 }

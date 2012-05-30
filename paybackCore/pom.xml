@@ -3,11 +3,12 @@
   <parent>
     <artifactId>platform</artifactId>
     <groupId>com.fb</groupId>
-    <version>1.0</version>
+    <version>${platform.version}</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <artifactId>paybackCore</artifactId>
-  <version>1.0</version>
+  
+    <artifactId>paybackCore</artifactId>
+    <version>${platform.version}</version>
 	<packaging>jar</packaging>
 	
 	<name>Core Payback Module of the E Commerce platform</name>
@@ -22,6 +23,16 @@
 	  	<dependency>
 	  		<groupId>com.fb</groupId>
 			<artifactId>platformCaching</artifactId>
+			<version>${platform.version}</version>
+	  	</dependency>
+	  	<dependency>
+	  		<groupId>com.fb</groupId>
+			<artifactId>authenticationCore</artifactId>
+			<version>${platform.version}</version>
+	  	</dependency>
+	  	<dependency>
+	  		<groupId>com.fb</groupId>
+			<artifactId>userCore</artifactId>
 			<version>${platform.version}</version>
 	  	</dependency>
 	</dependencies>

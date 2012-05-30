@@ -382,6 +382,14 @@
 	<value name="transfer_price">0.00</value>
 	<value name="offer_price">639.00</value>
 </row>
+
+	<row>
+		<value name="id">49447</value>
+		<value name="sku">2577243</value>
+		<value name="list_price">639.00</value>
+		<value name="transfer_price">0.00</value>
+		<value name="offer_price">639.00</value>
+	</row>
 </table>
 
 <table name = "orders_orderitem">
@@ -430,6 +438,26 @@
 	<value name="order_id">1</value>
 	<value name="qty">1</value>
 	<value name="seller_rate_chart_id">2</value>
+	<value name="item_title">Pooh</value>
+	<value name="gift_title"></value>
+	<value name="list_price">639.00</value>
+	<value name="sale_price">639.00</value>
+	<value name="state">confirmed</value>
+	<value name="created_on">2012-05-22 00:00:00</value>
+	<value name="cashback_amount">0</value>
+	<value name="is_inventory_blocked">1</value>
+	<value name="total_amount">639.00</value>
+	<value name="received_by"></value>
+	<value name="receivers_contact"></value>
+	<value name="delivery_days">7</value>
+	<value name="notes"></value>
+	<value name="discount">0</value>
+	</row>
+	<row>
+	<value name="id">3</value>
+	<value name="order_id">2</value>
+	<value name="qty">1</value>
+	<value name="seller_rate_chart_id">49447</value>
 	<value name="item_title">Pooh</value>
 	<value name="gift_title"></value>
 	<value name="list_price">639.00</value>

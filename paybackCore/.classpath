@@ -8,7 +8,7 @@
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
   <classpathentry kind="var" path="M2_REPO/cglib/cglib/2.2.2/cglib-2.2.2.jar" sourcepath="M2_REPO/cglib/cglib/2.2.2/cglib-2.2.2-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/asm/asm/3.3.1/asm-3.3.1.jar"/>
-  <classpathentry kind="src" path="/platformCaching"/>
+  <classpathentry kind="src" path="/authenticationCore"/>
   <classpathentry kind="src" path="/platformCommons"/>
   <classpathentry kind="var" path="M2_REPO/mysql/mysql-connector-java/5.0.5/mysql-connector-java-5.0.5.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-dbcp/commons-dbcp/1.2.2/commons-dbcp-1.2.2.jar"/>
@@ -43,14 +43,14 @@
   <classpathentry kind="var" path="M2_REPO/org/codehaus/jackson/jackson-xc/1.9.2/jackson-xc-1.9.2.jar" sourcepath="M2_REPO/org/codehaus/jackson/jackson-xc/1.9.2/jackson-xc-1.9.2-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/sun/jersey/contribs/jersey-spring/1.11-b04/jersey-spring-1.11-b04.jar" sourcepath="M2_REPO/com/sun/jersey/contribs/jersey-spring/1.11-b04/jersey-spring-1.11-b04-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-servlet/1.11-b04/jersey-servlet-1.11-b04.jar" sourcepath="M2_REPO/com/sun/jersey/jersey-servlet/1.11-b04/jersey-servlet-1.11-b04-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-aop/2.5.6/spring-aop-2.5.6.jar" sourcepath="M2_REPO/org/springframework/spring-aop/2.5.6/spring-aop-2.5.6-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/aopalliance/aopalliance/1.0/aopalliance-1.0.jar" sourcepath="M2_REPO/aopalliance/aopalliance/1.0/aopalliance-1.0-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/joda-time/joda-time/2.1/joda-time-2.1.jar" sourcepath="M2_REPO/joda-time/joda-time/2.1/joda-time-2.1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-log4j12/1.6.4/slf4j-log4j12-1.6.4.jar" sourcepath="M2_REPO/org/slf4j/slf4j-log4j12/1.6.4/slf4j-log4j12-1.6.4-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-api/1.6.4/slf4j-api-1.6.4.jar" sourcepath="M2_REPO/org/slf4j/slf4j-api/1.6.4/slf4j-api-1.6.4-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/springframework/spring-core/3.0.5.RELEASE/spring-core-3.0.5.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-core/3.0.5.RELEASE/spring-core-3.0.5.RELEASE-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/springframework/spring-asm/3.0.5.RELEASE/spring-asm-3.0.5.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-asm/3.0.5.RELEASE/spring-asm-3.0.5.RELEASE-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/springframework/spring-beans/3.0.5.RELEASE/spring-beans-3.0.5.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-beans/3.0.5.RELEASE/spring-beans-3.0.5.RELEASE-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/springframework/spring-aop/3.0.5.RELEASE/spring-aop-3.0.5.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-aop/3.0.5.RELEASE/spring-aop-3.0.5.RELEASE-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/aopalliance/aopalliance/1.0/aopalliance-1.0.jar" sourcepath="M2_REPO/aopalliance/aopalliance/1.0/aopalliance-1.0-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/springframework/spring-jdbc/3.0.5.RELEASE/spring-jdbc-3.0.5.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-jdbc/3.0.5.RELEASE/spring-jdbc-3.0.5.RELEASE-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/springframework/spring-tx/3.0.5.RELEASE/spring-tx-3.0.5.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-tx/3.0.5.RELEASE/spring-tx-3.0.5.RELEASE-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/springframework/spring-context/3.0.5.RELEASE/spring-context-3.0.5.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-context/3.0.5.RELEASE/spring-context-3.0.5.RELEASE-sources.jar"/>
@@ -65,9 +65,11 @@
   <classpathentry kind="var" path="M2_REPO/org/springframework/spring-web/3.0.5.RELEASE/spring-web-3.0.5.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-web/3.0.5.RELEASE/spring-web-3.0.5.RELEASE-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/jcraft/jsch/0.1.47/jsch-0.1.47.jar" sourcepath="M2_REPO/com/jcraft/jsch/0.1.47/jsch-0.1.47-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/javax/mail/mail/1.4/mail-1.4.jar" sourcepath="M2_REPO/javax/mail/mail/1.4/mail-1.4-sources.jar"/>
+  <classpathentry kind="src" path="/platformCaching"/>
   <classpathentry kind="var" path="M2_REPO/net/sf/ehcache/ehcache-core/2.5.1/ehcache-core-2.5.1.jar" sourcepath="M2_REPO/net/sf/ehcache/ehcache-core/2.5.1/ehcache-core-2.5.1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/net/sf/ehcache/ehcache-terracotta/2.5.1/ehcache-terracotta-2.5.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/terracotta/terracotta-toolkit-1.4-runtime/4.1.0/terracotta-toolkit-1.4-runtime-4.1.0.jar"/>
+  <classpathentry kind="src" path="/userCore"/>
   <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-client/1.11-b04/jersey-client-1.11-b04.jar" sourcepath="M2_REPO/com/sun/jersey/jersey-client/1.11-b04/jersey-client-1.11-b04-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/javax/servlet/servlet-api/2.4/servlet-api-2.4.jar" sourcepath="M2_REPO/javax/servlet/servlet-api/2.4/servlet-api-2.4-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/jmock/jmock/1.1.0/jmock-1.1.0.jar" sourcepath="M2_REPO/jmock/jmock/1.1.0/jmock-1.1.0-sources.jar"/>

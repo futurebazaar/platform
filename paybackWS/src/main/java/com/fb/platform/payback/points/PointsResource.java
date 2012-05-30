@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 
+import javax.naming.NoPermissionException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -19,6 +20,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.logging.Log;
@@ -27,15 +29,19 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.fb.commons.PlatformException;
 import com.fb.platform.payback._1_0.ActionCode;
+import com.fb.platform.payback._1_0.ClearCacheRequest;
+import com.fb.platform.payback._1_0.ClearCacheResponse;
+import com.fb.platform.payback._1_0.DisplayPointsRequest;
+import com.fb.platform.payback._1_0.DisplayPointsResponse;
+import com.fb.platform.payback._1_0.ItemResponse;
 import com.fb.platform.payback._1_0.OrderItemRequest;
 import com.fb.platform.payback._1_0.PointsRequest;
 import com.fb.platform.payback._1_0.PointsResponse;
 import com.fb.platform.payback.service.PointsManager;
+import com.fb.platform.payback.to.PointsResponseCodeEnum;
 
 
 /**
@@ -62,7 +68,7 @@ public class PointsResource {
 	}
 	
 	@Autowired
-	private PointsManager pointsManager;
+	private PointsManager pointsManager = null;
 
 	@POST
 	@Path("/store")
@@ -78,12 +84,15 @@ public class PointsResource {
 			com.fb.platform.payback.to.PointsRequest pointsHeaderRequest = new com.fb.platform.payback.to.PointsRequest();
 			pointsHeaderRequest.setTxnActionCode(xmlPointsRequest.getActionCode().name());
 			pointsHeaderRequest.setClientName(xmlPointsRequest.getClientName());
+			pointsHeaderRequest.setSessionToken(xmlPointsRequest.getSessionToken());
 			
 			com.fb.platform.payback.to.OrderRequest orderRequest = new com.fb.platform.payback.to.OrderRequest();
 			orderRequest.setAmount(xmlPointsRequest.getOrderRequest().getAmount());
 			orderRequest.setLoyaltyCard(xmlPointsRequest.getOrderRequest().getLoyaltyCard());
 			orderRequest.setOrderId(xmlPointsRequest.getOrderRequest().getOrderId());
-			orderRequest.setTxnTimestamp(new DateTime(xmlPointsRequest.getOrderRequest().getTimestamp().getMillisecond()));
+			XMLGregorianCalendar gregCal = xmlPointsRequest.getOrderRequest().getTimestamp();
+			orderRequest.setTxnTimestamp(new DateTime(gregCal.getYear(), gregCal.getMonth(), gregCal.getDay(), 
+					gregCal.getHour(), gregCal.getMinute()));
 			orderRequest.setReferenceId(xmlPointsRequest.getOrderRequest().getReferenceId());
 			orderRequest.setReason(xmlPointsRequest.getOrderRequest().getReason());
 			
@@ -92,10 +101,13 @@ public class PointsResource {
 				orderRequest.getOrderItemRequest().add(orderItemRequest);
 			}
 			
+			pointsHeaderRequest.setOrderRequest(orderRequest);
 			com.fb.platform.payback.to.PointsResponse pointsResponse = pointsManager.getPointsReponse(pointsHeaderRequest);
 			PointsResponse xmlPointsResponse = new PointsResponse();	
 			xmlPointsResponse.setActionCode(ActionCode.valueOf(pointsResponse.getActionCode().name()));
 			xmlPointsResponse.setMessage(pointsResponse.getStatusMessage());
+			xmlPointsResponse.setStatusCode(pointsResponse.getPointsResponseCodeEnum().name());
+			xmlPointsResponse.setTotalPoints(pointsResponse.getTxnPoints());
 			StringWriter outStringWriter = new StringWriter();
 			Marshaller marsheller = context.createMarshaller();
 			marsheller.marshal(xmlPointsResponse, outStringWriter);
@@ -116,26 +128,99 @@ public class PointsResource {
 		pointsItemRequest.setQuantity(xmlOrderItem.getQuantity());
 		pointsItemRequest.setDepartmentCode(xmlOrderItem.getDepartmentCode());
 		pointsItemRequest.setDepartmentName(xmlOrderItem.getDepartmentName());
+		pointsItemRequest.setCategoryId(xmlOrderItem.getCategoryId());
 		pointsItemRequest.setArticleId(xmlOrderItem.getArticleId());
-		//pointsItemRequest.setSellerRateChartId(xmlOrderItem.getSellerRateChartId);
+		pointsItemRequest.setSellerRateChartId(xmlOrderItem.getSellerRateChartId());
 		return pointsItemRequest;
 	}
 	
-	@GET
-	public void sendToPayback(){
-		/*if (!getIp().startsWith("10.0.101.") || !getIp().equals("127.0.0.1")){
+	@POST
+	@Path("/clear/rule")
+	public String clearRuleCache(String pointsXml){
+		logger.info("clearCacheRequestXML : \n" + pointsXml);
+		try {
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			ClearCacheRequest xmlClearCacheRequest = (ClearCacheRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(pointsXml)));
+			com.fb.platform.payback.to.ClearCacheRequest clearCacheRequest= new com.fb.platform.payback.to.ClearCacheRequest();
+			clearCacheRequest.setRuleName(xmlClearCacheRequest.getRuleName());
+			clearCacheRequest.setSessionToken(xmlClearCacheRequest.getSessionToken());
+			
+			PointsResponseCodeEnum responseCodeEnum = pointsManager.clearPointsCache(clearCacheRequest);
+			ClearCacheResponse clearCacheResponse =  new ClearCacheResponse();
+			clearCacheResponse.setStatusCode(responseCodeEnum.name());
+			clearCacheResponse.setRuleName(clearCacheRequest.getRuleName());
+			clearCacheResponse.setSessionToken(clearCacheRequest.getSessionToken());
+
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marsheller = context.createMarshaller();
+			marsheller.marshal(clearCacheResponse, outStringWriter);
+			
+			String xmlResponse = outStringWriter.toString();
+			logger.info("Clear Cache Response : \n" + xmlResponse);
+			return xmlResponse;
+
+		} catch (JAXBException e) {
+			logger.error("Error in the Points call.", e);
 			return null;
-		}*/
-		pointsManager.mailBurnData();
-		pointsManager.uploadEarnFilesOnSFTP();
-		
+		}
+	}
+
+	@POST
+	@Path("/display")
+	public String displayPoints(String pointsXml) throws NoPermissionException{
+		logger.info("Display Points Request XML : \n" + pointsXml);
+		try {
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			DisplayPointsRequest xmlDisplayPointsRequest = (DisplayPointsRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(pointsXml)));
+			com.fb.platform.payback.to.PointsRequest pointsRequest = new com.fb.platform.payback.to.PointsRequest();
+			
+			pointsRequest.setTxnActionCode(xmlDisplayPointsRequest.getActionCode().name());
+			
+			com.fb.platform.payback.to.OrderRequest orderRequest = new com.fb.platform.payback.to.OrderRequest();
+			XMLGregorianCalendar gregCal = xmlDisplayPointsRequest.getTimestamp();
+			orderRequest.setTxnTimestamp(new DateTime(gregCal.getYear(), gregCal.getMonth(), gregCal.getDay(), 
+					gregCal.getHour(), gregCal.getMinute()));
+			
+			for (OrderItemRequest xmlOrderItem : xmlDisplayPointsRequest.getOrderItemRequest()) {
+				com.fb.platform.payback.to.OrderItemRequest orderItemRequest = createStorePointsItem(xmlOrderItem);
+				orderRequest.getOrderItemRequest().add(orderItemRequest);
+			}
+			
+			pointsRequest.setOrderRequest(orderRequest);
+			
+			com.fb.platform.payback.to.PointsRequest newPointsRequest= pointsManager.getPointsToBeDisplayed(pointsRequest);
+			
+			DisplayPointsResponse xmlDisplayPointsResponse = new DisplayPointsResponse();
+			xmlDisplayPointsResponse.setTotalPoints(newPointsRequest.getOrderRequest().getTxnPoints().intValue());
+			for (com.fb.platform.payback.to.OrderItemRequest itemRequest : newPointsRequest.getOrderRequest().getOrderItemRequest()){
+				ItemResponse xmlItemResponse = new ItemResponse();
+				xmlItemResponse.setAmount(itemRequest.getAmount());
+				xmlItemResponse.setItemId(itemRequest.getId());
+				xmlItemResponse.setTxnPoints(itemRequest.getTxnPoints().intValue());
+				xmlDisplayPointsResponse.getItemResponse().add(xmlItemResponse);
+			}
+
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marsheller = context.createMarshaller();
+			marsheller.marshal(xmlDisplayPointsResponse, outStringWriter);
+			
+			String xmlResponse = outStringWriter.toString();
+			logger.info("Display Points Response : \n" + xmlResponse);
+			return xmlResponse;
+
+		} catch (JAXBException e) {
+			logger.error("Error in the Points call.", e);
+			return null;
+		}
+
 	}
 	
 	@GET
+	@Path("/")
 	public String ping() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Future Platform PayBack Websevice.\n");
-		sb.append("To store Points post to : http://hostname:port/paybackWS/points/store\n");
+		sb.append("Future Platform PAYBACK Websevice. \n");
+		sb.append("To store Points post to : http://hostname:port/paybackWS/points/store \n");
 		return sb.toString();
 	}
 	
@@ -163,10 +248,6 @@ public class PointsResource {
 		}
 		return sb.toString();
 	}
-
-	private String getIp(){
-		return ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes())
-			       .getRequest().getRemoteAddr();
-	}
+	
 
 }

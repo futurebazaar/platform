@@ -2,6 +2,7 @@ package com.fb.platform.payback.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.Properties;
 
 import javax.mail.MessagingException;
@@ -13,7 +14,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import com.fb.commons.util.MailSender;
 
-public class PointsUtil {
+public class PointsUtil implements Serializable{
 	
 	public String getPreviousDayDate(){
 		DateTime datetime = new DateTime();
@@ -77,7 +78,7 @@ public class PointsUtil {
 			String host = props.getProperty("mailHost");
 			int port = Integer.parseInt(props.getProperty("mailPort"));
 			MailSender mailSender = new MailSender(host, port, props.getProperty("mailUsername"), 
-					props.getProperty("mailPassword"), 5000);
+					props.getProperty("mailPassword"), 50000);
 			mailSender.setFrom(props.getProperty(type + "_FROM"));
 			mailSender.setTO(props.getProperty(type + "_TO"));
 			mailSender.setCC(props.getProperty(type + "_CC"));

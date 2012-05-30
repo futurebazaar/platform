@@ -10,12 +10,13 @@ public class OrderRequest {
 
 	private long orderId;
 	private String referenceId;
-	private BigDecimal amount;
+	private BigDecimal amount =  BigDecimal.ZERO;
 	private String reason;
 	private List<OrderItemRequest> orderItemRequest = new ArrayList<OrderItemRequest>();
 	private String loyaltyCard;
 	private DateTime txnTimestamp;
 	private BigDecimal bonusPoints = BigDecimal.ZERO;
+	private BigDecimal txnPoints;
 	
 	public long getOrderId() {
 		return orderId;
@@ -39,7 +40,7 @@ public class OrderRequest {
 		return orderItemRequest;
 	}
 	public DateTime getTxnTimestamp() {
-		return new DateTime(txnTimestamp.getYear(), txnTimestamp.getMonthOfYear(), txnTimestamp.getDayOfMonth(), 0, 0);
+		return txnTimestamp;
 	}
 	public void setTxnTimestamp(DateTime txnTimestamp) {
 		this.txnTimestamp = txnTimestamp;
@@ -64,5 +65,11 @@ public class OrderRequest {
 	}
 	public void setReferenceId(String referenceId) {
 		this.referenceId = referenceId;
+	}
+	public BigDecimal getTxnPoints() {
+		return txnPoints;
+	}
+	public void setTxnPoints(BigDecimal txnPoints) {
+		this.txnPoints = txnPoints;
 	}
 }

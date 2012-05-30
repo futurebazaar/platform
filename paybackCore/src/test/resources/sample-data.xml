@@ -143,7 +143,7 @@
 	    			<row>
 								<value name="id">3</value>
 								<value name="name">MIN_ORDER_VALUE</value>
-								<value name="value">0.03</value>
+								<value name="value">2000</value>
 								<value name="rule_id">5</value>
 						</row>
 						<row>
@@ -193,7 +193,7 @@
 					<row>
 	    			<value name="id">11</value>
 	    			<value name="name">INCLUDED_CATEGORY_LIST</value>
-	    			<value name="value">1234, 2345</value>
+	    			<value name="value">1234, 2345, 1193</value>
 	    			<value name="rule_id">3</value>
 	    		</row>
 	    			<row>

@@ -1,16 +1,22 @@
 package com.fb.platform.payback.cache;
 
+import java.io.Serializable;
+
 import com.fb.platform.caching.AbstractCacheAccess;
 import com.fb.platform.caching.NamedCachesEnum;
 
-public class ListCacheAccess extends AbstractCacheAccess{
+public class ListCacheAccess extends AbstractCacheAccess implements Serializable{
 	
 	public void put(String key, Long value) {
 		platformCachingManager.put(NamedCachesEnum.POINTS_CACHE, key, value);
 	}
 
 	public  Long  get(String key) {
-		return (Long) platformCachingManager.get(NamedCachesEnum.POINTS_CACHE, key);
+		Object value = platformCachingManager.get(NamedCachesEnum.POINTS_CACHE, key);
+		if (value != null){
+			return (Long) value;
+		}
+		return null;
 	}
 
 	public boolean clear(String key) {

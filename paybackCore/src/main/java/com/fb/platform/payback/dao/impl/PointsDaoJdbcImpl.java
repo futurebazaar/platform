@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -20,6 +22,8 @@ import com.fb.platform.payback.model.PointsItems;
 import com.fb.platform.payback.to.OrderItemRequest;
 
 public class PointsDaoJdbcImpl implements PointsDao{
+	
+	private static Log logger = LogFactory.getLog(PointsDaoJdbcImpl.class);
 	
 	private JdbcTemplate jdbcTemplate;
 	
@@ -42,35 +46,6 @@ public class PointsDaoJdbcImpl implements PointsDao{
 			"reason) " +
 			"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
-	/*private static final String UPDATE_STATUS_SQL = 
-			"UPDATE payments_pointsheader SET " +
-			"txn_timstamp = ?, " +
-			"status = 'DONE' WHERE " +
-			"txn_action_code = ? AND " +
-			"settlement_date = ? AND " +
-			"partner_merchant_id = ? ";
-	
-	private static final String LOAD_POINTS_HEADER_SQL = 
-			" SELECT * FROM payments_pointsheader WHERE " +
-			"txn_action_code = ? AND " +
-			"order_id = ? AND " +
-			"txn_classification_code = ? " +
-			"order by id desc";
-	
-	private static final String LOAD_HEADER_DATA_QUERY = 
-			"SELECT * FROM " +
-			"payments_pointsheader WHERE " +
-			"status = 'FRESH' AND " +
-			"txn_action_code = ? AND " +
-			"settlement_date = ? AND " +
-			"partner_merchant_id = ?  " +
-			"order by id";
-	
-	private static final String LOAD_EARN_DATA_QUERY = 
-			"SELECT * FROM " +
-			"payments_pointsitems " +
-			"WHERE points_header_id = ? " +
-			"order by id desc";*/
 	
 	private static final String UPDATE_STATUS_SQL = 
 			"UPDATE points_header SET " +
@@ -126,6 +101,7 @@ public class PointsDaoJdbcImpl implements PointsDao{
 	
 	@Override
 	public Long insertPointsHeaderData(final PointsHeader pointsHeader) {
+		logger.info("Inserting Points Header data for order Id : " + pointsHeader.getOrderId());
 		final KeyHolder keyHolderPointsHeader = new GeneratedKeyHolder();
 			jdbcTemplate.update(new PreparedStatementCreator() {
 			
@@ -160,6 +136,7 @@ public class PointsDaoJdbcImpl implements PointsDao{
 
 	@Override
 	public void updateStatus(final String txnActionCode, final String settlementDate, final String merchantId) {
+		logger.info("Updating Points Header data for actionCode : " + txnActionCode + " for merchant : " + merchantId + " on date : " + settlementDate);
 		int rowUpdated =  jdbcTemplate.update(new PreparedStatementCreator() {
 			
 			@Override
@@ -181,6 +158,7 @@ public class PointsDaoJdbcImpl implements PointsDao{
 	
 	@Override
 	public PointsHeader getHeaderDetails(long orderId, String txnActionCode, String txnClassificationCode){
+		logger.info("Getting Points Header data for order Id : " + orderId);
 		return jdbcTemplate.queryForObject(LOAD_POINTS_HEADER_SQL, new Object[]{txnActionCode, orderId, txnClassificationCode}, new HeaderMapper());
 	}
 	
@@ -220,6 +198,7 @@ public class PointsDaoJdbcImpl implements PointsDao{
 	
 	@Override
 	public Collection<PointsItems> loadPointsItemData(long pointsHeaderId) {
+		logger.info("Getting Points Header data for points order Id : " + pointsHeaderId);
 		Collection<PointsItems> earnPointsList = jdbcTemplate.query(LOAD_EARN_DATA_QUERY, new Object[]{pointsHeaderId}, 
 				new EarnDataMapper());
 		return earnPointsList;
@@ -248,6 +227,7 @@ public class PointsDaoJdbcImpl implements PointsDao{
 	@Override
 	public void insertPointsItemsData(final OrderItemRequest itemRequest,
 			final long headerId, final int txnPoints) {
+		logger.info("Inserting Points Item data for header Id : " + headerId + " and itemId : " + itemRequest.getId());
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			
 			@Override

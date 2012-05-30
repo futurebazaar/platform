@@ -8,7 +8,8 @@ public enum PointsResponseCodeEnum {
 	INVALID_REFERENCE_ID("Reference ID cannot be null."),
 	INVALID_POINTS("No Points to Store."),
 	INVALID_ACTION_CODE("Action Code specified is invalid"), 
-	INVALID_REQUEST("This Request is not Valid. Please check.");
+	INVALID_REQUEST("This Request is not Valid. Please check."), 
+	NO_SESSION("No session attached/ Invalid session.");
 	
 	private String responseCode = null;
 	

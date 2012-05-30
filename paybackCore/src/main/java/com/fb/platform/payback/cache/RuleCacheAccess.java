@@ -21,7 +21,11 @@ public class RuleCacheAccess extends AbstractCacheAccess {
 	}
 
 	public  PointsRule get(String ruleName) {
-		return (PointsRule) platformCachingManager.get(NamedCachesEnum.POINTS_CACHE, ruleName);
+		Object rule = platformCachingManager.get(NamedCachesEnum.POINTS_CACHE, ruleName);
+		if (rule != null){
+			return (PointsRule) rule;
+		}
+		return null;
 	}
 
 	public boolean clear(String ruleName) {

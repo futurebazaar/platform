@@ -15,6 +15,8 @@ import com.fb.platform.payback.dao.ListDao;
 import com.fb.platform.payback.dao.PointsRuleDao;
 import com.fb.platform.payback.rule.EarnPointsRuleEnum;
 import com.fb.platform.payback.rule.PointsRule;
+import com.fb.platform.payback.rule.impl.BuyHeroDealEarnYPoints;
+import com.fb.platform.payback.service.PointsService;
 import com.fb.platform.payback.to.OrderItemRequest;
 import com.fb.platform.payback.to.OrderRequest;
 import com.fb.platform.payback.util.PointsUtil;
@@ -107,6 +109,18 @@ public class CacheTest extends BaseTestCase{
 		listCacheAccess.put(key, dealId);
 		listCacheAccess.unlock(key);
 		assertEquals(new Long(1),  listCacheAccess.get(key));
+		
+	}
+	
+	@Test
+	public void clearRuleCacheTest(){
+		PointsRule rule = new BuyHeroDealEarnYPoints();
+		ruleCacheAccess.lock(EarnPointsRuleEnum.EARN_X_POINTS_ON_Y_DAY.name());
+		ruleCacheAccess.put(EarnPointsRuleEnum.EARN_X_POINTS_ON_Y_DAY.name(), rule);
+		ruleCacheAccess.unlock(EarnPointsRuleEnum.EARN_X_POINTS_ON_Y_DAY.name());
+		assertTrue(ruleCacheAccess.clear(EarnPointsRuleEnum.EARN_X_POINTS_ON_Y_DAY.name()));
+		assertFalse(ruleCacheAccess.clear(EarnPointsRuleEnum.EARN_X_POINTS_ON_Y_DAY.name()));
+		assertNull(ruleCacheAccess.get(EarnPointsRuleEnum.EARN_X_POINTS_ON_Y_DAY.name()));
 		
 	}
 	

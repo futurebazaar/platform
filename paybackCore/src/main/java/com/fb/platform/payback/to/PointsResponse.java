@@ -5,6 +5,7 @@ public class PointsResponse {
 	private PointsTxnClassificationCodeEnum actionCode;
 	private PointsResponseCodeEnum pointsResponseCodeEnum;
 	private String statusMessage;
+	private int txnPoints;
 	
 	public String getStatusMessage() {
 		return statusMessage;
@@ -24,5 +25,11 @@ public class PointsResponse {
 	public void setPointsResponseCodeEnum(
 			PointsResponseCodeEnum pointsResponseCodeEnum) {
 		this.pointsResponseCodeEnum = pointsResponseCodeEnum;
+	}
+	public int getTxnPoints() {
+		return txnPoints;
+	}
+	public void setTxnPoints(int txnPoints) {
+		this.txnPoints = txnPoints;
 	}
 }

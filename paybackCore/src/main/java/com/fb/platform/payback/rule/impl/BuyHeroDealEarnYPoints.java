@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import org.joda.time.DateTime;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import com.fb.platform.payback.cache.ListCacheAccess;
 import com.fb.platform.payback.cache.PointsCacheConstants;
@@ -21,7 +22,7 @@ public class BuyHeroDealEarnYPoints implements PointsRule {
 	private BigDecimal earnRatio;
 	private DateTime validFrom;
 	private DateTime validTill;
-	private ListDao listDao;
+	private transient ListDao listDao;
 	private ListCacheAccess listCacheAccess;
 	private PointsUtil pointsUtil;
 	
@@ -72,10 +73,9 @@ public class BuyHeroDealEarnYPoints implements PointsRule {
 			try {
 				sellerRateChartId = listDao.getHeroDealSellerRateChart(orderDate);
 			} catch (DataAccessException e) {
-				e.printStackTrace();
 				return new Long(-1);
 			}
-
+			
 			if (sellerRateChartId != null) {
 				cacheHeroDeal(sellerRateChartId, key);
 			} else {

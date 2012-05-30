@@ -13,7 +13,7 @@
 
 	<artifactId>paybackWS</artifactId>
 	<packaging>war</packaging>
-	<version>1.0</version>
+	<version>${platform.version}</version>
 	<name>Payback Web Services</name>
 	<url>http://maven.apache.org</url>
 
@@ -32,7 +32,7 @@
 		<dependency>
 			<groupId>com.fb</groupId>
 			<artifactId>paybackCore</artifactId>
-	        <version>1.0</version>
+	        <version>${platform.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

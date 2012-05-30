@@ -41,7 +41,7 @@ public class PointsRuleDaoJdbcImpl implements PointsRuleDao{
 	@Override
 	public PointsRule loadEarnRule(EarnPointsRuleEnum ruleName) {
 		if(log.isDebugEnabled()) {
-			log.debug("Geting the promotion rule details for the rule id : " + ruleName );
+			log.debug("Geting the payback rule details for the rule id : " + ruleName );
 		}
 		PointsRuleRowCallBackHandler rcbh = new PointsRuleRowCallBackHandler();
 		jdbcTemplate.query(LOAD_RULE_QUERY, rcbh, ruleName.name());
@@ -75,7 +75,7 @@ public class PointsRuleDaoJdbcImpl implements PointsRuleDao{
 
 	private RuleConfiguration loadRuleConfiguration(long ruleId) {
 		if(log.isDebugEnabled()) {
-			log.debug("Geting the rule details for the promotion rule id : " + ruleId );
+			log.debug("Geting the rule details for the Payback rule id : " + ruleId );
 		}
 		List<com.fb.platform.payback.rule.RuleConfigItem> ruleConfigItems = jdbcTemplate.query(LOAD_RULE_CONFIG_ITEMS_QUERY, new RuleConfigItemRowMapper(), ruleId);
 		RuleConfiguration ruleConfig = new RuleConfiguration(ruleConfigItems);
@@ -94,7 +94,7 @@ public class PointsRuleDaoJdbcImpl implements PointsRuleDao{
 	@Override
 	public PointsRule loadBurnRule(BurnPointsRuleEnum ruleName) {
 		if(log.isDebugEnabled()) {
-			log.debug("Geting the promotion rule details for the rule id : " + ruleName );
+			log.debug("Geting the Payback rule details for the rule id : " + ruleName );
 		}
 		PointsRuleRowCallBackHandler rcbh = new PointsRuleRowCallBackHandler();
 		jdbcTemplate.query(LOAD_RULE_QUERY, rcbh, ruleName.name());
