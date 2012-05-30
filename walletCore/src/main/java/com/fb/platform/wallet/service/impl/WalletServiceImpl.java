@@ -86,7 +86,7 @@ public class WalletServiceImpl implements WalletService {
 			WalletTransaction walletTransactionRes = new WalletTransaction();
 			Wallet wallet = load(walletId);
 			com.fb.platform.wallet.model.WalletTransaction walletTransaction = wallet
-					.credit(amount, SubWalletType.valueOf(subWalletType), paymentId, refundId,gitfCoupon);
+					.credit(amount, SubWalletType.valueOf(subWalletType), paymentId, refundId,gitfCoupon,null); //to pass the gift coupon expiry date instead of null
 			walletTransactionRes.setWallet(walletDao.update(wallet));
 			walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(walletTransaction));
 			return walletTransactionRes;

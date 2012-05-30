@@ -55,7 +55,7 @@ public class WalletManagerTest extends BaseTestCase{
 	private UserManager userManager = null;
 
 	private String sessionToken = null;
-	int userId;
+	private int userId;
 	
 	@Before
 	@Test

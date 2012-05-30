@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public class WalletDetails {
 
-	long walletId;
+	private long walletId;
 	private BigDecimal cashAmount;
 	private BigDecimal refundAmount;
 	private BigDecimal giftAmount;

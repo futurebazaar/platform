@@ -5,8 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -55,6 +58,7 @@ public class WalletDaoImpl implements WalletDao {
 			+ "values (?,?,?)";
 	
 	private JdbcTemplate jdbcTemplate;
+	private Log log = LogFactory.getLog(WalletDaoImpl.class);
 	
 	@Override
 	public Wallet load(long walletId) {
@@ -116,9 +120,10 @@ public class WalletDaoImpl implements WalletDao {
 					wallet.getRefundSubWallet().getAmount(),
 					wallet.getId()});
 			return load(wallet.getId());
-		} catch (Exception e) {
+		}catch (WalletNotFoundException e) {
+			log.warn( " Tried updating the wallet with id " + wallet.getId() + " ,but entry not found.");
 			return null;
-		}		
+		}
 	}
 
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {

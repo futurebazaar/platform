@@ -33,24 +33,10 @@ CREATE TABLE wallets_transaction
 	amount DECIMAL(18,2) NOT NULL,
 	transaction_type VARCHAR(1) NOT NULL,
 	transaction_date DATETIME NOT NULL,
+	transaction_note longtext NULL,
 	CONSTRAINT wallets_transaction_fk1 FOREIGN KEY (wallet_id) REFERENCES wallets_wallet(id),
 	PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
-
-CREATE TABLE wallets_gifts
-(
-	id bigint NOT NULL AUTO_INCREMENT,
-	wallet_id bigint NOT NULL,
-	gift_amount decimal(18,2) NOT NULL,
-	create_date DATETIME NOT NULL,
-	expiry_date DATETIME NULL,
-	gift_type VARCHAR(50) NULL,
-	gift_code VARCHAR(100) NULL,
-	is_expired bit NOT NULL DEFAULT FALSE,	
-	CONSTRAINT wallet_gifts_fk1 FOREIGN KEY (wallet_id) REFERENCES wallets_wallet(id),
-	PRIMARY KEY(id)	
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 CREATE TABLE wallets_sub_transaction
 (
@@ -61,14 +47,14 @@ CREATE TABLE wallets_sub_transaction
 	order_id integer NULL,
 	refund_id integer NULL,
 	payment_id integer NULL,
-	gift_id bigint NULL,
+	gift_code VARCHAR(50) NULL,
+	gift_expiry DATETIME NULL,
 	transaction_reversal_id bigint NULL,
 	transaction_description longtext NULL,
 	CONSTRAINT wallets_sub_transaction_fk1 FOREIGN KEY (tran_id) REFERENCES wallets_transaction(id),
 	CONSTRAINT wallets_sub_transaction_fk2 FOREIGN KEY (order_id) REFERENCES orders_order(id),
 	CONSTRAINT wallets_sub_transaction_fk3 FOREIGN KEY (refund_id) REFERENCES payments_refund(id),
 	CONSTRAINT wallets_sub_transaction_fk4 FOREIGN KEY (payment_id) REFERENCES payments_paymentattempt(id),
-	CONSTRAINT wallets_sub_transaction_fk5 FOREIGN KEY (gift_id) REFERENCES wallets_gifts(id),
 	CONSTRAINT wallets_sub_transaction_fk6 FOREIGN KEY (transaction_reversal_id) REFERENCES wallets_transaction(id),
 	PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

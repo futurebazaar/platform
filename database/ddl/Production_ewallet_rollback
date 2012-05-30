@@ -1,5 +1,4 @@
 DROP TABLE IF EXISTS users_wallet;
 DROP TABLE IF EXISTS wallets_sub_transaction;
 DROP TABLE IF EXISTS wallets_transaction;
-DROP TABLE IF EXISTS wallets_gifts;
 DROP TABLE IF EXISTS wallets_wallet;

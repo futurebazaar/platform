@@ -1,7 +1,5 @@
 package com.fb.platform.wallet.manager.impl;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -14,7 +12,6 @@ import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
 import com.fb.platform.user.manager.exception.UserNotFoundException;
 
-import com.fb.platform.wallet.service.exception.InvalidTransaction;
 import com.fb.platform.wallet.service.exception.WalletNotFoundException;
 import com.fb.platform.wallet.service.exception.InSufficientFundsException;
 import com.fb.platform.wallet.service.exception.AlreadyRefundedException;
@@ -30,8 +27,6 @@ import com.fb.platform.wallet.manager.model.access.WalletHistoryRequest;
 import com.fb.platform.wallet.manager.model.access.WalletHistoryResponse;
 import com.fb.platform.wallet.manager.model.access.WalletHistoryStatusEnum;
 import com.fb.platform.wallet.to.WalletTransaction;
-import com.fb.platform.wallet.to.WalletSubTransaction;
-
 import com.fb.platform.wallet.manager.model.access.FillWalletRequest;
 import com.fb.platform.wallet.manager.model.access.FillWalletResponse;
 import com.fb.platform.wallet.manager.model.access.FillWalletStatusEnum;

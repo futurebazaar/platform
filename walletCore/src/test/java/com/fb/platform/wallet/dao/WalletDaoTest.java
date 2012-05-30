@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -75,7 +76,7 @@ public class WalletDaoTest extends BaseTestCase {
 		Wallet wallet2 = wallet;
 		assertEquals(wallet2, wallet);
 		
-		WalletTransaction walletTransaction = wallet.credit(new Money(new BigDecimal(100.00)), SubWalletType.GIFT, 0, 0, "EGV");
+		WalletTransaction walletTransaction = wallet.credit(new Money(new BigDecimal(100.00)), SubWalletType.GIFT, 0, 0, "EGV",new DateTime(2015,5,31,12,12,12));
 		assertNotNull(walletTransaction);
 		
 		Wallet walletPostUpdate = walletDao.update(wallet);
@@ -98,7 +99,7 @@ public class WalletDaoTest extends BaseTestCase {
 		Wallet wallet2 = wallet;
 		assertEquals(wallet2, wallet);
 		
-		WalletTransaction walletTransaction = wallet.credit(new Money(new BigDecimal(100.00)), SubWalletType.GIFT, 0, 0, "EGV");
+		WalletTransaction walletTransaction = wallet.credit(new Money(new BigDecimal(100.00)), SubWalletType.GIFT, 0, 0, "EGV",new DateTime(2015,5,31,12,12,12));
 		assertNotNull(walletTransaction);
 		
 		wallet.setId(10293L); // setting an invalid id to fail the wallet test

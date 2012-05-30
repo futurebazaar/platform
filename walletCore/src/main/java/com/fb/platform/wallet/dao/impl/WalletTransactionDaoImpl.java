@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -32,14 +34,16 @@ import com.fb.platform.wallet.service.exception.WorngRefundIdException;
 public class WalletTransactionDaoImpl implements WalletTransactionDao {
 	
 	private JdbcTemplate jdbcTemplate;
+	private Log log = LogFactory.getLog(WalletTransactionDaoImpl.class);
 
 	private final String INSERT_NEW_TRANSACTION  =  "Insert into wallets_transaction "
 			+ "(transaction_id, "
 			+ "wallet_id, " 
 			+ "amount, " 
 			+ "transaction_type, " 
-			+ "transaction_date) "
-			+ "values (?,?,?,?,?)";
+			+ "transaction_date, "
+			+ "transaction_note ) "
+			+ "values (?,?,?,?,?,?)";
 	
 	private final String INSERT_NEW_SUBTRANSACTION = "Insert into wallets_sub_transaction "
 			+ "(tran_id, "
@@ -49,9 +53,10 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			+ "refund_id, "
 			+ "payment_id, "
 			+ "gift_code, "
+			+ "gift_expiry, "
 			+ "transaction_reversal_id, "
 			+"transaction_description) "
-			+ "values (?,?,?,?,?,?,?,?,?)";
+			+ "values (?,?,?,?,?,?,?,?,?,?)";
 	
 	private final String GET_TRANSACTION_BY_TRANSACTIONID = "Select " 
 			+ "id, " 
@@ -59,8 +64,9 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			+ "wallet_id, "
 			+ "amount, "
 			+ "transaction_type, "
-			+ "transaction_date from "
-			+ "wallets_transaction where transaction_id= ? and wallet_id=?" ;
+			+ "transaction_date, "
+			+ "transaction_note "
+			+ "from wallets_transaction where transaction_id= ? and wallet_id=?" ;
 	
 	private final String GET_TRANSACTION_BY_ID = "Select "
 			+ "id, "
@@ -68,7 +74,8 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			+ "wallet_id, " 
 			+ "amount, "
 			+ "transaction_type, "
-			+ "transaction_date "
+			+ "transaction_date, "
+			+ "transaction_note "
 			+ "from wallets_transaction where id= ? and wallet_id=?" ;
 	
 	private final String GET_SUB_TRANSACTIONS_BY_TRANID = "Select "
@@ -80,6 +87,7 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			+ "refund_id, "
 			+ "payment_id, "
 			+ "gift_code, "
+			+ "gift_expiry, "
 			+ "transaction_reversal_id, "
 			+ "transaction_description "
 			+ "from wallets_sub_transaction "
@@ -91,7 +99,8 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			+ "wallet_id, "
 			+ "amount, "
 			+ "transaction_type, "
-			+ "transaction_date "
+			+ "transaction_date, "
+			+ "transaction_note "
 			+ "from wallets_transaction where wallet_id= ? and transaction_date between ? and ?" ;
 	
 	private final String GET_SUB_TRANSACTIONS_BY_REFUNDID = "Select "
@@ -103,6 +112,7 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			+ "refund_id, "
 			+ "payment_id,"
 			+ "gift_code, "
+			+ "gift_expiry, "
 			+ "transaction_reversal_id, "
 			+ "transaction_description "
 			+ "from wallets_sub_transaction "
@@ -117,10 +127,35 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			+ "refund_id, "
 			+ "payment_id,"
 			+ "gift_code, "
+			+ "gift_expiry, "
 			+ "transaction_reversal_id, "
 			+ "transaction_description "
 			+ "from wallets_sub_transaction "
 			+ "where transaction_reversal_id= ?" ;
+	
+	private final String GET_SUB_TRANSACTION_BY_TYPE_BUCKET = "Select "
+			+ "wst.id, "
+			+ "wst.tran_id, "
+			+ "wst.transaction_subwallet, "
+			+ "wst.amount, "
+			+ "wst.order_id, "
+			+ "wst.refund_id, "
+			+ "wst.payment_id,"
+			+ "wst.gift_code, "
+			+ "wst.gift_expiry, "
+			+ "wst.transaction_reversal_id, "
+			+ "wst.transaction_description "
+			+ "from wallets_sub_transaction wst "
+			+ "join wallets_transaction wt "
+			+ "on wt.id = wst.tran_id "
+			+ "where wst.transaction_subwallet= ? and wt.transaction_type= ? and wt.wallet_id = ?" ;
+	
+	private final String GET_TOTAL_AMOUNT_BY_TRANSACTIONTYPE_BUCKET = "Select "
+			+ "sum(wst.amount) "
+			+ "from wallets_sub_transaction wst "
+			+ "join wallets_transaction wt "
+			+ "on wt.id = wst.tran_id "
+			+ "where wst.transaction_subwallet= ? and wt.transaction_type= ? and wt.wallet_id = ?" ;
 	
 	@Override
 	public String insertTransaction(final WalletTransaction walletTransaction) {
@@ -137,13 +172,14 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 					ps.setBigDecimal(3, walletTransaction.getAmount().getAmount());
 					ps.setString(4, walletTransaction.getTransactionType().toString());
 					ps.setDate(5, new Date(walletTransaction.getTimeStamp().getMillis()));
+					ps.setString(6, walletTransaction.getTransactionNote());
 					return ps;
 				}
 			}, generatedKeyHolder);
 			long transactionId = generatedKeyHolder.getKey().longValue();
 			
 			for(WalletSubTransaction walletSubTransaction : walletTransaction.getWalletSubTransaction()){
-				Object[] args = new Object[9];
+				Object[] args = new Object[10];
 				args[0] = transactionId;
 				args[1] = walletSubTransaction.getSubWalletType().name();
 				args[2] = walletSubTransaction.getAmount().getAmount();
@@ -151,14 +187,15 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 				args[4] = walletSubTransaction.getRefundId() == 0 ? null : walletSubTransaction.getRefundId();
 				args[5] = walletSubTransaction.getPaymentId() == 0 ? null : walletSubTransaction.getPaymentId();
 				args[6] = walletSubTransaction.getGiftCode();
-				args[7] = walletSubTransaction.getPaymentReversalId() == 0 ? null : walletSubTransaction.getPaymentReversalId();
-				args[8] = walletSubTransaction.getNotes();
+				args[7] = walletSubTransaction.getGiftExpiry() != null ? new Date(walletSubTransaction.getGiftExpiry().getMillis()) : null;
+				args[8] = walletSubTransaction.getPaymentReversalId() == 0 ? null : walletSubTransaction.getPaymentReversalId();
+				args[9] = walletSubTransaction.getNotes();
 				jdbcTemplate.update(INSERT_NEW_SUBTRANSACTION,args);
 			}
 			return transactionUniqueId;
 		}catch (Exception e) {
-			e.printStackTrace();
-			return null;
+			log.error("An exception while inserting the transaction record" + e);
+			throw new PlatformException("An exception while insrting the transaction record "+e);
 		}
 	}
 
@@ -179,7 +216,8 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			}
 			return walletTransactions;
 		} catch (Exception e) {
-			return null;
+			log.error("An exception while fetching the wallet history" + e);
+			throw new PlatformException("An exception while fetching wallet history "+e);
 		}
 	}
 
@@ -196,8 +234,6 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			return walletTransaction;
 		} catch (EmptyResultDataAccessException e) {
 			throw new InvalidTransactionIdException();
-		} catch (PlatformException e) {
-			throw new PlatformException();
 		}
 	}
 	
@@ -212,6 +248,7 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			walletTransaction.setTimeStamp(new DateTime(rs.getDate("transaction_date")));
 			walletTransaction.setTransactionId(rs.getString("transaction_id"));
 			walletTransaction.setTransactionType(TransactionType.valueOf(rs.getString("transaction_type")));
+			walletTransaction.setTransactionNote(rs.getString("transaction_note"));
 			return walletTransaction;
 		}		
 	}
@@ -229,6 +266,7 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			walletsubTransaction.setTransactionId(rs.getLong("tran_id"));
 			walletsubTransaction.setAmount(new Money(rs.getBigDecimal("amount")));
 			walletsubTransaction.setGiftCode(rs.getString("gift_code"));
+			walletsubTransaction.setGiftExpiry(new DateTime(rs.getDate("gift_expiry")));
 			walletsubTransaction.setOrderId(rs.getLong("order_id"));
 			walletsubTransaction.setPaymentId(rs.getLong("payment_id"));
 			walletsubTransaction.setRefundId(rs.getLong("refund_id"));
@@ -241,31 +279,23 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 	@Override
 	public WalletTransaction refundTransactionByRefundId(long walletId,
 			long refundId) {		
-		try{
-			WalletSubTransaction walletSubTransaction = null;
-			try {
-				walletSubTransaction = jdbcTemplate.queryForObject(GET_SUB_TRANSACTIONS_BY_REFUNDID,
-						new Object[] {refundId},
-						new WalletSubTransactionMapper());
-			}catch (EmptyResultDataAccessException e){
-				throw new WorngRefundIdException("No available refund with this id");
-			}
-			try {
-				WalletTransaction walletTransaction = jdbcTemplate.queryForObject(GET_TRANSACTION_BY_ID,
-							new Object[]{walletSubTransaction.getTransactionId(),walletId},
-							new WalletTransactionMapper());
-				walletTransaction.getWalletSubTransaction().add(walletSubTransaction);
-				return walletTransaction;
-			}catch (EmptyResultDataAccessException e){
-				throw new WalletRefundMismatchException("This refundId not associated with this wallet");
-			}			
-		}catch (WorngRefundIdException e) {
+		WalletSubTransaction walletSubTransaction = null;
+		try {
+			walletSubTransaction = jdbcTemplate.queryForObject(GET_SUB_TRANSACTIONS_BY_REFUNDID,
+					new Object[] {refundId},
+					new WalletSubTransactionMapper());
+		}catch (EmptyResultDataAccessException e){
 			throw new WorngRefundIdException("No available refund with this id");
-		}catch (WalletRefundMismatchException e) {
+		}
+		try {
+			WalletTransaction walletTransaction = jdbcTemplate.queryForObject(GET_TRANSACTION_BY_ID,
+						new Object[]{walletSubTransaction.getTransactionId(),walletId},
+						new WalletTransactionMapper());
+			walletTransaction.getWalletSubTransaction().add(walletSubTransaction);
+			return walletTransaction;
+		}catch (EmptyResultDataAccessException e){
 			throw new WalletRefundMismatchException("This refundId not associated with this wallet");
-		}catch (PlatformException e) {
-			throw new PlatformException("No available refund with this id");
-		}		
+		}			
 	}
 
 	@Override
@@ -281,8 +311,6 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			}
 			return amount;
 		}catch (EmptyResultDataAccessException e) {
-			return new Money(new BigDecimal("0.00"));
-		} catch (PlatformException e) {
 			return new Money(new BigDecimal("0.00"));
 		}
 	}

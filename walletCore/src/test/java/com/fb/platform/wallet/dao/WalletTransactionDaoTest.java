@@ -32,7 +32,7 @@ public class WalletTransactionDaoTest extends BaseTestCase {
 		assertNotNull(wallet);
 		assertNotNull(wallet.getId());
 		
-		WalletTransaction walletTransaction = wallet.credit(new Money(new BigDecimal("100.00")), SubWalletType.GIFT, 0, 0, "EGV");
+		WalletTransaction walletTransaction = wallet.credit(new Money(new BigDecimal("100.00")), SubWalletType.GIFT, 0, 0, "EGV",new DateTime(2015,5,31,12,12,12));
 		assertNotNull(walletTransaction);
 		
 		String transactionId = walletTransactionDao.insertTransaction(walletTransaction);
@@ -47,15 +47,15 @@ public class WalletTransactionDaoTest extends BaseTestCase {
 		Wallet wallet = walletDao.load(2, -4,true);
 		assertNotNull(wallet);
 		assertNotNull(wallet.getId());
-		WalletTransaction walletTransaction = wallet.credit(new Money(new BigDecimal("100.00")), SubWalletType.GIFT, 0, 0, "EGV");
+		WalletTransaction walletTransaction = wallet.credit(new Money(new BigDecimal("100.00")), SubWalletType.GIFT, 0, 0, "EGV",new DateTime(2015,5,31,12,12,12));
 		assertNotNull(walletTransaction);
 		String transactionId = walletTransactionDao.insertTransaction(walletTransaction);
 		assertNotNull(transactionId);
 		Wallet wallet2 = walletDao.update(wallet);
 		assertNotNull(wallet2);
 		assertNotNull(wallet2.getId());
-		WalletTransaction walletTransaction2 = wallet2.credit(new Money(new BigDecimal("200.00")), SubWalletType.CASH, 1, 0, null);
-		WalletTransaction walletTransaction3 = wallet2.credit(new Money(new BigDecimal("200.00")), SubWalletType.REFUND, 0, 1, null);
+		WalletTransaction walletTransaction2 = wallet2.credit(new Money(new BigDecimal("200.00")), SubWalletType.CASH, 1, 0, null,null);
+		WalletTransaction walletTransaction3 = wallet2.credit(new Money(new BigDecimal("200.00")), SubWalletType.REFUND, 0, 1, null,null);
 		assertNotNull(walletTransaction2);
 		assertNotNull(walletTransaction3);
 		assertEquals(new Money(new BigDecimal("500.00")) , wallet2.getTotalAmount());
@@ -116,7 +116,7 @@ public class WalletTransactionDaoTest extends BaseTestCase {
 		Wallet wallet = walletDao.load(2, -4,true);
 		assertNotNull(wallet);
 		assertNotNull(wallet.getId());
-		WalletTransaction walletTransaction = wallet.credit(new Money(new BigDecimal("200.00")), SubWalletType.REFUND, 0, 1, null);
+		WalletTransaction walletTransaction = wallet.credit(new Money(new BigDecimal("200.00")), SubWalletType.REFUND, 0, 1, null,null);
 		Wallet wallet3 = walletDao.update(wallet);
 		String trnasString = walletTransactionDao.insertTransaction(walletTransaction);
 		assertNotNull(trnasString);
@@ -146,7 +146,7 @@ public class WalletTransactionDaoTest extends BaseTestCase {
 		assertNotNull(wallet);
 		assertNotNull(wallet.getId());
 		
-		WalletTransaction walletTransaction = wallet.credit(new Money(new BigDecimal(100.00)), SubWalletType.GIFT, 0, 0, "EGV");
+		WalletTransaction walletTransaction = wallet.credit(new Money(new BigDecimal(100.00)), SubWalletType.GIFT, 0, 0, "EGV",new DateTime(2015,5,31,12,12,12));
 		assertNotNull(walletTransaction);
 		String transactionId = walletTransactionDao.insertTransaction(walletTransaction);
 		assertNotNull(transactionId);
@@ -175,7 +175,7 @@ public class WalletTransactionDaoTest extends BaseTestCase {
 		assertNotNull(wallet);
 		assertNotNull(wallet.getId());
 		
-		WalletTransaction walletTransaction = wallet.credit(new Money(new BigDecimal(100.00)), SubWalletType.GIFT, 0, 0, "EGV");
+		WalletTransaction walletTransaction = wallet.credit(new Money(new BigDecimal(100.00)), SubWalletType.GIFT, 0, 0, "EGV",new DateTime(2015,5,31,12,12,12));
 		assertNotNull(walletTransaction);
 		String transactionId = walletTransactionDao.insertTransaction(walletTransaction);
 		assertNotNull(transactionId);
@@ -197,15 +197,15 @@ public class WalletTransactionDaoTest extends BaseTestCase {
 		assertNotNull(wallet);
 		assertNotNull(wallet.getId());
 		
-		WalletTransaction walletTransaction = wallet.credit(new Money(new BigDecimal("100.00")), SubWalletType.GIFT, 0, 0, "EGV");
+		WalletTransaction walletTransaction = wallet.credit(new Money(new BigDecimal("100.00")), SubWalletType.GIFT, 0, 0, "EGV",new DateTime(2015,5,31,12,12,12));
 		assertNotNull(walletTransaction);
 		String transactionId = walletTransactionDao.insertTransaction(walletTransaction);
 		assertNotNull(transactionId);
 		Wallet wallet2 = walletDao.update(wallet);
 		assertNotNull(wallet2);
 		assertNotNull(wallet2.getId());
-		WalletTransaction walletTransaction2 = wallet2.credit(new Money(new BigDecimal("200.00")), SubWalletType.CASH, 1, 0, null);
-		WalletTransaction walletTransaction3 = wallet2.credit(new Money(new BigDecimal("200.00")), SubWalletType.REFUND, 0, 1, null);
+		WalletTransaction walletTransaction2 = wallet2.credit(new Money(new BigDecimal("200.00")), SubWalletType.CASH, 1, 0, null,null);
+		WalletTransaction walletTransaction3 = wallet2.credit(new Money(new BigDecimal("200.00")), SubWalletType.REFUND, 0, 1, null,null);
 		assertNotNull(walletTransaction2);
 		assertNotNull(walletTransaction3);
 		assertEquals(new Money(new BigDecimal("500.00")) , wallet2.getTotalAmount());
@@ -245,15 +245,15 @@ public class WalletTransactionDaoTest extends BaseTestCase {
 		assertNotNull(wallet);
 		assertNotNull(wallet.getId());
 		
-		WalletTransaction walletTransaction = wallet.credit(new Money(new BigDecimal("100.00")), SubWalletType.GIFT, 0, 0, "EGV");
+		WalletTransaction walletTransaction = wallet.credit(new Money(new BigDecimal("100.00")), SubWalletType.GIFT, 0, 0, "EGV",new DateTime(2015,5,31,12,12,12));
 		assertNotNull(walletTransaction);
 		String transactionId = walletTransactionDao.insertTransaction(walletTransaction);
 		assertNotNull(transactionId);
 		Wallet wallet2 = walletDao.update(wallet);
 		assertNotNull(wallet2);
 		assertNotNull(wallet2.getId());
-		WalletTransaction walletTransaction2 = wallet2.credit(new Money(new BigDecimal("200.00")), SubWalletType.CASH, 1, 0, null);
-		WalletTransaction walletTransaction3 = wallet2.credit(new Money(new BigDecimal("200.00")), SubWalletType.REFUND, 0, 1, null);
+		WalletTransaction walletTransaction2 = wallet2.credit(new Money(new BigDecimal("200.00")), SubWalletType.CASH, 1, 0, null,null);
+		WalletTransaction walletTransaction3 = wallet2.credit(new Money(new BigDecimal("200.00")), SubWalletType.REFUND, 0, 1, null,null);
 		assertNotNull(walletTransaction2);
 		assertNotNull(walletTransaction3);
 		assertEquals(new Money(new BigDecimal("500.00")) , wallet2.getTotalAmount());

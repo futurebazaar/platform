@@ -9,5 +9,4 @@ public interface WalletDao {
 	public Wallet load (long userId , long clientId ,boolean isCreateNew);
 	
 	public Wallet update(Wallet wallet);
-
 }

@@ -15,6 +15,7 @@ public class WalletTransaction {
 	private List<WalletSubTransaction> walletSubTransaction;
 	private Money amount;
 	private DateTime timeStamp;
+	private String transactionNote = null;
 
 	WalletTransaction(Wallet wallet,
 			TransactionType transactionType, Money amount ,DateTime datetime) {
@@ -118,6 +119,22 @@ public class WalletTransaction {
 		this.timeStamp = timeStamp;
 	}
 	
+	
+	
+	/**
+	 * @return the transactionNote
+	 */
+	public String getTransactionNote() {
+		return transactionNote;
+	}
+
+	/**
+	 * @param transactionNote the transactionNote to set
+	 */
+	public void setTransactionNote(String transactionNote) {
+		this.transactionNote = transactionNote;
+	}
+
 	public boolean isSubTransactionBySubWallet(SubWalletType subWalletType){
 		if(this.walletSubTransaction.isEmpty()){
 			return false;

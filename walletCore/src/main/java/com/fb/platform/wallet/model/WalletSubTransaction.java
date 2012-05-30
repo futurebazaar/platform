@@ -1,5 +1,7 @@
 package com.fb.platform.wallet.model;
 
+import org.joda.time.DateTime;
+
 import com.fb.commons.to.Money;
 
 public class WalletSubTransaction {
@@ -11,12 +13,13 @@ public class WalletSubTransaction {
 	private long paymentId;
 	private long paymentReversalId;
 	private String giftCode;
+	private DateTime giftExpiry = null;
 	private String notes;
 	
 	
 	
 	WalletSubTransaction(SubWalletType subWalletType, Money amount,
-			long orderId, long refundId, long paymentId,long paymentReversalId,String giftCode) {
+			long orderId, long refundId, long paymentId,long paymentReversalId,String giftCode,DateTime giftExpiry) {
 		super();
 		this.subWalletType = subWalletType;
 		this.amount = amount;
@@ -24,6 +27,7 @@ public class WalletSubTransaction {
 		this.refundId = refundId;
 		this.paymentId = paymentId;
 		this.giftCode = giftCode;
+		this.giftExpiry = giftExpiry;
 		this.paymentReversalId =paymentReversalId;
 	}
 	
@@ -143,6 +147,22 @@ public class WalletSubTransaction {
 	 */
 	public void setTransactionId(long transactionId) {
 		this.transactionId = transactionId;
+	}
+	
+	
+
+	/**
+	 * @return the giftExpiry
+	 */
+	public DateTime getGiftExpiry() {
+		return giftExpiry;
+	}
+
+	/**
+	 * @param giftExpiry the giftExpiry to set
+	 */
+	public void setGiftExpiry(DateTime giftExpiry) {
+		this.giftExpiry = giftExpiry;
 	}
 
 	/* (non-Javadoc)
