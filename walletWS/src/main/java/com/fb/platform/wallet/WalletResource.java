@@ -94,7 +94,7 @@ public class WalletResource {
 	@Produces("application/xml")
 	public String summaryRequest(String walletSummaryryXml) {
 		
-		logger.debug("WALLET SUMMARY XML request: \n" + walletSummaryryXml);
+		logger.info("WALLET SUMMARY XML request: \n" + walletSummaryryXml);
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			WalletSummaryRequest xmlWalletSummaryReq = (WalletSummaryRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(walletSummaryryXml)));
@@ -140,7 +140,7 @@ public class WalletResource {
 	@Produces("application/xml")
 	public String historyRequest(String walletHistoryXml) {
 		
-		logger.debug("WALLET SUMMARY XML request: \n" + walletHistoryXml);
+		logger.info("WALLET HISTORY XML request: \n" + walletHistoryXml);
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			WalletHistoryRequest xmlWalletHistoryReq = (WalletHistoryRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(walletHistoryXml)));
@@ -148,9 +148,15 @@ public class WalletResource {
 			com.fb.platform.wallet.manager.model.access.WalletHistoryRequest apiWalletHistoryReq = new com.fb.platform.wallet.manager.model.access.WalletHistoryRequest();
 			apiWalletHistoryReq.setWalletId(xmlWalletHistoryReq.getWalletId());
 			apiWalletHistoryReq.setSessionToken(xmlWalletHistoryReq.getSessionToken());
-			apiWalletHistoryReq.setSubWallet(SubWalletEnum.valueOf(xmlWalletHistoryReq.getSubWallet().value()));
-			apiWalletHistoryReq.setFromDate(xmlWalletHistoryReq.getFromDate());
-			apiWalletHistoryReq.setToDate(xmlWalletHistoryReq.getToDate());
+			if(xmlWalletHistoryReq.getSubWallet() != null){
+				apiWalletHistoryReq.setSubWallet(SubWalletEnum.valueOf(xmlWalletHistoryReq.getSubWallet().value()));
+			}
+			if (xmlWalletHistoryReq.getFromDate() != null){
+				apiWalletHistoryReq.setFromDate(xmlWalletHistoryReq.getFromDate());
+			}
+			if (xmlWalletHistoryReq.getToDate() != null){
+				apiWalletHistoryReq.setToDate(xmlWalletHistoryReq.getToDate());
+			}
 
 			com.fb.platform.wallet.manager.model.access.WalletHistoryResponse apiWalletHistoryResp = walletManager.getWalletHistory(apiWalletHistoryReq);
 
@@ -210,7 +216,7 @@ public class WalletResource {
 	@Produces("application/xml")
 	public String fillRequest(String fillWalletXml) {
 		
-		logger.debug("FILL WALLET XML request: \n" + fillWalletXml);
+		logger.info("FILL WALLET XML request: \n" + fillWalletXml);
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			FillWalletRequest xmlFillWalletReq = (FillWalletRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(fillWalletXml)));
@@ -252,7 +258,7 @@ public class WalletResource {
 	@Produces("application/xml")
 	public String payRequest(String payFromWalletXml) {
 		
-		logger.debug("PAY FROM WALLET XML request: \n" + payFromWalletXml);
+		logger.info("PAY FROM WALLET XML request: \n" + payFromWalletXml);
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			PayRequest xmlPayReq = (PayRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(payFromWalletXml)));
@@ -293,7 +299,7 @@ public class WalletResource {
 	@Produces("application/xml")
 	public String refundRequest(String refundRequestXml) {
 		
-		logger.debug("REFUND REQUEST XML request: \n" + refundRequestXml);
+		logger.info("REFUND REQUEST XML request: \n" + refundRequestXml);
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			RefundRequest xmlRefundReq = (RefundRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(refundRequestXml)));
@@ -334,7 +340,7 @@ public class WalletResource {
 	@Produces("application/xml")
 	public String revertRequest(String revertRequestXml) {
 		
-		logger.debug("REVERT REQUEST XML request: \n" + revertRequestXml);
+		logger.info("REVERT REQUEST XML request: \n" + revertRequestXml);
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			RevertRequest xmlRevertReq = (RevertRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(revertRequestXml)));

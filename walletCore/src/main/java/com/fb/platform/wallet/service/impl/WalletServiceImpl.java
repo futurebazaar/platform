@@ -205,6 +205,23 @@ public class WalletServiceImpl implements WalletService {
 		WalletTransaction walletTransactionRes = new WalletTransaction();
 		walletTransactionRes.setTransactionId(walletTransaction.getTransactionId());
 		walletTransactionRes.setWallet(walletTransaction.getWallet());
+		walletTransactionRes.setAmount(walletTransaction.getAmount());
+		walletTransactionRes.setTimeStamp(walletTransaction.getTimeStamp());
+		walletTransactionRes.setTransactionType(walletTransaction.getTransactionType());
+		List<com.fb.platform.wallet.to.WalletSubTransaction> subTransactionList = new ArrayList<com.fb.platform.wallet.to.WalletSubTransaction>();
+		for(com.fb.platform.wallet.model.WalletSubTransaction subTransaction: walletTransaction.getWalletSubTransaction()){
+			com.fb.platform.wallet.to.WalletSubTransaction sTransaction = new com.fb.platform.wallet.to.WalletSubTransaction();
+			sTransaction.setAmount(subTransaction.getAmount());
+			sTransaction.setGiftCode(subTransaction.getGiftCode());
+			sTransaction.setOrderId(subTransaction.getOrderId());
+			sTransaction.setPaymentId(subTransaction.getPaymentId());
+			sTransaction.setPaymentReversalId(subTransaction.getPaymentReversalId());
+			sTransaction.setRefundId(subTransaction.getRefundId());
+			sTransaction.setSubWalletType(subTransaction.getSubWalletType());
+			
+			subTransactionList.add(sTransaction);
+		}
+		walletTransactionRes.setWalletSubTransaction(subTransactionList);
 		return walletTransactionRes;
 	}
 }
