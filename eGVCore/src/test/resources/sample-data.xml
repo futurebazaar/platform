@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+        <table name="gift_voucher">
+                <column>id</column>
+                <column>number</column>
+				<column>pin</column>
+				<column>email</column>
+				<column>amount</column>
+				<column>user_id</column>
+				<column>order_item_id</column>
+				<column>status</column>
+				<column>valid_from</column>
+				<column>valid_till</column>
+				<column>created_on</column>
+				<column>last_modified_on</column>
+        <row>
+        		<value name="id">-1000</value>
+				<value name="number">-12345678901</value>
+				<value name="pin">12345</value>
+				<value name="email">try1@gmail.com</value>
+				<value name="amount">1000</value>
+				<value name="user_id">-1</value>
+				<value name="order_item_id">-5</value>
+				<value name="status">INACTIVE</value>
+				<value name="valid_from">2012-05-28 00:00:00</value>
+				<value name="valid_till">2012-07-31 00:00:00</value>
+				<value name="created_on">2012-04-30 00:00:00</value>
+				<value name="last_modified_on">2012-04-30 00:00:00</value>
+        </row>
+        </table>
+
+</dataset>
+
+<!-- 
+
+create table gift_voucher ( 
+	id int primary key auto_increment,
+	number varchar(30) unique key,
+	pin varchar(120) not null,
+	email varchar(150) not null,
+	amount decimal(18,2) not null,
+	user_id int not null,
+	order_item_id int not null,
+	status varchar(80),
+	valid_from datetime,
+	valid_till datetime,
+	created_on datetime,
+	last_modified_on datetime
+	);
+
+ -->
