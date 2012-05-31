@@ -70,7 +70,7 @@ public class WalletManagerImpl implements WalletManager {
 	public WalletSummaryResponse getWalletSummary(
 			WalletSummaryRequest walletSummaryRequest) {
 	
-		logger.info("Trying to retrieve wallet summary for userid : " + walletSummaryRequest.getUserId());
+		logger.info("getWalletSummary: retrieve wallet summary for userid " + walletSummaryRequest.getUserId());
 	
 		WalletSummaryResponse walletSummaryResponse = new WalletSummaryResponse();
 
@@ -101,9 +101,10 @@ public class WalletManagerImpl implements WalletManager {
 			walletSummaryResponse.setWalletDetails(walletDetails);
 
 		} catch (UserNotFoundException e) {
+			logger.info("getWalletSummary: invalid user id " + walletSummaryRequest.getUserId());
 			walletSummaryResponse.setWalletSummaryStatus(WalletSummaryStatusEnum.INVALID_USER);
 		} catch (PlatformException pe) {
-			logger.error("Error while getting wallet summary for the user : " + walletSummaryRequest.getUserId(), pe);
+			logger.error("getWalletSummary: Error retriving wallet summary for the user id " + walletSummaryRequest.getUserId(), pe);
 			walletSummaryResponse.setWalletSummaryStatus(WalletSummaryStatusEnum.ERROR_RETRIVING_WALLET_SUMMARY);
 		}
 		return walletSummaryResponse;
@@ -113,7 +114,7 @@ public class WalletManagerImpl implements WalletManager {
 	public WalletHistoryResponse getWalletHistory(
 			WalletHistoryRequest walletHistoryRequest) {
 		
-		logger.info("Trying to retrieve wallet history for wallet id : " + walletHistoryRequest.getWalletId());			
+		logger.info("getWalletHistory: retrieving wallet history for wallet id " + walletHistoryRequest.getWalletId());			
 		WalletHistoryResponse response = new WalletHistoryResponse();
 
 		// authenticate the session token and find out the userId
@@ -134,9 +135,10 @@ public class WalletManagerImpl implements WalletManager {
 			response.setWalletHistoryStatus(WalletHistoryStatusEnum.SUCCESS);
 
 		} catch (WalletNotFoundException e) {
+			logger.info("getWalletHistory: invalid wallet id " + walletHistoryRequest.getWalletId());
 			response.setWalletHistoryStatus(WalletHistoryStatusEnum.INVALID_WALLET);
 		} catch (PlatformException pe) {
-			logger.error("Error while getting wallet history for walletId : " + walletHistoryRequest.getWalletId(), pe);
+			logger.error("getWalletHistory: Error while getting history for wallet Id " + walletHistoryRequest.getWalletId(), pe);
 			response.setWalletHistoryStatus(WalletHistoryStatusEnum.ERROR_RETRIVING_WALLET_HISTORY);
 		}
 
@@ -149,7 +151,7 @@ public class WalletManagerImpl implements WalletManager {
 	public FillWalletResponse fillWallet(
 			FillWalletRequest fillWalletRequest) {
 		
-		logger.info("Trying to fill wallet : " + fillWalletRequest.getWalletId());
+		logger.info("fillWallet: Trying to fill wallet " + fillWalletRequest.getWalletId());
 		FillWalletResponse response = new FillWalletResponse();
 
 		// authenticate the session token and find out the userId
@@ -171,11 +173,11 @@ public class WalletManagerImpl implements WalletManager {
 			response.setTransactionId(transaction.getTransactionId());
 			response.setStatus(FillWalletStatusEnum.SUCCESS);
 			
-		} catch (WalletNotFoundException pe) {
-			logger.error("No wallet exists with id : " + fillWalletRequest.getWalletId(), pe);
+		} catch (WalletNotFoundException e) {
+			logger.info("fillWallet: invalid wallet id " + fillWalletRequest.getWalletId());
 			response.setStatus(FillWalletStatusEnum.INVALID_WALLET);
 		} catch (PlatformException pe) {
-			logger.error("Exception in fillwallet for wallet id: " + fillWalletRequest.getWalletId(), pe);
+			logger.error("fillWallet: Exception for wallet id " + fillWalletRequest.getWalletId(), pe);
 			response.setStatus(FillWalletStatusEnum.FAILED_TRANSACTION);
 		}
 
@@ -188,7 +190,7 @@ public class WalletManagerImpl implements WalletManager {
 	public PayResponse payFromWallet(
 			PayRequest payRequest) {
 		
-		logger.info("Trying to pay from wallet for order " + payRequest.getOrderId());
+		logger.info("payFromWallet: Trying to pay for order " + payRequest.getOrderId());
 		
 		PayResponse response = new PayResponse();
 
@@ -209,14 +211,14 @@ public class WalletManagerImpl implements WalletManager {
 			response.setTransactionId(transaction.getTransactionId());
 			response.setStatus(PayStatusEnum.SUCCESS);
 			
-		} catch (WalletNotFoundException pe) {
-			logger.error("No wallet exists for user : " + payRequest.getUserId(), pe);
+		} catch (WalletNotFoundException e) {
+			logger.info("payFromWallet: No wallet for user id " + payRequest.getUserId());
 			response.setStatus(PayStatusEnum.INVALID_WALLET);
-		} catch (InSufficientFundsException pe) {
-			logger.error("Balance unavailable in wallet for user id : " + payRequest.getUserId(), pe);
+		} catch (InSufficientFundsException e) {
+			logger.info("payFromWallet: Balance unavailable in wallet for user id " + payRequest.getUserId());
 			response.setStatus(PayStatusEnum.BALANCE_UNAVAILABLE);
 		} catch (PlatformException pe) {
-			logger.error("Exception in fillwallet for user id: " + payRequest.getUserId(), pe);
+			logger.error("payFromWallet: Exception in pay from wallet for user id " + payRequest.getUserId(), pe);
 			response.setStatus(PayStatusEnum.FAILED_TRANSACTION);
 		}
 
@@ -229,7 +231,7 @@ public class WalletManagerImpl implements WalletManager {
 	public RefundResponse refundFromWallet(
 			RefundRequest refundRequest) {
 
-		logger.debug("Trying to refund from wallet for amount "	+ refundRequest.getAmount());
+		logger.info("refundFromWallet: Trying to refund amount "	+ refundRequest.getAmount());
 
 		RefundResponse response = new RefundResponse();
 
@@ -250,20 +252,20 @@ public class WalletManagerImpl implements WalletManager {
 			response.setTransactionId(transaction.getTransactionId());
 			response.setStatus(RefundStatusEnum.SUCCESS);
 			
-		} catch (WalletNotFoundException pe) {
-			logger.error("No wallet exists for user : " + refundRequest.getUserId(), pe);
+		} catch (WalletNotFoundException e) {
+			logger.info("refundFromWallet: No wallet exists for user Id " + refundRequest.getUserId());
 			response.setStatus(RefundStatusEnum.INVALID_WALLET);
-		} catch (AlreadyRefundedException pe) {
-			logger.error("No wallet exists for user : " + refundRequest.getUserId(), pe);
+		} catch (AlreadyRefundedException e) {
+			logger.info("refundFromWallet: Duplicate refund request for refund id " + refundRequest.getRefundId());
 			response.setStatus(RefundStatusEnum.DUPLICATE_REFUND_REQUEST);
-		} catch (RefundExpiredException pe) {
-			logger.error("No wallet exists for user : " + refundRequest.getUserId(), pe);
+		} catch (RefundExpiredException e) {
+			logger.info("refundFromWallet: Expired refund for refunded Id " + refundRequest.getRefundId());
 			response.setStatus(RefundStatusEnum.ALREADY_REFUNDED);
-		} catch (InSufficientFundsException pe) {
-			logger.error("Balance unavailable in wallet for user id : " + refundRequest.getUserId(), pe);
+		} catch (InSufficientFundsException e) {
+			logger.info("refundFromWallet: Balance unavailable in wallet for user id : " + refundRequest.getUserId());
 			response.setStatus(RefundStatusEnum.BALANCE_UNAVAILABLE);
 		} catch (PlatformException pe) {
-			logger.error("Exception in fillwallet for user id: " + refundRequest.getUserId(), pe);
+			logger.error("refundFromWallet: Exception in refund wallet for user id " + refundRequest.getUserId(), pe);
 			response.setStatus(RefundStatusEnum.FAILED_TRANSACTION);
 		}
 
@@ -276,7 +278,7 @@ public class WalletManagerImpl implements WalletManager {
 	public RevertResponse revertWalletTransaction(
 			RevertRequest revertRequest) {
 		
-		logger.debug("Trying to revert wallet transaction "	+ revertRequest.getTransactionId());
+		logger.info("revertWalletTransaction: Trying to revert wallet transaction Id "	+ revertRequest.getTransactionId());
 		
 		RevertResponse response = new RevertResponse();
 
@@ -296,17 +298,17 @@ public class WalletManagerImpl implements WalletManager {
 			response.setTransactionId(transaction.getTransactionId());
 			response.setStatus(RevertStatusEnum.SUCCESS);
 			
-		} catch (WalletNotFoundException pe) {
-			logger.error("No wallet exists for user : " + revertRequest.getUserId(), pe);
+		} catch (WalletNotFoundException e) {
+			logger.info("revertWalletTransaction: No wallet exists for user id " + revertRequest.getUserId());
 			response.setStatus(RevertStatusEnum.INVALID_WALLET);
-		} catch (InvalidTransactionIdException pe) {
-			logger.error("No wallet transaction with id: " + revertRequest.getTransactionId(), pe);
+		} catch (InvalidTransactionIdException e) {
+			logger.info("revertWalletTransaction: Invalid transaction id " + revertRequest.getTransactionId());
 			response.setStatus(RevertStatusEnum.INVALID_TRANSACTION_ID);
-		} catch (InSufficientFundsException pe) {
-			logger.error("Balance unavailable in wallet for user id : " + revertRequest.getUserId(), pe);
+		} catch (InSufficientFundsException e) {
+			logger.info("revertWalletTransaction: Balance unavailable reversal of transaction Id " + revertRequest.getTransactionId());
 			response.setStatus(RevertStatusEnum.BALANCE_UNAVAILABLE);
 		} catch (PlatformException pe) {
-			logger.error("Exception in fillwallet for user id: " + revertRequest.getUserId(), pe);
+			logger.error("revertWalletTransaction: Exception reversal of transaction Id " + revertRequest.getUserId(), pe);
 			response.setStatus(RevertStatusEnum.FAILED_TRANSACTION);
 		}
 

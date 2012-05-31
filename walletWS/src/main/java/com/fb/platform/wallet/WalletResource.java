@@ -227,7 +227,7 @@ public class WalletResource {
 			apiFillWalletReq.setAmount(xmlFillWalletReq.getAmount());
 			apiFillWalletReq.setSubWallet(SubWalletEnum.valueOf(xmlFillWalletReq.getSubWallet().value()));
 			apiFillWalletReq.setPaymentId(xmlFillWalletReq.getPaymentId());
-			apiFillWalletReq.setRefundId(xmlFillWalletReq.getPaymentId());
+			apiFillWalletReq.setRefundId(xmlFillWalletReq.getRefundId());
 
 			com.fb.platform.wallet.manager.model.access.FillWalletResponse apiFillWalletResp = walletManager.fillWallet(apiFillWalletReq);
 
@@ -325,7 +325,7 @@ public class WalletResource {
 			marsheller.marshal(xmlRefundResponse, outStringWriter);
 
 			String xmlResponse = outStringWriter.toString();
-			logger.info("PayFromWalletXml response :\n" + xmlResponse);
+			logger.info("RefundFromWalletXml response :\n" + xmlResponse);
 			return xmlResponse;
 
 		} catch (JAXBException e) {
@@ -365,7 +365,7 @@ public class WalletResource {
 			marsheller.marshal(xmlRevertResponse, outStringWriter);
 
 			String xmlResponse = outStringWriter.toString();
-			logger.info("PayFromWalletXml response :\n" + xmlResponse);
+			logger.info("RevertFromWalletXml response :\n" + xmlResponse);
 			return xmlResponse;
 
 		} catch (JAXBException e) {
