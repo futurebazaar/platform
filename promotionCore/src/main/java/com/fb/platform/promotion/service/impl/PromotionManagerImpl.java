@@ -15,6 +15,7 @@ import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
+import com.fb.platform.promotion.model.OrderDiscount;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.PromotionDates;
 import com.fb.platform.promotion.model.coupon.Coupon;
@@ -112,10 +113,10 @@ public class PromotionManagerImpl implements PromotionManager {
 				return response;
 			}
 			
-			Money discount = promotion.apply(request.getOrderReq());
-			
-			if(discount!=null){
-				response.setDiscountValue(discount.getAmount());
+			OrderDiscount orderDiscount = promotion.apply(request.getOrderReq());
+			if(orderDiscount!=null){
+				Money discount = orderDiscount.getTotalOrderDiscount()==null ? null : new Money(orderDiscount.getTotalOrderDiscount());
+				response.setOrderDiscount(orderDiscount);
 				PromotionStatusEnum postDiscountCheckStatus = promotionService.isApplicable(userId, request.getOrderReq(), discount, coupon, promotion, request.getIsOrderCommitted());
 				if(PromotionStatusEnum.SUCCESS.compareTo(postDiscountCheckStatus)!=0){
 					response.setCouponStatus(postDiscountCheckStatus);

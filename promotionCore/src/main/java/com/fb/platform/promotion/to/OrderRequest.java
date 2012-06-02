@@ -20,7 +20,7 @@ public class OrderRequest implements Serializable {
 	private int orderId = 0;
 	private List<OrderItem> orderItems = new ArrayList<OrderItem>();
 	private int clientId = 0;
-
+	
 	public int getOrderId() {
 		return orderId;
 	}
@@ -129,7 +129,9 @@ public class OrderRequest implements Serializable {
 	public Money getOrderValueForRelevantProducts(List<Integer> brandList,List<Integer> catIncludeList,List<Integer> catExcludeList){
 		Money orderValueForBrandProducts = new Money(new BigDecimal(0)); 
 		for(OrderItem o:orderItems){
-			if( (!ListUtil.isValidList(brandList)|| o.isOrderItemInBrand(brandList)) && (!ListUtil.isValidList(catIncludeList) || o.isOrderItemInCategory(catIncludeList)) &&  (!ListUtil.isValidList(catExcludeList) || !o.isOrderItemInCategory(catExcludeList))){
+			if( (!ListUtil.isValidList(brandList)|| o.isOrderItemInBrand(brandList))
+					&& (!ListUtil.isValidList(catIncludeList) || o.isOrderItemInCategory(catIncludeList))
+					&&  (!ListUtil.isValidList(catExcludeList) || !o.isOrderItemInCategory(catExcludeList))){
 				orderValueForBrandProducts = orderValueForBrandProducts.plus(new Money(o.getPrice()));
 			}
 		}

@@ -6,6 +6,8 @@ package com.fb.platform.promotion.to;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.fb.commons.to.Money;
+
 /**
  * @author vinayak
  *

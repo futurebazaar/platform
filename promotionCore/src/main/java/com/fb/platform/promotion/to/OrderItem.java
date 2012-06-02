@@ -14,7 +14,9 @@ public class OrderItem {
 
 	private Product product = null;
 	private int quantity = 0;
-
+	private boolean isLocked = false;
+	private BigDecimal totalDiscount = new BigDecimal(0);
+	
 	public Product getProduct() {
 		return product;
 	}
@@ -46,5 +48,16 @@ public class OrderItem {
 	public BigDecimal getProductPrice(){
 		return product.getPrice();
 	}
-	
+	public boolean isLocked() {
+		return isLocked;
+	}
+	public void setLocked(boolean isLocked) {
+		this.isLocked = isLocked;
+	}
+	public BigDecimal getTotalDiscount() {
+		return totalDiscount;
+	}
+	public void setTotalDiscount(BigDecimal totalDiscount) {
+		this.totalDiscount = totalDiscount;
+	}
 }

@@ -5,6 +5,7 @@ package com.fb.platform.promotion.rule.impl;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,10 +14,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.fb.commons.to.Money;
+import com.fb.platform.promotion.model.OrderDiscount;
 import com.fb.platform.promotion.rule.PromotionRule;
 import com.fb.platform.promotion.rule.RuleConfigDescriptorItem;
 import com.fb.platform.promotion.rule.RuleConfigDescriptorEnum;
 import com.fb.platform.promotion.rule.RuleConfiguration;
+import com.fb.platform.promotion.to.OrderItem;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.PromotionStatusEnum;
 import com.fb.platform.promotion.util.ListUtil;
@@ -97,11 +100,63 @@ public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule, Serializable {
 	}
 
 	@Override
-	public Money execute(OrderRequest request) {
+	public OrderDiscount execute(OrderDiscount orderDiscount) {
+		OrderRequest request = orderDiscount.getOrderRequest();	
 		if(log.isDebugEnabled()) {
 			log.debug("Executing BuyWorthXGetYRsOffRuleImpl on order : " + request.getOrderId());
 		}
-		return fixedRsOff;
+		orderDiscount.setTotalOrderDiscount(fixedRsOff.getAmount());
+		return distributeDiscountOnOrder(orderDiscount);
+	}
+	
+	private OrderDiscount distributeDiscountOnOrder(OrderDiscount orderDiscount) {
+
+		OrderRequest orderRequest = orderDiscount.getOrderRequest();
+		BigDecimal totalRemainingDiscountOnOrder = orderDiscount.getTotalOrderDiscount();
+		List<OrderItem> notLockedAplicableOrderItems = new ArrayList<OrderItem>();
+		BigDecimal totalOrderValueForRemainingApplicableItems = BigDecimal.ZERO;
+		
+		for (OrderItem eachOrderItemInRequest : orderRequest.getOrderItems()) {
+			if(isApplicableToOrderItem(eachOrderItemInRequest)){
+				if(eachOrderItemInRequest.isLocked()){
+					totalRemainingDiscountOnOrder = totalRemainingDiscountOnOrder.subtract(eachOrderItemInRequest.getTotalDiscount());
+				}else{
+					notLockedAplicableOrderItems.add(eachOrderItemInRequest);
+					totalOrderValueForRemainingApplicableItems = totalOrderValueForRemainingApplicableItems.add(eachOrderItemInRequest.getPrice());
+				}
+			}else{
+				log.info("order item is not applicable for discount. Product ID for this order item is = "+eachOrderItemInRequest.getProduct().getProductId());
+			}
+		}
+		
+		return distributeRemainingDiscountOnRemainingOrderItems(orderDiscount, totalRemainingDiscountOnOrder, notLockedAplicableOrderItems, 
+				totalOrderValueForRemainingApplicableItems);
+	}
+	
+	private OrderDiscount distributeRemainingDiscountOnRemainingOrderItems(OrderDiscount orderDiscount, BigDecimal totalRemainingDiscountOnOrder,
+			List<OrderItem> notLockedAplicableOrderItems,
+			BigDecimal totalOrderValueForRemainingApplicableItems) {
+		
+		for (OrderItem eachOrderItemInRequest : notLockedAplicableOrderItems) {
+			BigDecimal orderItemDiscount = new BigDecimal(0);
+			BigDecimal orderItemPrice = eachOrderItemInRequest.getPrice();
+			orderItemDiscount = (orderItemPrice.multiply(totalRemainingDiscountOnOrder)).divide(totalOrderValueForRemainingApplicableItems, 2, RoundingMode.HALF_EVEN);
+			eachOrderItemInRequest.setTotalDiscount(orderItemDiscount);
+			/*
+			 * after setting the right discount for the current order item,
+			 * substract the discount (set in the current order item) from the total discount to be distributed and 
+			 * substract the order item value from the total apllicable unlocked order item values
+			 * 
+			 * For Example:
+			 *  discountOnOrderItemA = (priceOfA / priceOfA + priceOfB + priceOfC + priceOfD) X totalDiscountToBeDistributedOnABCD ;
+			 *  totalDiscountToBeDistributedOnBCD = totalDiscountToBeDistributedOnABCD - discountOnOrderItemA ;
+			 *  
+			 *  discountOnOrderItemB = (priceOfB / priceOfB + priceOfC + priceOfD) X totalDiscountToBeDistributedOnBCD ;
+			 */
+			totalOrderValueForRemainingApplicableItems = totalOrderValueForRemainingApplicableItems.subtract(orderItemPrice);
+			totalRemainingDiscountOnOrder = totalRemainingDiscountOnOrder.subtract(orderItemDiscount);
+		}
+		return orderDiscount;
 	}
 	
 	@Override
@@ -116,5 +171,14 @@ public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule, Serializable {
 		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.FIXED_DISCOUNT_RS_OFF, true));
 		
 		return ruleConfigs;
+	}
+	
+	private boolean isApplicableToOrderItem(OrderItem orderItem){
+		if( (!ListUtil.isValidList(this.brands)|| orderItem.isOrderItemInBrand(this.brands))
+				&& (!ListUtil.isValidList(this.includeCategoryList) || orderItem.isOrderItemInCategory(this.includeCategoryList))
+				&&  (!ListUtil.isValidList(this.excludeCategoryList) || !orderItem.isOrderItemInCategory(this.excludeCategoryList))){
+			return true;
+		}
+		return false;
 	}
 }

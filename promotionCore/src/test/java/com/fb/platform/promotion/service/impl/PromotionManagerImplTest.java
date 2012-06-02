@@ -93,7 +93,7 @@ public class PromotionManagerImplTest extends BaseTestCase{
 		assertNotNull(couponResponse);
 		assertEquals(couponResponse.getCouponStatus(), ApplyCouponResponseStatusEnum.TOTAL_MAX_AMOUNT_PER_USER_EXCEEDED);
 		assertNotNull(couponResponse.getSessionToken());
-		assertEquals(0, new BigDecimal(120).compareTo(couponResponse.getDiscountValue()));
+		assertEquals(0, new BigDecimal(120).compareTo(couponResponse.getOrderDiscount().getTotalOrderDiscount()));
 		assertTrue((couponResponse.getPromoName()).equals("End to End Test Promotion 1"));
 		assertTrue(couponResponse.getPromoDescription().equals("end to end promo 1"));
 		assertTrue(couponResponse.getStatusMessage().equals(ApplyCouponResponseStatusEnum.TOTAL_MAX_AMOUNT_PER_USER_EXCEEDED.getMesage()));
@@ -128,7 +128,7 @@ public class PromotionManagerImplTest extends BaseTestCase{
 		assertNotNull(couponResponse);
 		assertEquals(couponResponse.getCouponStatus(), ApplyCouponResponseStatusEnum.SUCCESS);
 		assertNotNull(couponResponse.getSessionToken());
-		assertEquals(0, new BigDecimal(150).compareTo(couponResponse.getDiscountValue()));
+		assertEquals(0, new BigDecimal(150).compareTo(couponResponse.getOrderDiscount().getTotalOrderDiscount()));
 		
 		CommitCouponRequest commitCouponRequest = new CommitCouponRequest();
 		commitCouponRequest.setCouponCode("GLOBAL_COUPON_4444");
@@ -151,7 +151,7 @@ public class PromotionManagerImplTest extends BaseTestCase{
 		ApplyCouponResponse reCouponResponse = promotionManager.applyCoupon(reCouponRequest);
 		assertNotNull(reCouponResponse);
 		assertEquals(reCouponResponse.getCouponStatus(), ApplyCouponResponseStatusEnum.SUCCESS);
-		assertEquals(0, new BigDecimal(22.5).compareTo(reCouponResponse.getDiscountValue()));
+		assertEquals(0, new BigDecimal(22.5).compareTo(reCouponResponse.getOrderDiscount().getTotalOrderDiscount()));
 	}	
 	
 	/*@Test
@@ -322,7 +322,7 @@ public class PromotionManagerImplTest extends BaseTestCase{
 		assertNotNull(couponResponse);
 		assertEquals(couponResponse.getCouponStatus(), ApplyCouponResponseStatusEnum.SUCCESS);
 		assertNotNull(couponResponse.getSessionToken());
-		assertEquals(0, new BigDecimal(50).compareTo(couponResponse.getDiscountValue()));
+		assertEquals(0, new BigDecimal(50).compareTo(couponResponse.getOrderDiscount().getTotalOrderDiscount()));
 		
 		CommitCouponRequest commitCouponRequest = new CommitCouponRequest();
 		commitCouponRequest.setCouponCode("END2END_POST_ISSUE");

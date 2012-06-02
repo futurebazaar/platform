@@ -11,6 +11,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.fb.commons.to.Money;
+import com.fb.platform.promotion.model.OrderDiscount;
 import com.fb.platform.promotion.rule.PromotionRule;
 import com.fb.platform.promotion.rule.RuleConfigDescriptorEnum;
 import com.fb.platform.promotion.rule.RuleConfigDescriptorItem;
@@ -44,7 +45,8 @@ public class BuyXGetYFreeRuleImpl implements PromotionRule, Serializable{
 	}
 
 	@Override
-	public Money execute(OrderRequest request) {
+	public OrderDiscount execute(OrderDiscount orderDiscount) {
+		OrderRequest request = orderDiscount.getOrderRequest();
 		if(log.isDebugEnabled()) {
 			log.debug("Executing BuyXGetYFreeRuleImpl on order : " + request.getOrderId());
 		}

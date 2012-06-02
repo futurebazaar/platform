@@ -6,6 +6,7 @@ package com.fb.platform.promotion.rule;
 import java.util.List;
 
 import com.fb.commons.to.Money;
+import com.fb.platform.promotion.model.OrderDiscount;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.PromotionStatusEnum;
 
@@ -31,7 +32,7 @@ public interface PromotionRule {
 	 * Applies the rule on the request.
 	 * @param request
 	 */
-	public Money execute(OrderRequest request);
+	public OrderDiscount execute(OrderDiscount orderDiscount);
 	
 	/**
 	 * This function returns a list of RuleConfigDescriptors for each rule.
