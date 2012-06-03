@@ -95,7 +95,6 @@ CREATE TABLE released_promotion (
         created_on datetime NOT NULL,
 	discount_amount DECIMAL(18,2),
 	PRIMARY KEY(id),
-	UNIQUE(created_on),
 	CONSTRAINT released_promotion_fk1 FOREIGN KEY (promotion_id) REFERENCES platform_promotion(id) ON DELETE CASCADE,
 	CONSTRAINT released_promotion_fk2 FOREIGN KEY (user_id) REFERENCES users_profile(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -120,7 +119,6 @@ CREATE TABLE released_coupon (
 	discount_amount DECIMAL(18,2),
         created_on datetime NOT NULL,
 	PRIMARY KEY(id),
-	UNIQUE(created_on),
 	CONSTRAINT released_coupon_fk1 FOREIGN KEY (coupon_id) REFERENCES coupon(id) ON DELETE CASCADE,
 	CONSTRAINT released_coupon_fk2 FOREIGN KEY (user_id) REFERENCES users_profile(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
