@@ -191,36 +191,11 @@ public class PointsManagerTest  extends BaseTestCase{
 		pr.setSessionToken(responseUser1.getSessionToken());
 		
 		OrderRequest request  = new OrderRequest();
-		request.setLoyaltyCard("1234567890123456");
+		request.setLoyaltyCard("");
 		request.setAmount(new BigDecimal(2001));
 		request.setOrderId(1);
 		request.setTxnTimestamp(new DateTime(2012, 05, 24, 10, 0, 0));
-		request.setReferenceId("5051234567");
-		
-		List<OrderItemRequest> orderItemRequest = new ArrayList<OrderItemRequest>();
-		OrderItemRequest orderItem1 = new OrderItemRequest();
-		orderItem1.setAmount(new BigDecimal(2000));
-		orderItem1.setArticleId("1234");
-		orderItem1.setCategoryId(1234);
-		orderItem1.setDepartmentCode(1234);
-		orderItem1.setDepartmentName("Pooh");
-		orderItem1.setId(1);
-		orderItem1.setQuantity(1);
-		orderItem1.setSellerRateChartId(1);
-		orderItemRequest.add(orderItem1);
-		
-		OrderItemRequest orderItem2 = new OrderItemRequest();
-		orderItem2.setAmount(new BigDecimal(2000));
-		orderItem2.setArticleId("1234");
-		orderItem2.setCategoryId(1);
-		orderItem2.setDepartmentCode(1234);
-		orderItem2.setDepartmentName("Pooh");
-		orderItem2.setId(1);
-		orderItem2.setQuantity(1);
-		orderItem2.setSellerRateChartId(2);
-		orderItemRequest.add(orderItem2);
-		
-		request.setOrderItemRequest(orderItemRequest);
+		request.setReferenceId("123456");
 		
 		pr.setOrderRequest(request);
 		
@@ -237,11 +212,12 @@ public class PointsManagerTest  extends BaseTestCase{
 		pr.setTxnActionCode("PREALLOC_EARN");
 		
 		OrderRequest request  = new OrderRequest();
+		request.setAmount(new BigDecimal(500));
 		request.setTxnTimestamp(new DateTime(2012, 05, 24, 10, 0, 0));
 		
 		List<OrderItemRequest> orderItemRequest = new ArrayList<OrderItemRequest>();
-		OrderItemRequest orderItem1 = new OrderItemRequest();
-		orderItem1.setAmount(new BigDecimal(2000));
+		/*OrderItemRequest orderItem1 = new OrderItemRequest();
+		orderItem1.setAmount(new BigDecimal(500));
 		orderItem1.setArticleId("1234");
 		orderItem1.setCategoryId(1234);
 		orderItem1.setDepartmentCode(1234);
@@ -249,12 +225,12 @@ public class PointsManagerTest  extends BaseTestCase{
 		orderItem1.setId(1);
 		orderItem1.setQuantity(1);
 		orderItem1.setSellerRateChartId(1);
-		orderItemRequest.add(orderItem1);
+		orderItemRequest.add(orderItem1);*/
 		
 		OrderItemRequest orderItem2 = new OrderItemRequest();
-		orderItem2.setAmount(new BigDecimal(2000));
+		orderItem2.setAmount(new BigDecimal(639));
 		orderItem2.setArticleId("1234");
-		orderItem2.setCategoryId(1);
+		orderItem2.setCategoryId(1234);
 		orderItem2.setDepartmentCode(1234);
 		orderItem2.setDepartmentName("Pooh");
 		orderItem2.setId(1);
@@ -266,7 +242,7 @@ public class PointsManagerTest  extends BaseTestCase{
 		
 		pr.setOrderRequest(request);
 		PointsRequest newRequest = pointsManager.getPointsToBeDisplayed(pr);
-		assertEquals(180, newRequest.getOrderRequest().getTxnPoints().intValue());
+		assertEquals(38, newRequest.getOrderRequest().getTxnPoints().intValue());
 	}
 	
 }

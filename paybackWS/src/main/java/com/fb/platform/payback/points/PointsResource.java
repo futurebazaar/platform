@@ -177,6 +177,7 @@ public class PointsResource {
 			pointsRequest.setTxnActionCode(xmlDisplayPointsRequest.getActionCode().name());
 			
 			com.fb.platform.payback.to.OrderRequest orderRequest = new com.fb.platform.payback.to.OrderRequest();
+			orderRequest.setAmount(xmlDisplayPointsRequest.getOrderAmount());
 			XMLGregorianCalendar gregCal = xmlDisplayPointsRequest.getTimestamp();
 			orderRequest.setTxnTimestamp(new DateTime(gregCal.getYear(), gregCal.getMonth(), gregCal.getDay(), 
 					gregCal.getHour(), gregCal.getMinute()));
@@ -192,6 +193,7 @@ public class PointsResource {
 			
 			DisplayPointsResponse xmlDisplayPointsResponse = new DisplayPointsResponse();
 			xmlDisplayPointsResponse.setTotalPoints(newPointsRequest.getOrderRequest().getTxnPoints().intValue());
+			xmlDisplayPointsResponse.setBonusPoints(newPointsRequest.getOrderRequest().getBonusPoints().intValue());
 			for (com.fb.platform.payback.to.OrderItemRequest itemRequest : newPointsRequest.getOrderRequest().getOrderItemRequest()){
 				ItemResponse xmlItemResponse = new ItemResponse();
 				xmlItemResponse.setAmount(itemRequest.getAmount());

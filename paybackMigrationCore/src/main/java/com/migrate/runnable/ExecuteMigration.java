@@ -20,14 +20,14 @@ public class ExecuteMigration {
 		ApplicationContext orderServiceContext = new ClassPathXmlApplicationContext(serviceResources);
 		Object pointsService = orderServiceContext.getBean("legacyPointsService");
 		
-		//((LegacyPointsService) pointsService).mailBurnData(BurnActionCodesEnum.BURN_REVERSAL, "90012970");
+		((LegacyPointsService) pointsService).mailBurnData(BurnActionCodesEnum.BURN_REVERSAL, "90012970");
 		
-		//((LegacyPointsService) pointsService).postEarnData(EarnActionCodesEnum.EARN_REVERSAL, "90012970", "FUTUREBAZAAR");
-		//((LegacyPointsService) pointsService).postEarnData(EarnActionCodesEnum.PREALLOC_EARN, "90012970", "FUTUREBAZAAR");
+		((LegacyPointsService) pointsService).postEarnData(EarnActionCodesEnum.EARN_REVERSAL, "90012970", "FUTUREBAZAAR");
+		((LegacyPointsService) pointsService).postEarnData(EarnActionCodesEnum.PREALLOC_EARN, "90012970", "FUTUREBAZAAR");
 		
 		
 		
-		((LegacyPointsService) pointsService).migratePaybackData();
+		//((LegacyPointsService) pointsService).migratePaybackData();
 		
 	}
 	

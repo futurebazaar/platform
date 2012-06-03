@@ -11,16 +11,16 @@ import com.fb.platform.payback.to.PointsResponseCodeEnum;
 
 public interface PointsService {
 
-	String postEarnData(EarnActionCodesEnum txnActionCode, String merchantId, String client);
+	public String postEarnData(EarnActionCodesEnum txnActionCode, String merchantId, String client);
 	
-	String mailBurnData(BurnActionCodesEnum txnActionCode, String merchantId);
+	public String mailBurnData(BurnActionCodesEnum txnActionCode, String merchantId);
 	
 	@Transactional(propagation=Propagation.REQUIRED)
-	PointsResponseCodeEnum storePoints(PointsRequest request);
+	public  PointsResponseCodeEnum storePoints(PointsRequest request);
 
-	PointsResponseCodeEnum clearPointsCache(String ruleName);
+	public  PointsResponseCodeEnum clearPointsCache(String ruleName);
 
-	PointsRequest getPointsToBeDisplayed(PointsRequest request);
+	public  PointsRequest getPointsToBeDisplayed(PointsRequest request);
 
 	
 }

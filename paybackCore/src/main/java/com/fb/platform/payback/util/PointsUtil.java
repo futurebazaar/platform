@@ -14,9 +14,9 @@ import org.joda.time.format.DateTimeFormatter;
 
 import com.fb.commons.util.MailSender;
 
-public class PointsUtil implements Serializable{
+public class PointsUtil implements Serializable {
 	
-	public String getPreviousDayDate(){
+	public String getPreviousDayDate() {
 		DateTime datetime = new DateTime();
 		datetime = datetime.minusDays(1); 
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
@@ -31,7 +31,7 @@ public class PointsUtil implements Serializable{
 		return newSettlementDate;
 	}
 	
-	public DateTime getDateTimeFromString(String date, String pattern){
+	public DateTime getDateTimeFromString(String date, String pattern) {
 		try{
 			DateTimeFormatter format = DateTimeFormat.forPattern(pattern);
 			DateTime datetime = format.parseDateTime(date);
@@ -96,7 +96,7 @@ public class PointsUtil implements Serializable{
 		
 	}
 	
-	public boolean isValidLoyaltyCard(String cardNumber){
+	public boolean isValidLoyaltyCard(String cardNumber) {
 		return cardNumber.matches("[0-9]{16}");
 	}
 	

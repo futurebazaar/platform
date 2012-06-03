@@ -9,7 +9,7 @@ import com.fb.platform.payback.to.OrderItemRequest;
 import com.fb.platform.payback.to.OrderRequest;
 import com.fb.platform.payback.util.PointsUtil;
 
-public class PurchaseOrderBurnXPoints implements PointsRule{
+public class PurchaseOrderBurnXPoints implements PointsRule {
 	private BigDecimal burnRatio;
 	private PointsUtil pointsUtil;
 	
@@ -30,7 +30,7 @@ public class PurchaseOrderBurnXPoints implements PointsRule{
 
 	@Override
 	public BigDecimal execute(OrderRequest request, OrderItemRequest itemRequest) {
-		return burnRatio.multiply(itemRequest.getAmount());
+		return burnRatio.multiply(request.getAmount());
 	}
 
 	@Override

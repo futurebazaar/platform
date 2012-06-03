@@ -101,10 +101,9 @@ public class PointsRestClient {
 
 	private static DisplayPointsRequest setDisplayPointsRequest() throws Exception {
 		DisplayPointsRequest request = new DisplayPointsRequest();
-		request.setActionCode(ActionCode.PREALLOC_EARN);
-
+		request.setActionCode(ActionCode.BURN_REVERSAL);
 		request.setTimestamp(DatatypeFactory.newInstance().newXMLGregorianCalendar(2012, 05, 27, 0, 0, 0, 0, 0));
-		
+		request.setOrderAmount(new BigDecimal(500));
 		OrderItemRequest itemRequest = new OrderItemRequest();
 		itemRequest.setAmount(new BigDecimal(639));
 		itemRequest.setArticleId("1234");
@@ -159,12 +158,12 @@ public class PointsRestClient {
 
 	private static PointsRequest setPointsRequest() throws Exception {
 		PointsRequest request = new PointsRequest();
-		request.setActionCode(ActionCode.PREALLOC_EARN);
+		request.setActionCode(ActionCode.EARN_REVERSAL);
 		request.setClientName("Future Bazaar");
 		request.setSessionToken(login());
 		
 		OrderRequest orderRequest = new OrderRequest();
-		orderRequest.setAmount(new BigDecimal(639));
+		orderRequest.setAmount(new BigDecimal(500));
 		orderRequest.setLoyaltyCard("1234567812345678");
 		orderRequest.setOrderId(2);
 		orderRequest.setReason("REST CLIENT");

@@ -7,14 +7,17 @@ import com.fb.platform.payback.model.PointsItems;
 import com.fb.platform.payback.to.OrderItemRequest;
 
 public interface PointsDao {
-	
+
 	public Long insertPointsHeaderData(PointsHeader pointsHeader);
-	
-	public void updateStatus(String txnActionCode, String settlementDate, String merchantId);
 
-	public PointsHeader getHeaderDetails(long orderId, String txnActionCode, String txnClassificationCode);
+	public void updateStatus(String txnActionCode, String settlementDate,
+			String merchantId);
 
-	public Collection<PointsHeader> loadPointsHeaderData(String txnActionCode, String settlementDate, String merchantId);
+	public PointsHeader getHeaderDetails(long orderId, String txnActionCode,
+			String txnClassificationCode);
+
+	public Collection<PointsHeader> loadPointsHeaderData(String txnActionCode,
+			String settlementDate, String merchantId);
 
 	public Collection<PointsItems> loadPointsItemData(long pointsHeaderId);
 

@@ -8,12 +8,12 @@ public enum PointsTxnClassificationCodeEnum {
 	
 	private String txnClassificationCode = null;
 	
-	private PointsTxnClassificationCodeEnum(String txnClassificationCode){
+	private PointsTxnClassificationCodeEnum(String txnClassificationCode) {
 		this.txnClassificationCode = txnClassificationCode;
 	}
 	
 	@Override
-	public String toString(){
+	public String toString() {
 		return this.txnClassificationCode;
 	}
 

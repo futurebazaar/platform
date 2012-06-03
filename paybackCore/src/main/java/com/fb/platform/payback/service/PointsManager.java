@@ -15,8 +15,8 @@ public interface PointsManager {
 	
 	public String mailBurnData();
 
-	PointsResponseCodeEnum clearPointsCache(ClearCacheRequest request);
+	public PointsResponseCodeEnum clearPointsCache(ClearCacheRequest request);
 
-	PointsRequest getPointsToBeDisplayed(PointsRequest request) throws NoPermissionException;
+	public PointsRequest getPointsToBeDisplayed(PointsRequest request) throws NoPermissionException;
 
 }

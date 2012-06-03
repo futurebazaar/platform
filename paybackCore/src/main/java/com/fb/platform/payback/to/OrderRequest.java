@@ -16,7 +16,7 @@ public class OrderRequest {
 	private String loyaltyCard;
 	private DateTime txnTimestamp;
 	private BigDecimal bonusPoints = BigDecimal.ZERO;
-	private BigDecimal txnPoints;
+	private BigDecimal txnPoints = BigDecimal.ZERO;
 	
 	public long getOrderId() {
 		return orderId;

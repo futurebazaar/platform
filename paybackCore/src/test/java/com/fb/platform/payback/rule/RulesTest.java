@@ -42,7 +42,7 @@ public class RulesTest extends BaseTestCase{
 		public void setOrderRequest(){
 			
 			orderRequest.setLoyaltyCard("1234567890123456");
-			orderRequest.setAmount(new BigDecimal(4000));
+			orderRequest.setAmount(new BigDecimal(2000));
 			orderRequest.setOrderId(1);
 			orderRequest.setTxnTimestamp(new DateTime(2012, 05, 24, 10, 0, 0));
 			orderRequest.setReferenceId("5051234567");
@@ -158,11 +158,11 @@ public class RulesTest extends BaseTestCase{
 		orderRequest.setTxnTimestamp(new DateTime(2012, 05, 25, 0, 0, 0));
 		for (OrderItemRequest itemRequest : orderRequest.getOrderItemRequest()){
 			if (rule.isApplicable(orderRequest, itemRequest)){
-				txnPoints = txnPoints.add(rule.execute(orderRequest, itemRequest));
+				txnPoints = rule.execute(orderRequest, itemRequest);
 			}
 		}
 		
-		assertEquals(new BigDecimal(16000).intValue(), txnPoints.intValue());
+		assertEquals(new BigDecimal(8000).intValue(), txnPoints.intValue());
 	}
 	
 }

@@ -188,21 +188,21 @@ public class PointsServiceTest extends BaseTestCase{
 	}
 	
 	@Test
-	public void getPointsToBeDisplayed(){
+	public void getEarnPointsToBeDisplayed(){
 		PointsRequest pr = new PointsRequest();
 		pr.setTxnActionCode("PREALLOC_EARN");
 		pr.setClientName("Future Bazaar");
 		
 		OrderRequest request  = new OrderRequest();
 		request.setLoyaltyCard("1234567890123456");
-		request.setAmount(new BigDecimal(2001));
+		request.setAmount(new BigDecimal(500));
 		request.setOrderId(2);
 		request.setTxnTimestamp(new DateTime(2012, 05, 24, 10, 0, 0));
 		request.setReferenceId("5051234567");
 		
 		List<OrderItemRequest> orderItemRequest = new ArrayList<OrderItemRequest>();
 		OrderItemRequest orderItem1 = new OrderItemRequest();
-		orderItem1.setAmount(new BigDecimal(2000));
+		orderItem1.setAmount(new BigDecimal(639));
 		orderItem1.setArticleId("1234");
 		orderItem1.setCategoryId(1234);
 		orderItem1.setDepartmentCode(1234);
@@ -228,9 +228,11 @@ public class PointsServiceTest extends BaseTestCase{
 		
 		pr.setOrderRequest(request);
 		PointsRequest newRequest = pointsService.getPointsToBeDisplayed(pr);
-		assertEquals(180, newRequest.getOrderRequest().getTxnPoints().intValue());
+		assertEquals(98, newRequest.getOrderRequest().getTxnPoints().intValue());
+		
+		pr.setTxnActionCode("BURN_REVERSAL");
+		newRequest = pointsService.getPointsToBeDisplayed(pr);
+		assertEquals(2000, newRequest.getOrderRequest().getTxnPoints().intValue());
 	}
-	
-	
 	
 }

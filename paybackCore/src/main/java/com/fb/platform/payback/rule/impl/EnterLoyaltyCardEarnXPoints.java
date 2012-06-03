@@ -14,7 +14,7 @@ import com.fb.platform.payback.to.OrderItemRequest;
 import com.fb.platform.payback.to.OrderRequest;
 import com.fb.platform.payback.util.PointsUtil;
 
-public class EnterLoyaltyCardEarnXPoints implements PointsRule{
+public class EnterLoyaltyCardEarnXPoints implements PointsRule {
 	private BigDecimal earnRatio;
 	private PointsUtil pointsUtil;
 	private List<Long> excludedCategoryList = new ArrayList<Long>();

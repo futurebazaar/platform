@@ -13,12 +13,12 @@ public enum PointsResponseCodeEnum {
 	
 	private String responseCode = null;
 	
-	private PointsResponseCodeEnum(String responseCode){
+	private PointsResponseCodeEnum(String responseCode) {
 		this.responseCode = responseCode;
 	}
 	
 	@Override
-	public String toString(){
+	public String toString() {
 		return this.responseCode;
 	}
 }
