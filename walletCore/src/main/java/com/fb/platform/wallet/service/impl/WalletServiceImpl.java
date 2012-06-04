@@ -29,6 +29,8 @@ public class WalletServiceImpl implements WalletService {
 	@Autowired
 	private WalletTransactionDao walletTransactionDao;
 	
+	private int refundExpiryDays;
+	
 	@Override
 	public Wallet load(long walletId) throws WalletNotFoundException,PlatformException {
 		try{
@@ -41,7 +43,8 @@ public class WalletServiceImpl implements WalletService {
 
 	@Override
 	public Wallet load(long userId, long clientId) throws PlatformException {
-		return (load(userId,clientId,true));			
+		Wallet wallet = load(userId,clientId,true);
+        return walletTransactionDao.updateGiftExpiry(wallet);			
 	}
 	
 	private Wallet load(long userId,long clientId,boolean createNew) 
@@ -80,13 +83,17 @@ public class WalletServiceImpl implements WalletService {
 	@Override
 	public WalletTransaction credit(long walletId, Money amount,
 			String subWalletType, long paymentId, long refundId,
-			String gitfCoupon) throws WalletNotFoundException,
+			String gitfCoupon,DateTime giftExpiry) throws WalletNotFoundException,
 			PlatformException {
 		try {
 			WalletTransaction walletTransactionRes = new WalletTransaction();
 			Wallet wallet = load(walletId);
+			long gift_id = 0L;
+			if (SubWalletType.valueOf(subWalletType).equals(SubWalletType.GIFT)){
+				gift_id = walletTransactionDao.insertGift(wallet.getId(),gitfCoupon,giftExpiry,amount);
+			}
 			com.fb.platform.wallet.model.WalletTransaction walletTransaction = wallet
-					.credit(amount, SubWalletType.valueOf(subWalletType), paymentId, refundId,gitfCoupon,null); //to pass the gift coupon expiry date instead of null
+					.credit(amount, SubWalletType.valueOf(subWalletType), paymentId, refundId,gift_id);
 			walletTransactionRes.setWallet(walletDao.update(wallet));
 			walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(walletTransaction));
 			return walletTransactionRes;
@@ -129,7 +136,7 @@ public class WalletServiceImpl implements WalletService {
 
 	@Override
 	public WalletTransaction refund(long userId,
-			long clientId, Money amount, long refundId, boolean ignoreExpiry,int expiryDays)
+			long clientId, Money amount, long refundId, boolean ignoreExpiry)
 			throws WalletNotFoundException, AlreadyRefundedException,RefundExpiredException,InSufficientFundsException,
 			PlatformException {
 		try {
@@ -139,7 +146,7 @@ public class WalletServiceImpl implements WalletService {
 			if(walletTransaction.getTransactionType().equals(TransactionType.CREDIT)){
 				WalletSubTransaction walletSubTransaction = walletTransaction.getWalletSubTransaction().get(0);
 				if(walletSubTransaction.getAmount().eq(amount)){
-					if(ignoreExpiry || walletTransaction.getTimeStamp().plusDays(expiryDays).isAfterNow()){
+					if(ignoreExpiry || walletTransaction.getTimeStamp().plusDays(refundExpiryDays).isAfterNow()){
 						walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(wallet.refund(amount,refundId)));
 						walletTransactionRes.setWallet(walletDao.update(wallet));							
 					}else {
@@ -191,6 +198,7 @@ public class WalletServiceImpl implements WalletService {
 		}  catch (InvalidTransactionIdException e) {
 			throw new InvalidTransactionIdException("This is an invalid transaction Id");
 		} 	catch (PlatformException e) {
+			e.printStackTrace();
 			throw new PlatformException("an unhandeled exception has occured while trnasaction reversal");
 		}
 	}
@@ -200,7 +208,10 @@ public class WalletServiceImpl implements WalletService {
 	public void setWalletTransactionDao(WalletTransactionDao walletTransactionDao) {
 		this.walletTransactionDao = walletTransactionDao;
 	}
-	
+	public void setRefundExpiryDays(int refundExpiryDays) {
+		this.refundExpiryDays = refundExpiryDays;
+	}
+
 	private WalletTransaction walletTransactionModeltoTO (com.fb.platform.wallet.model.WalletTransaction walletTransaction){
 		WalletTransaction walletTransactionRes = new WalletTransaction();
 		walletTransactionRes.setTransactionId(walletTransaction.getTransactionId());
@@ -212,7 +223,7 @@ public class WalletServiceImpl implements WalletService {
 		for(com.fb.platform.wallet.model.WalletSubTransaction subTransaction: walletTransaction.getWalletSubTransaction()){
 			com.fb.platform.wallet.to.WalletSubTransaction sTransaction = new com.fb.platform.wallet.to.WalletSubTransaction();
 			sTransaction.setAmount(subTransaction.getAmount());
-			sTransaction.setGiftCode(subTransaction.getGiftCode());
+			//sTransaction.setGiftCode(subTransaction.getGiftCode()); //TO DO :: get gift code from gift id
 			sTransaction.setOrderId(subTransaction.getOrderId());
 			sTransaction.setPaymentId(subTransaction.getPaymentId());
 			sTransaction.setPaymentReversalId(subTransaction.getPaymentReversalId());

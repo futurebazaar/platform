@@ -21,4 +21,8 @@ public interface WalletTransactionDao {
 	public Money amountAlreadyReversedByTransactionId(long walletId,
 			long transactionId);
 
+	public long insertGift(long walletId, String gitfCoupon, DateTime giftExpiry,Money amount);
+
+	public Wallet updateGiftExpiry(Wallet wallet);
+
 }

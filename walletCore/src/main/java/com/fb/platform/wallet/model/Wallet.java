@@ -16,7 +16,7 @@ public class Wallet implements Serializable {
 	private DateTime modifiedOn;
 	private User user;
 
-	public WalletTransaction credit(Money amount,SubWalletType subWalletType,long paymentId,long refundId,String giftCode,DateTime giftExpiry){
+	public WalletTransaction credit(Money amount,SubWalletType subWalletType,long paymentId,long refundId,long giftId){
 		if (subWalletType.equals(SubWalletType.CASH)) {
 				cashSubWallet = cashSubWallet.plus(amount);
 			} else if (subWalletType.equals(SubWalletType.GIFT)) {
@@ -27,7 +27,7 @@ public class Wallet implements Serializable {
 			totalAmount = totalAmount.plus(amount);
 			WalletTransaction walletTransaction = new WalletTransaction(
 					this, TransactionType.CREDIT, amount,DateTime.now());
-			walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(subWalletType, amount, 0, refundId, paymentId,0, giftCode,giftExpiry));
+			walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(subWalletType, amount, 0, refundId, paymentId,0, giftId));
 			return walletTransaction;
 	}
 	
@@ -49,11 +49,11 @@ public class Wallet implements Serializable {
 			if(walletSubTransactionRefund.getAmount().gt(alreadyReversed)){
 				if(amountTobeReversed.lteq(walletSubTransactionRefund.getAmount().minus(alreadyReversed))){
 					refundSubWallet = refundSubWallet.plus(amountTobeReversed);
-					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,amountTobeReversed,0,0,0,walletTransaction.getId(),null,null));
+					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,amountTobeReversed,0,0,0,walletTransaction.getId(),0));
 					amountTobeReversed = amountTobeReversed.minus(amountTobeReversed);
 				}else{
 					refundSubWallet = refundSubWallet.plus(walletSubTransactionRefund.getAmount().minus(alreadyReversed));
-					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,walletSubTransactionRefund.getAmount().minus(alreadyReversed),0,0,0,walletTransaction.getId(),null,null));
+					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,walletSubTransactionRefund.getAmount().minus(alreadyReversed),0,0,0,walletTransaction.getId(),0));
 					amountTobeReversed = amountTobeReversed.minus(walletSubTransactionRefund.getAmount().minus(alreadyReversed));
 				}
 				alreadyReversed = alreadyReversed.minus(alreadyReversed);
@@ -65,11 +65,11 @@ public class Wallet implements Serializable {
 			if(walletSubTransactionCash.getAmount().gt(alreadyReversed)){
 				if(amountTobeReversed.lteq(walletSubTransactionCash.getAmount().minus(alreadyReversed))){
 					cashSubWallet = cashSubWallet.plus(amountTobeReversed);
-					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.CASH,amountTobeReversed,0,0,0,walletTransaction.getId(),null,null));
+					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.CASH,amountTobeReversed,0,0,0,walletTransaction.getId(),0));
 					amountTobeReversed = amountTobeReversed.minus(amountTobeReversed);
 				}else{
 					cashSubWallet = cashSubWallet.plus(walletSubTransactionCash.getAmount().minus(alreadyReversed));
-					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.CASH,walletSubTransactionCash.getAmount().minus(alreadyReversed),0,0,0,walletTransaction.getId(),null,null));
+					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.CASH,walletSubTransactionCash.getAmount().minus(alreadyReversed),0,0,0,walletTransaction.getId(),0));
 					amountTobeReversed = amountTobeReversed.minus(walletSubTransactionCash.getAmount().minus(alreadyReversed));
 				}
 				alreadyReversed = alreadyReversed.minus(alreadyReversed);
@@ -80,7 +80,7 @@ public class Wallet implements Serializable {
 		if(walletSubTransactionGift != null){
 			if(amountTobeReversed.lteq(walletSubTransactionGift.getAmount().minus(alreadyReversed))){
 				giftSubWallet = giftSubWallet.plus(amountTobeReversed);
-				walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.GIFT,amountTobeReversed,0,0,0,walletTransaction.getId(),walletSubTransactionGift.getGiftCode(),walletSubTransactionGift.getGiftExpiry()));
+				walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.GIFT,amountTobeReversed,0,0,0,walletTransaction.getId(),0));
 				amountTobeReversed = amountTobeReversed.minus(amountTobeReversed);
 			}
 		}
@@ -97,34 +97,42 @@ public class Wallet implements Serializable {
 		if(walletSubTransactionRefund != null){
 			if(amountTobeReversed.lteq(walletSubTransactionRefund.getAmount())){
 				refundSubWallet = refundSubWallet.minus(amountTobeReversed);
-				walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,amountTobeReversed,0,0,0,walletTransaction.getId(),null,null));
+				walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,amountTobeReversed,0,0,0,walletTransaction.getId(),0));
 				amountTobeReversed = amountTobeReversed.minus(amountTobeReversed);
 			}else{
 				refundSubWallet = refundSubWallet.minus(walletSubTransactionRefund.getAmount());
-				walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,walletSubTransactionRefund.getAmount(),0,0,0,walletTransaction.getId(),null,null));
+				walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,walletSubTransactionRefund.getAmount(),0,0,0,walletTransaction.getId(),0));
 				amountTobeReversed = amountTobeReversed.minus(walletSubTransactionRefund.getAmount());
 			}
 		}
 		if(walletSubTransactionCash != null){
 			if(amountTobeReversed.lteq(walletSubTransactionCash.getAmount())){
 				cashSubWallet = cashSubWallet.minus(amountTobeReversed);
-				walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.CASH,amountTobeReversed,0,0,0,walletTransaction.getId(),null,null));
+				walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.CASH,amountTobeReversed,0,0,0,walletTransaction.getId(),0));
 				amountTobeReversed = amountTobeReversed.minus(amountTobeReversed);
 			}else{
 				cashSubWallet = cashSubWallet.minus(walletSubTransactionCash.getAmount());
-				walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.CASH,walletSubTransactionCash.getAmount(),0,0,0,walletTransaction.getId(),null,null));
+				walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.CASH,walletSubTransactionCash.getAmount(),0,0,0,walletTransaction.getId(),0));
 				amountTobeReversed = amountTobeReversed.minus(walletSubTransactionCash.getAmount());
 			}
 		}
 		if(walletSubTransactionGift != null){
 			if(amountTobeReversed.lteq(walletSubTransactionGift.getAmount())){
 				giftSubWallet = giftSubWallet.minus(amountTobeReversed);
-				walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.GIFT,amountTobeReversed,0,0,0,walletTransaction.getId(),walletSubTransactionGift.getGiftCode(),walletSubTransactionGift.getGiftExpiry()));
+				walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.GIFT,amountTobeReversed,0,0,0,walletTransaction.getId(),walletSubTransactionGift.getGiftId()));
 				amountTobeReversed = amountTobeReversed.minus(amountTobeReversed);
 			}
 		}
 		totalAmount = totalAmount.minus(amount);
 		return walletTransactionRes;
+	}
+	
+	public WalletTransaction debit(Money amount,long giftId,String notes){
+		WalletTransaction walletTransaction = new WalletTransaction(this, TransactionType.DEBIT, amount,DateTime.now());
+		totalAmount = totalAmount.minus(amount);
+		giftSubWallet =giftSubWallet.minus(amount);
+		walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(amount,giftId,notes));
+		return walletTransaction;
 	}
 
 	public WalletTransaction debit(Money amount,long orderId) {
@@ -134,12 +142,12 @@ public class Wallet implements Serializable {
 			if(giftSubWallet.gteq(amountLeftToBeDebited)){
 				totalAmount = totalAmount.minus(amountLeftToBeDebited);
 				giftSubWallet =giftSubWallet.minus(amountLeftToBeDebited);
-				walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.GIFT,amountLeftToBeDebited,orderId,0,0,0,null,null));
+				walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.GIFT,amountLeftToBeDebited,orderId));
 				amountLeftToBeDebited = amountLeftToBeDebited.minus(amountLeftToBeDebited);
 			}else{
 				totalAmount = totalAmount.minus(giftSubWallet);
 				amountLeftToBeDebited = amountLeftToBeDebited.minus(giftSubWallet);
-				walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.GIFT,giftSubWallet,orderId,0,0,0,null,null));
+				walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.GIFT,giftSubWallet,orderId));
 				giftSubWallet = giftSubWallet.minus(giftSubWallet);
 			}
 		}
@@ -147,12 +155,12 @@ public class Wallet implements Serializable {
 			if(cashSubWallet.gteq(amountLeftToBeDebited)){
 				totalAmount = totalAmount.minus(amountLeftToBeDebited);
 				cashSubWallet = cashSubWallet.minus(amountLeftToBeDebited);
-				walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.CASH,amountLeftToBeDebited,orderId,0,0,0,null,null));
+				walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.CASH,amountLeftToBeDebited,orderId));
 				amountLeftToBeDebited = amountLeftToBeDebited.minus(amountLeftToBeDebited);
 			}else{
 				totalAmount = totalAmount.minus(cashSubWallet);
 				amountLeftToBeDebited = amountLeftToBeDebited.minus(cashSubWallet);
-				walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.CASH,cashSubWallet,orderId,0,0,0,null,null));
+				walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.CASH,cashSubWallet,orderId));
 				cashSubWallet = cashSubWallet.minus(cashSubWallet);
 			}
 		}
@@ -160,7 +168,7 @@ public class Wallet implements Serializable {
 			if(refundSubWallet.gteq(amountLeftToBeDebited)){
 				totalAmount = totalAmount.minus(amountLeftToBeDebited);
 				refundSubWallet = refundSubWallet.minus(amountLeftToBeDebited);
-				walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,amountLeftToBeDebited,orderId,0,0,0,null,null));
+				walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,amountLeftToBeDebited,orderId));
 				amountLeftToBeDebited = amountLeftToBeDebited.minus(amountLeftToBeDebited);
 			}
 		}
@@ -176,7 +184,7 @@ public class Wallet implements Serializable {
 		WalletTransaction walletTransaction = new WalletTransaction(this, TransactionType.DEBIT, amount,DateTime.now());
 		totalAmount = totalAmount.minus(amount);
 		refundSubWallet = refundSubWallet.minus(amount);
-		walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,amount,0,refundId,0,0,null,null));
+		walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,amount,0,refundId,0,0,0));
 		return walletTransaction;
 	}
 

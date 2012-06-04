@@ -265,9 +265,9 @@ public class WalletManagerTest extends BaseTestCase{
 		
 		assertNotNull(summaryResponse);
 		assertEquals("SUCCESS", summaryResponse.getWalletSummaryStatus().toString());
-		assertEquals(new BigDecimal("200.00"), summaryResponse.getWalletDetails().getTotalAmount());
+		assertEquals(new BigDecimal("300.00"), summaryResponse.getWalletDetails().getTotalAmount());
 		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getCashAmount());
-		assertEquals(new BigDecimal("0.00"), summaryResponse.getWalletDetails().getGiftAmount());
+		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getGiftAmount());
 		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getRefundAmount());
 
 	}
@@ -295,8 +295,8 @@ public class WalletManagerTest extends BaseTestCase{
 		
 		assertNotNull(summaryResponse);
 		assertEquals("SUCCESS", summaryResponse.getWalletSummaryStatus().toString());
-		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getTotalAmount());
-		assertEquals(new BigDecimal("0.00"), summaryResponse.getWalletDetails().getCashAmount());
+		assertEquals(new BigDecimal("200.00"), summaryResponse.getWalletDetails().getTotalAmount());
+		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getCashAmount());
 		assertEquals(new BigDecimal("0.00"), summaryResponse.getWalletDetails().getGiftAmount());
 		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getRefundAmount());
 
@@ -325,10 +325,10 @@ public class WalletManagerTest extends BaseTestCase{
 		
 		assertNotNull(summaryResponse);
 		assertEquals("SUCCESS", summaryResponse.getWalletSummaryStatus().toString());
-		assertEquals(new BigDecimal("0.00"), summaryResponse.getWalletDetails().getTotalAmount());
+		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getTotalAmount());
 		assertEquals(new BigDecimal("0.00"), summaryResponse.getWalletDetails().getCashAmount());
 		assertEquals(new BigDecimal("0.00"), summaryResponse.getWalletDetails().getGiftAmount());
-		assertEquals(new BigDecimal("0.00"), summaryResponse.getWalletDetails().getRefundAmount());
+		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getRefundAmount());
 
 	}
 	
@@ -355,9 +355,9 @@ public class WalletManagerTest extends BaseTestCase{
 		
 		assertNotNull(summaryResponse);
 		assertEquals("SUCCESS", summaryResponse.getWalletSummaryStatus().toString());
-		assertEquals(new BigDecimal("150.00"), summaryResponse.getWalletDetails().getTotalAmount());
-		assertEquals(new BigDecimal("50.00"), summaryResponse.getWalletDetails().getCashAmount());
-		assertEquals(new BigDecimal("0.00"), summaryResponse.getWalletDetails().getGiftAmount());
+		assertEquals(new BigDecimal("250.00"), summaryResponse.getWalletDetails().getTotalAmount());
+		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getCashAmount());
+		assertEquals(new BigDecimal("50.00"), summaryResponse.getWalletDetails().getGiftAmount());
 		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getRefundAmount());
 
 	}
@@ -365,7 +365,7 @@ public class WalletManagerTest extends BaseTestCase{
 	@Test
 	public void testWalletDebit5() {
 		PayRequest request = new PayRequest();
-		request.setAmount(new BigDecimal("400.00"));
+		request.setAmount(new BigDecimal("500.00"));
 		request.setUserId(userId);
 		request.setClientId(-5);
 		request.setOrderId(1);
@@ -585,9 +585,9 @@ public class WalletManagerTest extends BaseTestCase{
 		
 		assertNotNull(summaryResponse);
 		assertEquals("SUCCESS", summaryResponse.getWalletSummaryStatus().toString());
-		assertEquals(new BigDecimal("200.00"), summaryResponse.getWalletDetails().getTotalAmount());
+		assertEquals(new BigDecimal("300.00"), summaryResponse.getWalletDetails().getTotalAmount());
 		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getCashAmount());
-		assertEquals(new BigDecimal("0.00"), summaryResponse.getWalletDetails().getGiftAmount());
+		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getGiftAmount());
 		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getRefundAmount());
 
 		RevertRequest revertRequest = new RevertRequest();
@@ -611,16 +611,16 @@ public class WalletManagerTest extends BaseTestCase{
 		
 		assertNotNull(summaryResponse);
 		assertEquals("SUCCESS", summaryResponse.getWalletSummaryStatus().toString());
-		assertEquals(new BigDecimal("300.00"), summaryResponse.getWalletDetails().getTotalAmount());
+		assertEquals(new BigDecimal("400.00"), summaryResponse.getWalletDetails().getTotalAmount());
 		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getCashAmount());
-		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getGiftAmount());
+		assertEquals(new BigDecimal("200.00"), summaryResponse.getWalletDetails().getGiftAmount());
 		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getRefundAmount());
 	}
 
 	@Test
 	public void testRevertTransaction3() {
 		PayRequest request = new PayRequest();
-		request.setAmount(new BigDecimal("200.00"));
+		request.setAmount(new BigDecimal("300.00"));
 		request.setUserId(userId);
 		request.setClientId(-5);
 		request.setOrderId(1);
@@ -646,7 +646,7 @@ public class WalletManagerTest extends BaseTestCase{
 		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getRefundAmount());
 
 		RevertRequest revertRequest = new RevertRequest();
-		revertRequest.setAmount(new BigDecimal("200.00"));
+		revertRequest.setAmount(new BigDecimal("300.00"));
 		revertRequest.setUserId(userId);
 		revertRequest.setClientId(-5);
 		revertRequest.setSessionToken(sessionToken);
@@ -666,9 +666,9 @@ public class WalletManagerTest extends BaseTestCase{
 		
 		assertNotNull(summaryResponse);
 		assertEquals("SUCCESS", summaryResponse.getWalletSummaryStatus().toString());
-		assertEquals(new BigDecimal("300.00"), summaryResponse.getWalletDetails().getTotalAmount());
+		assertEquals(new BigDecimal("400.00"), summaryResponse.getWalletDetails().getTotalAmount());
 		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getCashAmount());
-		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getGiftAmount());
+		assertEquals(new BigDecimal("200.00"), summaryResponse.getWalletDetails().getGiftAmount());
 		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getRefundAmount());
 
 	}
@@ -676,7 +676,7 @@ public class WalletManagerTest extends BaseTestCase{
 	@Test
 	public void testRevertTransaction4() {
 		PayRequest request = new PayRequest();
-		request.setAmount(new BigDecimal("300.00"));
+		request.setAmount(new BigDecimal("400.00"));
 		request.setUserId(userId);
 		request.setClientId(-5);
 		request.setOrderId(1);
@@ -702,7 +702,7 @@ public class WalletManagerTest extends BaseTestCase{
 		assertEquals(new BigDecimal("0.00"), summaryResponse.getWalletDetails().getRefundAmount());
 
 		RevertRequest revertRequest = new RevertRequest();
-		revertRequest.setAmount(new BigDecimal("300.00"));
+		revertRequest.setAmount(new BigDecimal("400.00"));
 		revertRequest.setUserId(userId);
 		revertRequest.setClientId(-5);
 		revertRequest.setSessionToken(sessionToken);
@@ -722,9 +722,9 @@ public class WalletManagerTest extends BaseTestCase{
 		
 		assertNotNull(summaryResponse);
 		assertEquals("SUCCESS", summaryResponse.getWalletSummaryStatus().toString());
-		assertEquals(new BigDecimal("300.00"), summaryResponse.getWalletDetails().getTotalAmount());
+		assertEquals(new BigDecimal("400.00"), summaryResponse.getWalletDetails().getTotalAmount());
 		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getCashAmount());
-		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getGiftAmount());
+		assertEquals(new BigDecimal("200.00"), summaryResponse.getWalletDetails().getGiftAmount());
 		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getRefundAmount());
 		
 	}
@@ -732,7 +732,7 @@ public class WalletManagerTest extends BaseTestCase{
 	@Test
 	public void testRevertTransaction5() {
 		PayRequest request = new PayRequest();
-		request.setAmount(new BigDecimal("300.00"));
+		request.setAmount(new BigDecimal("400.00"));
 		request.setUserId(userId);
 		request.setClientId(-5);
 		request.setOrderId(1);
@@ -760,7 +760,7 @@ public class WalletManagerTest extends BaseTestCase{
 		String transactionId = response.getTransactionId();
 		
 		RevertRequest revertRequest = new RevertRequest();
-		revertRequest.setAmount(new BigDecimal("150.00"));
+		revertRequest.setAmount(new BigDecimal("250.00"));
 		revertRequest.setUserId(userId);
 		revertRequest.setClientId(-5);
 		revertRequest.setSessionToken(sessionToken);
@@ -780,9 +780,9 @@ public class WalletManagerTest extends BaseTestCase{
 		
 		assertNotNull(summaryResponse);
 		assertEquals("SUCCESS", summaryResponse.getWalletSummaryStatus().toString());
-		assertEquals(new BigDecimal("150.00"), summaryResponse.getWalletDetails().getTotalAmount());
-		assertEquals(new BigDecimal("50.00"), summaryResponse.getWalletDetails().getCashAmount());
-		assertEquals(new BigDecimal("0.00"), summaryResponse.getWalletDetails().getGiftAmount());
+		assertEquals(new BigDecimal("250.00"), summaryResponse.getWalletDetails().getTotalAmount());
+		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getCashAmount());
+		assertEquals(new BigDecimal("50.00"), summaryResponse.getWalletDetails().getGiftAmount());
 		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getRefundAmount());
 
 		revertRequest = new RevertRequest();
@@ -806,9 +806,9 @@ public class WalletManagerTest extends BaseTestCase{
 		
 		assertNotNull(summaryResponse);
 		assertEquals("SUCCESS", summaryResponse.getWalletSummaryStatus().toString());
-		assertEquals(new BigDecimal("300.00"), summaryResponse.getWalletDetails().getTotalAmount());
+		assertEquals(new BigDecimal("400.00"), summaryResponse.getWalletDetails().getTotalAmount());
 		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getCashAmount());
-		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getGiftAmount());
+		assertEquals(new BigDecimal("200.00"), summaryResponse.getWalletDetails().getGiftAmount());
 		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getRefundAmount());
 
 	}
@@ -816,7 +816,7 @@ public class WalletManagerTest extends BaseTestCase{
 	@Test
 	public void testRevertTransaction6() {
 		PayRequest request = new PayRequest();
-		request.setAmount(new BigDecimal("100.00"));
+		request.setAmount(new BigDecimal("200.00"));
 		request.setUserId(userId);
 		request.setClientId(-5);
 		request.setOrderId(1);
@@ -844,7 +844,7 @@ public class WalletManagerTest extends BaseTestCase{
 		String transactionId = response.getTransactionId();
 		
 		RevertRequest revertRequest = new RevertRequest();
-		revertRequest.setAmount(new BigDecimal("150.00"));
+		revertRequest.setAmount(new BigDecimal("250.00"));
 		revertRequest.setUserId(userId);
 		revertRequest.setClientId(-5);
 		revertRequest.setSessionToken(sessionToken);
@@ -870,5 +870,4 @@ public class WalletManagerTest extends BaseTestCase{
 		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getRefundAmount());
 
 	}
-
 }

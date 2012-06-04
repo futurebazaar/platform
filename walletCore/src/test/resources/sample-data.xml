@@ -145,9 +145,9 @@
 		</row>
 		<row>
 			<value>8</value>
-			<value>300.00</value>
+			<value>400.00</value>
 			<value>100.00</value>
-			<value>100.00</value>
+			<value>200.00</value>
 			<value>100.00</value>
 			<value>2011-04-18 20:42:57</value>
 			<value>2011-04-18 20:42:57</value>
@@ -286,9 +286,25 @@
 			<value>100</value>
 			<value>CREDIT</value>
 			<value>2012-04-18 20:42:57</value>
-			<value>A credit trnasaction</value>
+			<value>A credit transaction</value>
 		</row>
 		
+	</table>
+	<table name="wallets_gifts">
+		<column>id</column>
+		<column>wallet_id</column>
+		<column>gift_code</column>
+		<column>gift_expiry</column>
+		<column>is_expired</column>
+		<column>amount_remaining</column>
+		<row>
+			<value>1</value>
+			<value>8</value>
+			<value>xxyyzz</value>
+			<value>2012-04-18 20:42:57</value>
+			<value>false</value>
+			<value>100</value>
+		</row>
 	</table>
 	<table name="wallets_sub_transaction">
 		<column>id</column>
@@ -298,7 +314,7 @@
 		<column>order_id</column>
 		<column>refund_id</column>
 		<column>payment_id</column>
-		<column>gift_code</column>
+		<column>gift_id</column>
 		<column>transaction_reversal_id</column>
 		<column>transaction_description</column>		
 		<row>
@@ -393,10 +409,28 @@
 			<null/>
 			<null/>
 			<null/>
-			<value>xyzxyz</value>
+			<value>1</value>
 			<null/>
 			<value>This is a test transaction</value>
 		</row>
 		
+	</table>
+	<table name="wallets_gifts_transaction_history">
+		<column>id</column>
+		<column>gift_id</column>
+		<column>sub_transaction_id</column>
+		<column>amount</column>
+		<row>
+			<value>1</value>
+			<value>1</value>
+			<value>8</value>
+			<value>100</value>
+		</row>
+		<row>
+			<value>2</value>
+			<value>1</value>
+			<value>8</value>
+			<value>-50</value>
+		</row>
 	</table>
 </dataset>

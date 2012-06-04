@@ -59,12 +59,13 @@ public interface WalletService {
 	 * @param paymentId  : The payment Id of the payment for a cash transaction. 
 	 * @param refundId : The refund Id if the credit via the refund mechanism.
 	 * @param giftCoupon : The coupon code if filled via an client gift or EGV.
+	 * @param giftExpiry : The coupon code expiry date.
 	 * @throws WalletNotFoundException When no wallet is found matching the wallet.
 	 * @throws PlatformException When an unrecoverable error happens.
 	 * @return WalletTransaction
 	**/
 	@Transactional (propagation = Propagation.REQUIRED)
-	public WalletTransaction credit (long walletId, Money amount , String subWalletType , long paymentId , long refundId , String gitfCoupon) throws WalletNotFoundException,PlatformException;
+	public WalletTransaction credit (long walletId, Money amount , String subWalletType , long paymentId , long refundId , String gitfCoupon , DateTime giftExpiry) throws WalletNotFoundException,PlatformException;
 	
 	/**
 	 * Debit the wallet with the given amount.
@@ -95,7 +96,7 @@ public interface WalletService {
 	 * @return WalletTransaction 
 	**/
 	@Transactional (propagation = Propagation.REQUIRED)
-	public WalletTransaction refund (long userId, long clientId , Money amount , long refundId , boolean ignoreExpiry, int expiryDays) throws WalletNotFoundException, AlreadyRefundedException,RefundExpiredException,InSufficientFundsException,PlatformException;
+	public WalletTransaction refund (long userId, long clientId , Money amount , long refundId , boolean ignoreExpiry) throws WalletNotFoundException, AlreadyRefundedException,RefundExpiredException,InSufficientFundsException,PlatformException;
 	
 	/**
 	 * Reverse the transaction if an order is cancelled which is paid via the wallet.

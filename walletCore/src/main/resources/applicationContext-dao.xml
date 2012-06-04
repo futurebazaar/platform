@@ -18,6 +18,7 @@
 		<property name="jdbcTemplate" ref="jdbcTemplate"/>
 	</bean>
 	<bean id="walletTransactionDao" class="com.fb.platform.wallet.dao.impl.WalletTransactionDaoImpl">
+		<property name="walletDao" ref="walletDao"/>
 		<property name="jdbcTemplate" ref="jdbcTemplate"/>
 	</bean>
 

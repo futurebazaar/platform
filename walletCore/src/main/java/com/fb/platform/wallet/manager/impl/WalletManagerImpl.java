@@ -167,7 +167,7 @@ public class WalletManagerImpl implements WalletManager {
 			
 			Money amount = new Money(fillWalletRequest.getAmount());
 			
-			WalletTransaction transaction = walletService.credit(fillWalletRequest.getWalletId(), amount, fillWalletRequest.getSubWallet().toString(), fillWalletRequest.getPaymentId(), fillWalletRequest.getRefundId(), null);
+			WalletTransaction transaction = walletService.credit(fillWalletRequest.getWalletId(), amount, fillWalletRequest.getSubWallet().toString(), fillWalletRequest.getPaymentId(), fillWalletRequest.getRefundId(), null,null);
 			
 			response.setWalletId(transaction.getWallet().getId());
 			response.setTransactionId(transaction.getTransactionId());
@@ -247,8 +247,7 @@ public class WalletManagerImpl implements WalletManager {
 			//Wallet wallet = walletService.load(fillWalletRequest.getWalletId());
 			
 			Money amount = new Money(refundRequest.getAmount());
-			int refundExpiryLimit = 14;		// number of days
-			WalletTransaction transaction = walletService.refund(refundRequest.getUserId(), refundRequest.getClientId(), amount, refundRequest.getRefundId(), refundRequest.getIgnoreExpiry(), refundExpiryLimit);
+			WalletTransaction transaction = walletService.refund(refundRequest.getUserId(), refundRequest.getClientId(), amount, refundRequest.getRefundId(), refundRequest.getIgnoreExpiry());
 			response.setTransactionId(transaction.getTransactionId());
 			response.setStatus(RefundStatusEnum.SUCCESS);
 			

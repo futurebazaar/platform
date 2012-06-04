@@ -6,29 +6,45 @@ import com.fb.commons.to.Money;
 
 public class WalletSubTransaction {
 	private SubWalletType subWalletType;
+	private long id;
 	private long transactionId;
 	private Money amount;
 	private long orderId;
 	private long refundId;
 	private long paymentId;
 	private long paymentReversalId;
-	private String giftCode;
-	private DateTime giftExpiry = null;
+	private long giftId;
 	private String notes;
 	
 	
 	
 	WalletSubTransaction(SubWalletType subWalletType, Money amount,
-			long orderId, long refundId, long paymentId,long paymentReversalId,String giftCode,DateTime giftExpiry) {
+			long orderId, long refundId, long paymentId,long paymentReversalId,long giftId) {
 		super();
 		this.subWalletType = subWalletType;
 		this.amount = amount;
 		this.orderId = orderId;
 		this.refundId = refundId;
 		this.paymentId = paymentId;
-		this.giftCode = giftCode;
-		this.giftExpiry = giftExpiry;
+		this.giftId = giftId;
 		this.paymentReversalId =paymentReversalId;
+	}
+	
+	WalletSubTransaction(SubWalletType subWalletType, Money amount,long orderId)
+	{
+		super();
+		this.subWalletType = subWalletType;
+		this.amount = amount;
+		this.orderId = orderId;
+	}
+	
+	WalletSubTransaction(Money amount,long giftId,String notes)
+	{
+		super();
+		this.subWalletType = SubWalletType.GIFT;
+		this.amount = amount;
+		this.giftId = giftId;
+		this.notes = notes;
 	}
 	
 	public WalletSubTransaction(){
@@ -95,19 +111,6 @@ public class WalletSubTransaction {
 		this.paymentId = paymentId;
 	}
 	/**
-	 * @return the giftCode
-	 */
-	public String getGiftCode() {
-		return giftCode;
-	}
-	/**
-	 * @param giftCode the giftCode to set
-	 */
-	public void setGiftCode(String giftCode) {
-		this.giftCode = giftCode;
-	}
-
-	/**
 	 * @return the paymentReversalId
 	 */
 	public long getPaymentReversalId() {
@@ -148,21 +151,34 @@ public class WalletSubTransaction {
 	public void setTransactionId(long transactionId) {
 		this.transactionId = transactionId;
 	}
-	
-	
 
 	/**
-	 * @return the giftExpiry
+	 * @return the giftId
 	 */
-	public DateTime getGiftExpiry() {
-		return giftExpiry;
+	public long getGiftId() {
+		return giftId;
 	}
 
 	/**
-	 * @param giftExpiry the giftExpiry to set
+	 * @param giftId the giftId to set
 	 */
-	public void setGiftExpiry(DateTime giftExpiry) {
-		this.giftExpiry = giftExpiry;
+	public void setGiftId(long giftId) {
+		this.giftId = giftId;
+	}
+	
+
+	/**
+	 * @return the id
+	 */
+	public long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	/* (non-Javadoc)
@@ -173,9 +189,7 @@ public class WalletSubTransaction {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((amount == null) ? 0 : amount.hashCode());
-		result = prime * result
-				+ ((giftCode == null) ? 0 : giftCode.hashCode());
-		result = prime * result + ((notes == null) ? 0 : notes.hashCode());
+		result = prime * result + (int) (giftId ^ (giftId >>> 32));
 		result = prime * result + (int) (orderId ^ (orderId >>> 32));
 		result = prime * result + (int) (paymentId ^ (paymentId >>> 32));
 		result = prime * result
@@ -210,18 +224,7 @@ public class WalletSubTransaction {
 		} else if (!amount.equals(other.amount)) {
 			return false;
 		}
-		if (giftCode == null) {
-			if (other.giftCode != null) {
-				return false;
-			}
-		} else if (!giftCode.equals(other.giftCode)) {
-			return false;
-		}
-		if (notes == null) {
-			if (other.notes != null) {
-				return false;
-			}
-		} else if (!notes.equals(other.notes)) {
+		if (giftId != other.giftId) {
 			return false;
 		}
 		if (orderId != other.orderId) {
@@ -265,11 +268,13 @@ public class WalletSubTransaction {
 		builder.append(paymentId);
 		builder.append(", paymentReversalId=");
 		builder.append(paymentReversalId);
-		builder.append(", giftCode=");
-		builder.append(giftCode);
+		builder.append(", giftId=");
+		builder.append(giftId);
 		builder.append(", notes=");
 		builder.append(notes);
 		builder.append("]");
 		return builder.toString();
 	}
+	
+	
 }
