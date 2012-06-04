@@ -8,7 +8,7 @@ public class RevertRequest {
 	private long clientId;
 	private BigDecimal amount;
 	private String sessionToken;
-	private String transactionId;
+	private String transactionIdToRevert;
 
 	public long getUserId() {
 		return userId;
@@ -42,12 +42,12 @@ public class RevertRequest {
 		this.sessionToken = sessionToken;
 	}
 	
-	public String getTransactionId() {
-		return transactionId;
+	public String getTransactionIdToRevert() {
+		return transactionIdToRevert;
 	}
 
-	public void setTransactionId(String transactionId) {
-		this.transactionId = transactionId;
+	public void setTransactionIdToRevert(String transactionIdToRevert) {
+		this.transactionIdToRevert = transactionIdToRevert;
 	}
 
 }

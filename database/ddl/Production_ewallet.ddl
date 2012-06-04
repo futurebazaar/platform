@@ -31,7 +31,7 @@ CREATE TABLE wallets_transaction
 	transaction_id VARCHAR(100) NOT NULL,
 	wallet_id BIGINT NOT NULL,
 	amount DECIMAL(18,2) NOT NULL,
-	transaction_type VARCHAR(1) NOT NULL,
+	transaction_type VARCHAR(10) NOT NULL,
 	transaction_date DATETIME NOT NULL,
 	transaction_note longtext NULL,
 	CONSTRAINT wallets_transaction_fk1 FOREIGN KEY (wallet_id) REFERENCES wallets_wallet(id),

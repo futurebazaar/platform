@@ -192,8 +192,9 @@ public class WalletRestClient {
 		request.setRefundId(100);
 		request.setSessionToken(response.getSessionToken());
 		request.setSubWallet(SubWallet.fromValue("REFUND"));
-		request.setWalletId(8);
-
+		request.setUserId(response.getUserId());
+		request.setClientId(-5);
+		
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.wallet._1_0");
 		Marshaller marshaller = context.createMarshaller();
 		StringWriter sw = new StringWriter();
@@ -287,7 +288,7 @@ public class WalletRestClient {
 		RevertRequest request = new RevertRequest();
 		request.setAmount(new BigDecimal(100));
 		request.setSessionToken(response.getSessionToken());
-		request.setTransactionId(transactionId);
+		request.setTransactionIdToRevert(transactionId);
 		request.setUserId(response.getUserId());
 		request.setClientId(-5);
 		

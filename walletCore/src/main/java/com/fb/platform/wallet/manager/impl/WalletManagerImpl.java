@@ -74,21 +74,21 @@ public class WalletManagerImpl implements WalletManager {
 	
 		WalletSummaryResponse walletSummaryResponse = new WalletSummaryResponse();
 
-		// authenticate the session token and find out the userId
-		AuthenticationTO authentication = authenticationService
-				.authenticate(walletSummaryRequest.getSessionToken());
-		if (authentication == null) {
-			// invalid session token
-			walletSummaryResponse.setWalletSummaryStatus(WalletSummaryStatusEnum.NO_SESSION);
-			return walletSummaryResponse;
-		}
-
-		walletSummaryResponse.setSessionToken(walletSummaryRequest.getSessionToken());
-
-		long userId =  walletSummaryRequest.getUserId();
-		long clientId = walletSummaryRequest.getClientId();
-		
 		try {
+			// authenticate the session token and find out the userId
+			AuthenticationTO authentication = authenticationService
+					.authenticate(walletSummaryRequest.getSessionToken());
+			if (authentication == null) {
+				// invalid session token
+				walletSummaryResponse.setWalletSummaryStatus(WalletSummaryStatusEnum.NO_SESSION);
+				return walletSummaryResponse;
+			}
+	
+			walletSummaryResponse.setSessionToken(authentication.getToken());
+	
+			long userId =  walletSummaryRequest.getUserId();
+			long clientId = walletSummaryRequest.getClientId();
+		
 			Wallet wallet = walletService.load(userId, clientId);
 			
 			walletSummaryResponse.setWalletSummaryStatus(WalletSummaryStatusEnum.SUCCESS);
@@ -116,18 +116,19 @@ public class WalletManagerImpl implements WalletManager {
 		
 		logger.info("getWalletHistory: retrieving wallet history for wallet id " + walletHistoryRequest.getWalletId());			
 		WalletHistoryResponse response = new WalletHistoryResponse();
-
-		// authenticate the session token and find out the userId
-		AuthenticationTO authentication = authenticationService.authenticate(walletHistoryRequest.getSessionToken());
-		if (authentication == null) {
-			// invalid session token
-			response.setWalletHistoryStatus(WalletHistoryStatusEnum.NO_SESSION);
-			return response;
-		}
-
-		long walletId = walletHistoryRequest.getWalletId();
 		
 		try {
+			// authenticate the session token and find out the userId
+			AuthenticationTO authentication = authenticationService.authenticate(walletHistoryRequest.getSessionToken());
+			if (authentication == null) {
+				// invalid session token
+				response.setWalletHistoryStatus(WalletHistoryStatusEnum.NO_SESSION);
+				return response;
+			}
+			response.setSessionToken(authentication.getToken());
+			
+			long walletId = walletHistoryRequest.getWalletId();
+
 			//Wallet wallet = walletService.load(walletId);
 			
 			List<WalletTransaction> walletTransactionList = walletService.walletHistory(walletId, walletHistoryRequest.getFromDate(), walletHistoryRequest.getToDate(), null);
@@ -142,8 +143,6 @@ public class WalletManagerImpl implements WalletManager {
 			response.setWalletHistoryStatus(WalletHistoryStatusEnum.ERROR_RETRIVING_WALLET_HISTORY);
 		}
 
-		response.setSessionToken(walletHistoryRequest.getSessionToken());
-
 		return response;
 	}
 	
@@ -151,37 +150,36 @@ public class WalletManagerImpl implements WalletManager {
 	public FillWalletResponse fillWallet(
 			FillWalletRequest fillWalletRequest) {
 		
-		logger.info("fillWallet: Trying to fill wallet " + fillWalletRequest.getWalletId());
+		logger.info("fillWallet: Trying to fill wallet for user id " + fillWalletRequest.getUserId());
 		FillWalletResponse response = new FillWalletResponse();
 
-		// authenticate the session token and find out the userId
-		AuthenticationTO authentication = authenticationService.authenticate(fillWalletRequest.getSessionToken());
-		if (authentication == null) {
-			// invalid session token
-			response.setStatus(FillWalletStatusEnum.NO_SESSION);
-			return response;
-		}
-
 		try {
-			//Wallet wallet = walletService.load(fillWalletRequest.getWalletId());
+			// authenticate the session token and find out the userId
+			AuthenticationTO authentication = authenticationService.authenticate(fillWalletRequest.getSessionToken());
+			if (authentication == null) {
+				// invalid session token
+				response.setStatus(FillWalletStatusEnum.NO_SESSION);
+				return response;
+			}
+			response.setSessionToken(authentication.getToken());
+		
+			Wallet wallet = walletService.load(fillWalletRequest.getUserId(), fillWalletRequest.getClientId());
 			
 			Money amount = new Money(fillWalletRequest.getAmount());
 			
-			WalletTransaction transaction = walletService.credit(fillWalletRequest.getWalletId(), amount, fillWalletRequest.getSubWallet().toString(), fillWalletRequest.getPaymentId(), fillWalletRequest.getRefundId(), null,null);
+			WalletTransaction transaction = walletService.credit(wallet.getId(), amount, fillWalletRequest.getSubWallet().toString(), fillWalletRequest.getPaymentId(), fillWalletRequest.getRefundId(), fillWalletRequest.getGiftCode(),fillWalletRequest.getExpiryDate());
 			
 			response.setWalletId(transaction.getWallet().getId());
 			response.setTransactionId(transaction.getTransactionId());
 			response.setStatus(FillWalletStatusEnum.SUCCESS);
 			
 		} catch (WalletNotFoundException e) {
-			logger.info("fillWallet: invalid wallet id " + fillWalletRequest.getWalletId());
+			logger.info("fillWallet: No wallet found for user Id " + fillWalletRequest.getUserId());
 			response.setStatus(FillWalletStatusEnum.INVALID_WALLET);
 		} catch (PlatformException pe) {
-			logger.error("fillWallet: Exception for wallet id " + fillWalletRequest.getWalletId(), pe);
+			logger.error("fillWallet: Exception for user id " + fillWalletRequest.getUserId(), pe);
 			response.setStatus(FillWalletStatusEnum.FAILED_TRANSACTION);
 		}
-
-		response.setSessionToken(fillWalletRequest.getSessionToken());
 
 		return response;
 	}
@@ -193,15 +191,17 @@ public class WalletManagerImpl implements WalletManager {
 		logger.info("payFromWallet: Trying to pay for order " + payRequest.getOrderId());
 		
 		PayResponse response = new PayResponse();
-
-		// authenticate the session token and find out the userId
-		AuthenticationTO authentication = authenticationService.authenticate(payRequest.getSessionToken());
-		if (authentication == null) {
-			// invalid session token
-			response.setStatus(PayStatusEnum.NO_SESSION);
-			return response;
-		}
+		
 		try {
+			// authenticate the session token and find out the userId
+			AuthenticationTO authentication = authenticationService.authenticate(payRequest.getSessionToken());
+			if (authentication == null) {
+				// invalid session token
+				response.setStatus(PayStatusEnum.NO_SESSION);
+				return response;
+			}
+			response.setSessionToken(authentication.getToken());
+		
 			//Wallet wallet = walletService.load(fillWalletRequest.getWalletId());
 			
 			Money amount = new Money(payRequest.getAmount());
@@ -222,8 +222,6 @@ public class WalletManagerImpl implements WalletManager {
 			response.setStatus(PayStatusEnum.FAILED_TRANSACTION);
 		}
 
-		response.setSessionToken(payRequest.getSessionToken());
-
 		return response;
 	}
 
@@ -235,15 +233,16 @@ public class WalletManagerImpl implements WalletManager {
 
 		RefundResponse response = new RefundResponse();
 
-		// authenticate the session token and find out the userId
-		AuthenticationTO authentication = authenticationService.authenticate(refundRequest.getSessionToken());
-		if (authentication == null) {
-			// invalid session token
-			response.setStatus(RefundStatusEnum.NO_SESSION);
-			return response;
-		}
-		
 		try {
+			// authenticate the session token and find out the userId
+			
+			AuthenticationTO authentication = authenticationService.authenticate(refundRequest.getSessionToken());
+			if (authentication == null) {
+				// invalid session token
+				response.setStatus(RefundStatusEnum.NO_SESSION);
+				return response;
+			}
+			response.setSessionToken(authentication.getToken());
 			//Wallet wallet = walletService.load(fillWalletRequest.getWalletId());
 			
 			Money amount = new Money(refundRequest.getAmount());
@@ -267,9 +266,6 @@ public class WalletManagerImpl implements WalletManager {
 			logger.error("refundFromWallet: Exception in refund wallet for user id " + refundRequest.getUserId(), pe);
 			response.setStatus(RefundStatusEnum.FAILED_TRANSACTION);
 		}
-
-		response.setSessionToken(refundRequest.getSessionToken());
-
 		return response;
 	}
 	
@@ -277,23 +273,26 @@ public class WalletManagerImpl implements WalletManager {
 	public RevertResponse revertWalletTransaction(
 			RevertRequest revertRequest) {
 		
-		logger.info("revertWalletTransaction: Trying to revert wallet transaction Id "	+ revertRequest.getTransactionId());
+		logger.info("revertWalletTransaction: Trying to revert wallet transaction Id "	+ revertRequest.getTransactionIdToRevert());
 		
 		RevertResponse response = new RevertResponse();
-
-		// authenticate the session token and find out the userId
-		AuthenticationTO authentication = authenticationService.authenticate(revertRequest.getSessionToken());
-		if (authentication == null) {
-			// invalid session token
-			response.setStatus(RevertStatusEnum.NO_SESSION);
-			return response;
-		}
+		
 		try {
+			
+			// authenticate the session token and find out the userId
+			AuthenticationTO authentication = authenticationService.authenticate(revertRequest.getSessionToken());
+			if (authentication == null) {
+				// invalid session token
+				response.setStatus(RevertStatusEnum.NO_SESSION);
+				return response;
+			}
+			response.setSessionToken(authentication.getToken());
+		
 			//Wallet wallet = walletService.load(fillWalletRequest.getWalletId());
 			
 			Money amount = new Money(revertRequest.getAmount());
 			
-			WalletTransaction transaction = walletService.reverseTransaction(revertRequest.getUserId(), revertRequest.getClientId(), revertRequest.getTransactionId(), amount);
+			WalletTransaction transaction = walletService.reverseTransaction(revertRequest.getUserId(), revertRequest.getClientId(), revertRequest.getTransactionIdToRevert(), amount);
 			response.setTransactionId(transaction.getTransactionId());
 			response.setStatus(RevertStatusEnum.SUCCESS);
 			
@@ -301,10 +300,10 @@ public class WalletManagerImpl implements WalletManager {
 			logger.info("revertWalletTransaction: No wallet exists for user id " + revertRequest.getUserId());
 			response.setStatus(RevertStatusEnum.INVALID_WALLET);
 		} catch (InvalidTransactionIdException e) {
-			logger.info("revertWalletTransaction: Invalid transaction id " + revertRequest.getTransactionId());
+			logger.info("revertWalletTransaction: Invalid transaction id " + revertRequest.getTransactionIdToRevert());
 			response.setStatus(RevertStatusEnum.INVALID_TRANSACTION_ID);
 		} catch (InSufficientFundsException e) {
-			logger.info("revertWalletTransaction: Balance unavailable reversal of transaction Id " + revertRequest.getTransactionId());
+			logger.info("revertWalletTransaction: Balance unavailable reversal of transaction Id " + revertRequest.getTransactionIdToRevert());
 			response.setStatus(RevertStatusEnum.BALANCE_UNAVAILABLE);
 		} catch (PlatformException pe) {
 			logger.error("revertWalletTransaction: Exception reversal of transaction Id " + revertRequest.getUserId(), pe);

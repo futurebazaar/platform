@@ -157,7 +157,8 @@ public class WalletManagerTest extends BaseTestCase{
 	public void testWalletCreditWithCash() {
 		FillWalletRequest request = new FillWalletRequest();
 		request.setAmount(new BigDecimal("100.00"));
-		request.setWalletId(8);
+		request.setUserId(userId);
+		request.setClientId(-5);
 		request.setPaymentId(1);
 		request.setSubWallet(SubWalletEnum.CASH);
 		request.setSessionToken(sessionToken + "abcd");
@@ -194,7 +195,8 @@ public class WalletManagerTest extends BaseTestCase{
 	public void testWalletCreditWithRefund() {
 		FillWalletRequest request = new FillWalletRequest();
 		request.setAmount(new BigDecimal("100.00"));
-		request.setWalletId(8);
+		request.setUserId(userId);
+		request.setClientId(-5);
 		request.setRefundId(1);
 		request.setSubWallet(SubWalletEnum.REFUND);
 		request.setSessionToken(sessionToken);
@@ -220,21 +222,6 @@ public class WalletManagerTest extends BaseTestCase{
 		
 	}
 	
-	@Test
-	public void testWalletCreditWithRefund1() {
-		FillWalletRequest request = new FillWalletRequest();
-		request.setAmount(new BigDecimal("100.00"));
-		request.setWalletId(100);
-		request.setRefundId(1);
-		request.setSubWallet(SubWalletEnum.REFUND);
-		request.setSessionToken(sessionToken);
-
-		FillWalletResponse response = walletManager.fillWallet(request);
-		
-		assertNotNull(response);
-		assertEquals("INVALID WALLET", response.getStatus().toString());
-	}
-
 	@Test
 	public void testWalletDebit() {
 		PayRequest request = new PayRequest();
@@ -508,7 +495,7 @@ public class WalletManagerTest extends BaseTestCase{
 		request.setUserId(userId);
 		request.setClientId(-5);
 		request.setSessionToken(sessionToken);
-		request.setTransactionId("akjsdasdjj");
+		request.setTransactionIdToRevert("akjsdasdjj");
 
 		RevertResponse response = walletManager.revertWalletTransaction(request);
 		
@@ -516,7 +503,7 @@ public class WalletManagerTest extends BaseTestCase{
 		assertEquals("INVALID TRANSACTION ID", response.getStatus().toString());
 		
 		request.setSessionToken(sessionToken + "abcd");
-		request.setTransactionId("akjsdasdjj");
+		request.setTransactionIdToRevert("akjsdasdjj");
 
 		response = walletManager.revertWalletTransaction(request);
 		
@@ -532,7 +519,7 @@ public class WalletManagerTest extends BaseTestCase{
 		request.setUserId(userId);
 		request.setClientId(-155);
 		request.setSessionToken(sessionToken);
-		request.setTransactionId("ABSCDFADF1231lp0bg2SASzcvab");
+		request.setTransactionIdToRevert("ABSCDFADF1231lp0bg2SASzcvab");
 
 		RevertResponse response = walletManager.revertWalletTransaction(request);
 		
@@ -595,7 +582,7 @@ public class WalletManagerTest extends BaseTestCase{
 		revertRequest.setUserId(userId);
 		revertRequest.setClientId(-5);
 		revertRequest.setSessionToken(sessionToken);
-		revertRequest.setTransactionId(response.getTransactionId());
+		revertRequest.setTransactionIdToRevert(response.getTransactionId());
 
 		RevertResponse revertResponse = walletManager.revertWalletTransaction(revertRequest);
 		
@@ -650,7 +637,7 @@ public class WalletManagerTest extends BaseTestCase{
 		revertRequest.setUserId(userId);
 		revertRequest.setClientId(-5);
 		revertRequest.setSessionToken(sessionToken);
-		revertRequest.setTransactionId(response.getTransactionId());
+		revertRequest.setTransactionIdToRevert(response.getTransactionId());
 
 		RevertResponse revertResponse = walletManager.revertWalletTransaction(revertRequest);
 		
@@ -706,7 +693,7 @@ public class WalletManagerTest extends BaseTestCase{
 		revertRequest.setUserId(userId);
 		revertRequest.setClientId(-5);
 		revertRequest.setSessionToken(sessionToken);
-		revertRequest.setTransactionId(response.getTransactionId());
+		revertRequest.setTransactionIdToRevert(response.getTransactionId());
 
 		RevertResponse revertResponse = walletManager.revertWalletTransaction(revertRequest);
 		
@@ -764,7 +751,7 @@ public class WalletManagerTest extends BaseTestCase{
 		revertRequest.setUserId(userId);
 		revertRequest.setClientId(-5);
 		revertRequest.setSessionToken(sessionToken);
-		revertRequest.setTransactionId(transactionId);
+		revertRequest.setTransactionIdToRevert(transactionId);
 
 		RevertResponse revertResponse = walletManager.revertWalletTransaction(revertRequest);
 		
@@ -790,7 +777,7 @@ public class WalletManagerTest extends BaseTestCase{
 		revertRequest.setUserId(userId);
 		revertRequest.setClientId(-5);
 		revertRequest.setSessionToken(sessionToken);
-		revertRequest.setTransactionId(transactionId);
+		revertRequest.setTransactionIdToRevert(transactionId);
 
 		revertResponse = walletManager.revertWalletTransaction(revertRequest);
 		
@@ -848,7 +835,7 @@ public class WalletManagerTest extends BaseTestCase{
 		revertRequest.setUserId(userId);
 		revertRequest.setClientId(-5);
 		revertRequest.setSessionToken(sessionToken);
-		revertRequest.setTransactionId(transactionId);
+		revertRequest.setTransactionIdToRevert(transactionId);
 
 		RevertResponse revertResponse = walletManager.revertWalletTransaction(revertRequest);
 		

@@ -2,9 +2,9 @@ package com.fb.platform.wallet.manager.model.access;
 
 public class RefundResponse {
 
-	private String sessionToken;
-	private String transactionId;
-	private RefundStatusEnum status;
+	private String sessionToken = null;
+	private String transactionId = null;
+	private RefundStatusEnum status = null;
 
 	public String getSessionToken(){
 		return sessionToken;

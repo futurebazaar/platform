@@ -44,7 +44,7 @@
   </xs:simpleType>
   
   
-  <xs:element name="walletDetails">
+  <xs:element name="walletDetails" nillable="true">
   	<xs:complexType>
   	  <xs:sequence>
   	  	<xs:element ref="tns:walletId"/>
@@ -56,18 +56,19 @@
   	</xs:complexType>
   </xs:element>
 
-  <xs:element name="transactionId" type="xs:string"/>
+  <xs:element name="transactionId" type="xs:string" nillable="true"/>
   <xs:element name="notes" type="xs:string"/>
   <xs:element name="amount" type="xs:decimal"/>
-  <xs:element name="toDate" type="xs:dateTime"/>
-  <xs:element name="fromDate" type="xs:dateTime"/>
+  <xs:element name="toDate" type="xs:dateTime" nillable="true"/>
+  <xs:element name="fromDate" type="xs:dateTime" nillable="true"/>
   <xs:element name="timestamp" type="xs:dateTime"/>
   <xs:element name="type" type="xs:string"/>
   <xs:element name="orderId" type="xs:long"/>
   <xs:element name="paymentId" type="xs:long"/>
   <xs:element name="refundId" type="xs:long"/>
   <xs:element name="paymentReversalId" type="xs:long"/>
-  
+  <xs:element name="subWallet" type="tns:subWallet" nillable="true"/>
+    
   <xs:element name="walletHistoryRequest">
     <xs:complexType>
       <xs:sequence>
@@ -80,7 +81,6 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="subWallet" type="tns:subWallet"/>
   <xs:simpleType name="subWallet">
     <xs:restriction base="xs:string">
       <xs:enumeration value="CASH"/>
@@ -110,7 +110,7 @@
   </xs:simpleType>
   
   
-  <xs:element name="transaction">
+  <xs:element name="transaction" nillable="true">
   	<xs:complexType>
   	  <xs:sequence>
   	  	<xs:element ref="tns:transactionId"/>
@@ -132,20 +132,28 @@
         <xs:element ref="tns:paymentId"/>
         <xs:element ref="tns:refundId"/>
         <xs:element ref="tns:paymentReversalId"/>
-        <xs:element ref="tns:egvCode"/>
+        <xs:element ref="tns:giftCode"/>
   	  </xs:sequence>
   	</xs:complexType>
   </xs:element>
   
+  <xs:element name="expiryDate" type="xs:dateTime" nillable="true"/>
+  <xs:element name="giftCode" type="xs:string" nillable="true"/>
+  <xs:element name="isEgv" type="xs:boolean"/>
+  
   <xs:element name="fillWalletRequest">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="tns:walletId"/>
+        <xs:element ref="tns:userId"/>
+        <xs:element ref="tns:clientId"/>
         <xs:element ref="tns:sessionToken"/>
         <xs:element ref="tns:amount"/>
         <xs:element ref="tns:subWallet"/>
         <xs:element ref="tns:paymentId"/>
         <xs:element ref="tns:refundId"/>
+        <xs:element ref="tns:giftCode"/>
+        <xs:element ref="tns:expiryDate"/>
+        <xs:element ref="tns:isEgv"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -172,44 +180,8 @@
     </xs:restriction>
   </xs:simpleType>
   
-  <xs:element name="egvCode" type="xs:string" />
-  <xs:element name="egvPin" type="xs:string" />
-  <xs:element name="password" type="xs:string" />
+  <xs:element name="password" type="xs:string"/>
   
-  <xs:element name="fillWalletByEGVRequest">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="tns:walletId"/>
-        <xs:element ref="tns:sessionToken"/>
-        <xs:element ref="tns:egvCode"/>
-        <xs:element ref="tns:egvPin"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-     
-  <xs:element name="fillWalletByEGVResponse">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="tns:sessionToken"/>
-        <xs:element ref="tns:walletId"/>
-        <xs:element ref="tns:fillEgvStatus"/>        
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  
-  <xs:element name="fillEgvStatus" type="tns:fillEgvStatus"/>
-  
-  <xs:simpleType name="fillEgvStatus">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="SUCCESS"/>
-      <xs:enumeration value="NO_SESSION"/>
-      <xs:enumeration value="INVALID_COUPON_CODE"/>
-      <xs:enumeration value="INVALID_PIN_CODE"/>
-      <xs:enumeration value="COUPON_EXPIRED"/>
-      <xs:enumeration value="FAILED_TRANSACTION"/>
-    </xs:restriction>
-  </xs:simpleType>
-     
   <xs:element name="payRequest">
     <xs:complexType>
       <xs:sequence>
@@ -284,6 +256,8 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:element name="transactionIdToRevert" type="xs:string"/>
+  
   <xs:element name="revertRequest">
     <xs:complexType>
       <xs:sequence>
@@ -291,7 +265,7 @@
         <xs:element ref="tns:userId"/>
         <xs:element ref="tns:clientId"/>
         <xs:element ref="tns:amount"/>
-        <xs:element ref="tns:transactionId"/>
+        <xs:element ref="tns:transactionIdToRevert"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>

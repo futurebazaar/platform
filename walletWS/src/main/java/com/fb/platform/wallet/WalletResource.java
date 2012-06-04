@@ -183,7 +183,7 @@ public class WalletResource {
 							subTransaction.setPaymentId(apiSubTransaction.getPaymentId());
 							subTransaction.setRefundId(apiSubTransaction.getRefundId());
 							subTransaction.setPaymentReversalId(apiSubTransaction.getPaymentReversalId());
-							subTransaction.setEgvCode(apiSubTransaction.getGiftCode());
+							subTransaction.setGiftCode(apiSubTransaction.getGiftCode());
 							
 							subTransactionList.add(subTransaction);
 						}
@@ -223,12 +223,16 @@ public class WalletResource {
 
 			com.fb.platform.wallet.manager.model.access.FillWalletRequest apiFillWalletReq = new com.fb.platform.wallet.manager.model.access.FillWalletRequest();
 			apiFillWalletReq.setSessionToken(xmlFillWalletReq.getSessionToken());
-			apiFillWalletReq.setWalletId(xmlFillWalletReq.getWalletId());
+			apiFillWalletReq.setUserId(xmlFillWalletReq.getUserId());
+			apiFillWalletReq.setClientId(xmlFillWalletReq.getClientId());
 			apiFillWalletReq.setAmount(xmlFillWalletReq.getAmount());
 			apiFillWalletReq.setSubWallet(SubWalletEnum.valueOf(xmlFillWalletReq.getSubWallet().value()));
 			apiFillWalletReq.setPaymentId(xmlFillWalletReq.getPaymentId());
 			apiFillWalletReq.setRefundId(xmlFillWalletReq.getRefundId());
-
+			apiFillWalletReq.setGiftCode(xmlFillWalletReq.getGiftCode());
+			apiFillWalletReq.setExpiryDate(xmlFillWalletReq.getExpiryDate());
+			apiFillWalletReq.setIsEgv(xmlFillWalletReq.isIsEgv());
+						
 			com.fb.platform.wallet.manager.model.access.FillWalletResponse apiFillWalletResp = walletManager.fillWallet(apiFillWalletReq);
 
 			FillWalletResponse xmlFillWalletResponse = new FillWalletResponse();
@@ -350,7 +354,7 @@ public class WalletResource {
 			apiRevertReq.setUserId(xmlRevertReq.getUserId());
 			apiRevertReq.setClientId(xmlRevertReq.getClientId());
 			apiRevertReq.setAmount(xmlRevertReq.getAmount());
-			apiRevertReq.setTransactionId(xmlRevertReq.getTransactionId());
+			apiRevertReq.setTransactionIdToRevert(xmlRevertReq.getTransactionIdToRevert());
 
 			com.fb.platform.wallet.manager.model.access.RevertResponse apiRevertResponse = walletManager.revertWalletTransaction(apiRevertReq);
 
