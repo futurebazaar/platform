@@ -35,27 +35,15 @@ public class PointsServiceTest extends BaseTestCase{
 	
 	@Before
 	public void insertTestData(){
-		BigDecimal txnPoints = new BigDecimal(30);
-		int ROUND = BigDecimal.ROUND_HALF_DOWN;
-		BigDecimal amount = new BigDecimal(1000);
+		PointsRequest pr = new PointsRequest();
+		pr.setTxnActionCode("PREALLOC_EARN");
+		pr.setClientName("Future Bazaar");
 		
-		pointsHeader.setPartnerMerchantId("90012970");
-		pointsHeader.setPartnerTerminalId("6241718");
-		pointsHeader.setTxnClassificationCode("CASH_CASH");
-		pointsHeader.setTxnPaymentType("OTHERS");
-		pointsHeader.setTxnActionCode("BURN_REVERSAL");
-		pointsHeader.setTxnPoints(txnPoints.setScale(0, ROUND).intValue());
-		pointsHeader.setTxnValue(amount.setScale(0, ROUND).intValue());
-		pointsHeader.setReferenceId("1234");
-		pointsHeader.setLoyaltyCard("1234567812345678");
-		pointsHeader.setReason("TEST ORDER");
-		pointsHeader.setSettlementDate(DateTime.now().minusDays(1));
-		pointsHeader.setTxnDate(DateTime.now().minusDays(1));
-		pointsHeader.setTxnTimestamp(DateTime.now().minusDays(1));
-		pointsHeader.setOrderId(1);
-		
-		pointsDao.insertPointsHeaderData(pointsHeader);
-		
+		OrderRequest request = setOrderRequest(new Long(1), "1234");
+		request.setLoyaltyCard("1234123412341234");
+		request.getOrderItemRequest().add(setItemRequest(1, 2000));
+		pr.setOrderRequest(request);
+		assertEquals(PointsResponseCodeEnum.SUCCESS, pointsService.storePoints(pr));
 	}
 	
 //	@Test
@@ -105,38 +93,26 @@ public class PointsServiceTest extends BaseTestCase{
 		pr.setTxnActionCode("PREALLOC_EARN");
 		pr.setClientName("Future Bazaar");
 		
-		OrderRequest request  = new OrderRequest();
-		request.setLoyaltyCard("1234567890123456");
-		request.setAmount(new BigDecimal(2001));
-		request.setOrderId(1);
-		request.setTxnTimestamp(new DateTime(2012, 05, 24, 10, 0, 0));
-		request.setReferenceId("5051234567");
+		OrderRequest request = setOrderRequest(new Long(2), "1234");
+		request.setLoyaltyCard("1234123412341234");
+		pr.setOrderRequest(request);
+		assertEquals(PointsResponseCodeEnum.INVALID_POINTS, pointsService.storePoints(pr));
 		
-		List<OrderItemRequest> orderItemRequest = new ArrayList<OrderItemRequest>();
-		OrderItemRequest orderItem1 = new OrderItemRequest();
-		orderItem1.setAmount(new BigDecimal(2000));
-		orderItem1.setArticleId("1234");
-		orderItem1.setCategoryId(1234);
-		orderItem1.setDepartmentCode(1234);
-		orderItem1.setDepartmentName("Pooh");
-		orderItem1.setId(2);
-		orderItem1.setQuantity(1);
-		orderItem1.setSellerRateChartId(1);
-		orderItemRequest.add(orderItem1);
+		request.getOrderItemRequest().add(setItemRequest(1, 2000));
+		pr.setOrderRequest(request);
+		assertEquals(PointsResponseCodeEnum.SUCCESS, pointsService.storePoints(pr));
+	}
+	
+	@Test
+	public void storeEarnReversalPoints(){
+		PointsRequest pr = new PointsRequest();
+		pr.setTxnActionCode("EARN_REVERSAL");
+		pr.setClientName("Future Bazaar");
 		
-		OrderItemRequest orderItem2 = new OrderItemRequest();
-		orderItem2.setAmount(new BigDecimal(2000));
-		orderItem2.setArticleId("1234");
-		orderItem2.setCategoryId(1);
-		orderItem2.setDepartmentCode(1234);
-		orderItem2.setDepartmentName("Pooh");
-		orderItem2.setId(1);
-		orderItem2.setQuantity(1);
-		orderItem2.setSellerRateChartId(2);
-		orderItemRequest.add(orderItem2);
+		OrderRequest request = setOrderRequest(new Long(1), "1234");
+		request.setLoyaltyCard("1234567812345678");
 		
-		request.setOrderItemRequest(orderItemRequest);
-		
+		request.getOrderItemRequest().add(setItemRequest(1, 100));
 		pr.setOrderRequest(request);
 		assertEquals(PointsResponseCodeEnum.SUCCESS, pointsService.storePoints(pr));
 		
@@ -149,38 +125,7 @@ public class PointsServiceTest extends BaseTestCase{
 		pr.setTxnActionCode("BURN_REVERSAL");
 		pr.setClientName("Future Bazaar");
 		
-		OrderRequest request  = new OrderRequest();
-		request.setLoyaltyCard("1234567890123456");
-		request.setAmount(new BigDecimal(2001));
-		request.setOrderId(2);
-		request.setTxnTimestamp(new DateTime(2012, 05, 24, 10, 0, 0));
-		request.setReferenceId("5051234567");
-		
-		List<OrderItemRequest> orderItemRequest = new ArrayList<OrderItemRequest>();
-		OrderItemRequest orderItem1 = new OrderItemRequest();
-		orderItem1.setAmount(new BigDecimal(2000));
-		orderItem1.setArticleId("1234");
-		orderItem1.setCategoryId(1234);
-		orderItem1.setDepartmentCode(1234);
-		orderItem1.setDepartmentName("Pooh");
-		orderItem1.setId(1);
-		orderItem1.setQuantity(1);
-		orderItem1.setSellerRateChartId(1);
-		orderItemRequest.add(orderItem1);
-		
-		OrderItemRequest orderItem2 = new OrderItemRequest();
-		orderItem2.setAmount(new BigDecimal(2000));
-		orderItem2.setArticleId("1234");
-		orderItem2.setCategoryId(1);
-		orderItem2.setDepartmentCode(1234);
-		orderItem2.setDepartmentName("Pooh");
-		orderItem2.setId(1);
-		orderItem2.setQuantity(1);
-		orderItem2.setSellerRateChartId(2);
-		orderItemRequest.add(orderItem2);
-		
-		
-		request.setOrderItemRequest(orderItemRequest);
+		OrderRequest request  = setOrderRequest(new Long(2), "1234");
 		
 		pr.setOrderRequest(request);
 		assertEquals(PointsResponseCodeEnum.SUCCESS, pointsService.storePoints(pr));
@@ -188,51 +133,42 @@ public class PointsServiceTest extends BaseTestCase{
 	}
 	
 	@Test
-	public void getEarnPointsToBeDisplayed(){
+	public void getPointsToBeDisplayed(){
 		PointsRequest pr = new PointsRequest();
 		pr.setTxnActionCode("PREALLOC_EARN");
-		pr.setClientName("Future Bazaar");
+		OrderRequest request = setOrderRequest(new Long(1), "1234");
+		request.getOrderItemRequest().add(setItemRequest(1, 500));
+		request.getOrderItemRequest().add(setItemRequest(2, 639));
+		pr.setOrderRequest(request);
+		PointsRequest newRequest = pointsService.getPointsToBeDisplayed(pr);
+		assertEquals(68, newRequest.getOrderRequest().getTxnPoints().intValue());
 		
-		OrderRequest request  = new OrderRequest();
-		request.setLoyaltyCard("1234567890123456");
-		request.setAmount(new BigDecimal(500));
-		request.setOrderId(2);
+		pr.setTxnActionCode("BURN_REVERSAL");
+		newRequest = pointsService.getPointsToBeDisplayed(pr);
+		assertEquals(8000, newRequest.getOrderRequest().getTxnPoints().intValue());
+	}
+	
+	private OrderRequest setOrderRequest(Long orderId, String referenceId) {
+		OrderRequest request = new OrderRequest();
+		request.setOrderId(orderId);
+		request.setAmount(new BigDecimal(2000));
 		request.setTxnTimestamp(new DateTime(2012, 05, 24, 10, 0, 0));
-		request.setReferenceId("5051234567");
+		request.setReferenceId(referenceId);
+		return request;
 		
-		List<OrderItemRequest> orderItemRequest = new ArrayList<OrderItemRequest>();
+	}
+	
+	private OrderItemRequest setItemRequest(int itemId, int amount){
 		OrderItemRequest orderItem1 = new OrderItemRequest();
-		orderItem1.setAmount(new BigDecimal(639));
+		orderItem1.setAmount(new BigDecimal(amount));
 		orderItem1.setArticleId("1234");
 		orderItem1.setCategoryId(1234);
 		orderItem1.setDepartmentCode(1234);
 		orderItem1.setDepartmentName("Pooh");
-		orderItem1.setId(1);
+		orderItem1.setId(new Long(itemId));
 		orderItem1.setQuantity(1);
 		orderItem1.setSellerRateChartId(1);
-		orderItemRequest.add(orderItem1);
-		
-		OrderItemRequest orderItem2 = new OrderItemRequest();
-		orderItem2.setAmount(new BigDecimal(2000));
-		orderItem2.setArticleId("1234");
-		orderItem2.setCategoryId(1);
-		orderItem2.setDepartmentCode(1234);
-		orderItem2.setDepartmentName("Pooh");
-		orderItem2.setId(1);
-		orderItem2.setQuantity(1);
-		orderItem2.setSellerRateChartId(2);
-		orderItemRequest.add(orderItem2);
-		
-		
-		request.setOrderItemRequest(orderItemRequest);
-		
-		pr.setOrderRequest(request);
-		PointsRequest newRequest = pointsService.getPointsToBeDisplayed(pr);
-		assertEquals(98, newRequest.getOrderRequest().getTxnPoints().intValue());
-		
-		pr.setTxnActionCode("BURN_REVERSAL");
-		newRequest = pointsService.getPointsToBeDisplayed(pr);
-		assertEquals(2000, newRequest.getOrderRequest().getTxnPoints().intValue());
+		return orderItem1;
 	}
 	
 }

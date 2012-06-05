@@ -11,7 +11,7 @@ import org.apache.commons.logging.LogFactory;
 import com.fb.commons.PlatformException;
 import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
-import com.fb.platform.payback.exception.InvalidActionCode;
+import com.fb.platform.payback.exception.InvalidReferenceId;
 import com.fb.platform.payback.exception.InvalidSession;
 import com.fb.platform.payback.exception.PointsHeaderDoesNotExist;
 import com.fb.platform.payback.service.PointsManager;
@@ -49,40 +49,41 @@ public class PointsManagerImpl implements PointsManager {
 		PointsTxnClassificationCodeEnum actionCode = PointsTxnClassificationCodeEnum
 				.valueOf(request.getTxnActionCode());
 		PointsResponseCodeEnum responseEnum = PointsResponseCodeEnum.FAILURE;
+		PointsResponse pointsResponse = new PointsResponse();
 		try {
-			if (request == null
-					|| StringUtils.isBlank(request.getSessionToken())) {
-				throw new InvalidSession("Invalid Session Toekn");
+			if (StringUtils.isBlank(request.getSessionToken())) {
+				throw new InvalidSession("Invalid Session Token");
 			}
 
 			// authenticate the session token and find out the userId
 			AuthenticationTO authentication = authenticationService
 					.authenticate(request.getSessionToken());
 			if (authentication == null) {
-				throw new InvalidSession("Invalid Session Toekn");
+				throw new InvalidSession("Invalid Session Token");
+			}
+			
+			if (request.getOrderRequest().getReferenceId() == null){
+				throw new InvalidReferenceId("Reference Id is null");
 			}
 
 			responseEnum = pointsService.storePoints(request);
-		} catch (InvalidActionCode e) {
-			responseEnum = PointsResponseCodeEnum.INVALID_ACTION_CODE;
+			pointsResponse.setTxnPoints(request.getOrderRequest().getTxnPoints().intValue());
 		} catch (PointsHeaderDoesNotExist e) {
-			responseEnum = PointsResponseCodeEnum.FAILURE;
-		} catch (InvalidSession e) {
+			responseEnum = PointsResponseCodeEnum.EARN_DOES_NOT_EXIST;
+		} catch (InvalidReferenceId e) {
+			responseEnum = PointsResponseCodeEnum.INVALID_REFERENCE_ID;
+		}catch (InvalidSession e) {
 			responseEnum = PointsResponseCodeEnum.NO_SESSION;
-		} catch (PlatformException e) {
-			logger.error(e.toString());
-			responseEnum = PointsResponseCodeEnum.INTERNAL_ERROR;
 		} catch (Exception e) {
 			logger.error(e.toString());
 			responseEnum = PointsResponseCodeEnum.INTERNAL_ERROR;
 		}
 		logger.info("Store Points Status Code : " + responseEnum.name());
-		PointsResponse pointsResponse = new PointsResponse();
+	
 		pointsResponse.setActionCode(actionCode);
 		pointsResponse.setPointsResponseCodeEnum(responseEnum);
 		pointsResponse.setStatusMessage(responseEnum.toString());
-		pointsResponse.setTxnPoints(request.getOrderRequest().getTxnPoints()
-				.intValue());
+	
 		return pointsResponse;
 	}
 

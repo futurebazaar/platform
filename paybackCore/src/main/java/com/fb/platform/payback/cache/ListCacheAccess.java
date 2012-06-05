@@ -9,17 +9,13 @@ public class ListCacheAccess extends AbstractCacheAccess implements
 		Serializable {
 	private static final long serialVersionUID = 1L;
 
-	public void put(String key, Long value) {
+	public void put(String key,  String value) {
 		platformCachingManager.put(NamedCachesEnum.POINTS_CACHE, key, value);
 	}
 
-	public Long get(String key) {
-		Object value = platformCachingManager.get(NamedCachesEnum.POINTS_CACHE,
+	public String get(String key) {
+		return (String) platformCachingManager.get(NamedCachesEnum.POINTS_CACHE,
 				key);
-		if (value != null) {
-			return (Long) value;
-		}
-		return null;
 	}
 
 	public boolean clear(String key) {

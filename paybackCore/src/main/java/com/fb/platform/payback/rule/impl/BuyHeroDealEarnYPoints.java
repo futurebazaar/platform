@@ -1,6 +1,8 @@
 package com.fb.platform.payback.rule.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.joda.time.DateTime;
 import org.springframework.dao.DataAccessException;
@@ -67,44 +69,52 @@ public class BuyHeroDealEarnYPoints implements PointsRule {
 			return false;
 		}
 
-		if (itemRequest.getSellerRateChartId() != getHeroDealSellerRateChart(request
-				.getTxnTimestamp())) {
+		if (getHeroDealSellerRateChart(request	.getTxnTimestamp()).contains(itemRequest.getSellerRateChartId())) {
 			return false;
 		}
 
 		return true;
 	}
 
-	private Long getHeroDealSellerRateChart(DateTime orderDate) {
+	private List<Long> getHeroDealSellerRateChart(DateTime orderDate) {
+		List<Long> sellerRateChartId = new ArrayList<Long>();
 		String bookingDate = pointsUtil.convertDateToFormat(orderDate,
 				"yyyy-MM-dd");
 		String key = PointsCacheConstants.HERO_DEAL + "#" + bookingDate;
-		Long sellerRateChartId = listCacheAccess.get(key);
-		if (sellerRateChartId == null) {
+		String heroDeals = listCacheAccess.get(key);
+		if (heroDeals != null && heroDeals.equals("")){
+			String[] deals = heroDeals.split(",");
+			for (String deal : deals){
+				sellerRateChartId.add(Long.parseLong(deal));
+			}
+		} 
+		else {
 			try {
 				sellerRateChartId = listDao
 						.getHeroDealSellerRateChart(orderDate);
 			} catch (DataAccessException e) {
-				return new Long(-1);
+				return sellerRateChartId;
 			}
 
 			if (sellerRateChartId != null) {
-				cacheHeroDeal(sellerRateChartId, key);
+				StringBuilder stringBuilder = new StringBuilder();
+				for (Long id : sellerRateChartId){
+					stringBuilder.append(String.valueOf(id) + ",");
+				}
+				cacheHeroDeal(stringBuilder.toString().substring(0, stringBuilder.length()-1), key);
 			} else {
-				return new Long(-1);
+				return sellerRateChartId;
 			}
-
 		}
-
 		return sellerRateChartId;
 	}
 
 	// Caches Deal Id and Deal Date
-	private void cacheHeroDeal(Long sellerRateChartId, String key) {
+	private void cacheHeroDeal(String sellerRateChartIds, String key) {
 		try {
 			listCacheAccess.lock(key);
 			if (listCacheAccess.get(key) == null) {
-				listCacheAccess.put(key, sellerRateChartId);
+				listCacheAccess.put(key, sellerRateChartIds);
 			}
 		} finally {
 			listCacheAccess.unlock(key);

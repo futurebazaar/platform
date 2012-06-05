@@ -100,15 +100,15 @@ public class CacheTest extends BaseTestCase{
 	public void listCacheAccessTest(){
 		
 		DateTime dealTime = new DateTime(2012, 05, 24, 0, 0, 1);
-		Long dealId = listDao.getHeroDealSellerRateChart(dealTime);
-		assertEquals(new Long(1),  dealId);
+		List<Long> dealId = listDao.getHeroDealSellerRateChart(dealTime);
+		assertEquals(new Long(1),  dealId.get(0));
 		
 		String bookingDate = pointsUtil.convertDateToFormat(dealTime, "yyyy-MM-dd");
 		String key = PointsCacheConstants.HERO_DEAL +  "#" + bookingDate;
 		listCacheAccess.lock(key);
-		listCacheAccess.put(key, dealId);
+		listCacheAccess.put(key, String.valueOf(dealId.get(0)));
 		listCacheAccess.unlock(key);
-		assertEquals(new Long(1),  listCacheAccess.get(key));
+		assertEquals("1",  listCacheAccess.get(key));
 		
 	}
 	

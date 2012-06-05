@@ -16,7 +16,7 @@ import com.fb.commons.util.SFTPConnector;
 import com.fb.platform.payback.cache.RuleCacheAccess;
 import com.fb.platform.payback.dao.PointsDao;
 import com.fb.platform.payback.dao.PointsRuleDao;
-import com.fb.platform.payback.exception.RuleNotFoundException;
+import com.fb.platform.payback.exception.PointsHeaderDoesNotExist;
 import com.fb.platform.payback.model.PointsHeader;
 import com.fb.platform.payback.model.PointsItems;
 import com.fb.platform.payback.rule.BurnPointsRuleEnum;
@@ -288,16 +288,12 @@ public class PointsServiceImpl implements PointsService {
 				rule = pointsRuleDao.loadEarnRule(ruleName);
 			} catch (DataAccessException e) {
 				e.printStackTrace();
-				throw new RuleNotFoundException("Error loading Rule "
-						+ ruleName);
+				return null;
 			}
 
 			if (rule != null) {
 				cacheRule(ruleName.name(), rule);
-			} else {
-				throw new RuleNotFoundException("Rule Not Found " + ruleName);
 			}
-
 		}
 
 		return rule;
@@ -315,10 +311,7 @@ public class PointsServiceImpl implements PointsService {
 
 			if (rule != null) {
 				cacheRule(ruleName.name(), rule);
-			} else {
-				return null;
 			}
-
 		}
 
 		return rule;
@@ -528,47 +521,48 @@ public class PointsServiceImpl implements PointsService {
 	private PointsResponseCodeEnum saveEarnReversalPoints(PointsRequest request) {
 		PointsTxnClassificationCodeEnum actionCode = PointsTxnClassificationCodeEnum.PREALLOC_EARN;
 		String classificationCode = actionCode.toString().split(",")[0];
-		PointsHeader pointsHeader = pointsDao.getHeaderDetails(request
-				.getOrderRequest().getOrderId(), actionCode.name(),
-				classificationCode);
-		Collection<PointsItems> pointsItems = pointsDao
-				.loadPointsItemData(pointsHeader.getId());
-		for (OrderItemRequest itemRequest : request.getOrderRequest()
-				.getOrderItemRequest()) {
-			Iterator<PointsItems> itemIterator = pointsItems.iterator();
-			while (itemIterator.hasNext()) {
-				PointsItems pointsItem = itemIterator.next();
-				if (pointsItem.getItemId() == itemRequest.getId()) {
-					if (pointsItem.getEarnRatio().compareTo(BigDecimal.ZERO) == 1) {
-						itemRequest.setTxnPoints(pointsItem.getEarnRatio()
-								.multiply(itemRequest.getAmount()));
-						itemRequest.setEarnRatio(pointsItem.getEarnRatio());
+		try{
+			PointsHeader pointsHeader = pointsDao.getHeaderDetails(request .getOrderRequest().getOrderId(), actionCode.name(), classificationCode);
+			Collection<PointsItems> pointsItems = pointsDao.loadPointsItemData(pointsHeader.getId());
+			for (OrderItemRequest itemRequest : request.getOrderRequest()
+					.getOrderItemRequest()) {
+				Iterator<PointsItems> itemIterator = pointsItems.iterator();
+				while (itemIterator.hasNext()) {
+					PointsItems pointsItem = itemIterator.next();
+					if (pointsItem.getItemId() == itemRequest.getId()) {
+						if (pointsItem.getEarnRatio().compareTo(BigDecimal.ZERO) == 1) {
+							itemRequest.setTxnPoints(pointsItem.getEarnRatio().multiply(itemRequest.getAmount()));
+							itemRequest.setEarnRatio(pointsItem.getEarnRatio());
+						}
 					}
 				}
-			}
-		}
-		// Check for Bonus Points
-		logger.info("Checking for Bonus Points Entry for Order id : "
-				+ request.getOrderRequest().getOrderId());
-		try {
-			PointsHeader bonusPointsHeader = pointsDao.getHeaderDetails(request
-					.getOrderRequest().getOrderId(), actionCode.name(),
-					PointsRuleConfigConstants.BONUS_POINTS);
-			EarnPointsRuleEnum ruleName = EarnPointsRuleEnum.BUY_WORTH_X_EARN_Y_BONUS_POINTS;
-			PointsRule rule = loadEarnRule(ruleName);
-			// Reverse Bonus Points only when rule is not applicable.
-			if (!rule.isApplicable(request.getOrderRequest(), null)) {
-				request.getOrderRequest().setBonusPoints(
-						new BigDecimal(bonusPointsHeader.getTxnPoints()));
-			}
-		} catch (DataAccessException e) {
-			logger.info("No Bonus Points Entry found for Order id : "
+			} 
+		
+			// Check for Bonus Points
+			logger.info("Checking for Bonus Points Entry for Order id : "
 					+ request.getOrderRequest().getOrderId());
-		}
+			try {
+				PointsHeader bonusPointsHeader = pointsDao.getHeaderDetails(request
+						.getOrderRequest().getOrderId(), actionCode.name(),
+						PointsRuleConfigConstants.BONUS_POINTS);
+				EarnPointsRuleEnum ruleName = EarnPointsRuleEnum.BUY_WORTH_X_EARN_Y_BONUS_POINTS;
+				PointsRule rule = loadEarnRule(ruleName);
+				// Reverse Bonus Points only when rule is not applicable.
+				if (!rule.isApplicable(request.getOrderRequest(), null)) {
+					request.getOrderRequest().setBonusPoints(
+							new BigDecimal(bonusPointsHeader.getTxnPoints()));
+				}
+			} catch (DataAccessException e) {
+				logger.info("No Bonus Points Entry found for Order id : "
+						+ request.getOrderRequest().getOrderId());
+			}
 
-		request.getOrderRequest().setTxnPoints(
-				getTxnPoints(request).setScale(0, ROUND));
-		return doOperation(request);
+			request.getOrderRequest().setTxnPoints(
+					getTxnPoints(request).setScale(0, ROUND));
+			return doOperation(request);
+		} catch (DataAccessException e) {
+			throw new PointsHeaderDoesNotExist("Earn Header not available");
+		}
 	}
 
 }

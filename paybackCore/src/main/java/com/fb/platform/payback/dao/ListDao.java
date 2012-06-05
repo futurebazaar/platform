@@ -1,9 +1,11 @@
 package com.fb.platform.payback.dao;
 
+import java.util.List;
+
 import org.joda.time.DateTime;
 
 public interface ListDao {
 
-	public Long getHeroDealSellerRateChart(DateTime orderDate);
+	public List<Long> getHeroDealSellerRateChart(DateTime orderDate);
 
 }

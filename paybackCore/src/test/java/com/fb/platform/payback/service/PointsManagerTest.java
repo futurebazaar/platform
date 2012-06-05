@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.test.BaseTestCase;
+import com.fb.platform.payback.to.ClearCacheRequest;
 import com.fb.platform.payback.to.OrderItemRequest;
 import com.fb.platform.payback.to.OrderRequest;
 import com.fb.platform.payback.to.PointsRequest;
@@ -41,7 +42,6 @@ public class PointsManagerTest  extends BaseTestCase{
 		LoginRequest loginRequest = new LoginRequest();
 		loginRequest.setUsername("jasvipul@gmail.com");
 		loginRequest.setPassword("testpass");
-
 		responseUser1 = userManager.login(loginRequest);
 
 		
@@ -87,99 +87,91 @@ public class PointsManagerTest  extends BaseTestCase{
 		pointsManager.getPointsReponse(pr);
 	}
 	
+	@Test(expected=IllegalArgumentException.class)
+	public void storeEarnPointsInvalidActionCodeTest() {
+		PointsRequest pr = new PointsRequest();
+		pr.setTxnActionCode("TEST");
+		pr.setClientName("Future Bazaar");
+		pr.setSessionToken(responseUser1.getSessionToken());
+		
+		OrderRequest request  = setOrderRequest(new Long(2), null);
+		pr.setOrderRequest(request);
+		
+		pointsManager.getPointsReponse(pr);
+	}
+	
 	@Test
 	public void storeEarnPointsTest(){
 		PointsRequest pr = new PointsRequest();
 		pr.setTxnActionCode("PREALLOC_EARN");
 		pr.setClientName("Future Bazaar");
-		pr.setSessionToken(responseUser1.getSessionToken());
 		
-		OrderRequest request  = new OrderRequest();
-		request.setLoyaltyCard("1234567890123456");
-		request.setAmount(new BigDecimal(639));
-		request.setOrderId(2);
-		request.setTxnTimestamp(new DateTime(2012, 05, 27, 10, 0, 0));
-		request.setReferenceId("5052");
-		
-		List<OrderItemRequest> orderItemRequest = new ArrayList<OrderItemRequest>();
-		OrderItemRequest orderItem1 = new OrderItemRequest();
-		orderItem1.setAmount(new BigDecimal(639));
-		orderItem1.setArticleId("1234");
-		orderItem1.setCategoryId(1193);
-		orderItem1.setDepartmentCode(1234);
-		orderItem1.setDepartmentName("Pooh");
-		orderItem1.setId(3);
-		orderItem1.setQuantity(1);
-		orderItem1.setSellerRateChartId(49447);
-		orderItemRequest.add(orderItem1);
-		
-		/*OrderItemRequest orderItem2 = new OrderItemRequest();
-		orderItem2.setAmount(new BigDecimal(2000));
-		orderItem2.setArticleId("1234");
-		orderItem2.setCategoryId(1);
-		orderItem2.setDepartmentCode(1234);	
-		orderItem2.setDepartmentName("Pooh");
-		orderItem2.setId(1);
-		orderItem2.setQuantity(1);
-		orderItem2.setSellerRateChartId(2);
-		orderItemRequest.add(orderItem2);*/
-		
-		request.setOrderItemRequest(orderItemRequest);
-		
+		OrderRequest request  = setOrderRequest(new Long(2), null);
 		pr.setOrderRequest(request);
 		
+		pr.setOrderRequest(request);
 		PointsResponse pointsResponse = pointsManager.getPointsReponse(pr);
-		assertEquals(PointsResponseCodeEnum.SUCCESS, pointsResponse.getPointsResponseCodeEnum());
 		assertEquals(PointsTxnClassificationCodeEnum.PREALLOC_EARN, pointsResponse.getActionCode());
-		assertNotNull(pointsResponse.getStatusMessage());
+		assertEquals(PointsResponseCodeEnum.NO_SESSION, pointsResponse.getPointsResponseCodeEnum());
+		
+		pr.setSessionToken(responseUser1.getSessionToken());
+		PointsResponse pointsResponse1 = pointsManager.getPointsReponse(pr);
+		assertEquals(PointsTxnClassificationCodeEnum.PREALLOC_EARN, pointsResponse1.getActionCode());
+		assertEquals(PointsResponseCodeEnum.INVALID_REFERENCE_ID, pointsResponse1.getPointsResponseCodeEnum());
+		
+		request.setReferenceId("1234");
+		pr.setOrderRequest(request);
+		PointsResponse pointsResponse2 = pointsManager.getPointsReponse(pr);
+		assertEquals(PointsTxnClassificationCodeEnum.PREALLOC_EARN, pointsResponse2.getActionCode());
+		assertEquals(PointsResponseCodeEnum.INVALID_CARD_NO, pointsResponse2.getPointsResponseCodeEnum());
+		
+		request.setLoyaltyCard("1234567812345678");
+		pr.setOrderRequest(request);
+		PointsResponse pointsResponse3 = pointsManager.getPointsReponse(pr);
+		assertEquals(PointsTxnClassificationCodeEnum.PREALLOC_EARN, pointsResponse3.getActionCode());
+		assertEquals(PointsResponseCodeEnum.SUCCESS, pointsResponse3.getPointsResponseCodeEnum());
+		
+		request.setOrderId(new Long(20));
+		pr.setOrderRequest(request);
+		pointsResponse3 = pointsManager.getPointsReponse(pr);
+		assertEquals(PointsTxnClassificationCodeEnum.PREALLOC_EARN, pointsResponse3.getActionCode());
+		assertEquals(PointsResponseCodeEnum.INTERNAL_ERROR, pointsResponse3.getPointsResponseCodeEnum());
 		
 	}
 	
 	@Test
 	public void storeEarnReversalPointsTest(){
 		PointsRequest pr = new PointsRequest();
-		pr.setTxnActionCode("EARN_REVERSAL");
 		pr.setClientName("Future Bazaar");
-		pr.setSessionToken(responseUser1.getSessionToken());
+		pr.setTxnActionCode("EARN_REVERSAL");
+		PointsResponse pointsResponse = pointsManager.getPointsReponse(pr);
+		assertEquals(PointsTxnClassificationCodeEnum.EARN_REVERSAL, pointsResponse.getActionCode());
+		assertEquals(PointsResponseCodeEnum.NO_SESSION, pointsResponse.getPointsResponseCodeEnum());
 		
-		OrderRequest request  = new OrderRequest();
-		request.setLoyaltyCard("1234567890123456");
-		request.setAmount(new BigDecimal(4000));
-		request.setOrderId(1);
-		request.setTxnTimestamp(new DateTime(2012, 05, 24, 10, 0, 0));
-		request.setReferenceId("5051234568");
-		
-		List<OrderItemRequest> orderItemRequest = new ArrayList<OrderItemRequest>();
-		OrderItemRequest orderItem1 = new OrderItemRequest();
-		orderItem1.setAmount(new BigDecimal(2000));
-		orderItem1.setArticleId("1234");
-		orderItem1.setCategoryId(1234);
-		orderItem1.setDepartmentCode(1234);
-		orderItem1.setDepartmentName("Pooh");
-		orderItem1.setId(1);
-		orderItem1.setQuantity(1);
-		orderItem1.setSellerRateChartId(1);
-		orderItemRequest.add(orderItem1);
-		
-		OrderItemRequest orderItem2 = new OrderItemRequest();
-		orderItem2.setAmount(new BigDecimal(2000));
-		orderItem2.setArticleId("1234");
-		orderItem2.setCategoryId(1);
-		orderItem2.setDepartmentCode(1234);
-		orderItem2.setDepartmentName("Pooh");
-		orderItem2.setId(1);
-		orderItem2.setQuantity(1);
-		orderItem2.setSellerRateChartId(2);
-		orderItemRequest.add(orderItem2);
-		
-		request.setOrderItemRequest(orderItemRequest);
-		
+		OrderRequest request  = setOrderRequest(new Long(2), "1234");
 		pr.setOrderRequest(request);
 		
-		PointsResponse pointsResponse = pointsManager.getPointsReponse(pr);
-		assertEquals(PointsResponseCodeEnum.SUCCESS, pointsResponse.getPointsResponseCodeEnum());
+		pointsResponse = pointsManager.getPointsReponse(pr);
 		assertEquals(PointsTxnClassificationCodeEnum.EARN_REVERSAL, pointsResponse.getActionCode());
-		assertNotNull(pointsResponse.getStatusMessage());
+		assertEquals(PointsResponseCodeEnum.NO_SESSION, pointsResponse.getPointsResponseCodeEnum());
+		
+		pr.setSessionToken(responseUser1.getSessionToken());
+		pointsResponse = pointsManager.getPointsReponse(pr);
+		assertEquals(PointsTxnClassificationCodeEnum.EARN_REVERSAL, pointsResponse.getActionCode());
+		assertEquals(PointsResponseCodeEnum.INVALID_CARD_NO, pointsResponse.getPointsResponseCodeEnum());
+		
+		request.setLoyaltyCard("1234567812345678");
+		pr.setOrderRequest(request);
+		PointsResponse pointsResponse1 = pointsManager.getPointsReponse(pr);
+		assertEquals(PointsResponseCodeEnum.EARN_DOES_NOT_EXIST, pointsResponse1.getPointsResponseCodeEnum());
+		assertNotNull(pointsResponse1.getStatusMessage());
+		
+		request.setOrderId(new Long(1));
+		pr.setOrderRequest(request);
+		
+		pointsResponse = pointsManager.getPointsReponse(pr);
+		assertEquals(PointsTxnClassificationCodeEnum.EARN_REVERSAL, pointsResponse.getActionCode());
+		assertEquals(PointsResponseCodeEnum.SUCCESS, pointsResponse.getPointsResponseCodeEnum());
 		
 	}
 	
@@ -210,13 +202,22 @@ public class PointsManagerTest  extends BaseTestCase{
 	public void getPointsToBeDisplayedTest() throws NoPermissionException{
 		PointsRequest pr = new PointsRequest();
 		pr.setTxnActionCode("PREALLOC_EARN");
-		
-		OrderRequest request  = new OrderRequest();
+		OrderRequest request = setOrderRequest(new Long(1), "1234");
+		pr.setOrderRequest(request);
+		PointsRequest newRequest = pointsManager.getPointsToBeDisplayed(pr);
+		assertEquals(68, newRequest.getOrderRequest().getTxnPoints().intValue());
+	}
+	
+	private OrderRequest setOrderRequest(Long orderId, String referenceId) {
+		OrderRequest request = new OrderRequest();
+		request.setOrderId(orderId);
 		request.setAmount(new BigDecimal(500));
 		request.setTxnTimestamp(new DateTime(2012, 05, 24, 10, 0, 0));
+		request.setReferenceId(referenceId);
 		
 		List<OrderItemRequest> orderItemRequest = new ArrayList<OrderItemRequest>();
-		/*OrderItemRequest orderItem1 = new OrderItemRequest();
+		
+		OrderItemRequest orderItem1 = new OrderItemRequest();
 		orderItem1.setAmount(new BigDecimal(500));
 		orderItem1.setArticleId("1234");
 		orderItem1.setCategoryId(1234);
@@ -225,7 +226,7 @@ public class PointsManagerTest  extends BaseTestCase{
 		orderItem1.setId(1);
 		orderItem1.setQuantity(1);
 		orderItem1.setSellerRateChartId(1);
-		orderItemRequest.add(orderItem1);*/
+		orderItemRequest.add(orderItem1);
 		
 		OrderItemRequest orderItem2 = new OrderItemRequest();
 		orderItem2.setAmount(new BigDecimal(639));
@@ -239,10 +240,36 @@ public class PointsManagerTest  extends BaseTestCase{
 		orderItemRequest.add(orderItem2);
 		
 		request.setOrderItemRequest(orderItemRequest);
+		return request;
 		
-		pr.setOrderRequest(request);
-		PointsRequest newRequest = pointsManager.getPointsToBeDisplayed(pr);
-		assertEquals(38, newRequest.getOrderRequest().getTxnPoints().intValue());
 	}
 	
+	@Test
+	public void clearCacheTest(){
+		ClearCacheRequest request =null;
+		PointsResponseCodeEnum cacheResponse = pointsManager.clearPointsCache(request);
+		assertEquals(PointsResponseCodeEnum.NO_SESSION, cacheResponse);
+		
+		request = new ClearCacheRequest();
+		cacheResponse = pointsManager.clearPointsCache(request);
+		assertEquals(PointsResponseCodeEnum.NO_SESSION, cacheResponse);
+		
+		request.setSessionToken("1234");
+		cacheResponse = pointsManager.clearPointsCache(request);
+		assertEquals(PointsResponseCodeEnum.NO_SESSION, cacheResponse);
+		
+		request.setSessionToken(responseUser1.getSessionToken());
+		cacheResponse = pointsManager.clearPointsCache(request);
+		assertEquals(PointsResponseCodeEnum.FAILURE,  cacheResponse);
+	}
+	
+	@Test
+	public void mailBurnDataTest(){
+		assertEquals("", pointsManager.mailBurnData());
+	}
+	
+	@Test
+	public void uploadEarnDataTest(){
+		pointsManager.uploadEarnFilesOnSFTP();
+	}
 }

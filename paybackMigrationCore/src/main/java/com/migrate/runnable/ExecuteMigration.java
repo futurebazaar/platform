@@ -1,5 +1,8 @@
 package com.migrate.runnable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -28,6 +31,7 @@ public class ExecuteMigration {
 		
 		
 		//((LegacyPointsService) pointsService).migratePaybackData();
+		
 		
 	}
 	

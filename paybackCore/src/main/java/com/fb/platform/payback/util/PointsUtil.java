@@ -32,14 +32,9 @@ public class PointsUtil implements Serializable {
 	}
 	
 	public DateTime getDateTimeFromString(String date, String pattern) {
-		try{
-			DateTimeFormatter format = DateTimeFormat.forPattern(pattern);
-			DateTime datetime = format.parseDateTime(date);
-			return datetime;
-		} catch (Exception e){
-			return null;
-		}
-				
+		DateTimeFormatter format = DateTimeFormat.forPattern(pattern);
+		DateTime datetime = format.parseDateTime(date);
+		return datetime;
 	}
 	
 	public String convertDateToFormat(DateTime currentTime, String dateFormat) {
@@ -58,19 +53,6 @@ public class PointsUtil implements Serializable {
 		}
 		return props;
 	}
-
-	public boolean isValidDate(String validTill) {
-		try{
-			DateTimeFormatter format = DateTimeFormat.forPattern("yyyyMMdd");
-			DateTime validTillDate = format.parseDateTime(validTill);
-			return validTillDate.isAfterNow();
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-		return false;
-
-	}
-	
 
 	public void sendMail(String txnActionCode, String merchantId, String fileName, String fileContent, String type) {
 		try{
@@ -97,6 +79,9 @@ public class PointsUtil implements Serializable {
 	}
 	
 	public boolean isValidLoyaltyCard(String cardNumber) {
+		if (cardNumber == null){
+			return false;
+		}
 		return cardNumber.matches("[0-9]{16}");
 	}
 	

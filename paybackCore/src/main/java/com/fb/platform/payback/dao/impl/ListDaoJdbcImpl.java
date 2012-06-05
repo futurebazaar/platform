@@ -1,6 +1,7 @@
 package com.fb.platform.payback.dao.impl;
 
 import java.sql.Date;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,11 +26,12 @@ public class ListDaoJdbcImpl implements ListDao {
 	}
 
 	@Override
-	public Long getHeroDealSellerRateChart(DateTime orderDate) {
+	public List<Long> getHeroDealSellerRateChart(DateTime orderDate) {
 		Date date = new Date(orderDate.getMillis());
 		logger.info("Getting Hero Deail for date  : " + date);
-		return jdbcTemplate.queryForLong(GET_DOD_QUERY, new Object[] { date,
+		List<Long> heroDeals =   jdbcTemplate.queryForList(GET_DOD_QUERY,  Long.class, new Object[] { date,
 				date });
+		return heroDeals;
 	}
 
 }
