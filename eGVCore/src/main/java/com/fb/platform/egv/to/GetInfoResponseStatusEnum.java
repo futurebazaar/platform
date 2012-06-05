@@ -7,7 +7,7 @@ package com.fb.platform.egv.to;
  * @author keith
  *
  */
-public enum GetGiftVoucherInfoResponseStatusEnum {
+public enum GetInfoResponseStatusEnum {
 
 	NO_SESSION,
 	INTERNAL_ERROR,

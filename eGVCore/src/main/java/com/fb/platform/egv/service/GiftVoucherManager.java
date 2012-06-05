@@ -3,10 +3,10 @@
  */
 package com.fb.platform.egv.service;
 
-import com.fb.platform.egv.to.CreateGiftVoucherRequest;
-import com.fb.platform.egv.to.CreateGiftVoucherResponse;
-import com.fb.platform.egv.to.GetGiftVoucherInfoRequest;
-import com.fb.platform.egv.to.GetGiftVoucherInfoResponse;
+import com.fb.platform.egv.to.CreateRequest;
+import com.fb.platform.egv.to.CreateResponse;
+import com.fb.platform.egv.to.GetInfoRequest;
+import com.fb.platform.egv.to.GetInfoResponse;
 
 /**
  * @author keith
@@ -14,8 +14,8 @@ import com.fb.platform.egv.to.GetGiftVoucherInfoResponse;
  */
 public interface GiftVoucherManager {
 
-	public GetGiftVoucherInfoResponse getGiftVoucherInfo(GetGiftVoucherInfoRequest request);
+	public GetInfoResponse getInfo(GetInfoRequest request);
 	
-	public CreateGiftVoucherResponse createGiftVoucher(CreateGiftVoucherRequest request);
+	public CreateResponse create(CreateRequest request);
 	
 }

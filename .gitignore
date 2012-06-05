@@ -82,5 +82,8 @@ promotionAdminWS/bin/
 promotionAdminWS/target/
 Migration/
 apache-tomcat-6.0.33/
+eGVWS/.classpath
+eGVWS/.settings/
+migrationWS/.settings/
 .gitignore
 

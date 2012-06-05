@@ -9,12 +9,11 @@ import java.math.BigDecimal;
  * @author keith
  *
  */
-public class GetGiftVoucherInfoRequest {
+public class GetInfoRequest {
 
 	private String sessionToken;
 	private long giftVoucherNumber;
 	private int giftVoucherPin;
-	private int userId;
 	
 	public String getSessionToken() {
 		return sessionToken;
@@ -27,12 +26,6 @@ public class GetGiftVoucherInfoRequest {
 	}
 	public void setGiftVoucherNumber(long giftVoucherNumber) {
 		this.giftVoucherNumber = giftVoucherNumber;
-	}
-	public int getUserId() {
-		return userId;
-	}
-	public void setUserId(int userId) {
-		this.userId = userId;
 	}
 	public int getGiftVoucherPin() {
 		return giftVoucherPin;

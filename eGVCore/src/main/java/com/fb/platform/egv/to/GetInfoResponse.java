@@ -5,6 +5,8 @@ package com.fb.platform.egv.to;
 
 import java.math.BigDecimal;
 
+import org.joda.time.DateTime;
+
 import com.fb.commons.to.Money;
 import com.fb.platform.egv.model.GiftVoucherDates;
 import com.fb.platform.egv.model.GiftVoucherStatusEnum;
@@ -14,19 +16,19 @@ import com.fb.platform.egv.model.GiftVoucherStatusEnum;
  *
  */
 
-public class GetGiftVoucherInfoResponse {
+public class GetInfoResponse {
 
 	private String sessionToken;
-	private GetGiftVoucherInfoResponseStatusEnum responseStatus;
+	private GetInfoResponseStatusEnum responseStatus;
 	
 	private int id;
-	private String number;
-	private int pin;
-	private GiftVoucherDates dates;
+	private long number;
+	private DateTime validFrom;
+	private DateTime validTill;
 	private int orderItemId;
 	private String email;
 	private int userId;
-	private GiftVoucherStatusEnum status;
+	private GiftVoucherStatusEnum gvStatus;
 	private BigDecimal amount;
 
 
@@ -38,11 +40,11 @@ public class GetGiftVoucherInfoResponse {
 		this.sessionToken = sessionToken;
 	}
 
-	public GetGiftVoucherInfoResponseStatusEnum getResponseStatus() {
+	public GetInfoResponseStatusEnum getResponseStatus() {
 		return responseStatus;
 	}
 
-	public void setResponseStatus(GetGiftVoucherInfoResponseStatusEnum responseStatus) {
+	public void setResponseStatus(GetInfoResponseStatusEnum responseStatus) {
 		this.responseStatus = responseStatus;
 	}
 
@@ -54,28 +56,28 @@ public class GetGiftVoucherInfoResponse {
 		this.id = id;
 	}
 
-	public String getNumber() {
+	public long getNumber() {
 		return number;
 	}
 
-	public void setNumber(String number) {
+	public void setNumber(long number) {
 		this.number = number;
 	}
 
-	public int getPin() {
-		return pin;
+	public DateTime getValidFrom() {
+		return validFrom;
 	}
 
-	public void setPin(int pin) {
-		this.pin = pin;
+	public void setValidFrom(DateTime validFrom) {
+		this.validFrom = validFrom;
 	}
 
-	public GiftVoucherDates getDates() {
-		return dates;
+	public DateTime getValidTill() {
+		return validTill;
 	}
 
-	public void setDates(GiftVoucherDates dates) {
-		this.dates = dates;
+	public void setValidTill(DateTime validTill) {
+		this.validTill = validTill;
 	}
 
 	public int getOrderItemId() {
@@ -103,11 +105,11 @@ public class GetGiftVoucherInfoResponse {
 	}
 
 	public GiftVoucherStatusEnum getStatus() {
-		return status;
+		return gvStatus;
 	}
 
 	public void setStatus(GiftVoucherStatusEnum status) {
-		this.status = status;
+		this.gvStatus = status;
 	}
 
 	public BigDecimal getAmount() {

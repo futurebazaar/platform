@@ -7,7 +7,7 @@ package com.fb.platform.egv.to;
  * @author keith
  *
  */
-public enum CreateGiftVoucherResponseStatusEnum {
+public enum CreateResponseStatusEnum {
 	
 	
 	NO_SESSION,

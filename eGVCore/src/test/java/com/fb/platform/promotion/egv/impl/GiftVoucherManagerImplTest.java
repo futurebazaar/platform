@@ -19,12 +19,12 @@ import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
 import com.fb.platform.egv.service.GiftVoucherManager;
 import com.fb.platform.egv.service.GiftVoucherService;
-import com.fb.platform.egv.to.CreateGiftVoucherRequest;
-import com.fb.platform.egv.to.CreateGiftVoucherResponse;
-import com.fb.platform.egv.to.CreateGiftVoucherResponseStatusEnum;
-import com.fb.platform.egv.to.GetGiftVoucherInfoRequest;
-import com.fb.platform.egv.to.GetGiftVoucherInfoResponse;
-import com.fb.platform.egv.to.GetGiftVoucherInfoResponseStatusEnum;
+import com.fb.platform.egv.to.CreateRequest;
+import com.fb.platform.egv.to.CreateResponse;
+import com.fb.platform.egv.to.CreateResponseStatusEnum;
+import com.fb.platform.egv.to.GetInfoRequest;
+import com.fb.platform.egv.to.GetInfoResponse;
+import com.fb.platform.egv.to.GetInfoResponseStatusEnum;
 import com.fb.platform.user.manager.interfaces.UserManager;
 import com.fb.platform.user.manager.model.auth.LoginRequest;
 import com.fb.platform.user.manager.model.auth.LoginResponse;
@@ -72,33 +72,33 @@ public class GiftVoucherManagerImplTest extends BaseTestCase{
 	@Test
 	public void testGetGiftVoucherInfo(){
 		
-		GetGiftVoucherInfoRequest getGiftVoucherInfoRequest = new GetGiftVoucherInfoRequest();
+		GetInfoRequest getGiftVoucherInfoRequest = new GetInfoRequest();
 		getGiftVoucherInfoRequest.setGiftVoucherNumber(-12345678901L);
 		getGiftVoucherInfoRequest.setGiftVoucherPin(12345);
 		getGiftVoucherInfoRequest.setSessionToken(responseUser1.getSessionToken());
 		
-		GetGiftVoucherInfoResponse getGiftVoucherInfoResponse = giftVoucherManager.getGiftVoucherInfo(getGiftVoucherInfoRequest);
+		GetInfoResponse getGiftVoucherInfoResponse = giftVoucherManager.getInfo(getGiftVoucherInfoRequest);
 		
 		assertNotNull(getGiftVoucherInfoResponse);
 		assertNotNull(getGiftVoucherInfoResponse.getSessionToken());
-		assertEquals(GetGiftVoucherInfoResponseStatusEnum.SUCCESS,getGiftVoucherInfoResponse.getResponseStatus());
+		assertEquals(GetInfoResponseStatusEnum.SUCCESS,getGiftVoucherInfoResponse.getResponseStatus());
 		assertEquals(0, new BigDecimal(1000).compareTo(getGiftVoucherInfoResponse.getAmount()));
 	}
 
 	@Test
 	public void testCreateGiftVoucher(){
-		CreateGiftVoucherRequest createGiftVoucherRequest = new CreateGiftVoucherRequest();
+		CreateRequest createGiftVoucherRequest = new CreateRequest();
 		createGiftVoucherRequest.setEmail("try1@gmail.com");
 		createGiftVoucherRequest.setOrderItemId(-100);
 		createGiftVoucherRequest.setAmount(new BigDecimal(1000.00));
 		createGiftVoucherRequest.setSessionToken(responseUser1.getSessionToken());
 		
 		
-		CreateGiftVoucherResponse createGiftVoucherResponse = giftVoucherManager.createGiftVoucher(createGiftVoucherRequest);
+		CreateResponse createGiftVoucherResponse = giftVoucherManager.create(createGiftVoucherRequest);
 		
 		assertNotNull(createGiftVoucherResponse);
 		assertNotNull(createGiftVoucherResponse.getSessionToken());
-		assertEquals(CreateGiftVoucherResponseStatusEnum.SUCCESS,createGiftVoucherResponse.getStatus());
+		assertEquals(CreateResponseStatusEnum.SUCCESS,createGiftVoucherResponse.getStatus());
 		
 	}
 }

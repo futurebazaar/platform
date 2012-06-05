@@ -15,12 +15,12 @@ import com.fb.platform.egv.model.GiftVoucher;
 import com.fb.platform.egv.service.GiftVoucherManager;
 import com.fb.platform.egv.service.GiftVoucherNotFoundException;
 import com.fb.platform.egv.service.GiftVoucherService;
-import com.fb.platform.egv.to.CreateGiftVoucherRequest;
-import com.fb.platform.egv.to.CreateGiftVoucherResponse;
-import com.fb.platform.egv.to.CreateGiftVoucherResponseStatusEnum;
-import com.fb.platform.egv.to.GetGiftVoucherInfoRequest;
-import com.fb.platform.egv.to.GetGiftVoucherInfoResponse;
-import com.fb.platform.egv.to.GetGiftVoucherInfoResponseStatusEnum;
+import com.fb.platform.egv.to.CreateRequest;
+import com.fb.platform.egv.to.CreateResponse;
+import com.fb.platform.egv.to.CreateResponseStatusEnum;
+import com.fb.platform.egv.to.GetInfoRequest;
+import com.fb.platform.egv.to.GetInfoResponse;
+import com.fb.platform.egv.to.GetInfoResponseStatusEnum;
 
 /**
  * @author keith
@@ -37,14 +37,14 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 	private GiftVoucherService giftVoucherService = null;
 
 	@Override
-	public CreateGiftVoucherResponse createGiftVoucher(CreateGiftVoucherRequest request) {
+	public CreateResponse create(CreateRequest request) {
 		if(logger.isDebugEnabled()) {
 			logger.debug("Creating Gift Voucher worth : " + request.getAmount());
 		}
-		CreateGiftVoucherResponse response = new CreateGiftVoucherResponse();
+		CreateResponse response = new CreateResponse();
 
 		if (request == null || StringUtils.isBlank(request.getSessionToken())) {
-			response.setStatus(CreateGiftVoucherResponseStatusEnum.NO_SESSION);
+			response.setStatus(CreateResponseStatusEnum.NO_SESSION);
 			return response;
 		}
 
@@ -52,7 +52,7 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
 		if (authentication == null) {
 			//invalid session token
-			response.setStatus(CreateGiftVoucherResponseStatusEnum.NO_SESSION);
+			response.setStatus(CreateResponseStatusEnum.NO_SESSION);
 			return response;
 		}
 		
@@ -63,12 +63,12 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 		try {
 			//create the gift voucher
 			giftVoucherService.createGiftVoucher(request.getEmail(), userId, request.getAmount(), request.getOrderItemId());
-			response.setStatus(CreateGiftVoucherResponseStatusEnum.SUCCESS);
+			response.setStatus(CreateResponseStatusEnum.SUCCESS);
 
 		} catch (GiftVoucherNotFoundException e) {
-			response.setStatus(CreateGiftVoucherResponseStatusEnum.INTERNAL_ERROR);
+			response.setStatus(CreateResponseStatusEnum.INTERNAL_ERROR);
 		} catch (PlatformException e) {
-			response.setStatus(CreateGiftVoucherResponseStatusEnum.INTERNAL_ERROR);
+			response.setStatus(CreateResponseStatusEnum.INTERNAL_ERROR);
 		}
 
 		return response;
@@ -83,13 +83,13 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 	}
 
 	@Override
-	public GetGiftVoucherInfoResponse getGiftVoucherInfo(
-			GetGiftVoucherInfoRequest request) {
+	public GetInfoResponse getInfo(
+			GetInfoRequest request) {
 		
-		GetGiftVoucherInfoResponse response = new GetGiftVoucherInfoResponse();
+		GetInfoResponse response = new GetInfoResponse();
 
 		if (request == null || StringUtils.isBlank(request.getSessionToken())) {
-			response.setResponseStatus(GetGiftVoucherInfoResponseStatusEnum.NO_SESSION);
+			response.setResponseStatus(GetInfoResponseStatusEnum.NO_SESSION);
 			return response;
 		}
 
@@ -97,7 +97,7 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
 		if (authentication == null) {
 			//invalid session token
-			response.setResponseStatus(GetGiftVoucherInfoResponseStatusEnum.NO_SESSION);
+			response.setResponseStatus(GetInfoResponseStatusEnum.NO_SESSION);
 			return response;
 		}
 		
@@ -110,13 +110,13 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 			GiftVoucher eGV = giftVoucherService.getGiftVoucher(request.getGiftVoucherNumber(),request.getGiftVoucherPin());
 			response.setAmount(eGV.getAmount().getAmount());
 			response.setEmail(eGV.getEmail());
-			response.setNumber(eGV.getNumber());
-			response.setResponseStatus(GetGiftVoucherInfoResponseStatusEnum.SUCCESS);
+			response.setNumber(Long.parseLong(eGV.getNumber()));
+			response.setResponseStatus(GetInfoResponseStatusEnum.SUCCESS);
 			
 		} catch (GiftVoucherNotFoundException e) {
-			response.setResponseStatus(GetGiftVoucherInfoResponseStatusEnum.GIFT_VOUCHER_NOT_FOUND);
+			response.setResponseStatus(GetInfoResponseStatusEnum.GIFT_VOUCHER_NOT_FOUND);
 		} catch (PlatformException e) {
-			response.setResponseStatus(GetGiftVoucherInfoResponseStatusEnum.INTERNAL_ERROR);
+			response.setResponseStatus(GetInfoResponseStatusEnum.INTERNAL_ERROR);
 		}
 
 		return response;

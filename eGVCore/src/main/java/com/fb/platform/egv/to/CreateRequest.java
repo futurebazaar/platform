@@ -9,7 +9,7 @@ import java.math.BigDecimal;
  * @author keith
  *
  */
-public class CreateGiftVoucherRequest {
+public class CreateRequest {
 
 	private String sessionToken;
 	private int orderItemId;
