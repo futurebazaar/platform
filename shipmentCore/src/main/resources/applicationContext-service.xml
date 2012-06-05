@@ -11,7 +11,7 @@
 
     
     <!-- Add new Managers here -->
-    <bean id="shipmentManager" class="com.fb.platform.shipment.manager.impl.ShipmentManagerImpl">
+    <bean id="shipmentManager" class="com.fb.platform.shipment.manager.impl.ShipmentManagerImpl" scope="prototype">
     	<property name="shipmentService" ref="shipmentService"/>
     </bean>
     

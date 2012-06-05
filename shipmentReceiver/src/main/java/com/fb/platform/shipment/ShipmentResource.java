@@ -14,7 +14,10 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 import com.fb.commons.PlatformException;
 import com.fb.platform.shipment.manager.ShipmentManager;
@@ -27,7 +30,7 @@ import com.sap.abapxml.Values.TAB.Item;
  * @author nehaga
  *
  */
-public class ShipmentResource {
+public class ShipmentResource implements ApplicationContextAware {
 	
 	private static Log infoLog = LogFactory.getLog("LOGINFO");
 	
@@ -36,8 +39,9 @@ public class ShipmentResource {
 	//JAXBContext class is thread safe and can be shared
 	private static final JAXBContext context = initContext();
 	
-	@Autowired
-	ShipmentManager shipmentManager = null;
+	private ApplicationContext applicationContext = null;
+	
+	private ShipmentManager shipmentManager = null;
 	
 	private static JAXBContext initContext() {
 		try {
@@ -56,6 +60,7 @@ public class ShipmentResource {
 		infoLog.info("GatePass xml String received : " + gatePassString);
 		List<Item> ordersList = createItemList(gatePassString);
 		List<GatePassItem> deliveryList = createLSPLists(ordersList);
+		shipmentManager = (ShipmentManager)applicationContext.getBean("shipmentManager");
 		boolean outboundCreated = shipmentManager.generateOutboundFile(deliveryList);
 		return outboundCreated;
 	}
@@ -136,5 +141,11 @@ public class ShipmentResource {
 	
 	public void setShipmentManager(ShipmentManager shipmentManager) {
 		this.shipmentManager = shipmentManager;
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext)
+			throws BeansException {
+		this.applicationContext = applicationContext;
 	}
 }

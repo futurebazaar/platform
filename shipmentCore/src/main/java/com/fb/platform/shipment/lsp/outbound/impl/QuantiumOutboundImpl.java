@@ -2,10 +2,13 @@ package com.fb.platform.shipment.lsp.outbound.impl;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Writer;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -20,15 +23,40 @@ import com.fb.platform.shipment.to.ParcelItem;
  */
 public class QuantiumOutboundImpl implements ShipmentOutbound {
 
-	private static String destinationPath = "src/main/gatepass/Quantium/Outbound";
+	private static String serverFilePath;
+	private static Properties prop = new Properties();
 	
-	private static String extension=".QS";
-	private static String fileNamePrefix="P";
-	private static String fileNameFormat="%f%y%y%y%y%M%M%d%d%H%H%m%m";
+	private static String extension;
+	private static String fileNamePrefix;
+	private static String fileNameFormat;
 	
 	private static Log infoLog = LogFactory.getLog("LOGINFO");
 	
 	private static Log errorLog = LogFactory.getLog("LOGERROR");
+	
+	public QuantiumOutboundImpl() {
+		super();
+		loadProperties();
+	}
+	
+	private void loadProperties() {
+		try {
+			InputStream configPropertiesStream = this.getClass().getClassLoader().getResourceAsStream("ftp_details.properties");
+			prop.load(configPropertiesStream);
+			serverFilePath = prop.getProperty("future.server.outbound.quantium");
+			prop.clear();
+			
+			InputStream lspPropertiesStream = this.getClass().getClassLoader().getResourceAsStream("lsp_configurations.properties");
+			prop.load(lspPropertiesStream);
+			extension = prop.getProperty("quantium.outbound.extension");
+			fileNamePrefix = prop.getProperty("quantium.outbound.fileNamePrefix");
+			fileNameFormat = prop.getProperty("quantium.outbound.fileNameFormat");
+		} catch (FileNotFoundException e) {
+			System.out.println(e.getStackTrace());
+		} catch (Exception e) {
+			System.out.println(e.getStackTrace());
+		}
+	}
 	
 	@Override
 	public boolean generateOutboundFile(List<ParcelItem> parcelItemList) {
@@ -89,7 +117,7 @@ public class QuantiumOutboundImpl implements ShipmentOutbound {
 		fileName = fileName.replace("%m%m", min);
 		fileName += extension;
 		infoLog.info("Filename : " + fileName);
-		File file = new File(destinationPath + File.separator + fileName);
+		File file = new File(serverFilePath + File.separator + fileName);
 		try {
 			Writer writer = new BufferedWriter(new FileWriter(file));
 			writer.write(outboundFile.toString());

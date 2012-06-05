@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+
+	<parent>
+	    <artifactId>platform</artifactId>
+	    <groupId>com.fb</groupId>
+	    <version>1.0</version>
+	    <relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>shipmentFTP</artifactId>
+	<packaging>war</packaging>
+	<version>1.0</version>
+	<name>Shipment FTP</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+	        <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss.SSS</maven.build.timestamp.format> 
+	        <buildDate>${maven.build.timestamp}</buildDate> 
+		<junit.version>4.8.2</junit.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+	  		<groupId>com.fb</groupId>
+			<artifactId>platformCommons</artifactId>
+			<version>1.0</version>
+	  	</dependency>
+	  	<dependency>
+	  		<groupId>com.fb</groupId>
+			<artifactId>shipmentCore</artifactId>
+			<version>1.0</version>
+	  	</dependency>
+	  	<dependency>
+	  		<groupId>com.fb</groupId>
+			<artifactId>shipmentReceiver</artifactId>
+			<version>1.0</version>
+	  	</dependency>
+	</dependencies>
+	<build>
+		<finalName>shipmentFTP</finalName>
+	</build>
+</project>

@@ -30,7 +30,7 @@ public class ShipmentOutboundRunner {
 		ShipmentFTPClient ftpClient = new ShipmentFTPClient();
 		List<String> gatePassList = ftpClient.getGatePassList();
 		//for(String gatePassString : gatePassList) {
-		for(int i=0;i<10;i++) {
+		for(int i=0;i<3;i++) {
 			String gatePassString =gatePassList.get(i);
 			infoLog.info("Gate Pass XML String : " + gatePassString);
 			boolean outboundCreated = shipmentResource.processGatepass(gatePassString);

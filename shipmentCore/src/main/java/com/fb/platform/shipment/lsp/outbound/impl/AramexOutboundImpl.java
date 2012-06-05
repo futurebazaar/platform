@@ -2,6 +2,7 @@ package com.fb.platform.shipment.lsp.outbound.impl;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,29 +23,40 @@ import com.fb.platform.shipment.to.ParcelItem;
  */
 public class AramexOutboundImpl implements ShipmentOutbound {
 
-	private static String destinationPath = "src/main/gatepass/Aramex/Outbound";
-	private static String extension=".ar";
-	private static String fileNamePrefix="P";
-	private static String fileNameFormat="%f%y%y%y%y%M%M%d%d%H%H%m%m";
+	private static String serverFilePath;
+	private static Properties prop = new Properties();
+	
+	private static String extension;
+	private static String fileNamePrefix;
+	private static String fileNameFormat;
 	
 	private static Log infoLog = LogFactory.getLog("LOGINFO");
 	
 	private static Log errorLog = LogFactory.getLog("LOGERROR");
 	
-//	private static InputStream propertiesInputStream = null;
-//	
-//	private static Properties lspProp = null;
-//	
-//	public AramexOutboundImpl(){
-//		super();
-//		propertiesInputStream = AramexOutboundImpl.class.getClassLoader().getResourceAsStream("lsp_configurations.properties");
-//		lspProp = new Properties();
-//		try {
-//			lspProp.load(propertiesInputStream);
-//		} catch (IOException e) {
-//			// TODO: handle exception
-//		}
-//	}
+	public AramexOutboundImpl() {
+		super();
+		loadProperties();
+	}
+	
+	private void loadProperties() {
+		try {
+			InputStream configPropertiesStream = this.getClass().getClassLoader().getResourceAsStream("ftp_details.properties");
+			prop.load(configPropertiesStream);
+			serverFilePath = prop.getProperty("future.server.outbound.aramex");
+			prop.clear();
+			
+			InputStream lspPropertiesStream = this.getClass().getClassLoader().getResourceAsStream("lsp_configurations.properties");
+			prop.load(lspPropertiesStream);
+			extension = prop.getProperty("aramex.outbound.extension");
+			fileNamePrefix = prop.getProperty("aramex.outbound.fileNamePrefix");
+			fileNameFormat = prop.getProperty("aramex.outbound.fileNameFormat");
+		} catch (FileNotFoundException e) {
+			System.out.println(e.getStackTrace());
+		} catch (Exception e) {
+			System.out.println(e.getStackTrace());
+		}
+	}
 	
 	@Override
 	public boolean generateOutboundFile(List<ParcelItem> parcelItemList) {
@@ -105,7 +117,7 @@ public class AramexOutboundImpl implements ShipmentOutbound {
 		fileName = fileName.replace("%m%m", min);
 		fileName += extension;
 		infoLog.info("Filename : " + fileName);
-		File file = new File(destinationPath + File.separator + fileName);
+		File file = new File(serverFilePath + File.separator + fileName);
 		try {
 			Writer writer = new BufferedWriter(new FileWriter(file));
 			writer.write(outboundFile.toString());

@@ -210,20 +210,20 @@ public class RuleImplTest extends BaseTestCase {
 		assertTrue(new Money(new BigDecimal(100)).eq(buyWorthXGetYPercentOffRule.execute(orderReq3)));
 		
 //		BuyWorthXGetYRsOffOnZCategoryRuleImpl
-		PromotionRule buyWorthXGetYRsOffOnZCategoryRule = ruleDao.load(-9, -4);
-
-		assertNotNull(buyWorthXGetYRsOffOnZCategoryRule);
-		assertTrue(buyWorthXGetYRsOffOnZCategoryRule instanceof BuyWorthXGetYRsOffOnZCategoryRuleImpl);
-		
-		RuleConfiguration yRsOffOnZCategoryRuleConfiguration = ruleDao.loadRuleConfiguration(-9, -4);
-
-		assertNotNull(yRsOffOnZCategoryRuleConfiguration);
-		assertEquals(4, yRsOffOnZCategoryRuleConfiguration.getConfigItems().size());
-
-		assertEquals(buyWorthXGetYRsOffOnZCategoryRule.isApplicable(orderReq1),PromotionStatusEnum.SUCCESS);
-		assertEquals(buyWorthXGetYRsOffOnZCategoryRule.isApplicable(orderReq2),PromotionStatusEnum.LESS_ORDER_AMOUNT);
-		
-		assertTrue(new Money(new BigDecimal(150)).eq(buyWorthXGetYRsOffOnZCategoryRule.execute(orderReq1)));
+//		PromotionRule buyWorthXGetYRsOffOnZCategoryRule = ruleDao.load(-9, -4);
+//
+//		assertNotNull(buyWorthXGetYRsOffOnZCategoryRule);
+//		assertTrue(buyWorthXGetYRsOffOnZCategoryRule instanceof BuyWorthXGetYRsOffRuleImpl);
+//		
+//		RuleConfiguration yRsOffOnZCategoryRuleConfiguration = ruleDao.loadRuleConfiguration(-9, -4);
+//
+//		assertNotNull(yRsOffOnZCategoryRuleConfiguration);
+//		assertEquals(4, yRsOffOnZCategoryRuleConfiguration.getConfigItems().size());
+//
+//		assertEquals(buyWorthXGetYRsOffOnZCategoryRule.isApplicable(orderReq1),PromotionStatusEnum.SUCCESS);
+//		assertEquals(buyWorthXGetYRsOffOnZCategoryRule.isApplicable(orderReq2),PromotionStatusEnum.LESS_ORDER_AMOUNT);
+//		
+//		assertTrue(new Money(new BigDecimal(150)).eq(buyWorthXGetYRsOffOnZCategoryRule.execute(orderReq1)));
 		
 		
 		

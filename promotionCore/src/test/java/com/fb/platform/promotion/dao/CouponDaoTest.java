@@ -125,8 +125,8 @@ public class CouponDaoTest extends BaseTestCase {
 		GlobalCouponUses globalUses = couponDao.loadGlobalUses(-1);
 
 		assertNotNull(globalUses);
-		assertEquals(1, globalUses.getCurrentCount());
-		assertTrue(globalUses.getCurrentAmount().eq(new Money(new BigDecimal(2000))));
+		assertEquals(2, globalUses.getCurrentCount());
+		assertTrue(globalUses.getCurrentAmount().eq(new Money(new BigDecimal(2201))));
 	}
 
 	@Test

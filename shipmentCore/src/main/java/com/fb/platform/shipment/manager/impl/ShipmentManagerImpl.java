@@ -107,6 +107,7 @@ public class ShipmentManagerImpl implements ShipmentManager {
 		boolean firstFlightOutboundCreated = false;
 		boolean blueDartOutboundCreated = false;
 		boolean quantiumOutboundCreated = false;
+		//TODO and list size is greater than 0
 		if(aramexParcelsList != null) {
 			ShipmentProcessor aramexShipmentProcessor = new ShipmentProcessor(new AramexLSP());
 			aramexOutboundCreated = aramexShipmentProcessor.generateOutboundFile(aramexParcelsList);
