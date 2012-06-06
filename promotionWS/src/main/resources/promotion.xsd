@@ -67,7 +67,7 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="orderDiscount">
+  <xs:element name="orderDiscount" nillable="true">
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="promotion:discountValue"/>

@@ -8,7 +8,7 @@ import com.fb.platform.promotion.to.OrderRequest;
 public class OrderDiscount implements Serializable {
 
 	private OrderRequest orderRequest = null;
-	private BigDecimal totalOrderDiscount = null;
+	private BigDecimal totalOrderDiscount = BigDecimal.ZERO;
 	
 	public OrderRequest getOrderRequest() {
 		return orderRequest;
