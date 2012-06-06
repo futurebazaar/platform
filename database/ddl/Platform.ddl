@@ -2,7 +2,13 @@
 DROP TABLE IF EXISTS categories_store; 
 DROP TABLE IF EXISTS sso_session;
 DROP TABLE IF EXISTS crypto_key;
+DROP TABLE IF EXISTS lists_listitem;
+DROP TABLE IF EXISTS lists_list;
+DROP TABLE IF EXISTS points_items;
+DROP TABLE IF EXISTS points_header;
+DROP TABLE IF EXISTS orders_orderitem;
 DROP TABLE IF EXISTS orders_order;
+DROP TABLE IF EXISTS catalog_sellerratechart;
 DROP TABLE IF EXISTS platform_coupon_user;
 DROP TABLE IF EXISTS user_promotion_uses ;
 DROP TABLE IF EXISTS user_coupon_uses ;
@@ -37,6 +43,8 @@ DROP TABLE IF EXISTS accounts_clientdomain;
 DROP TABLE IF EXISTS accounts_client;
 DROP TABLE IF EXISTS users_profile ;
 DROP TABLE IF EXISTS auth_user;
+DROP TABLE IF EXISTS payback_rule_config;
+DROP TABLE IF EXISTS rules;
 
 --  ******************** CREATE TABLE *****************
 
@@ -603,5 +611,146 @@ CREATE TABLE orders_order (
   KEY orders_order_ef0dcc2f (client_domain_id),
   CONSTRAINT agent_id_refs_id_684bce15b1886510 FOREIGN KEY (agent_id) REFERENCES users_profile (id),
   CONSTRAINT client_domain_id_refs_id_42c094ebad791900 FOREIGN KEY (client_domain_id) REFERENCES accounts_clientdomain (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE rules (
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	name VARCHAR(100) NOT NULL,
+	description VARCHAR(300),
+	PRIMARY KEY(id),
+	UNIQUE(name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE payback_rule_config (
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	name VARCHAR(50),
+	value VARCHAR(100),
+	rule_id INTEGER ,
+	PRIMARY KEY(id),
+	CONSTRAINT payback_rule_config_fk2 FOREIGN KEY (rule_id) REFERENCES rules(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE catalog_sellerratechart (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  sku varchar(100) NOT NULL,
+  list_price decimal(10,2) DEFAULT NULL,
+  transfer_price decimal(10,2) DEFAULT NULL,
+  offer_price decimal(10,2) DEFAULT NULL,
+  PRIMARY KEY(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `lists_list` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `title` varchar(1000) NOT NULL,
+    `curator_id` int(11) DEFAULT NULL,
+    `description` longtext NOT NULL,
+    `banner_image` varchar(100) DEFAULT NULL,
+    `starts_on` datetime DEFAULT NULL,
+    `ends_on` datetime DEFAULT NULL,
+    `is_featured` tinyint(1) NOT NULL DEFAULT '0',
+    `type` varchar(50) NOT NULL DEFAULT 'top_10',
+    `visibility` varchar(10) NOT NULL,
+    `percent_on_10` decimal(22,2) NOT NULL,
+    `percent_on_5` decimal(22,2) NOT NULL,
+    `detail_page_banner` varchar(100) DEFAULT NULL,
+    `detail_page_thumb_banner` varchar(100) DEFAULT NULL,
+    `freebies_banner` varchar(100) DEFAULT NULL,
+    `home_page_thumb_banner` varchar(100) DEFAULT NULL,
+    `tagline` varchar(1000),
+    `redirect_to` varchar(300),
+    `banner_type` varchar(50) NOT NULL,
+    `sort_order` int(10) unsigned,
+    `location` varchar(50) NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `lists_listitem` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `list_id` int(11) NOT NULL,
+    `sku_id` int(11),
+    `user_description` longtext DEFAULT NULL,
+    `user_title` varchar(1000) DEFAULT NULL,
+    `user_image` varchar(100) DEFAULT NULL,
+    `status` varchar(10),
+    `user_features` longtext,
+    `starts_on` datetime DEFAULT NULL,
+    `ends_on` datetime DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    CONSTRAINT list_item_fk1 FOREIGN KEY (list_id) REFERENCES lists_list(id),
+    CONSTRAINT `sku_id_refs_id_55b7b79d237f0c40` FOREIGN KEY (`sku_id`) REFERENCES `catalog_sellerratechart` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE points_header (
+    id INTEGER NOT NULL AUTO_INCREMENT,
+    order_id INTEGER NOT NULL,
+    reference_id VARCHAR(20) NOT NULL,
+    loyalty_card VARCHAR(16) DEFAULT NULL,
+    partner_merchant_id VARCHAR(10) NOT NULL,
+    partner_terminal_id VARCHAR(10) NOT NULL,
+    txn_action_code VARCHAR(50) NOT NULL,
+    txn_classification_code VARCHAR(20) NOT NULL,
+    txn_payment_type VARCHAR(20) NOT NULL DEFAULT 'OTHERS',
+    txn_date DATE NOT NULL,
+    settlement_date DATE NOT NULL,
+    txn_value INTEGER DEFAULT NULL,
+    marketing_code VARCHAR(10) DEFAULT 'DEFAULT',
+    branch_id VARCHAR(10) DEFAULT 'ONLINE',
+    txn_points INTEGER DEFAULT 0,
+    status VARCHAR(10) DEFAULT 'FRESH',
+    txn_timestamp DATETIME NOT NULL,
+    reason LONGTEXT,
+    PRIMARY KEY (id),
+    CONSTRAINT points_header_fk1 FOREIGN KEY (order_id) REFERENCES orders_order(id),
+    CONSTRAINT points_header_uk1 UNIQUE (order_id, txn_action_code, txn_classification_code, 
+        txn_points, txn_value, settlement_date)    
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE orders_orderitem (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    order_id int(11) NOT NULL,
+    qty int(11) NOT NULL DEFAULT '1',
+    seller_rate_chart_id int(11) DEFAULT NULL,
+    item_title varchar(500) DEFAULT NULL,
+    gift_title varchar(500) DEFAULT NULL,
+    list_price decimal(22,2) DEFAULT NULL,
+    sale_price decimal(22,2) DEFAULT NULL,
+    shipping_charges decimal(22,2) DEFAULT 0,
+    state varchar(100) DEFAULT NULL,
+    created_on DATETIME DEFAULT NULL,
+    cashback_amount decimal(22,2) DEFAULT 0,
+    is_inventory_blocked tinyint(1) DEFAULT 1,
+    dispatched_on datetime DEFAULT NULL,
+    dispatch_due_on datetime DEFAULT NULL,
+    expected_stock_arrival datetime DEFAULT NULL,
+    delivered_on datetime DEFAULT NULL,
+    expected_delivery_date datetime DEFAULT NULL,
+    modified_on datetime DEFAULT NULL,
+    total_amount decimal(22,2) NOT NULL DEFAULT '0.00',
+    received_by varchar(100) DEFAULT NULL,
+    receivers_contact varchar(15) DEFAULT NULL,
+    delivery_days int(11) DEFAULT NULL,
+    notes longtext,
+    discount decimal(22,2) DEFAULT '0.00',
+    PRIMARY KEY (id),
+    CONSTRAINT order_items_fk1 FOREIGN KEY (order_id) REFERENCES orders_order(id),
+    CONSTRAINT order_items_fk2 FOREIGN KEY (seller_rate_chart_id) REFERENCES catalog_sellerratechart(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE points_items (
+    id INTEGER NOT NULL AUTO_INCREMENT,
+    points_header_id INTEGER NOT NULL,
+    quantity INTEGER NOT NULL,
+    department_code INTEGER NOT NULL,
+    department_name VARCHAR(50) NOT NULL,
+    item_amount INTEGER NOT NULL,
+    txn_points DECIMAL(10, 2) DEFAULT 0,
+    article_id VARCHAR(20) NOT NULL,
+    order_item_id INTEGER NOT NULL,
+    earn_ratio DECIMAL(10, 2) DEFAULT '0.03',
+    burn_ratio DECIMAL(10, 2) DEFAULT '4',
+    PRIMARY KEY (id),
+    CONSTRAINT points_items_fk1 FOREIGN KEY (order_item_id) REFERENCES orders_orderitem(id),
+    CONSTRAINT points_items_fk2 FOREIGN KEY (points_header_id) REFERENCES points_header(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

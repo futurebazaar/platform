@@ -516,7 +516,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 		request.setPassword("testpass");
 		LoginResponse response = userManager.login(request);
 		UserEmail userEmail = new UserEmail();
-		userEmail.setEmail("testing@new.email");
+		userEmail.setEmail("jasvipul@gmail.com");
 		userEmail.setType("primary");
 		
 		AddUserEmailRequest addUserEmailRequest = new AddUserEmailRequest();
@@ -800,7 +800,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 		request.setPassword("testpass");
 		LoginResponse response = userManager.login(request);
 		UserPhone userPhone = new UserPhone();
-		userPhone.setPhone("9876543210");
+		userPhone.setPhone("9870587074");
 		userPhone.setType("primary");
 		
 		AddUserPhoneRequest addUserPhoneRequest = new AddUserPhoneRequest();
@@ -823,7 +823,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 		request.setPassword("testpass");
 		LoginResponse response = userManager.login(request);
 		UserPhone userPhone = new UserPhone();
-		userPhone.setPhone("7498775830");
+		userPhone.setPhone("9326164025");
 		userPhone.setType("primary");
 		
 		AddUserPhoneRequest addUserPhoneRequest = new AddUserPhoneRequest();
