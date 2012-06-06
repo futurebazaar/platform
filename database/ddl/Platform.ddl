@@ -756,4 +756,3 @@ CREATE TABLE points_items (
     CONSTRAINT points_items_fk2 FOREIGN KEY (points_header_id) REFERENCES points_header(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
