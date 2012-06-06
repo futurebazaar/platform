@@ -160,7 +160,7 @@ public class PointsServiceImpl implements PointsService {
 						logger.info("Rule : " + ruleName
 								+ " applicable for  item amount "
 								+ itemRequest.getAmount() + " . Txn Points = "
-								+ "points");
+								+ points);
 						if (points.compareTo(itemRequest.getTxnPoints()) > 0) {
 							itemRequest.setTxnPoints(points);
 							itemRequest.setEarnRatio(points.divide(itemRequest
