@@ -111,9 +111,12 @@ public class CouponResource {
 			com.fb.platform.promotion.model.OrderDiscount apiOrderDiscount =  apiCouponResponse.getOrderDiscount();
 			
 			OrderDiscount xmlOrderDiscount = new OrderDiscount();
-			xmlOrderDiscount.setDiscountValue(apiOrderDiscount.getTotalOrderDiscount());
-			OrderRequest xmlOrderResponse = getXMLOrderResponse(apiOrderDiscount.getOrderRequest());
-			xmlOrderDiscount.setOrderRequest(xmlOrderResponse);
+			
+			if (apiOrderDiscount != null) {
+				xmlOrderDiscount.setDiscountValue(apiOrderDiscount.getTotalOrderDiscount());
+				OrderRequest xmlOrderResponse = getXMLOrderResponse(apiOrderDiscount.getOrderRequest());
+				xmlOrderDiscount.setOrderRequest(xmlOrderResponse);
+			}
 			
 			xmlCouponResponse.setOrderDiscount(xmlOrderDiscount);
 			xmlCouponResponse.setSessionToken(apiCouponResponse.getSessionToken());
@@ -415,6 +418,12 @@ public class CouponResource {
 		Product xmlProduct = new Product();
 		xmlProduct.setPrice(apiProduct.getPrice());
 		xmlProduct.setProductId(apiProduct.getProductId());
+		for (Integer category : apiProduct.getCategories()){
+			xmlProduct.getCategory().add(category);
+		}
+		for (Integer brand : apiProduct.getBrands()){
+			xmlProduct.getBrand().add(brand);
+		}
 		return xmlProduct;
 	}
 	
