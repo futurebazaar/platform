@@ -81,4 +81,15 @@ promotionAdminWS/.settings/
 promotionAdminWS/bin/
 promotionAdminWS/target/
 .gitignore
+paybackWS/.classpath
+paybackCore/.classpath
+paybackWS/.settings/
+paybackWS/.project
+paybackWS/bin/
+paybackWS/target/
+paybackCore/.settings/
+paybackCore/.project
+paybackCore/bin/
+paybackCore/target/
+
 
