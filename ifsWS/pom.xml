@@ -4,12 +4,12 @@
     <parent>
         <groupId>com.fb</groupId>
         <artifactId>platform</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>${platform.version}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>ifsWS</artifactId>
     <packaging>war</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>${platform.version}</version>
     <name>IFS Web Service</name>
     <build>
         <finalName>ifsWS</finalName>
@@ -46,7 +46,7 @@
 		<dependency>
 			<groupId>com.fb</groupId>
 			<artifactId>ifsCore</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>${platform.version}</version>
 		</dependency>
     </dependencies>
     <!--properties>
