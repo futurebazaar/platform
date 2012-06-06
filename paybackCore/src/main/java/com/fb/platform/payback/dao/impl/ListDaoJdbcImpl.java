@@ -31,6 +31,7 @@ public class ListDaoJdbcImpl implements ListDao {
 		logger.info("Getting Hero Deail for date  : " + date);
 		List<Long> heroDeals =   jdbcTemplate.queryForList(GET_DOD_QUERY,  Long.class, new Object[] { date,
 				date });
+		logger.info("Hero deals for date + " + date + " are : " + heroDeals); 
 		return heroDeals;
 	}
 

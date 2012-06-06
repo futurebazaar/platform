@@ -4,12 +4,16 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.springframework.dao.DataAccessException;
 
 import com.fb.platform.payback.cache.ListCacheAccess;
 import com.fb.platform.payback.cache.PointsCacheConstants;
 import com.fb.platform.payback.dao.ListDao;
+import com.fb.platform.payback.dao.impl.ListDaoJdbcImpl;
 import com.fb.platform.payback.rule.PointsRule;
 import com.fb.platform.payback.rule.PointsRuleConfigConstants;
 import com.fb.platform.payback.rule.RuleConfiguration;
@@ -27,6 +31,8 @@ public class BuyHeroDealEarnYPoints implements PointsRule {
 	private ListCacheAccess listCacheAccess;
 	private PointsUtil pointsUtil;
 
+	private static Log logger = LogFactory.getLog(ListDaoJdbcImpl.class);
+	
 	public void setListDao(ListDao listDao) {
 		this.listDao = listDao;
 	}
@@ -96,12 +102,10 @@ public class BuyHeroDealEarnYPoints implements PointsRule {
 				return sellerRateChartId;
 			}
 
-			if (sellerRateChartId != null) {
-				StringBuilder stringBuilder = new StringBuilder();
-				for (Long id : sellerRateChartId){
-					stringBuilder.append(String.valueOf(id) + ",");
-				}
-				cacheHeroDeal(stringBuilder.toString().substring(0, stringBuilder.length()-1), key);
+			if (sellerRateChartId != null && !sellerRateChartId.isEmpty()) {
+				String dods = StringUtils.join(sellerRateChartId, ",");
+				logger.info("Hero Deals : " + dods);
+				cacheHeroDeal(dods, key);
 			} else {
 				return sellerRateChartId;
 			}
