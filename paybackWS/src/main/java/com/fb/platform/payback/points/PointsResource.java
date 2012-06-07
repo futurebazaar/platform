@@ -40,6 +40,8 @@ import com.fb.platform.payback._1_0.ItemResponse;
 import com.fb.platform.payback._1_0.OrderItemRequest;
 import com.fb.platform.payback._1_0.PointsRequest;
 import com.fb.platform.payback._1_0.PointsResponse;
+import com.fb.platform.payback._1_0.RollbackPointsRequest;
+import com.fb.platform.payback._1_0.RollbackPointsResponse;
 import com.fb.platform.payback.service.PointsManager;
 import com.fb.platform.payback.to.PointsResponseCodeEnum;
 
@@ -102,12 +104,14 @@ public class PointsResource {
 			}
 			
 			pointsHeaderRequest.setOrderRequest(orderRequest);
+			
 			com.fb.platform.payback.to.PointsResponse pointsResponse = pointsManager.getPointsReponse(pointsHeaderRequest);
 			PointsResponse xmlPointsResponse = new PointsResponse();	
 			xmlPointsResponse.setActionCode(ActionCode.valueOf(pointsResponse.getActionCode().name()));
 			xmlPointsResponse.setMessage(pointsResponse.getStatusMessage());
 			xmlPointsResponse.setStatusCode(pointsResponse.getPointsResponseCodeEnum().name());
 			xmlPointsResponse.setTotalPoints(pointsResponse.getTxnPoints());
+			xmlPointsResponse.setHeaderId(pointsResponse.getPointsHeaderId());
 			StringWriter outStringWriter = new StringWriter();
 			Marshaller marsheller = context.createMarshaller();
 			marsheller.marshal(xmlPointsResponse, outStringWriter);
@@ -208,6 +212,41 @@ public class PointsResource {
 			
 			String xmlResponse = outStringWriter.toString();
 			logger.info("Display Points Response : \n" + xmlResponse);
+			return xmlResponse;
+
+		} catch (JAXBException e) {
+			logger.error("Error in the Points call.", e);
+			return null;
+		}
+
+	}
+	
+	@POST
+	@Path("/rollback")
+	public String rollbackPoints(String pointsXml) throws NoPermissionException{
+		logger.info("Rollback Points Request XML : \n" + pointsXml);
+		try {
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			RollbackPointsRequest xmlRollbackPointsRequest = (RollbackPointsRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(pointsXml)));
+			com.fb.platform.payback.to.RollbackRequest rollbackRequest = new com.fb.platform.payback.to.RollbackRequest();
+			
+			rollbackRequest.setSessionToken(xmlRollbackPointsRequest.getSessionToken());
+			rollbackRequest.setHeaderId(xmlRollbackPointsRequest.getHeaderId());
+			
+			com.fb.platform.payback.to.RollbackResponse rollbackResponse = pointsManager.rollbackTransaction(rollbackRequest);
+			
+			RollbackPointsResponse xmlRollbackPointsResponse = new RollbackPointsResponse();
+			xmlRollbackPointsResponse.setDeletedHeaderRows(rollbackResponse.getDeletedHeaderRows());
+			xmlRollbackPointsResponse.setDeletedItemRows(rollbackResponse.getDeletedItemRows());
+			xmlRollbackPointsResponse.setHeaderId(rollbackResponse.getHeaderId());
+			xmlRollbackPointsResponse.setStatusCode(rollbackResponse.getResponseEnum().name());
+
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marsheller = context.createMarshaller();
+			marsheller.marshal(xmlRollbackPointsResponse, outStringWriter);
+			
+			String xmlResponse = outStringWriter.toString();
+			logger.info("Rollback Points Response : \n" + xmlResponse);
 			return xmlResponse;
 
 		} catch (JAXBException e) {

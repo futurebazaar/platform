@@ -14,6 +14,7 @@ import com.fb.platform.auth.AuthenticationTO;
 import com.fb.platform.payback.exception.InvalidReferenceId;
 import com.fb.platform.payback.exception.InvalidSession;
 import com.fb.platform.payback.exception.PointsHeaderDoesNotExist;
+import com.fb.platform.payback.model.RollbackHeader;
 import com.fb.platform.payback.service.PointsManager;
 import com.fb.platform.payback.service.PointsService;
 import com.fb.platform.payback.to.BurnActionCodesEnum;
@@ -23,6 +24,8 @@ import com.fb.platform.payback.to.PointsRequest;
 import com.fb.platform.payback.to.PointsResponse;
 import com.fb.platform.payback.to.PointsResponseCodeEnum;
 import com.fb.platform.payback.to.PointsTxnClassificationCodeEnum;
+import com.fb.platform.payback.to.RollbackRequest;
+import com.fb.platform.payback.to.RollbackResponse;
 import com.fb.platform.payback.util.PointsUtil;
 
 public class PointsManagerImpl implements PointsManager {
@@ -68,8 +71,9 @@ public class PointsManagerImpl implements PointsManager {
 
 			responseEnum = pointsService.storePoints(request);
 			pointsResponse.setTxnPoints(request.getOrderRequest().getTxnPoints().intValue());
+			pointsResponse.setPointsHeaderId(request.getOrderRequest().getPointsHeaderId());
 		} catch (PointsHeaderDoesNotExist e) {
-			responseEnum = PointsResponseCodeEnum.EARN_DOES_NOT_EXIST;
+			responseEnum = PointsResponseCodeEnum.HEADER_DOES_NOT_EXIST;
 		} catch (InvalidReferenceId e) {
 			responseEnum = PointsResponseCodeEnum.INVALID_REFERENCE_ID;
 		}catch (InvalidSession e) {
@@ -165,6 +169,33 @@ public class PointsManagerImpl implements PointsManager {
 	@Override
 	public PointsRequest getPointsToBeDisplayed(PointsRequest request) {
 		return pointsService.getPointsToBeDisplayed(request);
+	}
+	
+	@Override
+	public RollbackResponse rollbackTransaction(RollbackRequest request){
+		RollbackResponse response = new RollbackResponse();
+		if (StringUtils.isBlank(request.getSessionToken())) {
+				response.setResponseEnum(PointsResponseCodeEnum.NO_SESSION);
+				return response;
+		}
+
+		AuthenticationTO authentication = authenticationService
+				.authenticate(request.getSessionToken());
+		if (authentication == null) {
+			response.setResponseEnum(PointsResponseCodeEnum.NO_SESSION);
+			return response;
+		}
+		
+		RollbackHeader header = pointsService.rollbackTransaction(request.getHeaderId());
+		response.setResponseEnum(PointsResponseCodeEnum.HEADER_DOES_NOT_EXIST);
+		if (header.getHeaderRowsDeleted() > 0){
+			response.setResponseEnum(PointsResponseCodeEnum.SUCCESS);
+		}
+		logger.info("Status Code is : " + request.getHeaderId() + " for Rollback Transaction : " + response.getResponseEnum().name());
+		response.setDeletedHeaderRows(header.getHeaderRowsDeleted());
+		response.setDeletedItemRows(header.getItemRowsDeleted());
+		response.setHeaderId(header.getHeaderId());
+		return response;
 	}
 
 }

@@ -19,6 +19,7 @@ import com.fb.platform.payback.dao.PointsRuleDao;
 import com.fb.platform.payback.exception.PointsHeaderDoesNotExist;
 import com.fb.platform.payback.model.PointsHeader;
 import com.fb.platform.payback.model.PointsItems;
+import com.fb.platform.payback.model.RollbackHeader;
 import com.fb.platform.payback.rule.BurnPointsRuleEnum;
 import com.fb.platform.payback.rule.EarnPointsRuleEnum;
 import com.fb.platform.payback.rule.PointsRule;
@@ -201,8 +202,9 @@ public class PointsServiceImpl implements PointsService {
 		String paymentType = actionCode.toString().split(",")[1];
 		BigDecimal bonusPoints = orderRequest.getBonusPoints();
 		if (txnPoints.compareTo(BigDecimal.ZERO) == 1) {
-			savePoints(orderRequest, txnPoints, actionCode, classificationCode,
+			long headerId = savePoints(orderRequest, txnPoints, actionCode, classificationCode,
 					paymentType, clientName);
+			request.getOrderRequest().setPointsHeaderId(headerId);
 			if (bonusPoints.compareTo(BigDecimal.ZERO) == 1) {
 				logger.info("Bonus Points Exist for order id: "
 						+ orderRequest.getOrderId());
@@ -234,7 +236,7 @@ public class PointsServiceImpl implements PointsService {
 		return totalTxnPoint;
 	}
 
-	private void savePoints(OrderRequest orderRequest, BigDecimal txnPoints,
+	private long savePoints(OrderRequest orderRequest, BigDecimal txnPoints,
 			PointsTxnClassificationCodeEnum actionCode,
 			String classificationCode, String paymentType, String client) {
 		Properties props = pointsUtil.getProperties("payback.properties");
@@ -269,7 +271,8 @@ public class PointsServiceImpl implements PointsService {
 				&& pointsHeader.hasSKUItems() > 0) {
 			savePointsItems(orderRequest, headerId);
 		}
-
+		
+		return headerId;
 	}
 
 	private void savePointsItems(OrderRequest orderRequest, long headerId) {
@@ -564,5 +567,15 @@ public class PointsServiceImpl implements PointsService {
 			throw new PointsHeaderDoesNotExist("Earn Header not available");
 		}
 	}
+	
+	@Override
+	public RollbackHeader rollbackTransaction(long headerId){
+		RollbackHeader header = new RollbackHeader();
+		header.setHeaderId(headerId);
+		logger.info("Rolling Back the transaction for header id : " + headerId);
+		header = pointsDao.rollbackTransaction(header);
+		return header;
+	}
+	
 
 }
