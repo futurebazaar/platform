@@ -13,6 +13,7 @@ import com.fb.commons.PlatformException;
 import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.payback.model.PointsHeader;
 import com.fb.platform.payback.model.PointsItems;
+import com.fb.platform.payback.model.RollbackHeader;
 import com.fb.platform.payback.rule.BurnPointsRuleEnum;
 import com.fb.platform.payback.rule.EarnPointsRuleEnum;
 import com.fb.platform.payback.to.OrderItemRequest;
@@ -176,11 +177,67 @@ public class DaoTest extends BaseTestCase{
 		itemRequest.setId(1);
 		itemRequest.setQuantity(1);
 		itemRequest.setSellerRateChartId(1);
-		
 		pointsDao.insertPointsItemsData(itemRequest, headerId, txnPoints.setScale(0, ROUND).intValue());
 		Collection<PointsItems> pointsItems = pointsDao.loadPointsItemData(headerId);
 		assertTrue("PointsItems size empty", pointsItems.size() > 0);
 		
+	}
+	
+	@Test 
+	public void rollbackTransaction() {
+		pointsHeader.setPartnerMerchantId("90012970");
+		pointsHeader.setPartnerTerminalId("6241718");
+		pointsHeader.setTxnClassificationCode("CASH_CASH");
+		pointsHeader.setTxnPaymentType("OTHERS");
+		pointsHeader.setTxnActionCode("PREALLOC_EARN");
+		BigDecimal txnPoints = new BigDecimal(30);
+		int ROUND = BigDecimal.ROUND_HALF_DOWN;
+		pointsHeader.setTxnPoints(txnPoints.setScale(0, ROUND).intValue());
+		
+		BigDecimal amount = new BigDecimal(1000);
+		pointsHeader.setTxnValue(amount.setScale(0, ROUND).intValue());
+		pointsHeader.setReferenceId("1234");
+		pointsHeader.setLoyaltyCard("1234567812345678");
+		pointsHeader.setReason("TEST ORDER");
+		pointsHeader.setSettlementDate(DateTime.now());
+		pointsHeader.setTxnDate(DateTime.now());
+		pointsHeader.setTxnTimestamp(DateTime.now());
+		pointsHeader.setOrderId(1);
+		
+		long headerId = pointsDao.insertPointsHeaderData(pointsHeader);
+		
+		OrderItemRequest itemRequest = new OrderItemRequest();
+		itemRequest.setAmount(amount);
+		itemRequest.setArticleId("1234");
+		itemRequest.setCategoryId(1234);
+		itemRequest.setDepartmentCode(1234);
+		itemRequest.setDepartmentName("Pooh");
+		itemRequest.setEarnRatio(new BigDecimal(0.03));
+		itemRequest.setId(1);
+		itemRequest.setQuantity(1);
+		itemRequest.setSellerRateChartId(1);
+		pointsDao.insertPointsItemsData(itemRequest, headerId, txnPoints.setScale(0, ROUND).intValue());
+		
+		OrderItemRequest itemRequest2 = new OrderItemRequest();
+		itemRequest2.setAmount(amount);
+		itemRequest2.setArticleId("1234");
+		itemRequest2.setCategoryId(1234);
+		itemRequest2.setDepartmentCode(1234);
+		itemRequest2.setDepartmentName("Pooh");
+		itemRequest2.setEarnRatio(new BigDecimal(0.03));
+		itemRequest2.setId(2);
+		itemRequest2.setQuantity(1);
+		itemRequest2.setSellerRateChartId(1);
+		pointsDao.insertPointsItemsData(itemRequest2, headerId, txnPoints.setScale(0, ROUND).intValue());
+		
+		RollbackHeader header = new RollbackHeader();
+		header.setHeaderId(headerId);
+		header = pointsDao.rollbackTransaction(header);
+		assertEquals(1, header.getHeaderRowsDeleted());
+		assertEquals(2, header.getItemRowsDeleted());
+		header = pointsDao.rollbackTransaction(header);
+		assertEquals(0, header.getHeaderRowsDeleted());
+		assertEquals(0, header.getItemRowsDeleted());
 	}
 	
 }

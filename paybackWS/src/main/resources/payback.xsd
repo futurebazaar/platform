@@ -76,6 +76,7 @@
         <xs:element ref="payback:statusCode"/>
         <xs:element ref="payback:message"/>
         <xs:element ref="payback:totalPoints"/>
+        <xs:element ref="payback:headerId"/>
 	  </xs:sequence>
 	</xs:complexType>
   </xs:element>
@@ -138,5 +139,30 @@
   <xs:element name="txnPoints" type="xs:int"/>
   <xs:element name="bonusPoints" type="xs:int"/>
   <xs:element name="orderAmount" type="xs:decimal"/>
+  
+  <xs:element name="rollbackPointsRequest">
+    <xs:complexType>
+      <xs:sequence>
+      	<xs:element ref="payback:headerId"/>
+      	<xs:element ref="payback:sessionToken" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
 
+  <xs:element name="headerId" type="xs:long"/>
+  
+  <xs:element name="rollbackPointsResponse">
+    <xs:complexType>
+      <xs:sequence>
+      	<xs:element ref="payback:headerId"/>
+      	<xs:element ref="payback:deletedHeaderRows" />
+      	<xs:element ref="payback:deletedItemRows" />
+      	<xs:element ref="payback:statusCode" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="deletedHeaderRows" type="xs:int"/>
+  <xs:element name="deletedItemRows" type="xs:int"/>
+  
 </xs:schema>

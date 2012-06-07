@@ -6,6 +6,7 @@ public class PointsResponse {
 	private PointsResponseCodeEnum pointsResponseCodeEnum;
 	private String statusMessage;
 	private int txnPoints;
+	private long pointsHeaderId;
 	
 	public String getStatusMessage() {
 		return statusMessage;
@@ -31,5 +32,11 @@ public class PointsResponse {
 	}
 	public void setTxnPoints(int txnPoints) {
 		this.txnPoints = txnPoints;
+	}
+	public long getPointsHeaderId() {
+		return pointsHeaderId;
+	}
+	public void setPointsHeaderId(long pointsHeaderId) {
+		this.pointsHeaderId = pointsHeaderId;
 	}
 }

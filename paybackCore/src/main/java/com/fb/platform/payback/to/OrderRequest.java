@@ -9,6 +9,7 @@ import org.joda.time.DateTime;
 public class OrderRequest {
 
 	private long orderId;
+	private long pointsHeaderId;
 	private String referenceId;
 	private BigDecimal amount =  BigDecimal.ZERO;
 	private String reason;
@@ -71,5 +72,11 @@ public class OrderRequest {
 	}
 	public void setTxnPoints(BigDecimal txnPoints) {
 		this.txnPoints = txnPoints;
+	}
+	public long getPointsHeaderId() {
+		return pointsHeaderId;
+	}
+	public void setPointsHeaderId(long pointsHeaderId) {
+		this.pointsHeaderId = pointsHeaderId;
 	}
 }

@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import com.fb.platform.payback.model.PointsHeader;
 import com.fb.platform.payback.model.PointsItems;
+import com.fb.platform.payback.model.RollbackHeader;
 import com.fb.platform.payback.to.OrderItemRequest;
 
 public interface PointsDao {
@@ -23,5 +24,7 @@ public interface PointsDao {
 
 	public void insertPointsItemsData(OrderItemRequest itemRequest,
 			long headerId, int txnPoints);
+
+	public RollbackHeader rollbackTransaction(RollbackHeader header);
 
 }
