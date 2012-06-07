@@ -33,6 +33,8 @@ DROP TABLE IF EXISTS fulfillment_lsp;
 DROP TABLE IF EXISTS fulfillment_dc;
 DROP TABLE IF EXISTS fulfillment_productgroup;
 DROP TABLE IF EXISTS inventory_inventory;
+DROP TABLE IF EXISTS fulfillment_sellerpincodemap; 
+DROP TABLE IF EXISTS accounts_account;
 DROP TABLE IF EXISTS accounts_clientdomain;
 DROP TABLE IF EXISTS accounts_client;
 DROP TABLE IF EXISTS users_profile ;
@@ -607,3 +609,49 @@ CREATE TABLE orders_order (
   CONSTRAINT client_domain_id_refs_id_42c094ebad791900 FOREIGN KEY (client_domain_id) REFERENCES accounts_clientdomain (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `accounts_account` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) NOT NULL,
+  `website` varchar(200) NOT NULL,
+  `type` varchar(100) NOT NULL DEFAULT 'Channel',
+  `customer_support_no` varchar(150) NOT NULL,
+  `primary_phone` varchar(15) NOT NULL,
+  `secondary_phone` varchar(15) NOT NULL,
+  `primary_email` varchar(500) NOT NULL,
+  `secondary_email` varchar(500) NOT NULL,
+  `shipping_policy` longtext NOT NULL,
+  `returns_policy` longtext NOT NULL,
+  `tos` longtext NOT NULL,
+  `code` varchar(200) NOT NULL,
+  `dni` varchar(5) NOT NULL,
+  `greeting_title` longtext NOT NULL,
+  `greeting_text` longtext NOT NULL,
+  `is_exclusive` tinyint(1) NOT NULL,
+  `confirmed_order_email` varchar(500) NOT NULL,
+  `pending_order_email` varchar(500) NOT NULL,
+  `signature` longtext NOT NULL,
+  `pending_order_helpline` varchar(25) NOT NULL,
+  `confirmed_order_helpline` varchar(25) NOT NULL,
+  `pg_return_url` varchar(200) NOT NULL,
+  `sms_mask` longtext NOT NULL,
+  `share_product_email` varchar(500) NOT NULL,
+  `client_id` int(11) NOT NULL,
+  `slug` varchar(200) NOT NULL,
+  `ships_everywhere` tinyint(1) NOT NULL,
+  `shipping_duration` int(10) unsigned,
+  `delivery_duration` int(10) unsigned,
+  `sap_support_needed` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `accounts_account_4a4e8ffb` (`client_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=93 DEFAULT CHARSET=utf8;
+
+CREATE TABLE fulfillment_sellerpincodemap (
+	id INTEGER NOT NULL AUTO_INCREMENT,
+	pincode varchar(6) NOT NULL,
+	seller_id int NOT NULL,
+	PRIMARY KEY(id),
+	CONSTRAINT fulfillment_sellerpincodemap_fk1 FOREIGN KEY (seller_id) REFERENCES accounts_account(id),
+	CONSTRAINT pincode_seller_key UNIQUE (pincode,seller_id), 
+	INDEX (pincode), 
+	INDEX (seller_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
