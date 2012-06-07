@@ -6,12 +6,12 @@
     <parent>
         <groupId>com.fb</groupId>
         <artifactId>platform</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>${platform.version}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
 	<artifactId>testProject</artifactId>
-	<version>1.0-SNAPSHOT</version>
+        <version>${platform.version}</version>
 	<packaging>jar</packaging>
 	
 	<name>Module to write dummy test classes</name>
@@ -48,17 +48,22 @@
 	  	<dependency>
 	  		<groupId>com.fb</groupId>
 			<artifactId>platformCommons</artifactId>
-			<version>1.0-SNAPSHOT</version>
+        		<version>${platform.version}</version>
 	  	</dependency>
 	  	<dependency>
 	  		<groupId>com.fb</groupId>
 			<artifactId>platformCaching</artifactId>
-			<version>1.0-SNAPSHOT</version>
+        		<version>${platform.version}</version>
 	  	</dependency>
 	  	<dependency>
 	  		<groupId>com.fb</groupId>
 			<artifactId>promotionCore</artifactId>
-			<version>1.0-SNAPSHOT</version>
+        		<version>${platform.version}</version>
+	  	</dependency>
+	  	<dependency>
+	  		<groupId>com.fb</groupId>
+			<artifactId>fulfilmentCore</artifactId>
+        		<version>${platform.version}</version>
 	  	</dependency>
 	</dependencies>
 
