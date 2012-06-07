@@ -1,6 +1,3 @@
--- ******************** DROP TABLE AND CONSTRANTS **********
-DROP TABLE IF EXISTS fulfillment_sellerpincodemap; 
-
 --  ******************** CREATE TABLE *****************
 CREATE TABLE fulfillment_sellerpincodemap (
 	id INTEGER NOT NULL AUTO_INCREMENT,
