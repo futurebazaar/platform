@@ -27,6 +27,7 @@
   <xs:element name="orderItem">
     <xs:complexType>
       <xs:sequence>
+      	<xs:element ref="promotion:itemId" />
         <xs:element ref="promotion:product"/>
         <xs:element ref="promotion:quantity"/>
         <xs:element ref="promotion:isLocked"/>
@@ -44,6 +45,7 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="itemId" type="xs:int"/>
   <xs:element name="productId" type="xs:int"/>
   <xs:element name="category" type="xs:int"/>
   <xs:element name="brand" type="xs:int"/>
