@@ -119,7 +119,9 @@
     <xs:complexType>
       <xs:sequence>
       	<xs:element ref="payback:totalPoints"/>
+      	<xs:element ref="payback:earnPoints"/>
       	<xs:element ref="payback:bonusPoints"/>
+      	<xs:element ref="payback:purchasablePoints"/>
       	<xs:element maxOccurs="unbounded" ref="payback:itemResponse" />
       </xs:sequence>
     </xs:complexType>
@@ -135,7 +137,9 @@
     </xs:complexType>
   </xs:element>
   
+  <xs:element name="earnPoints" type="xs:int"/>
   <xs:element name="totalPoints" type="xs:int"/>
+  <xs:element name="purchasablePoints" type="xs:int"/>
   <xs:element name="txnPoints" type="xs:int"/>
   <xs:element name="bonusPoints" type="xs:int"/>
   <xs:element name="orderAmount" type="xs:decimal"/>

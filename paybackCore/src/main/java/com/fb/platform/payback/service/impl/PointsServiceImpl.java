@@ -24,6 +24,7 @@ import com.fb.platform.payback.rule.BurnPointsRuleEnum;
 import com.fb.platform.payback.rule.EarnPointsRuleEnum;
 import com.fb.platform.payback.rule.PointsRule;
 import com.fb.platform.payback.rule.PointsRuleConfigConstants;
+import com.fb.platform.payback.rule.impl.PurchaseOrderBurnXPoints;
 import com.fb.platform.payback.service.PointsService;
 import com.fb.platform.payback.to.BurnActionCodesEnum;
 import com.fb.platform.payback.to.ClassificationCodesEnum;
@@ -113,7 +114,15 @@ public class PointsServiceImpl implements PointsService {
 		default:
 
 		}
+		request.getOrderRequest().setPointsValue(purchasablePointsValue(request).setScale(0, ROUND));
 		return request;
+	}
+	
+	private BigDecimal purchasablePointsValue(PointsRequest request){
+		PointsRule rule = null;
+		rule = loadBurnRule(BurnPointsRuleEnum.PURCHASE_ORDER_BURN_X_POINTS);
+		BigDecimal burnRatio = ((PurchaseOrderBurnXPoints)rule).getBurnRatio();
+		return request.getOrderRequest().getTxnPoints().divide(burnRatio);
 	}
 
 	@Override
@@ -161,7 +170,7 @@ public class PointsServiceImpl implements PointsService {
 						logger.info("Rule : " + ruleName
 								+ " applicable for  item amount "
 								+ itemRequest.getAmount() + " . Txn Points = "
-								+ points);
+								+ points + ". Bonus Points = " + orderRequest.getBonusPoints());
 						if (points.compareTo(itemRequest.getTxnPoints()) > 0) {
 							itemRequest.setTxnPoints(points);
 							itemRequest.setEarnRatio(points.divide(itemRequest

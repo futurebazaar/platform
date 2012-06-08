@@ -18,6 +18,8 @@ public class OrderRequest {
 	private DateTime txnTimestamp;
 	private BigDecimal bonusPoints = BigDecimal.ZERO;
 	private BigDecimal txnPoints = BigDecimal.ZERO;
+	private BigDecimal pointsValue = BigDecimal.ZERO;
+	private BigDecimal totalTxnPoints = BigDecimal.ZERO;
 	
 	public long getOrderId() {
 		return orderId;
@@ -78,5 +80,15 @@ public class OrderRequest {
 	}
 	public void setPointsHeaderId(long pointsHeaderId) {
 		this.pointsHeaderId = pointsHeaderId;
+	}
+	public BigDecimal getPointsValue() {
+		return pointsValue;
+	}
+	public void setPointsValue(BigDecimal pointsValue) {
+		this.pointsValue = pointsValue;
+	}
+	
+	public BigDecimal getTotalTxnPoints() {
+		return txnPoints.add(bonusPoints);
 	}
 }
