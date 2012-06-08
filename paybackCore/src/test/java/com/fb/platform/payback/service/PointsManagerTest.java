@@ -210,6 +210,13 @@ public class PointsManagerTest  extends BaseTestCase{
 		pr.setOrderRequest(request);
 		PointsRequest newRequest = pointsManager.getPointsToBeDisplayed(pr);
 		assertEquals(68, newRequest.getOrderRequest().getTxnPoints().intValue());
+		assertEquals(17, newRequest.getOrderRequest().getPointsValue().intValue());
+		
+		request.setAmount(new BigDecimal(4000));
+		newRequest = pointsManager.getPointsToBeDisplayed(pr);
+		assertEquals(68, newRequest.getOrderRequest().getTxnPoints().intValue());
+		assertEquals(17, newRequest.getOrderRequest().getPointsValue().intValue());
+		assertEquals(268, newRequest.getOrderRequest().getTotalTxnPoints().intValue());
 	}
 	
 	private OrderRequest setOrderRequest(Long orderId, String referenceId) {

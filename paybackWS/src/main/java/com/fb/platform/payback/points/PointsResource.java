@@ -196,9 +196,11 @@ public class PointsResource {
 			com.fb.platform.payback.to.PointsRequest newPointsRequest= pointsManager.getPointsToBeDisplayed(pointsRequest);
 			
 			DisplayPointsResponse xmlDisplayPointsResponse = new DisplayPointsResponse();
-			xmlDisplayPointsResponse.setTotalPoints(newPointsRequest.getOrderRequest().getTxnPoints().intValue());
+			xmlDisplayPointsResponse.setTotalPoints(newPointsRequest.getOrderRequest().getTotalTxnPoints().intValue());
 			xmlDisplayPointsResponse.setBonusPoints(newPointsRequest.getOrderRequest().getBonusPoints().intValue());
-			for (com.fb.platform.payback.to.OrderItemRequest itemRequest : newPointsRequest.getOrderRequest().getOrderItemRequest()){
+			xmlDisplayPointsResponse.setPurchasablePoints(newPointsRequest.getOrderRequest().getPointsValue().intValue());
+			xmlDisplayPointsResponse.setEarnPoints(newPointsRequest.getOrderRequest().getTxnPoints().intValue());
+			for (com.fb.platform.payback.to.OrderItemRequest itemRequest : newPointsRequest.getOrderRequest().getOrderItemRequest()) {
 				ItemResponse xmlItemResponse = new ItemResponse();
 				xmlItemResponse.setAmount(itemRequest.getAmount());
 				xmlItemResponse.setItemId(itemRequest.getId());
@@ -262,6 +264,9 @@ public class PointsResource {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Future Platform PAYBACK Websevice. \n");
 		sb.append("To store Points post to : http://hostname:port/paybackWS/points/store \n");
+		sb.append("To store Points post to : http://hostname:port/paybackWS/points/display \n");
+		sb.append("To store Points post to : http://hostname:port/paybackWS/points/rollback \n");
+		sb.append("To store Points post to : http://hostname:port/paybackWS/points/clear/rule \n");
 		return sb.toString();
 	}
 	

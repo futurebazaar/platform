@@ -144,10 +144,12 @@ public class PointsServiceTest extends BaseTestCase{
 		pr.setOrderRequest(request);
 		PointsRequest newRequest = pointsService.getPointsToBeDisplayed(pr);
 		assertEquals(68, newRequest.getOrderRequest().getTxnPoints().intValue());
+		assertEquals(268, newRequest.getOrderRequest().getTotalTxnPoints().intValue());
 		
 		pr.setTxnActionCode("BURN_REVERSAL");
 		newRequest = pointsService.getPointsToBeDisplayed(pr);
 		assertEquals(8000, newRequest.getOrderRequest().getTxnPoints().intValue());
+		assertEquals(2000, newRequest.getOrderRequest().getPointsValue().intValue());
 	}
 	
 	private OrderRequest setOrderRequest(Long orderId, String referenceId) {
