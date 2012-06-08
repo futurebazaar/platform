@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.fb.com/platform/fulfilment/1.0.0" xmlns:fulfilment="http://www.fb.com/platform/fulfilment/1.0.0">
+
+  	<xs:element name="pincode" type="xs:string"/>  
+  	<xs:element name="sellers" type="xs:string"/>
+	<xs:element name="statusCode" type="xs:string"/>
+	<xs:element name="statusMessage" type="xs:string"/>
+	
+  	<xs:element name="sellerByPincodeRequest">
+    	<xs:complexType>
+      		<xs:sequence>
+        		<xs:element ref="fulfilment:pincode"/>
+      		</xs:sequence>
+    	</xs:complexType>
+  	</xs:element>
+  
+  	<xs:element name="sellerByPincodeResponse">
+    	<xs:complexType>
+      		<xs:sequence>
+        		<xs:element ref="fulfilment:pincode"/>
+        		<xs:element ref="fulfilment:sellers"/>
+        		<xs:element ref="fulfilment:statusCode"/>
+        		<xs:element ref="fulfilment:statusMessage"/>
+      		</xs:sequence>
+    	</xs:complexType>
+  	</xs:element>
+  
+</xs:schema>

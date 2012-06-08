@@ -16,7 +16,8 @@ public enum NamedCachesEnum {
 	COUPON_CACHE("couponCache"),
 	PRODUCT_GROUP_CACHE("productGroupCache"),
 	LSP_CACHE("lspCache"),
-	POINTS_CACHE("pointsCache");
+	POINTS_CACHE("pointsCache"),
+	FULFILMENT_CACHE("fulfilmentCache");
 
 	private String name = null;
 

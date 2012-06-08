@@ -374,6 +374,8 @@
         <module>authenticationCore</module>
         <module>promotionCore</module>
         <module>promotionWS</module>
+		<module>fulfilmentCore</module>
+		<module>fulfilmentWS</module>
 		<module>promotionAdminWS</module>
         <module>paybackCore</module>
         <module>paybackWS</module>
@@ -413,7 +415,7 @@
 
     <properties>
         <dao.framework>jdbc</dao.framework>
-        <platform.version>${platform.version}</platform.version>        
+	<platform.version>1.0-SNAPSHOT</platform.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.version>4.8.2</junit.version>
 		<spring.version>3.0.5.RELEASE</spring.version>
