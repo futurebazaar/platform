@@ -7,12 +7,14 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang.text.StrTokenizer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.model.OrderDiscount;
 import com.fb.platform.promotion.rule.PromotionRule;
@@ -30,26 +32,26 @@ import com.fb.platform.promotion.util.StringToIntegerList;
  * @author keith
  *
  */
-public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule, Serializable {
+public class BuyXQuantityGetVariablePercentOffRuleImpl implements PromotionRule, Serializable {
 
-	private static transient Log log = LogFactory.getLog(BuyWorthXGetYPercentOffRuleImpl.class);
+	private static transient Log log = LogFactory.getLog(BuyXQuantityGetVariablePercentOffRuleImpl.class);
 
-	private BigDecimal discountPercentage;
-	private Money maxDiscountPerUse;
 	private Money minOrderValue = null;
+	private Money maxDiscountPerUse = null;
 	private List<Integer> clientList = null;
 	private List<Integer> includeCategoryList = null;
 	private List<Integer> excludeCategoryList = null;
 	private List<Integer> brands;
+	private HashMap<Integer,BigDecimal> quantityDiscountMap = null;	// "1=5,2=15,3=20"
 	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
 
-		discountPercentage = BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.DISCOUNT_PERCENTAGE.name())));
+		quantityDiscountMap = getPercentMap(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.VARIABLE_DISCOUNT_PERCENTAGE.name()));
 		if (ruleConfig.isConfigItemPresent(RuleConfigDescriptorEnum.MAX_DISCOUNT_CEIL_IN_VALUE.name())) {
 			maxDiscountPerUse = new Money (BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.MAX_DISCOUNT_CEIL_IN_VALUE.name()))));
 		}
-		
+
 		if (ruleConfig.isConfigItemPresent(RuleConfigDescriptorEnum.CATEGORY_INCLUDE_LIST.name())) {
 			StrTokenizer strTokCategories = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.CATEGORY_INCLUDE_LIST.name()),",");
 			includeCategoryList = StringToIntegerList.convert((List<String>)strTokCategories.getTokenList());
@@ -81,7 +83,6 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule, Serializa
 			brands = StringToIntegerList.convert((List<String>)strTokCategories.getTokenList());
 			log.info("brandsList = "+ brands);
 		}
-		log.info("minOrderValue : " + minOrderValue + ", discountPercentage : " + discountPercentage.toString() + " ,maxDiscountPerUse" + maxDiscountPerUse.toString());
 	}
 
 	@Override
@@ -114,6 +115,9 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule, Serializa
 		if(log.isDebugEnabled()) {
 			log.debug("Executing BuyWorthXGetYPercentOffRuleImpl on order : " + request.getOrderId());
 		}
+		int relevantProductQuantity = request.getOrderQuantityForRelevantProducts(brands, includeCategoryList, excludeCategoryList);
+		BigDecimal discountPercentage = getPercentApplicable(relevantProductQuantity,quantityDiscountMap);
+
 		Money orderVal = request.getOrderValueForRelevantProducts(brands, includeCategoryList, excludeCategoryList);
 		Money discountCalculated = (orderVal.times(discountPercentage.doubleValue())).div(100);
 		Money finalDiscountAmount = new Money(new BigDecimal(0));
@@ -130,6 +134,7 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule, Serializa
 		return distributeDiscountOnOrder(orderDiscount);
 	}
 	
+
 	@Override
 	public List<RuleConfigDescriptorItem> getRuleConfigs() {
 		List<RuleConfigDescriptorItem> ruleConfigs = new ArrayList<RuleConfigDescriptorItem>();
@@ -139,7 +144,7 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule, Serializa
 		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CATEGORY_EXCLUDE_LIST, false));
 		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.BRAND_LIST, false));
 		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.MIN_ORDER_VALUE, false));
-		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.DISCOUNT_PERCENTAGE, true));
+		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.VARIABLE_DISCOUNT_PERCENTAGE, true));
 		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.MAX_DISCOUNT_CEIL_IN_VALUE, false));
 		
 		return ruleConfigs;
@@ -202,5 +207,56 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule, Serializa
 			return true;
 		}
 		return false;
+	}
+	
+	private HashMap<Integer,BigDecimal> getPercentMap(String percentQuantityCSKV){
+		
+		HashMap<Integer,BigDecimal> map = new HashMap<Integer,BigDecimal>();
+		try {
+			
+			StrTokenizer strTokPercentMap = new StrTokenizer(percentQuantityCSKV,",");
+			log.info("Quanity Map : "+strTokPercentMap.toString());
+			while (strTokPercentMap.hasNext()) {
+				String percentEntry = strTokPercentMap.nextToken();
+				StrTokenizer strTokPercentEntry = new StrTokenizer(percentEntry,"=");
+				// Quantity=Percent : 1=5,2=10,3=30
+				map.put(Integer.parseInt(strTokPercentEntry.nextToken()), BigDecimal.valueOf(Double.parseDouble(strTokPercentEntry.nextToken())));
+			}
+			
+		} catch (Exception e) {
+			//Assumption of syntax being correct. If any error throw Platform Exception
+			throw new PlatformException("Invalid Format in Quantity Percent Map : Input = " + percentQuantityCSKV + "\n Error : " + e);
+		}
+			
+		return map;
+	}
+	
+	private BigDecimal getPercentApplicable(int relevantProductQuantity,
+			HashMap<Integer, BigDecimal> quantityDiscountMap) {
+		
+		int maxQuantity = 0;
+		BigDecimal maxPercent = new BigDecimal(0);
+		for (int quantity : quantityDiscountMap.keySet()) {
+			// If Quantity is more than the MaxQuantity for which percent is defined
+			if (quantity > maxQuantity) {
+				maxQuantity = quantity;
+				maxPercent = quantityDiscountMap.get(quantity);
+			}
+			// If exact match, return the percent associated
+			if (relevantProductQuantity == quantity) {
+				return quantityDiscountMap.get(quantity);
+			}
+		}
+		
+		// If Quantity is Greater than maximum quantity, give maximum discount
+		// Example 20% on all purchase of 3 OR MORE products
+		if (relevantProductQuantity > maxQuantity) {
+			return maxPercent;
+		}
+		// default 0 Percent
+		return new BigDecimal(0);
+		
+		
+		
 	}
 }
