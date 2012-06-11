@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fb.commons.PlatformException;
 import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.promotion.dao.RuleDao;
 import com.fb.platform.promotion.model.OrderDiscount;
@@ -500,8 +501,12 @@ public class RuleImplTest extends BaseTestCase {
 		variablePercentDiscountOrderReqDiscout4.setOrderRequest(variablePercentDiscountOrderReq4);
 		assertEquals(0,new BigDecimal(900).compareTo(buyXQuantityVariableDiscountPercentOffOnZCategoryOnBrandBRule.execute(variablePercentDiscountOrderReqDiscout4).getTotalOrderDiscount()));
 		
-		
 	}
+	
+//	@Test(expected = PlatformException.class)
+//	public void BuyXQuantityVariableDiscountPercentOffRuleImplInvalidInput(){
+//		
+//	}
 
 	
 	@Test(expected=NotImplementedException.class)

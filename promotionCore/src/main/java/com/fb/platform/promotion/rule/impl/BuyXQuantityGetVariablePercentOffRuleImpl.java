@@ -23,7 +23,6 @@ import com.fb.platform.promotion.rule.RuleConfigDescriptorItem;
 import com.fb.platform.promotion.rule.RuleConfiguration;
 import com.fb.platform.promotion.to.OrderItem;
 import com.fb.platform.promotion.to.OrderRequest;
-import com.fb.platform.promotion.to.Product;
 import com.fb.platform.promotion.to.PromotionStatusEnum;
 import com.fb.platform.promotion.util.ListUtil;
 import com.fb.platform.promotion.util.StringToIntegerList;
@@ -42,12 +41,12 @@ public class BuyXQuantityGetVariablePercentOffRuleImpl implements PromotionRule,
 	private List<Integer> includeCategoryList = null;
 	private List<Integer> excludeCategoryList = null;
 	private List<Integer> brands;
-	private HashMap<Integer,BigDecimal> quantityDiscountMap = null;	// "1=5,2=15,3=20"
+	private QuantityDiscountMapper quantityDiscountMap = null;	// "1=5,2=15,3=20"
 	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
 
-		quantityDiscountMap = getPercentMap(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.VARIABLE_DISCOUNT_PERCENTAGE.name()));
+		quantityDiscountMap = new QuantityDiscountMapper(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.VARIABLE_DISCOUNT_PERCENTAGE.name()));
 		if (ruleConfig.isConfigItemPresent(RuleConfigDescriptorEnum.MAX_DISCOUNT_CEIL_IN_VALUE.name())) {
 			maxDiscountPerUse = new Money (BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigDescriptorEnum.MAX_DISCOUNT_CEIL_IN_VALUE.name()))));
 		}
@@ -93,17 +92,17 @@ public class BuyXQuantityGetVariablePercentOffRuleImpl implements PromotionRule,
 		if (ListUtil.isValidList(clientList) && !request.isValidClient(clientList)) {
 			return PromotionStatusEnum.INVALID_CLIENT;
 		}
-		if (ListUtil.isValidList(includeCategoryList) && !request.isAnyProductInCategory(includeCategoryList)) {
+		if(ListUtil.isValidList(includeCategoryList) && !request.isAnyProductInCategory(includeCategoryList)) {
 			return PromotionStatusEnum.CATEGORY_MISMATCH;
 		}
-		if (ListUtil.isValidList(excludeCategoryList) && request.isAnyProductInCategory(excludeCategoryList)){
+		if(ListUtil.isValidList(excludeCategoryList) && request.isAnyProductInCategory(excludeCategoryList)){
 			return PromotionStatusEnum.CATEGORY_MISMATCH;
 		}
-		if (ListUtil.isValidList(brands) && !request.isAnyProductInBrand(brands)){
+		if(ListUtil.isValidList(brands) && !request.isAnyProductInBrand(brands)){
 			return PromotionStatusEnum.BRAND_MISMATCH;
 		}
 		Money orderValue = request.getOrderValueForRelevantProducts(brands, includeCategoryList, excludeCategoryList);
-		if(minOrderValue!=null && orderValue.lt(minOrderValue)){
+		if(minOrderValue != null && orderValue.lt(minOrderValue)) {
 			return PromotionStatusEnum.LESS_ORDER_AMOUNT;
 		}
 		return PromotionStatusEnum.SUCCESS;
@@ -116,11 +115,11 @@ public class BuyXQuantityGetVariablePercentOffRuleImpl implements PromotionRule,
 			log.debug("Executing BuyWorthXGetYPercentOffRuleImpl on order : " + request.getOrderId());
 		}
 		int relevantProductQuantity = request.getOrderQuantityForRelevantProducts(brands, includeCategoryList, excludeCategoryList);
-		BigDecimal discountPercentage = getPercentApplicable(relevantProductQuantity,quantityDiscountMap);
+		BigDecimal discountPercentage = quantityDiscountMap.getDiscount(relevantProductQuantity);
 
 		Money orderVal = request.getOrderValueForRelevantProducts(brands, includeCategoryList, excludeCategoryList);
 		Money discountCalculated = (orderVal.times(discountPercentage.doubleValue())).div(100);
-		Money finalDiscountAmount = new Money(new BigDecimal(0));
+		Money finalDiscountAmount = new Money(BigDecimal.ZERO);
 		if(discountCalculated.gt(maxDiscountPerUse)){
 			log.info("Maximum discount is less than the calculated discount on this order. Max Discount = "+maxDiscountPerUse +" and Discount calculated = "+discountCalculated);
 			finalDiscountAmount = finalDiscountAmount.plus(maxDiscountPerUse);
@@ -133,7 +132,6 @@ public class BuyXQuantityGetVariablePercentOffRuleImpl implements PromotionRule,
 		orderDiscount.setTotalOrderDiscount(finalDiscountAmount.getAmount());
 		return distributeDiscountOnOrder(orderDiscount);
 	}
-	
 
 	@Override
 	public List<RuleConfigDescriptorItem> getRuleConfigs() {
@@ -209,54 +207,4 @@ public class BuyXQuantityGetVariablePercentOffRuleImpl implements PromotionRule,
 		return false;
 	}
 	
-	private HashMap<Integer,BigDecimal> getPercentMap(String percentQuantityCSKV){
-		
-		HashMap<Integer,BigDecimal> map = new HashMap<Integer,BigDecimal>();
-		try {
-			
-			StrTokenizer strTokPercentMap = new StrTokenizer(percentQuantityCSKV,",");
-			log.info("Quanity Map : "+strTokPercentMap.toString());
-			while (strTokPercentMap.hasNext()) {
-				String percentEntry = strTokPercentMap.nextToken();
-				StrTokenizer strTokPercentEntry = new StrTokenizer(percentEntry,"=");
-				// Quantity=Percent : 1=5,2=10,3=30
-				map.put(Integer.parseInt(strTokPercentEntry.nextToken()), BigDecimal.valueOf(Double.parseDouble(strTokPercentEntry.nextToken())));
-			}
-			
-		} catch (Exception e) {
-			//Assumption of syntax being correct. If any error throw Platform Exception
-			throw new PlatformException("Invalid Format in Quantity Percent Map : Input = " + percentQuantityCSKV + "\n Error : " + e);
-		}
-			
-		return map;
-	}
-	
-	private BigDecimal getPercentApplicable(int relevantProductQuantity,
-			HashMap<Integer, BigDecimal> quantityDiscountMap) {
-		
-		int maxQuantity = 0;
-		BigDecimal maxPercent = new BigDecimal(0);
-		for (int quantity : quantityDiscountMap.keySet()) {
-			// If Quantity is more than the MaxQuantity for which percent is defined
-			if (quantity > maxQuantity) {
-				maxQuantity = quantity;
-				maxPercent = quantityDiscountMap.get(quantity);
-			}
-			// If exact match, return the percent associated
-			if (relevantProductQuantity == quantity) {
-				return quantityDiscountMap.get(quantity);
-			}
-		}
-		
-		// If Quantity is Greater than maximum quantity, give maximum discount
-		// Example 20% on all purchase of 3 OR MORE products
-		if (relevantProductQuantity > maxQuantity) {
-			return maxPercent;
-		}
-		// default 0 Percent
-		return new BigDecimal(0);
-		
-		
-		
-	}
 }
