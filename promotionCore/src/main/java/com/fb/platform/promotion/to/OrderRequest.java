@@ -138,4 +138,26 @@ public class OrderRequest implements Serializable {
 		return orderValueForBrandProducts;
 	}
 	
+	public int getOrderQuantityForBrand(List<Integer> brandList){
+		int count = 0; 
+		for(OrderItem o:orderItems){
+			if(o.isOrderItemInBrand(brandList)){
+				count++;
+			}
+		}
+		return count;
+	}
+	
+	public int getOrderQuantityForRelevantProducts(List<Integer> brandList, List<Integer> catIncludeList, List<Integer> catExcludeList) {
+		int count = 0; 
+		for(OrderItem o: orderItems) {
+			if( (!ListUtil.isValidList(brandList)|| o.isOrderItemInBrand(brandList))
+					&& (!ListUtil.isValidList(catIncludeList) || o.isOrderItemInCategory(catIncludeList))
+					&&  (!ListUtil.isValidList(catExcludeList) || !o.isOrderItemInCategory(catExcludeList))){
+				count++;
+			}
+		}
+		return count;
+	}
+	
 }
