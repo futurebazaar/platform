@@ -17,6 +17,7 @@ import com.fb.commons.PlatformException;
 public class QuantityDiscountMapper {
 
 	private int maxSupportedQuantity = 0;
+	private int minSupportedQuantity = 9999999; // Some Random Large number
 	HashMap<Integer, BigDecimal> quantityDiscountMap = null;	//map of quantity vs discount
 
 	public QuantityDiscountMapper(String percentQuantityKeyValueMapString) throws PlatformException{
@@ -34,6 +35,9 @@ public class QuantityDiscountMapper {
 				if(maxSupportedQuantity < quantity) {
 					maxSupportedQuantity = quantity;
 				}
+				if(minSupportedQuantity > quantity) {
+					minSupportedQuantity = quantity;
+				}
 				percent = new BigDecimal(strTokPercentEntry.nextToken().trim());
 				quantityDiscountMap.put(quantity,percent);
 			}
@@ -42,6 +46,10 @@ public class QuantityDiscountMapper {
 			//Assumption of syntax being correct. If any error throw Platform Exception
 			throw new PlatformException("Invalid Format in Quantity Percent Map : Input = " + percentQuantityKeyValueMapString + "\n Error : " + e);
 		}
+	}
+	
+	public boolean isQuantityApplicable(int quantity) {
+		return (quantity >= minSupportedQuantity);
 	}
 
 	public BigDecimal getDiscount(int quantity) {

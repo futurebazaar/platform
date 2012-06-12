@@ -154,7 +154,7 @@ public class OrderRequest implements Serializable {
 			if( (!ListUtil.isValidList(brandList)|| o.isOrderItemInBrand(brandList))
 					&& (!ListUtil.isValidList(catIncludeList) || o.isOrderItemInCategory(catIncludeList))
 					&&  (!ListUtil.isValidList(catExcludeList) || !o.isOrderItemInCategory(catExcludeList))){
-				count++;
+				count=count+o.getQuantity();
 			}
 		}
 		return count;
