@@ -80,7 +80,7 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
       	<xs:enumeration value="PRODUCT_DISCOUNTED_VALUE"/>
       	<xs:enumeration value="CATEGORY_INCLUDE_LIST"/>
       	<xs:enumeration value="CATEGORY_EXCLUDE_LIST"/>
-      	<xs:enumeration value="VARIABLE_DISCOUNT_PERCENT_OFF"/>
+      	<xs:enumeration value="VARIABLE_DISCOUNT_PERCENT"/>
 	</xs:restriction>
   </xs:simpleType>
  

@@ -87,7 +87,7 @@ public class BuyXQuantityGetVariablePercentOffRuleImpl implements PromotionRule,
 	@Override
 	public PromotionStatusEnum isApplicable(OrderRequest request,int userId,boolean isCouponCommitted) {
 		if (log.isDebugEnabled()) {
-			log.debug("Checking if BuyWorthXGetYPercentOffRuleImpl applies on order : " + request.getOrderId());
+			log.debug("Checking if BuyXQuantityGetVariablePercentOffRuleImpl applies on order : " + request.getOrderId());
 		}
 		if (ListUtil.isValidList(clientList) && !request.isValidClient(clientList)) {
 			return PromotionStatusEnum.INVALID_CLIENT;
@@ -112,11 +112,12 @@ public class BuyXQuantityGetVariablePercentOffRuleImpl implements PromotionRule,
 	public OrderDiscount execute(OrderDiscount orderDiscount) {
 		OrderRequest request = orderDiscount.getOrderRequest();
 		if(log.isDebugEnabled()) {
-			log.debug("Executing BuyWorthXGetYPercentOffRuleImpl on order : " + request.getOrderId());
+			log.debug("Executing BuyXQuantityGetVariablePercentOffRuleImpl on order : " + request.getOrderId());
 		}
 		int relevantProductQuantity = request.getOrderQuantityForRelevantProducts(brands, includeCategoryList, excludeCategoryList);
+		log.info("Relevant Product Quantity = " + relevantProductQuantity);
 		BigDecimal discountPercentage = quantityDiscountMap.getDiscount(relevantProductQuantity);
-
+		log.info("Relevant Percent Discount = " + discountPercentage);
 		Money orderVal = request.getOrderValueForRelevantProducts(brands, includeCategoryList, excludeCategoryList);
 		Money discountCalculated = (orderVal.times(discountPercentage.doubleValue())).div(100);
 		Money finalDiscountAmount = new Money(BigDecimal.ZERO);
