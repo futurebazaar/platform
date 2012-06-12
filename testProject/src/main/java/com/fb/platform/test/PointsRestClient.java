@@ -24,6 +24,7 @@ import com.fb.platform.payback._1_0.DisplayPointsRequest;
 import com.fb.platform.payback._1_0.DisplayPointsResponse;
 import com.fb.platform.payback._1_0.OrderItemRequest;
 import com.fb.platform.payback._1_0.OrderRequest;
+import com.fb.platform.payback._1_0.PaymentRequest;
 import com.fb.platform.payback._1_0.PointsRequest;
 import com.fb.platform.payback._1_0.PointsResponse;
 import com.fb.platform.payback._1_0.RollbackPointsRequest;
@@ -64,10 +65,10 @@ public class PointsRestClient {
 	}
 	
 	public static void main(String[] args) throws Exception {
-			clearCache();
 			long headerId = storeEarnPoints();
 			rollbackPoints(headerId);
 			displayPoints();
+			clearCache();
 	}
 
 	private static void rollbackPoints(long headerId) throws Exception {
@@ -143,7 +144,7 @@ public class PointsRestClient {
 		request.setTimestamp(DatatypeFactory.newInstance().newXMLGregorianCalendar(2012, 05, 27, 0, 0, 0, 0, 0));
 		request.setOrderAmount(new BigDecimal(500));
 		OrderItemRequest itemRequest = new OrderItemRequest();
-		itemRequest.setAmount(new BigDecimal(639));
+		itemRequest.setAmount(new BigDecimal(500));
 		itemRequest.setArticleId("1234");
 		itemRequest.setCategoryId(1193);
 		itemRequest.setDepartmentCode(1234);
@@ -204,12 +205,13 @@ public class PointsRestClient {
 		orderRequest.setAmount(new BigDecimal(500));
 		orderRequest.setLoyaltyCard("1234567812345678");
 		orderRequest.setOrderId(2);
+		orderRequest.setAmount(new BigDecimal(500));
 		orderRequest.setReason("REST CLIENT");
 		orderRequest.setReferenceId("5052");
 		orderRequest.setTimestamp(DatatypeFactory.newInstance().newXMLGregorianCalendar(2012, 05, 27, 0, 0, 0, 0, 0));
 		
 		OrderItemRequest itemRequest = new OrderItemRequest();
-		itemRequest.setAmount(new BigDecimal(639));
+		itemRequest.setAmount(new BigDecimal(500));
 		itemRequest.setArticleId("1234");
 		itemRequest.setCategoryId(1193);
 		itemRequest.setDepartmentCode(1234);
@@ -220,6 +222,12 @@ public class PointsRestClient {
 		
 		orderRequest.getOrderItemRequest().add(itemRequest);
 		request.setOrderRequest(orderRequest);
+		
+		PaymentRequest paymentRequest = new PaymentRequest();
+		paymentRequest.setAmount(new BigDecimal(500));
+		paymentRequest.setPaymentMode("payback");
+		orderRequest.getPaymentRequest().add(paymentRequest);
+		
 		return request;
 	}
 	

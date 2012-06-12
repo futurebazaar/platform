@@ -19,6 +19,7 @@ import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.payback.to.ClearCacheRequest;
 import com.fb.platform.payback.to.OrderItemRequest;
 import com.fb.platform.payback.to.OrderRequest;
+import com.fb.platform.payback.to.PaymentRequest;
 import com.fb.platform.payback.to.PointsRequest;
 import com.fb.platform.payback.to.PointsResponse;
 import com.fb.platform.payback.to.PointsResponseCodeEnum;
@@ -207,22 +208,19 @@ public class PointsManagerTest  extends BaseTestCase{
 		PointsRequest pr = new PointsRequest();
 		pr.setTxnActionCode("PREALLOC_EARN");
 		OrderRequest request = setOrderRequest(new Long(1), "1234");
+		
 		pr.setOrderRequest(request);
 		PointsRequest newRequest = pointsManager.getPointsToBeDisplayed(pr);
-		assertEquals(68, newRequest.getOrderRequest().getTxnPoints().intValue());
-		assertEquals(17, newRequest.getOrderRequest().getPointsValue().intValue());
+		assertEquals(342, newRequest.getOrderRequest().getTxnPoints().intValue());
+		assertEquals(85, newRequest.getOrderRequest().getPointsValue().intValue());
+		assertEquals(542, newRequest.getOrderRequest().getTotalTxnPoints().intValue());
 		
-		request.setAmount(new BigDecimal(4000));
-		newRequest = pointsManager.getPointsToBeDisplayed(pr);
-		assertEquals(68, newRequest.getOrderRequest().getTxnPoints().intValue());
-		assertEquals(17, newRequest.getOrderRequest().getPointsValue().intValue());
-		assertEquals(268, newRequest.getOrderRequest().getTotalTxnPoints().intValue());
 	}
 	
 	private OrderRequest setOrderRequest(Long orderId, String referenceId) {
 		OrderRequest request = new OrderRequest();
 		request.setOrderId(orderId);
-		request.setAmount(new BigDecimal(500));
+		request.setAmount(new BigDecimal(2000));
 		request.setTxnTimestamp(new DateTime(2012, 05, 24, 10, 0, 0));
 		request.setReferenceId(referenceId);
 		
@@ -251,6 +249,14 @@ public class PointsManagerTest  extends BaseTestCase{
 		orderItemRequest.add(orderItem2);
 		
 		request.setOrderItemRequest(orderItemRequest);
+		
+		List<PaymentRequest> paymentRequest = new ArrayList<PaymentRequest>();
+		PaymentRequest payment = new PaymentRequest();
+		payment.setAmount(new BigDecimal(2000));
+		payment.setPaymentMode("payback");
+		paymentRequest.add(payment);
+		
+		request.setPaymentRequest(paymentRequest);
 		return request;
 		
 	}

@@ -19,6 +19,7 @@ import com.fb.platform.payback.dao.PointsRuleDao;
 import com.fb.platform.payback.rule.impl.BuyHeroDealEarnYPoints;
 import com.fb.platform.payback.to.OrderItemRequest;
 import com.fb.platform.payback.to.OrderRequest;
+import com.fb.platform.payback.to.PaymentRequest;
 import com.fb.platform.payback.util.PointsUtil;
 
 public class RulesTest extends BaseTestCase{
@@ -70,10 +71,15 @@ public class RulesTest extends BaseTestCase{
 			orderItem2.setSellerRateChartId(2);
 			orderItemRequest.add(orderItem2);
 			
-			
 			orderRequest.setOrderItemRequest(orderItemRequest);
+
+			List<PaymentRequest> paymentRequest = new ArrayList<PaymentRequest>();
+			PaymentRequest payment = new PaymentRequest();
+			payment.setAmount(new BigDecimal(2000));
+			payment.setPaymentMode("payback");
+			paymentRequest.add(payment);
 			
-			
+			orderRequest.setPaymentRequest(paymentRequest);
 		}
 		
 	@Test
@@ -163,6 +169,19 @@ public class RulesTest extends BaseTestCase{
 		}
 		
 		assertEquals(new BigDecimal(8000).intValue(), txnPoints.intValue());
+	}
+	
+	@Test
+	public void earnXPointsOnYPaymentMode(){
+		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.EARN_X_POINTS_ON_Y_PAYMENT_MODE);
+		BigDecimal txnPoints = BigDecimal.ZERO;
+		orderRequest.setTxnTimestamp(new DateTime(2012, 05, 25, 0, 0, 0));
+		for (OrderItemRequest itemRequest : orderRequest.getOrderItemRequest()){
+			if (rule.isApplicable(orderRequest, itemRequest)){
+				txnPoints = txnPoints.add(rule.execute(orderRequest, itemRequest));
+			}
+		}
+		assertEquals(new BigDecimal(600).intValue(), txnPoints.intValue());
 	}
 	
 }

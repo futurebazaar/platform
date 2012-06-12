@@ -20,6 +20,7 @@ import com.fb.platform.payback.to.BurnActionCodesEnum;
 import com.fb.platform.payback.to.EarnActionCodesEnum;
 import com.fb.platform.payback.to.OrderItemRequest;
 import com.fb.platform.payback.to.OrderRequest;
+import com.fb.platform.payback.to.PaymentRequest;
 import com.fb.platform.payback.to.PointsRequest;
 import com.fb.platform.payback.to.PointsResponseCodeEnum;
 import com.sun.jersey.api.MessageException;
@@ -143,8 +144,8 @@ public class PointsServiceTest extends BaseTestCase{
 		request.getOrderItemRequest().add(setItemRequest(2, 639));
 		pr.setOrderRequest(request);
 		PointsRequest newRequest = pointsService.getPointsToBeDisplayed(pr);
-		assertEquals(68, newRequest.getOrderRequest().getTxnPoints().intValue());
-		assertEquals(268, newRequest.getOrderRequest().getTotalTxnPoints().intValue());
+		assertEquals(342, newRequest.getOrderRequest().getTxnPoints().intValue());
+		assertEquals(542, newRequest.getOrderRequest().getTotalTxnPoints().intValue());
 		
 		pr.setTxnActionCode("BURN_REVERSAL");
 		newRequest = pointsService.getPointsToBeDisplayed(pr);
@@ -158,6 +159,14 @@ public class PointsServiceTest extends BaseTestCase{
 		request.setAmount(new BigDecimal(2000));
 		request.setTxnTimestamp(new DateTime(2012, 05, 24, 10, 0, 0));
 		request.setReferenceId(referenceId);
+		
+		List<PaymentRequest> paymentRequest = new ArrayList<PaymentRequest>();
+		PaymentRequest payment = new PaymentRequest();
+		payment.setAmount(new BigDecimal(2000));
+		payment.setPaymentMode("payback");
+		paymentRequest.add(payment);
+		
+		request.setPaymentRequest(paymentRequest);
 		return request;
 		
 	}

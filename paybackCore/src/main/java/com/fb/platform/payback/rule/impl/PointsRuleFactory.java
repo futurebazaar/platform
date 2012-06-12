@@ -60,6 +60,12 @@ public class PointsRuleFactory {
 					rule.setPointsUtil(pointsUtil);
 					rule.init(ruleConfig);
 					break;
+				
+				case EARN_X_POINTS_ON_Y_PAYMENT_MODE:
+					rule = new EarnXPointsOnYPaymentMode();
+					rule.setPointsUtil(pointsUtil);
+					rule.init(ruleConfig);
+					break;
 					
 				case BUY_DOD_EARN_Y_POINTS:
 					rule = new BuyHeroDealEarnYPoints();

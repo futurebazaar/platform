@@ -19,7 +19,8 @@ public class OrderRequest {
 	private BigDecimal bonusPoints = BigDecimal.ZERO;
 	private BigDecimal txnPoints = BigDecimal.ZERO;
 	private BigDecimal pointsValue = BigDecimal.ZERO;
-	private BigDecimal totalTxnPoints = BigDecimal.ZERO;
+	private String paymentMode;
+	private List<PaymentRequest> paymentRequest = new ArrayList<PaymentRequest>();
 	
 	public long getOrderId() {
 		return orderId;
@@ -90,5 +91,17 @@ public class OrderRequest {
 	
 	public BigDecimal getTotalTxnPoints() {
 		return txnPoints.add(bonusPoints);
+	}
+	public String getPaymentMode() {
+		return paymentMode;
+	}
+	public void setPaymentMode(String paymentMode) {
+		this.paymentMode = paymentMode;
+	}
+	public List<PaymentRequest> getPaymentRequest() {
+		return paymentRequest;
+	}
+	public void setPaymentRequest(List<PaymentRequest> paymentRequest) {
+		this.paymentRequest = paymentRequest;
 	}
 }
