@@ -105,6 +105,10 @@ public class BuyXQuantityGetVariablePercentOffRuleImpl implements PromotionRule,
 		if(minOrderValue != null && orderValue.lt(minOrderValue)) {
 			return PromotionStatusEnum.LESS_ORDER_AMOUNT;
 		}
+		int relevantProductQuantity = request.getOrderQuantityForRelevantProducts(brands, includeCategoryList, excludeCategoryList);
+		if(!quantityDiscountMap.isQuantityApplicable(relevantProductQuantity)) {
+			return PromotionStatusEnum.NOT_APPLICABLE;
+		}
 		return PromotionStatusEnum.SUCCESS;
 	}
 

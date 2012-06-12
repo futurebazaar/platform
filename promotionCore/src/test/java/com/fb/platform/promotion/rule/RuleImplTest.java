@@ -489,12 +489,12 @@ public class RuleImplTest extends BaseTestCase {
 		//Quantity = 2, Percent Off = 10
 		OrderDiscount variablePercentDiscountOrderReqDiscout2 = new OrderDiscount();
 		variablePercentDiscountOrderReqDiscout2.setOrderRequest(variablePercentDiscountOrderReq2);
-		assertEquals(0,new BigDecimal(100).compareTo(buyXQuantityVariableDiscountPercentOffOnZCategoryOnBrandBRule.execute(variablePercentDiscountOrderReqDiscout2).getTotalOrderDiscount()));
+		assertEquals(0,new BigDecimal(200).compareTo(buyXQuantityVariableDiscountPercentOffOnZCategoryOnBrandBRule.execute(variablePercentDiscountOrderReqDiscout2).getTotalOrderDiscount()));
 
 		// Quantity = 3, Percent Off = 15
 		OrderDiscount variablePercentDiscountOrderReqDiscout3 = new OrderDiscount();
 		variablePercentDiscountOrderReqDiscout3.setOrderRequest(variablePercentDiscountOrderReq3);
-		assertEquals(0,new BigDecimal(150).compareTo(buyXQuantityVariableDiscountPercentOffOnZCategoryOnBrandBRule.execute(variablePercentDiscountOrderReqDiscout3).getTotalOrderDiscount()));
+		assertEquals(0,new BigDecimal(450).compareTo(buyXQuantityVariableDiscountPercentOffOnZCategoryOnBrandBRule.execute(variablePercentDiscountOrderReqDiscout3).getTotalOrderDiscount()));
 		
 		// Quantity = 6, Percent Off = 15
 		OrderDiscount variablePercentDiscountOrderReqDiscout4 = new OrderDiscount();
