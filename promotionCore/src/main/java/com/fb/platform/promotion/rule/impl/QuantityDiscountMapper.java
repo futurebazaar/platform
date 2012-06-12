@@ -35,10 +35,10 @@ public class QuantityDiscountMapper {
 				if(maxSupportedQuantity < quantity) {
 					maxSupportedQuantity = quantity;
 				}
-				if(minSupportedQuantity > quantity) {
+				percent = new BigDecimal(strTokPercentEntry.nextToken().trim());
+				if(minSupportedQuantity > quantity && (percent.compareTo(BigDecimal.ZERO) >= 0)) {
 					minSupportedQuantity = quantity;
 				}
-				percent = new BigDecimal(strTokPercentEntry.nextToken().trim());
 				quantityDiscountMap.put(quantity,percent);
 			}
 		
