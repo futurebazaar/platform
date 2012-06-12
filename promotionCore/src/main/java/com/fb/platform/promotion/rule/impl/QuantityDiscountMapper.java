@@ -48,7 +48,7 @@ public class QuantityDiscountMapper {
 		if (quantity > maxSupportedQuantity) {
 			quantity = maxSupportedQuantity;
 		}
-		return quantityDiscountMap.get(quantity);
+		return (quantityDiscountMap.get(quantity) == null)? BigDecimal.ZERO:(quantityDiscountMap.get(quantity));
 	}
 	
 }
