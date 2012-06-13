@@ -6,6 +6,8 @@ package com.fb.platform.promotion.to;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.fb.platform.promotion.util.ListUtil;
+
 /**
  * @author vinayak
  *
@@ -67,4 +69,14 @@ public class OrderItem {
 	public void setItemId(int itemId) {
 		this.itemId = itemId;
 	}
+	
+	public boolean isApplicableToOrderItem(OrderItem orderItem,List<Integer> brands, List<Integer> includeCategoryList, List<Integer> excludeCategoryList){
+		if( (!ListUtil.isValidList(brands)|| orderItem.isOrderItemInBrand(brands))
+				&& (!ListUtil.isValidList(includeCategoryList) || orderItem.isOrderItemInCategory(includeCategoryList))
+				&&  (!ListUtil.isValidList(excludeCategoryList) || !orderItem.isOrderItemInCategory(excludeCategoryList))){
+			return true;
+		}
+		return false;
+	}
+	
 }
