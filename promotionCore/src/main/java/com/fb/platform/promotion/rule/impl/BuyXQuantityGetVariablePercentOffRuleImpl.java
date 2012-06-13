@@ -123,7 +123,9 @@ public class BuyXQuantityGetVariablePercentOffRuleImpl implements PromotionRule,
 		BigDecimal discountPercentage = quantityDiscountMap.getDiscount(relevantProductQuantity);
 		log.info("Relevant Percent Discount = " + discountPercentage);
 		Money orderVal = request.getOrderValueForRelevantProducts(brands, includeCategoryList, excludeCategoryList);
+		log.info("Discount Relevant on Order Value = " + orderVal.toString());
 		Money discountCalculated = (orderVal.times(discountPercentage.doubleValue())).div(100);
+		log.info("Calculated Discount on Order Value = " + discountCalculated.toString());
 		Money finalDiscountAmount = new Money(BigDecimal.ZERO);
 		if(discountCalculated.gt(maxDiscountPerUse)){
 			log.info("Maximum discount is less than the calculated discount on this order. Max Discount = "+maxDiscountPerUse +" and Discount calculated = "+discountCalculated);
