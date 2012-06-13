@@ -127,7 +127,7 @@ public class BuyXQuantityGetVariablePercentOffRuleImpl implements PromotionRule,
 		Money discountCalculated = (orderVal.times(discountPercentage.doubleValue())).div(100);
 		log.info("Calculated Discount on Order Value = " + discountCalculated.toString());
 		Money finalDiscountAmount = new Money(BigDecimal.ZERO);
-		if(discountCalculated.gt(maxDiscountPerUse)){
+		if(maxDiscountPerUse!=null && discountCalculated.gt(maxDiscountPerUse)){
 			log.info("Maximum discount is less than the calculated discount on this order. Max Discount = "+maxDiscountPerUse +" and Discount calculated = "+discountCalculated);
 			finalDiscountAmount = finalDiscountAmount.plus(maxDiscountPerUse);
 		}
