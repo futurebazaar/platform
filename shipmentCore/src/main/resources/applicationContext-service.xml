@@ -11,12 +11,29 @@
 
     
     <!-- Add new Managers here -->
-    <bean id="shipmentManager" class="com.fb.platform.shipment.manager.impl.ShipmentManagerImpl" scope="prototype">
+    <bean id="shipmentManager" class="com.fb.platform.shipment.manager.impl.ShipmentManagerImpl">
     	<property name="shipmentService" ref="shipmentService"/>
+    	<property name="mailSender" ref="mailSender"/>
     </bean>
     
     <!-- Add new services here -->
     <bean id="shipmentService" class="com.fb.platform.shipment.service.impl.ShipmentServiceImpl">
     	<property name="shipmentDao" ref="shipmentDao"/>
     </bean>
+    
+    <bean id="springMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+  		<property name="host" value="MUMOPBL01.fb.dc"/>
+        <property name="port" value="25"/>
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.localhost">mail.pantaloon.com</prop>
+            </props>
+         </property>
+	</bean>
+	
+	<bean id="mailSender" class="com.fb.platform.mail.MailSender">
+	  	<property name="springMailSender" ref="springMailSender"/>
+	</bean>  
+	
+	
 </beans>

@@ -340,12 +340,22 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>org.subethamail</groupId>
             <artifactId>subethasmtp-wiser</artifactId>
             <version>${wiser.version}</version>
             <scope>test</scope>
-        </dependency>
+        </dependency>-->
+	<dependency>
+	   <groupId>commons-io</groupId>
+	   <artifactId>commons-io</artifactId>
+	   <version>1.4</version>
+	</dependency>
+	<dependency>
+	<groupId>javax.mail</groupId>
+	<artifactId>mail</artifactId>
+	<version>1.4</version>
+</dependency>
 	<dependency>
 		<groupId>commons-net</groupId>
 		<artifactId>commons-net</artifactId>
@@ -355,12 +365,13 @@
 	    <groupId>org.mockftpserver</groupId>
 	    <artifactId>MockFtpServer</artifactId>
 	    <version>2.3</version>
-	    <scope>test</scope>
 	</dependency>
     </dependencies>
     
     <modules>
     	<module>platformCommons</module>
+	<module>platformMailer</module>
+	<module>platformFTP</module>
     	<module>platformCaching</module>
     	<module>catalogCommons</module>
 	<module>catalogCore</module>

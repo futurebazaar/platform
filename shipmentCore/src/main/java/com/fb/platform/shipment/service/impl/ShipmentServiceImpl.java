@@ -29,13 +29,26 @@ public class ShipmentServiceImpl implements ShipmentService {
 	 */
 	@Override
 	public ParcelItem getParcelDetails(GatePassItem gatePassItem) {
-		ParcelItem parcelItem = null;
+		ParcelItem parcelItem = new ParcelItem();
 		try {
 			infoLog.debug("GatePassItem received : " + gatePassItem.toString());
-			parcelItem = shipmentDao.getParcelDetails(gatePassItem);
+			//parcelItem = shipmentDao.getParcelDetails(gatePassItem);
+			parcelItem.setDeliveryNumber(gatePassItem.getAwbNo());
+			parcelItem.setWeight(gatePassItem.getDelWt());
+			parcelItem.setCustomerName(gatePassItem.getName());
+			parcelItem.setAddress(gatePassItem.getAddress());
+			parcelItem.setCity(gatePassItem.getCity());
+			parcelItem.setState(gatePassItem.getRegion());
+			parcelItem.setPincode(gatePassItem.getPincode());
+			parcelItem.setPhoneNumber(gatePassItem.getTelnumber());
+			parcelItem.setArticleDescription(gatePassItem.getItemDescription());
+			parcelItem.setAmountPayable(gatePassItem.getAmount());
+			parcelItem.setDeliverySiteId(gatePassItem.getDeece());
+			parcelItem.setTrackingNumber(gatePassItem.getAwbNo());
+			parcelItem.setPaymentMode(gatePassItem.getPayMod());
 			infoLog.debug("ParcelItem retrieved : " + parcelItem.toString());
 		} catch (Exception e) {
-			errorLog.error("Outbound entry not created for : " + gatePassItem.getSonum() + " , LSP code : " + gatePassItem.getLspcode().toString());
+			errorLog.error("Outbound entry not created for : " + gatePassItem.getDelNo());
 			errorLog.error(e.getStackTrace());
 		}
 		

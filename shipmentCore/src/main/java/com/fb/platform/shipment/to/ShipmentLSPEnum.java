@@ -43,7 +43,7 @@ public enum ShipmentLSPEnum  implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "Code : " + this.code + " ,Name :" + this.name();
+		return this.name();
 	}
 	
 	

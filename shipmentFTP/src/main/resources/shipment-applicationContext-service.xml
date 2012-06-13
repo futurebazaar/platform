@@ -11,8 +11,9 @@
 
     
     <!-- Add new Managers here -->
-    <bean id="shipmentManager" class="com.fb.platform.shipment.manager.impl.ShipmentManagerImpl">
+    <bean id="shipmentManager" class="com.fb.platform.shipment.manager.impl.ShipmentManagerImpl" scope="prototype">
     	<property name="shipmentService" ref="shipmentService"/>
+    	<property name="mailSender" ref="mailSender"/>
     </bean>
     
     <!-- Add new services here -->
@@ -22,4 +23,26 @@
     <bean id="shipmentResource" class="com.fb.platform.shipment.ShipmentResource">
     	<property name="shipmentManager" ref="shipmentManager"/>
     </bean>
+    
+    <bean id="shipmentFTPClient" class="com.fb.platform.shipment.ftp.ShipmentFTPClient">
+    </bean>
+    
+    <bean id="springMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+  		<property name="host" value="MUMOPBL01.fb.dc"/>
+        <property name="port" value="25"/>
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.localhost">mail.pantaloon.com</prop>
+            </props>
+         </property>
+	</bean>
+	
+	<bean id="templateMessage" class="org.springframework.mail.SimpleMailMessage">
+	  	<property name="from" value="neha.garani@futuregroup.in"/>
+	  	<property name="subject" value="Your order"/>
+	</bean>
+	
+	<bean id="mailSender" class="com.fb.commons.mail.MailSender">
+		<property name="springMailSender" ref="springMailSender"/>
+	</bean>    
 </beans>

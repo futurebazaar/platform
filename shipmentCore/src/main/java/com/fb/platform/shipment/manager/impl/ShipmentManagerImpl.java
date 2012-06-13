@@ -7,6 +7,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fb.commons.ftp.exception.FTPConnectException;
+import com.fb.commons.ftp.exception.FTPDisconnectException;
+import com.fb.commons.ftp.exception.FTPLoginException;
+import com.fb.commons.ftp.exception.FTPLogoutException;
+import com.fb.commons.ftp.exception.FTPUploadException;
+import com.fb.commons.mail.MailSender;
+import com.fb.platform.shipment.exception.OutboundFileCreationException;
 import com.fb.platform.shipment.lsp.impl.AramexLSP;
 import com.fb.platform.shipment.lsp.impl.BlueDartLSP;
 import com.fb.platform.shipment.lsp.impl.FirstFlightLSP;
@@ -14,7 +21,9 @@ import com.fb.platform.shipment.lsp.impl.QuantiumLSP;
 import com.fb.platform.shipment.manager.ShipmentManager;
 import com.fb.platform.shipment.service.ShipmentService;
 import com.fb.platform.shipment.to.GatePassItem;
+import com.fb.platform.shipment.to.GatePassTO;
 import com.fb.platform.shipment.to.ParcelItem;
+import com.fb.platform.shipment.to.ShipmentLSPEnum;
 import com.fb.platform.shipment.util.ShipmentProcessor;
 
 /**
@@ -23,29 +32,34 @@ import com.fb.platform.shipment.util.ShipmentProcessor;
  * Any module that wants to convert the gatePass.xml to outbound files has to get an instance of this class.
  *
  */
-public class ShipmentManagerImpl implements ShipmentManager {
+public class ShipmentManagerImpl implements ShipmentManager{
 	
 	private static Log infoLog = LogFactory.getLog("LOGINFO");
 	
-	private static Log errorLog = LogFactory.getLog("LOGERROR");	
-	
-	private List<ParcelItem> quantiumParcelsList = null;
-	private List<ParcelItem> firstFlightParcelsList = null;
-	private List<ParcelItem> aramexParcelsList = null;
-	private List<ParcelItem> blueDartParcelsList = null;
+	private static Log errorLog = LogFactory.getLog("LOGERROR");
 	
 	@Autowired
 	private ShipmentService shipmentService = null;
+	
+	@Autowired
+	private MailSender mailSender;
 	
 	/**
 	 * This function accepts a list of gate pass delivery items and processes it to create outbound files.
 	 * @param gatePassString
 	 */
 	@Override
-	public boolean generateOutboundFile(List<GatePassItem> deliveryList) {
-		createLSPLists(deliveryList);
-		boolean outboundCreated = processLSPLists();
-		return outboundCreated;
+	public void generateOutboundFile(GatePassTO gatePass) {
+		if(gatePass.getLspcode() == null) {
+			errorLog.error("Incorrect LSP code");
+		} else {
+			List<ParcelItem> parcelList = createParcelList(gatePass);
+			ShipmentProcessor processor = getProcessor(gatePass.getLspcode());
+			if(parcelList != null && parcelList.size() > 0) {
+				processParcels(parcelList, processor);
+			}
+		}
+		
 	}
 	
 	/**
@@ -53,47 +67,17 @@ public class ShipmentManagerImpl implements ShipmentManager {
 	 * This function calls the service layer and fetches the required information from the database to generate ParcelItem object. 
 	 * @param ordersList
 	 */
-	private void createLSPLists(List<GatePassItem> deliveryList) {
-		for(GatePassItem gatePassItem : deliveryList) {
+	private List<ParcelItem> createParcelList(GatePassTO gatePass) {
+		List<ParcelItem> parcelList = new ArrayList<ParcelItem>();
+		for(GatePassItem gatePassItem : gatePass.getGatePassItems()) {
 			infoLog.debug("Gate Pass item : " + gatePassItem.toString());
 			ParcelItem parcelItem = shipmentService.getParcelDetails(gatePassItem);
 			if(parcelItem != null) {
 				infoLog.debug("Parcel Item Data : " + parcelItem.toString());
-				if(gatePassItem.getLspcode() == null) {
-					errorLog.error("Incorrect LSP code for order : " + gatePassItem.toString());
-				} else {
-					switch (gatePassItem.getLspcode()) {
-					case Quantium:
-						if(quantiumParcelsList == null) {
-							quantiumParcelsList = new ArrayList<ParcelItem>();
-						}
-						quantiumParcelsList.add(parcelItem);
-						break;
-					case FirstFlight:
-						if(firstFlightParcelsList == null) {
-							firstFlightParcelsList = new ArrayList<ParcelItem>();
-						}
-						firstFlightParcelsList.add(parcelItem);
-						break;
-					case Aramex:
-						if(aramexParcelsList == null) {
-							aramexParcelsList = new ArrayList<ParcelItem>();
-						}
-						aramexParcelsList.add(parcelItem);
-						break;
-					case BlueDart:
-						if(blueDartParcelsList == null) {
-							blueDartParcelsList = new ArrayList<ParcelItem>();
-						}
-						blueDartParcelsList.add(parcelItem);
-						break;
-					default:
-						errorLog.error("Invalid LSP code : " + gatePassItem.getLspcode() + " , for gate pass delivery : " + gatePassItem.toString());
-						break;
-					}
-				}
+				parcelList.add(parcelItem);
 			}
 		}
+		return parcelList;
 	}
 	
 	/**
@@ -102,33 +86,53 @@ public class ShipmentManagerImpl implements ShipmentManager {
 	 * deliver it to the lsp.
 	 */
 	
-	private boolean processLSPLists() {
-		boolean aramexOutboundCreated = false;
-		boolean firstFlightOutboundCreated = false;
-		boolean blueDartOutboundCreated = false;
-		boolean quantiumOutboundCreated = false;
-		//TODO and list size is greater than 0
-		if(aramexParcelsList != null) {
-			ShipmentProcessor aramexShipmentProcessor = new ShipmentProcessor(new AramexLSP());
-			aramexOutboundCreated = aramexShipmentProcessor.generateOutboundFile(aramexParcelsList);
+	private ShipmentProcessor getProcessor(ShipmentLSPEnum lsp) {
+		ShipmentProcessor processor = null;
+		switch (lsp) {
+		case Aramex:
+			processor =  new ShipmentProcessor(new AramexLSP());
+			break;
+		case BlueDart:
+			processor = new ShipmentProcessor(new BlueDartLSP());
+			break;
+		case FirstFlight:
+			processor = new ShipmentProcessor(new FirstFlightLSP());
+			break;
+		case Quantium:
+			processor = new ShipmentProcessor(new QuantiumLSP());
+			break;
+		default:
+			break;
 		}
-		if(firstFlightParcelsList != null) {
-			ShipmentProcessor firstFlightShipmentProcessor = new ShipmentProcessor(new FirstFlightLSP());
-			firstFlightOutboundCreated = firstFlightShipmentProcessor.generateOutboundFile(firstFlightParcelsList);
+		return processor;
+	}
+	
+	private void processParcels(List<ParcelItem> parcelList, ShipmentProcessor processor) {
+		try {
+			processor.generateOutboundFile(parcelList);
+			processor.uploadOutboundFile();
+			processor.mailOutboundFile(mailSender);
+		} catch (FTPConnectException e) {
+			errorLog.error("FTP connection error", e);
+		} catch (FTPLoginException e) {
+			errorLog.error("FTP login error", e);
+		} catch (FTPLogoutException e) {
+			errorLog.error("FTP logout error", e);
+		} catch (FTPDisconnectException e) {
+			errorLog.error("FTP disconnect error", e);
+		} catch (FTPUploadException e) {
+			errorLog.error("FTP upload error", e);
+		} catch (OutboundFileCreationException e) {
+			errorLog.error("Outbound file creation error", e);
 		}
-		if(blueDartParcelsList != null) {
-			ShipmentProcessor blueDartShipmentProcessor = new ShipmentProcessor(new BlueDartLSP());
-			blueDartOutboundCreated = blueDartShipmentProcessor.generateOutboundFile(blueDartParcelsList);
-		}
-		if(quantiumParcelsList != null) {
-			ShipmentProcessor quantiumShipmentProcessor = new ShipmentProcessor(new QuantiumLSP());
-			quantiumOutboundCreated = quantiumShipmentProcessor.generateOutboundFile(quantiumParcelsList);
-		}
-		return (aramexOutboundCreated || firstFlightOutboundCreated || blueDartOutboundCreated || quantiumOutboundCreated);
 	}
 	
 	public void setShipmentService(ShipmentService shipmentService) {
 		this.shipmentService = shipmentService;
+	}
+	
+	public void setMailSender(MailSender mailSender) {
+		this.mailSender = mailSender;
 	}
 
 }

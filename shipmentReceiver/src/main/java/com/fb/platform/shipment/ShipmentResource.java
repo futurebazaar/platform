@@ -13,15 +13,16 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.joda.time.DateTime;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 import com.fb.commons.PlatformException;
+import com.fb.commons.to.Money;
 import com.fb.platform.shipment.manager.ShipmentManager;
 import com.fb.platform.shipment.to.GatePassItem;
+import com.fb.platform.shipment.to.GatePassTO;
 import com.fb.platform.shipment.to.ShipmentLSPEnum;
 import com.sap.abapxml.Abap;
 import com.sap.abapxml.Values.TAB.Item;
@@ -30,7 +31,7 @@ import com.sap.abapxml.Values.TAB.Item;
  * @author nehaga
  *
  */
-public class ShipmentResource implements ApplicationContextAware {
+public class ShipmentResource {
 	
 	private static Log infoLog = LogFactory.getLog("LOGINFO");
 	
@@ -39,8 +40,7 @@ public class ShipmentResource implements ApplicationContextAware {
 	//JAXBContext class is thread safe and can be shared
 	private static final JAXBContext context = initContext();
 	
-	private ApplicationContext applicationContext = null;
-	
+	@Autowired
 	private ShipmentManager shipmentManager = null;
 	
 	private static JAXBContext initContext() {
@@ -56,13 +56,11 @@ public class ShipmentResource implements ApplicationContextAware {
 	 * This function accepts the gatePass.xml as String and initiates the process of creating the outbound files.
 	 * @param gatePassString
 	 */
-	public boolean processGatepass(String gatePassString) {
+	public void processGatepass(String gatePassString) {
 		infoLog.info("GatePass xml String received : " + gatePassString);
-		List<Item> ordersList = createItemList(gatePassString);
-		List<GatePassItem> deliveryList = createLSPLists(ordersList);
-		shipmentManager = (ShipmentManager)applicationContext.getBean("shipmentManager");
-		boolean outboundCreated = shipmentManager.generateOutboundFile(deliveryList);
-		return outboundCreated;
+		Abap orders = createItemList(gatePassString);
+		GatePassTO gatePass = createLSPLists(orders);
+		shipmentManager.generateOutboundFile(gatePass);
 	}
 	
 	/**
@@ -70,31 +68,31 @@ public class ShipmentResource implements ApplicationContextAware {
 	 * This function calls the service layer and fetches the required information from the database to generate ParcelItem object. 
 	 * @param ordersList
 	 */
-	private List<GatePassItem> createLSPLists(List<Item> ordersList) {
+	private GatePassTO createLSPLists(Abap orders) {
+		GatePassTO gatePassTO = new GatePassTO();
+		List<Item> ordersList = orders.getValues().getTAB().getItem();
 		List<GatePassItem> deliveryItems = new ArrayList<GatePassItem>();
 		for(Item gatePassItemReceived : ordersList) {
 			GatePassItem gatePassItem = new GatePassItem();
-			gatePassItem.setAwbno(gatePassItemReceived.getAWBNO());
+			gatePassItem.setAmount(new Money(gatePassItemReceived.getAMOUNT()));
+			gatePassItem.setAwbNo(gatePassItemReceived.getAWBNO());
+			gatePassItem.setCity(gatePassItemReceived.getCITY1());
 			gatePassItem.setDeece(gatePassItemReceived.getDEECE());
-			if(gatePassItemReceived.getDELDT() != null && isValidDate(gatePassItemReceived.getDELDT())) {
-				gatePassItem.setDeldt(new DateTime(gatePassItemReceived.getDELDT()));
-			} else {
-				gatePassItem.setDeldt(new DateTime());
-			}
-			gatePassItem.setDelno(gatePassItemReceived.getDELNO());
-			gatePassItem.setGtpas(gatePassItemReceived.getGTPAS());
-			if(gatePassItemReceived.getINVDT() != null && isValidDate(gatePassItemReceived.getINVDT())) {
-				gatePassItem.setInvdt(new DateTime(gatePassItemReceived.getINVDT()));
-			} else {
-				gatePassItem.setInvdt(new DateTime());
-			}
-			gatePassItem.setInvno(gatePassItemReceived.getINVNO());
-			String lspCode = gatePassItemReceived.getLSPCODE().substring(4);
-			gatePassItem.setLspcode(ShipmentLSPEnum.getLSP(lspCode));
-			gatePassItem.setSonum(gatePassItemReceived.getSONUM());
+			gatePassItem.setDelNo(gatePassItemReceived.getDELNO());
+			gatePassItem.setDelWt(gatePassItemReceived.getDELWET());
+			gatePassItem.setItemDescription(gatePassItemReceived.getDELDIS());
+			gatePassItem.setName(gatePassItemReceived.getNAME());
+			gatePassItem.setPayMod(gatePassItemReceived.getPAYMOD());
+			gatePassItem.setPincode(gatePassItemReceived.getPOSTCODE1());
+			gatePassItem.setRegion(gatePassItemReceived.getREGION());
+			gatePassItem.setAddress(gatePassItemReceived.getSTRSUPPL1());
+			gatePassItem.setTelnumber(gatePassItemReceived.getTELNUMBER());
 			deliveryItems.add(gatePassItem);
 		}
-		return deliveryItems;
+		gatePassTO.setGatePassItems(deliveryItems);
+		String lspCode = orders.getLSPCODE().substring(4);
+		gatePassTO.setLspcode(ShipmentLSPEnum.getLSP(lspCode));
+		return gatePassTO;
 	}
 	
 	public boolean isValidDate(String inDate) {
@@ -124,14 +122,14 @@ public class ShipmentResource implements ApplicationContextAware {
 	 * @return
 	 *  
 	 */
-	private List<Item> createItemList(String gatePassString) {
+	private Abap createItemList(String gatePassString) {
 		try {
 			
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			
 			Abap abap = (Abap) unmarshaller.unmarshal(new StreamSource(new StringReader(gatePassString)));
 			
-			return abap.getValues().getTAB().getItem();
+			return abap;
 		} catch (JAXBException e) {
 			System.out.println(e.getStackTrace());
 		}
@@ -141,11 +139,5 @@ public class ShipmentResource implements ApplicationContextAware {
 	
 	public void setShipmentManager(ShipmentManager shipmentManager) {
 		this.shipmentManager = shipmentManager;
-	}
-
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext)
-			throws BeansException {
-		this.applicationContext = applicationContext;
 	}
 }

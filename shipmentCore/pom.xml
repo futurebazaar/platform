@@ -23,16 +23,16 @@
 			<artifactId>platformCommons</artifactId>
 			<version>1.0</version>
 	  	</dependency>
-<!-- 	  	<dependency> -->
-<!-- 	  		<groupId>com.fb</groupId> -->
-<!-- 			<artifactId>platformCaching</artifactId> -->
-<!-- 			<version>1.0</version> -->
-<!-- 	  	</dependency> -->
-<!-- 	  	<dependency> -->
-<!-- 	  		<groupId>com.fb</groupId> -->
-<!-- 			<artifactId>authenticationCore</artifactId> -->
-<!-- 			<version>1.0</version> -->
-<!-- 	  	</dependency> -->
+	  	<dependency>
+	  		<groupId>com.fb</groupId>
+			<artifactId>platformFTP</artifactId>
+			<version>1.0</version>
+	  	</dependency>
+	  	<dependency>
+	  		<groupId>com.fb</groupId>
+			<artifactId>platformMailer</artifactId>
+			<version>1.0</version>
+	  	</dependency>
 <!-- 	  	<dependency> -->
 <!-- 	  		<groupId>com.fb</groupId> -->
 <!-- 			<artifactId>userCore</artifactId> -->

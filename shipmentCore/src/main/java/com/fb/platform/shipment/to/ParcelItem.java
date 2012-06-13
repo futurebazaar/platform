@@ -31,11 +31,11 @@ public class ParcelItem {
 	private String city = "";
 	private String state = "";
 	private String country = "";
-	private int pincode;
-	private BigDecimal phoneNumber;
+	private String pincode;
+	private long phoneNumber;
 	private Money amountPayable;
 	private String articleDescription = "";
-	private int weight;
+	private BigDecimal weight;
 	private int quantity;
 	private int deliverySiteId;
 	private String paymentMode = "";
@@ -77,23 +77,23 @@ public class ParcelItem {
 	public void setCountry(String country) {
 		this.country = country.replace("\r\n", " ");
 	}
-	public int getPincode() {
+	public String getPincode() {
 		return pincode;
 	}
-	public void setPincode(int pincode) {
+	public void setPincode(String pincode) {
 		this.pincode = pincode;
 	}
-	public BigDecimal getPhoneNumber() {
+	public long getPhoneNumber() {
 		return phoneNumber;
 	}
-	public void setPhoneNumber(BigDecimal phoneNumber) {
+	public void setPhoneNumber(long phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
 	public Money getAmountPayable() {
 		return amountPayable;
 	}
-	public void setAmountPayable(BigDecimal amountPayable) {
-		this.amountPayable = new Money(amountPayable);
+	public void setAmountPayable(Money amountPayable) {
+		this.amountPayable = amountPayable;
 	}
 	public String getArticleDescription() {
 		return articleDescription;
@@ -101,10 +101,10 @@ public class ParcelItem {
 	public void setArticleDescription(String articleDescription) {
 		this.articleDescription = articleDescription.replace("\r\n", " ");
 	}
-	public int getWeight() {
+	public BigDecimal getWeight() {
 		return weight;
 	}
-	public void setWeight(int weight) {
+	public void setWeight(BigDecimal weight) {
 		this.weight = weight;
 	}
 	public int getQuantity() {

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="fakeFtpServer" class="org.mockftpserver.fake.FakeFtpServer">
+        <property name="serverControlPort" value="9981"/>
+        <property name="systemName" value="UNIX"/>
+        <property name="userAccounts">
+            <list>
+                <bean class="org.mockftpserver.fake.UserAccount">
+                    <property name="username" value="ftptest"/>
+                    <property name="password" value="password"/>
+                    <property name="homeDirectory" value="/home/nehaga/fakeFtpServer"/>
+                </bean>
+            </list>
+        </property>
+
+        <property name="fileSystem">
+            <bean class="org.mockftpserver.fake.filesystem.UnixFakeFileSystem">
+                <property name="createParentDirectoriesAutomatically" value="true"/>
+                <property name="entries">
+                    <list>
+                        <bean class="org.mockftpserver.fake.filesystem.DirectoryEntry">
+                            <property name="path" value="/LSP/Gatepass"/>
+                        </bean>
+                        <bean class="org.mockftpserver.fake.filesystem.FileEntry" >
+                            <property name="path" value="/BLUEDART_P201205120500.xml"/>
+                            <property name="contents" >
+                            	<value type="java.lang.String">&lt;?xml version=&quot;1.0&quot; encoding=&quot;iso-8859-1&quot; ?&gt;&lt;asx:abap xmlns:asx=&quot;http://www.sap.com/abapxml&quot; version=&quot;1.0&quot;&gt;&lt;asx:values&gt;&lt;TAB&gt;&lt;item&gt;&lt;DEL_NO&gt;8000017431&lt;/DEL_NO&gt;&lt;DEL_WET&gt;5.005&lt;/DEL_WET&gt;&lt;NAME&gt;ITZ CUSTOMER&lt;/NAME&gt;&lt;STR_SUPPL1&gt;AKASH,MULUND E&lt;/STR_SUPPL1&gt;&lt;CITY1&gt;AMDAVAAD&lt;/CITY1&gt;&lt;REGION&gt;Maharashtra&lt;/REGION&gt;&lt;POST_CODE1&gt;400060&lt;/POST_CODE1&gt;&lt;TEL_NUMBER&gt;1111&lt;/TEL_NUMBER&gt;&lt;DEL_DIS&gt;LOGITECH V 470 BLUETOOTH CORDL,LOGITECH V 470 BLUETOOTH CORDLESS MOUSE&lt;/DEL_DIS&gt;&lt;AMOUNT&gt;381.40&lt;/AMOUNT&gt;&lt;DEECE&gt;6330&lt;/DEECE&gt;&lt;AWB_NO&gt;44248655636&lt;/AWB_NO&gt;&lt;PAYMOD&gt;PREPAID&lt;/PAYMOD&gt;&lt;/item&gt;&lt;item&gt;&lt;DEL_NO&gt;8000017433&lt;/DEL_NO&gt;&lt;DEL_WET&gt;5.005&lt;/DEL_WET&gt;&lt;NAME&gt;ITZ CUSTOMER&lt;/NAME&gt;&lt;STR_SUPPL1&gt;AKASH,901 AHRIHUNT DARPAN , MAHADA ,MULUND E&lt;/STR_SUPPL1&gt;&lt;CITY1&gt;AMDAVAAD&lt;/CITY1&gt;&lt;REGION&gt;Maharashtra&lt;/REGION&gt;&lt;POST_CODE1&gt;400060&lt;/POST_CODE1&gt;&lt;TEL_NUMBER&gt;1111&lt;/TEL_NUMBER&gt;&lt;DEL_DIS&gt;LOGITECH V 470 BLUETOOTH CORDL,LOGITECH V 470 BLUETOOTH CORDLESS MOUSE&lt;/DEL_DIS&gt;&lt;AMOUNT&gt;381.40&lt;/AMOUNT&gt;&lt;DEECE&gt;6330&lt;/DEECE&gt;&lt;AWB_NO&gt;44248655651&lt;/AWB_NO&gt;&lt;PAYMOD&gt;PREPAID&lt;/PAYMOD&gt;&lt;/item&gt;&lt;/TAB&gt;&lt;/asx:values&gt;&lt;/asx:abap&gt;</value>
+                            </property>
+                        </bean>
+                    </list>
+                </property>
+            </bean>
+        </property>
+
+    </bean>
+
+</beans>

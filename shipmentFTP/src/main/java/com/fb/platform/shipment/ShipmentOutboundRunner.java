@@ -27,18 +27,13 @@ public class ShipmentOutboundRunner {
 				"shipment-applicationContext-resources.xml",
 				"shipment-applicationContext-service.xml");
 		ShipmentResource shipmentResource = (ShipmentResource)appContext.getBean("shipmentResource");
-		ShipmentFTPClient ftpClient = new ShipmentFTPClient();
+		ShipmentFTPClient ftpClient = (ShipmentFTPClient)appContext.getBean("shipmentFTPClient");
 		List<String> gatePassList = ftpClient.getGatePassList();
 		//for(String gatePassString : gatePassList) {
 		for(int i=0;i<3;i++) {
-			String gatePassString =gatePassList.get(i);
-			infoLog.info("Gate Pass XML String : " + gatePassString);
-			boolean outboundCreated = shipmentResource.processGatepass(gatePassString);
-			if(outboundCreated) {
-				ftpClient.deliverOutboundFiles();
-			} else {
-				errorLog.error("No outbound files created");
-			}
+			String gatePassXML = gatePassList.get(i); 
+			infoLog.info("Gate Pass XML String : " + gatePassXML);
+			shipmentResource.processGatepass(gatePassXML);
 		}
 	}
 	

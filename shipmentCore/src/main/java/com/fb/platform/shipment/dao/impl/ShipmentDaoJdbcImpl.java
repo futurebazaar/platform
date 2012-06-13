@@ -8,10 +8,11 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import com.fb.commons.to.Money;
 import com.fb.platform.shipment.dao.ShipmentDao;
 import com.fb.platform.shipment.to.GatePassItem;
 import com.fb.platform.shipment.to.ParcelItem;
-;
+
  /**
  * @author nehaga
  *
@@ -67,12 +68,12 @@ public class ShipmentDaoJdbcImpl implements ShipmentDao {
 	public ParcelItem getParcelDetails(GatePassItem gatePassItem) {
 		infoLog.info("Getting parcel details for order : " + gatePassItem.toString());
 		ParcelItem parcelItem = jdbcTemplate.queryForObject(FETCH_PARCEL_DETAILS,
-				new Object[] {gatePassItem.getSonum()},
+				new Object[] {},
 				new ParcelItemMapper());
 		//TODO check for null values and constraints
-		parcelItem.setDeliveryNumber(gatePassItem.getDelno());
+		parcelItem.setDeliveryNumber(gatePassItem.getDelNo());
 		parcelItem.setDeliverySiteId(gatePassItem.getDeece());
-		parcelItem.setTrackingNumber(gatePassItem.getAwbno());
+		parcelItem.setTrackingNumber(gatePassItem.getAwbNo());
 		infoLog.info("Parcel details : " + parcelItem.toString());
 		return parcelItem;
 	}
@@ -84,12 +85,12 @@ public class ShipmentDaoJdbcImpl implements ShipmentDao {
 
     		ParcelItem parcelItem = new ParcelItem();
     		parcelItem.setAddress(rs.getString("address"));
-    		parcelItem.setAmountPayable(rs.getBigDecimal("payableAmount"));
+    		parcelItem.setAmountPayable(new Money(rs.getBigDecimal("payableAmount")));
     		parcelItem.setCity(rs.getString("cityName"));
     		parcelItem.setCountry(rs.getString("countryName"));
     		parcelItem.setPaymentMode(rs.getString("paymentMode"));
-    		parcelItem.setPhoneNumber(rs.getBigDecimal("phone"));
-    		parcelItem.setPincode(rs.getInt("pincode"));
+    		parcelItem.setPhoneNumber(rs.getLong("phone"));
+    		parcelItem.setPincode(rs.getString("pincode"));
     		parcelItem.setState(rs.getString("stateName"));
     		parcelItem.setCustomerName(rs.getString("name"));
 			return parcelItem;

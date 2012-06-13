@@ -3,11 +3,13 @@
   <xs:element name="abap">
     <xs:complexType>
       <xs:sequence>
+        <xs:element ref="asx:LSP_CODE"/>
         <xs:element ref="asx:values"/>
       </xs:sequence>
       <xs:attribute name="version" use="required" type="xs:decimal"/>
     </xs:complexType>
   </xs:element>
+  <xs:element name="LSP_CODE" type="xs:string"></xs:element>
   <xs:element name="values">
     <xs:complexType>
       <xs:sequence>
@@ -17,15 +19,19 @@
               <xs:element maxOccurs="unbounded" name="item" form="unqualified">
                 <xs:complexType>
                   <xs:sequence>
-                    <xs:element name="DEECE" form="unqualified" type="xs:int"/>
                     <xs:element name="DEL_NO" form="unqualified" type="xs:string"/>
-                    <xs:element name="DEL_DT" form="unqualified" type="xs:NMTOKEN"/>
-                    <xs:element name="SONUM" form="unqualified" type="xs:long"/>
-                    <xs:element name="INV_NO" form="unqualified" type="xs:int"/>
-                    <xs:element name="INV_DT" form="unqualified" type="xs:NMTOKEN"/>
-                    <xs:element name="GT_PAS" form="unqualified" type="xs:int"/>
+                    <xs:element name="DEL_WET" form="unqualified" type="xs:decimal"/>
+                    <xs:element name="NAME" form="unqualified" type="xs:string"/>
+                    <xs:element name="STR_SUPPL1" form="unqualified" type="xs:string"/>
+                    <xs:element name="CITY1" form="unqualified" type="xs:string"/>
+                    <xs:element name="REGION" form="unqualified" type="xs:string"/>
+                    <xs:element name="POST_CODE1" form="unqualified" type="xs:string"/>
+                    <xs:element name="TEL_NUMBER" form="unqualified" type="xs:long"/>
+                    <xs:element name="DEL_DIS" form="unqualified" type="xs:string"/>
+                    <xs:element name="AMOUNT" form="unqualified" type="xs:decimal"/>
+                    <xs:element name="DEECE" form="unqualified" type="xs:int"/>
                     <xs:element name="AWB_NO" form="unqualified" type="xs:string"/>
-                    <xs:element name="LSP_CODE" form="unqualified" type="xs:string"/>
+                    <xs:element name="PAYMOD" form="unqualified" type="xs:string"/>
                   </xs:sequence>
                 </xs:complexType>
               </xs:element>
