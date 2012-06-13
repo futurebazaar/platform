@@ -117,7 +117,7 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule, Serializa
 		Money orderVal = request.getOrderValueForRelevantProducts(brands, includeCategoryList, excludeCategoryList);
 		Money discountCalculated = (orderVal.times(discountPercentage.doubleValue())).div(100);
 		Money finalDiscountAmount = new Money(new BigDecimal(0));
-		if(discountCalculated.gt(maxDiscountPerUse)){
+		if(maxDiscountPerUse != null && discountCalculated.gt(maxDiscountPerUse)){
 			log.info("Maximum discount is less than the calculated discount on this order. Max Discount = "+maxDiscountPerUse +" and Discount calculated = "+discountCalculated);
 			finalDiscountAmount = finalDiscountAmount.plus(maxDiscountPerUse);
 		}
