@@ -33,4 +33,12 @@ public interface GiftVoucherService {
 	@Transactional(propagation=Propagation.REQUIRED)
 	public boolean createGiftVoucher(String email, int userId, BigDecimal amount,int orderItemId) throws PlatformException;
 
+	@Transactional(propagation=Propagation.REQUIRED)
+	public boolean useGiftVoucher(int userId, BigDecimal amount, int orderId,
+			long giftVoucherNumber, int giftVoucherPin);
+
+	@Transactional(propagation=Propagation.REQUIRED)
+	public boolean cancelGiftVoucher(int userId, int orderItemId,
+			long giftVoucherNumber);
+
 }

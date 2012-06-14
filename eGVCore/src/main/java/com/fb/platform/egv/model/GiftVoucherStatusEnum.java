@@ -3,13 +3,13 @@
  */
 package com.fb.platform.egv.model;
 
-import com.sun.xml.bind.v2.runtime.RuntimeUtil.ToStringAdapter;
+import java.io.Serializable;
 
 /**
  * @author keith
  *
  */
-public enum GiftVoucherStatusEnum {
+public enum GiftVoucherStatusEnum implements Serializable{
 	
 	INACTIVE("INACTIVE"),
 	CONFIRMED("CONFIRMED"),

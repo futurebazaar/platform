@@ -15,12 +15,18 @@ import com.fb.platform.egv.model.GiftVoucher;
 import com.fb.platform.egv.service.GiftVoucherManager;
 import com.fb.platform.egv.service.GiftVoucherNotFoundException;
 import com.fb.platform.egv.service.GiftVoucherService;
+import com.fb.platform.egv.to.CancelRequest;
+import com.fb.platform.egv.to.CancelResponse;
+import com.fb.platform.egv.to.CancelResponseStatusEnum;
 import com.fb.platform.egv.to.CreateRequest;
 import com.fb.platform.egv.to.CreateResponse;
 import com.fb.platform.egv.to.CreateResponseStatusEnum;
 import com.fb.platform.egv.to.GetInfoRequest;
 import com.fb.platform.egv.to.GetInfoResponse;
 import com.fb.platform.egv.to.GetInfoResponseStatusEnum;
+import com.fb.platform.egv.to.UseRequest;
+import com.fb.platform.egv.to.UseResponse;
+import com.fb.platform.egv.to.UseResponseStatusEnum;
 
 /**
  * @author keith
@@ -73,7 +79,84 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 
 		return response;
 	}
+	
+	@Override
+	public CancelResponse cancel(CancelRequest request) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("Cancelling Gift Voucher : " + request.getGiftVoucherNumber());
+		}
+		CancelResponse response = new CancelResponse();
 
+		if (request == null || StringUtils.isBlank(request.getSessionToken())) {
+			response.setStatus(CancelResponseStatusEnum.NO_SESSION);
+			return response;
+		}
+
+		//authenticate the session token and find out the userId
+		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
+		if (authentication == null) {
+			//invalid session token
+			response.setStatus(CancelResponseStatusEnum.NO_SESSION);
+			return response;
+		}
+		
+		response.setSessionToken(request.getSessionToken());
+		
+		int userId = authentication.getUserID();
+
+		try {
+			//create the gift voucher
+			giftVoucherService.cancelGiftVoucher(userId,request.getOrderItemId(),request.getGiftVoucherNumber());
+			response.setStatus(CancelResponseStatusEnum.SUCCESS);
+
+		} catch (GiftVoucherNotFoundException e) {
+			response.setStatus(CancelResponseStatusEnum.INTERNAL_ERROR);
+		} catch (PlatformException e) {
+			response.setStatus(CancelResponseStatusEnum.INTERNAL_ERROR);
+		}
+
+		return response;
+	}
+
+	@Override
+	public UseResponse use(UseRequest request) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("Creating Gift Voucher worth : " + request.getAmount());
+		}
+		UseResponse response = new UseResponse();
+
+		if (request == null || StringUtils.isBlank(request.getSessionToken())) {
+			response.setStatus(UseResponseStatusEnum.NO_SESSION);
+			return response;
+		}
+
+		//authenticate the session token and find out the userId
+		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
+		if (authentication == null) {
+			//invalid session token
+			response.setStatus(UseResponseStatusEnum.NO_SESSION);
+			return response;
+		}
+		
+		response.setSessionToken(request.getSessionToken());
+		
+		int userId = authentication.getUserID();
+
+		try {
+			//create the gift voucher
+			giftVoucherService.useGiftVoucher(userId,request.getAmount(), request.getOrderId(),request.getGiftVoucherNumber(),request.getGiftVoucherPin());
+			response.setStatus(UseResponseStatusEnum.SUCCESS);
+
+		} catch (GiftVoucherNotFoundException e) {
+			response.setStatus(UseResponseStatusEnum.INTERNAL_ERROR);
+		} catch (PlatformException e) {
+			response.setStatus(UseResponseStatusEnum.INTERNAL_ERROR);
+		}
+
+		return response;
+	}
+	
+	
 	public void setAuthenticationService(AuthenticationService authenticationService) {
 		this.authenticationService = authenticationService;
 	}

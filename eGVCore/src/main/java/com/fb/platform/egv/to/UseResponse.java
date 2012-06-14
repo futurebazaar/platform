@@ -9,12 +9,12 @@ import java.io.Serializable;
  * @author keith
  *
  */
-public class CreateResponse implements Serializable{
+public class UseResponse implements Serializable{
 
 	private String sessionToken;
 	private long gvNumber;
 	
-	private CreateResponseStatusEnum status;
+	private UseResponseStatusEnum status;
 
 	public String getSessionToken() {
 		return sessionToken;
@@ -24,11 +24,11 @@ public class CreateResponse implements Serializable{
 		this.sessionToken = sessionToken;
 	}
 
-	public CreateResponseStatusEnum getStatus() {
+	public UseResponseStatusEnum getStatus() {
 		return status;
 	}
 
-	public void setStatus(CreateResponseStatusEnum status) {
+	public void setStatus(UseResponseStatusEnum status) {
 		this.status = status;
 	}
 

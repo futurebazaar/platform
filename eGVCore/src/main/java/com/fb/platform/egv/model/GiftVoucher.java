@@ -85,5 +85,9 @@ public class GiftVoucher implements Serializable {
 	public void setStatus(GiftVoucherStatusEnum status) {
 		this.status = status;
 	}
+	
+	public boolean isUsable() {
+		return (getStatus() == GiftVoucherStatusEnum.CONFIRMED);
+	}
 
 }

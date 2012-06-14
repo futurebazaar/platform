@@ -79,4 +79,35 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 		String gvPin = RandomGenerator.integerRandomGenerator(GV_PIN_LENGTH);
 		return giftVoucherDao.createGiftVoucher(gvNumber,gvPin,email,userId,amount,GiftVoucherStatusEnum.CONFIRMED,orderItemId);
 	}
+
+	@Override
+	public boolean useGiftVoucher(int userId, BigDecimal amount, int orderId,
+			long giftVoucherNumber, int giftVoucherPin) {
+		GiftVoucher eGV = new GiftVoucher();
+		try {
+			eGV = giftVoucherDao.load(giftVoucherNumber,giftVoucherPin);
+			if(eGV.isUsable())
+			{
+				giftVoucherDao.changeState(giftVoucherNumber, GiftVoucherStatusEnum.USED);
+				return giftVoucherDao.createGiftVoucherUse(giftVoucherNumber, userId, orderId, amount);
+			}
+			return false;
+		} 
+//		catch (InvalidPinException e) {
+//			throw new PlatformException("Error while loading the GiftVoucher. GiftVoucherId  : " + giftVoucherNumber, e);
+//		} 
+		catch (DataAccessException e) {
+			throw new PlatformException("Error while loading the GiftVoucher. GiftVoucherId  : " + giftVoucherNumber, e);
+		}
+		catch (GiftVoucherNotFoundException e) {
+			throw new GiftVoucherNotFoundException("No Such Gift Voucher Exists :  " + giftVoucherNumber, e);
+		}
+	}
+
+	@Override
+	public boolean cancelGiftVoucher(int userId, int orderItemId,
+			long giftVoucherNumber) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

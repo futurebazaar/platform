@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author keith
  *
  */
-public enum CreateResponseStatusEnum implements Serializable{
+public enum CancelResponseStatusEnum implements Serializable{
 	
 	NO_SESSION,
 	INTERNAL_ERROR,

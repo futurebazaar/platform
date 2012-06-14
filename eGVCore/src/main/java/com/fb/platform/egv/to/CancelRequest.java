@@ -10,11 +10,11 @@ import java.math.BigDecimal;
  * @author keith
  *
  */
-public class GetInfoRequest implements Serializable{
+public class CancelRequest implements Serializable{
 
 	private String sessionToken;
 	private long giftVoucherNumber;
-	private int giftVoucherPin;
+	private int orderItemId;
 	
 	public String getSessionToken() {
 		return sessionToken;
@@ -28,11 +28,11 @@ public class GetInfoRequest implements Serializable{
 	public void setGiftVoucherNumber(long giftVoucherNumber) {
 		this.giftVoucherNumber = giftVoucherNumber;
 	}
-	public int getGiftVoucherPin() {
-		return giftVoucherPin;
+	public int getOrderItemId() {
+		return orderItemId;
 	}
-	public void setGiftVoucherPin(int giftVoucherPin) {
-		this.giftVoucherPin = giftVoucherPin;
+	public void setOrderItemId(int orderItemId) {
+		this.orderItemId = orderItemId;
 	}
 	
 	

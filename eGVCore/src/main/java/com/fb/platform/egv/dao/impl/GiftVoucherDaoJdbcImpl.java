@@ -28,6 +28,7 @@ import com.fb.platform.egv.dao.GiftVoucherDao;
 import com.fb.platform.egv.model.GiftVoucher;
 import com.fb.platform.egv.model.GiftVoucherDates;
 import com.fb.platform.egv.model.GiftVoucherStatusEnum;
+import com.fb.platform.egv.model.GiftVoucherUse;
 import com.fb.platform.egv.service.GiftVoucherNotFoundException;
 
 /**
@@ -40,7 +41,7 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 
 	private Log log = LogFactory.getLog(GiftVoucherDaoJdbcImpl.class);
 
-	private static final String GET_GIFT_VOUCHER__BY_ID_QUERY = 
+	private static final String GET_GIFT_VOUCHER_BY_ID_QUERY = 
 			"SELECT " +
 			"	id, " +
 			"	valid_from, " +
@@ -56,7 +57,7 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 			"	last_modified_on " +
 			"FROM gift_voucher where id = ?";
 
-	private static final String GET_GIFT_VOUCHER__BY_NUMBER_PIN_QUERY = 
+	private static final String GET_GIFT_VOUCHER_BY_NUMBER_PIN_QUERY = 
 			"SELECT " +
 			"	id, " +
 			"	valid_from, " +
@@ -88,6 +89,27 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 			"	valid_from,"	+
 			"	valid_till"	+
 			"	) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,? )";
+
+	private static final String GET_GIFT_VOUCHER_USAGE_BY_NUMBER_QUERY = 
+			"SELECT " +
+			"	gift_voucher_number, " +
+			"	used_by, " +
+			"	order_id," +
+			"	used_on, " +
+			"	amount_used " +
+			"FROM gift_voucher_usage where gift_voucher_number = ?";
+
+	
+	private static final String CREATE_GIFT_VOUCHER_USAGE_QUERY = 
+			"INSERT INTO " +
+			"	gift_voucher_usage(" +
+			"	gift_voucher_number,"	+
+			"	used_by,"	+
+			"	order_id,"	+
+			"	used_on,"	+
+			"	amount_used"	+
+			"	) VALUES ( ?, ?, ?, ?, ? )";
+
 	
 	@Override
 	public GiftVoucher load(int giftVoucherId) {
@@ -97,14 +119,13 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 		}
 		
 		GiftVoucher eGV = null;
-		GiftVoucherRowCallBackHandler prcbh = new GiftVoucherRowCallBackHandler(); 
-		jdbcTemplate.query(GET_GIFT_VOUCHER__BY_ID_QUERY, prcbh, giftVoucherId);
-		if (prcbh.giftVoucher == null) {
-			//this means there is no promotion in the database for this id, fine
+		GiftVoucherRowCallBackHandler gvrcbh = new GiftVoucherRowCallBackHandler(); 
+		jdbcTemplate.query(GET_GIFT_VOUCHER_BY_ID_QUERY, gvrcbh, giftVoucherId);
+		if (gvrcbh.giftVoucher == null) {
 			log.error("No Gift Voucher found for the id - " + giftVoucherId);
 			return null;
 		}
-		eGV = prcbh.giftVoucher;
+		eGV = gvrcbh.giftVoucher;
 
 		return eGV;
 	}
@@ -117,14 +138,14 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 		}
 		
 		GiftVoucher eGV = null;
-		GiftVoucherRowCallBackHandler prcbh = new GiftVoucherRowCallBackHandler(); 
-		jdbcTemplate.query(GET_GIFT_VOUCHER__BY_NUMBER_PIN_QUERY, prcbh, new Object[] {giftVoucherNumber,giftVoucherPin});
-		if (prcbh.giftVoucher == null) {
+		GiftVoucherRowCallBackHandler gvrcbh = new GiftVoucherRowCallBackHandler(); 
+		jdbcTemplate.query(GET_GIFT_VOUCHER_BY_NUMBER_PIN_QUERY, gvrcbh, new Object[] {giftVoucherNumber,giftVoucherPin});
+		if (gvrcbh.giftVoucher == null) {
 			//this means there is no promotion in the database for this id, fine
-			log.error("No Gift Voucher found for the id - " + giftVoucherNumber);
+			log.error("No Gift Voucher and Pin match found for the eGV - eGVPin" + giftVoucherNumber + " - " + giftVoucherPin);
 			throw new GiftVoucherNotFoundException();
 		}
-		eGV = prcbh.giftVoucher;
+		eGV = gvrcbh.giftVoucher;
 
 		return eGV;
 	}
@@ -143,12 +164,10 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 			log.debug("Insert in the gift_voucher table ");
 		}
 		int rowAffected = 0;
-		KeyHolder userUsesKeyHolder = new GeneratedKeyHolder();
+		KeyHolder giftVoucherKeyHolder = new GeneratedKeyHolder();
 		
 		try {
 			rowAffected = jdbcTemplate.update(new PreparedStatementCreator() {
-				
-				
 				
 				@Override
 				public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
@@ -169,7 +188,41 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 					ps.setTimestamp(11, new java.sql.Timestamp(DateTime.now().plusMonths(6).getMillis()));
 					return ps;
 				}
-			}, userUsesKeyHolder);
+			}, giftVoucherKeyHolder);
+		} catch (DuplicateKeyException e) {
+			log.error("Duplicate key insertion exception " + e);
+			throw new PlatformException("Duplicate key insertion exception "+e);
+		}
+		
+		return rowAffected>0 ? true : false;
+	}
+	
+	@Override
+	public boolean createGiftVoucherUse(final long gvNumber, final int userId, final int orderId,final BigDecimal amountUsed) {
+		
+		if(log.isDebugEnabled()) {
+			log.debug("Insert in the gift_voucher table ");
+		}
+		int rowAffected = 0;
+		KeyHolder gvUsesKeyHolder = new GeneratedKeyHolder();
+		
+		try {
+			rowAffected = jdbcTemplate.update(new PreparedStatementCreator() {
+				
+				@Override
+				public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+					PreparedStatement ps = con.prepareStatement(CREATE_GIFT_VOUCHER_QUERY, new String [] {"id"});
+					
+					ps.setLong(1,gvNumber);
+					ps.setInt(2, userId);
+					ps.setInt(3, orderId);
+					Timestamp timestamp = new java.sql.Timestamp(System.currentTimeMillis());
+					ps.setTimestamp(4, timestamp);
+					ps.setBigDecimal(5, amountUsed);
+					
+					return ps;
+				}
+			}, gvUsesKeyHolder);
 		} catch (DuplicateKeyException e) {
 			log.error("Duplicate key insertion exception " + e);
 			throw new PlatformException("Duplicate key insertion exception "+e);
@@ -178,6 +231,32 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 		return rowAffected>0 ? true : false;
 	}
 
+	@Override
+	public GiftVoucherUse loadUse(long giftVoucherNumber) {
+		if(log.isDebugEnabled()) {
+			log.debug("Geting the details for the Gift Voucher : GV NUmber " + giftVoucherNumber);
+		}
+		
+		GiftVoucherUse gvUse = null;
+		GiftVoucherUseRowCallBackHandler gvurcbh = new GiftVoucherUseRowCallBackHandler(); 
+		jdbcTemplate.query(GET_GIFT_VOUCHER_USAGE_BY_NUMBER_QUERY, gvurcbh, giftVoucherNumber);
+		if (gvurcbh.giftVoucherUse == null) {
+			log.error("No Gift Voucher found : GV NUmber - " + giftVoucherNumber);
+			return null;
+		}
+		gvUse = gvurcbh.giftVoucherUse;
+
+		return gvUse;
+
+	}
+
+	@Override
+	public GiftVoucher changeState(long giftVoucherNumber,
+			GiftVoucherStatusEnum newState) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	private static class GiftVoucherRowCallBackHandler implements RowCallbackHandler {
 
 		private GiftVoucher giftVoucher;
@@ -214,10 +293,30 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 			giftVoucher.setDates(dates);
 		}
 	}
+	
+	private static class GiftVoucherUseRowCallBackHandler implements RowCallbackHandler {
 
+		private GiftVoucherUse giftVoucherUse;
+
+		@Override
+		public void processRow(ResultSet rs) throws SQLException {
+			giftVoucherUse = new GiftVoucherUse();
+			giftVoucherUse.setGiftVoucherNumber(rs.getString("gift_voucher_number"));
+			giftVoucherUse.setOrderId(rs.getInt("order_id"));
+			giftVoucherUse.setUsedBy(rs.getInt("used_by"));
+			giftVoucherUse.setAmountRedeemed(new Money(rs.getBigDecimal("amount_used")));
+			Timestamp usedOnTS = rs.getTimestamp("used_on");
+			if (usedOnTS != null) {
+				giftVoucherUse.setUsedOn(new DateTime(usedOnTS));
+			}
+		}
+	}
 	
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
+
+	
+
 
 }

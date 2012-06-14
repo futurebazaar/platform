@@ -3,6 +3,7 @@
  */
 package com.fb.platform.egv.to;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.joda.time.DateTime;
@@ -16,7 +17,7 @@ import com.fb.platform.egv.model.GiftVoucherStatusEnum;
  *
  */
 
-public class GetInfoResponse {
+public class GetInfoResponse implements Serializable{
 
 	private String sessionToken;
 	private GetInfoResponseStatusEnum responseStatus;

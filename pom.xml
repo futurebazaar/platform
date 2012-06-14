@@ -356,6 +356,8 @@
         <module>authenticationCore</module>
 		<module>promotionCore</module>
 		<module>promotionAdminWS</module>
+		<module>eGVCore</module>
+		<module>eGVWS</module>
 		<module>promotionWS</module>
     </modules>
 

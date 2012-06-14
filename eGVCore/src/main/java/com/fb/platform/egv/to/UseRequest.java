@@ -10,11 +10,13 @@ import java.math.BigDecimal;
  * @author keith
  *
  */
-public class GetInfoRequest implements Serializable{
+public class UseRequest implements Serializable{
 
 	private String sessionToken;
 	private long giftVoucherNumber;
 	private int giftVoucherPin;
+	private BigDecimal amount;
+	private int orderId;
 	
 	public String getSessionToken() {
 		return sessionToken;
@@ -33,6 +35,18 @@ public class GetInfoRequest implements Serializable{
 	}
 	public void setGiftVoucherPin(int giftVoucherPin) {
 		this.giftVoucherPin = giftVoucherPin;
+	}
+	public BigDecimal getAmount() {
+		return amount;
+	}
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+	}
+	public int getOrderId() {
+		return orderId;
+	}
+	public void setOrderId(int orderId) {
+		this.orderId = orderId;
 	}
 	
 	
