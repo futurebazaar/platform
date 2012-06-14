@@ -13,10 +13,8 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
@@ -31,6 +29,7 @@ import com.sap.abapxml.Values.TAB.Item;
  * @author nehaga
  *
  */
+@Component
 public class ShipmentResource {
 	
 	private static Log infoLog = LogFactory.getLog("LOGINFO");

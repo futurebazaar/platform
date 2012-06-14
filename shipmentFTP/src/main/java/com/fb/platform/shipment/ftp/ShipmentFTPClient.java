@@ -11,6 +11,7 @@ import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Component;
 
 import com.fb.commons.ftp.exception.FTPConnectException;
 import com.fb.commons.ftp.exception.FTPDisconnectException;
@@ -26,6 +27,7 @@ import com.fb.platform.shipment.util.StringGenerator;
  * @author nehaga
  *
  */
+@Component
 public class ShipmentFTPClient {
 	
 	private static Log infoLog = LogFactory.getLog("LOGINFO");
@@ -87,7 +89,7 @@ public class ShipmentFTPClient {
 				}
 			}
 		} catch (IOException e) {
-			errorLog.error("FTP disconnect error : " + e.getStackTrace());
+			errorLog.error("Error reading file from local machine.", e);
 		}
 		return gatePassList;
 	}

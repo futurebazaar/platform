@@ -48,8 +48,7 @@ public class ShipmentServiceImpl implements ShipmentService {
 			parcelItem.setPaymentMode(gatePassItem.getPayMod());
 			infoLog.debug("ParcelItem retrieved : " + parcelItem.toString());
 		} catch (Exception e) {
-			errorLog.error("Outbound entry not created for : " + gatePassItem.getDelNo());
-			errorLog.error(e.getStackTrace());
+			errorLog.error("Outbound entry not created for : " + gatePassItem.getDelNo(), e);
 		}
 		
 		return parcelItem;

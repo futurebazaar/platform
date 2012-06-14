@@ -29,11 +29,11 @@ public class ShipmentOutboundRunner {
 		ShipmentResource shipmentResource = (ShipmentResource)appContext.getBean("shipmentResource");
 		ShipmentFTPClient ftpClient = (ShipmentFTPClient)appContext.getBean("shipmentFTPClient");
 		List<String> gatePassList = ftpClient.getGatePassList();
-		//for(String gatePassString : gatePassList) {
-		for(int i=0;i<3;i++) {
-			String gatePassXML = gatePassList.get(i); 
-			infoLog.info("Gate Pass XML String : " + gatePassXML);
-			shipmentResource.processGatepass(gatePassXML);
+		for(String gatePassString : gatePassList) {
+		//for(int i=0;i<3;i++) {
+			//String gatePassXML = gatePassList.get(i); 
+			infoLog.info("Gate Pass XML String : " + gatePassString);
+			shipmentResource.processGatepass(gatePassString);
 		}
 	}
 	

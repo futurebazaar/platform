@@ -13,6 +13,10 @@ import com.fb.commons.ftp.exception.FTPLoginException;
 import com.fb.commons.ftp.exception.FTPLogoutException;
 import com.fb.commons.ftp.exception.FTPUploadException;
 import com.fb.commons.mail.MailSender;
+import com.fb.commons.mail.exception.MailNoReceiverException;
+import com.fb.commons.mail.exception.MailNoSenderException;
+import com.fb.commons.mail.exception.MailerException;
+import com.fb.platform.shipment.exception.MoveFileException;
 import com.fb.platform.shipment.exception.OutboundFileCreationException;
 import com.fb.platform.shipment.lsp.impl.AramexLSP;
 import com.fb.platform.shipment.lsp.impl.BlueDartLSP;
@@ -124,6 +128,14 @@ public class ShipmentManagerImpl implements ShipmentManager{
 			errorLog.error("FTP upload error", e);
 		} catch (OutboundFileCreationException e) {
 			errorLog.error("Outbound file creation error", e);
+		} catch (MailerException e) {
+			errorLog.error("Mail file error", e);
+		} catch (MoveFileException e) {
+			errorLog.error("File move error", e);
+		} catch (MailNoReceiverException e) {
+			errorLog.error("Mail has no receiver", e);
+		} catch (MailNoSenderException e) {
+			errorLog.error("Mail has no sender", e);
 		}
 	}
 	

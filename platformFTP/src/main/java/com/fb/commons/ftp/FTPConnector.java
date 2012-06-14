@@ -51,7 +51,7 @@ public class FTPConnector {
 			ftpClient.connect(connectTO.getHostName());
 		} catch (IOException ioexception) {
 			log.error("FTP connect error, hostname : " + connectTO.getHostName(), ioexception);
-			throw new FTPConnectException(ioexception);
+			throw new FTPConnectException("FTP connect error, hostname : " + connectTO.getHostName());
 		}
 	}
 	
@@ -61,7 +61,7 @@ public class FTPConnector {
 			ftpClient.login(connectTO.getUserName(), connectTO.getPassword());
 		} catch (IOException ioexception) {
 			log.error("FTP login error, hostname : " + connectTO.getHostName(), ioexception);
-			throw new FTPLoginException(ioexception);
+			throw new FTPLoginException("FTP login error, hostname : " + connectTO.getHostName());
 		}
 	}
 	
@@ -70,7 +70,7 @@ public class FTPConnector {
 			ftpClient.disconnect();
 		} catch (IOException ioException) {
 			log.error("FTP disconnect error, hostname : " + connectTO.getHostName(), ioException);
-			throw new FTPDisconnectException(ioException);
+			throw new FTPDisconnectException("FTP disconnect error, hostname : " + connectTO.getHostName());
 		}
 	}
 	
@@ -80,7 +80,7 @@ public class FTPConnector {
 			disconnect();
 		} catch (IOException ioException) {
 			log.error("FTP logout error, hostname : " + connectTO.getHostName(), ioException);
-			throw new FTPLoginException(ioException);
+			throw new FTPLoginException("FTP logout error, hostname : " + connectTO.getHostName());
 		}
 	}
 	
@@ -110,7 +110,7 @@ public class FTPConnector {
 			logout();
 		} catch (IOException e) {
 			log.error("FTP upload error : " + uploadTO.toString(), e);
-			throw new FTPUploadException(e);
+			throw new FTPUploadException("FTP upload error : " + uploadTO.toString());
 		}
 	}
 	
@@ -139,7 +139,7 @@ public class FTPConnector {
 			logout();
 		} catch (IOException e) {
 			log.error("FTP file download error : " + downloadTO.toString(), e);
-			throw new FTPDownloadException(e);
+			throw new FTPDownloadException("FTP file download error : " + downloadTO.toString());
 		} 
 	}
 }

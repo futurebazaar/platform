@@ -12,16 +12,17 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
-import org.springframework.mail.MailException;
 
 import com.fb.commons.ftp.manager.FTPManager;
 import com.fb.commons.ftp.to.FTPConnectionTO;
 import com.fb.commons.ftp.to.FTPUploadTO;
 import com.fb.commons.mail.MailSender;
 import com.fb.commons.mail.to.MailTO;
+import com.fb.platform.shipment.exception.MoveFileException;
 import com.fb.platform.shipment.exception.OutboundFileCreationException;
 import com.fb.platform.shipment.lsp.outbound.ShipmentOutbound;
 import com.fb.platform.shipment.to.ParcelItem;
@@ -147,8 +148,8 @@ public class BlueDartOutboundImpl implements ShipmentOutbound {
 			FileUtils.copyFile(file, mailFile);
 			infoLog.info(outboundFile.toString());
 		} catch (IOException ioException) {
-			errorLog.error("Error writing to file : " + fileName + ", exception : " + ioException.getStackTrace());
-			new OutboundFileCreationException(ioException);
+			errorLog.error("Error writing to file : " + fileName, ioException);
+			new OutboundFileCreationException("Error writing to file : " + fileName);
 		}
 	}
 	
@@ -180,21 +181,23 @@ public class BlueDartOutboundImpl implements ShipmentOutbound {
 		File[] outboundFiles = getOutboundFiles(serverFilePathMail);
 		List<File> attachments = mailAttachments(outboundFiles);
 		if(attachments != null && attachments.size() > 0) {
-			try {
-				MailTO ftpMail = createMail(attachments);
-				mailSender.send(ftpMail);
-				moveFiles(outboundFiles, mailSentPath);
-			} catch (MailException e) {
-				System.out.println(e.getStackTrace());
-			}
+			MailTO ftpMail = createMail(attachments);
+			mailSender.send(ftpMail);
+			moveFiles(outboundFiles, mailSentPath);
 		}
 	}
 	
 	private MailTO createMail(List<File> attachments) {
 		MailTO ftpMail = new MailTO();
 		String[] to = prop.getProperty("blueDart.ftp.to").split(",");
-		String[] cc = prop.getProperty("blueDart.ftp.cc").split(",");
-		String[] bcc = prop.getProperty("blueDart.ftp.bcc").split(",");
+		String[] cc = null;
+		if(StringUtils.isNotBlank(prop.getProperty("blueDart.ftp.cc"))) {
+			cc = prop.getProperty("blueDart.ftp.cc").split(",");
+		}
+		String[] bcc = null;
+		if(StringUtils.isNotBlank(prop.getProperty("blueDart.ftp.bcc"))) {
+			bcc = prop.getProperty("blueDart.ftp.bcc").split(",");
+		}
 		ftpMail.setFrom(prop.getProperty("blueDart.ftp.from"));
 		DateTime dateTime = new DateTime();
 		ftpMail.setMessage(prop.getProperty("blueDart.ftp.message").replace("%date%", dateTime.toString()));
@@ -226,7 +229,8 @@ public class BlueDartOutboundImpl implements ShipmentOutbound {
 				}
 			}
 		} catch (IOException e) {
-			System.out.println(e.getStackTrace());
+			errorLog.error("Error moving file to path : " + outboundMailSent + ", exception : " + e.getStackTrace());
+			throw new MoveFileException("Error moving file to path : " + outboundMailSent);
 		}
 	}
 
