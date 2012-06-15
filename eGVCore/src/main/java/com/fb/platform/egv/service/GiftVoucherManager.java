@@ -3,6 +3,8 @@
  */
 package com.fb.platform.egv.service;
 
+import com.fb.platform.egv.to.ApplyRequest;
+import com.fb.platform.egv.to.ApplyResponse;
 import com.fb.platform.egv.to.CancelRequest;
 import com.fb.platform.egv.to.CancelResponse;
 import com.fb.platform.egv.to.CreateRequest;
@@ -25,5 +27,7 @@ public interface GiftVoucherManager {
 	public CancelResponse cancel(CancelRequest request);
 	
 	public UseResponse use(UseRequest request);
+	
+	public ApplyResponse apply(ApplyRequest request);
 	
 }

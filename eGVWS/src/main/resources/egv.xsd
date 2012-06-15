@@ -12,7 +12,7 @@
   </xs:element>
 
   <xs:element name="giftVoucherNumber" type="xs:long"/>
-  <xs:element name="giftVoucherPin" type="xs:int"/>
+  <xs:element name="giftVoucherPin" type="xs:string"/>
   <xs:element name="sessionToken" type="xs:string"/>
 
   <xs:element name="getInfoResponse">
@@ -41,6 +41,7 @@
   <xs:element name="validTill" type="xs:dateTime"/>
   <xs:element name="validFrom" type="xs:dateTime"/>
   <xs:element name="orderItemId" type="xs:int"/>
+  <xs:element name="orderId" type="xs:int"/>
   
   <xs:simpleType name="getInfoResponseStatusEnum">
     <xs:restriction base="xs:string">
@@ -87,4 +88,114 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:element name="applyRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="egv:sessionToken"/>
+        <xs:element ref="egv:giftVoucherNumber"/>
+        <xs:element ref="egv:giftVoucherPin"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="applyResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="egv:sessionToken"/>
+        <xs:element ref="egv:applyResponseStatus"/>
+        <xs:element ref="egv:number"/>
+        <xs:element ref="egv:amount"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+
+  <xs:element name="applyResponseStatus" type="egv:applyResponseStatusEnum"/>
+  
+  <xs:simpleType name="applyResponseStatusEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INVALID_GIFT_VOUCHER_NUMBER"/>
+      <xs:enumeration value="INVALID_GIFT_VOUCHER_PIN"/>
+      <xs:enumeration value="USER_NOT_AUTHORIZED"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+      <xs:enumeration value="GIFT_VOUCHER_EXPIRED"/>
+      <xs:enumeration value="ALREADY_USED"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+    <xs:element name="useRequest">
+	    <xs:complexType>
+	      <xs:sequence>
+	        <xs:element ref="egv:sessionToken"/>
+	        <xs:element ref="egv:giftVoucherNumber"/>
+	        <xs:element ref="egv:giftVoucherPin"/>
+	        <xs:element ref="egv:amount"/>
+	        <xs:element ref="egv:orderId"/>
+	      </xs:sequence>
+	    </xs:complexType>
+  	</xs:element>
+
+  <xs:element name="useResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="egv:sessionToken"/>
+        <xs:element ref="egv:useResponseStatus"/>
+        <xs:element ref="egv:number"/>
+        <xs:element ref="egv:amount"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+
+  <xs:element name="useResponseStatus" type="egv:useResponseStatusEnum"/>
+  
+  <xs:simpleType name="useResponseStatusEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INVALID_GIFT_VOUCHER_NUMBER"/>
+      <xs:enumeration value="INVALID_GIFT_VOUCHER_PIN"/>
+      <xs:enumeration value="USER_NOT_AUTHORIZED"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+      <xs:enumeration value="GIFT_VOUCHER_EXPIRED"/>
+      <xs:enumeration value="ALREADY_USED"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="cancelRequest">
+	    <xs:complexType>
+	      <xs:sequence>
+	        <xs:element ref="egv:sessionToken"/>
+	        <xs:element ref="egv:giftVoucherNumber"/>
+	        <xs:element ref="egv:orderItemId"/>
+	      </xs:sequence>
+	    </xs:complexType>
+  	</xs:element>
+
+  <xs:element name="cancelResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="egv:sessionToken"/>
+        <xs:element ref="egv:cancelResponseStatus"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+
+  <xs:element name="cancelResponseStatus" type="egv:cancelResponseStatusEnum"/>
+  
+  <xs:simpleType name="cancelResponseStatusEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INVALID_GIFT_VOUCHER_NUMBER"/>
+      <xs:enumeration value="USER_NOT_AUTHORIZED"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+      <xs:enumeration value="GIFT_VOUCHER_EXPIRED"/>
+      <xs:enumeration value="ALREADY_USED"/>
+    </xs:restriction>
+  </xs:simpleType>
+    
 </xs:schema>

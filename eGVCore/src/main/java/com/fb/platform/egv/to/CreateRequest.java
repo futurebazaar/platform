@@ -3,14 +3,13 @@
  */
 package com.fb.platform.egv.to;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
  * @author keith
  *
  */
-public class CreateRequest implements Serializable{
+public class CreateRequest implements GiftVoucherRequest{
 
 	private String sessionToken;
 	private int orderItemId;

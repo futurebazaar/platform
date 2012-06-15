@@ -3,13 +3,12 @@
  */
 package com.fb.platform.egv.to;
 
-import java.io.Serializable;
 
 /**
  * @author keith
  *
  */
-public enum CancelResponseStatusEnum implements Serializable{
+public enum CancelResponseStatusEnum implements GiftVoucherResponseEnum {
 	
 	NO_SESSION,
 	INTERNAL_ERROR,

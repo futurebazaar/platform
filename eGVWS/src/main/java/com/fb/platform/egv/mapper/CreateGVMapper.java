@@ -5,13 +5,11 @@ package com.fb.platform.egv.mapper;
 
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.GregorianCalendar;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
 import javax.xml.transform.stream.StreamSource;
 
 import com.fb.platform.egv.resource.GiftVoucherResource;
@@ -41,13 +39,12 @@ public class CreateGVMapper {
 		return coreRequest;
 	}
 			
-	public static String CoreResponseToXml(com.fb.platform.egv.to.CreateResponse coreResponse) throws JAXBException,DatatypeConfigurationException{
+	public static String coreResponseToXml(com.fb.platform.egv.to.CreateResponse coreResponse) throws JAXBException,DatatypeConfigurationException{
 		
 	com.fb.platform.egv._1_0.CreateResponse webResponse = new com.fb.platform.egv._1_0.CreateResponse();
-	GregorianCalendar gregCal = new GregorianCalendar();
 	
 	// Mapping Code
-	webResponse.setCreateResponseStatus(com.fb.platform.egv._1_0.CreateResponseStatusEnum.fromValue(coreResponse.getStatus().toString()));
+	webResponse.setCreateResponseStatus(com.fb.platform.egv._1_0.CreateResponseStatusEnum.fromValue(coreResponse.getResponseStatus().toString()));
 
 	StringWriter outStringWriter = new StringWriter();
 	Marshaller marshaller = GiftVoucherResource.getContext().createMarshaller();

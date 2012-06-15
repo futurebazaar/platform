@@ -84,6 +84,9 @@ Migration/
 apache-tomcat-6.0.33/
 eGVWS/.classpath
 eGVWS/.settings/
+eGVCore/.classpath
+eGVCore/.settings/
+eGVCore/bin/
 migrationWS/.settings/
 .gitignore
 

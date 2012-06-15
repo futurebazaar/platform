@@ -3,22 +3,10 @@
  */
 package com.fb.platform.egv.mapper;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.GregorianCalendar;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
-
-import com.fb.platform.egv._1_0.GetInfoRequest;
-import com.fb.platform.egv.resource.GiftVoucherResource;
-import com.fb.platform.egv.to.GetInfoResponseStatusEnum;
-
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -26,9 +14,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.transform.stream.StreamSource;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
+import com.fb.platform.egv.resource.GiftVoucherResource;
 
 
 /**
@@ -47,7 +33,6 @@ public class GetInfoMapper {
 			// Mapping Code
 			coreRequest.setSessionToken(webRequest.getSessionToken());
 			coreRequest.setGiftVoucherNumber(webRequest.getGiftVoucherNumber());
-			coreRequest.setGiftVoucherPin(webRequest.getGiftVoucherPin());
 
 		}catch (JAXBException e) {
 			// TODO: handle exception
@@ -55,7 +40,7 @@ public class GetInfoMapper {
 		return coreRequest;
 	}
 			
-	public static String CoreResponseToXml(com.fb.platform.egv.to.GetInfoResponse coreResponse) throws JAXBException,DatatypeConfigurationException{
+	public static String coreResponseToXml(com.fb.platform.egv.to.GetInfoResponse coreResponse) throws JAXBException,DatatypeConfigurationException{
 			
 		com.fb.platform.egv._1_0.GetInfoResponse webResponse = new com.fb.platform.egv._1_0.GetInfoResponse();
 		GregorianCalendar gregCal = new GregorianCalendar();

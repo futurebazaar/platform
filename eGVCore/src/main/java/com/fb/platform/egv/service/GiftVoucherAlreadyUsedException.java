@@ -9,33 +9,33 @@ import com.fb.commons.PlatformException;
  * @author keith
  *
  */
-public class InvalidPinException extends PlatformException {
+public class GiftVoucherAlreadyUsedException extends PlatformException {
 
 	/**
 	 * 
 	 */
-	public InvalidPinException() {
+	public GiftVoucherAlreadyUsedException() {
 	}
 
 	/**
 	 * @param message
 	 * @param cause
 	 */
-	public InvalidPinException(String message, Throwable cause) {
+	public GiftVoucherAlreadyUsedException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @param message
 	 */
-	public InvalidPinException(String message) {
+	public GiftVoucherAlreadyUsedException(String message) {
 		super(message);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public InvalidPinException(Throwable cause) {
+	public GiftVoucherAlreadyUsedException(Throwable cause) {
 		super(cause);
 	}
 

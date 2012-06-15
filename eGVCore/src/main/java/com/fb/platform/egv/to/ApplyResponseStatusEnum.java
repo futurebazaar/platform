@@ -3,12 +3,13 @@
  */
 package com.fb.platform.egv.to;
 
+import java.io.Serializable;
 
 /**
  * @author keith
  *
  */
-public enum UseResponseStatusEnum implements GiftVoucherResponseEnum {
+public enum ApplyResponseStatusEnum implements Serializable{
 	
 	NO_SESSION,
 	INTERNAL_ERROR,

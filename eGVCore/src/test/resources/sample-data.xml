@@ -63,7 +63,8 @@ create table gift_voucher (
 	valid_till datetime,
 	created_on datetime,
 	last_modified_on datetime,
-	CONSTRAINT `gift_voucher_fk1` FOREIGN KEY (`users_id`) REFERENCES `user_profile` (`id`)
+	CONSTRAINT `gift_voucher_fk1` FOREIGN KEY (`user_id`) REFERENCES `users_profile` (`id`),
+	CONSTRAINT `gift_voucher_fk2` FOREIGN KEY (`order_item_id`) REFERENCES `orders_orderitem` (`id`)
 	)ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 	
 create table gift_voucher_usage (
@@ -75,7 +76,7 @@ create table gift_voucher_usage (
 	amount_used decimal(18,2) not null,
 	 CONSTRAINT `gift_voucher_use_fk1` FOREIGN KEY (`used_by`) REFERENCES `users_profile` (`id`),
 	 CONSTRAINT `gift_voucher_use_fk2` FOREIGN KEY (`order_id`) REFERENCES `orders_order` (`id`),
-	 CONSTRAINT `gift_voucher_use_fk3` FOREIGN KEY (`gv_number`) REFERENCES `gift_voucher` (`number`)
+	 CONSTRAINT `gift_voucher_use_fk3` FOREIGN KEY (`gift_voucher_number`) REFERENCES `gift_voucher` (`number`)
 	)ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
  -->

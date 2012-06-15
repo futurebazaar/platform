@@ -7,8 +7,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.io.StringWriter;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -17,24 +15,20 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.fb.commons.PlatformException;
-import com.fb.platform.egv._1_0.*;
+import com.fb.platform.egv.mapper.ApplyMapper;
+import com.fb.platform.egv.mapper.CancelMapper;
 import com.fb.platform.egv.mapper.CreateGVMapper;
 import com.fb.platform.egv.mapper.GetInfoMapper;
+import com.fb.platform.egv.mapper.UseMapper;
 import com.fb.platform.egv.service.GiftVoucherManager;
 
 /**
@@ -80,7 +74,7 @@ public class GiftVoucherResource {
 			
 			com.fb.platform.egv.to.GetInfoResponse getResponse = giftVoucherManager.getInfo(getRequest);
 					
-			String getInfoResponseXml = GetInfoMapper.CoreResponseToXml(getResponse);
+			String getInfoResponseXml = GetInfoMapper.coreResponseToXml(getResponse);
 
 			if (logger.isDebugEnabled()) {
 				logger.debug("GetInfo Response XML :\n" + getInfoResponseXml);
@@ -110,7 +104,7 @@ public class GiftVoucherResource {
 			
 			com.fb.platform.egv.to.CreateResponse createResponse = giftVoucherManager.create(createRequest);
 					
-			String createResponseXml = CreateGVMapper.CoreResponseToXml(createResponse);
+			String createResponseXml = CreateGVMapper.coreResponseToXml(createResponse);
 			
 			if (logger.isDebugEnabled()) {
 				logger.debug("GetInfo Response XML :\n" + createResponseXml);
@@ -126,6 +120,99 @@ public class GiftVoucherResource {
 			return "error"; //TODO return proper error response
 		}
 	}
+
+	
+	@POST
+	@Path("/cancel")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String cancel(String cancelRequestXml) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("CancelRequestXML : \n" + cancelRequestXml);
+		}
+		try {
+			com.fb.platform.egv.to.CancelRequest cancelRequest = CancelMapper.xmlToCoreRequest(cancelRequestXml);
+			
+			com.fb.platform.egv.to.CancelResponse cancelResponse = giftVoucherManager.cancel(cancelRequest);
+					
+			String cancelResponseXml = CancelMapper.coreResponseToXml(cancelResponse);
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("GetInfo Response XML :\n" + cancelResponseXml);
+			}
+			
+			return cancelResponseXml;
+
+		} catch (JAXBException e) {
+			logger.error("Error in the getGiftVoucherInfo call : ", e);
+			return "error"; //TODO return proper error response
+		} catch (DatatypeConfigurationException e) {
+			logger.error("Error in the getGiftVoucherInfo call : ", e);
+			return "error"; //TODO return proper error response
+		}
+	}
+	
+	@POST
+	@Path("/apply")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String apply(String applyRequestXml) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("ApplyRequestXML : \n" + applyRequestXml);
+		}
+		try {
+			com.fb.platform.egv.to.ApplyRequest applyRequest = ApplyMapper.xmlToCoreRequest(applyRequestXml);
+			
+			com.fb.platform.egv.to.ApplyResponse applyResponse = giftVoucherManager.apply(applyRequest);
+					
+			String applyResponseXml = ApplyMapper.coreResponseToXml(applyResponse);
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("GetInfo Response XML :\n" + applyResponseXml);
+			}
+			
+			return applyResponseXml;
+
+		} catch (JAXBException e) {
+			logger.error("Error in the getGiftVoucherInfo call : ", e);
+			return "error"; //TODO return proper error response
+		} catch (DatatypeConfigurationException e) {
+			logger.error("Error in the getGiftVoucherInfo call : ", e);
+			return "error"; //TODO return proper error response
+		}
+	}
+	
+	@POST
+	@Path("/use")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String use(String useRequestXml) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("UseRequestXML : \n" + useRequestXml);
+		}
+		try {
+			com.fb.platform.egv.to.UseRequest useRequest = UseMapper.xmlToCoreRequest(useRequestXml);
+			
+			com.fb.platform.egv.to.UseResponse useResponse = giftVoucherManager.use(useRequest);
+					
+			String useResponseXml = UseMapper.coreResponseToXml(useResponse);
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("GetInfo Response XML :\n" + useResponseXml);
+			}
+			
+			return useResponseXml;
+
+		} catch (JAXBException e) {
+			logger.error("Error in the getGiftVoucherInfo call : ", e);
+			return "error"; //TODO return proper error response
+		} catch (DatatypeConfigurationException e) {
+			logger.error("Error in the getGiftVoucherInfo call : ", e);
+			return "error"; //TODO return proper error response
+		}
+	}
+
+
 	
 	@GET
 	public String ping() {

@@ -74,7 +74,6 @@ public class GiftVoucherManagerImplTest extends BaseTestCase{
 		
 		GetInfoRequest getGiftVoucherInfoRequest = new GetInfoRequest();
 		getGiftVoucherInfoRequest.setGiftVoucherNumber(-12345678901L);
-		getGiftVoucherInfoRequest.setGiftVoucherPin(12345);
 		getGiftVoucherInfoRequest.setSessionToken(responseUser1.getSessionToken());
 		
 		GetInfoResponse getGiftVoucherInfoResponse = giftVoucherManager.getInfo(getGiftVoucherInfoRequest);
@@ -98,7 +97,7 @@ public class GiftVoucherManagerImplTest extends BaseTestCase{
 		
 		assertNotNull(createGiftVoucherResponse);
 		assertNotNull(createGiftVoucherResponse.getSessionToken());
-		assertEquals(CreateResponseStatusEnum.SUCCESS,createGiftVoucherResponse.getStatus());
+		assertEquals(CreateResponseStatusEnum.SUCCESS,createGiftVoucherResponse.getResponseStatus());
 		
 	}
 }

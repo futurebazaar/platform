@@ -3,13 +3,10 @@
  */
 package com.fb.platform.egv.to;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.joda.time.DateTime;
 
-import com.fb.commons.to.Money;
-import com.fb.platform.egv.model.GiftVoucherDates;
 import com.fb.platform.egv.model.GiftVoucherStatusEnum;
 
 /**
@@ -17,7 +14,7 @@ import com.fb.platform.egv.model.GiftVoucherStatusEnum;
  *
  */
 
-public class GetInfoResponse implements Serializable{
+public class GetInfoResponse implements GiftVoucherResponse{
 
 	private String sessionToken;
 	private GetInfoResponseStatusEnum responseStatus;

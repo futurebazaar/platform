@@ -7,6 +7,7 @@ package com.fb.platform.egv.model;
 import java.io.Serializable;
 
 import com.fb.commons.to.Money;
+import com.fb.platform.egv.util.GiftVoucherPinUtil;
 
 /**
  * @author keith
@@ -16,8 +17,7 @@ public class GiftVoucher implements Serializable {
 
 	private int id;
 	private String number;
-	private int pin;
-//	private boolean isActive;
+	private String pin;
 	private GiftVoucherDates dates;
 	private int orderItemId;
 	private String email;
@@ -34,21 +34,15 @@ public class GiftVoucher implements Serializable {
 	public String getNumber() {
 		return number;
 	}
+	public String getPin() {
+		return pin;
+	}
+	public void setPin(String pin) {
+		this.pin = pin;
+	}
 	public void setNumber(String number) {
 		this.number = number;
 	}
-	public int getPin() {
-		return pin;
-	}
-	public void setPin(int pin) {
-		this.pin = pin;
-	}
-//	public boolean isActive() {
-//		return isActive;
-//	}
-//	public void setActive(boolean isActive) {
-//		this.isActive = isActive;
-//	}
 	public GiftVoucherDates getDates() {
 		return dates;
 	}
@@ -88,6 +82,14 @@ public class GiftVoucher implements Serializable {
 	
 	public boolean isUsable() {
 		return (getStatus() == GiftVoucherStatusEnum.CONFIRMED);
+	}
+	
+	public boolean isValidPin(String pin) {
+		return GiftVoucherPinUtil.checkPassword(pin, this.pin);
+	}
+	
+	public boolean isExpired() {
+		return this.dates.isWithinDates();
 	}
 
 }

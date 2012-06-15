@@ -3,18 +3,17 @@
  */
 package com.fb.platform.egv.to;
 
-import java.io.Serializable;
 
 /**
  * @author keith
  *
  */
-public class CreateResponse implements Serializable{
+public class CreateResponse implements GiftVoucherResponse{
 
 	private String sessionToken;
 	private long gvNumber;
 	
-	private CreateResponseStatusEnum status;
+	private CreateResponseStatusEnum responseStatus;
 
 	public String getSessionToken() {
 		return sessionToken;
@@ -24,12 +23,12 @@ public class CreateResponse implements Serializable{
 		this.sessionToken = sessionToken;
 	}
 
-	public CreateResponseStatusEnum getStatus() {
-		return status;
+	public CreateResponseStatusEnum getResponseStatus() {
+		return responseStatus;
 	}
 
-	public void setStatus(CreateResponseStatusEnum status) {
-		this.status = status;
+	public void setResponseStatus(CreateResponseStatusEnum status) {
+		this.responseStatus = status;
 	}
 
 	public long getGvNumber() {

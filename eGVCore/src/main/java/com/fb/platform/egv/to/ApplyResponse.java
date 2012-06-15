@@ -5,17 +5,18 @@ package com.fb.platform.egv.to;
 
 import java.math.BigDecimal;
 
-
 /**
  * @author keith
  *
  */
-public class UseResponse implements GiftVoucherResponse {
+
+public class ApplyResponse implements GiftVoucherResponse{
 
 	private String sessionToken;
-	private UseResponseStatusEnum responseStatus;
+	private ApplyResponseStatusEnum responseStatus;
 	private long number;
 	private BigDecimal amount;
+
 
 	public String getSessionToken() {
 		return sessionToken;
@@ -25,12 +26,12 @@ public class UseResponse implements GiftVoucherResponse {
 		this.sessionToken = sessionToken;
 	}
 
-	public UseResponseStatusEnum getResponseStatus() {
+	public ApplyResponseStatusEnum getResponseStatus() {
 		return responseStatus;
 	}
 
-	public void setResponseStatus(UseResponseStatusEnum status) {
-		this.responseStatus = status;
+	public void setResponseStatus(ApplyResponseStatusEnum responseStatus) {
+		this.responseStatus = responseStatus;
 	}
 
 	public long getNumber() {
@@ -48,4 +49,5 @@ public class UseResponse implements GiftVoucherResponse {
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
+	
 }

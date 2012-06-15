@@ -30,6 +30,7 @@ import com.fb.platform.egv.model.GiftVoucherDates;
 import com.fb.platform.egv.model.GiftVoucherStatusEnum;
 import com.fb.platform.egv.model.GiftVoucherUse;
 import com.fb.platform.egv.service.GiftVoucherNotFoundException;
+import com.fb.platform.egv.service.InvalidPinException;
 
 /**
  * @author keith
@@ -57,6 +58,23 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 			"	last_modified_on " +
 			"FROM gift_voucher where id = ?";
 
+	private static final String GET_GIFT_VOUCHER_BY_NUMBER_QUERY = 
+			"SELECT " +
+			"	id, " +
+			"	valid_from, " +
+			"	valid_till, " +
+			"	number, " +
+			"	pin, " +
+			"	status," +
+			"	order_item_id, " +
+			"	user_id, " +
+			"	email, " +
+			"	amount, " +
+			"	created_on, " +
+			"	last_modified_on " +
+			"FROM gift_voucher where number = ?";
+
+	
 	private static final String GET_GIFT_VOUCHER_BY_NUMBER_PIN_QUERY = 
 			"SELECT " +
 			"	id, " +
@@ -89,6 +107,12 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 			"	valid_from,"	+
 			"	valid_till"	+
 			"	) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,? )";
+
+	private static final String UPDATE_GIFT_VOUCHER_STATE_QUERY = 
+			"UPDATE " +
+			"	gift_voucher set " +
+			"	status = ? "	+
+			"FROM gift_voucher where number = ? ";
 
 	private static final String GET_GIFT_VOUCHER_USAGE_BY_NUMBER_QUERY = 
 			"SELECT " +
@@ -131,7 +155,7 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 	}
 	
 	@Override
-	public GiftVoucher load(long giftVoucherNumber,int giftVoucherPin) {
+	public GiftVoucher load(long giftVoucherNumber) {
 		
 		if(log.isDebugEnabled()) {
 			log.debug("Geting the details for the Gift Voucher Number : " + giftVoucherNumber);
@@ -139,10 +163,10 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 		
 		GiftVoucher eGV = null;
 		GiftVoucherRowCallBackHandler gvrcbh = new GiftVoucherRowCallBackHandler(); 
-		jdbcTemplate.query(GET_GIFT_VOUCHER_BY_NUMBER_PIN_QUERY, gvrcbh, new Object[] {giftVoucherNumber,giftVoucherPin});
-		if (gvrcbh.giftVoucher == null) {
-			//this means there is no promotion in the database for this id, fine
-			log.error("No Gift Voucher and Pin match found for the eGV - eGVPin" + giftVoucherNumber + " - " + giftVoucherPin);
+		jdbcTemplate.query(GET_GIFT_VOUCHER_BY_NUMBER_QUERY, gvrcbh, new Object[] {giftVoucherNumber});
+		if(gvrcbh.giftVoucher == null) {
+			//no gift voucher in the database for this number
+			log.error("No Gift Voucher found for the eGV " + giftVoucherNumber );
 			throw new GiftVoucherNotFoundException();
 		}
 		eGV = gvrcbh.giftVoucher;
@@ -251,11 +275,18 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 	}
 
 	@Override
-	public GiftVoucher changeState(long giftVoucherNumber,
+	public boolean changeState(long giftVoucherNumber,
 			GiftVoucherStatusEnum newState) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return false;
 	}
+	
+	@Override
+	public boolean deleteGiftVoucher(long gvNumber, int userId, int orderItemId) {
+		
+		return false;
+	}
+
 	
 	private static class GiftVoucherRowCallBackHandler implements RowCallbackHandler {
 
@@ -269,7 +300,7 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 			giftVoucher.setAmount(new Money(rs.getBigDecimal("amount")));
 			giftVoucher.setStatus(GiftVoucherStatusEnum.valueOf(rs.getString("status")));
 			giftVoucher.setNumber(rs.getString("number"));
-			giftVoucher.setPin(rs.getInt("pin"));
+			giftVoucher.setPin(rs.getString("pin"));
 			giftVoucher.setOrderItemId(rs.getInt("order_item_id"));
 			giftVoucher.setUserId(rs.getInt("user_id"));
 			
@@ -315,8 +346,5 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
-
-	
-
 
 }

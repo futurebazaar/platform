@@ -3,18 +3,17 @@
  */
 package com.fb.platform.egv.to;
 
-import java.io.Serializable;
 
 /**
  * @author keith
  *
  */
-public class CancelResponse implements Serializable{
+public class CancelResponse implements GiftVoucherResponse{
 
 	private String sessionToken;
 	private long gvNumber;
 	
-	private CancelResponseStatusEnum status;
+	private CancelResponseStatusEnum responseStatus;
 
 	public String getSessionToken() {
 		return sessionToken;
@@ -24,12 +23,12 @@ public class CancelResponse implements Serializable{
 		this.sessionToken = sessionToken;
 	}
 
-	public CancelResponseStatusEnum getStatus() {
-		return status;
+	public CancelResponseStatusEnum getResponseStatus() {
+		return responseStatus;
 	}
 
-	public void setStatus(CancelResponseStatusEnum status) {
-		this.status = status;
+	public void setResponseStatus(CancelResponseStatusEnum status) {
+		this.responseStatus = status;
 	}
 
 	public long getGvNumber() {

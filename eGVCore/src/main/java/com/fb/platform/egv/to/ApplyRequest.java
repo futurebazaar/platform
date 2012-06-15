@@ -8,11 +8,11 @@ package com.fb.platform.egv.to;
  * @author keith
  *
  */
-public class CancelRequest implements GiftVoucherRequest{
+public class ApplyRequest implements GiftVoucherRequest{
 
 	private String sessionToken;
 	private long giftVoucherNumber;
-	private int orderItemId;
+	private String giftVoucherPin;
 	
 	public String getSessionToken() {
 		return sessionToken;
@@ -26,12 +26,11 @@ public class CancelRequest implements GiftVoucherRequest{
 	public void setGiftVoucherNumber(long giftVoucherNumber) {
 		this.giftVoucherNumber = giftVoucherNumber;
 	}
-	public int getOrderItemId() {
-		return orderItemId;
+	public String getGiftVoucherPin() {
+		return giftVoucherPin;
 	}
-	public void setOrderItemId(int orderItemId) {
-		this.orderItemId = orderItemId;
-	}
-	
+	public void setGiftVoucherPin(String giftVoucherPin) {
+		this.giftVoucherPin = giftVoucherPin;
+	}	
 	
 }

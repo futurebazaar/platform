@@ -3,18 +3,17 @@
  */
 package com.fb.platform.egv.to;
 
-import java.io.Serializable;
 
 /**
  * @author keith
  *
  */
-public enum GetInfoResponseStatusEnum implements Serializable{
+public enum GetInfoResponseStatusEnum implements GiftVoucherResponseEnum {
 
 	NO_SESSION,
 	INTERNAL_ERROR,
 	SUCCESS,
-	GIFT_VOUCHER_NOT_FOUND,
-	INVALID_PIN;
+	INVALID_GIFT_VOUCHER_NUMBER,
+	INVALID_GIFT_VOUCHER_PIN;
 	
 }
