@@ -49,7 +49,7 @@ public class CancelMapper {
 
 		StringWriter outStringWriter = new StringWriter();
 		Marshaller marshaller = GiftVoucherResource.getContext().createMarshaller();
-		marshaller.marshal(coreResponse, outStringWriter);
+		marshaller.marshal(webResponse, outStringWriter);
 
 		return outStringWriter.toString();
 	}

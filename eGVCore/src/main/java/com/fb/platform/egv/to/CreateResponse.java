@@ -12,7 +12,6 @@ public class CreateResponse implements GiftVoucherResponse{
 
 	private String sessionToken;
 	private long gvNumber;
-	
 	private CreateResponseStatusEnum responseStatus;
 
 	public String getSessionToken() {

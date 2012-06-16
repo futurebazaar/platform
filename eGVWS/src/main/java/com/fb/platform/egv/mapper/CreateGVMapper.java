@@ -34,7 +34,7 @@ public class CreateGVMapper {
 			coreRequest.setOrderItemId(webRequest.getOrderItemId());
 
 		}catch (JAXBException e) {
-			// TODO: handle exception
+			throw new JAXBException("Problem in XML Parsing");
 		}
 		return coreRequest;
 	}
@@ -45,10 +45,12 @@ public class CreateGVMapper {
 	
 	// Mapping Code
 	webResponse.setCreateResponseStatus(com.fb.platform.egv._1_0.CreateResponseStatusEnum.fromValue(coreResponse.getResponseStatus().toString()));
+	webResponse.setNumber(coreResponse.getGvNumber());
+	webResponse.setSessionToken(coreResponse.getSessionToken());
 
 	StringWriter outStringWriter = new StringWriter();
 	Marshaller marshaller = GiftVoucherResource.getContext().createMarshaller();
-	marshaller.marshal(coreResponse, outStringWriter);
+	marshaller.marshal(webResponse, outStringWriter);
 
 	return outStringWriter.toString();
 
