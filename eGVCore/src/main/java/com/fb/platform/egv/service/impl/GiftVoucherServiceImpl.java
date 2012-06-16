@@ -19,6 +19,7 @@ import com.fb.platform.egv.service.GiftVoucherExpiredException;
 import com.fb.platform.egv.service.GiftVoucherNotFoundException;
 import com.fb.platform.egv.service.GiftVoucherService;
 import com.fb.platform.egv.service.InvalidPinException;
+import com.fb.platform.egv.util.GiftVoucherPinUtil;
 import com.fb.platform.egv.util.RandomGenerator;
 
 /**
@@ -114,7 +115,7 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 		String numGenerated = RandomGenerator.integerRandomGenerator(GV_NUMBER_LENGTH);
 		long gvNumber = Long.parseLong(numGenerated);
 		String gvPin = RandomGenerator.integerRandomGenerator(GV_PIN_LENGTH);
-		createStatus = giftVoucherDao.createGiftVoucher(gvNumber,gvPin,email,userId,amount,GiftVoucherStatusEnum.CONFIRMED,orderItemId);
+		createStatus = giftVoucherDao.createGiftVoucher(gvNumber,GiftVoucherPinUtil.getEncryptedPassword(gvPin),email,userId,amount,GiftVoucherStatusEnum.CONFIRMED,orderItemId);
 		
 		//TODO : code to send email 
 		
