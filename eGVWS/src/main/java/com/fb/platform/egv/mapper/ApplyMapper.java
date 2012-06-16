@@ -36,8 +36,7 @@ public class ApplyMapper {
 		}catch (JAXBException e) {
 			// TODO: handle exception
 		}
-//		return coreRequest;
-		return null;
+		return coreRequest;
 	}
 			
 	public static String coreResponseToXml(com.fb.platform.egv.to.ApplyResponse coreResponse) throws JAXBException,DatatypeConfigurationException{
