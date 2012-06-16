@@ -89,7 +89,7 @@ public class GiftVoucher implements Serializable {
 	}
 	
 	public boolean isExpired() {
-		return this.dates.isWithinDates();
+		return !(this.dates.isWithinDates());
 	}
 
 }
