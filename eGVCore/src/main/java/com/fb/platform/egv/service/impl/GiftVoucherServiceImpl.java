@@ -109,17 +109,18 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 	}
 	
 	@Override
-	public boolean createGiftVoucher(String email, int userId,
+	public GiftVoucher createGiftVoucher(String email, int userId,
 			BigDecimal amount, int orderItemId) throws PlatformException {
-		boolean createStatus = false;
 		String numGenerated = RandomGenerator.integerRandomGenerator(GV_NUMBER_LENGTH);
 		long gvNumber = Long.parseLong(numGenerated);
+		GiftVoucher eGV = new GiftVoucher();
 		String gvPin = RandomGenerator.integerRandomGenerator(GV_PIN_LENGTH);
-		createStatus = giftVoucherDao.createGiftVoucher(gvNumber,GiftVoucherPinUtil.getEncryptedPassword(gvPin),email,userId,amount,GiftVoucherStatusEnum.CONFIRMED,orderItemId);
-		
+		 giftVoucherDao.createGiftVoucher(gvNumber,GiftVoucherPinUtil.getEncryptedPassword(gvPin),email,userId,amount,GiftVoucherStatusEnum.CONFIRMED,orderItemId);
+		 eGV = giftVoucherDao.load(gvNumber);
+		 
 		//TODO : code to send email 
 		
-		return createStatus;
+		return eGV;
 	}
 
 	@Override

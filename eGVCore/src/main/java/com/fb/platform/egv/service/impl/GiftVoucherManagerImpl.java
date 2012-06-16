@@ -71,11 +71,13 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 		response.setSessionToken(request.getSessionToken());
 		
 		int userId = authentication.getUserID();
-
+		
+		GiftVoucher gv = new GiftVoucher();
 		try {
 			//create the gift voucher
-			giftVoucherService.createGiftVoucher(request.getEmail(), userId, request.getAmount(), request.getOrderItemId());
+			gv = giftVoucherService.createGiftVoucher(request.getEmail(), userId, request.getAmount(), request.getOrderItemId());
 			response.setResponseStatus(CreateResponseStatusEnum.SUCCESS);
+			response.setGvNumber(Long.parseLong(gv.getNumber()));
 
 		} catch (PlatformException e) {
 			logger.error("Problem while creating new Gift Voucher of Amount : " + request.getAmount() + " for email " + request.getEmail());
