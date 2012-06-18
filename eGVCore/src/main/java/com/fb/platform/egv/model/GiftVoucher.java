@@ -6,6 +6,8 @@ package com.fb.platform.egv.model;
 
 import java.io.Serializable;
 
+import org.joda.time.DateTime;
+
 import com.fb.commons.to.Money;
 import com.fb.platform.egv.util.GiftVoucherPinUtil;
 
@@ -90,6 +92,14 @@ public class GiftVoucher implements Serializable {
 	
 	public boolean isExpired() {
 		return !(this.dates.isWithinDates());
+	}
+	
+	public DateTime getValidFrom() {
+		return this.dates.getValidFrom();
+	}
+	
+	public DateTime getValidTill() {
+		return this.dates.getValidTill();
 	}
 
 }

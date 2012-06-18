@@ -7,8 +7,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 
 import com.fb.commons.PlatformException;
+import com.fb.commons.mail.exception.MailerException;
 import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
 import com.fb.platform.egv.model.GiftVoucher;
@@ -76,9 +78,15 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 		try {
 			//create the gift voucher
 			gv = giftVoucherService.createGiftVoucher(request.getEmail(), userId, request.getAmount(), request.getOrderItemId());
-			response.setResponseStatus(CreateResponseStatusEnum.SUCCESS);
 			response.setGvNumber(Long.parseLong(gv.getNumber()));
+			response.setValidFrom(gv.getValidFrom());
+			response.setValidTill(gv.getValidTill());
+			response.setResponseStatus(CreateResponseStatusEnum.SUCCESS);
 
+		} catch (MailException e) {
+			logger.error("Problem in sending mail to " + gv.getEmail(),e);
+			response.setResponseStatus(CreateResponseStatusEnum.SENDING_MAIL_ERROR);
+			throw new MailerException("Error sending mail", e);
 		} catch (PlatformException e) {
 			logger.error("Problem while creating new Gift Voucher of Amount : " + request.getAmount() + " for email " + request.getEmail());
 			response.setResponseStatus(CreateResponseStatusEnum.INTERNAL_ERROR);

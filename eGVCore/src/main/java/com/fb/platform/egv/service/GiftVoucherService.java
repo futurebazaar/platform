@@ -28,17 +28,50 @@ public interface GiftVoucherService {
 	 */
 	public GiftVoucher getGiftVoucher(int giftVoucherId) throws GiftVoucherNotFoundException, PlatformException;
 	
+	/**
+	 * @param giftVoucherNumber
+	 * @return
+	 * @throws GiftVoucherNotFoundException
+	 * @throws PlatformException
+	 */
 	public GiftVoucher getGiftVoucher(long giftVoucherNumber) throws GiftVoucherNotFoundException, PlatformException;
 	
+	/**
+	 * @param giftVoucherNumber
+	 * @param giftVoucherPin
+	 * @return
+	 */
 	public GiftVoucher applyGiftVoucher(long giftVoucherNumber,String giftVoucherPin);
 	
+	/**
+	 * @param email
+	 * @param userId
+	 * @param amount
+	 * @param orderItemId
+	 * @return
+	 * @throws PlatformException
+	 */
 	@Transactional(propagation=Propagation.REQUIRED)
 	public GiftVoucher createGiftVoucher(String email, int userId, BigDecimal amount,int orderItemId) throws PlatformException;
 
+	/**
+	 * @param userId
+	 * @param amount
+	 * @param orderId
+	 * @param giftVoucherNumber
+	 * @param giftVoucherPin
+	 * @return
+	 */
 	@Transactional(propagation=Propagation.REQUIRED)
 	public boolean useGiftVoucher(int userId, BigDecimal amount, int orderId,
 			long giftVoucherNumber, String giftVoucherPin);
 
+	/**
+	 * @param giftVoucherNumber
+	 * @param userId
+	 * @param orderItemId
+	 * @return
+	 */
 	@Transactional(propagation=Propagation.REQUIRED)
 	public boolean cancelGiftVoucher(long giftVoucherNumber, int userId, int orderItemId);
 

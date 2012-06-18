@@ -9,8 +9,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.mail.MailException;
 
 import com.fb.commons.PlatformException;
+import com.fb.commons.mail.MailSender;
+import com.fb.commons.mail.exception.MailerException;
+import com.fb.commons.mail.to.MailTO;
 import com.fb.platform.egv.dao.GiftVoucherDao;
 import com.fb.platform.egv.model.GiftVoucher;
 import com.fb.platform.egv.model.GiftVoucherStatusEnum;
@@ -21,7 +25,7 @@ import com.fb.platform.egv.service.GiftVoucherService;
 import com.fb.platform.egv.service.InvalidPinException;
 import com.fb.platform.egv.util.GiftVoucherPinUtil;
 import com.fb.platform.egv.util.RandomGenerator;
-import com.fb.platform.egv.util.SendEmailUtil;
+import com.fb.platform.egv.util.MailHelper;
 
 /**
  * @author keith
@@ -37,9 +41,16 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 	
 	@Autowired
 	private GiftVoucherDao giftVoucherDao = null;
+	
+	@Autowired
+	private MailSender mailSender = null;
 
 	public void setGiftVoucherDao(GiftVoucherDao giftVoucherDao) {
 		this.giftVoucherDao = giftVoucherDao;
+	}
+	
+	public void setMailSender(MailSender mailSender) {
+		this.mailSender = mailSender;
 	}
 
 	@Override
@@ -112,7 +123,7 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 	
 	@Override
 	public GiftVoucher createGiftVoucher(String email, int userId,
-			BigDecimal amount, int orderItemId) throws PlatformException {
+			BigDecimal amount, int orderItemId) throws MailerException,PlatformException {
 		String numGenerated = RandomGenerator.integerRandomGenerator(GV_NUMBER_LENGTH);
 		long gvNumber = Long.parseLong(numGenerated);
 		GiftVoucher eGV = new GiftVoucher();
@@ -121,9 +132,16 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 		 eGV = giftVoucherDao.load(gvNumber);
 		 
 		 //code to send email
-//		 SendEmailUtil.sendMail(eGV.getEmail(),Long.toString(gvNumber),gvPin);
-		
+		 MailTO message = MailHelper.createMailTO(eGV.getEmail(),amount,Long.toString(gvNumber),gvPin);
+		 
+		try {
+//			mailSender.send(message);
+		} catch (MailException e) {
+			throw new MailerException("Error sending mail", e);
+		}
+
 		return eGV;
+		
 	}
 
 	@Override

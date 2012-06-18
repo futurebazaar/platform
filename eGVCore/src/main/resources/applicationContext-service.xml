@@ -16,7 +16,22 @@
     <!-- Add new services here -->
     <bean id="giftVoucherService" class="com.fb.platform.egv.service.impl.GiftVoucherServiceImpl">
         <property name="giftVoucherDao" ref="giftVoucherDao"></property>
+        <property name="mailSender" ref="mailSender"></property>
     </bean>
+    
+    <bean id="springMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+  		<property name="host" value="MUMOPBL01.fb.dc"/>
+        <property name="port" value="25"/>
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.localhost">mail.pantaloon.com</prop>
+            </props>
+         </property>
+	</bean>
+    <bean id="mailSender" class="com.fb.commons.mail.MailSender">
+	  	<property name="springMailSender" ref="springMailSender"/>
+	</bean>
+    
 
     <!-- Add new Managers here -->
     <bean id="giftVoucherManager" class="com.fb.platform.egv.service.impl.GiftVoucherManagerImpl">
