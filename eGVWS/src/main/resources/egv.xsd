@@ -6,7 +6,6 @@
       <xs:sequence>
         <xs:element ref="egv:sessionToken"/>
         <xs:element ref="egv:giftVoucherNumber"/>
-        <xs:element ref="egv:giftVoucherPin"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -71,6 +70,9 @@
         <xs:element ref="egv:sessionToken"/>
         <xs:element ref="egv:createResponseStatus"/>
         <xs:element ref="egv:number"/>
+        <xs:element ref="egv:validTill"/>
+        <xs:element ref="egv:validFrom"/>
+        <xs:element ref="egv:amount"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>

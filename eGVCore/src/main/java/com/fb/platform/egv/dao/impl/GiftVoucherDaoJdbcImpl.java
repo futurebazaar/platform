@@ -108,6 +108,7 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 	private static final String UPDATE_GIFT_VOUCHER_STATE_QUERY = 
 			"UPDATE " +
 			"	gift_voucher set " +
+			"	last_modified_on = ? "	+
 			"	status = ? "	+
 			"FROM gift_voucher where number = ? ";
 
@@ -170,13 +171,6 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 
 		return eGV;
 	}
-
-	private Money getGiftVoucherValue(int giftVoucherId, int userId, int orderId){
-		if(log.isDebugEnabled()) {
-//			log.debug("Get from the user promotion uses table record for user : " + userId + " , applied promotion id : " + promotionId + " , on order id : " + orderId);
-		}
-		return null;
-	}
 	
 	@Override
 	public boolean createGiftVoucher(final long gvNumber, final String pin,final String email, final int userId, final BigDecimal amount, final GiftVoucherStatusEnum status, final int orderItemId) {
@@ -232,7 +226,7 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 				
 				@Override
 				public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-					PreparedStatement ps = con.prepareStatement(CREATE_GIFT_VOUCHER_QUERY, new String [] {"id"});
+					PreparedStatement ps = con.prepareStatement(CREATE_GIFT_VOUCHER_USAGE_QUERY, new String [] {"id"});
 					
 					ps.setLong(1,gvNumber);
 					ps.setInt(2, userId);
@@ -272,10 +266,17 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 	}
 
 	@Override
-	public boolean changeState(long giftVoucherNumber,
+	public void changeState(long giftVoucherNumber,
 			GiftVoucherStatusEnum newState) {
 		
-		return false;
+		log.info("Update state of Gift Voucher " +giftVoucherNumber + " to => " + newState);
+		
+		Timestamp modifiedOnTimestamp = new java.sql.Timestamp(System.currentTimeMillis());
+		int gvUpdated = jdbcTemplate.update(UPDATE_GIFT_VOUCHER_STATE_QUERY, new Object[] {modifiedOnTimestamp, newState,Long.toString(giftVoucherNumber)});
+		if (gvUpdated != 1) {
+			log.error("Error while updating the Gift Voucher : " + giftVoucherNumber);
+			throw new PlatformException("Error while updating the Gift Voucher : " + giftVoucherNumber);
+		}
 	}
 	
 	@Override

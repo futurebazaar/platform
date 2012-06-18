@@ -21,6 +21,7 @@ import com.fb.platform.egv.service.GiftVoucherService;
 import com.fb.platform.egv.service.InvalidPinException;
 import com.fb.platform.egv.util.GiftVoucherPinUtil;
 import com.fb.platform.egv.util.RandomGenerator;
+import com.fb.platform.egv.util.SendEmailUtil;
 
 /**
  * @author keith
@@ -83,6 +84,7 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 				throw new InvalidPinException();
 			}
 			if(eGV.isExpired()) {
+				logger.info("Gift Voucher expiry date  " + eGV.getDates().getValidTill());
 				throw new GiftVoucherExpiredException();
 			}
 			if(!eGV.isUsable()) {
@@ -118,7 +120,8 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 		 giftVoucherDao.createGiftVoucher(gvNumber,GiftVoucherPinUtil.getEncryptedPassword(gvPin),email,userId,amount,GiftVoucherStatusEnum.CONFIRMED,orderItemId);
 		 eGV = giftVoucherDao.load(gvNumber);
 		 
-		//TODO : code to send email 
+		 //code to send email
+//		 SendEmailUtil.sendMail(eGV.getEmail(),Long.toString(gvNumber),gvPin);
 		
 		return eGV;
 	}

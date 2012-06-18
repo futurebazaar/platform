@@ -350,6 +350,7 @@
     
     <modules>
     	<module>platformCommons</module>
+	<module>platformMailer</module>
     	<module>platformCaching</module>
         <module>userCore</module>
         <module>userWS</module>
