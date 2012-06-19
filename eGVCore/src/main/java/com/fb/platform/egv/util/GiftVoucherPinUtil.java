@@ -82,7 +82,8 @@ public class GiftVoucherPinUtil {
 			return false;
 		}
 	}
-	
+
+	//Code to Test it individually
 	public static void main(String[] args) {
 		System.out.println(getEncryptedPassword("12345"));
 	}

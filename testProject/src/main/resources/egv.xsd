@@ -132,7 +132,6 @@
 	      <xs:sequence>
 	        <xs:element ref="egv:sessionToken"/>
 	        <xs:element ref="egv:giftVoucherNumber"/>
-	        <xs:element ref="egv:giftVoucherPin"/>
 	        <xs:element ref="egv:amount"/>
 	        <xs:element ref="egv:orderId"/>
 	      </xs:sequence>

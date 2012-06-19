@@ -30,6 +30,7 @@ import com.fb.platform.egv.mapper.CreateGVMapper;
 import com.fb.platform.egv.mapper.GetInfoMapper;
 import com.fb.platform.egv.mapper.UseMapper;
 import com.fb.platform.egv.service.GiftVoucherManager;
+import com.fb.platform.egv.to.UseResponseStatusEnum;
 
 /**
  * @author keith
@@ -194,7 +195,7 @@ public class GiftVoucherResource {
 			com.fb.platform.egv.to.UseRequest useRequest = UseMapper.xmlToCoreRequest(useRequestXml);
 			
 			com.fb.platform.egv.to.UseResponse useResponse = giftVoucherManager.use(useRequest);
-					
+			
 			String useResponseXml = UseMapper.coreResponseToXml(useResponse);
 
 			if (logger.isDebugEnabled()) {

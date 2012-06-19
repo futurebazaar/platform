@@ -108,9 +108,9 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 	private static final String UPDATE_GIFT_VOUCHER_STATE_QUERY = 
 			"UPDATE " +
 			"	gift_voucher set " +
-			"	last_modified_on = ? "	+
+			"	last_modified_on = ? , "	+
 			"	status = ? "	+
-			"FROM gift_voucher where number = ? ";
+			" where number = ? ";
 
 	private static final String GET_GIFT_VOUCHER_USAGE_BY_NUMBER_QUERY = 
 			"SELECT " +
@@ -272,7 +272,7 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 		log.info("Update state of Gift Voucher " +giftVoucherNumber + " to => " + newState);
 		
 		Timestamp modifiedOnTimestamp = new java.sql.Timestamp(System.currentTimeMillis());
-		int gvUpdated = jdbcTemplate.update(UPDATE_GIFT_VOUCHER_STATE_QUERY, new Object[] {modifiedOnTimestamp, newState,Long.toString(giftVoucherNumber)});
+		int gvUpdated = jdbcTemplate.update(UPDATE_GIFT_VOUCHER_STATE_QUERY, new Object[] {modifiedOnTimestamp, newState.toString(),Long.toString(giftVoucherNumber)});
 		if (gvUpdated != 1) {
 			log.error("Error while updating the Gift Voucher : " + giftVoucherNumber);
 			throw new PlatformException("Error while updating the Gift Voucher : " + giftVoucherNumber);

@@ -63,7 +63,7 @@ public interface GiftVoucherService {
 	 * @return
 	 */
 	@Transactional(propagation=Propagation.REQUIRED)
-	public boolean useGiftVoucher(int userId, BigDecimal amount, int orderId,
+	public void useGiftVoucher(int userId, BigDecimal amount, int orderId,
 			long giftVoucherNumber);
 
 	/**
@@ -73,6 +73,6 @@ public interface GiftVoucherService {
 	 * @return
 	 */
 	@Transactional(propagation=Propagation.REQUIRED)
-	public boolean cancelGiftVoucher(long giftVoucherNumber, int userId, int orderItemId);
+	public void cancelGiftVoucher(long giftVoucherNumber, int userId, int orderItemId);
 
 }

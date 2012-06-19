@@ -145,7 +145,7 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 	}
 
 	@Override
-	public boolean useGiftVoucher(int userId, BigDecimal amount, int orderId,
+	public void useGiftVoucher(int userId, BigDecimal amount, int orderId,
 			long giftVoucherNumber) {
 		GiftVoucher eGV = new GiftVoucher();
 		try {
@@ -155,9 +155,8 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 			{
 				eGV.setStatus(GiftVoucherStatusEnum.USED);
 				giftVoucherDao.changeState(giftVoucherNumber, GiftVoucherStatusEnum.USED);
-				return giftVoucherDao.createGiftVoucherUse(giftVoucherNumber, userId, orderId, amount);
+				giftVoucherDao.createGiftVoucherUse(giftVoucherNumber, userId, orderId, amount);
 			}
-			return false;
 		} catch (GiftVoucherNotFoundException e) {
 			logger.info("No Such Gift Voucher Exists :  " + giftVoucherNumber);
 			throw new GiftVoucherNotFoundException("No Such Gift Voucher Exists :  " + giftVoucherNumber, e);
@@ -174,15 +173,14 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 	}
 
 	@Override
-	public boolean cancelGiftVoucher(long giftVoucherNumber,int userId, int orderItemId) {
+	public void cancelGiftVoucher(long giftVoucherNumber,int userId, int orderItemId) {
 		GiftVoucher eGV = new GiftVoucher();
 		try {
 			eGV = giftVoucherDao.load(giftVoucherNumber);
 			if(eGV.isUsable())
 			{
-				eGV.setStatus(GiftVoucherStatusEnum.USED);
-				giftVoucherDao.changeState(giftVoucherNumber, GiftVoucherStatusEnum.USED);
-				return giftVoucherDao.deleteGiftVoucher(giftVoucherNumber, userId, orderItemId);
+				eGV.setStatus(GiftVoucherStatusEnum.CANCELLED);
+				giftVoucherDao.changeState(giftVoucherNumber, GiftVoucherStatusEnum.CANCELLED);
 			}
 			else {
 				throw new GiftVoucherAlreadyUsedException();

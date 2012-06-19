@@ -81,7 +81,6 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 			response.setGvNumber(Long.parseLong(gv.getNumber()));
 			response.setValidFrom(gv.getValidFrom());
 			response.setValidTill(gv.getValidTill());
-			System.out.println("Service : Valid till " + gv.getValidTill());
 			response.setResponseStatus(CreateResponseStatusEnum.SUCCESS);
 
 		} catch (MailException e) {

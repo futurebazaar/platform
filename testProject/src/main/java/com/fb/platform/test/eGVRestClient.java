@@ -56,11 +56,12 @@ public class eGVRestClient {
 		String mail="keith.fernandez@futuregroup.in";
 		BigDecimal amount = new BigDecimal(1000);
 		int orderItemId = -1;
-		createGV(sessionToken, mail, amount, orderItemId);
+		int orderId=-1;
+//		createGV(sessionToken, mail, amount, orderItemId);
 //		getInfoGV(sessionToken, gvNumber);
 //		applyGV(sessionToken, gvNumber, gvPin);
-//		useGV(sessionToken, gvNumber);
-//		canelGV(sessionToken, gvNumber);
+//		useGV(sessionToken, gvNumber,amount,orderId);
+		cancelGV(sessionToken, gvNumber);
 		logout(sessionToken);
 	}
 
@@ -82,7 +83,7 @@ public class eGVRestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(loginRequest, sw);
 		
-		System.out.println("\n================== Testing eGV Apply Web Service Call ============ \n" +
+		System.out.println("\n================== Testing Login Web Service Call ============ \n" +
 				"Logging In " +
 				"The URL is : "+ URL + "userWS/auth/login");
 		System.out.println("\n\nLoginReq : \n" + sw.toString());
@@ -162,7 +163,7 @@ public class eGVRestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(createRequest, sw);
 
-		System.out.println("\n================== Testing eGV Apply Web Service Call ============ \n" + 
+		System.out.println("\n================== Testing eGV Create Web Service Call ============ \n" + 
 							"The URL is : "+ EGV_URL + "create");
 		System.out.println("\n\n Request  : \n   " + sw.toString());
 
@@ -175,10 +176,11 @@ public class eGVRestClient {
 			System.exit(1);
 		}
 		String responseString = postMethod.getResponseBodyAsString();
-		System.out.println("Got the Response : \n\n   " + responseString);
+		System.out.println("\n\nGot the Response : \n   " + responseString);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		CreateResponse response = (CreateResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(responseString)));
 		System.out.println("Response Status *************** " + response.getCreateResponseStatus() + " *****************");
+		System.out.println("\n\n ============= Create Web Service Call Over =============== \n\n");
 		
 	}
 
@@ -197,7 +199,7 @@ public class eGVRestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(getInfoRequest, sw);
 
-		System.out.println("\n================== Testing eGV Apply Web Service Call ============ \n" + 
+		System.out.println("\n================== Testing eGV GetInfo Web Service Call ============ \n" + 
 							"The URL is : "+ EGV_URL + "getInfo");
 		System.out.println("\n\n Request  : \n   " + sw.toString());
 
@@ -210,14 +212,14 @@ public class eGVRestClient {
 			System.exit(1);
 		}
 		String responseString = postMethod.getResponseBodyAsString();
-		System.out.println("Got the Response : \n\n   " + responseString);
+		System.out.println("\n\nGot the Response : \n   " + responseString);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		GetInfoResponse response = (GetInfoResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(responseString)));
 		System.out.println("Response Status ********** " + response.getGetInfoResponseStatus() + " ***************");
-		
+		System.out.println("\n\n ============= getInfo Web Service Call Over =============== \n\n");
 	}
 
-	private static void canelGV(String sessionToken, String gvNumber) throws Exception {
+	private static void cancelGV(String sessionToken, String gvNumber) throws Exception {
 		HttpClient httpClient = new HttpClient();
 
 		PostMethod postMethod = new PostMethod(EGV_URL + "cancel");
@@ -232,7 +234,7 @@ public class eGVRestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(cancelRequest, sw);
 
-		System.out.println("\n================== Testing eGV Apply Web Service Call ============ \n" + 
+		System.out.println("\n================== Testing eGV Cancel Web Service Call ============ \n" + 
 							"The URL is : "+ EGV_URL + "/cancel");
 		System.out.println("\n\n Request  : \n   " + sw.toString());
 
@@ -245,15 +247,16 @@ public class eGVRestClient {
 			System.exit(1);
 		}
 		String responseString = postMethod.getResponseBodyAsString();
-		System.out.println("Got the Response : \n\n   " + responseString);
+		System.out.println("\n\nGot the Response : \n   " + responseString);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		CancelResponse response = (CancelResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(responseString)));
 		System.out.println("Response Status " + response.getCancelResponseStatus());
 		
+		System.out.println("\n\n ============= Cancel Web Service Call Over =============== \n\n");
 	}
 	
 		
-	private static void useGV(String sessionToken, String gvNumber) throws Exception {
+	private static void useGV(String sessionToken, String gvNumber,BigDecimal amount, int orderId) throws Exception {
 		HttpClient httpClient = new HttpClient();
 
 		PostMethod postMethod = new PostMethod(EGV_URL + "use");
@@ -261,6 +264,8 @@ public class eGVRestClient {
 		UseRequest useRequest = new UseRequest();
 		useRequest.setGiftVoucherNumber(Long.parseLong(gvNumber));
 		useRequest.setSessionToken(sessionToken);
+		useRequest.setAmount(amount);
+		useRequest.setOrderId(orderId);
 
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.egv._1_0");
 
@@ -268,8 +273,8 @@ public class eGVRestClient {
 		StringWriter sw = new StringWriter();
 		marshaller.marshal(useRequest, sw);
 
-		System.out.println("\n================== Testing eGV Apply Web Service Call ============ \n" + 
-							"The URL is : "+ EGV_URL + "/use");
+		System.out.println("\n================== Testing eGV Use Web Service Call ============ \n" + 
+							"The URL is : "+ EGV_URL + "use");
 		System.out.println("\n\n Request  : \n   " + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -281,11 +286,12 @@ public class eGVRestClient {
 			System.exit(1);
 		}
 		String responseString = postMethod.getResponseBodyAsString();
-		System.out.println("Got the Response : \n\n   " + responseString);
+		System.out.println("\n\nGot the Response : \n   " + responseString);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		UseResponse response = (UseResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(responseString)));
 		System.out.println("Response Status " + response.getUseResponseStatus());
 		
+		System.out.println("\n\n ============= Use Web Service Call Over =============== \n\n");
 	}
 		
 	private static void logout(String sessionToken) throws Exception {
@@ -312,10 +318,12 @@ public class eGVRestClient {
 			return;
 		}
 		String logoutResponseStr = logoutMethod.getResponseBodyAsString();
-		System.out.println("Got the logout Response : \n\n" + logoutResponseStr);
+		System.out.println("\n\nGot the logout Response : \n" + logoutResponseStr);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		LogoutResponse logoutResponse = (LogoutResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(logoutResponseStr)));
 		System.out.println(logoutResponse.getLogoutStatus());
+		
+		System.out.println("\n\n ============= Logout Web Service Call Over =============== \n\n");
 	}
 
 }

@@ -19,7 +19,6 @@ public class RandomGenerator {
 		Random random = new Random();
 		StringBuilder sb = new StringBuilder("");
 		
-//		return Long.toString(random.nextLong());
 		//First character : non-zero
 		sb.append(intSetFirstChar[random.nextInt(intSetFirstChar.length)]);
 		for (int i = 1; i < length; i++) {
@@ -30,6 +29,7 @@ public class RandomGenerator {
 		return sb.toString();
 	}
 	
+	//Code to Test it individually
 	public static void main(String[] args) {
 		System.out.println(RandomGenerator.integerRandomGenerator(11));
 	}

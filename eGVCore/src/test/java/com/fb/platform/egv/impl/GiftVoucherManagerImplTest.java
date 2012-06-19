@@ -19,12 +19,21 @@ import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
 import com.fb.platform.egv.service.GiftVoucherManager;
 import com.fb.platform.egv.service.GiftVoucherService;
+import com.fb.platform.egv.to.ApplyRequest;
+import com.fb.platform.egv.to.ApplyResponse;
+import com.fb.platform.egv.to.ApplyResponseStatusEnum;
+import com.fb.platform.egv.to.CancelRequest;
+import com.fb.platform.egv.to.CancelResponse;
+import com.fb.platform.egv.to.CancelResponseStatusEnum;
 import com.fb.platform.egv.to.CreateRequest;
 import com.fb.platform.egv.to.CreateResponse;
 import com.fb.platform.egv.to.CreateResponseStatusEnum;
 import com.fb.platform.egv.to.GetInfoRequest;
 import com.fb.platform.egv.to.GetInfoResponse;
 import com.fb.platform.egv.to.GetInfoResponseStatusEnum;
+import com.fb.platform.egv.to.UseRequest;
+import com.fb.platform.egv.to.UseResponse;
+import com.fb.platform.egv.to.UseResponseStatusEnum;
 import com.fb.platform.user.manager.interfaces.UserManager;
 import com.fb.platform.user.manager.model.auth.LoginRequest;
 import com.fb.platform.user.manager.model.auth.LoginResponse;
@@ -100,4 +109,51 @@ public class GiftVoucherManagerImplTest extends BaseTestCase{
 		assertEquals(CreateResponseStatusEnum.SUCCESS,createGiftVoucherResponse.getResponseStatus());
 		
 	}
-}
+	
+	@Test
+	public void testApplyGiftVoucher(){
+		ApplyRequest applyGiftVoucherRequest = new ApplyRequest();
+		applyGiftVoucherRequest.setGiftVoucherNumber(34989761072L);
+		applyGiftVoucherRequest.setGiftVoucherPin("12345");
+		applyGiftVoucherRequest.setSessionToken(responseUser1.getSessionToken());
+		
+		ApplyResponse applyGiftVoucherResponse = giftVoucherManager.apply(applyGiftVoucherRequest);
+		
+		assertNotNull(applyGiftVoucherResponse);
+		assertNotNull(applyGiftVoucherResponse.getSessionToken());
+		assertEquals(ApplyResponseStatusEnum.SUCCESS,applyGiftVoucherResponse.getResponseStatus());
+		
+	}
+
+	@Test
+	public void testUseGiftVoucher(){
+		UseRequest useGiftVoucherRequest = new UseRequest();
+		useGiftVoucherRequest.setGiftVoucherNumber(34989761072L);
+		useGiftVoucherRequest.setOrderId(-1);
+		useGiftVoucherRequest.setAmount(new BigDecimal(1000.00));
+		useGiftVoucherRequest.setSessionToken(responseUser1.getSessionToken());
+		
+		UseResponse useGiftVoucherResponse = giftVoucherManager.use(useGiftVoucherRequest);
+		
+		assertNotNull(useGiftVoucherResponse);
+		assertNotNull(useGiftVoucherResponse.getSessionToken());
+		assertEquals(UseResponseStatusEnum.SUCCESS,useGiftVoucherResponse.getResponseStatus());
+		
+	}
+	
+	@Test
+	public void testCancelGiftVoucher(){
+		CancelRequest cancelGiftVoucherRequest = new CancelRequest();
+		cancelGiftVoucherRequest.setGiftVoucherNumber(34989761072L);
+		cancelGiftVoucherRequest.setOrderItemId(-1);
+		cancelGiftVoucherRequest.setSessionToken(responseUser1.getSessionToken());
+		
+		CancelResponse cancelGiftVoucherResponse = giftVoucherManager.cancel(cancelGiftVoucherRequest);
+		
+		assertNotNull(cancelGiftVoucherResponse);
+		assertNotNull(cancelGiftVoucherResponse.getSessionToken());
+		assertEquals(CancelResponseStatusEnum.SUCCESS,cancelGiftVoucherResponse.getResponseStatus());
+		
+	}
+	
+	}
