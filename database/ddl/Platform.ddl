@@ -2,7 +2,6 @@
 DROP TABLE IF EXISTS categories_store; 
 DROP TABLE IF EXISTS sso_session;
 DROP TABLE IF EXISTS crypto_key;
-DROP TABLE IF EXISTS orders_order;
 DROP TABLE IF EXISTS platform_coupon_user;
 DROP TABLE IF EXISTS user_promotion_uses ;
 DROP TABLE IF EXISTS user_coupon_uses ;
@@ -37,6 +36,7 @@ DROP TABLE IF EXISTS accounts_clientdomain;
 DROP TABLE IF EXISTS accounts_client;
 DROP TABLE IF EXISTS gift_voucher_usage;
 DROP TABLE IF EXISTS gift_voucher;
+DROP TABLE IF EXISTS orders_order;
 DROP TABLE IF EXISTS users_profile ;
 DROP TABLE IF EXISTS auth_user;
 
@@ -622,7 +622,6 @@ CREATE TABLE orders_order (
 	valid_till datetime,
 	created_on datetime,
 	last_modified_on datetime,
-	CONSTRAINT `gift_voucher_fk1` FOREIGN KEY (`user_id`) REFERENCES `users_profile` (`id`)
 	)ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 	
   CREATE TABLE gift_voucher_usage (
@@ -632,7 +631,6 @@ CREATE TABLE orders_order (
 	order_id int not null,
 	used_on datetime,
 	amount_used decimal(18,2) not null,
-	 CONSTRAINT `gift_voucher_use_fk1` FOREIGN KEY (`used_by`) REFERENCES `users_profile` (`id`),
 	 CONSTRAINT `gift_voucher_use_fk2` FOREIGN KEY (`gift_voucher_number`) REFERENCES `gift_voucher` (`number`)
 	)ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 

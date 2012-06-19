@@ -26,11 +26,11 @@ public class GiftVoucherUseDaoTest extends BaseTestCase {
 
 	@Test
 	public void getUsage() {
-		GiftVoucherUse gvUse = giftVoucherDao.loadUse(Long.parseLong("-12345678901"));
+		GiftVoucherUse gvUse = giftVoucherDao.loadUse(Long.parseLong("-12345678921"));
 
 		assertNotNull(gvUse);
 //		assertEquals(new DateTime(2012, 5, 28, 0, 0), gvUse.getUsedOn());
-		assertEquals("-12345678901", gvUse.getGiftVoucherNumber());
+		assertEquals("-12345678921", gvUse.getGiftVoucherNumber());
 		assertEquals(-5, gvUse.getOrderId());
 		assertEquals(-1,gvUse.getUsedBy());
 		assertEquals(0,new Money(new BigDecimal(126.0)).compareTo(gvUse.getAmountRedeemed()));

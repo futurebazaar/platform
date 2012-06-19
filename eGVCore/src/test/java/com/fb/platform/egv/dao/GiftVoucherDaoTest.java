@@ -33,7 +33,7 @@ public class GiftVoucherDaoTest extends BaseTestCase {
 		assertEquals(new DateTime(2012, 7, 31, 0, 0), eGV.getDates().getValidTill());
 		assertEquals("-12345678901", eGV.getNumber());
 //		assertEquals(true, eGV.isValidPin("12345");
-		assertEquals(GiftVoucherStatusEnum.INACTIVE,eGV.getStatus());
+		assertEquals(GiftVoucherStatusEnum.CONFIRMED,eGV.getStatus());
 	}
 
 }

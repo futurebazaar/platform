@@ -113,7 +113,7 @@ public class GiftVoucherManagerImplTest extends BaseTestCase{
 	@Test
 	public void testApplyGiftVoucher(){
 		ApplyRequest applyGiftVoucherRequest = new ApplyRequest();
-		applyGiftVoucherRequest.setGiftVoucherNumber(34989761072L);
+		applyGiftVoucherRequest.setGiftVoucherNumber(-12345678901L);
 		applyGiftVoucherRequest.setGiftVoucherPin("12345");
 		applyGiftVoucherRequest.setSessionToken(responseUser1.getSessionToken());
 		
@@ -128,7 +128,7 @@ public class GiftVoucherManagerImplTest extends BaseTestCase{
 	@Test
 	public void testUseGiftVoucher(){
 		UseRequest useGiftVoucherRequest = new UseRequest();
-		useGiftVoucherRequest.setGiftVoucherNumber(34989761072L);
+		useGiftVoucherRequest.setGiftVoucherNumber(-12345678901L);
 		useGiftVoucherRequest.setOrderId(-1);
 		useGiftVoucherRequest.setAmount(new BigDecimal(1000.00));
 		useGiftVoucherRequest.setSessionToken(responseUser1.getSessionToken());
@@ -144,7 +144,7 @@ public class GiftVoucherManagerImplTest extends BaseTestCase{
 	@Test
 	public void testCancelGiftVoucher(){
 		CancelRequest cancelGiftVoucherRequest = new CancelRequest();
-		cancelGiftVoucherRequest.setGiftVoucherNumber(34989761072L);
+		cancelGiftVoucherRequest.setGiftVoucherNumber(-12345678901L);
 		cancelGiftVoucherRequest.setOrderItemId(-1);
 		cancelGiftVoucherRequest.setSessionToken(responseUser1.getSessionToken());
 		
