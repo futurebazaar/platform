@@ -14,7 +14,7 @@
 	<version>${platform.version}</version>
 	<packaging>jar</packaging>
 	
-	<name>Core Promotion Module of the E Commerce platform</name>
+	<name>Core e-Gift Voucher Module of the E Commerce platform</name>
 	<url>http://maven.apache.org</url>
 	
 	<dependencies>

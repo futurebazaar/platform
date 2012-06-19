@@ -146,14 +146,11 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 
 	@Override
 	public boolean useGiftVoucher(int userId, BigDecimal amount, int orderId,
-			long giftVoucherNumber, String giftVoucherPin) {
+			long giftVoucherNumber) {
 		GiftVoucher eGV = new GiftVoucher();
 		try {
 			eGV = giftVoucherDao.load(giftVoucherNumber);
-			//check pin
-			if(!eGV.isValidPin(giftVoucherPin)) {
-				throw new InvalidPinException();
-			}
+			
 			if(eGV.isUsable())
 			{
 				eGV.setStatus(GiftVoucherStatusEnum.USED);
@@ -164,9 +161,6 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 		} catch (GiftVoucherNotFoundException e) {
 			logger.info("No Such Gift Voucher Exists :  " + giftVoucherNumber);
 			throw new GiftVoucherNotFoundException("No Such Gift Voucher Exists :  " + giftVoucherNumber, e);
-		} catch (InvalidPinException e) {
-			logger.info("Pin entered is invalid " + giftVoucherPin);
-			throw new InvalidPinException("Pin entered is invalid " + giftVoucherPin, e);
 		} catch (GiftVoucherExpiredException e) {
 			logger.info("Gift Voucher has expired GV number : " + giftVoucherNumber);
 			throw new GiftVoucherExpiredException("Gift Voucher has expired GV number : " + giftVoucherNumber, e);

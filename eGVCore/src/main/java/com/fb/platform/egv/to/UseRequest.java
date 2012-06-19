@@ -13,7 +13,6 @@ public class UseRequest implements GiftVoucherRequest{
 
 	private String sessionToken;
 	private long giftVoucherNumber;
-	private String giftVoucherPin;
 	private BigDecimal amount;
 	private int orderId;
 	
@@ -28,12 +27,6 @@ public class UseRequest implements GiftVoucherRequest{
 	}
 	public void setGiftVoucherNumber(long giftVoucherNumber) {
 		this.giftVoucherNumber = giftVoucherNumber;
-	}
-	public String getGiftVoucherPin() {
-		return giftVoucherPin;
-	}
-	public void setGiftVoucherPin(String giftVoucherPin) {
-		this.giftVoucherPin = giftVoucherPin;
 	}
 	public BigDecimal getAmount() {
 		return amount;

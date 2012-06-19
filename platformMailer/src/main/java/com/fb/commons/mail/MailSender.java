@@ -57,14 +57,20 @@ public class MailSender {
             	helper.setFrom(mailTO.getFrom());
             	helper.setSubject(mailTO.getSubject());
             	helper.setText(mailTO.getMessage());
-            	for(File attachment : mailTO.getAttachments()) {
-            		helper.addAttachment(attachment.getName(), attachment);
+            	System.out.println("Coming TIll here");
+            	if(mailTO.getAttachments() != null) {
+	            	for(File attachment : mailTO.getAttachments()) {
+	            		helper.addAttachment(attachment.getName(), attachment);
+	            	}
             	}
+            	System.out.println("But noy TIll here");
             }
         };
         try {
-        	this.springMailSender.send(preparator);
+        	System.out.println("Problem may lie here");
+//        	this.springMailSender.send(preparator);
         } catch (MailException e) {
+        	System.out.println("Problem !!!");
 			throw new MailerException("Error sending mail", e);
 		}
     }

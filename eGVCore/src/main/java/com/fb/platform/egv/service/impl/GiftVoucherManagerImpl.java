@@ -81,6 +81,7 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 			response.setGvNumber(Long.parseLong(gv.getNumber()));
 			response.setValidFrom(gv.getValidFrom());
 			response.setValidTill(gv.getValidTill());
+			System.out.println("Service : Valid till " + gv.getValidTill());
 			response.setResponseStatus(CreateResponseStatusEnum.SUCCESS);
 
 		} catch (MailException e) {
@@ -136,7 +137,7 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 	@Override
 	public UseResponse use(UseRequest request) {
 		if(logger.isDebugEnabled()) {
-			logger.debug("Using Gift Voucher worth : " + request.getAmount() + " as payment in order : " + request.getOrderId() + " worth : " +        request.getAmount());
+			logger.debug("Using Gift Voucher : " + request.getGiftVoucherNumber() + " as payment in order : " + request.getOrderId() + " worth : " +        request.getAmount());
 		}
 		UseResponse response = new UseResponse();
 
@@ -159,7 +160,7 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 
 		try {
 			//use the gift voucher
-			giftVoucherService.useGiftVoucher(userId,request.getAmount(), request.getOrderId(),request.getGiftVoucherNumber(),request.getGiftVoucherPin());
+			giftVoucherService.useGiftVoucher(userId,request.getAmount(), request.getOrderId(),request.getGiftVoucherNumber());
 			response.setResponseStatus(UseResponseStatusEnum.SUCCESS);
 
 		} catch (GiftVoucherNotFoundException e) {
@@ -205,6 +206,11 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 			response.setAmount(eGV.getAmount().getAmount());
 			response.setEmail(eGV.getEmail());
 			response.setNumber(Long.parseLong(eGV.getNumber()));
+			response.setOrderItemId(eGV.getOrderItemId());
+			response.setStatus(eGV.getStatus());
+			response.setValidFrom(eGV.getValidFrom());
+			response.setValidTill(eGV.getValidTill());
+			response.setUserId(eGV.getUserId());
 			response.setResponseStatus(GetInfoResponseStatusEnum.SUCCESS);
 			
 		} catch (GiftVoucherNotFoundException e) {

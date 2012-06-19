@@ -63,7 +63,6 @@ public class CreateGVMapper {
 		webResponse.setValidFrom(null);
 	}
 
-
 	StringWriter outStringWriter = new StringWriter();
 	Marshaller marshaller = GiftVoucherResource.getContext().createMarshaller();
 	marshaller.marshal(webResponse, outStringWriter);

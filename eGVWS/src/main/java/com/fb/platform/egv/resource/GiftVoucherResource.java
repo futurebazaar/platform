@@ -103,7 +103,7 @@ public class GiftVoucherResource {
 			com.fb.platform.egv.to.CreateRequest createRequest = CreateGVMapper.xmlToCoreRequest(createGVXml);
 			
 			com.fb.platform.egv.to.CreateResponse createResponse = giftVoucherManager.create(createRequest);
-					
+			
 			String createResponseXml = CreateGVMapper.coreResponseToXml(createResponse);
 			
 			if (logger.isDebugEnabled()) {

@@ -24,8 +24,4 @@
          </property>
 	</bean>
 	
-	<bean id="mailSender" class="com.fb.platform.mail.MailSender">
-	  	<property name="springMailSender" ref="springMailSender"/>
-	</bean>  
-	
 </beans>

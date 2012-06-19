@@ -48,6 +48,8 @@ public class GetInfoMapper {
 		// Mapping Code
 		webResponse.setAmount(coreResponse.getAmount());
 		webResponse.setEmail(coreResponse.getEmail());
+		System.out.println(coreResponse.getResponseStatus());
+		System.out.println(coreResponse.getStatus());
 		webResponse.setGetInfoResponseStatus(com.fb.platform.egv._1_0.GetInfoResponseStatusEnum.fromValue(coreResponse.getResponseStatus().toString()));
 		webResponse.setGvStatus(coreResponse.getStatus().toString());
 		webResponse.setNumber(coreResponse.getNumber());

@@ -31,6 +31,8 @@ public class UseMapper {
 			// Mapping Code
 			coreRequest.setSessionToken(webRequest.getSessionToken());
 			coreRequest.setGiftVoucherNumber(webRequest.getGiftVoucherNumber());
+			coreRequest.setAmount(webRequest.getAmount());
+			coreRequest.setOrderId(webRequest.getOrderId());
 
 		}catch (JAXBException e) {
 			// TODO: handle exception

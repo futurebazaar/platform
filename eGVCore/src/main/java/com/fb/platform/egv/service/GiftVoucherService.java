@@ -64,7 +64,7 @@ public interface GiftVoucherService {
 	 */
 	@Transactional(propagation=Propagation.REQUIRED)
 	public boolean useGiftVoucher(int userId, BigDecimal amount, int orderId,
-			long giftVoucherNumber, String giftVoucherPin);
+			long giftVoucherNumber);
 
 	/**
 	 * @param giftVoucherNumber

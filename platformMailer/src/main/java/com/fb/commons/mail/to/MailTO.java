@@ -15,7 +15,7 @@ public class MailTO {
 	private String bounceBack;
 	private String subject;
 	private String message;
-	private List<File> attachments;
+	private List<File> attachments = null;
 	
 	public String getFrom() {
 		return from;
