@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS categories_store;
 DROP TABLE IF EXISTS sso_session;
 DROP TABLE IF EXISTS crypto_key;
 DROP TABLE IF EXISTS platform_coupon_user;
+DROP TABLE IF EXISTS orders_order;
 DROP TABLE IF EXISTS user_promotion_uses ;
 DROP TABLE IF EXISTS user_coupon_uses ;
 DROP TABLE IF EXISTS released_coupon;
@@ -36,7 +37,6 @@ DROP TABLE IF EXISTS accounts_clientdomain;
 DROP TABLE IF EXISTS accounts_client;
 DROP TABLE IF EXISTS gift_voucher_usage;
 DROP TABLE IF EXISTS gift_voucher;
-DROP TABLE IF EXISTS orders_order;
 DROP TABLE IF EXISTS users_profile ;
 DROP TABLE IF EXISTS auth_user;
 
