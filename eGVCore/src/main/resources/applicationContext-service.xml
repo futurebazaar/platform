@@ -20,8 +20,12 @@
     </bean>
     
     <bean id="springMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-  		<property name="host" value="MUMOPBL01.fb.dc"/>
-        <property name="port" value="25"/>
+  		<!-- <property name="host" value="MUMOPBL01.fb.dc"/>
+        <property name="port" value="25"/>  -->
+        <property name="host" value="10.0.28.31"/>
+        <property name="port" value="587"/>
+        <property name="username" value="keith.fernandez@futuregroup.in" />
+		<property name="password" value="password1" />
         <property name="javaMailProperties">
             <props>
                 <prop key="mail.smtp.localhost">mail.pantaloon.com</prop>

@@ -14,6 +14,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 
@@ -41,7 +42,7 @@ public class eGVRestClient {
 	
 	private static final String LOCALHOST = "http://localhost:8082/";
 	
-	private static String URL = LOCALHOST;
+	private static String URL = QA_URL;
 	
 	private static final String EGV_URL = URL + "eGVWS/egv/";
 
@@ -57,11 +58,13 @@ public class eGVRestClient {
 		BigDecimal amount = new BigDecimal(1000);
 		int orderItemId = -1;
 		int orderId=-1;
-//		createGV(sessionToken, mail, amount, orderItemId);
+		pingGV();
+		xsdDisplayGV();
+		createGV(sessionToken, mail, amount, orderItemId);
 //		getInfoGV(sessionToken, gvNumber);
 //		applyGV(sessionToken, gvNumber, gvPin);
 //		useGV(sessionToken, gvNumber,amount,orderId);
-		cancelGV(sessionToken, gvNumber);
+//		cancelGV(sessionToken, gvNumber);
 		logout(sessionToken);
 	}
 
@@ -73,8 +76,10 @@ public class eGVRestClient {
 		LoginRequest loginRequest = new LoginRequest();
 		//loginRequest.setUsername("9920694762");
 		//loginRequest.setPassword("test");
-		loginRequest.setUsername("neha.garani@gmail.com");
-		loginRequest.setPassword("testpass");
+//		loginRequest.setUsername("neha.garani@gmail.com");
+//		loginRequest.setPassword("testpass");
+		loginRequest.setUsername("Narendra.adki@futuregroup.in");
+		loginRequest.setPassword("1234");
 //		loginRequest.setUsername("1010101010");
 //		loginRequest.setPassword("shagunankush");
 
@@ -143,6 +148,44 @@ public class eGVRestClient {
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		ApplyResponse response = (ApplyResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(responseString)));
 		System.out.println("Response Status " + response.getApplyResponseStatus());
+		
+	}
+
+
+	
+	private static void pingGV() throws Exception {
+		HttpClient httpClient = new HttpClient();
+
+		GetMethod getMethod = new GetMethod(EGV_URL);
+
+		System.out.println("\n================== Testing eGV Ping Web Service Call ============ \n" + 
+							"The URL is : "+ EGV_URL);
+
+		int statusCode = httpClient.executeMethod(getMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("\n\nunable to execute the Web Service method : " + statusCode);
+			System.exit(1);
+		}
+		String responseString = getMethod.getResponseBodyAsString();
+		System.out.println("Got the Response : \n\n   " + responseString);
+		
+	}
+
+	private static void xsdDisplayGV() throws Exception {
+		HttpClient httpClient = new HttpClient();
+
+		GetMethod getMethod = new GetMethod(EGV_URL + "xsd");
+
+		System.out.println("\n================== Testing eGV Ping Web Service Call ============ \n" + 
+							"The URL is : "+ EGV_URL + "xsd");
+
+		int statusCode = httpClient.executeMethod(getMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("\n\nunable to execute the Web Service method : " + statusCode);
+			System.exit(1);
+		}
+		String responseString = getMethod.getResponseBodyAsString();
+		System.out.println("Got the Response : \n\n   " + responseString);
 		
 	}
 

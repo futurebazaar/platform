@@ -621,7 +621,7 @@ CREATE TABLE orders_order (
 	valid_from datetime,
 	valid_till datetime,
 	created_on datetime,
-	last_modified_on datetime,
+	last_modified_on datetime
 	)ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 	
   CREATE TABLE gift_voucher_usage (

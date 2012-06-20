@@ -134,11 +134,11 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 		 //code to send email
 		 MailTO message = MailHelper.createMailTO(eGV.getEmail(),amount,Long.toString(gvNumber),gvPin);
 		 
-		try {
+		 try {
 //			mailSender.send(message);
-		} catch (MailException e) {
+		 } catch (MailException e) {
 			throw new MailerException("Error sending mail", e);
-		}
+		 }
 
 		return eGV;
 		

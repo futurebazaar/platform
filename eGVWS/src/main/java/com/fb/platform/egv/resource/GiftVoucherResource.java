@@ -98,7 +98,7 @@ public class GiftVoucherResource {
 	@Produces("application/xml")
 	public String create(String createGVXml) {
 		if (logger.isDebugEnabled()) {
-			logger.debug("getInfoRequestXML : \n" + createGVXml);
+			logger.debug("createRequestXML : \n" + createGVXml);
 		}
 		try {
 			com.fb.platform.egv.to.CreateRequest createRequest = CreateGVMapper.xmlToCoreRequest(createGVXml);
@@ -108,16 +108,16 @@ public class GiftVoucherResource {
 			String createResponseXml = CreateGVMapper.coreResponseToXml(createResponse);
 			
 			if (logger.isDebugEnabled()) {
-				logger.debug("GetInfo Response XML :\n" + createResponseXml);
+				logger.debug("Create Response XML :\n" + createResponseXml);
 			}
 			
 			return createResponseXml;
 
 		} catch (JAXBException e) {
-			logger.error("Error in the getGiftVoucherInfo call : ", e);
+			logger.error("Error in the create GiftVoucher call : ", e);
 			return "error"; //TODO return proper error response
 		} catch (DatatypeConfigurationException e) {
-			logger.error("Error in the getGiftVoucherInfo call : ", e);
+			logger.error("Error in the create GiftVoucher call : ", e);
 			return "error"; //TODO return proper error response
 		}
 	}
@@ -139,16 +139,16 @@ public class GiftVoucherResource {
 			String cancelResponseXml = CancelMapper.coreResponseToXml(cancelResponse);
 
 			if (logger.isDebugEnabled()) {
-				logger.debug("GetInfo Response XML :\n" + cancelResponseXml);
+				logger.debug("Cancel Response XML :\n" + cancelResponseXml);
 			}
 			
 			return cancelResponseXml;
 
 		} catch (JAXBException e) {
-			logger.error("Error in the getGiftVoucherInfo call : ", e);
+			logger.error("Error in the cancel GiftVoucher call : ", e);
 			return "error"; //TODO return proper error response
 		} catch (DatatypeConfigurationException e) {
-			logger.error("Error in the getGiftVoucherInfo call : ", e);
+			logger.error("Error in the cancel GiftVoucher call : ", e);
 			return "error"; //TODO return proper error response
 		}
 	}
@@ -169,16 +169,16 @@ public class GiftVoucherResource {
 			String applyResponseXml = ApplyMapper.coreResponseToXml(applyResponse);
 
 			if (logger.isDebugEnabled()) {
-				logger.debug("GetInfo Response XML :\n" + applyResponseXml);
+				logger.debug("Apply Response XML :\n" + applyResponseXml);
 			}
 			
 			return applyResponseXml;
 
 		} catch (JAXBException e) {
-			logger.error("Error in the getGiftVoucherInfo call : ", e);
+			logger.error("Error in the apply GiftVoucher call : ", e);
 			return "error"; //TODO return proper error response
 		} catch (DatatypeConfigurationException e) {
-			logger.error("Error in the getGiftVoucherInfo call : ", e);
+			logger.error("Error in the apply GiftVoucher call : ", e);
 			return "error"; //TODO return proper error response
 		}
 	}
@@ -199,16 +199,16 @@ public class GiftVoucherResource {
 			String useResponseXml = UseMapper.coreResponseToXml(useResponse);
 
 			if (logger.isDebugEnabled()) {
-				logger.debug("GetInfo Response XML :\n" + useResponseXml);
+				logger.debug("Use Response XML :\n" + useResponseXml);
 			}
 			
 			return useResponseXml;
 
 		} catch (JAXBException e) {
-			logger.error("Error in the getGiftVoucherInfo call : ", e);
+			logger.error("Error in the use GiftVoucher call : ", e);
 			return "error"; //TODO return proper error response
 		} catch (DatatypeConfigurationException e) {
-			logger.error("Error in the getGiftVoucherInfo call : ", e);
+			logger.error("Error in the use GiftVoucher call : ", e);
 			return "error"; //TODO return proper error response
 		}
 	}
@@ -218,9 +218,12 @@ public class GiftVoucherResource {
 	@GET
 	public String ping() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Future Platform Promotion Websevice.\n");
+		sb.append("Future Platform Gift Voucher Websevice.\n");
 		sb.append("To get GiftVoucher Information post to : http://hostname:port/eGVWS/egv/getInfo\n");
 		sb.append("To create a new Gift Voucher post to : http://hostname:port/eGVWS/egv/create\n");
+		sb.append("To apply a Gift Voucher post to : http://hostname:port/eGVWS/egv/apply\n");
+		sb.append("To use a Gift Voucher post to : http://hostname:port/eGVWS/egv/use\n");
+		sb.append("To cancel a Gift Voucher post to : http://hostname:port/eGVWS/egv/cancel\n");
 		return sb.toString();
 	}
 	
@@ -228,7 +231,7 @@ public class GiftVoucherResource {
 	@Path("/xsd")
 	@Produces("application/xml")
 	public String getXsd() {	
-		InputStream eGVXsd = this.getClass().getClassLoader().getResourceAsStream("promotion.xsd");
+		InputStream eGVXsd = this.getClass().getClassLoader().getResourceAsStream("egv.xsd");
 		String eGVXsdString = convertInputStreamToString(eGVXsd);
 		return eGVXsdString;
 	}
@@ -244,7 +247,7 @@ public class GiftVoucherResource {
 			}
 			inputStream.close();
 		} catch(IOException exception) {
-			logger.error("promotion.xsd loading error : " + exception.getMessage() );
+			logger.error("egv.xsd loading error : " + exception.getMessage() );
 		}
 		return sb.toString();
 	}

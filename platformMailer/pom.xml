@@ -6,7 +6,7 @@
   <parent>
     <artifactId>platform</artifactId>
     <groupId>com.fb</groupId>
-    <version>1.0</version>
+    <version>${platform.version}</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 

@@ -5,6 +5,7 @@ import java.io.File;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -21,6 +22,7 @@ import com.fb.commons.mail.to.MailTO;
  */
 public class MailSender {
 	
+	@Autowired
 	private JavaMailSender springMailSender;
     
     public void setSpringMailSender(JavaMailSender springMailSender) {
@@ -57,20 +59,19 @@ public class MailSender {
             	helper.setFrom(mailTO.getFrom());
             	helper.setSubject(mailTO.getSubject());
             	helper.setText(mailTO.getMessage());
-            	System.out.println("Coming TIll here");
             	if(mailTO.getAttachments() != null) {
 	            	for(File attachment : mailTO.getAttachments()) {
 	            		helper.addAttachment(attachment.getName(), attachment);
 	            	}
             	}
-            	System.out.println("But noy TIll here");
             }
         };
         try {
         	System.out.println("Problem may lie here");
-//        	this.springMailSender.send(preparator);
+        	this.springMailSender.send(preparator);
         } catch (MailException e) {
         	System.out.println("Problem !!!");
+        	e.printStackTrace();
 			throw new MailerException("Error sending mail", e);
 		}
     }
