@@ -5,6 +5,7 @@ package com.fb.platform.egv.service;
 
 import java.math.BigDecimal;
 
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,7 +52,7 @@ public interface GiftVoucherService {
 	 * @return
 	 * @throws PlatformException
 	 */
-	@Transactional(propagation=Propagation.REQUIRED)
+	@Transactional(propagation=Propagation.REQUIRED,isolation=Isolation.READ_COMMITTED)
 	public GiftVoucher createGiftVoucher(String email, int userId, BigDecimal amount,int orderItemId) throws PlatformException;
 
 	/**
