@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.fb.commons.to.Money;
 import com.fb.platform.shipment.dao.ShipmentDao;
-import com.fb.platform.shipment.to.GatePassItem;
 import com.fb.platform.shipment.to.ParcelItem;
 
  /**
@@ -65,15 +64,12 @@ public class ShipmentDaoJdbcImpl implements ShipmentDao {
 	 * @return
 	 */
 	@Override
-	public ParcelItem getParcelDetails(GatePassItem gatePassItem) {
-		infoLog.info("Getting parcel details for order : " + gatePassItem.toString());
+	public ParcelItem getParcelDetails(String refOrderId) {
+		infoLog.info("Getting parcel details for order : " + refOrderId);
 		ParcelItem parcelItem = jdbcTemplate.queryForObject(FETCH_PARCEL_DETAILS,
-				new Object[] {},
+				new Object[] {refOrderId},
 				new ParcelItemMapper());
 		//TODO check for null values and constraints
-		parcelItem.setDeliveryNumber(gatePassItem.getDelNo());
-		parcelItem.setDeliverySiteId(gatePassItem.getDeece());
-		parcelItem.setTrackingNumber(gatePassItem.getAwbNo());
 		infoLog.info("Parcel details : " + parcelItem.toString());
 		return parcelItem;
 	}

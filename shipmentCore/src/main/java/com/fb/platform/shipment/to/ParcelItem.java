@@ -25,21 +25,21 @@ import com.fb.commons.to.Money;
  *
  */
 public class ParcelItem {
-	private String deliveryNumber = "";
-	private String customerName = "";
-	private String address = "";
-	private String city = "";
-	private String state = "";
-	private String country = "";
+	private String deliveryNumber = " ";
+	private String customerName = " ";
+	private String address = " ";
+	private String city = " ";
+	private String state = " ";
+	private String country = " ";
 	private String pincode;
 	private long phoneNumber;
 	private Money amountPayable;
-	private String articleDescription = "";
+	private String articleDescription = " ";
 	private BigDecimal weight;
 	private int quantity;
-	private int deliverySiteId;
-	private String paymentMode = "";
-	private String trackingNumber = "";
+	private String deliverySiteId;
+	private String paymentMode = " ";
+	private String trackingNumber = " ";
 	
 	public String getDeliveryNumber() {
 		return deliveryNumber;
@@ -113,10 +113,10 @@ public class ParcelItem {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-	public int getDeliverySiteId() {
+	public String getDeliverySiteId() {
 		return deliverySiteId;
 	}
-	public void setDeliverySiteId(int deliverySiteId) {
+	public void setDeliverySiteId(String deliverySiteId) {
 		this.deliverySiteId = deliverySiteId;
 	}
 	public String getPaymentMode() {

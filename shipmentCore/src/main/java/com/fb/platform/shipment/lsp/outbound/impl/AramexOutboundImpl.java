@@ -2,12 +2,12 @@ package com.fb.platform.shipment.lsp.outbound.impl;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -17,6 +17,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 
+import com.fb.commons.PlatformException;
 import com.fb.commons.ftp.manager.FTPManager;
 import com.fb.commons.ftp.to.FTPConnectionTO;
 import com.fb.commons.ftp.to.FTPUploadTO;
@@ -33,16 +34,11 @@ import com.fb.platform.shipment.to.ParcelItem;
  */
 public class AramexOutboundImpl implements ShipmentOutbound {
 
-	private static String hostName;
-	private static String userName;
-	private static String password;
-	private static String serverFilePathFtp;
-	private static String serverFilePathMail;
-	private static String uploadedPath;
-	private static String mailSentPath;
-	private FTPManager ftpConnection;
+	private FTPManager lspFTPConnection = null;
+	private FTPManager futureFTPConnection = null;
 	
-	private static Properties prop = new Properties();
+	private static Properties futureProp = new Properties();
+	private static Properties lspProp = new Properties();
 	
 	private static Log infoLog = LogFactory.getLog("LOGINFO");
 	
@@ -56,29 +52,31 @@ public class AramexOutboundImpl implements ShipmentOutbound {
 	private void loadProperties() {
 		try {
 			InputStream configPropertiesStream = this.getClass().getClassLoader().getResourceAsStream("ftp_details.properties");
-			prop.load(configPropertiesStream);
-			hostName = prop.getProperty("future.ftp.hostName");
-			userName = prop.getProperty("future.ftp.userName");
-			password = prop.getProperty("future.ftp.password");
-			serverFilePathFtp = prop.getProperty("future.server.outbound.aramex.ftp");
-			serverFilePathMail = prop.getProperty("future.server.outbound.aramex.mail");
-			uploadedPath = prop.getProperty("future.server.outbound.aramex.ftp.uploaded");
-			mailSentPath = prop.getProperty("future.server.outbound.aramex.mail.sent");
-			prop.clear();
-			
-			InputStream lspPropertiesStream = this.getClass().getClassLoader().getResourceAsStream("lsp_configurations.properties");
-			prop.load(lspPropertiesStream);
+			futureProp.load(configPropertiesStream);
 			
 			FTPConnectionTO connectionTO = new FTPConnectionTO();
-			connectionTO.setHostName(hostName);
-			connectionTO.setUserName(userName);
-			connectionTO.setPassword(password);
+			connectionTO.setHostName(futureProp.getProperty("future.ftp.hostName"));
+			connectionTO.setUserName(futureProp.getProperty("future.ftp.userName"));
+			connectionTO.setPassword(futureProp.getProperty("future.ftp.password"));
 			
-			ftpConnection = new FTPManager(connectionTO);
-		} catch (FileNotFoundException e) {
-			System.out.println(e.getStackTrace());
-		} catch (Exception e) {
-			System.out.println(e.getStackTrace());
+			futureFTPConnection = new FTPManager(connectionTO);
+			
+			InputStream lspPropertiesStream = this.getClass().getClassLoader().getResourceAsStream("lsp_configurations.properties");
+			lspProp.load(lspPropertiesStream);
+			
+			if(lspProp.getProperty("aramex.ftp.hostName") != null) {
+				connectionTO = new FTPConnectionTO();
+				connectionTO.setHostName(lspProp.getProperty("aramex.ftp.hostName"));
+				connectionTO.setUserName(lspProp.getProperty("aramex.ftp.userName"));
+				connectionTO.setPassword(lspProp.getProperty("aramex.ftp.password"));
+				
+				lspFTPConnection = new FTPManager(connectionTO);
+			}
+			
+			
+		} catch (IOException e) {
+			errorLog.error("Error loading properties file.", e);
+			new PlatformException("Error loading properties file.");
 		}
 	}
 	
@@ -89,24 +87,28 @@ public class AramexOutboundImpl implements ShipmentOutbound {
 	
 	public void generateFile(List<ParcelItem> parcelItemList) {
 		StringBuilder outboundFile = null;
-		String extension = prop.getProperty("aramex.outbound.extension");
-		String fileNamePrefix = prop.getProperty("aramex.outbound.fileNamePrefix");
-		String fileNameFormat = prop.getProperty("aramex.outbound.fileNameFormat");
+		String serverFilePathFtp = futureProp.getProperty("future.server.outbound.aramex.ftp");
+		String serverFilePathMail = futureProp.getProperty("future.server.outbound.aramex.mail");
+		
+		String extension = lspProp.getProperty("aramex.outbound.extension");
+		String fileNamePrefix = lspProp.getProperty("aramex.outbound.fileNamePrefix");
+		String fileNameFormat = lspProp.getProperty("aramex.outbound.fileNameFormat");
+		String separator = lspProp.getProperty("aramex.outbound.separator");
 		for(ParcelItem parcelItem : parcelItemList) {
-			String parcelItemString = 	parcelItem.getDeliveryNumber() + "||" +
-										parcelItem.getCustomerName() + "||-||" +
-										parcelItem.getAddress() + "||-||" +
-										parcelItem.getCity() + "||" +
-										parcelItem.getState() + "||" +
-										parcelItem.getCountry() + "||" +
-										parcelItem.getPincode() + "||" +
-										parcelItem.getPhoneNumber() + "||" +
-										parcelItem.getAmountPayable() + "||" + 
-										parcelItem.getArticleDescription() + "||" +
-										parcelItem.getWeight() + "||" +
-										parcelItem.getQuantity() + "||" +
-										parcelItem.getDeliverySiteId() + "||" +
-										parcelItem.getPaymentMode() + "||" +
+			String parcelItemString = 	parcelItem.getDeliveryNumber() + separator +
+										parcelItem.getCustomerName() + separator +
+										parcelItem.getAddress() + separator +
+										parcelItem.getCity() + separator +
+										parcelItem.getState() + separator +
+										parcelItem.getCountry() + separator +
+										parcelItem.getPincode() + separator +
+										parcelItem.getPhoneNumber() + separator +
+										parcelItem.getAmountPayable() + separator + 
+										parcelItem.getArticleDescription() + separator +
+										parcelItem.getQuantity() + separator +
+										parcelItem.getWeight() + separator +
+										parcelItem.getDeliverySiteId() + separator +
+										parcelItem.getPaymentMode() + separator +
 										parcelItem.getTrackingNumber();
 			if(outboundFile == null) {
 				outboundFile = new StringBuilder();
@@ -159,17 +161,33 @@ public class AramexOutboundImpl implements ShipmentOutbound {
 
 	@Override
 	public void uploadOutboundFile() {
-		String uploadPath = prop.getProperty("aramex.ftp.outbound");
+		String uploadPath = lspProp.getProperty("aramex.ftp.outbound");
+		String serverFilePathFtp = futureProp.getProperty("future.server.outbound.aramex.ftp");
+		String uploadedPath = futureProp.getProperty("future.server.outbound.aramex.ftp.uploaded");
+		String futureFtpUploadPath = futureProp.getProperty("future.ftp.outbound.aramex");
 		
 		File[] outboundFiles = getOutboundFiles(serverFilePathFtp);
 		
 		FTPUploadTO uploadTO = new FTPUploadTO();
 		uploadTO.setSourcePath(serverFilePathFtp);
-		uploadTO.setMovePath(uploadedPath);
-		uploadTO.setDestinationPath(uploadPath);
+		if(lspFTPConnection == null) {
+			uploadTO.setMovePath(uploadedPath);
+		} else {
+			uploadTO.setMovePath(null);
+		}
+		uploadTO.setDestinationPath(futureFtpUploadPath);
 		uploadTO.setFiles(outboundFiles);
+		futureFTPConnection.upload(uploadTO);
 		
-		ftpConnection.upload(uploadTO);
+		if(lspFTPConnection != null) {
+			uploadTO = new FTPUploadTO();
+			uploadTO.setSourcePath(serverFilePathFtp);
+			uploadTO.setMovePath(uploadedPath);
+			uploadTO.setDestinationPath(uploadPath);
+			uploadTO.setFiles(outboundFiles);
+			
+			lspFTPConnection.upload(uploadTO);
+		}
 		
 	}
 	
@@ -181,6 +199,9 @@ public class AramexOutboundImpl implements ShipmentOutbound {
 
 	@Override
 	public void mailOutboundFile(MailSender mailSender) {
+		String serverFilePathMail = futureProp.getProperty("future.server.outbound.aramex.mail");
+		String mailSentPath = futureProp.getProperty("future.server.outbound.aramex.mail.sent");
+		
 		File[] outboundFiles = getOutboundFiles(serverFilePathMail);
 		List<File> attachments = mailAttachments(outboundFiles);
 		if(attachments != null && attachments.size() > 0) {
@@ -192,19 +213,19 @@ public class AramexOutboundImpl implements ShipmentOutbound {
 	
 	private MailTO createMail(List<File> attachments) {
 		MailTO ftpMail = new MailTO();
-		String[] to = prop.getProperty("aramex.ftp.to").split(",");
+		String[] to = lspProp.getProperty("aramex.ftp.to").split(",");
 		String[] cc = null;
-		if(StringUtils.isNotBlank(prop.getProperty("aramex.ftp.cc"))) {
-			cc = prop.getProperty("aramex.ftp.cc").split(",");
+		if(StringUtils.isNotBlank(lspProp.getProperty("aramex.ftp.cc"))) {
+			cc = lspProp.getProperty("aramex.ftp.cc").split(",");
 		}
 		String[] bcc = null;
-		if(StringUtils.isNotBlank(prop.getProperty("aramex.ftp.bcc"))) {
-			bcc = prop.getProperty("aramex.ftp.bcc").split(",");
+		if(StringUtils.isNotBlank(lspProp.getProperty("aramex.ftp.bcc"))) {
+			bcc = lspProp.getProperty("aramex.ftp.bcc").split(",");
 		}
-		ftpMail.setFrom(prop.getProperty("aramex.ftp.from"));
-		DateTime dateTime = new DateTime();
-		ftpMail.setMessage(prop.getProperty("aramex.ftp.message").replace("%date%", dateTime.toString()));
-		ftpMail.setSubject(prop.getProperty("aramex.ftp.subject").replace("%date%", dateTime.toString()));
+		ftpMail.setFrom(lspProp.getProperty("aramex.ftp.from"));
+		Date today = new Date();
+		ftpMail.setMessage(lspProp.getProperty("aramex.ftp.message").replace("%date%", today.toString()));
+		ftpMail.setSubject(lspProp.getProperty("aramex.ftp.subject").replace("%date%", today.toString()));
 		ftpMail.setAttachments(attachments);
 		ftpMail.setTo(to);
 		ftpMail.setCc(cc);

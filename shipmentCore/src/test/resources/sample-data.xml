@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<table name="orders_deliveryinfo">
+		<column>id</column>
+		<column>address_id</column>
+		<column>notes</column>
+		<column>order_id</column>
+<!-- 		<row> -->
+<!-- 			<value name="id"></value> -->
+<!-- 			<value name="address_id"></value> -->
+<!-- 			<value name="notes"></value> -->
+<!-- 			<value name="order_id"></value> -->
+<!-- 		</row> -->
+		
+		<row>
+			<value name="id">1</value>
+			<value name="address_id">100</value>
+			<value name="notes"></value>
+			<value name="order_id">100</value>
+		</row>
+		<row>
+			<value name="id">2</value>
+			<value name="address_id">200</value>
+			<value name="notes"></value>
+			<value name="order_id">200</value>
+		</row>
+		<row>
+			<value name="id">3</value>
+			<value name="address_id">300</value>
+			<value name="notes"></value>
+			<value name="order_id">300</value>
+		</row>
+		<row>
+			<value name="id">4</value>
+			<value name="address_id">400</value>
+			<value name="notes"></value>
+			<value name="order_id">400</value>
+		</row>
+		<row>
+			<value name="id">5</value>
+			<value name="address_id">104</value>
+			<value name="notes"></value>
+			<value name="order_id">104</value>
+		</row>
+		<row>
+			<value name="id">11</value>
+			<value name="address_id">500</value>
+			<value name="notes"></value>
+			<value name="order_id">500</value>
+		</row>
+	</table>
+</dataset>

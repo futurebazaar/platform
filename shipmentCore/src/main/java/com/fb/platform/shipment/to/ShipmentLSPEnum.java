@@ -15,7 +15,8 @@ public enum ShipmentLSPEnum  implements Serializable {
 	Quantium("325190"),
 	FirstFlight("300437"),
 	Aramex("305240"),
-	BlueDart("300413");
+	BlueDart("300413"),
+	ExpressIt("300415");
 	
 	private String code = null;
 	

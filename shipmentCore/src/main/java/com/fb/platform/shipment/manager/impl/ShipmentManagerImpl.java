@@ -7,6 +7,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fb.commons.PlatformException;
 import com.fb.commons.ftp.exception.FTPConnectException;
 import com.fb.commons.ftp.exception.FTPDisconnectException;
 import com.fb.commons.ftp.exception.FTPLoginException;
@@ -16,10 +17,12 @@ import com.fb.commons.mail.MailSender;
 import com.fb.commons.mail.exception.MailNoReceiverException;
 import com.fb.commons.mail.exception.MailNoSenderException;
 import com.fb.commons.mail.exception.MailerException;
+import com.fb.platform.shipment.exception.DataNotFoundException;
 import com.fb.platform.shipment.exception.MoveFileException;
 import com.fb.platform.shipment.exception.OutboundFileCreationException;
 import com.fb.platform.shipment.lsp.impl.AramexLSP;
 import com.fb.platform.shipment.lsp.impl.BlueDartLSP;
+import com.fb.platform.shipment.lsp.impl.ExpressItLSP;
 import com.fb.platform.shipment.lsp.impl.FirstFlightLSP;
 import com.fb.platform.shipment.lsp.impl.QuantiumLSP;
 import com.fb.platform.shipment.manager.ShipmentManager;
@@ -54,14 +57,53 @@ public class ShipmentManagerImpl implements ShipmentManager{
 	 */
 	@Override
 	public void generateOutboundFile(GatePassTO gatePass) {
-		if(gatePass.getLspcode() == null) {
-			errorLog.error("Incorrect LSP code");
-		} else {
+		try {
+			infoLog.info("Processing gatepass : " + gatePass.getGatePassId());
+			if(gatePass.getLspcode() == null) {
+				errorLog.error("Error processing gatepass : " + gatePass.getGatePassId());
+				errorLog.error("Incorrect LSP code");
+			}
 			List<ParcelItem> parcelList = createParcelList(gatePass);
 			ShipmentProcessor processor = getProcessor(gatePass.getLspcode());
 			if(parcelList != null && parcelList.size() > 0) {
 				processParcels(parcelList, processor);
 			}
+		} catch (FTPConnectException e) {
+			errorLog.error("Error processing gatepass : " + gatePass.getGatePassId());
+			errorLog.error("FTP connection error", e);
+		} catch (FTPLoginException e) {
+			errorLog.error("Error processing gatepass : " + gatePass.getGatePassId());
+			errorLog.error("FTP login error", e);
+		} catch (FTPLogoutException e) {
+			errorLog.error("Error processing gatepass : " + gatePass.getGatePassId());
+			errorLog.error("FTP logout error", e);
+		} catch (FTPDisconnectException e) {
+			errorLog.error("Error processing gatepass : " + gatePass.getGatePassId());
+			errorLog.error("FTP disconnect error", e);
+		} catch (FTPUploadException e) {
+			errorLog.error("Error processing gatepass : " + gatePass.getGatePassId());
+			errorLog.error("FTP upload error", e);
+		} catch (OutboundFileCreationException e) {
+			errorLog.error("Error processing gatepass : " + gatePass.getGatePassId());
+			errorLog.error("Outbound file creation error", e);
+		} catch (MailerException e) {
+			errorLog.error("Error processing gatepass : " + gatePass.getGatePassId());
+			errorLog.error("Mail file error", e);
+		} catch (MoveFileException e) {
+			errorLog.error("Error processing gatepass : " + gatePass.getGatePassId());
+			errorLog.error("File move error", e);
+		} catch (MailNoReceiverException e) {
+			errorLog.error("Error processing gatepass : " + gatePass.getGatePassId());
+			errorLog.error("Mail has no receiver", e);
+		} catch (MailNoSenderException e) {
+			errorLog.error("Error processing gatepass : " + gatePass.getGatePassId());
+			errorLog.error("Mail has no sender", e);
+		} catch (DataNotFoundException e) {
+			errorLog.error("Error processing gatepass : " + gatePass.getGatePassId());
+			errorLog.error("Data not found exception.", e);
+		} catch (PlatformException e) {
+			errorLog.error("Error processing gatepass : " + gatePass.getGatePassId());
+			errorLog.error("Error processing gatepass.", e);
 		}
 		
 	}
@@ -105,6 +147,9 @@ public class ShipmentManagerImpl implements ShipmentManager{
 		case Quantium:
 			processor = new ShipmentProcessor(new QuantiumLSP());
 			break;
+		case ExpressIt:
+			processor = new ShipmentProcessor(new ExpressItLSP());
+			break;
 		default:
 			break;
 		}
@@ -112,31 +157,9 @@ public class ShipmentManagerImpl implements ShipmentManager{
 	}
 	
 	private void processParcels(List<ParcelItem> parcelList, ShipmentProcessor processor) {
-		try {
-			processor.generateOutboundFile(parcelList);
-			processor.uploadOutboundFile();
-			processor.mailOutboundFile(mailSender);
-		} catch (FTPConnectException e) {
-			errorLog.error("FTP connection error", e);
-		} catch (FTPLoginException e) {
-			errorLog.error("FTP login error", e);
-		} catch (FTPLogoutException e) {
-			errorLog.error("FTP logout error", e);
-		} catch (FTPDisconnectException e) {
-			errorLog.error("FTP disconnect error", e);
-		} catch (FTPUploadException e) {
-			errorLog.error("FTP upload error", e);
-		} catch (OutboundFileCreationException e) {
-			errorLog.error("Outbound file creation error", e);
-		} catch (MailerException e) {
-			errorLog.error("Mail file error", e);
-		} catch (MoveFileException e) {
-			errorLog.error("File move error", e);
-		} catch (MailNoReceiverException e) {
-			errorLog.error("Mail has no receiver", e);
-		} catch (MailNoSenderException e) {
-			errorLog.error("Mail has no sender", e);
-		}
+		processor.generateOutboundFile(parcelList);
+		processor.uploadOutboundFile();
+		processor.mailOutboundFile(mailSender);
 	}
 	
 	public void setShipmentService(ShipmentService shipmentService) {

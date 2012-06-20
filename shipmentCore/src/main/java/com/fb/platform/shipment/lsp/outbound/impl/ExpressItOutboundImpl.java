@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,7 +33,7 @@ import com.fb.platform.shipment.to.ParcelItem;
  * @author nehaga
  *
  */
-public class QuantiumOutboundImpl implements ShipmentOutbound {
+public class ExpressItOutboundImpl implements ShipmentOutbound {
 
 	private FTPManager lspFTPConnection = null;
 	private FTPManager futureFTPConnection = null;
@@ -44,7 +45,7 @@ public class QuantiumOutboundImpl implements ShipmentOutbound {
 	
 	private static Log errorLog = LogFactory.getLog("LOGERROR");
 	
-	public QuantiumOutboundImpl() {
+	public ExpressItOutboundImpl() {
 		super();
 		loadProperties();
 	}
@@ -64,14 +65,14 @@ public class QuantiumOutboundImpl implements ShipmentOutbound {
 			InputStream lspPropertiesStream = this.getClass().getClassLoader().getResourceAsStream("lsp_configurations.properties");
 			lspProp.load(lspPropertiesStream);
 			
-			if(lspProp.getProperty("quantium.ftp.hostName") != null) {
+			if(lspProp.getProperty("expressIt.ftp.hostName") != null) {
 				connectionTO = new FTPConnectionTO();
-				connectionTO.setHostName(lspProp.getProperty("quantium.ftp.hostName"));
-				connectionTO.setUserName(lspProp.getProperty("quantium.ftp.userName"));
-				connectionTO.setPassword(lspProp.getProperty("quantium.ftp.password"));
-				
+				connectionTO.setHostName(lspProp.getProperty("expressIt.ftp.hostName"));
+				connectionTO.setUserName(lspProp.getProperty("expressIt.ftp.userName"));
+				connectionTO.setPassword(lspProp.getProperty("expressIt.ftp.password"));
 				lspFTPConnection = new FTPManager(connectionTO);
 			}
+			
 		} catch (IOException e) {
 			errorLog.error("Error loading properties file.", e);
 			new PlatformException("Error loading properties file.");
@@ -85,29 +86,25 @@ public class QuantiumOutboundImpl implements ShipmentOutbound {
 	
 	public void generateFile(List<ParcelItem> parcelItemList) {
 		StringBuilder outboundFile = null;
-		String serverFilePathFtp = futureProp.getProperty("future.server.outbound.quantium.ftp");
-		String serverFilePathMail = futureProp.getProperty("future.server.outbound.quantium.mail");
+		String serverFilePathFtp = futureProp.getProperty("future.server.outbound.expressIt.ftp");
+		String serverFilePathMail = futureProp.getProperty("future.server.outbound.expressIt.mail");
 		
-		String extension = lspProp.getProperty("quantium.outbound.extension");
-		String fileNamePrefix = lspProp.getProperty("quantium.outbound.fileNamePrefix");
-		String fileNameFormat = lspProp.getProperty("quantium.outbound.fileNameFormat");
-		String separator = lspProp.getProperty("quantium.outbound.separator");
+		String extension = lspProp.getProperty("expressIt.outbound.extension");
+		String fileNamePrefix = lspProp.getProperty("expressIt.outbound.fileNamePrefix");
+		String fileNameFormat = lspProp.getProperty("expressIt.outbound.fileNameFormat");
+		String separator = lspProp.getProperty("expressIt.outbound.separator");
 		for(ParcelItem parcelItem : parcelItemList) {
-			String parcelItemString = 	parcelItem.getDeliveryNumber() + separator +
-										parcelItem.getCustomerName() + separator +
-										parcelItem.getAddress() + separator +
-										parcelItem.getCity() + separator +
-										parcelItem.getState() + separator +
-										parcelItem.getCountry() + separator +
-										parcelItem.getPincode() + separator +
-										parcelItem.getPhoneNumber() + separator +
-										parcelItem.getAmountPayable() + separator + 
-										parcelItem.getArticleDescription() + separator +
-										parcelItem.getQuantity() + separator +
-										parcelItem.getWeight() + separator +
-										parcelItem.getDeliverySiteId() + separator +
-										parcelItem.getPaymentMode() + separator +
-										parcelItem.getTrackingNumber();
+			String parcelItemString = 	StringEscapeUtils.escapeCsv(parcelItem.getDeliveryNumber()) + separator +
+					StringEscapeUtils.escapeCsv(parcelItem.getTrackingNumber()) + separator +
+					StringEscapeUtils.escapeCsv(parcelItem.getCustomerName()) + separator +
+					StringEscapeUtils.escapeCsv(parcelItem.getAddress()) + separator +
+					StringEscapeUtils.escapeCsv(parcelItem.getState()) + separator +
+					StringEscapeUtils.escapeCsv(parcelItem.getCountry()) + separator +
+					StringEscapeUtils.escapeCsv(parcelItem.getCity()) + separator +
+					StringEscapeUtils.escapeCsv(parcelItem.getPincode()) + separator +
+					parcelItem.getPhoneNumber() + separator +
+					parcelItem.getAmountPayable() + separator + 
+					StringEscapeUtils.escapeCsv(parcelItem.getArticleDescription());
 			if(outboundFile == null) {
 				outboundFile = new StringBuilder();
 			} else {
@@ -115,7 +112,7 @@ public class QuantiumOutboundImpl implements ShipmentOutbound {
 			}
 			outboundFile.append(parcelItemString);
 		}
-		infoLog.info("======================================== QUANTIUM ========================================");
+		infoLog.info("======================================== expressIt ========================================");
 		String fileName = fileNameFormat;
 		fileName = fileName.replace("%f", fileNamePrefix);
 		DateTime timeStamp = new DateTime();
@@ -155,13 +152,14 @@ public class QuantiumOutboundImpl implements ShipmentOutbound {
 			new OutboundFileCreationException("Error writing to file : " + fileName);
 		}
 	}
+	
 
 	@Override
 	public void uploadOutboundFile() {
-		String uploadPath = lspProp.getProperty("quantium.ftp.outbound");
-		String serverFilePathFtp = futureProp.getProperty("future.server.outbound.quantium.ftp");
-		String uploadedPath = futureProp.getProperty("future.server.outbound.quantium.ftp.uploaded");
-		String futureFtpUploadPath = futureProp.getProperty("future.ftp.outbound.quantium");
+		String uploadPath = lspProp.getProperty("expressIt.ftp.outbound");
+		String serverFilePathFtp = futureProp.getProperty("future.server.outbound.expressIt.ftp");
+		String uploadedPath = futureProp.getProperty("future.server.outbound.expressIt.ftp.uploaded");
+		String futureFtpUploadPath = futureProp.getProperty("future.ftp.outbound.expressIt");
 		
 		File[] outboundFiles = getOutboundFiles(serverFilePathFtp);
 		
@@ -196,8 +194,8 @@ public class QuantiumOutboundImpl implements ShipmentOutbound {
 
 	@Override
 	public void mailOutboundFile(MailSender mailSender) {
-		String serverFilePathMail = futureProp.getProperty("future.server.outbound.quantium.mail");
-		String mailSentPath = futureProp.getProperty("future.server.outbound.quantium.mail.sent");
+		String serverFilePathMail = futureProp.getProperty("future.server.outbound.expressIt.mail");
+		String mailSentPath = futureProp.getProperty("future.server.outbound.expressIt.mail.sent");
 		
 		File[] outboundFiles = getOutboundFiles(serverFilePathMail);
 		List<File> attachments = mailAttachments(outboundFiles);
@@ -210,19 +208,19 @@ public class QuantiumOutboundImpl implements ShipmentOutbound {
 	
 	private MailTO createMail(List<File> attachments) {
 		MailTO ftpMail = new MailTO();
-		String[] to = lspProp.getProperty("quantium.ftp.to").split(",");
+		String[] to = lspProp.getProperty("expressIt.ftp.to").split(",");
 		String[] cc = null;
-		if(StringUtils.isNotBlank(lspProp.getProperty("quantium.ftp.cc"))) {
-			cc = lspProp.getProperty("quantium.ftp.cc").split(",");
+		if(StringUtils.isNotBlank(lspProp.getProperty("expressIt.ftp.cc"))) {
+			cc = lspProp.getProperty("expressIt.ftp.cc").split(",");
 		}
 		String[] bcc = null;
-		if(StringUtils.isNotBlank(lspProp.getProperty("quantium.ftp.bcc"))) {
-			bcc = lspProp.getProperty("quantium.ftp.bcc").split(",");
+		if(StringUtils.isNotBlank(lspProp.getProperty("expressIt.ftp.bcc"))) {
+			bcc = lspProp.getProperty("expressIt.ftp.bcc").split(",");
 		}
-		ftpMail.setFrom(lspProp.getProperty("quantium.ftp.from"));
+		ftpMail.setFrom(lspProp.getProperty("expressIt.ftp.from"));
 		Date today = new Date();
-		ftpMail.setMessage(lspProp.getProperty("quantium.ftp.message").replace("%date%", today.toString()));
-		ftpMail.setSubject(lspProp.getProperty("quantium.ftp.subject").replace("%date%", today.toString()));
+		ftpMail.setMessage(lspProp.getProperty("expressIt.ftp.message").replace("%date%", today.toString()));
+		ftpMail.setSubject(lspProp.getProperty("expressIt.ftp.subject").replace("%date%", today.toString()));
 		ftpMail.setAttachments(attachments);
 		ftpMail.setTo(to);
 		ftpMail.setCc(cc);
@@ -254,5 +252,6 @@ public class QuantiumOutboundImpl implements ShipmentOutbound {
 			throw new MoveFileException("Error moving file to path : " + outboundMailSent);
 		}
 	}
+
 
 }

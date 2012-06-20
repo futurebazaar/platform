@@ -2,12 +2,12 @@ package com.fb.platform.shipment.lsp.outbound.impl;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -17,6 +17,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 
+import com.fb.commons.PlatformException;
 import com.fb.commons.ftp.manager.FTPManager;
 import com.fb.commons.ftp.to.FTPConnectionTO;
 import com.fb.commons.ftp.to.FTPUploadTO;
@@ -33,16 +34,11 @@ import com.fb.platform.shipment.to.ParcelItem;
  */
 public class BlueDartOutboundImpl implements ShipmentOutbound {
 
-	private static String hostName;
-	private static String userName;
-	private static String password;
-	private static String serverFilePathFtp;
-	private static String serverFilePathMail;
-	private static String uploadedPath;
-	private static String mailSentPath;
-	private FTPManager ftpConnection;
+	private FTPManager lspFTPConnection = null;
+	private FTPManager futureFTPConnection = null;
 	
-	private static Properties prop = new Properties();
+	private static Properties futureProp = new Properties();
+	private static Properties lspProp = new Properties();
 	
 	private static Log infoLog = LogFactory.getLog("LOGINFO");
 	
@@ -56,29 +52,29 @@ public class BlueDartOutboundImpl implements ShipmentOutbound {
 	private void loadProperties() {
 		try {
 			InputStream configPropertiesStream = this.getClass().getClassLoader().getResourceAsStream("ftp_details.properties");
-			prop.load(configPropertiesStream);
-			hostName = prop.getProperty("future.ftp.hostName");
-			userName = prop.getProperty("future.ftp.userName");
-			password = prop.getProperty("future.ftp.password");
-			serverFilePathFtp = prop.getProperty("future.server.outbound.blueDart.ftp");
-			serverFilePathMail = prop.getProperty("future.server.outbound.blueDart.mail");
-			uploadedPath = prop.getProperty("future.server.outbound.blueDart.ftp.uploaded");
-			mailSentPath = prop.getProperty("future.server.outbound.blueDart.mail.sent");
-			prop.clear();
-			
-			InputStream lspPropertiesStream = this.getClass().getClassLoader().getResourceAsStream("lsp_configurations.properties");
-			prop.load(lspPropertiesStream);
+			futureProp.load(configPropertiesStream);
 			
 			FTPConnectionTO connectionTO = new FTPConnectionTO();
-			connectionTO.setHostName(hostName);
-			connectionTO.setUserName(userName);
-			connectionTO.setPassword(password);
+			connectionTO.setHostName(futureProp.getProperty("future.ftp.hostName"));
+			connectionTO.setUserName(futureProp.getProperty("future.ftp.userName"));
+			connectionTO.setPassword(futureProp.getProperty("future.ftp.password"));
 			
-			ftpConnection = new FTPManager(connectionTO);
-		} catch (FileNotFoundException e) {
-			System.out.println(e.getStackTrace());
-		} catch (Exception e) {
-			System.out.println(e.getStackTrace());
+			futureFTPConnection = new FTPManager(connectionTO);
+			
+			InputStream lspPropertiesStream = this.getClass().getClassLoader().getResourceAsStream("lsp_configurations.properties");
+			lspProp.load(lspPropertiesStream);
+			
+			if(lspProp.getProperty("blueDart.ftp.hostName") != null) {
+				connectionTO = new FTPConnectionTO();
+				connectionTO.setHostName(lspProp.getProperty("blueDart.ftp.hostName"));
+				connectionTO.setUserName(lspProp.getProperty("blueDart.ftp.userName"));
+				connectionTO.setPassword(lspProp.getProperty("blueDart.ftp.password"));
+				
+				lspFTPConnection = new FTPManager(connectionTO);
+			}
+		} catch (IOException e) {
+			errorLog.error("Error loading properties file.", e);
+			new PlatformException("Error loading properties file.");
 		}
 	}
 	
@@ -89,21 +85,25 @@ public class BlueDartOutboundImpl implements ShipmentOutbound {
 	
 	public void generateFile(List<ParcelItem> parcelItemList) {
 		StringBuilder outboundFile = null;
-		String extension = prop.getProperty("blueDart.outbound.extension");
-		String fileNamePrefix = prop.getProperty("blueDart.outbound.fileNamePrefix");
-		String fileNameFormat = prop.getProperty("blueDart.outbound.fileNameFormat");
+		String serverFilePathFtp = futureProp.getProperty("future.server.outbound.blueDart.ftp");
+		String serverFilePathMail = futureProp.getProperty("future.server.outbound.blueDart.mail");
+		
+		String extension = lspProp.getProperty("blueDart.outbound.extension");
+		String fileNamePrefix = lspProp.getProperty("blueDart.outbound.fileNamePrefix");
+		String fileNameFormat = lspProp.getProperty("blueDart.outbound.fileNameFormat");
+		String separator = lspProp.getProperty("blueDart.outbound.separator");
 		for(ParcelItem parcelItem : parcelItemList) {
-			String parcelItemString = 	parcelItem.getDeliveryNumber() + "\t" +
-										parcelItem.getWeight() + "\t" +
-										parcelItem.getCustomerName() + "\t" +
-										parcelItem.getAddress() + "\t" +
-										parcelItem.getCity() + "\t" +
-										parcelItem.getState() + "\t" +
-										parcelItem.getPincode() + "\t" +
-										parcelItem.getArticleDescription() + "\t" +
-										parcelItem.getAmountPayable().toString() + "\t" +
-										parcelItem.getDeliverySiteId() + "\t" +
-										parcelItem.getTrackingNumber() + "\t" +
+			String parcelItemString = 	parcelItem.getDeliveryNumber() + separator +
+										parcelItem.getWeight() + separator +
+										parcelItem.getCustomerName() + separator +
+										parcelItem.getAddress() + separator +
+										parcelItem.getCity() + separator +
+										parcelItem.getState() + separator +
+										parcelItem.getPincode() + separator +
+										parcelItem.getArticleDescription() + separator +
+										parcelItem.getAmountPayable().toString() + separator +
+										parcelItem.getDeliverySiteId() + separator +
+										parcelItem.getTrackingNumber() + separator +
 										parcelItem.getPaymentMode();
 			if(outboundFile == null) {
 				outboundFile = new StringBuilder();
@@ -156,17 +156,33 @@ public class BlueDartOutboundImpl implements ShipmentOutbound {
 
 	@Override
 	public void uploadOutboundFile() {
-		String uploadPath = prop.getProperty("blueDart.ftp.outbound");
+		String uploadPath = lspProp.getProperty("blueDart.ftp.outbound");
+		String serverFilePathFtp = futureProp.getProperty("future.server.outbound.blueDart.ftp");
+		String uploadedPath = futureProp.getProperty("future.server.outbound.blueDart.ftp.uploaded");
+		String futureFtpUploadPath = futureProp.getProperty("future.ftp.outbound.blueDart");
 		
 		File[] outboundFiles = getOutboundFiles(serverFilePathFtp);
 		
 		FTPUploadTO uploadTO = new FTPUploadTO();
 		uploadTO.setSourcePath(serverFilePathFtp);
-		uploadTO.setMovePath(uploadedPath);
-		uploadTO.setDestinationPath(uploadPath);
+		if(lspFTPConnection == null) {
+			uploadTO.setMovePath(uploadedPath);
+		} else {
+			uploadTO.setMovePath(null);
+		}
+		uploadTO.setDestinationPath(futureFtpUploadPath);
 		uploadTO.setFiles(outboundFiles);
+		futureFTPConnection.upload(uploadTO);
 		
-		ftpConnection.upload(uploadTO);
+		if(lspFTPConnection != null) {
+			uploadTO = new FTPUploadTO();
+			uploadTO.setSourcePath(serverFilePathFtp);
+			uploadTO.setMovePath(uploadedPath);
+			uploadTO.setDestinationPath(uploadPath);
+			uploadTO.setFiles(outboundFiles);
+			
+			lspFTPConnection.upload(uploadTO);
+		}
 		
 	}
 	
@@ -178,6 +194,9 @@ public class BlueDartOutboundImpl implements ShipmentOutbound {
 
 	@Override
 	public void mailOutboundFile(MailSender mailSender) {
+		String serverFilePathMail = futureProp.getProperty("future.server.outbound.blueDart.mail");
+		String mailSentPath = futureProp.getProperty("future.server.outbound.blueDart.mail.sent");
+		
 		File[] outboundFiles = getOutboundFiles(serverFilePathMail);
 		List<File> attachments = mailAttachments(outboundFiles);
 		if(attachments != null && attachments.size() > 0) {
@@ -189,19 +208,19 @@ public class BlueDartOutboundImpl implements ShipmentOutbound {
 	
 	private MailTO createMail(List<File> attachments) {
 		MailTO ftpMail = new MailTO();
-		String[] to = prop.getProperty("blueDart.ftp.to").split(",");
+		String[] to = lspProp.getProperty("blueDart.ftp.to").split(",");
 		String[] cc = null;
-		if(StringUtils.isNotBlank(prop.getProperty("blueDart.ftp.cc"))) {
-			cc = prop.getProperty("blueDart.ftp.cc").split(",");
+		if(StringUtils.isNotBlank(lspProp.getProperty("blueDart.ftp.cc"))) {
+			cc = lspProp.getProperty("blueDart.ftp.cc").split(",");
 		}
 		String[] bcc = null;
-		if(StringUtils.isNotBlank(prop.getProperty("blueDart.ftp.bcc"))) {
-			bcc = prop.getProperty("blueDart.ftp.bcc").split(",");
+		if(StringUtils.isNotBlank(lspProp.getProperty("blueDart.ftp.bcc"))) {
+			bcc = lspProp.getProperty("blueDart.ftp.bcc").split(",");
 		}
-		ftpMail.setFrom(prop.getProperty("blueDart.ftp.from"));
-		DateTime dateTime = new DateTime();
-		ftpMail.setMessage(prop.getProperty("blueDart.ftp.message").replace("%date%", dateTime.toString()));
-		ftpMail.setSubject(prop.getProperty("blueDart.ftp.subject").replace("%date%", dateTime.toString()));
+		ftpMail.setFrom(lspProp.getProperty("blueDart.ftp.from"));
+		Date today = new Date();
+		ftpMail.setMessage(lspProp.getProperty("blueDart.ftp.message").replace("%date%", today.toString()));
+		ftpMail.setSubject(lspProp.getProperty("blueDart.ftp.subject").replace("%date%", today.toString()));
 		ftpMail.setAttachments(attachments);
 		ftpMail.setTo(to);
 		ftpMail.setCc(cc);

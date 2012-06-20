@@ -3,8 +3,12 @@ package com.fb.platform.shipment.service.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 
+import com.fb.commons.PlatformException;
 import com.fb.platform.shipment.dao.ShipmentDao;
+import com.fb.platform.shipment.exception.DataNotFoundException;
 import com.fb.platform.shipment.service.ShipmentService;
 import com.fb.platform.shipment.to.GatePassItem;
 import com.fb.platform.shipment.to.ParcelItem;
@@ -32,23 +36,20 @@ public class ShipmentServiceImpl implements ShipmentService {
 		ParcelItem parcelItem = new ParcelItem();
 		try {
 			infoLog.debug("GatePassItem received : " + gatePassItem.toString());
-			//parcelItem = shipmentDao.getParcelDetails(gatePassItem);
-			parcelItem.setDeliveryNumber(gatePassItem.getAwbNo());
-			parcelItem.setWeight(gatePassItem.getDelWt());
-			parcelItem.setCustomerName(gatePassItem.getName());
-			parcelItem.setAddress(gatePassItem.getAddress());
-			parcelItem.setCity(gatePassItem.getCity());
-			parcelItem.setState(gatePassItem.getRegion());
-			parcelItem.setPincode(gatePassItem.getPincode());
-			parcelItem.setPhoneNumber(gatePassItem.getTelnumber());
-			parcelItem.setArticleDescription(gatePassItem.getItemDescription());
-			parcelItem.setAmountPayable(gatePassItem.getAmount());
+			parcelItem = shipmentDao.getParcelDetails(gatePassItem.getOrderReferenceId());
+			parcelItem.setDeliveryNumber(gatePassItem.getDelNo());
 			parcelItem.setDeliverySiteId(gatePassItem.getDeece());
 			parcelItem.setTrackingNumber(gatePassItem.getAwbNo());
-			parcelItem.setPaymentMode(gatePassItem.getPayMod());
+			parcelItem.setQuantity(gatePassItem.getQuantity());
+			parcelItem.setArticleDescription(gatePassItem.getItemDescription());
+			parcelItem.setWeight(gatePassItem.getDelWt());
 			infoLog.debug("ParcelItem retrieved : " + parcelItem.toString());
-		} catch (Exception e) {
-			errorLog.error("Outbound entry not created for : " + gatePassItem.getDelNo(), e);
+		} catch (EmptyResultDataAccessException e) {
+			errorLog.error("Outbound entry not created for : " + gatePassItem.getOrderReferenceId(), e);
+			throw new DataNotFoundException("Data not found for : " + gatePassItem.getOrderReferenceId());
+		}catch (DataAccessException e) {
+			errorLog.error("Outbound entry not created for : " + gatePassItem.getOrderReferenceId(), e);
+			throw new PlatformException("Outbound entry not created for : " + gatePassItem.getOrderReferenceId());
 		}
 		
 		return parcelItem;

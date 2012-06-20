@@ -2,12 +2,12 @@ package com.fb.platform.shipment.lsp.outbound.impl;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -17,6 +17,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 
+import com.fb.commons.PlatformException;
 import com.fb.commons.ftp.manager.FTPManager;
 import com.fb.commons.ftp.to.FTPConnectionTO;
 import com.fb.commons.ftp.to.FTPUploadTO;
@@ -33,16 +34,11 @@ import com.fb.platform.shipment.to.ParcelItem;
  */
 public class FirstFlightOutboundImpl implements ShipmentOutbound {
 
-	private static String hostName;
-	private static String userName;
-	private static String password;
-	private static String serverFilePathFtp;
-	private static String serverFilePathMail;
-	private static String uploadedPath;
-	private static String mailSentPath;
-	private FTPManager ftpConnection;
+	private FTPManager lspFTPConnection = null;
+	private FTPManager futureFTPConnection = null;
 	
-	private static Properties prop = new Properties();
+	private static Properties futureProp = new Properties();
+	private static Properties lspProp = new Properties();
 	
 	private static Log infoLog = LogFactory.getLog("LOGINFO");
 	
@@ -56,30 +52,30 @@ public class FirstFlightOutboundImpl implements ShipmentOutbound {
 	private void loadProperties() {
 		try {
 			InputStream configPropertiesStream = this.getClass().getClassLoader().getResourceAsStream("ftp_details.properties");
-			prop.load(configPropertiesStream);
-			hostName = prop.getProperty("future.ftp.hostName");
-			userName = prop.getProperty("future.ftp.userName");
-			password = prop.getProperty("future.ftp.password");
-			serverFilePathFtp = prop.getProperty("future.server.outbound.firstFlight.ftp");
-			serverFilePathMail = prop.getProperty("future.server.outbound.firstFlight.mail");
-			uploadedPath = prop.getProperty("future.server.outbound.firstFlight.ftp.uploaded");
-			mailSentPath = prop.getProperty("future.server.outbound.firstFlight.mail.sent");
-			prop.clear();
-			
-			InputStream lspPropertiesStream = this.getClass().getClassLoader().getResourceAsStream("lsp_configurations.properties");
-			prop.load(lspPropertiesStream);
+			futureProp.load(configPropertiesStream);
 			
 			FTPConnectionTO connectionTO = new FTPConnectionTO();
-			connectionTO.setHostName(hostName);
-			connectionTO.setUserName(userName);
-			connectionTO.setPassword(password);
+			connectionTO.setHostName(futureProp.getProperty("future.ftp.hostName"));
+			connectionTO.setUserName(futureProp.getProperty("future.ftp.userName"));
+			connectionTO.setPassword(futureProp.getProperty("future.ftp.password"));
 			
-			ftpConnection = new FTPManager(connectionTO);
+			futureFTPConnection = new FTPManager(connectionTO);
 			
-		} catch (FileNotFoundException e) {
-			System.out.println(e.getStackTrace());
-		} catch (Exception e) {
-			System.out.println(e.getStackTrace());
+			InputStream lspPropertiesStream = this.getClass().getClassLoader().getResourceAsStream("lsp_configurations.properties");
+			lspProp.load(lspPropertiesStream);
+			
+			if(lspProp.getProperty("firstFlight.ftp.hostName") != null) {
+				connectionTO = new FTPConnectionTO();
+				connectionTO.setHostName(lspProp.getProperty("firstFlight.ftp.hostName"));
+				connectionTO.setUserName(lspProp.getProperty("firstFlight.ftp.userName"));
+				connectionTO.setPassword(lspProp.getProperty("firstFlight.ftp.password"));
+				
+				lspFTPConnection = new FTPManager(connectionTO);
+			}
+			
+		} catch (IOException e) {
+			errorLog.error("Error loading properties file.", e);
+			new PlatformException("Error loading properties file.");
 		}
 	}
 	
@@ -90,24 +86,28 @@ public class FirstFlightOutboundImpl implements ShipmentOutbound {
 	
 	private void generateFile(List<ParcelItem> parcelItemList) {
 		StringBuilder outboundFile = null;
-		String extension = prop.getProperty("firstFlight.outbound.extension");
-		String fileNamePrefix = prop.getProperty("firstFlight.outbound.fileNamePrefix");
-		String fileNameFormat = prop.getProperty("firstFlight.outbound.fileNameFormat");
+		String serverFilePathFtp = futureProp.getProperty("future.server.outbound.firstFlight.ftp");
+		String serverFilePathMail = futureProp.getProperty("future.server.outbound.firstFlight.mail");
+		
+		String extension = lspProp.getProperty("firstFlight.outbound.extension");
+		String fileNamePrefix = lspProp.getProperty("firstFlight.outbound.fileNamePrefix");
+		String fileNameFormat = lspProp.getProperty("firstFlight.outbound.fileNameFormat");
+		String separator = lspProp.getProperty("firstFlight.outbound.separator");
 		for(ParcelItem parcelItem : parcelItemList) {
-			String parcelItemString = 	parcelItem.getDeliveryNumber() + "||" +
-										parcelItem.getCustomerName() + "||-||" +
-										parcelItem.getAddress() + "||-||" +
-										parcelItem.getCity() + "||" +
-										parcelItem.getState() + "||" +
-										parcelItem.getCountry() + "||" +
-										parcelItem.getPincode() + "||" +
-										parcelItem.getPhoneNumber() + "||" +
-										parcelItem.getAmountPayable() + "||" + 
-										parcelItem.getArticleDescription() + "||" +
-										parcelItem.getWeight() + "||" +
-										parcelItem.getQuantity() + "||" +
-										parcelItem.getDeliverySiteId() + "||" +
-										parcelItem.getPaymentMode() + "||" +
+			String parcelItemString = 	parcelItem.getDeliveryNumber() + separator +
+										parcelItem.getCustomerName() + separator +
+										parcelItem.getAddress() + separator +
+										parcelItem.getCity() + separator +
+										parcelItem.getState() + separator +
+										parcelItem.getCountry() + separator +
+										parcelItem.getPincode() + separator +
+										parcelItem.getPhoneNumber() + separator +
+										parcelItem.getAmountPayable() + separator + 
+										parcelItem.getArticleDescription() + separator +
+										parcelItem.getWeight() + separator +
+										parcelItem.getQuantity() + separator +
+										parcelItem.getDeliverySiteId() + separator +
+										parcelItem.getPaymentMode() + separator +
 										parcelItem.getTrackingNumber();
 			if(outboundFile == null) {
 				outboundFile = new StringBuilder();
@@ -159,17 +159,33 @@ public class FirstFlightOutboundImpl implements ShipmentOutbound {
 
 	@Override
 	public void uploadOutboundFile() {
-		String uploadPath = prop.getProperty("firstFlight.ftp.outbound");
+		String uploadPath = lspProp.getProperty("firstFlight.ftp.outbound");
+		String serverFilePathFtp = futureProp.getProperty("future.server.outbound.firstFlight.ftp");
+		String uploadedPath = futureProp.getProperty("future.server.outbound.firstFlight.ftp.uploaded");
+		String futureFtpUploadPath = futureProp.getProperty("future.ftp.outbound.firstFlight");
 		
 		File[] outboundFiles = getOutboundFiles(serverFilePathFtp);
 		
 		FTPUploadTO uploadTO = new FTPUploadTO();
 		uploadTO.setSourcePath(serverFilePathFtp);
-		uploadTO.setMovePath(uploadedPath);
-		uploadTO.setDestinationPath(uploadPath);
+		if(lspFTPConnection == null) {
+			uploadTO.setMovePath(uploadedPath);
+		} else {
+			uploadTO.setMovePath(null);
+		}
+		uploadTO.setDestinationPath(futureFtpUploadPath);
 		uploadTO.setFiles(outboundFiles);
+		futureFTPConnection.upload(uploadTO);
 		
-		ftpConnection.upload(uploadTO);
+		if(lspFTPConnection != null) {
+			uploadTO = new FTPUploadTO();
+			uploadTO.setSourcePath(serverFilePathFtp);
+			uploadTO.setMovePath(uploadedPath);
+			uploadTO.setDestinationPath(uploadPath);
+			uploadTO.setFiles(outboundFiles);
+			
+			lspFTPConnection.upload(uploadTO);
+		}
 		
 	}
 	
@@ -181,6 +197,9 @@ public class FirstFlightOutboundImpl implements ShipmentOutbound {
 
 	@Override
 	public void mailOutboundFile(MailSender mailSender) {
+		String serverFilePathMail = futureProp.getProperty("future.server.outbound.firstFlight.mail");
+		String mailSentPath = futureProp.getProperty("future.server.outbound.firstFlight.mail.sent");
+		
 		File[] outboundFiles = getOutboundFiles(serverFilePathMail);
 		List<File> attachments = mailAttachments(outboundFiles);
 		if(attachments != null && attachments.size() > 0) {
@@ -192,19 +211,19 @@ public class FirstFlightOutboundImpl implements ShipmentOutbound {
 	
 	private MailTO createMail(List<File> attachments) {
 		MailTO ftpMail = new MailTO();
-		String[] to = prop.getProperty("firstFlight.ftp.to").split(",");
+		String[] to = lspProp.getProperty("firstFlight.ftp.to").split(",");
 		String[] cc = null;
-		if(StringUtils.isNotBlank(prop.getProperty("firstFlight.ftp.cc"))) {
-			cc = prop.getProperty("firstFlight.ftp.cc").split(",");
+		if(StringUtils.isNotBlank(lspProp.getProperty("firstFlight.ftp.cc"))) {
+			cc = lspProp.getProperty("firstFlight.ftp.cc").split(",");
 		}
 		String[] bcc = null;
-		if(StringUtils.isNotBlank(prop.getProperty("firstFlight.ftp.bcc"))) {
-			bcc = prop.getProperty("firstFlight.ftp.bcc").split(",");
+		if(StringUtils.isNotBlank(lspProp.getProperty("firstFlight.ftp.bcc"))) {
+			bcc = lspProp.getProperty("firstFlight.ftp.bcc").split(",");
 		}
-		ftpMail.setFrom(prop.getProperty("firstFlight.ftp.from"));
-		DateTime dateTime = new DateTime();
-		ftpMail.setMessage(prop.getProperty("firstFlight.ftp.message").replace("%date%", dateTime.toString()));
-		ftpMail.setSubject(prop.getProperty("firstFlight.ftp.subject").replace("%date%", dateTime.toString()));
+		ftpMail.setFrom(lspProp.getProperty("firstFlight.ftp.from"));
+		Date today = new Date();
+		ftpMail.setMessage(lspProp.getProperty("firstFlight.ftp.message").replace("%date%", today.toString()));
+		ftpMail.setSubject(lspProp.getProperty("firstFlight.ftp.subject").replace("%date%", today.toString()));
 		ftpMail.setAttachments(attachments);
 		ftpMail.setTo(to);
 		ftpMail.setCc(cc);

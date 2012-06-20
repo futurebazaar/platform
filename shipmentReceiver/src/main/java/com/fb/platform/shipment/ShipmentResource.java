@@ -23,7 +23,7 @@ import com.fb.platform.shipment.to.GatePassItem;
 import com.fb.platform.shipment.to.GatePassTO;
 import com.fb.platform.shipment.to.ShipmentLSPEnum;
 import com.sap.abapxml.Abap;
-import com.sap.abapxml.Values.TAB.Item;
+import com.sap.abapxml.Item;
 
 /**
  * @author nehaga
@@ -73,24 +73,18 @@ public class ShipmentResource {
 		List<GatePassItem> deliveryItems = new ArrayList<GatePassItem>();
 		for(Item gatePassItemReceived : ordersList) {
 			GatePassItem gatePassItem = new GatePassItem();
-			gatePassItem.setAmount(new Money(gatePassItemReceived.getAMOUNT()));
+			gatePassItem.setOrderReferenceId(gatePassItemReceived.getORDERREFID());
 			gatePassItem.setAwbNo(gatePassItemReceived.getAWBNO());
-			gatePassItem.setCity(gatePassItemReceived.getCITY1());
 			gatePassItem.setDeece(gatePassItemReceived.getDEECE());
 			gatePassItem.setDelNo(gatePassItemReceived.getDELNO());
 			gatePassItem.setDelWt(gatePassItemReceived.getDELWET());
 			gatePassItem.setItemDescription(gatePassItemReceived.getDELDIS());
-			gatePassItem.setName(gatePassItemReceived.getNAME());
-			gatePassItem.setPayMod(gatePassItemReceived.getPAYMOD());
-			gatePassItem.setPincode(gatePassItemReceived.getPOSTCODE1());
-			gatePassItem.setRegion(gatePassItemReceived.getREGION());
-			gatePassItem.setAddress(gatePassItemReceived.getSTRSUPPL1());
-			gatePassItem.setTelnumber(gatePassItemReceived.getTELNUMBER());
 			deliveryItems.add(gatePassItem);
 		}
 		gatePassTO.setGatePassItems(deliveryItems);
 		String lspCode = orders.getLSPCODE().substring(4);
 		gatePassTO.setLspcode(ShipmentLSPEnum.getLSP(lspCode));
+		gatePassTO.setGatePassId(orders.getGATEPASSID());
 		return gatePassTO;
 	}
 	

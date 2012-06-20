@@ -17,8 +17,13 @@
     <context:component-scan base-package="com.fb.platform.promotion.cache"></context:component-scan>
 
 	<bean id="springMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-  		<property name="host" value="mail.pantaloon.com"/>
-  		<property name="port" value="25"/>
+  		<property name="host" value="MUMOPBL01.fb.dc"/>
+        <property name="port" value="25"/>
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.localhost">mail.pantaloon.com</prop>
+            </props>
+         </property>
 	</bean>
 	
 	<bean id="templateMessage" class="org.springframework.mail.SimpleMailMessage">
@@ -26,8 +31,7 @@
 	  	<property name="subject" value="Your order"/>
 	</bean>
 	
-	<bean id="mailSender" class="com.fb.platform.mail.MailSender">
-	  	<property name="springMailSender" ref="springMailSender"/>
-  		<property name="templateMessage" ref="templateMessage"/>
-	</bean>    
+	<bean id="mailSender" class="com.fb.commons.mail.MailSender">
+		<property name="springMailSender" ref="springMailSender"/>
+	</bean>     
 </beans>

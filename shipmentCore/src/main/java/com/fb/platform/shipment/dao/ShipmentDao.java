@@ -12,5 +12,5 @@ public interface ShipmentDao {
 	 * @param gatePassItem
 	 * @return
 	 */
-	public ParcelItem getParcelDetails(GatePassItem gatePassItem);
+	public ParcelItem getParcelDetails(String refOrderId);
 }

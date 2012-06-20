@@ -8,7 +8,9 @@ import java.util.List;
  *
  */
 public class GatePassTO {
-	private ShipmentLSPEnum lspcode;
+	private ShipmentLSPEnum lspcode = null;
+	private String gatePassId;
+	
 	private List<GatePassItem> gatePassItems = new ArrayList<GatePassItem>();
 	
 	public ShipmentLSPEnum getLspcode() {
@@ -22,5 +24,11 @@ public class GatePassTO {
 	}
 	public void setGatePassItems(List<GatePassItem> gatePassItems) {
 		this.gatePassItems = gatePassItems;
+	}
+	public String getGatePassId() {
+		return gatePassId;
+	}
+	public void setGatePassId(String gatePassId) {
+		this.gatePassId = gatePassId;
 	}
 }

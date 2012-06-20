@@ -37,6 +37,7 @@ DROP TABLE IF EXISTS accounts_clientdomain;
 DROP TABLE IF EXISTS accounts_client;
 DROP TABLE IF EXISTS users_profile ;
 DROP TABLE IF EXISTS auth_user;
+DROP TABLE IF EXISTS orders_deliveryinfo;
 
 --  ******************** CREATE TABLE *****************
 
@@ -412,122 +413,122 @@ ALTER TABLE  locations_address  ADD CONSTRAINT fk_la_country_id FOREIGN KEY(coun
 
 
 -- IFS tables 
-CREATE TABLE `fulfillment_articleproductgroup` (
-  `id` int(11) NOT NULL auto_increment,
-  `article_id` varchar(16) NOT NULL,
-  `product_group_id` int(11) NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `fulfillment_articleproductgroup_67dad9bc` (`product_group_id`)
+CREATE TABLE fulfillment_articleproductgroup (
+  id int(11) NOT NULL auto_increment,
+  article_id varchar(16) NOT NULL,
+  product_group_id int(11) NOT NULL,
+  PRIMARY KEY  (id),
+  KEY fulfillment_articleproductgroup_67dad9bc (product_group_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `fulfillment_dc` (
-  `id` int(11) NOT NULL auto_increment,
-  `code` varchar(6) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `cod_flag` tinyint(1) NOT NULL default '0',
-  `client_id` int(11) NOT NULL,
-  `address` varchar(250) NOT NULL,
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `fulfillment_dc_code_140b70462a118a7_uniq` (`code`,`client_id`),
-  KEY `fulfillment_dc_4a4e8ffb` (`client_id`)
+CREATE TABLE fulfillment_dc (
+  id int(11) NOT NULL auto_increment,
+  code varchar(6) NOT NULL,
+  name varchar(100) NOT NULL,
+  cod_flag tinyint(1) NOT NULL default '0',
+  client_id int(11) NOT NULL,
+  address varchar(250) NOT NULL,
+  PRIMARY KEY  (id),
+  UNIQUE KEY fulfillment_dc_code_140b70462a118a7_uniq (code,client_id),
+  KEY fulfillment_dc_4a4e8ffb (client_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `fulfillment_dczipgroup` (
-  `id` int(11) NOT NULL auto_increment,
-  `dc_id` int(11) NOT NULL,
-  `zipgroup_id` int(11) NOT NULL,
-  `lsp_id` int(11) default NULL,
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `fulfillment_dczipgroup_zipgroup_id_37fd21600b1472ef_uniq` (`zipgroup_id`,`dc_id`,`lsp_id`),
-  KEY `fulfillment_dczipgroup_f3c25827` (`dc_id`),
-  KEY `fulfillment_dczipgroup_8a9558d2` (`zipgroup_id`),
-  KEY `fulfillment_dczipgroup_186fcb02` (`lsp_id`)
+CREATE TABLE fulfillment_dczipgroup (
+  id int(11) NOT NULL auto_increment,
+  dc_id int(11) NOT NULL,
+  zipgroup_id int(11) NOT NULL,
+  lsp_id int(11) default NULL,
+  PRIMARY KEY  (id),
+  UNIQUE KEY fulfillment_dczipgroup_zipgroup_id_37fd21600b1472ef_uniq (zipgroup_id,dc_id,lsp_id),
+  KEY fulfillment_dczipgroup_f3c25827 (dc_id),
+  KEY fulfillment_dczipgroup_8a9558d2 (zipgroup_id),
+  KEY fulfillment_dczipgroup_186fcb02 (lsp_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `fulfillment_lsp` (
-  `id` int(11) NOT NULL auto_increment,
-  `code` varchar(6) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `code` (`code`),
-  UNIQUE KEY `name` (`name`)
+CREATE TABLE fulfillment_lsp (
+  id int(11) NOT NULL auto_increment,
+  code varchar(6) NOT NULL,
+  name varchar(100) NOT NULL,
+  PRIMARY KEY  (id),
+  UNIQUE KEY code (code),
+  UNIQUE KEY name (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `fulfillment_lspdeliverychart` (
-  `id` int(11) NOT NULL auto_increment,
-  `dc_id` int(11) NOT NULL,
-  `zipgroup_id` int(11) NOT NULL,
-  `transit_time` int(10) unsigned NOT NULL,
-  `ship_mode` varchar(8) NOT NULL,
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `fulfillment_lspdeliverychart_ship_mode_5adee0838f62ccbb_uniq` (`ship_mode`,`zipgroup_id`,`dc_id`),
-  KEY `fulfillment_lspdeliverychart_f3c25827` (`dc_id`),
-  KEY `fulfillment_lspdeliverychart_8a9558d2` (`zipgroup_id`)
+CREATE TABLE fulfillment_lspdeliverychart (
+  id int(11) NOT NULL auto_increment,
+  dc_id int(11) NOT NULL,
+  zipgroup_id int(11) NOT NULL,
+  transit_time int(10) unsigned NOT NULL,
+  ship_mode varchar(8) NOT NULL,
+  PRIMARY KEY  (id),
+  UNIQUE KEY fulfillment_lspdeliverychart_ship_mode_5adee0838f62ccbb_uniq (ship_mode,zipgroup_id,dc_id),
+  KEY fulfillment_lspdeliverychart_f3c25827 (dc_id),
+  KEY fulfillment_lspdeliverychart_8a9558d2 (zipgroup_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `fulfillment_lspzipgroup` (
-  `id` int(11) NOT NULL auto_increment,
-  `lsp_id` int(11) NOT NULL,
-  `zipgroup_name` varchar(40) NOT NULL,
-  `zipgroup_code` varchar(3) NOT NULL,
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `fulfillment_lspzipgroup_zipgroup_name_406b3b883ea38d5_uniq` (`zipgroup_name`,`lsp_id`),
-  KEY `fulfillment_lspzipgroup_186fcb02` (`lsp_id`)
+CREATE TABLE fulfillment_lspzipgroup (
+  id int(11) NOT NULL auto_increment,
+  lsp_id int(11) NOT NULL,
+  zipgroup_name varchar(40) NOT NULL,
+  zipgroup_code varchar(3) NOT NULL,
+  PRIMARY KEY  (id),
+  UNIQUE KEY fulfillment_lspzipgroup_zipgroup_name_406b3b883ea38d5_uniq (zipgroup_name,lsp_id),
+  KEY fulfillment_lspzipgroup_186fcb02 (lsp_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `fulfillment_pincodezipgroupmap` (
-  `id` int(11) NOT NULL auto_increment,
-  `zipgroup_id` int(11) NOT NULL,
-  `pincode` varchar(6) NOT NULL,
-  `cod_flag` tinyint(1) NOT NULL default '0',
-  `high_value` tinyint(1) NOT NULL default '0',
-  `supported_product_groups` varchar(100) default NULL,
-  `lsp_priority` int(10) unsigned default NULL,
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `fulfillment_pincodezipgroupmap_zipgroup_id_278c0f82a992ddb_uniq` (`zipgroup_id`,`pincode`),
-  KEY `fulfillment_pincodezipgroupmap_8a9558d2` (`zipgroup_id`)
+CREATE TABLE fulfillment_pincodezipgroupmap (
+  id int(11) NOT NULL auto_increment,
+  zipgroup_id int(11) NOT NULL,
+  pincode varchar(6) NOT NULL,
+  cod_flag tinyint(1) NOT NULL default '0',
+  high_value tinyint(1) NOT NULL default '0',
+  supported_product_groups varchar(100) default NULL,
+  lsp_priority int(10) unsigned default NULL,
+  PRIMARY KEY  (id),
+  UNIQUE KEY fulfillment_pincodezipgroupmap_zipgroup_id_278c0f82a992ddb_uniq (zipgroup_id,pincode),
+  KEY fulfillment_pincodezipgroupmap_8a9558d2 (zipgroup_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `fulfillment_productgroup` (
-  `id` int(11) NOT NULL auto_increment,
-  `name` varchar(20) NOT NULL,
-  `local_tag` tinyint(1) NOT NULL default '0',
-  `ship_mode` varchar(8) NOT NULL,
-  `high_value_flag` tinyint(1) NOT NULL default '0',
-  `threshold_amount` int(10) unsigned default NULL,
-  `description` varchar(40) default NULL,
-  `client_id` int(11) default NULL,
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `fulfillment_productgroup_name_uniq` (`name`),
-  KEY `fulfillment_productgroup_4a4e8ffb` (`client_id`)
+CREATE TABLE fulfillment_productgroup (
+  id int(11) NOT NULL auto_increment,
+  name varchar(20) NOT NULL,
+  local_tag tinyint(1) NOT NULL default '0',
+  ship_mode varchar(8) NOT NULL,
+  high_value_flag tinyint(1) NOT NULL default '0',
+  threshold_amount int(10) unsigned default NULL,
+  description varchar(40) default NULL,
+  client_id int(11) default NULL,
+  PRIMARY KEY  (id),
+  UNIQUE KEY fulfillment_productgroup_name_uniq (name),
+  KEY fulfillment_productgroup_4a4e8ffb (client_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `inventory_inventory` (
-  `id` int(11) NOT NULL auto_increment,
-  `rate_chart_id` int(11) NOT NULL,
-  `dc_id` int(11) default NULL,
-  `type` varchar(25) NOT NULL,
-  `stock` decimal(7,2) default NULL,
-  `starts_on` datetime default NULL,
-  `ends_on` datetime default NULL,
-  `expected_on` datetime default NULL,
-  `bookings` decimal(7,2) default NULL,
-  `outward` decimal(7,2) default NULL,
-  `threshold` decimal(7,2) default NULL,
-  `stock_adjustment` decimal(7,2) default NULL,
-  `bookings_adjustment` decimal(7,2) default NULL,
-  `modified_on` datetime default NULL,
-  `is_active` tinyint(1) NOT NULL,
-  `expected_in` int(10) default NULL,
-  PRIMARY KEY  (`id`),
-  KEY `rate_chart_id` (`id`)
+CREATE TABLE inventory_inventory (
+  id int(11) NOT NULL auto_increment,
+  rate_chart_id int(11) NOT NULL,
+  dc_id int(11) default NULL,
+  type varchar(25) NOT NULL,
+  stock decimal(7,2) default NULL,
+  starts_on datetime default NULL,
+  ends_on datetime default NULL,
+  expected_on datetime default NULL,
+  bookings decimal(7,2) default NULL,
+  outward decimal(7,2) default NULL,
+  threshold decimal(7,2) default NULL,
+  stock_adjustment decimal(7,2) default NULL,
+  bookings_adjustment decimal(7,2) default NULL,
+  modified_on datetime default NULL,
+  is_active tinyint(1) NOT NULL,
+  expected_in int(10) default NULL,
+  PRIMARY KEY  (id),
+  KEY rate_chart_id (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `fulfillment_deliverychart_vendor` (
-  `pincode` varchar(10) NOT NULL,
-  `product_group` varchar(512) NOT NULL,
-  `shipping_time` int(11) NOT NULL,
-  `delivery_time` int(11) NOT NULL
+CREATE TABLE fulfillment_deliverychart_vendor (
+  pincode varchar(10) NOT NULL,
+  product_group varchar(512) NOT NULL,
+  shipping_time int(11) NOT NULL,
+  delivery_time int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -607,3 +608,12 @@ CREATE TABLE orders_order (
   CONSTRAINT client_domain_id_refs_id_42c094ebad791900 FOREIGN KEY (client_domain_id) REFERENCES accounts_clientdomain (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE orders_deliveryinfo (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  address_id int(11) NOT NULL,
+  notes longtext NOT NULL,
+  order_id int(11) NOT NULL,
+  PRIMARY KEY (id),
+  KEY orders_deliveryinfo_4dec3e17 (address_id),
+  KEY orders_deliveryinfo_7cc8fcf5 (order_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
