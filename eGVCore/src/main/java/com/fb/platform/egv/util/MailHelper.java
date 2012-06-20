@@ -16,15 +16,15 @@ import com.fb.commons.mail.to.MailTO;
  */
 public class MailHelper {
 		
-	public static final String MESSAGE_TEMPLATE = "Congratulation you have received a Gift Voucher worth ";
+	public static final String MESSAGE_TEMPLATE = "Congratulations you have received a Gift Voucher worth ";
 	
-	public static final String FROM = "keith.fernandez@futuregroup.in";
+	public static final String FROM = "no-reply@futuregroup.com";
 	
-	public static final String SUBJECT = "Congratulation you have received a Gift Voucher worth ";
+	public static final String SUBJECT = "Congratulations you have received a Gift Voucher worth ";
 	
 	public static final String CC = "keith.fernandez@futuregroup.in";
 	
-	public static final String BCC = "keith.fernandez@futuregroup.in";
+	public static final String BCC = "kishan.gajjar@futuregroup.in";
 
 	/**
 	 * @param from The mail sender email address
@@ -40,10 +40,10 @@ public class MailHelper {
 		MailTO mail = new MailTO();
 		mail.setFrom(FROM);
 		//Set message using template
-		String message = MESSAGE_TEMPLATE + " GV number : " + eGV + " and Password is " + pin;
+		String message = MESSAGE_TEMPLATE + amount + " GV number : " + eGV + " and Password is " + pin;
 		mail.setMessage(message);
 		mail.setSubject(SUBJECT+amount);
-		mail.setTo(new String[] { "keithfernandez25@gmail.com" }); //to });
+		mail.setTo(new String[] { to });
 		mail.setCc(new String[] { CC });
 		mail.setBcc(new String[] {BCC });
 		return mail;
