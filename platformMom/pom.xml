@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>platform</artifactId>
+    <groupId>com.fb</groupId>
+    <version>${platform.version}</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+	<artifactId>platformMom</artifactId>
+	<version>${platform.version}</version>
+	<packaging>jar</packaging>
+	
+	<name>Async message receiver module of the E Commerce platform MOM</name>
+	<url>http://maven.apache.org</url>
+	
+	<dependencies>
+	  	<dependency>
+	  		<groupId>com.fb</groupId>
+			<artifactId>platformCommons</artifactId>
+			<version>${platform.version}</version>
+	  	</dependency>
+	  	<dependency>
+	  		<groupId>com.fb</groupId>
+			<artifactId>platformCaching</artifactId>
+			<version>${platform.version}</version>
+	  	</dependency>
+<!-- 
+		<dependency>
+			<groupId>org.jboss.logging</groupId>
+			<artifactId>jboss-logging-spi</artifactId>
+			<version>${jboss.logging.spi.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-core</artifactId>
+			<version>${hornetq.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-jms</artifactId>
+			<version>${hornetq.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.netty</groupId>
+			<artifactId>netty</artifactId>
+			<version>3.2.3.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.javaee</groupId>
+			<artifactId>jboss-jms-api</artifactId>
+			<version>1.1.0.GA</version>
+		</dependency>
+		<dependency>
+			<groupId>jboss</groupId>
+			<artifactId>jnpserver</artifactId>
+			<version>4.2.2.GA</version>
+		</dependency>
+-->
+		<dependency>  
+			<groupId>org.hornetq</groupId>  
+			<artifactId>hornetq-core-client</artifactId>  
+			<version>${hornetq.version}</version>  
+		</dependency>  
+		<dependency>  
+			<groupId>org.hornetq</groupId>  
+			<artifactId>hornetq-jms-client</artifactId>  
+			<version>${hornetq.version}</version>  
+		</dependency>  
+		<dependency>
+			<groupId>jboss</groupId>
+			<artifactId>jnp-client</artifactId>
+			<version>4.2.2.GA</version>
+		</dependency>
+		<dependency>  
+			<groupId>org.jboss.netty</groupId>  
+			<artifactId>netty</artifactId>  
+			<version>3.2.3.Final</version>  
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.javaee</groupId>
+			<artifactId>jboss-jms-api</artifactId>
+			<version>1.1.0.GA</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.logging</groupId>
+			<artifactId>jboss-logging-spi</artifactId>
+			<version>${jboss.logging.spi.version}</version>
+		</dependency>
+
+	</dependencies>
+	<build>
+		<defaultGoal>install</defaultGoal>
+        <plugins>
+			<plugin>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<version>2.0.2</version>
+			<configuration>
+				<source>1.6</source>
+				<target>1.6</target>
+			</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<properties>
+		<jboss.logging.spi.version>2.1.2.GA</jboss.logging.spi.version>
+		<hornetq.version>2.2.15.Final</hornetq.version>
+	</properties>
+</project>
+

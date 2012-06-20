@@ -144,6 +144,15 @@
    <enabled>true</enabled>
   </snapshots>
  </repository>
+ 
+    <repository> 
+        <id>jboss-public-repository-group</id> 
+        <url>http://maven.futurebazaar.com/nexus/content/repositories/jboss-public-repository-group/</url> 
+        <snapshots> 
+            <enabled>false</enabled> 
+        </snapshots> 
+    </repository> 
+
 </repositories>
 
 <!-- download plugins from this repo -->
@@ -308,6 +317,11 @@
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-jdbc</artifactId>
 		    <version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jms</artifactId>
+			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.springframework</groupId>
