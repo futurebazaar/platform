@@ -88,5 +88,8 @@ eGVCore/.classpath
 eGVCore/.settings/
 eGVCore/bin/
 migrationWS/.settings/
+platformMailer/.classpath
+platformMailer/.settings/
+platformMailer/bin/
 .gitignore
 

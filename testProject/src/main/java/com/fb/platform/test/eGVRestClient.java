@@ -42,9 +42,9 @@ public class eGVRestClient {
 	
 	private static final String LOCALHOST = "http://localhost:8082/";
 	
-	private static String URL = QA_URL;
+	private static String URL = LOCALHOST;
 	
-	private static final String EGV_URL = URL + "eGVWS/egv/";
+	private static final String EGV_URL = URL + "eGVWS/egv";
 
 	/**
 	 * @param args
@@ -60,7 +60,7 @@ public class eGVRestClient {
 		int orderId=-1;
 		pingGV();
 		xsdDisplayGV();
-		createGV(sessionToken, mail, amount, orderItemId);
+//		createGV(sessionToken, mail, amount, orderItemId);
 //		getInfoGV(sessionToken, gvNumber);
 //		applyGV(sessionToken, gvNumber, gvPin);
 //		useGV(sessionToken, gvNumber,amount,orderId);
@@ -70,19 +70,17 @@ public class eGVRestClient {
 
 	public static String login() throws Exception {
 		HttpClient httpClient = new HttpClient();
-		//PostMethod loginMethod = new PostMethod("http://10.0.102.12:8082/userWS/auth/login");
-		PostMethod loginMethod = new PostMethod(URL + "userWS/auth/login");
-		//StringRequestEntity requestEntity = new StringRequestEntity("<loginRequest><username>vinayak</username><password>password</password></loginRequest>", "application/xml", null);
+		String url= URL + "userWS/auth/login";
+		PostMethod loginMethod = new PostMethod(url);
 		LoginRequest loginRequest = new LoginRequest();
-		//loginRequest.setUsername("9920694762");
-		//loginRequest.setPassword("test");
-//		loginRequest.setUsername("neha.garani@gmail.com");
-//		loginRequest.setPassword("testpass");
-		loginRequest.setUsername("Narendra.adki@futuregroup.in");
-		loginRequest.setPassword("1234");
-//		loginRequest.setUsername("1010101010");
-//		loginRequest.setPassword("shagunankush");
-
+		if(URL.equals(LOCALHOST)) {
+			loginRequest.setUsername("neha.garani@gmail.com");
+			loginRequest.setPassword("testpass");
+		}
+		if(URL.equals(QA_URL)) {
+			loginRequest.setUsername("Narendra.adki@futuregroup.in");
+			loginRequest.setPassword("1234");
+		}
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.auth._1_0");
 		Marshaller marshaller = context.createMarshaller();
 		StringWriter sw = new StringWriter();
@@ -90,7 +88,7 @@ public class eGVRestClient {
 		
 		System.out.println("\n================== Testing Login Web Service Call ============ \n" +
 				"Logging In " +
-				"The URL is : "+ URL + "userWS/auth/login");
+				"The URL is : "+ url);
 		System.out.println("\n\nLoginReq : \n" + sw.toString());
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
 		loginMethod.setRequestEntity(requestEntity);
@@ -117,8 +115,8 @@ public class eGVRestClient {
 
 	private static void applyGV(String sessionToken, String gvNumber, String gvPin) throws Exception {
 		HttpClient httpClient = new HttpClient();
-
-		PostMethod postMethod = new PostMethod(EGV_URL + "apply");
+		String url = EGV_URL + "/apply";
+		PostMethod postMethod = new PostMethod(url);
 
 		ApplyRequest applyRequest = new ApplyRequest();
 		applyRequest.setGiftVoucherNumber(Long.parseLong(gvNumber));
@@ -132,7 +130,7 @@ public class eGVRestClient {
 		marshaller.marshal(applyRequest, sw);
 
 		System.out.println("\n================== Testing eGV Apply Web Service Call ============ \n" + 
-							"The URL is : "+ EGV_URL + "/apply");
+							"The URL is : "+ url);
 		System.out.println("\n\n Request  : \n   " + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -155,11 +153,11 @@ public class eGVRestClient {
 	
 	private static void pingGV() throws Exception {
 		HttpClient httpClient = new HttpClient();
-
-		GetMethod getMethod = new GetMethod(EGV_URL);
+		String url = EGV_URL;
+		GetMethod getMethod = new GetMethod(url);
 
 		System.out.println("\n================== Testing eGV Ping Web Service Call ============ \n" + 
-							"The URL is : "+ EGV_URL);
+							"The URL is : "+ url);
 
 		int statusCode = httpClient.executeMethod(getMethod);
 		if (statusCode != HttpStatus.SC_OK) {
@@ -173,11 +171,11 @@ public class eGVRestClient {
 
 	private static void xsdDisplayGV() throws Exception {
 		HttpClient httpClient = new HttpClient();
-
-		GetMethod getMethod = new GetMethod(EGV_URL + "xsd");
+		String url = EGV_URL + "/xsd";
+		GetMethod getMethod = new GetMethod(url);
 
 		System.out.println("\n================== Testing eGV Ping Web Service Call ============ \n" + 
-							"The URL is : "+ EGV_URL + "xsd");
+							"The URL is : "+ url);
 
 		int statusCode = httpClient.executeMethod(getMethod);
 		if (statusCode != HttpStatus.SC_OK) {
@@ -191,8 +189,8 @@ public class eGVRestClient {
 
 	private static void createGV(String sessionToken, String mail, BigDecimal amount, int orderItemId) throws Exception {
 		HttpClient httpClient = new HttpClient();
-
-		PostMethod postMethod = new PostMethod(EGV_URL + "create");
+		String url = EGV_URL + "/create";
+		PostMethod postMethod = new PostMethod(url);
 
 		CreateRequest createRequest = new CreateRequest();
 		createRequest.setEmail(mail);
@@ -207,7 +205,7 @@ public class eGVRestClient {
 		marshaller.marshal(createRequest, sw);
 
 		System.out.println("\n================== Testing eGV Create Web Service Call ============ \n" + 
-							"The URL is : "+ EGV_URL + "create");
+							"The URL is : "+ url);
 		System.out.println("\n\n Request  : \n   " + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -229,8 +227,8 @@ public class eGVRestClient {
 
 	private static void getInfoGV(String sessionToken, String gvNumber) throws Exception {
 		HttpClient httpClient = new HttpClient();
-
-		PostMethod postMethod = new PostMethod(EGV_URL + "getInfo");
+		String url = EGV_URL + "/getInfo";
+		PostMethod postMethod = new PostMethod(url);
 
 		GetInfoRequest getInfoRequest = new GetInfoRequest();
 		getInfoRequest.setGiftVoucherNumber(Long.parseLong(gvNumber));
@@ -243,7 +241,7 @@ public class eGVRestClient {
 		marshaller.marshal(getInfoRequest, sw);
 
 		System.out.println("\n================== Testing eGV GetInfo Web Service Call ============ \n" + 
-							"The URL is : "+ EGV_URL + "getInfo");
+							"The URL is : "+ url);
 		System.out.println("\n\n Request  : \n   " + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -264,8 +262,8 @@ public class eGVRestClient {
 
 	private static void cancelGV(String sessionToken, String gvNumber) throws Exception {
 		HttpClient httpClient = new HttpClient();
-
-		PostMethod postMethod = new PostMethod(EGV_URL + "cancel");
+		String url = EGV_URL + "/cancel";
+		PostMethod postMethod = new PostMethod(url);
 
 		CancelRequest cancelRequest = new CancelRequest();
 		cancelRequest.setGiftVoucherNumber(Long.parseLong(gvNumber));
@@ -278,7 +276,7 @@ public class eGVRestClient {
 		marshaller.marshal(cancelRequest, sw);
 
 		System.out.println("\n================== Testing eGV Cancel Web Service Call ============ \n" + 
-							"The URL is : "+ EGV_URL + "/cancel");
+							"The URL is : "+ url);
 		System.out.println("\n\n Request  : \n   " + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
@@ -301,8 +299,8 @@ public class eGVRestClient {
 		
 	private static void useGV(String sessionToken, String gvNumber,BigDecimal amount, int orderId) throws Exception {
 		HttpClient httpClient = new HttpClient();
-
-		PostMethod postMethod = new PostMethod(EGV_URL + "use");
+		String url = EGV_URL + "/use";
+		PostMethod postMethod = new PostMethod(url);
 
 		UseRequest useRequest = new UseRequest();
 		useRequest.setGiftVoucherNumber(Long.parseLong(gvNumber));
@@ -317,7 +315,7 @@ public class eGVRestClient {
 		marshaller.marshal(useRequest, sw);
 
 		System.out.println("\n================== Testing eGV Use Web Service Call ============ \n" + 
-							"The URL is : "+ EGV_URL + "use");
+							"The URL is : "+ url);
 		System.out.println("\n\n Request  : \n   " + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
