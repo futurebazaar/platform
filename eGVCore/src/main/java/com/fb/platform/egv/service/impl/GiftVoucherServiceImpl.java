@@ -16,6 +16,7 @@ import com.fb.commons.mail.MailSender;
 import com.fb.commons.mail.exception.MailerException;
 import com.fb.commons.mail.to.MailTO;
 import com.fb.platform.egv.dao.GiftVoucherDao;
+import com.fb.platform.egv.dao.OrderItemDao;
 import com.fb.platform.egv.model.GiftVoucher;
 import com.fb.platform.egv.model.GiftVoucherStatusEnum;
 import com.fb.platform.egv.service.GiftVoucherAlreadyUsedException;
@@ -23,6 +24,7 @@ import com.fb.platform.egv.service.GiftVoucherExpiredException;
 import com.fb.platform.egv.service.GiftVoucherNotFoundException;
 import com.fb.platform.egv.service.GiftVoucherService;
 import com.fb.platform.egv.service.InvalidPinException;
+import com.fb.platform.egv.service.NoOrderItemExistsException;
 import com.fb.platform.egv.util.GiftVoucherPinUtil;
 import com.fb.platform.egv.util.RandomGenerator;
 import com.fb.platform.egv.util.MailHelper;
@@ -41,6 +43,9 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 	
 	@Autowired
 	private GiftVoucherDao giftVoucherDao = null;
+	
+	@Autowired
+	private OrderItemDao orderItemDao = null;
 	
 	@Autowired
 	private MailSender mailSender = null;
@@ -123,19 +128,23 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 	
 	@Override
 	public GiftVoucher createGiftVoucher(String email, int userId,
-			BigDecimal amount, int orderItemId) throws MailerException,PlatformException {
+			BigDecimal amount, int orderItemId) throws NoOrderItemExistsException, MailerException, PlatformException {
 		String numGenerated = RandomGenerator.integerRandomGenerator(GV_NUMBER_LENGTH);
 		long gvNumber = Long.parseLong(numGenerated);
 		GiftVoucher eGV = new GiftVoucher();
 		String gvPin = RandomGenerator.integerRandomGenerator(GV_PIN_LENGTH);
 		 giftVoucherDao.createGiftVoucher(gvNumber,GiftVoucherPinUtil.getEncryptedPassword(gvPin),email,userId,amount,GiftVoucherStatusEnum.CONFIRMED,orderItemId);
-		 eGV = giftVoucherDao.load(gvNumber);
-		 
-		 //code to send email
-		 MailTO message = MailHelper.createMailTO(eGV.getEmail(),amount,Long.toString(gvNumber),gvPin);
-		 
 		 try {
+			 if(orderItemDao.isValidId(orderItemId)) {
+				 throw new NoOrderItemExistsException("No such OrderItem " + orderItemId);  
+			 }
+		 	eGV = giftVoucherDao.load(gvNumber);
+		 
+		    //code to send email
+		 	MailTO message = MailHelper.createMailTO(eGV.getEmail(),amount,Long.toString(gvNumber),gvPin);
 			mailSender.send(message);
+		 } catch (NoOrderItemExistsException e) {
+			 throw new NoOrderItemExistsException("No such OrderItem " + orderItemId);
 		 } catch (MailException e) {
 			throw new MailerException("Error sending mail", e);
 		 }

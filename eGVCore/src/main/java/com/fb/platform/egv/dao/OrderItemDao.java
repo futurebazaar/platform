@@ -7,9 +7,9 @@ package com.fb.platform.egv.dao;
  * @author keith
  *
  */
-public interface OrderDao {
+public interface OrderItemDao {
 
-	public boolean isUserFirstOrder(int userId);
+	public boolean isValidId(int orderItemId);
 
 	
 }
