@@ -35,7 +35,6 @@ CREATE TABLE points_header (
     txn_timestamp DATETIME NOT NULL,
     reason LONGTEXT,
     PRIMARY KEY (id),
-    CONSTRAINT points_header_fk1 FOREIGN KEY (order_id) REFERENCES orders_order(id),
     CONSTRAINT points_header_uk1 UNIQUE (order_id, txn_action_code, txn_classification_code, 
         txn_points, txn_value, settlement_date)    
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -53,6 +52,5 @@ CREATE TABLE points_items (
     earn_ratio DECIMAL(10, 2) DEFAULT '0.03',
     burn_ratio DECIMAL(10, 2) DEFAULT '4',
     PRIMARY KEY (id),
-    CONSTRAINT points_items_fk1 FOREIGN KEY (order_item_id) REFERENCES orders_orderitem(id),
     CONSTRAINT points_items_fk2 FOREIGN KEY (points_header_id) REFERENCES points_header(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
