@@ -16,7 +16,10 @@
 	<bean id="giftVoucherDao" class="com.fb.platform.egv.dao.impl.GiftVoucherDaoJdbcImpl">
 		<property name="jdbcTemplate" ref="jdbcTemplate"/>
 	</bean>
-
+	<bean id="orderItemDao" class="com.fb.platform.egv.dao.impl.OrderItemDaoJdbcImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+	
     <!-- Add new DAOs here -->
 
 </beans>
