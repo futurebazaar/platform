@@ -22,6 +22,7 @@ public class InventoryMessageListener extends AbstractPlatformListener implement
 	@Override
 	public void onMessage(Message message) {
 		logger.info("Received the message for the Inventor destination.");
+		System.out.println("Received the message for the Inventor destination.");
 		super.notify(message);
 	}
 }
