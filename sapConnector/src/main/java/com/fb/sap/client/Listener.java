@@ -17,7 +17,7 @@ public class Listener {
 		Logger logger = Logger.getLogger("auris");
 		try {
 			// TODO Don't hard code configuration
-			JCoIDocServer server = JCoIDoc.getServer("prodlistener");
+			JCoIDocServer server = JCoIDoc.getServer("qalistener");
 			server.setIDocHandlerFactory(new IDocHandlerFactory());
 			server.setTIDHandler(new TIDHandler());
 
