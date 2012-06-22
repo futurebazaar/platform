@@ -134,11 +134,15 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 		GiftVoucher eGV = new GiftVoucher();
 		String gvPin = RandomGenerator.integerRandomGenerator(GV_PIN_LENGTH);
 		 giftVoucherDao.createGiftVoucher(gvNumber,GiftVoucherPinUtil.getEncryptedPassword(gvPin),email,userId,amount,GiftVoucherStatusEnum.CONFIRMED,orderItemId);
+		 logger.debug("eGV created, now checking if valid orderItemId " + orderItemId);
 		 try {
-			 if(orderItemDao.isValidId(orderItemId)) {
+			if(!orderItemDao.isValidId(orderItemId)) {
 				 throw new NoOrderItemExistsException("No such OrderItem " + orderItemId);  
-			 }
-		 	eGV = giftVoucherDao.load(gvNumber);
+			}
+			logger.debug("OrderItem is Valid");
+			
+			// load the eGV info
+			eGV = giftVoucherDao.load(gvNumber);
 		 
 		    //code to send email
 		 	MailTO message = MailHelper.createMailTO(eGV.getEmail(),amount,Long.toString(gvNumber),gvPin);
