@@ -344,6 +344,12 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+		        <groupId>javax.mail</groupId>
+		        <artifactId>mail</artifactId>
+		        <version>1.4</version>
+		</dependency>
+
         <dependency>
             <groupId>org.subethamail</groupId>
             <artifactId>subethasmtp-wiser</artifactId>
@@ -364,6 +370,7 @@
     
     <modules>
     	<module>platformCommons</module>
+	<module>platformMailer</module>
     	<module>platformCaching</module>
     	<module>catalogCommons</module>
         <module>catalogCore</module>
@@ -373,12 +380,14 @@
         <module>userWS</module>
         <module>authenticationCore</module>
         <module>promotionCore</module>
-        <module>promotionWS</module>
-		<module>fulfilmentCore</module>
-		<module>fulfilmentWS</module>
-		<module>promotionAdminWS</module>
+	<module>fulfilmentCore</module>
+	<module>fulfilmentWS</module>
+	<module>promotionAdminWS</module>
         <module>paybackCore</module>
         <module>paybackWS</module>
+	<module>eGVCore</module>
+	<module>eGVWS</module>
+	<module>promotionWS</module>
     </modules>
 
     <reporting>
