@@ -12,6 +12,7 @@ public class OrderRequest {
 	private long pointsHeaderId;
 	private String referenceId;
 	private BigDecimal amount =  BigDecimal.ZERO;
+	private BigDecimal orderTotal =  BigDecimal.ZERO;
 	private String reason;
 	private List<OrderItemRequest> orderItemRequest = new ArrayList<OrderItemRequest>();
 	private String loyaltyCard;
@@ -103,5 +104,11 @@ public class OrderRequest {
 	}
 	public void setPaymentRequest(List<PaymentRequest> paymentRequest) {
 		this.paymentRequest = paymentRequest;
+	}
+	public BigDecimal getOrderTotal() {
+		return orderTotal;
+	}
+	public void setOrderTotal(BigDecimal orderTotal) {
+		this.orderTotal = orderTotal;
 	}
 }

@@ -212,7 +212,7 @@ public class PointsManagerTest  extends BaseTestCase{
 		pr.setOrderRequest(request);
 		PointsRequest newRequest = pointsManager.getPointsToBeDisplayed(pr);
 		assertEquals(342, newRequest.getOrderRequest().getTxnPoints().intValue());
-		assertEquals(85, newRequest.getOrderRequest().getPointsValue().intValue());
+		assertEquals(135, newRequest.getOrderRequest().getPointsValue().intValue());
 		assertEquals(542, newRequest.getOrderRequest().getTotalTxnPoints().intValue());
 		
 	}
@@ -221,6 +221,7 @@ public class PointsManagerTest  extends BaseTestCase{
 		OrderRequest request = new OrderRequest();
 		request.setOrderId(orderId);
 		request.setAmount(new BigDecimal(2000));
+		request.setOrderTotal(new BigDecimal(2000));
 		request.setTxnTimestamp(new DateTime(2012, 05, 24, 10, 0, 0));
 		request.setReferenceId(referenceId);
 		

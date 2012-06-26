@@ -91,6 +91,7 @@ public class PointsResource {
 			
 			com.fb.platform.payback.to.OrderRequest orderRequest = new com.fb.platform.payback.to.OrderRequest();
 			orderRequest.setAmount(xmlPointsRequest.getOrderRequest().getAmount());
+			orderRequest.setOrderTotal(xmlPointsRequest.getOrderRequest().getOrderTotal());
 			orderRequest.setLoyaltyCard(xmlPointsRequest.getOrderRequest().getLoyaltyCard());
 			orderRequest.setOrderId(xmlPointsRequest.getOrderRequest().getOrderId());
 			XMLGregorianCalendar gregCal = xmlPointsRequest.getOrderRequest().getTimestamp();

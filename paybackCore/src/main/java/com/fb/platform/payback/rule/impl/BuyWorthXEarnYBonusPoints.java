@@ -50,7 +50,7 @@ public class BuyWorthXEarnYBonusPoints implements PointsRule {
 	
 	@Override
 	public boolean isApplicable(OrderRequest request, OrderItemRequest itemRequest){
-		if (minimumOrderValue.compareTo(request.getAmount()) == 1){
+		if (minimumOrderValue.compareTo(request.getOrderTotal()) == 1){
 			return false;
 		}
 		if(request.getTxnTimestamp().toDate().compareTo(validFrom.toDate()) <0 || request.getTxnTimestamp().toDate().compareTo(validTill.toDate()) > 0){

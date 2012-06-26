@@ -44,6 +44,7 @@ public class RulesTest extends BaseTestCase{
 			
 			orderRequest.setLoyaltyCard("1234567890123456");
 			orderRequest.setAmount(new BigDecimal(2000));
+			orderRequest.setOrderTotal(new BigDecimal(2000));
 			orderRequest.setOrderId(1);
 			orderRequest.setTxnTimestamp(new DateTime(2012, 05, 24, 10, 0, 0));
 			orderRequest.setReferenceId("5051234567");
