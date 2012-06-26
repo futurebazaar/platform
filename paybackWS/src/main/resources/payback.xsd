@@ -32,9 +32,11 @@
         <xs:element ref="payback:referenceId"/>
         <xs:element ref="payback:loyaltyCard"/>
         <xs:element ref="payback:amount"/>
+        <xs:element ref="payback:orderTotal" />
         <xs:element ref="payback:reason"/>
         <xs:element ref="payback:timestamp"/>
         <xs:element maxOccurs="unbounded" ref="payback:orderItemRequest"/>
+        <xs:element maxOccurs="unbounded" ref="payback:paymentRequest"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -45,6 +47,7 @@
   <xs:element name="loyaltyCard" type="xs:string"/>
   <xs:element name="reason" type="xs:string"/>
   <xs:element name="amount" type="xs:decimal"/>
+   <xs:element name="orderTotal" type="xs:decimal"/>
   
   <xs:element name="orderItemRequest">
     <xs:complexType>
@@ -61,6 +64,16 @@
     </xs:complexType>
   </xs:element>
   
+  <xs:element name="paymentRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="payback:amount"/>
+        <xs:element ref="payback:paymentMode" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="paymentMode" type="xs:string"/>
   <xs:element name="categoryId" type="xs:long"/>
   <xs:element name="sellerRateChartId" type="xs:long"/>
   <xs:element name="itemId" type="xs:long"/>

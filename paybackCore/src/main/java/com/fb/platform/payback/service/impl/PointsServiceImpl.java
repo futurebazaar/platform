@@ -122,7 +122,7 @@ public class PointsServiceImpl implements PointsService {
 		PointsRule rule = null;
 		rule = loadBurnRule(BurnPointsRuleEnum.PURCHASE_ORDER_BURN_X_POINTS);
 		BigDecimal burnRatio = ((PurchaseOrderBurnXPoints)rule).getBurnRatio();
-		return request.getOrderRequest().getTxnPoints().divide(burnRatio);
+		return request.getOrderRequest().getTotalTxnPoints().divide(burnRatio);
 	}
 
 	@Override

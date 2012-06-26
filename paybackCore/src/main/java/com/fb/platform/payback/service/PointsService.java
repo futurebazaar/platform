@@ -17,7 +17,7 @@ public interface PointsService {
 	
 	public String mailBurnData(BurnActionCodesEnum txnActionCode, String merchantId);
 	
-	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_UNCOMMITTED)
+	@Transactional(propagation=Propagation.REQUIRED)
 	public  PointsResponseCodeEnum storePoints(PointsRequest request);
 
 	public  PointsResponseCodeEnum clearPointsCache(String ruleName);

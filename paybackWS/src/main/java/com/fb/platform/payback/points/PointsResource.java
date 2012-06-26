@@ -38,6 +38,7 @@ import com.fb.platform.payback._1_0.DisplayPointsRequest;
 import com.fb.platform.payback._1_0.DisplayPointsResponse;
 import com.fb.platform.payback._1_0.ItemResponse;
 import com.fb.platform.payback._1_0.OrderItemRequest;
+import com.fb.platform.payback._1_0.PaymentRequest;
 import com.fb.platform.payback._1_0.PointsRequest;
 import com.fb.platform.payback._1_0.PointsResponse;
 import com.fb.platform.payback._1_0.RollbackPointsRequest;
@@ -90,6 +91,7 @@ public class PointsResource {
 			
 			com.fb.platform.payback.to.OrderRequest orderRequest = new com.fb.platform.payback.to.OrderRequest();
 			orderRequest.setAmount(xmlPointsRequest.getOrderRequest().getAmount());
+			orderRequest.setOrderTotal(xmlPointsRequest.getOrderRequest().getOrderTotal());
 			orderRequest.setLoyaltyCard(xmlPointsRequest.getOrderRequest().getLoyaltyCard());
 			orderRequest.setOrderId(xmlPointsRequest.getOrderRequest().getOrderId());
 			XMLGregorianCalendar gregCal = xmlPointsRequest.getOrderRequest().getTimestamp();
@@ -101,6 +103,11 @@ public class PointsResource {
 			for (OrderItemRequest xmlOrderItem : xmlPointsRequest.getOrderRequest().getOrderItemRequest()) {
 				com.fb.platform.payback.to.OrderItemRequest orderItemRequest = createStorePointsItem(xmlOrderItem);
 				orderRequest.getOrderItemRequest().add(orderItemRequest);
+			}
+			
+			for (PaymentRequest  xmlPaymentRequest : xmlPointsRequest.getOrderRequest().getPaymentRequest()){
+				com.fb.platform.payback.to.PaymentRequest paymentRequest = createStorePointsPaymentRequest(xmlPaymentRequest);
+				orderRequest.getPaymentRequest().add(paymentRequest);
 			}
 			
 			pointsHeaderRequest.setOrderRequest(orderRequest);
@@ -123,6 +130,14 @@ public class PointsResource {
 			logger.error("Error in the Points call.", e);
 			return null;
 		}
+	}
+
+	private com.fb.platform.payback.to.PaymentRequest createStorePointsPaymentRequest(
+			PaymentRequest xmlPaymentRequest) {
+		com.fb.platform.payback.to.PaymentRequest paymentRequest = new com.fb.platform.payback.to.PaymentRequest();
+		paymentRequest.setAmount(xmlPaymentRequest.getAmount());
+		paymentRequest.setPaymentMode(xmlPaymentRequest.getPaymentMode());
+		return paymentRequest;
 	}
 
 	private com.fb.platform.payback.to.OrderItemRequest createStorePointsItem(OrderItemRequest xmlOrderItem) {
