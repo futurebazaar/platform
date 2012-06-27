@@ -145,9 +145,9 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 			
 			// load the eGV info
 			eGV = giftVoucherDao.load(gvNumber);
-		 
+			
 		    //code to send email
-		 	MailTO message = MailHelper.createMailTO(eGV.getEmail(),amount,Long.toString(gvNumber),gvPin);
+		 	MailTO message = MailHelper.createMailTO(eGV.getEmail(),amount,Long.toString(gvNumber),gvPin,eGV.getValidTill());
 			mailSender.send(message);
 		 } catch (MailException e) {
 			throw new MailerException("Error sending mail", e);

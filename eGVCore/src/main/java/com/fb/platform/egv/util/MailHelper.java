@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 
+import org.joda.time.DateTime;
 import org.springframework.mail.MailException;
 
 import com.fb.commons.mail.exception.MailerException;
@@ -29,6 +30,8 @@ public class MailHelper {
 	public static String EGV_NUMBER_MESSAGE_TEMPLATE_STR = "egv.number";
 	
 	public static String EGV_PIN_MESSAGE_TEMPLATE_STR = "egv.pin";
+	
+	public static String EGV_VALIDITY_MESSAGE_TEMPLATE_STR = "egv.validity";
 	
 	public static String EGV_AMOUNT_MESSAGE_TEMPLATE_STR = "egv.amount";
 		
@@ -58,11 +61,11 @@ public class MailHelper {
 	 * @return
 	 * @throws MailException
 	 */
-	public static MailTO createMailTO(String to, BigDecimal amount, String eGVNumber, String eGVPin) throws MailException{
+	public static MailTO createMailTO(String to, BigDecimal amount, String eGVNumber, String eGVPin, DateTime date) throws MailException{
 		MailTO mail = new MailTO();
 		mail.setFrom(FROM);
 		//Set message using template		
-		String message = MESSAGE_TEMPLATE_STR.replaceAll(EGV_NUMBER_MESSAGE_TEMPLATE_STR,eGVNumber).replaceAll(EGV_PIN_MESSAGE_TEMPLATE_STR, eGVPin).replaceAll(EGV_AMOUNT_MESSAGE_TEMPLATE_STR, amount.toString());
+		String message = MESSAGE_TEMPLATE_STR.replaceAll(EGV_NUMBER_MESSAGE_TEMPLATE_STR,eGVNumber).replaceAll(EGV_PIN_MESSAGE_TEMPLATE_STR, eGVPin).replaceAll(EGV_AMOUNT_MESSAGE_TEMPLATE_STR, amount.toString()).replaceAll(EGV_VALIDITY_MESSAGE_TEMPLATE_STR, date.getDayOfMonth() + "-" + date.monthOfYear().getAsShortText() + "-" + date.getYear());
 		mail.setMessage(message);
 		mail.setSubject(SUBJECT.replaceAll(EGV_AMOUNT_MESSAGE_TEMPLATE_STR, amount.toString()));
 		mail.setTo(new String[] { to });
