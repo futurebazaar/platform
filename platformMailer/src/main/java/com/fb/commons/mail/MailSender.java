@@ -58,7 +58,7 @@ public class MailSender {
             	}
             	helper.setFrom(mailTO.getFrom());
             	helper.setSubject(mailTO.getSubject());
-            	helper.setText(mailTO.getMessage());
+            	helper.setText(mailTO.getMessage(),mailTO.isHtmlText());
             	if(mailTO.getAttachments() != null) {
 	            	for(File attachment : mailTO.getAttachments()) {
 	            		helper.addAttachment(attachment.getName(), attachment);
@@ -67,10 +67,8 @@ public class MailSender {
             }
         };
         try {
-        	System.out.println("Problem may lie here");
         	this.springMailSender.send(preparator);
         } catch (MailException e) {
-        	System.out.println("Problem !!!");
         	e.printStackTrace();
 			throw new MailerException("Error sending mail", e);
 		}

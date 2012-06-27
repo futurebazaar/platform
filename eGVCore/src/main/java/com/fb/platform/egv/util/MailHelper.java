@@ -3,10 +3,15 @@
  */
 package com.fb.platform.egv.util;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 
 import org.springframework.mail.MailException;
 
+import com.fb.commons.mail.exception.MailerException;
 import com.fb.commons.mail.to.MailTO;
 
 
@@ -15,16 +20,25 @@ import com.fb.commons.mail.to.MailTO;
  *
  */
 public class MailHelper {
+	
+	public static final String MESSAGE_TEMPLATE_URL = "egv_mailer_template.html";
+	
+	//Used to load the template in this
+	public static String MESSAGE_TEMPLATE_STR = "";
+	
+	public static String EGV_NUMBER_MESSAGE_TEMPLATE_STR = "egv.number";
+	
+	public static String EGV_PIN_MESSAGE_TEMPLATE_STR = "egv.pin";
+	
+	public static String EGV_AMOUNT_MESSAGE_TEMPLATE_STR = "egv.amount";
 		
-	public static final String MESSAGE_TEMPLATE = "Congratulations you have received a Gift Voucher worth ";
+	public static final String FROM = "orders@futuregroup.com";
 	
-	public static final String FROM = "no-reply@futuregroup.com";
+	public static final String SUBJECT = "Congratulations you have received a Gift Voucher worth Rs. egv.amount";
 	
-	public static final String SUBJECT = "Congratulations you have received a Gift Voucher worth ";
+	public static final String CC = "";
 	
-	public static final String CC = "keith.fernandez@futuregroup.in";
-	
-	public static final String BCC = "kishan.gajjar@futuregroup.in";
+	public static final String BCC = "pm@futuregroup.com";
 
 	/**
 	 * @param from The mail sender email address
@@ -36,17 +50,43 @@ public class MailHelper {
 	 * @throws MailException
 	 * @see MailException
 	 */
-	public static MailTO createMailTO(String to, BigDecimal amount, String eGV, String pin) throws MailException{
+	/**
+	 * @param to
+	 * @param amount
+	 * @param eGVNumber
+	 * @param eGVPin
+	 * @return
+	 * @throws MailException
+	 */
+	public static MailTO createMailTO(String to, BigDecimal amount, String eGVNumber, String eGVPin) throws MailException{
 		MailTO mail = new MailTO();
 		mail.setFrom(FROM);
-		//Set message using template
-		String message = MESSAGE_TEMPLATE + amount + " GV number : " + eGV + " and Password is " + pin;
+		//Set message using template		
+		String message = MESSAGE_TEMPLATE_STR.replaceAll(EGV_NUMBER_MESSAGE_TEMPLATE_STR,eGVNumber).replaceAll(EGV_PIN_MESSAGE_TEMPLATE_STR, eGVPin).replaceAll(EGV_AMOUNT_MESSAGE_TEMPLATE_STR, amount.toString());
 		mail.setMessage(message);
-		mail.setSubject(SUBJECT+amount);
+		mail.setSubject(SUBJECT.replaceAll(EGV_AMOUNT_MESSAGE_TEMPLATE_STR, amount.toString()));
 		mail.setTo(new String[] { to });
-		mail.setCc(new String[] { CC });
+//		mail.setCc(new String[] { CC });
 		mail.setBcc(new String[] {BCC });
+		mail.setHtmlText(true);
 		return mail;
+	}
+	
+	// Static block to load the message template from html
+	static {
+		try {
+			  InputStream messageTemplateStream = MailHelper.class.getClassLoader().getResourceAsStream(MESSAGE_TEMPLATE_URL);
+			  BufferedReader br = new BufferedReader(new InputStreamReader(messageTemplateStream));
+			  StringBuilder messageTemplateString = new StringBuilder("");
+			  String strLine;
+			  while ((strLine = br.readLine()) != null)   {
+				  messageTemplateString.append(strLine);
+			  }
+			  MESSAGE_TEMPLATE_STR = messageTemplateString.toString();
+		} catch (IOException e) {
+			throw new MailerException("Error While Reading Message Template from file " + MESSAGE_TEMPLATE_URL, e);
+		}
+		
 	}
 	
 }
