@@ -141,11 +141,22 @@ public class PointsServiceImpl implements PointsService {
 	}
 
 	private PointsResponseCodeEnum savePreallocEarnPoints(PointsRequest request) {
-		setEarnPoints(request.getOrderRequest());
-		request.getOrderRequest().setTxnPoints(
-				getTxnPoints(request).setScale(0, ROUND));
+		boolean alreadySaved = false;
+		try {
+			PointsTxnClassificationCodeEnum actionCode = PointsTxnClassificationCodeEnum.PREALLOC_EARN;
+			String classificationCode = actionCode.toString().split(",")[0];
+			PointsHeader pointsHeader = pointsDao.getHeaderDetails(request .getOrderRequest().getOrderId(), actionCode.name(), classificationCode);
+			logger.info("Header Entry Already exists :" + pointsHeader.getId() + " for order id : " + request.getOrderRequest().getOrderId());
+			alreadySaved = true;
+		} catch (DataAccessException e) {
+			logger.info("Save Earn for order id : " + request.getOrderRequest().getOrderId());
+		}
+		if (!alreadySaved){
+			setEarnPoints(request.getOrderRequest());
+			request.getOrderRequest().setTxnPoints(
+					getTxnPoints(request).setScale(0, ROUND));
+		}
 		return doOperation(request);
-
 	}
 
 	private PointsResponseCodeEnum saveBurnReversalPoints(PointsRequest request) {
