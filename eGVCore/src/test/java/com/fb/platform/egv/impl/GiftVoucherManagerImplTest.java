@@ -97,7 +97,7 @@ public class GiftVoucherManagerImplTest extends BaseTestCase{
 	public void testCreateGiftVoucher(){
 		CreateRequest createGiftVoucherRequest = new CreateRequest();
 		createGiftVoucherRequest.setEmail("keith.fernandez@futuregroup.in");
-		createGiftVoucherRequest.setOrderItemId(-100);
+		createGiftVoucherRequest.setOrderItemId(1);
 		createGiftVoucherRequest.setAmount(new BigDecimal(1000.00));
 		createGiftVoucherRequest.setSessionToken(responseUser1.getSessionToken());
 		

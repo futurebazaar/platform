@@ -136,19 +136,19 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 		 giftVoucherDao.createGiftVoucher(gvNumber,GiftVoucherPinUtil.getEncryptedPassword(gvPin),email,userId,amount,GiftVoucherStatusEnum.CONFIRMED,orderItemId);
 		 logger.debug("eGV created, now checking if valid orderItemId " + orderItemId);
 		 try {
-			if(!orderItemDao.isValidId(orderItemId)) {
-				 throw new NoOrderItemExistsException("No such OrderItem " + orderItemId);  
-			}
-			logger.debug("OrderItem is Valid");
+			 
+			// Removed the constraint (due to Txn prob ) and Added below check : Remove after constraint is added
+//			if(!orderItemDao.isValidId(orderItemId)) {
+//				 throw new NoOrderItemExistsException("No such OrderItem " + orderItemId);  
+//			}
+//			logger.debug("OrderItem is Valid");
 			
 			// load the eGV info
 			eGV = giftVoucherDao.load(gvNumber);
-		 
+			
 		    //code to send email
-		 	MailTO message = MailHelper.createMailTO(eGV.getEmail(),amount,Long.toString(gvNumber),gvPin);
+		 	MailTO message = MailHelper.createMailTO(eGV.getEmail(),amount,Long.toString(gvNumber),gvPin,eGV.getValidTill());
 			mailSender.send(message);
-		 } catch (NoOrderItemExistsException e) {
-			 throw new NoOrderItemExistsException("No such OrderItem " + orderItemId);
 		 } catch (MailException e) {
 			throw new MailerException("Error sending mail", e);
 		 }
@@ -169,6 +169,9 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 				eGV.setStatus(GiftVoucherStatusEnum.USED);
 				giftVoucherDao.changeState(giftVoucherNumber, GiftVoucherStatusEnum.USED);
 				giftVoucherDao.createGiftVoucherUse(giftVoucherNumber, userId, orderId, amount);
+			}
+			else {
+				throw new GiftVoucherAlreadyUsedException("Gift Voucher has GV number : " + giftVoucherNumber + " has laready been used");
 			}
 		} catch (GiftVoucherNotFoundException e) {
 			logger.info("No Such Gift Voucher Exists :  " + giftVoucherNumber);
