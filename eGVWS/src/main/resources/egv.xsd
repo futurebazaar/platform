@@ -41,6 +41,8 @@
   <xs:element name="validFrom" type="xs:dateTime"/>
   <xs:element name="orderItemId" type="xs:int"/>
   <xs:element name="orderId" type="xs:int"/>
+  <xs:element name="senderName" type="xs:string"/>
+  <xs:element name="receiverName" type="xs:string"/>
   
   <xs:simpleType name="getInfoResponseStatusEnum">
     <xs:restriction base="xs:string">
@@ -60,6 +62,8 @@
         <xs:element ref="egv:email"/>
         <xs:element ref="egv:amount"/>
         <xs:element ref="egv:orderItemId"/>
+        <xs:element ref="egv:senderName"/>
+        <xs:element ref="egv:receiverName"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>

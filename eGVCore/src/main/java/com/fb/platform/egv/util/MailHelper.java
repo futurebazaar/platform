@@ -31,13 +31,17 @@ public class MailHelper {
 	
 	public static String EGV_PIN_MESSAGE_TEMPLATE_STR = "egv.pin";
 	
+	public static String EGV_SENDER_MESSAGE_TEMPLATE_STR = "egv.sender";
+	
+	public static String EGV_RECEIVER_MESSAGE_TEMPLATE_STR = "egv.receiver";
+	
 	public static String EGV_VALIDITY_MESSAGE_TEMPLATE_STR = "egv.validity";
 	
 	public static String EGV_AMOUNT_MESSAGE_TEMPLATE_STR = "egv.amount";
 		
 	public static final String FROM = "orders@futuregroup.com";
 	
-	public static final String SUBJECT = "Congratulations you have received a Gift Voucher worth Rs. egv.amount";
+	public static final String SUBJECT = "Congratulations! egv.sender sent you a Future Bazaar eGift Voucher";
 	
 	public static final String CC = "";
 	
@@ -61,11 +65,16 @@ public class MailHelper {
 	 * @return
 	 * @throws MailException
 	 */
-	public static MailTO createMailTO(String to, BigDecimal amount, String eGVNumber, String eGVPin, DateTime date) throws MailException{
+	public static MailTO createMailTO(String to, BigDecimal amount, String eGVNumber, String eGVPin, DateTime date, String senderName, String receiverName) throws MailException{
 		MailTO mail = new MailTO();
 		mail.setFrom(FROM);
 		//Set message using template		
-		String message = MESSAGE_TEMPLATE_STR.replaceAll(EGV_NUMBER_MESSAGE_TEMPLATE_STR,eGVNumber).replaceAll(EGV_PIN_MESSAGE_TEMPLATE_STR, eGVPin).replaceAll(EGV_AMOUNT_MESSAGE_TEMPLATE_STR, amount.toString()).replaceAll(EGV_VALIDITY_MESSAGE_TEMPLATE_STR, date.getDayOfMonth() + "-" + date.monthOfYear().getAsShortText() + "-" + date.getYear());
+		String message = MESSAGE_TEMPLATE_STR.replaceAll(EGV_NUMBER_MESSAGE_TEMPLATE_STR,eGVNumber)
+				.replaceAll(EGV_PIN_MESSAGE_TEMPLATE_STR, eGVPin)
+				.replaceAll(EGV_AMOUNT_MESSAGE_TEMPLATE_STR, amount.toString())
+				.replaceAll(EGV_VALIDITY_MESSAGE_TEMPLATE_STR, date.getDayOfMonth() + "-" + date.monthOfYear().getAsShortText() + "-" + date.getYear())
+				.replaceAll(EGV_SENDER_MESSAGE_TEMPLATE_STR, senderName)
+				.replaceAll(EGV_RECEIVER_MESSAGE_TEMPLATE_STR, receiverName);
 		mail.setMessage(message);
 		mail.setSubject(SUBJECT.replaceAll(EGV_AMOUNT_MESSAGE_TEMPLATE_STR, amount.toString()));
 		mail.setTo(new String[] { to });

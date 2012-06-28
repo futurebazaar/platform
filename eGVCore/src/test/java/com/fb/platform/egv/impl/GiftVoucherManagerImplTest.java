@@ -100,6 +100,8 @@ public class GiftVoucherManagerImplTest extends BaseTestCase{
 		createGiftVoucherRequest.setOrderItemId(1);
 		createGiftVoucherRequest.setAmount(new BigDecimal(1000.00));
 		createGiftVoucherRequest.setSessionToken(responseUser1.getSessionToken());
+		createGiftVoucherRequest.setSenderName("Keith Fernandez");
+		createGiftVoucherRequest.setReceiverName("Zishaan");
 		
 		
 		CreateResponse createGiftVoucherResponse = giftVoucherManager.create(createGiftVoucherRequest);
