@@ -3,7 +3,7 @@
  */
 package com.fb.platform.mom.receiver.mail;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
@@ -29,6 +29,6 @@ public class MailReceiverTest extends BaseTestCase {
 	public void receiveMail() throws JMSException {
 		mailSender.sendMail();
 		TextMessage receiveMail = mailReceiver.receiveMail();
-		assertEquals("Hello world!", receiveMail.getText());
+		assertTrue(receiveMail.getText().startsWith("Hello world!"));
 	}
 }

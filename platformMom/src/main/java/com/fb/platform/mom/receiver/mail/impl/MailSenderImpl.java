@@ -3,6 +3,8 @@
  */
 package com.fb.platform.mom.receiver.mail.impl;
 
+import java.util.Date;
+
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -31,7 +33,7 @@ public class MailSenderImpl implements MailSender {
 			@Override
 			public Message createMessage(Session session) throws JMSException {
 				TextMessage message = session.createTextMessage();
-				message.setText("Hello world!");
+				message.setText("Hello world!" + new Date());
 				return message;
 			}
 		});

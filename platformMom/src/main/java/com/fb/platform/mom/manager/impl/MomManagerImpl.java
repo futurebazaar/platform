@@ -5,6 +5,8 @@ package com.fb.platform.mom.manager.impl;
 
 import java.io.Serializable;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.platform.mom.manager.MomManager;
@@ -19,6 +21,8 @@ import com.fb.platform.mom.receiver.inventory.InventorySender;
  */
 public class MomManagerImpl implements MomManager {
 
+	private static Log logger = LogFactory.getLog(MomManagerImpl.class);
+
 	@Autowired
 	private InventoryMessageListener inventoryListener = null;
 
@@ -30,10 +34,13 @@ public class MomManagerImpl implements MomManager {
 	 */
 	@Override
 	public void send(PlatformDestinationEnum destination, Serializable message) {
+		logger.debug("Sending message to destination : " + destination);
+
 		if (PlatformDestinationEnum.INVENTORY == destination) {
 			inventorySender.sendMessage(message);
+		} else {
+			throw new IllegalStateException("No sender is configured for the destination : " + destination);
 		}
-		throw new IllegalStateException("No sender is configured for the destination : " + destination);
 	}
 
 	/* (non-Javadoc)
@@ -41,9 +48,21 @@ public class MomManagerImpl implements MomManager {
 	 */
 	@Override
 	public void registerReceiver(PlatformDestinationEnum destination, PlatformMessageReceiver receiver) {
+		logger.debug("Registering receiver : " + receiver + " for destination : " + destination);
+
 		if (PlatformDestinationEnum.INVENTORY == destination) {
 			inventoryListener.addReceiver(receiver);
+		} else {
+			throw new IllegalStateException("no Receiver is configured for the destination : " + destination);
 		}
-		throw new IllegalStateException("no Receiver is configured for the destination : " + destination);
 	}
+
+	public void setInventoryListener(InventoryMessageListener inventoryListener) {
+		this.inventoryListener = inventoryListener;
+	}
+
+	public void setInventorySender(InventorySender inventorySender) {
+		this.inventorySender = inventorySender;
+	}
+
 }
