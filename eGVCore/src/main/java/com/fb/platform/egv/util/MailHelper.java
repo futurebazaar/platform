@@ -39,13 +39,13 @@ public class MailHelper {
 	
 	public static String EGV_AMOUNT_MESSAGE_TEMPLATE_STR = "egv.amount";
 		
-	public static final String FROM = "order@futuregroup.com";
+	public static final String FROM = "order@futurebazaar.com";
 	
 	public static final String SUBJECT = "Congratulations! egv.sender sent you a Future Bazaar eGift Voucher";
 	
 	public static final String CC = "";
 	
-	public static final String BCC = "pm@futuregroup.com";
+	public static final String BCC = "pm@futurebazaar.com";
 	
 	public static final String FROM_NAME = "Future Bazaar";
 
