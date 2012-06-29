@@ -140,7 +140,7 @@ public class PointsManagerTest  extends BaseTestCase{
 		pr.setOrderRequest(request);
 		pointsResponse3 = pointsManager.getPointsReponse(pr);
 		assertEquals(PointsTxnClassificationCodeEnum.PREALLOC_EARN, pointsResponse3.getActionCode());
-		assertEquals(PointsResponseCodeEnum.INTERNAL_ERROR, pointsResponse3.getPointsResponseCodeEnum());
+		assertEquals(PointsResponseCodeEnum.SUCCESS, pointsResponse3.getPointsResponseCodeEnum());
 		
 	}
 	
