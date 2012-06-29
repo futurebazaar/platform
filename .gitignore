@@ -80,6 +80,17 @@ promotionAdminWS/.project
 promotionAdminWS/.settings/
 promotionAdminWS/bin/
 promotionAdminWS/target/
+Migration/
+apache-tomcat-6.0.33/
+eGVWS/.classpath
+eGVWS/.settings/
+eGVCore/.classpath
+eGVCore/.settings/
+eGVCore/bin/
+migrationWS/.settings/
+platformMailer/.classpath
+platformMailer/.settings/
+platformMailer/bin/
 .gitignore
 paybackWS/.classpath
 paybackCore/.classpath

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+        <table name="gift_voucher">
+                <column>id</column>
+                <column>number</column>
+				<column>pin</column>
+				<column>email</column>
+				<column>amount</column>
+				<column>user_id</column>
+				<column>order_item_id</column>
+				<column>status</column>
+				<column>valid_from</column>
+				<column>valid_till</column>
+				<column>created_on</column>
+				<column>last_modified_on</column>
+        <row>
+        		<value name="id">-1000</value>
+				<value name="number">-12345678901</value>
+				<value name="pin">sha1$d4e60$8315909744c42b46c93d6311bdf806c1b6c80099</value>
+				<value name="email">try1@gmail.com</value>
+				<value name="amount">1000</value>
+				<value name="user_id">-1</value>
+				<value name="order_item_id">-5</value>
+				<value name="status">CONFIRMED</value>
+				<value name="valid_from">2012-05-28 00:00:00</value>
+				<value name="valid_till">2012-07-31 00:00:00</value>
+				<value name="created_on">2012-04-30 00:00:00</value>
+				<value name="last_modified_on">2012-04-30 00:00:00</value>
+        </row>
+         <row>
+        		<value name="id">-1001</value>
+				<value name="number">-12345678921</value>
+				<value name="pin">sha1$d4e60$8315909744c42b46c93d6311bdf806c1b6c80099</value>
+				<value name="email">try1@gmail.com</value>
+				<value name="amount">800</value>
+				<value name="user_id">-1</value>
+				<value name="order_item_id">-5</value>
+				<value name="status">USED</value>
+				<value name="valid_from">2012-05-28 00:00:00</value>
+				<value name="valid_till">2012-07-31 00:00:00</value>
+				<value name="created_on">2012-04-30 00:00:00</value>
+				<value name="last_modified_on">2012-04-30 00:00:00</value>
+        </row>
+        </table>
+                <table name="gift_voucher_usage">
+                <column>id</column>
+                <column>gift_voucher_number</column>
+				<column>amount_used</column>
+				<column>used_by</column>
+				<column>order_id</column>
+				<column>used_on</column>
+        <row>
+        		<value name="id">-1000</value>
+				<value name="gift_voucher_number">-12345678921</value>
+				<value name="amount_used">126</value>
+				<value name="used_by">-1</value>
+				<value name="order_id">-5</value>
+				<value name="used_on">2012-05-28 00:00:00</value>
+        </row>
+        </table>                	
+</dataset>
+
+<!-- 
+
+create table gift_voucher ( 
+	id int primary key auto_increment,
+	number varchar(30) unique key,
+	pin varchar(120) not null,
+	email varchar(150) not null,
+	amount decimal(18,2) not null,
+	user_id int not null,
+	order_item_id int not null,
+	status varchar(80),
+	valid_from datetime,
+	valid_till datetime,
+	created_on datetime,
+	last_modified_on datetime,
+	CONSTRAINT `gift_voucher_fk1` FOREIGN KEY (`user_id`) REFERENCES `users_profile` (`id`),
+	CONSTRAINT `gift_voucher_fk2` FOREIGN KEY (`order_item_id`) REFERENCES `orders_orderitem` (`id`)
+	)ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+	
+create table gift_voucher_usage (
+	id int primary key auto_increment,
+	gift_voucher_number varchar(30) unique key,
+	used_by int not null,
+	order_id int not null,
+	used_on datetime,
+	amount_used decimal(18,2) not null,
+	 CONSTRAINT `gift_voucher_use_fk1` FOREIGN KEY (`used_by`) REFERENCES `users_profile` (`id`),
+	 CONSTRAINT `gift_voucher_use_fk2` FOREIGN KEY (`order_id`) REFERENCES `orders_order` (`id`),
+	 CONSTRAINT `gift_voucher_use_fk3` FOREIGN KEY (`gift_voucher_number`) REFERENCES `gift_voucher` (`number`)
+	)ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+
+create table gift_voucher ( 
+	id int primary key auto_increment,
+	number varchar(30) unique key,
+	pin varchar(120) not null,
+	email varchar(150) not null,
+	amount decimal(18,2) not null,
+	user_id int not null,
+	order_item_id int not null,
+	status varchar(80),
+	valid_from datetime,
+	valid_till datetime,
+	created_on datetime,
+	last_modified_on datetime,
+	CONSTRAINT `gift_voucher_fk1` FOREIGN KEY (`user_id`) REFERENCES `users_profile` (`id`)
+	)ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+	
+create table gift_voucher_usage (
+	id int primary key auto_increment,
+	gift_voucher_number varchar(30) unique key,
+	used_by int not null,
+	order_id int not null,
+	used_on datetime,
+	amount_used decimal(18,2) not null,
+	 CONSTRAINT `gift_voucher_use_fk1` FOREIGN KEY (`used_by`) REFERENCES `users_profile` (`id`),
+	 CONSTRAINT `gift_voucher_use_fk3` FOREIGN KEY (`gift_voucher_number`) REFERENCES `gift_voucher` (`number`)
+	)ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+ -->
