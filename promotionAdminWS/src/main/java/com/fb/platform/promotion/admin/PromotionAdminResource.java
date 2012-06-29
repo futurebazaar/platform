@@ -61,6 +61,8 @@ import com.fb.platform.promotion.admin._1_0.SearchCouponStatus;
 import com.fb.platform.promotion.admin._1_0.SearchPromotionEnum;
 import com.fb.platform.promotion.admin._1_0.SearchPromotionRequest;
 import com.fb.platform.promotion.admin._1_0.SearchPromotionResponse;
+import com.fb.platform.promotion.admin._1_0.SearchScratchCardRequest;
+import com.fb.platform.promotion.admin._1_0.SearchScratchCardResponse;
 import com.fb.platform.promotion.admin._1_0.UpdatePromotionEnum;
 import com.fb.platform.promotion.admin._1_0.UpdatePromotionRequest;
 import com.fb.platform.promotion.admin._1_0.UpdatePromotionResponse;
@@ -71,15 +73,11 @@ import com.fb.platform.promotion.admin._1_0.ViewPromotionEnum;
 import com.fb.platform.promotion.admin._1_0.ViewPromotionRequest;
 import com.fb.platform.promotion.admin._1_0.ViewPromotionResponse;
 import com.fb.platform.promotion.admin.service.PromotionAdminManager;
-import com.fb.platform.promotion.admin.to.ScratchCardBasicDetails;
 import com.fb.platform.promotion.admin.to.SearchCouponOrderBy;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
 import com.fb.platform.promotion.admin.to.SortOrder;
 import com.fb.platform.promotion.to.AlphaNumericType;
 import com.fb.platform.promotion.to.AlphabetCase;
-import com.fb.platform.promotion.admin._1_0.SearchScratchCardRequest;
-import com.fb.platform.promotion.admin._1_0.SearchScratchCardResponse;
-import com.fb.platform.promotion.admin._1_0.SearchScratchCardStatus;
 
 /**
  * @author nehaga
