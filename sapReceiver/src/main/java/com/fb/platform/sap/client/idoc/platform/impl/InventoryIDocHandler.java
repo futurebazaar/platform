@@ -8,6 +8,7 @@ import generated.ZTINLAIDOCTYP;
 import generated.ZTINLASEGDLVR;
 
 import java.io.StringReader;
+import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -58,23 +59,26 @@ public class InventoryIDocHandler implements PlatformIDocHandler {
 
 			ZTINLAIDOCTYP inventoryIdoc = (ZTINLAIDOCTYP)unmarshaller.unmarshal(new StreamSource(new StringReader(idocXml)));
 
-			ZTINLASEGDLVR ztinlasegdlvr = inventoryIdoc.getIDOC().getZTINLASEGDLVR();
-			InventoryTO inventoryTo = new InventoryTO();
-			inventoryTo.setArticleId(ztinlasegdlvr.getMATNR().toString());
-			inventoryTo.setIssuingSite(ztinlasegdlvr.getRWERKS().toString());
-			inventoryTo.setIssuingStorageLoc(ztinlasegdlvr.getRLGORT().toString());
-			inventoryTo.setmovementType(ztinlasegdlvr.getBWART().toString());
-			inventoryTo.setQuantity(ztinlasegdlvr.getTRNSFRQUAN().toString());
-			inventoryTo.setReceivingSite(ztinlasegdlvr.getRWERKS().toString());
-			inventoryTo.setReceivingStorageLoc(ztinlasegdlvr.getRLGORT().toString());
-			inventoryTo.setTransactionCode(ztinlasegdlvr.getTCODE());
+			List<ZTINLASEGDLVR> sapInventoryAckList = inventoryIdoc.getIDOC().getZTINLASEGDLVR();
+			for (ZTINLASEGDLVR sapInventoryAck : sapInventoryAckList) {
+				InventoryTO inventoryTo = new InventoryTO();
+				inventoryTo.setArticleId(sapInventoryAck.getMATNR());
+				inventoryTo.setIssuingSite(sapInventoryAck.getRWERKS());
+				inventoryTo.setIssuingStorageLoc(sapInventoryAck.getRLGORT());
+				inventoryTo.setmovementType(sapInventoryAck.getBWART());
+				inventoryTo.setQuantity(sapInventoryAck.getTRNSFRQUAN());
+				inventoryTo.setReceivingSite(sapInventoryAck.getRWERKS());
+				inventoryTo.setReceivingStorageLoc(sapInventoryAck.getRLGORT());
+				inventoryTo.setTransactionCode(sapInventoryAck.getTCODE());
 
-			logger.debug("Sending InventoryTO to Inventory destination");
-			momManager.send(PlatformDestinationEnum.INVENTORY, inventoryTo);
+				logger.debug("Sending InventoryTO to Inventory destination");
+				momManager.send(PlatformDestinationEnum.INVENTORY, inventoryTo);
+			}
 		} catch (JAXBException e) {
+			logger.error("Unable to create Inventory Message for inventory idoc :\n" + idocXml);
+			//TODO send this to some kind of error queue
 			throw new PlatformException("Exception while unmarshalling the inventory idoc xml", e);
 		}
-
 	}
 
 	@Override

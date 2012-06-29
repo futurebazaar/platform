@@ -11,6 +11,8 @@ import javax.jms.Message;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 
@@ -19,6 +21,8 @@ import org.springframework.jms.core.MessageCreator;
  *
  */
 public class InventorySenderImpl implements InventorySender {
+
+	private static Log logger = LogFactory.getLog(InventorySenderImpl.class);
 
 	private JmsTemplate jmsTemplate;
 
@@ -33,6 +37,8 @@ public class InventorySenderImpl implements InventorySender {
 			
 			@Override
 			public Message createMessage(Session session) throws JMSException {
+				logger.info("Creating the Inventory Message for sending.");
+				System.out.println("Creating the Inventory Message for sending.");
 				ObjectMessage jmsMessage = session.createObjectMessage();
 				jmsMessage.setObject(message);
 				return jmsMessage;
