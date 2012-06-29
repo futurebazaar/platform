@@ -8,6 +8,7 @@ import java.io.Serializable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.listener.DefaultMessageListenerContainer;
 
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
@@ -28,6 +29,9 @@ public class MomManagerImpl implements MomManager {
 
 	@Autowired
 	private InventorySender inventorySender = null;
+
+	@Autowired
+	private DefaultMessageListenerContainer inventoryContainer = null;
 
 	/* (non-Javadoc)
 	 * @see com.fb.platform.mom.manager.MomManager#send(com.fb.platform.mom.manager.PlatformDestinationEnum, java.lang.Object)
@@ -50,8 +54,11 @@ public class MomManagerImpl implements MomManager {
 	public void registerReceiver(PlatformDestinationEnum destination, PlatformMessageReceiver receiver) {
 		logger.debug("Registering receiver : " + receiver + " for destination : " + destination);
 
+		inventoryListener.addReceiver(receiver);
 		if (PlatformDestinationEnum.INVENTORY == destination) {
-			inventoryListener.addReceiver(receiver);
+			if (!inventoryContainer.isRunning()) {
+				inventoryContainer.start();
+			}
 		} else {
 			throw new IllegalStateException("no Receiver is configured for the destination : " + destination);
 		}
@@ -65,4 +72,7 @@ public class MomManagerImpl implements MomManager {
 		this.inventorySender = inventorySender;
 	}
 
+	public void setInventoryContainer(DefaultMessageListenerContainer inventoryContainer) {
+		this.inventoryContainer = inventoryContainer;
+	}
 }

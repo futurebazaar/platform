@@ -81,6 +81,7 @@
 		<property name="connectionFactory" ref="connectionFactory"/>
 		<property name="destination" ref="inventoryDestination"/>
 		<property name="messageListener" ref="inventoryListener" />
+		<property name="autoStartup" value="false"/>
 	</bean>
 
 	<bean id="inventorySender" class="com.fb.platform.mom.receiver.inventory.InventorySenderImpl">
@@ -102,5 +103,6 @@
     <bean id="momManager" class="com.fb.platform.mom.manager.impl.MomManagerImpl">
         <property name="inventoryListener" ref="inventoryListener"/>
         <property name="inventorySender" ref="inventorySender"></property>
+        <property name="inventoryContainer" ref="inventoryContainer"></property>
     </bean>
 </beans>

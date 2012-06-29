@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.mom.inventory.to.InventoryTO;
+import com.fb.platform.mom.manager.MomManager;
+import com.fb.platform.mom.manager.PlatformDestinationEnum;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
 
 /**
@@ -24,7 +26,7 @@ public class InventoryTest extends BaseTestCase {
 	private InventorySender inventorySender = null;
 
 	@Autowired
-	private InventoryMessageListener inventoryListener = null;
+	private MomManager momManager = null;
 
 	private TestInventoryReceiver testReceiver = null;
 
@@ -36,7 +38,8 @@ public class InventoryTest extends BaseTestCase {
 	@Test
 	public void sendTwoMessages() {
 
-		inventoryListener.addReceiver(testReceiver);
+		//inventoryListener.addReceiver(testReceiver);
+		momManager.registerReceiver(PlatformDestinationEnum.INVENTORY, testReceiver);
 
 		InventoryTO inventory1 = new InventoryTO();
 		inventory1.setArticleId("article1");
