@@ -32,6 +32,10 @@ public class PurchaseOrderBurnXPoints implements PointsRule {
 	public BigDecimal execute(OrderRequest request, OrderItemRequest itemRequest) {
 		return burnRatio.multiply(request.getAmount());
 	}
+	
+	public BigDecimal getBurnRatio(){
+		return burnRatio;
+	}
 
 	@Override
 	public boolean allowNext() {

@@ -19,6 +19,7 @@ import com.fb.commons.PlatformException;
 import com.fb.platform.payback.dao.PointsDao;
 import com.fb.platform.payback.model.PointsHeader;
 import com.fb.platform.payback.model.PointsItems;
+import com.fb.platform.payback.model.RollbackHeader;
 import com.fb.platform.payback.to.OrderItemRequest;
 
 public class PointsDaoJdbcImpl implements PointsDao {
@@ -75,6 +76,14 @@ public class PointsDaoJdbcImpl implements PointsDao {
 			+ "order_item_id, "
 			+ "earn_ratio, "
 			+ "burn_ratio) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	
+	private static final String ROLLBACK_POINTS_HEADER  = 
+			" DELETE FROM points_header WHERE " +
+			"id = ?";
+	
+	private static final String ROLLBACK_POINTS_ITEMS = 
+			"DELETE FROM points_items WHERE " +
+			"points_header_id = ?";
 
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
@@ -259,4 +268,17 @@ public class PointsDaoJdbcImpl implements PointsDao {
 		});
 
 	}
+	
+	@Override
+	public RollbackHeader rollbackTransaction(RollbackHeader header) {
+		logger.info("Deleting Points Items for Header ID : " + header.getHeaderId() );
+		int itemRows = jdbcTemplate.update(ROLLBACK_POINTS_ITEMS, new Object[]{header.getHeaderId()});
+		header.setItemRowsDeleted(itemRows);
+		
+		logger.info("Deleting Points Header with ID : " + header.getHeaderId());
+		int HeaderRows = jdbcTemplate.update(ROLLBACK_POINTS_HEADER, new Object[]{header.getHeaderId()});
+		header.setHeaderRowsDeleted(HeaderRows);
+		return header;
+	}
+	
 }

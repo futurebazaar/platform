@@ -9,14 +9,19 @@ import org.joda.time.DateTime;
 public class OrderRequest {
 
 	private long orderId;
+	private long pointsHeaderId;
 	private String referenceId;
 	private BigDecimal amount =  BigDecimal.ZERO;
+	private BigDecimal orderTotal =  BigDecimal.ZERO;
 	private String reason;
 	private List<OrderItemRequest> orderItemRequest = new ArrayList<OrderItemRequest>();
 	private String loyaltyCard;
 	private DateTime txnTimestamp;
 	private BigDecimal bonusPoints = BigDecimal.ZERO;
 	private BigDecimal txnPoints = BigDecimal.ZERO;
+	private BigDecimal pointsValue = BigDecimal.ZERO;
+	private String paymentMode;
+	private List<PaymentRequest> paymentRequest = new ArrayList<PaymentRequest>();
 	
 	public long getOrderId() {
 		return orderId;
@@ -71,5 +76,39 @@ public class OrderRequest {
 	}
 	public void setTxnPoints(BigDecimal txnPoints) {
 		this.txnPoints = txnPoints;
+	}
+	public long getPointsHeaderId() {
+		return pointsHeaderId;
+	}
+	public void setPointsHeaderId(long pointsHeaderId) {
+		this.pointsHeaderId = pointsHeaderId;
+	}
+	public BigDecimal getPointsValue() {
+		return pointsValue;
+	}
+	public void setPointsValue(BigDecimal pointsValue) {
+		this.pointsValue = pointsValue;
+	}
+	
+	public BigDecimal getTotalTxnPoints() {
+		return txnPoints.add(bonusPoints);
+	}
+	public String getPaymentMode() {
+		return paymentMode;
+	}
+	public void setPaymentMode(String paymentMode) {
+		this.paymentMode = paymentMode;
+	}
+	public List<PaymentRequest> getPaymentRequest() {
+		return paymentRequest;
+	}
+	public void setPaymentRequest(List<PaymentRequest> paymentRequest) {
+		this.paymentRequest = paymentRequest;
+	}
+	public BigDecimal getOrderTotal() {
+		return orderTotal;
+	}
+	public void setOrderTotal(BigDecimal orderTotal) {
+		this.orderTotal = orderTotal;
 	}
 }

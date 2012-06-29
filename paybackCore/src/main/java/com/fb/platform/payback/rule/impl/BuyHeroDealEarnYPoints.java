@@ -75,7 +75,7 @@ public class BuyHeroDealEarnYPoints implements PointsRule {
 			return false;
 		}
 
-		if (getHeroDealSellerRateChart(request	.getTxnTimestamp()).contains(itemRequest.getSellerRateChartId())) {
+		if (!getHeroDealSellerRateChart(request	.getTxnTimestamp()).contains(itemRequest.getSellerRateChartId())) {
 			return false;
 		}
 
