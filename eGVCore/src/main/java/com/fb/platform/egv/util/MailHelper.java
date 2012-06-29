@@ -39,13 +39,15 @@ public class MailHelper {
 	
 	public static String EGV_AMOUNT_MESSAGE_TEMPLATE_STR = "egv.amount";
 		
-	public static final String FROM = "orders@futuregroup.com";
+	public static final String FROM = "order@futuregroup.com";
 	
 	public static final String SUBJECT = "Congratulations! egv.sender sent you a Future Bazaar eGift Voucher";
 	
 	public static final String CC = "";
 	
 	public static final String BCC = "pm@futuregroup.com";
+	
+	public static final String FROM_NAME = "Future Bazaar";
 
 	/**
 	 * @param from The mail sender email address
@@ -69,6 +71,7 @@ public class MailHelper {
 		MailTO mail = new MailTO();
 		int intAmount = amount.intValue();
 		mail.setFrom(FROM);
+		mail.setFromPersonal(FROM_NAME);
 		//Set message using template		
 		String message = MESSAGE_TEMPLATE_STR.replaceAll(EGV_NUMBER_MESSAGE_TEMPLATE_STR,eGVNumber)
 				.replaceAll(EGV_PIN_MESSAGE_TEMPLATE_STR, eGVPin)
@@ -77,8 +80,8 @@ public class MailHelper {
 				.replaceAll(EGV_SENDER_MESSAGE_TEMPLATE_STR, senderName)
 				.replaceAll(EGV_RECEIVER_MESSAGE_TEMPLATE_STR, receiverName);
 		mail.setMessage(message);
-		mail.setSubject(SUBJECT.replaceAll(EGV_AMOUNT_MESSAGE_TEMPLATE_STR, String.valueOf(intAmount)).replaceAll(EGV_SENDER_MESSAGE_TEMPLATE_STR, senderName));
-		mail.setTo(new String[] { to });
+		mail.setSubject(SUBJECT.replaceAll(EGV_SENDER_MESSAGE_TEMPLATE_STR, senderName));
+		mail.setTo(new String[] { to });		
 //		mail.setCc(new String[] { CC });
 		mail.setBcc(new String[] {BCC });
 		mail.setHtmlText(true);

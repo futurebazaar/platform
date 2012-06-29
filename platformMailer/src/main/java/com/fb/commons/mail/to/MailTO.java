@@ -17,6 +17,7 @@ public class MailTO {
 	private String message;
 	private List<File> attachments = null;
 	private boolean isHtmlText = false;
+	private String fromPersonal;
 	
 	public String getFrom() {
 		return from;
@@ -71,6 +72,12 @@ public class MailTO {
 	}
 	public void setHtmlText(boolean isHtmlText) {
 		this.isHtmlText = isHtmlText;
+	}
+	public String getFromPersonal() {
+		return fromPersonal;
+	}
+	public void setFromPersonal(String fromPersonal) {
+		this.fromPersonal = fromPersonal;
 	}
 	
 }
