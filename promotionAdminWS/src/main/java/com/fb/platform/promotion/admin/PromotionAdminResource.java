@@ -71,11 +71,15 @@ import com.fb.platform.promotion.admin._1_0.ViewPromotionEnum;
 import com.fb.platform.promotion.admin._1_0.ViewPromotionRequest;
 import com.fb.platform.promotion.admin._1_0.ViewPromotionResponse;
 import com.fb.platform.promotion.admin.service.PromotionAdminManager;
+import com.fb.platform.promotion.admin.to.ScratchCardBasicDetails;
 import com.fb.platform.promotion.admin.to.SearchCouponOrderBy;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
 import com.fb.platform.promotion.admin.to.SortOrder;
 import com.fb.platform.promotion.to.AlphaNumericType;
 import com.fb.platform.promotion.to.AlphabetCase;
+import com.fb.platform.promotion.admin._1_0.SearchScratchCardRequest;
+import com.fb.platform.promotion.admin._1_0.SearchScratchCardResponse;
+import com.fb.platform.promotion.admin._1_0.SearchScratchCardStatus;
 
 /**
  * @author nehaga
@@ -775,5 +779,67 @@ public class PromotionAdminResource {
 		}
 		
 	}
+	
+	
+	@POST
+	@Path("/scratchcardsearch")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String searchScratchCard(String searchScratchCardXML) {
+		logger.info("searchScratchCardXML : " + searchScratchCardXML);
+		try {
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			//GregorianCalendar gregCal = new GregorianCalendar();
+		
+			SearchScratchCardRequest searchScratchCardRequest = (SearchScratchCardRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(searchScratchCardXML)));
+			com.fb.platform.promotion.admin.to.SearchScratchCardRequest apiSearchScratchCardRequest = new com.fb.platform.promotion.admin.to.SearchScratchCardRequest();
+			
+			apiSearchScratchCardRequest.setSessionToken(searchScratchCardRequest.getSessionToken());
+			apiSearchScratchCardRequest.setScratchCardNumber(searchScratchCardRequest.getScratchCardNumber());
+			
+			String inputScratchCardNumber = StringUtils.isBlank(searchScratchCardRequest.getScratchCardNumber()) ? null : searchScratchCardRequest.getScratchCardNumber().trim();
+			apiSearchScratchCardRequest.setScratchCardNumber(inputScratchCardNumber);
+			
+			SearchScratchCardResponse searchScratchCardResponse	= new SearchScratchCardResponse();
+			com.fb.platform.promotion.admin.to.SearchScratchCardResponse apiSearchPromotionResponse = promotionAdminManager.searchScratchCard(apiSearchScratchCardRequest);
+			
+			searchScratchCardResponse.setErrorCause(apiSearchPromotionResponse.getErrorCause());
+			searchScratchCardResponse.setSessionToken(apiSearchPromotionResponse.getSessionToken());
+			//searchScratchCardResponse.setSearchScratchCardStatus( SearchScratchCardStatus.valueOf(apiSearchPromotionResponse.getStatus().toString()) );
+			// searchScratchCardResponse.setTotalCount(apiSearchPromotionResponse.getTotalCount());
+			
+/*			if(searchScratchCardResponse.getSearchScratchCardStatus().equals(SearchScratchCardStatus.SUCCESS)) {
+				for(com.fb.platform.promotion.admin.to.ScratchCardBasicDetails apiScratchCardBasicDetails : apiSearchPromotionResponse.getScratchCardBasicDetailsList()) {
+					ScratchCardBasicDetails scratchCardBasicDetails = new ScratchCardBasicDetails();
+					scratchCardBasicDetails.setEmail(apiScratchCardBasicDetails.getEmail() );
+					scratchCardBasicDetails.setMobile(apiScratchCardBasicDetails.getMobile());
+
+					scratchCardBasicDetails.setScratchCardNumber(apiScratchCardBasicDetails.getScratchCardNumber() );
+					
+					scratchCardBasicDetails.setStore(apiScratchCardBasicDetails.getStore() );
+					
+					scratchCardBasicDetails.setUsedDate( apiScratchCardBasicDetails.getUsedDate() );
+					scratchCardBasicDetails.setUser( apiScratchCardBasicDetails.getUser() );
+					
+					
+					searchScratchCardResponse.getScratchCardBasicDetails().add(scratchCardBasicDetails);
+				}
+			} */
+			
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marshaller = context.createMarshaller();
+			marshaller.marshal(searchScratchCardResponse, outStringWriter);
+
+			String xmlResponse = outStringWriter.toString();
+			logger.info("searchCouponXML response :\n" + xmlResponse);
+			return xmlResponse; 
+			
+		} catch (JAXBException e) {
+			logger.error("Error in the searchCoupon call.", e);
+			return "searchCoupon error"; //TODO return proper error response
+		}  
+	} 
+	
+	
 
 }

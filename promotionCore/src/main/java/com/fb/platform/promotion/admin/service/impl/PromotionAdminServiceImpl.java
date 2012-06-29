@@ -26,15 +26,18 @@ import com.fb.platform.promotion.admin.to.SearchCouponResultBO;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
 import com.fb.platform.promotion.admin.to.SortOrder;
 import com.fb.platform.promotion.dao.RuleDao;
+import com.fb.platform.promotion.dao.ScratchCardDao;
 import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
 import com.fb.platform.promotion.model.coupon.CouponType;
+import com.fb.platform.promotion.model.scratchCard.ScratchCard;
 import com.fb.platform.promotion.rule.RulesEnum;
 import com.fb.platform.promotion.service.CouponAlreadyAssignedToUserException;
 import com.fb.platform.promotion.service.CouponNotFoundException;
 import com.fb.platform.promotion.service.InvalidCouponTypeException;
 import com.fb.platform.promotion.service.PromotionNotFoundException;
 import com.fb.platform.promotion.service.PromotionService;
+import com.fb.platform.promotion.service.ScratchCardNotFoundException;
 import com.fb.platform.promotion.to.AlphaNumericType;
 import com.fb.platform.promotion.to.AlphabetCase;
 import com.fb.platform.promotion.util.CouponCodeCreator;
@@ -56,6 +59,9 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 
 	@Autowired
 	private CouponAdminDao couponAdminDao = null;
+
+	@Autowired
+	private ScratchCardDao scratchCardDao = null;
 
 	@Autowired
 	private PromotionAdminDao promotionAdminDao = null;
@@ -349,6 +355,10 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 		this.userAdminDao = userAdminDao;
 	}
 	
+	public void setScratchCardDao(ScratchCardDao scratchCardDao) {
+		this.scratchCardDao = scratchCardDao;
+	}
+	
 	@Override
 	public void renamePromotionName(){
 		try{
@@ -367,5 +377,23 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 		}catch(Exception e){
 			log.error("Error while renaming promotionName = \n"+e);
 		}
+	}
+
+	@Override
+	public ScratchCard searchScratchCard(
+			String scratchCardNumber ) {
+				
+		try {
+			ScratchCard scratchCard = scratchCardDao.load(scratchCardNumber);
+			return scratchCard;
+			
+		} catch (ScratchCardNotFoundException e) {
+			log.info("No such Scratch Card found "+scratchCardNumber  , e);
+			throw new ScratchCardNotFoundException("No such Scratch Card found for Scratch Card No = "+scratchCardNumber , e);
+		} catch (Exception e) {
+			log.error("Error while searching coupon details for Scratch Card No = "+scratchCardNumber  , e);
+			throw new PlatformException("Error while searching coupon details for Scratch Card No = "+scratchCardNumber , e);
+		}
+		
 	}
 }

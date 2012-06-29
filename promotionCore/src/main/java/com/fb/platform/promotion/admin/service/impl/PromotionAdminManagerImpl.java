@@ -43,6 +43,9 @@ import com.fb.platform.promotion.admin.to.SearchCouponStatusEnum;
 import com.fb.platform.promotion.admin.to.SearchPromotionEnum;
 import com.fb.platform.promotion.admin.to.SearchPromotionRequest;
 import com.fb.platform.promotion.admin.to.SearchPromotionResponse;
+import com.fb.platform.promotion.admin.to.SearchScratchCardRequest;
+import com.fb.platform.promotion.admin.to.SearchScratchCardResponse;
+import com.fb.platform.promotion.admin.to.SearchScratchCardStatusEnum;
 import com.fb.platform.promotion.admin.to.UpdatePromotionEnum;
 import com.fb.platform.promotion.admin.to.UpdatePromotionRequest;
 import com.fb.platform.promotion.admin.to.UpdatePromotionResponse;
@@ -53,6 +56,7 @@ import com.fb.platform.promotion.admin.to.ViewPromotionEnum;
 import com.fb.platform.promotion.admin.to.ViewPromotionRequest;
 import com.fb.platform.promotion.admin.to.ViewPromotionResponse;
 import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
+import com.fb.platform.promotion.model.scratchCard.ScratchCard;
 import com.fb.platform.promotion.rule.RuleConfigDescriptor;
 import com.fb.platform.promotion.rule.RuleConfigDescriptorItem;
 import com.fb.platform.promotion.rule.RulesEnum;
@@ -62,6 +66,7 @@ import com.fb.platform.promotion.service.CouponNotFoundException;
 import com.fb.platform.promotion.service.InvalidAlphaNumericTypeException;
 import com.fb.platform.promotion.service.InvalidCouponTypeException;
 import com.fb.platform.promotion.service.PromotionNotFoundException;
+import com.fb.platform.promotion.service.ScratchCardNotFoundException;
 import com.fb.platform.promotion.util.MessageTranslatorUtility;
 import com.fb.platform.promotion.util.PromotionRuleFactory;
 import com.fb.platform.user.manager.exception.InvalidUserNameException;
@@ -594,5 +599,57 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 
 		return response;
 	}
+
+	@Override
+	public SearchScratchCardResponse searchScratchCard(
+			SearchScratchCardRequest searchScratchCardRequest) {
+		// TODO Auto-generated method stub
+
+	
+		
+		SearchScratchCardResponse response = new SearchScratchCardResponse();
+		if (searchScratchCardRequest == null) {
+			response.setStatus(SearchScratchCardStatusEnum.NO_SESSION);
+			return response;
+		}
+
+		response.setSessionToken(searchScratchCardRequest.getSessionToken());
+		String requestInvalidationList = searchScratchCardRequest.validate();
+		
+		if(StringUtils.isNotBlank(requestInvalidationList)) {
+			response.setStatus(SearchScratchCardStatusEnum.INSUFFICIENT_DATA);
+			response.setErrorCause(requestInvalidationList);
+			return response;
+		}
+
+		//authenticate the session token and find out the userId
+		AuthenticationTO authentication = authenticationService.authenticate(searchScratchCardRequest.getSessionToken());
+		if (authentication == null) {
+			//invalid session token
+			response.setStatus(SearchScratchCardStatusEnum.NO_SESSION);
+			return response;
+		}
+		
+		ScratchCard scratchCard = null;
+		try {
+			scratchCard = promotionAdminService.searchScratchCard(searchScratchCardRequest.getScratchCardNumber() );
+			response.setEmail(scratchCard.getEmail());
+			response.setMobile(scratchCard.getMobile());
+			response.setUsedDate(scratchCard.getUsedDate()) ;
+			response.setUser(scratchCard.getUser()) ;
+			response.setCardStatus( scratchCard.getCardStatus() );
+			
+		} catch (ScratchCardNotFoundException e) {
+			log.info("No such Scratch Card found "+ searchScratchCardRequest.getScratchCardNumber() , e);
+			response.setStatus(SearchScratchCardStatusEnum.NO_SCRATCH_CARD_FOUND);
+		} catch (InvalidUserNameException e) {
+			response.setStatus(SearchScratchCardStatusEnum.INVALID_USER);
+		} catch (Exception e) {
+			response.setStatus(SearchScratchCardStatusEnum.INTERNAL_ERROR);
+			
+		}
+		
+		return response;
+	} 
 
 }

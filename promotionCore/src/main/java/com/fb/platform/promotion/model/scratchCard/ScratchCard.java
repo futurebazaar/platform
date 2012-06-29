@@ -23,7 +23,11 @@ public class ScratchCard implements Serializable {
 	private String email = null;
 	private String name = null;
 	private DateTime timestamp = null;
-
+	private DateTime usedDate = null; 
+	private String user = null;
+	private String cardStatus = null;
+			
+		
 	public int getId() {
 		return id;
 	}
@@ -83,5 +87,23 @@ public class ScratchCard implements Serializable {
 	}
 	public void setUserId(int userId) {
 		this.userId = userId;
+	}
+	public DateTime getUsedDate() {
+		return usedDate;
+	}
+	public void setUsedDate(DateTime usedDate) {
+		this.usedDate = usedDate;
+	}
+	public String getUser() {
+		return user;
+	}
+	public void setUser(String user) {
+		this.user = user;
+	}
+	public String getCardStatus() {
+		return cardStatus;
+	}
+	public void setCardStatus(String cardStatus) {
+		this.cardStatus = cardStatus;
 	}
 }

@@ -14,6 +14,7 @@ import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
 import com.fb.platform.promotion.admin.to.SortOrder;
 import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
 import com.fb.platform.promotion.model.coupon.CouponType;
+import com.fb.platform.promotion.model.scratchCard.ScratchCard;
 import com.fb.platform.promotion.rule.RulesEnum;
 import com.fb.platform.promotion.to.AlphaNumericType;
 import com.fb.platform.promotion.to.AlphabetCase;
@@ -108,6 +109,8 @@ public interface PromotionAdminService {
 	public void assignCouponToUser(String couponCode, int userId, int overriddenUserLimit);
 	
 	public SearchCouponResultBO searchCoupons(String couponCode, String userName, SearchCouponOrderBy orderBy, SortOrder sortOrder, int startRecord, int batchSize);
+
+	public ScratchCard searchScratchCard(String scratchCardNumber );
 	
 	public CouponTO viewCoupons(String couponCode);
 	

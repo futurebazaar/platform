@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTime;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -39,7 +40,10 @@ public class ScratchCardDaoJdbcImpl implements ScratchCardDao {
 			"	scratch_card_no, " +
 			"	coupon_code, " +
 			"	status, " +
-			"	store " +
+			"	store ," +
+			"	used_date ,  " +
+			"	email ," +
+			"	mobile " +
 			"FROM promotions_scratchcard " +
 			"WHERE scratch_card_no = ?";
 
@@ -133,6 +137,13 @@ public class ScratchCardDaoJdbcImpl implements ScratchCardDao {
 			scratchCard.setId(rs.getInt("id"));
 			scratchCard.setCouponCode(rs.getString("coupon_code"));
 			scratchCard.setStore(rs.getString("store"));
+			scratchCard.setCardStatus( rs.getString("status"));
+			Timestamp usedOnTS = rs.getTimestamp("used_date");
+            if (usedOnTS != null) {
+            	scratchCard.setUsedDate(new DateTime(usedOnTS));
+            }
+
+			
 
 			return scratchCard;
 		}

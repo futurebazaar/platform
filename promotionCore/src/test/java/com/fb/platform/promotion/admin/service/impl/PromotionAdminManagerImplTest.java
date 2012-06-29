@@ -39,6 +39,8 @@ import com.fb.platform.promotion.admin.to.SearchPromotionEnum;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
 import com.fb.platform.promotion.admin.to.SearchPromotionRequest;
 import com.fb.platform.promotion.admin.to.SearchPromotionResponse;
+import com.fb.platform.promotion.admin.to.SearchScratchCardRequest;
+import com.fb.platform.promotion.admin.to.SearchScratchCardResponse;
 import com.fb.platform.promotion.admin.to.SortOrder;
 import com.fb.platform.promotion.admin.to.UpdatePromotionEnum;
 import com.fb.platform.promotion.admin.to.UpdatePromotionRequest;
@@ -884,6 +886,8 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		}
 	}
 	
+	
+	
 	@Test
 	public void testSearchPromotionValidFrom() {
 		SearchPromotionRequest searchPromotionRequest = new SearchPromotionRequest();
@@ -1433,6 +1437,23 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 	
 	public void setUserManager(UserManager userManager) {
 		this.userManager = userManager;
+	}
+
+	
+	
+	@Test 
+	public void testSearchScratchCard(){
+		SearchScratchCardRequest searchScratchCardRequest = new SearchScratchCardRequest();
+		
+		searchScratchCardRequest.setScratchCardNumber("NG2911BMJ");
+		searchScratchCardRequest.setSessionToken(responseUser.getSessionToken());
+		
+		SearchScratchCardResponse searchScratchCardResponse = promotionAdminManager.searchScratchCard(searchScratchCardRequest);
+		
+		searchScratchCardResponse = promotionAdminManager.searchScratchCard(searchScratchCardRequest);
+		assertEquals("active", searchScratchCardResponse.getCardStatus());
+		
+		
 	}
 	
 }
