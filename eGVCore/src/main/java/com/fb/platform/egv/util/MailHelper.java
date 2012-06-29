@@ -73,7 +73,7 @@ public class MailHelper {
 		String message = MESSAGE_TEMPLATE_STR.replaceAll(EGV_NUMBER_MESSAGE_TEMPLATE_STR,eGVNumber)
 				.replaceAll(EGV_PIN_MESSAGE_TEMPLATE_STR, eGVPin)
 				.replaceAll(EGV_AMOUNT_MESSAGE_TEMPLATE_STR, String.valueOf(intAmount))
-				.replaceAll(EGV_VALIDITY_MESSAGE_TEMPLATE_STR, date.getDayOfMonth() + "-" + date.monthOfYear().getAsShortText() + "-" + date.getYear())
+				.replaceAll(EGV_VALIDITY_MESSAGE_TEMPLATE_STR, date.getDayOfMonth() + " " + date.monthOfYear().getAsShortText() + ", " + date.getYear())
 				.replaceAll(EGV_SENDER_MESSAGE_TEMPLATE_STR, senderName)
 				.replaceAll(EGV_RECEIVER_MESSAGE_TEMPLATE_STR, receiverName);
 		mail.setMessage(message);
