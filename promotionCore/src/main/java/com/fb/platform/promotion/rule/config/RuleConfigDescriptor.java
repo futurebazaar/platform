@@ -1,21 +1,23 @@
-package com.fb.platform.promotion.rule;
+package com.fb.platform.promotion.rule.config;
 
 import java.util.List;
 
+import com.fb.platform.promotion.rule.RulesEnum;
+
 /**
- * @author nehaga
+ * @author keith
  *
  */
 public class RuleConfigDescriptor {
 	
-	private List<RuleConfigDescriptorItem> ruleConfigItemsList = null;
+	private List<RuleConfigItemDescriptor> ruleConfigItemsList = null;
 	private RulesEnum rulesEnum;
 	
-	public List<RuleConfigDescriptorItem> getRuleConfigItemsList() {
+	public List<RuleConfigItemDescriptor> getRuleConfigItemsList() {
 		return ruleConfigItemsList;
 	}
 	public void setRuleConfigItemsList(
-			List<RuleConfigDescriptorItem> ruleConfigItemsList) {
+			List<RuleConfigItemDescriptor> ruleConfigItemsList) {
 		this.ruleConfigItemsList = ruleConfigItemsList;
 	}
 	public RulesEnum getRulesEnum() {

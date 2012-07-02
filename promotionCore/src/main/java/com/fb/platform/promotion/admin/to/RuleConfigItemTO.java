@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 import com.fb.commons.to.PlatformMessage;
-import com.fb.platform.promotion.rule.RuleConfigDescriptorEnum;
+import com.fb.platform.promotion.rule.config.RuleConfigDescriptorEnum;
 import com.fb.platform.promotion.util.RuleValidatorUtils;
 import com.fb.platform.promotion.util.StringToIntegerList;
 

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.fb.platform.promotion.rule;
+package com.fb.platform.promotion.rule.config;
 
 import java.util.List;
 
@@ -65,4 +65,5 @@ public class RuleConfiguration {
 	public boolean isConfigItemPresent(String key){
 		return (getConfigItem(key) !=null);
 	}
+
 }

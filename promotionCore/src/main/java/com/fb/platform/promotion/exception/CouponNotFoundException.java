@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.fb.platform.promotion.service;
+package com.fb.platform.promotion.exception;
 
 import com.fb.commons.PlatformException;
 

@@ -49,8 +49,8 @@ import com.fb.platform.promotion.admin.to.ViewPromotionEnum;
 import com.fb.platform.promotion.admin.to.ViewPromotionRequest;
 import com.fb.platform.promotion.admin.to.ViewPromotionResponse;
 import com.fb.platform.promotion.model.coupon.CouponType;
-import com.fb.platform.promotion.rule.RuleConfigDescriptor;
 import com.fb.platform.promotion.rule.RulesEnum;
+import com.fb.platform.promotion.rule.config.RuleConfigDescriptor;
 import com.fb.platform.promotion.to.AlphaNumericType;
 import com.fb.platform.promotion.to.AlphabetCase;
 import com.fb.platform.user.manager.interfaces.UserManager;
@@ -94,11 +94,9 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 	private static int[] filterSearch = new int[] {-3001, -3002};
 	
 	private static List<RulesEnum> ruleList = new ArrayList<RulesEnum>() {{
-		add(RulesEnum.BUY_WORTH_X_GET_Y_RS_OFF_ON_Z_CATEGORY);
 		add(RulesEnum.BUY_WORTH_X_GET_Y_RS_OFF);
 		add(RulesEnum.BUY_WORTH_X_GET_Y_PERCENT_OFF);
 		add(RulesEnum.BUY_X_BRAND_GET_Y_RS_OFF_ON_Z_PRODUCT);
-		add(RulesEnum.BUY_WORTH_X_GET_Y_PERCENT_OFF_ON_Z_CATEGORY);
 		add(RulesEnum.FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF);
 		add(RulesEnum.BUY_X_GET_Y_FREE);
 		add(RulesEnum.BUY_X_QUANTITY_GET_VARIABLE_PERCENT_OFF);

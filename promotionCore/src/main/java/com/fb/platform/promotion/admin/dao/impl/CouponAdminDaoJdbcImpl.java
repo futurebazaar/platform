@@ -31,11 +31,11 @@ import com.fb.platform.promotion.admin.to.CouponBasicDetails;
 import com.fb.platform.promotion.admin.to.CouponTO;
 import com.fb.platform.promotion.admin.to.SearchCouponOrderBy;
 import com.fb.platform.promotion.admin.to.SortOrder;
+import com.fb.platform.promotion.exception.CouponAlreadyAssignedToUserException;
+import com.fb.platform.promotion.exception.CouponNotFoundException;
 import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
 import com.fb.platform.promotion.model.coupon.CouponType;
-import com.fb.platform.promotion.service.CouponAlreadyAssignedToUserException;
-import com.fb.platform.promotion.service.CouponNotFoundException;
 
 /**
  * @author vinayak

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.fb.platform.promotion.rule;
+package com.fb.platform.promotion.rule.config;
 
 import java.io.Serializable;
 
@@ -13,7 +13,6 @@ public class RuleConfigItem implements Serializable {
 
 	private String key;
 	private String value;
-	private String description;
 	
 	public RuleConfigItem(String key, String value) {
 		this.key = key;

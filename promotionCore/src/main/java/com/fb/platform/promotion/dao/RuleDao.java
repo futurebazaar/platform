@@ -6,8 +6,8 @@ package com.fb.platform.promotion.dao;
 import java.util.List;
 
 import com.fb.platform.promotion.rule.PromotionRule;
-import com.fb.platform.promotion.rule.RuleConfiguration;
 import com.fb.platform.promotion.rule.RulesEnum;
+import com.fb.platform.promotion.rule.config.RuleConfiguration;
 
 /**
  * @author vinayak
