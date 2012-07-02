@@ -61,15 +61,34 @@
 				</configuration>
 			</plugin>
 			<plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.3</version>
-        <configuration>
-          <descriptorRefs>
-            <descriptorRef>bin</descriptorRef>
-          </descriptorRefs>
-        </configuration>
+            	<artifactId>maven-assembly-plugin</artifactId>
+            	<version>2.3</version>
+            	<configuration>
+                	<archive>
+                    	<manifest>
+                        	<mainClass>com.fb.platform.sap.launcher.SapServerLauncher</mainClass>
+                    	</manifest>
+                	</archive>
+                	<descriptorRefs>
+                    	<descriptorRef>bin</descriptorRef>
+                	</descriptorRefs>
+            	</configuration>
+        	</plugin>
+                    <plugin>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <phase>install</phase>
+                                    <goals>
+                                        <goal>copy-dependencies</goal>
+                                    </goals>
+                                    <configuration>
+                                        <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                    </plugin>
 
-			</plugin>
 		</plugins>
 	</build>
 </project>
