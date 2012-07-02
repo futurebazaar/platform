@@ -19,6 +19,7 @@ public class InventoryTO implements Serializable {
 	private String receivingStorageLoc;
 	private String movementType;
 	private String quantity;
+	private String sellingUnit;
 	
 	public String getTransactionCode() {
 		return transactionCode;
@@ -56,12 +57,6 @@ public class InventoryTO implements Serializable {
 	public void setReceivingStorageLoc(String receivingStorageLoc) {
 		this.receivingStorageLoc = receivingStorageLoc;
 	}
-	public String getmovementType() {
-		return movementType;
-	}
-	public void setmovementType(String movementType) {
-		this.movementType = movementType;
-	}
 	public String getQuantity() {
 		return quantity;
 	}
@@ -69,6 +64,18 @@ public class InventoryTO implements Serializable {
 		this.quantity = quantity;
 	}
 	
+	public String getMovementType() {
+		return movementType;
+	}
+	public void setMovementType(String movementType) {
+		this.movementType = movementType;
+	}
+	public String getSellingUnit() {
+		return sellingUnit;
+	}
+	public void setSellingUnit(String sellingUnit) {
+		this.sellingUnit = sellingUnit;
+	}
 	@Override
 	public String toString() {
 		return "transactionCode:" + transactionCode
@@ -78,6 +85,7 @@ public class InventoryTO implements Serializable {
 				+ "\nissuingStorageLoc:" + issuingStorageLoc
 				+ "\nreceivingStorageLoc:" + receivingStorageLoc
 				+ "\nmovementType:"+ movementType
+				+ "\nsellingUnit:"+ sellingUnit
 				+ "\nquantity:" + quantity;
 		
 	}

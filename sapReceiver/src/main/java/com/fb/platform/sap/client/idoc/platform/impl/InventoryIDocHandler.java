@@ -65,13 +65,14 @@ public class InventoryIDocHandler implements PlatformIDocHandler {
 				inventoryTo.setArticleId(sapInventoryAck.getMATNR());
 				inventoryTo.setIssuingSite(sapInventoryAck.getRWERKS());
 				inventoryTo.setIssuingStorageLoc(sapInventoryAck.getRLGORT());
-				inventoryTo.setmovementType(sapInventoryAck.getBWART());
+				inventoryTo.setMovementType(sapInventoryAck.getBWART());
 				inventoryTo.setQuantity(sapInventoryAck.getTRNSFRQUAN());
 				inventoryTo.setReceivingSite(sapInventoryAck.getRWERKS());
 				inventoryTo.setReceivingStorageLoc(sapInventoryAck.getRLGORT());
 				inventoryTo.setTransactionCode(sapInventoryAck.getTCODE());
+				inventoryTo.setSellingUnit(sapInventoryAck.getMEINS());
 
-				logger.debug("Sending InventoryTO to Inventory destination");
+				logger.debug("Sending InventoryTO to Inventory destination : " + inventoryTo.toString());
 				momManager.send(PlatformDestinationEnum.INVENTORY, inventoryTo);
 			}
 		} catch (JAXBException e) {
