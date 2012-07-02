@@ -63,8 +63,8 @@ public class InventoryIDocHandler implements PlatformIDocHandler {
 			for (ZTINLASEGDLVR sapInventoryAck : sapInventoryAckList) {
 				InventoryTO inventoryTo = new InventoryTO();
 				inventoryTo.setArticleId(sapInventoryAck.getMATNR());
-				inventoryTo.setIssuingSite(sapInventoryAck.getRWERKS());
-				inventoryTo.setIssuingStorageLoc(sapInventoryAck.getRLGORT());
+				inventoryTo.setIssuingSite(sapInventoryAck.getIWERKS());
+				inventoryTo.setIssuingStorageLoc(sapInventoryAck.getILGORT());
 				inventoryTo.setMovementType(sapInventoryAck.getBWART());
 				inventoryTo.setQuantity(sapInventoryAck.getTRNSFRQUAN());
 				inventoryTo.setReceivingSite(sapInventoryAck.getRWERKS());
