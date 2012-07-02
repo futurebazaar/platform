@@ -113,6 +113,8 @@ public class WalletServiceImpl implements WalletService {
 		try{
 			WalletTransaction walletTransactionRes = new WalletTransaction();
 			Wallet wallet = load(userId,clientId,false);
+			// update expiry data for gifts prior to debiting the account
+			wallet = walletTransactionDao.updateGiftExpiry(wallet);
 			if(wallet.isSufficientFund(amount)){
 				com.fb.platform.wallet.model.WalletTransaction walletTransaction = wallet
 						.debit(amount, orderId);

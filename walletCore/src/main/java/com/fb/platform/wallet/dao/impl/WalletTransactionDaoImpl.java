@@ -391,8 +391,8 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 		return giftId;
 	}
 	
-	private void insertWalletGiftHistory(long subWalletId,long giftId , Money amount){
-		jdbcTemplate.update(INSERT_WALLET_GIFT_HISTORY,new Object[] {subWalletId,giftId,amount.getAmount()});
+	private void insertWalletGiftHistory(long subTransactionId,long giftId , Money amount){
+		jdbcTemplate.update(INSERT_WALLET_GIFT_HISTORY,new Object[] {giftId,subTransactionId,amount.getAmount()});
 	}
 	
 	private void updateWalletGiftAmount(long giftId, Money amount , boolean isExpiry){
@@ -403,16 +403,16 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 		}
 	}
 	
-	private void debitWalletGift(long walletId,long subWalletId,Money amount){
+	private void debitWalletGift(long walletId,long subTransactionId,Money amount){
 		Money amountToDebit = amount;
 		List<WalletGifts> walletGifts = jdbcTemplate.query(GET_WALLET_GIFT_WALLET_ID, new Object[]{walletId},new WalletGiftsMapper());
 		for(WalletGifts walletGift : walletGifts){
 			if(walletGift.getAmountRemaining().gteq(amountToDebit)){
-				insertWalletGiftHistory(subWalletId, walletGift.getGiftId(), amountToDebit.negate());
+				insertWalletGiftHistory(subTransactionId, walletGift.getGiftId(), amountToDebit.negate());
 				updateWalletGiftAmount(walletGift.getGiftId(), walletGift.getAmountRemaining().minus(amountToDebit),false);
 				amountToDebit = amountToDebit.minus(amountToDebit);
 			}else{
-				insertWalletGiftHistory(subWalletId, walletGift.getGiftId(), walletGift.getAmountRemaining().negate());
+				insertWalletGiftHistory(subTransactionId, walletGift.getGiftId(), walletGift.getAmountRemaining().negate());
 				updateWalletGiftAmount(walletGift.getGiftId(),new Money(new BigDecimal("0.00")),false);
 				amountToDebit = amountToDebit.minus(walletGift.getAmountRemaining());
 			}

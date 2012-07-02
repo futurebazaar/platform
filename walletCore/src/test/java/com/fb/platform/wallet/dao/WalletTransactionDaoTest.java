@@ -268,6 +268,7 @@ public class WalletTransactionDaoTest extends BaseTestCase {
 		assertEquals(new Money(new BigDecimal("0.00")) , wallet3.getGiftSubWallet());
 		assertEquals(new Money(new BigDecimal("0.00")) , wallet3.getCashSubWallet());
 		assertEquals(new Money(new BigDecimal("0.00")) , wallet3.getRefundSubWallet());
+		debitWalletTransaction.toString();
 		
 		String debitTranString = walletTransactionDao.insertTransaction(debitWalletTransaction);
 		Wallet wallet4 = walletDao.update(wallet3);
@@ -281,6 +282,7 @@ public class WalletTransactionDaoTest extends BaseTestCase {
 		Wallet wallet5  = walletDao.update(wallet4);
 		assertNotNull(transactionReversal);
 		assertNotNull(wallet5);
+		assertEquals(false,debitWalletTransaction.equals(debitWalletTranFetch));
 		assertEquals(new Money(new BigDecimal("500.00")) , wallet5.getTotalAmount());
 		assertEquals(new Money(new BigDecimal("100.00")) , wallet5.getGiftSubWallet());
 		assertEquals(new Money(new BigDecimal("200.00")) , wallet5.getRefundSubWallet());
