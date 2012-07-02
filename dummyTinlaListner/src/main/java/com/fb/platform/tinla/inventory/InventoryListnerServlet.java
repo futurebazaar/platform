@@ -34,6 +34,16 @@ public class InventoryListnerServlet extends HttpServlet {
 	    PrintWriter out = resp.getWriter();
 
 	    out.println("<title>Success</title>");
+	    log.info("====================== PARAMETERES ======================");
+	    log.info("transactioncode : " + req.getParameter("transactioncode"));
+	    log.info("articleid : " + req.getParameter("articleid"));
+	    log.info("issuingsite : " + req.getParameter("issuingsite"));
+	    log.info("receivingsite : " + req.getParameter("receivingsite"));
+	    log.info("issuingstorageloc : " + req.getParameter("issuingstorageloc"));
+	    log.info("receivingstorageloc : " + req.getParameter("receivingstorageloc"));
+	    log.info("movementtype : " + req.getParameter("movementtype"));
+	    log.info("sellingunit : " + req.getParameter("sellingunit"));
+	    log.info("quantity : " + req.getParameter("quantity"));
 
 	    out.close();
 	    log.info("Sent success response to inventoryReceive module.");
