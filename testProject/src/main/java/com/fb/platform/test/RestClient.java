@@ -71,6 +71,8 @@ import com.fb.platform.promotion.admin._1_0.ViewCouponRequest;
 import com.fb.platform.promotion.admin._1_0.ViewCouponResponse;
 import com.fb.platform.promotion.admin._1_0.ViewPromotionRequest;
 import com.fb.platform.promotion.admin._1_0.ViewPromotionResponse;
+import com.fb.platform.promotion.admin.to.SearchScratchCardRequest;
+import com.fb.platform.promotion.admin.to.SearchScratchCardResponse;
 /**
  * @author vinayak
  *
@@ -79,7 +81,7 @@ public class RestClient {
 	
 	private static String QAURL = "http://10.0.102.21:8082/";
 	
-	private static String localhost = "http://localhost:8082/";
+	private static String localhost = "http://localhost:8080/";
 	
 	private static String url = localhost;
 
@@ -106,6 +108,10 @@ public class RestClient {
 		searchCoupon(sessionToken);
 		viewCoupon(sessionToken);
 		createCoupon(sessionToken);
+		
+		System.out.println("=============Test Search scartch card =============");
+		searchScratchCard(sessionToken);
+		System.out.println("=============Test Search scartch card Ends =============");
 		logout(sessionToken);
 	}
 
@@ -841,4 +847,43 @@ public class RestClient {
 		CreateCouponResponse response = (CreateCouponResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(responseStr)));
 		System.out.println(response.getCreateCouponStatus());
 	}
+
+
+	private static void searchScratchCard(String sessionToken) throws Exception {
+		HttpClient httpClient = new HttpClient();
+
+		PostMethod postMethod = new PostMethod(url + "promotionAdminWS/promotionAdmin/scratchCard/search");
+
+		SearchScratchCardRequest request = new SearchScratchCardRequest();
+		request.setScratchCardNumber("NG2911BMJ");
+		
+		request.setSessionToken(sessionToken);
+		//request.setSearchCouponOrderBy(SearchCouponOrderBy.COUPON_CODE);
+		//request.setSortOrder(SortOrder.ASCENDING);
+
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
+
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(request, sw);
+
+		System.out.println("\n http://localhost:8080/promotionAdminWS/promotionAdmin/scratchCard/search");
+		System.out.println("\n\n searchScratchCardRequest : \n" + sw.toString());
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		postMethod.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(postMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the searchScratchCard method : " + statusCode);
+			System.exit(1);
+		}
+		String responseStr = postMethod.getResponseBodyAsString();
+		System.out.println("Got the searchScratchCard Response : \n\n" + responseStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		SearchScratchCardResponse response = (SearchScratchCardResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(responseStr)));
+		System.out.println(response.getStatus());
+
+	}
+
 }

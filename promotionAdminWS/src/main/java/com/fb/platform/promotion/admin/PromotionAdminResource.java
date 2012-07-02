@@ -97,6 +97,10 @@ public class PromotionAdminResource {
 	@Autowired
 	private PromotionAdminManager promotionAdminManager = null;
 	
+	public void setPromotionAdminManager(PromotionAdminManager promotionAdminManager) {
+		this.promotionAdminManager = promotionAdminManager;
+	}
+	
 	private static JAXBContext initContext() {
 		try {
 			return JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
@@ -780,14 +784,13 @@ public class PromotionAdminResource {
 	
 	
 	@POST
-	@Path("/scratchcardsearch")
+	@Path("/scratchCard/search")
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String searchScratchCard(String searchScratchCardXML) {
 		logger.info("searchScratchCardXML : " + searchScratchCardXML);
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
-			//GregorianCalendar gregCal = new GregorianCalendar();
 		
 			SearchScratchCardRequest searchScratchCardRequest = (SearchScratchCardRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(searchScratchCardXML)));
 			com.fb.platform.promotion.admin.to.SearchScratchCardRequest apiSearchScratchCardRequest = new com.fb.platform.promotion.admin.to.SearchScratchCardRequest();
@@ -803,27 +806,6 @@ public class PromotionAdminResource {
 			
 			searchScratchCardResponse.setErrorCause(apiSearchPromotionResponse.getErrorCause());
 			searchScratchCardResponse.setSessionToken(apiSearchPromotionResponse.getSessionToken());
-			//searchScratchCardResponse.setSearchScratchCardStatus( SearchScratchCardStatus.valueOf(apiSearchPromotionResponse.getStatus().toString()) );
-			// searchScratchCardResponse.setTotalCount(apiSearchPromotionResponse.getTotalCount());
-			
-/*			if(searchScratchCardResponse.getSearchScratchCardStatus().equals(SearchScratchCardStatus.SUCCESS)) {
-				for(com.fb.platform.promotion.admin.to.ScratchCardBasicDetails apiScratchCardBasicDetails : apiSearchPromotionResponse.getScratchCardBasicDetailsList()) {
-					ScratchCardBasicDetails scratchCardBasicDetails = new ScratchCardBasicDetails();
-					scratchCardBasicDetails.setEmail(apiScratchCardBasicDetails.getEmail() );
-					scratchCardBasicDetails.setMobile(apiScratchCardBasicDetails.getMobile());
-
-					scratchCardBasicDetails.setScratchCardNumber(apiScratchCardBasicDetails.getScratchCardNumber() );
-					
-					scratchCardBasicDetails.setStore(apiScratchCardBasicDetails.getStore() );
-					
-					scratchCardBasicDetails.setUsedDate( apiScratchCardBasicDetails.getUsedDate() );
-					scratchCardBasicDetails.setUser( apiScratchCardBasicDetails.getUser() );
-					
-					
-					searchScratchCardResponse.getScratchCardBasicDetails().add(scratchCardBasicDetails);
-				}
-			} */
-			
 			StringWriter outStringWriter = new StringWriter();
 			Marshaller marshaller = context.createMarshaller();
 			marshaller.marshal(searchScratchCardResponse, outStringWriter);

@@ -41,6 +41,7 @@ import com.fb.platform.promotion.admin.to.SearchPromotionRequest;
 import com.fb.platform.promotion.admin.to.SearchPromotionResponse;
 import com.fb.platform.promotion.admin.to.SearchScratchCardRequest;
 import com.fb.platform.promotion.admin.to.SearchScratchCardResponse;
+import com.fb.platform.promotion.admin.to.SearchScratchCardStatusEnum;
 import com.fb.platform.promotion.admin.to.SortOrder;
 import com.fb.platform.promotion.admin.to.UpdatePromotionEnum;
 import com.fb.platform.promotion.admin.to.UpdatePromotionRequest;
@@ -1453,6 +1454,49 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchScratchCardResponse = promotionAdminManager.searchScratchCard(searchScratchCardRequest);
 		assertEquals("active", searchScratchCardResponse.getCardStatus());
 		
+		
+	}
+	
+	@Test 
+	public void testSearchScratchCardNullRequest(){
+		SearchScratchCardRequest searchScratchCardRequest = new SearchScratchCardRequest();
+		
+		//searchScratchCardRequest.setScratchCardNumber(null);
+		//searchScratchCardRequest.setSessionToken(responseUser.getSessionToken());
+		
+		SearchScratchCardResponse searchScratchCardResponse = promotionAdminManager.searchScratchCard(null);
+		
+		searchScratchCardResponse = promotionAdminManager.searchScratchCard(searchScratchCardRequest);
+		assertEquals(SearchScratchCardStatusEnum.INSUFFICIENT_DATA , searchScratchCardResponse.getStatus());
+		
+		
+	}
+
+	@Test 
+	public void testSearchScratchCardInvalidRequest(){
+		SearchScratchCardRequest searchScratchCardRequest = new SearchScratchCardRequest();
+		
+		searchScratchCardRequest.setScratchCardNumber("TEST");
+		searchScratchCardRequest.setSessionToken(responseUser.getSessionToken());
+		
+		SearchScratchCardResponse searchScratchCardResponse = promotionAdminManager.searchScratchCard(searchScratchCardRequest);
+		
+		searchScratchCardResponse = promotionAdminManager.searchScratchCard(searchScratchCardRequest);
+		assertEquals(SearchScratchCardStatusEnum.NO_SCRATCH_CARD_FOUND , searchScratchCardResponse.getStatus());
+		
+	}
+
+	@Test 
+	public void testSearchScratchCardInvalidUserRequest(){
+		SearchScratchCardRequest searchScratchCardRequest = new SearchScratchCardRequest();
+		
+		searchScratchCardRequest.setScratchCardNumber("NG2911BMJ");
+		searchScratchCardRequest.setSessionToken("test");
+		
+		SearchScratchCardResponse searchScratchCardResponse = promotionAdminManager.searchScratchCard(searchScratchCardRequest);
+		
+		searchScratchCardResponse = promotionAdminManager.searchScratchCard(searchScratchCardRequest);
+		assertEquals(SearchScratchCardStatusEnum.NO_SESSION , searchScratchCardResponse.getStatus());
 		
 	}
 	
