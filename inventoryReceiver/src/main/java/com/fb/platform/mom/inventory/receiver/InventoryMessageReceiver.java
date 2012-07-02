@@ -5,11 +5,14 @@ package com.fb.platform.mom.inventory.receiver;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.logging.Log;
@@ -59,8 +62,19 @@ public class InventoryMessageReceiver implements PlatformMessageReceiver {
 		
 		HttpClient httpClient = new HttpClient();
 		PostMethod inventoryAckMethod = new PostMethod(inventoryURL);
-		StringRequestEntity requestEntity = new StringRequestEntity(inventoryTO.toString());
-		inventoryAckMethod.setRequestEntity(requestEntity);
+		
+		NameValuePair[] parameters = {new NameValuePair("transactioncode", inventoryTO.getTransactionCode()),
+				new NameValuePair("articleid", inventoryTO.getArticleId()),
+				new NameValuePair("issuingsite", inventoryTO.getIssuingSite()),
+				new NameValuePair("receivingsite", inventoryTO.getReceivingSite()),
+				new NameValuePair("issuingstorageloc", inventoryTO.getIssuingStorageLoc()),
+				new NameValuePair("receivingstorageloc", inventoryTO.getReceivingStorageLoc()),
+				new NameValuePair("movementtype", inventoryTO.getMovementType()),
+				new NameValuePair("sellingunit", inventoryTO.getSellingUnit()),
+				new NameValuePair("quantity", inventoryTO.getQuantity())};
+		
+		inventoryAckMethod.setRequestBody(parameters);
+		
 		int statusCode;
 		try {
 			statusCode = httpClient.executeMethod(inventoryAckMethod);
