@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.platform.mom.manager.MomManager;
+import com.fb.platform.sap.client.idoc.platform.impl.DefaultIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.impl.InventoryIDocHandler;
 
 /**
@@ -37,7 +38,7 @@ public class PlatformIDocHandlerFactory {
 			return inventoryIDocHandler;
 		}
 		logger.error("No Handler is configured for idocType : " + idocType + ", returning null");
-		return null;
+		return new DefaultIDocHandler();
 	}
 
 	public void setMomManager(MomManager momManager) {
