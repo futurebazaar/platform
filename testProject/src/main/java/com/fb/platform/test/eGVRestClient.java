@@ -52,19 +52,21 @@ public class eGVRestClient {
 	public static void main(String[] args) throws Exception {
 		//test login
 		String sessionToken = login();
-		String gvNumber="34989761072";
+		String gvNumber="70679923845";
 		String gvPin="12345";
 		String mail="keith.fernandez@futuregroup.in";
+		String senderName="Keith";
+		String receiverName="FB.com";
 		BigDecimal amount = new BigDecimal(1000);
 		int orderItemId = -1;
 		int orderId=-1;
 		pingGV();
 		xsdDisplayGV();
-//		createGV(sessionToken, mail, amount, orderItemId);
-//		getInfoGV(sessionToken, gvNumber);
-//		applyGV(sessionToken, gvNumber, gvPin);
-//		useGV(sessionToken, gvNumber,amount,orderId);
-//		cancelGV(sessionToken, gvNumber);
+		createGV(sessionToken, mail, amount, orderItemId,senderName,receiverName);
+		getInfoGV(sessionToken, gvNumber);
+		applyGV(sessionToken, gvNumber, gvPin);
+		useGV(sessionToken, gvNumber,amount,orderId);
+		cancelGV(sessionToken, gvNumber);
 		logout(sessionToken);
 	}
 
@@ -187,7 +189,7 @@ public class eGVRestClient {
 		
 	}
 
-	private static void createGV(String sessionToken, String mail, BigDecimal amount, int orderItemId) throws Exception {
+	private static void createGV(String sessionToken, String mail, BigDecimal amount, int orderItemId, String senderName, String receiverName) throws Exception {
 		HttpClient httpClient = new HttpClient();
 		String url = EGV_URL + "/create";
 		PostMethod postMethod = new PostMethod(url);
@@ -197,6 +199,8 @@ public class eGVRestClient {
 		createRequest.setAmount(amount);
 		createRequest.setOrderItemId(orderItemId);
 		createRequest.setSessionToken(sessionToken);
+//		createRequest.setSenderName(senderName);
+//		createRequest.setReceiverName(receiverName);
 
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.egv._1_0");
 

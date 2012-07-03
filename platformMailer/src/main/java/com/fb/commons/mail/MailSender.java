@@ -56,7 +56,12 @@ public class MailSender {
             	if(StringUtils.isBlank(mailTO.getFrom())) {
             		throw new MailNoSenderException("Mail should have a sender.");
             	}
-            	helper.setFrom(mailTO.getFrom());
+            	if(mailTO.getFromPersonal()!=null) {
+            		helper.setFrom(mailTO.getFrom(),mailTO.getFromPersonal());
+            	}
+            	else {
+            		helper.setFrom(mailTO.getFrom());
+            	}
             	helper.setSubject(mailTO.getSubject());
             	helper.setText(mailTO.getMessage(),mailTO.isHtmlText());
             	if(mailTO.getAttachments() != null) {
