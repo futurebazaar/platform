@@ -26,6 +26,8 @@ public class MockInventorySapServer {
 	private static Log logger = LogFactory.getLog(MockInventorySapServer.class);
 
 	private static String INVENTORY_IDOC_0 = null;
+	private static String INVENTORY_IDOC_1 = null;
+	private static String INVENTORY_IDOC_2 = null;
 	static {
 		InputStream inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ztinla_idoctype1.xml");
 		StringWriter sw = new StringWriter();
@@ -36,6 +38,27 @@ public class MockInventorySapServer {
 			e.printStackTrace();
 		}
 		INVENTORY_IDOC_0 = sw.toString();
+
+		inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ztinla_idoctype2.xml");
+		sw = new StringWriter();
+		try {
+			IOUtils.copy(inputStream, sw);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		INVENTORY_IDOC_1 = sw.toString();
+
+		inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ztinla_idoctype3.xml");
+		sw = new StringWriter();
+		try {
+			IOUtils.copy(inputStream, sw);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		INVENTORY_IDOC_2 = sw.toString();
+
 	}
 	/**
 	 * @param args
@@ -50,13 +73,19 @@ public class MockInventorySapServer {
 
 		int count = 0;
 		while (true) {
-			platformIDocHandler.handle(INVENTORY_IDOC_0);
-			logger.info("sent the inventory message. sleeping for 5 seconds");
+			if (count == 0) {
+				platformIDocHandler.handle(INVENTORY_IDOC_0);
+			} else if (count == 1) {
+				platformIDocHandler.handle(INVENTORY_IDOC_2);
+			} else {
+				platformIDocHandler.handle(INVENTORY_IDOC_1);
+			}
+			logger.info("sent the inventory message. sleeping for 15 seconds");
 			count ++;
-			if (count > 10) {
+			if (count > 2) {
 				break;
 			}
-			Thread.sleep(5000);
+			Thread.sleep(20000);
 		}
 	}
 }

@@ -70,10 +70,18 @@
                     	</manifest>
                 	</archive>
                 	<descriptorRefs>
-                    	<descriptorRef>bin</descriptorRef>
+                    	<descriptorRef>jar-with-dependencies</descriptorRef>
                 	</descriptorRefs>
             	</configuration>
-        	</plugin>
+<!--                 <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+ -->        	</plugin>
                     <plugin>
                         <artifactId>maven-dependency-plugin</artifactId>
                             <executions>
@@ -81,9 +89,12 @@
                                     <phase>install</phase>
                                     <goals>
                                         <goal>copy-dependencies</goal>
+                                        <goal>build-classpath</goal>
                                     </goals>
                                     <configuration>
-                                        <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                                        <outputDirectory>${project.build.directory}/dependency</outputDirectory>
+                                        <useRepositoryLayout>true</useRepositoryLayout>
+                                        <outputFile>${project.build.directory}/cp.txt</outputFile>
                                     </configuration>
                                 </execution>
                             </executions>

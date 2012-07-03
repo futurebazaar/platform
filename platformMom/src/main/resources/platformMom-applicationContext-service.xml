@@ -59,7 +59,7 @@
             <ref bean="jndiTemplate"/>
         </property>
         <property name="jndiName">
-            <value>ConnectionFactory</value>
+            <value>XAConnectionFactory</value>
         </property>
     </bean>
 
@@ -82,6 +82,7 @@
 		<property name="destination" ref="inventoryDestination"/>
 		<property name="messageListener" ref="inventoryListener" />
 		<property name="autoStartup" value="false"/>
+		<property name="sessionTransacted" value="true"/>
 	</bean>
 
 	<bean id="inventorySender" class="com.fb.platform.mom.receiver.inventory.InventorySenderImpl">
