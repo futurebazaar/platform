@@ -18,9 +18,7 @@ public class LauncherBootstrap {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		ApplicationContext appContext = new ClassPathXmlApplicationContext("launcher-applicationContext-dao.xml",
-				"launcher-applicationContext-resources.xml",
-				"launcher-applicationContext-service.xml");
+		ApplicationContext appContext = new ClassPathXmlApplicationContext("launcher-applicationContext-service.xml", "platformMom-applicationContext-resources.xml", "platformMom-applicationContext-service.xml");
 		System.out.println("Start");
 		ReceiverManager inventoryManager = (ReceiverManager) appContext.getBean("inventoryManager");
 		inventoryManager.start();

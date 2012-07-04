@@ -285,6 +285,10 @@
 			        <groupId>org.springframework</groupId>
 			        <artifactId>spring-context</artifactId>
 			    </exclusion>
+			    <exclusion>
+			        <groupId>org.springframework</groupId>
+			        <artifactId>spring-aop</artifactId>
+			    </exclusion>
 			</exclusions>
         </dependency>
 		<dependency>
@@ -342,6 +346,12 @@
 		    <groupId>org.springframework.security</groupId>
 		    <artifactId>spring-security-core</artifactId>
 		    <version>${spring.security.version}</version>
+		    <exclusions>
+		    	<exclusion>
+		    		<groupId>org.springframework</groupId>
+		    		<artifactId>spring-expression</artifactId>
+		    	</exclusion>
+		    </exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>

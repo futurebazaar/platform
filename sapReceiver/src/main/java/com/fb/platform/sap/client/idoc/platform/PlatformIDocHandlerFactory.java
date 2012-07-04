@@ -37,7 +37,7 @@ public class PlatformIDocHandlerFactory {
 		if (idocType.equals(InventoryIDocHandler.INVENTORY_IDOC_TYPE)) {
 			return inventoryIDocHandler;
 		}
-		logger.error("No Handler is configured for idocType : " + idocType + ", returning null");
+		logger.error("No Handler is configured for idocType : " + idocType + ", returning default handler.");
 		return new DefaultIDocHandler();
 	}
 
