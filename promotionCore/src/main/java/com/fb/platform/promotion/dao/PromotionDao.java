@@ -29,4 +29,6 @@ public interface PromotionDao {
 	public boolean isPromotionApplicable(int promotionId, int userId, int orderId);
 	
 	public UserPromotionUsesEntry load(int promotionId, int userId, int orderId);
+
+	public boolean isNoOfTimesInMonth(int userId);
 }
