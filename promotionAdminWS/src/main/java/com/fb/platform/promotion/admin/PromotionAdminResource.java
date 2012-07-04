@@ -63,6 +63,7 @@ import com.fb.platform.promotion.admin._1_0.SearchPromotionRequest;
 import com.fb.platform.promotion.admin._1_0.SearchPromotionResponse;
 import com.fb.platform.promotion.admin._1_0.SearchScratchCardRequest;
 import com.fb.platform.promotion.admin._1_0.SearchScratchCardResponse;
+import com.fb.platform.promotion.admin._1_0.SearchScratchCardStatusEnum;
 import com.fb.platform.promotion.admin._1_0.UpdatePromotionEnum;
 import com.fb.platform.promotion.admin._1_0.UpdatePromotionRequest;
 import com.fb.platform.promotion.admin._1_0.UpdatePromotionResponse;
@@ -791,6 +792,7 @@ public class PromotionAdminResource {
 		logger.info("searchScratchCardXML : " + searchScratchCardXML);
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
+			GregorianCalendar gregCal = new GregorianCalendar();
 		
 			SearchScratchCardRequest searchScratchCardRequest = (SearchScratchCardRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(searchScratchCardXML)));
 			com.fb.platform.promotion.admin.to.SearchScratchCardRequest apiSearchScratchCardRequest = new com.fb.platform.promotion.admin.to.SearchScratchCardRequest();
@@ -806,6 +808,17 @@ public class PromotionAdminResource {
 			
 			searchScratchCardResponse.setErrorCause(apiSearchPromotionResponse.getErrorCause());
 			searchScratchCardResponse.setSessionToken(apiSearchPromotionResponse.getSessionToken());
+			
+			searchScratchCardResponse.setEmail(apiSearchPromotionResponse.getEmail());
+			searchScratchCardResponse.setMobile(apiSearchPromotionResponse.getMobile()) ;
+			searchScratchCardResponse.setScratchCardNumber(apiSearchPromotionResponse.getScratchCardNumber()) ;
+			searchScratchCardResponse.setClaimStatus ( apiSearchPromotionResponse.getCardStatus()  ) ;
+			searchScratchCardResponse.setUsedDate(apiSearchPromotionResponse.getUsedDate()) ;
+			searchScratchCardResponse.setSearchScratchCardStatusEnum(SearchScratchCardStatusEnum.SUCCESS );
+			searchScratchCardResponse.setUserId(apiSearchPromotionResponse.getUserId());
+			//searchScratchCardResponse.setSearchScratchCardStatus( )
+			//searchScratchCardResponse.set ( apiSearchPromotionResponse.getCardStatus()  ) ;		
+			
 			StringWriter outStringWriter = new StringWriter();
 			Marshaller marshaller = context.createMarshaller();
 			marshaller.marshal(searchScratchCardResponse, outStringWriter);

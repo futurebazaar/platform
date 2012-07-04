@@ -52,6 +52,7 @@ import com.fb.platform.promotion.admin._1_0.CouponType;
 import com.fb.platform.promotion.admin._1_0.CreateCouponRequest;
 import com.fb.platform.promotion.admin._1_0.CreateCouponResponse;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionRequest;
+import com.fb.platform.promotion.admin._1_0.*;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionResponse;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionTO;
 import com.fb.platform.promotion.admin._1_0.FetchRuleRequest;
@@ -71,8 +72,6 @@ import com.fb.platform.promotion.admin._1_0.ViewCouponRequest;
 import com.fb.platform.promotion.admin._1_0.ViewCouponResponse;
 import com.fb.platform.promotion.admin._1_0.ViewPromotionRequest;
 import com.fb.platform.promotion.admin._1_0.ViewPromotionResponse;
-import com.fb.platform.promotion.admin.to.SearchScratchCardRequest;
-import com.fb.platform.promotion.admin.to.SearchScratchCardResponse;
 /**
  * @author vinayak
  *
@@ -92,26 +91,23 @@ public class RestClient {
 		//test login
 		String sessionToken = login();
 		//String username = getUser(sessionToken);
-		int orderId = RandomUtils.nextInt();
-		BigDecimal discountValue = applyCoupon(sessionToken, orderId, "GlobalCoupon1000Off");
-		commitCouupon(sessionToken, orderId, discountValue);
-		releaseCoupon(sessionToken, orderId);
-		clearCoupon(sessionToken);
-		clearPromotion(sessionToken);
-		getAllPromotionRuleList(sessionToken);
-		createPromotion(sessionToken);
-		searchPromotion(sessionToken);
-		viewPromotion(sessionToken);
-		updatePromotion(sessionToken);
-		assignCouponToUser(sessionToken);
-		//applyCoupon(sessionToken, orderId, "preIssuedNoCouponUserEntry");
-		searchCoupon(sessionToken);
-		viewCoupon(sessionToken);
-		createCoupon(sessionToken);
-		
-		System.out.println("=============Test Search scartch card =============");
-		searchScratchCard(sessionToken);
-		System.out.println("=============Test Search scartch card Ends =============");
+//		int orderId = RandomUtils.nextInt();
+//		BigDecimal discountValue = applyCoupon(sessionToken, orderId, "GlobalCoupon1000Off");
+//		commitCouupon(sessionToken, orderId, discountValue);
+//		releaseCoupon(sessionToken, orderId);
+//		clearCoupon(sessionToken);
+//		clearPromotion(sessionToken);
+//		getAllPromotionRuleList(sessionToken);
+//		createPromotion(sessionToken);
+//		searchPromotion(sessionToken);
+//		viewPromotion(sessionToken);
+//		updatePromotion(sessionToken);
+//		assignCouponToUser(sessionToken);
+//		//applyCoupon(sessionToken, orderId, "preIssuedNoCouponUserEntry");
+//		searchCoupon(sessionToken);
+//		viewCoupon(sessionToken);
+//		createCoupon(sessionToken);
+		searchScratchCard(sessionToken,"BB000UGDC");
 		logout(sessionToken);
 	}
 
@@ -123,10 +119,10 @@ public class RestClient {
 		LoginRequest loginRequest = new LoginRequest();
 		//loginRequest.setUsername("9920694762");
 		//loginRequest.setPassword("test");
-		loginRequest.setUsername("neha.garani@gmail.com");
-		loginRequest.setPassword("testpass");
-//		loginRequest.setUsername("1010101010");
-//		loginRequest.setPassword("shagunankush");
+//		loginRequest.setUsername("neha.garani@gmail.com");
+//		loginRequest.setPassword("testpass");
+		loginRequest.setUsername("1010101010");
+		loginRequest.setPassword("shagun");
 
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.auth._1_0");
 		Marshaller marshaller = context.createMarshaller();
@@ -847,43 +843,76 @@ public class RestClient {
 		CreateCouponResponse response = (CreateCouponResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(responseStr)));
 		System.out.println(response.getCreateCouponStatus());
 	}
+	
+	private static void searchScratchCard(String sessionToken, String cardNumber) throws Exception {
+
+        HttpClient httpClient = new HttpClient();
 
 
-	private static void searchScratchCard(String sessionToken) throws Exception {
-		HttpClient httpClient = new HttpClient();
 
-		PostMethod postMethod = new PostMethod(url + "promotionAdminWS/promotionAdmin/scratchCard/search");
+        PostMethod postMethod = new PostMethod(url + "promotionAdminWS/promotionAdmin/scratchcardsearch");
 
-		SearchScratchCardRequest request = new SearchScratchCardRequest();
-		request.setScratchCardNumber("NG2911BMJ");
-		
-		request.setSessionToken(sessionToken);
-		//request.setSearchCouponOrderBy(SearchCouponOrderBy.COUPON_CODE);
-		//request.setSortOrder(SortOrder.ASCENDING);
 
-		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
 
-		Marshaller marshaller = context.createMarshaller();
-		StringWriter sw = new StringWriter();
-		marshaller.marshal(request, sw);
+        com.fb.platform.promotion.admin._1_0.SearchScratchCardRequest request = new com.fb.platform.promotion.admin._1_0.SearchScratchCardRequest();
 
-		System.out.println("\n http://localhost:8080/promotionAdminWS/promotionAdmin/scratchCard/search");
-		System.out.println("\n\n searchScratchCardRequest : \n" + sw.toString());
+        request.setScratchCardNumber(cardNumber);
 
-		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
-		postMethod.setRequestEntity(requestEntity);
+       
 
-		int statusCode = httpClient.executeMethod(postMethod);
-		if (statusCode != HttpStatus.SC_OK) {
-			System.out.println("unable to execute the searchScratchCard method : " + statusCode);
-			System.exit(1);
-		}
-		String responseStr = postMethod.getResponseBodyAsString();
-		System.out.println("Got the searchScratchCard Response : \n\n" + responseStr);
-		Unmarshaller unmarshaller = context.createUnmarshaller();
-		SearchScratchCardResponse response = (SearchScratchCardResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(responseStr)));
-		System.out.println(response.getStatus());
+        request.setSessionToken(sessionToken);
 
-	}
+        //request.setSearchCouponOrderBy(SearchCouponOrderBy.COUPON_CODE);
+
+        //request.setSortOrder(SortOrder.ASCENDING);
+
+
+
+        JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
+
+
+
+        Marshaller marshaller = context.createMarshaller();
+
+        StringWriter sw = new StringWriter();
+
+        marshaller.marshal(request, sw);
+
+
+
+        System.out.println("\n http://localhost:8080/promotionAdminWS/promotionAdmin/scratchCard/search");
+
+        System.out.println("\n\n searchScratchCardRequest : \n" + sw.toString());
+
+
+
+        StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+
+        postMethod.setRequestEntity(requestEntity);
+
+
+
+        int statusCode = httpClient.executeMethod(postMethod);
+
+        if (statusCode != HttpStatus.SC_OK) {
+
+               System.out.println("unable to execute the searchScratchCard method : " + statusCode);
+
+               System.exit(1);
+
+        }
+
+        String responseStr = postMethod.getResponseBodyAsString();
+
+        System.out.println("Got the searchScratchCard Response : \n\n" + responseStr);
+
+        Unmarshaller unmarshaller = context.createUnmarshaller();
+
+        com.fb.platform.promotion.admin._1_0.SearchScratchCardResponse response = (com.fb.platform.promotion.admin._1_0.SearchScratchCardResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(responseStr)));
+
+        System.out.println(response.getSearchScratchCardStatusEnum());
+
+ }
+
 
 }

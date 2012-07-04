@@ -381,10 +381,12 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 
 	@Override
 	public ScratchCard searchScratchCard(
-			String scratchCardNumber ) {
+			String scratchCardNumber ) throws ScratchCardNotFoundException {
 				
 		try {
 			ScratchCard scratchCard = scratchCardDao.load(scratchCardNumber);
+            System.out.println("In ServiceImpl : Found scratch card");
+            System.out.println(scratchCard.getCardNumber());
 			return scratchCard;
 			
 		} catch (ScratchCardNotFoundException e) {

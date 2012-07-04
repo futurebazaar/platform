@@ -633,11 +633,17 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		ScratchCard scratchCard = null;
 		try {
 			scratchCard = promotionAdminService.searchScratchCard(searchScratchCardRequest.getScratchCardNumber() );
+			response.setUserId(scratchCard.getUserId());
 			response.setEmail(scratchCard.getEmail());
 			response.setMobile(scratchCard.getMobile());
 			response.setUsedDate(scratchCard.getUsedDate()) ;
+			response.setStore(scratchCard.getStore());
+			response.setTimeStamp(scratchCard.getTimestamp());
+			response.setCouponCode(scratchCard.getCouponCode());
+			response.setScratchCardNumber(scratchCard.getCardNumber() );
 			response.setUser(scratchCard.getUser()) ;
 			response.setCardStatus( scratchCard.getCardStatus() );
+			response.setStatus(SearchScratchCardStatusEnum.SUCCESS );
 			
 		} catch (ScratchCardNotFoundException e) {
 			log.info("No such Scratch Card found "+ searchScratchCardRequest.getScratchCardNumber() , e);
