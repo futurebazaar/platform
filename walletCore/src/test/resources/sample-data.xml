@@ -258,7 +258,7 @@
 			<value>ABSCDFADF1231lp0bg2SASzcv</value>
 			<value>6</value>
 			<value>99</value>
-			<value>D</value>
+			<value>DEBIT</value>
 			<value>2011-04-18 20:42:57</value>
 		</row>
 		<row>
@@ -431,6 +431,57 @@
 			<value>1</value>
 			<value>8</value>
 			<value>-50</value>
+		</row>
+	</table>
+	<table name="wallets_refunds_credit_history">
+		<column>id</column>
+		<column>wallet_id</column>
+		<column>sub_transaction_id</column>
+		<column>amount</column>
+		<column>credit_date</column>
+		<column>amount_remaining</column>
+		<column>is_used</column>
+		<row>
+			<value>1</value>
+			<value>8</value>
+			<value>7</value>
+			<value>100.00</value>
+			<value>2012-07-01 16:42:57</value>
+			<value>100.00</value>
+			<value>0</value>
+		</row>
+		<row>
+			<value>2</value>
+			<value>8</value>
+			<value>10</value>
+			<value>200.00</value>
+			<value>2012-06-01 16:42:57</value>
+			<value>100.00</value>
+			<value>1</value>
+		</row>
+	</table>
+	<table name="wallets_refunds_debit_history">
+		<column>id</column>
+		<column>wallet_id</column>
+		<column>sub_transaction_id</column>
+		<column>amount</column>
+		<column>debit_date</column>
+		<column>refund_credit_id</column>
+		<row>
+			<value>1</value>
+			<value>8</value>
+			<value>11</value>
+			<value>50.00</value>
+			<value>2012-07-01 16:42:57</value>
+			<value>2</value>
+		</row>
+		<row>
+			<value>2</value>
+			<value>8</value>
+			<value>12</value>
+			<value>50.00</value>
+			<value>2012-07-01 20:42:57</value>
+			<value>2</value>
 		</row>
 	</table>
 </dataset>

@@ -14,12 +14,17 @@
 	</bean>
 
     <!-- Add new DAOs here -->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location">
+            <value>classpath:wallet.properties</value>
+        </property>
+    </bean>
     <bean id="walletDao" class="com.fb.platform.wallet.dao.impl.WalletDaoImpl">
-		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>		
 	</bean>
 	<bean id="walletTransactionDao" class="com.fb.platform.wallet.dao.impl.WalletTransactionDaoImpl">
 		<property name="walletDao" ref="walletDao"/>
-		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>		
 	</bean>
 
 </beans>

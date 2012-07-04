@@ -82,4 +82,31 @@ CREATE TABLE wallets_gifts_transaction_history
 	PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE wallets_refunds_credit_history
+(
+	id bigint NOT NULL AUTO_INCREMENT,
+	wallet_id bigint NOT NULL,
+	sub_transaction_id BIGINT NOT NULL,
+	amount decimal(18,2) NOT NULL,
+	credit_date DATETIME NOT NULL,
+	amount_remaining decimal(18,2) NOT NULL,
+	is_used bit NOT NULL DEFAULT 0,
+	CONSTRAINT wallets_refunds_credit_history_fk1 FOREIGN KEY (wallet_id) REFERENCES wallets_wallet(id), 
+	CONSTRAINT wallets_refunds_credit_history_fk2 FOREIGN KEY (sub_transaction_id) REFERENCES wallets_sub_transaction(id),
+	PRIMARY KEY(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE wallets_refunds_debit_history
+(
+	id bigint NOT NULL AUTO_INCREMENT,
+	wallet_id bigint NOT NULL,
+	sub_transaction_id BIGINT NOT NULL,
+	amount decimal(18,2) NOT NULL,
+	debit_date DATETIME NOT NULL,
+	refund_credit_id bigint NOT NULL,
+	CONSTRAINT wallets_refunds_debit_history_fk1 FOREIGN KEY (wallet_id) REFERENCES wallets_wallet(id), 
+	CONSTRAINT wallets_refunds_debit_history_fk2 FOREIGN KEY (sub_transaction_id) REFERENCES wallets_sub_transaction(id),
+	CONSTRAINT wallets_refunds_debit_history_fk3 FOREIGN KEY (refund_credit_id) REFERENCES wallets_refunds_credit_history(id),
+	PRIMARY KEY(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --  ***************WALLET RELATED TABLES END**************

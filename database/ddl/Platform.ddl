@@ -5,6 +5,8 @@ DROP TABLE IF EXISTS crypto_key;
 DROP TABLE IF EXISTS users_wallet;
 DROP TABLE IF EXISTS wallets_gifts_transaction_history;
 DROP TABLE IF EXISTS wallets_gifts;
+DROP TABLE IF EXISTS wallets_refunds_debit_history;
+DROP TABLE IF EXISTS wallets_refunds_credit_history;
 DROP TABLE IF EXISTS wallets_sub_transaction;
 DROP TABLE IF EXISTS wallets_transaction;
 DROP TABLE IF EXISTS payments_paymentattempt;
@@ -760,5 +762,31 @@ CREATE TABLE wallets_gifts_transaction_history
 -- CONSTRAINT wallets_gifts_transaction_history_fk1 FOREIGN KEY (gift_id) REFERENCES wallets_gifts(id),
 -- CONSTRAINT wallets_gifts_transaction_history_fk2 FOREIGN KEY (sub_transaction_id) REFERENCES wallets_sub_transaction(id),
 
+CREATE TABLE wallets_refunds_credit_history
+(
+	id bigint NOT NULL AUTO_INCREMENT,
+	wallet_id bigint NOT NULL,
+	sub_transaction_id BIGINT NOT NULL,
+	amount decimal(18,2) NOT NULL,
+	credit_date DATETIME NOT NULL,
+	amount_remaining decimal(18,2) NOT NULL,
+	is_used bit NOT NULL DEFAULT 0,
+	PRIMARY KEY(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- CONSTRAINT wallets_refunds_credit_history_fk1 FOREIGN KEY (wallet_id) REFERENCES wallets_wallet(id), 
+-- CONSTRAINT wallets_refunds_credit_history_fk2 FOREIGN KEY (sub_transaction_id) REFERENCES wallets_sub_transaction(id),
 
+CREATE TABLE wallets_refunds_debit_history
+(
+	id bigint NOT NULL AUTO_INCREMENT,
+	wallet_id bigint NOT NULL,
+	sub_transaction_id BIGINT NOT NULL,
+	amount decimal(18,2) NOT NULL,
+	debit_date DATETIME NOT NULL,
+	refund_credit_id bigint NOT NULL,
+	PRIMARY KEY(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- CONSTRAINT wallets_refunds_debit_history_fk1 FOREIGN KEY (wallet_id) REFERENCES wallets_wallet(id), 
+-- CONSTRAINT wallets_refunds_debit_history_fk2 FOREIGN KEY (sub_transaction_id) REFERENCES wallets_sub_transaction(id),
+-- CONSTRAINT wallets_refunds_debit_history_fk3 FOREIGN KEY (refund_credit_id) REFERENCES wallets_refunds_credit_history(id),
 --  ***************WALLET RELATED TABLES END**************

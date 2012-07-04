@@ -11,6 +11,11 @@ public class Wallet implements Serializable {
 	private Money cashSubWallet;
 	private Money giftSubWallet;
 	private Money refundSubWallet;
+	private Money refundableAmount;
+	private Money giftExpiryAmt1;
+	private DateTime giftExpiryDt1;
+	private Money giftExpiryAmt2;
+	private DateTime giftExpiryDt2;
 	private Money totalAmount;
 	private DateTime createdOn;
 	private DateTime modifiedOn;
@@ -306,6 +311,77 @@ public class Wallet implements Serializable {
 	 */
 	public void setTotalAmount(Money totalAmount) {
 		this.totalAmount = totalAmount;
+	}
+	
+
+	/**
+	 * @return the refundableAmount
+	 */
+	public Money getRefundableAmount() {
+		return refundableAmount;
+	}
+
+	/**
+	 * @param refundableAmount the refundableAmount to set
+	 */
+	public void setRefundableAmount(Money refundableAmount) {
+		this.refundableAmount = refundableAmount;
+	}
+
+	/**
+	 * @return the giftExpiryAmt1
+	 */
+	public Money getGiftExpiryAmt1() {
+		return giftExpiryAmt1;
+	}
+
+	/**
+	 * @param giftExpiryAmt1 the giftExpiryAmt1 to set
+	 */
+	public void setGiftExpiryAmt1(Money giftExpiryAmt1) {
+		this.giftExpiryAmt1 = giftExpiryAmt1;
+	}
+
+	/**
+	 * @return the giftExpiryDt1
+	 */
+	public DateTime getGiftExpiryDt1() {
+		return giftExpiryDt1;
+	}
+
+	/**
+	 * @param giftExpiryDt1 the giftExpiryDt1 to set
+	 */
+	public void setGiftExpiryDt1(DateTime giftExpiryDt1) {
+		this.giftExpiryDt1 = giftExpiryDt1;
+	}
+
+	/**
+	 * @return the giftExpiryAmt2
+	 */
+	public Money getGiftExpiryAmt2() {
+		return giftExpiryAmt2;
+	}
+
+	/**
+	 * @param giftExpiryAmt2 the giftExpiryAmt2 to set
+	 */
+	public void setGiftExpiryAmt2(Money giftExpiryAmt2) {
+		this.giftExpiryAmt2 = giftExpiryAmt2;
+	}
+
+	/**
+	 * @return the giftExpiryDt2
+	 */
+	public DateTime getGiftExpiryDt2() {
+		return giftExpiryDt2;
+	}
+
+	/**
+	 * @param giftExpiryDt2 the giftExpiryDt2 to set
+	 */
+	public void setGiftExpiryDt2(DateTime giftExpiryDt2) {
+		this.giftExpiryDt2 = giftExpiryDt2;
 	}
 
 	/* (non-Javadoc)

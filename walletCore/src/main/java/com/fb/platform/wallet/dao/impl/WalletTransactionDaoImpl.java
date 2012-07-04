@@ -1,11 +1,13 @@
 package com.fb.platform.wallet.dao.impl;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -146,12 +148,28 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			+ "(gift_id,sub_transaction_id,amount ) values "
 			+ "(?,?,?)";
 	
+	private final String INSERT_WALLET_REFUND_CREDIT = "Insert into wallets_refunds_credit_history "
+			+ "(wallet_id,sub_transaction_id,amount,credit_date,amount_remaining,is_used) values "
+			+ "(?,?,?,?,?,?)";
+	
+	private final String INSERT_WALLET_REFUND_DEBIT = "Insert into wallets_refunds_debit_history "
+			+ "(wallet_id,sub_transaction_id,amount,debit_date,refund_credit_id) values "
+			+ "(?,?,?,?,?)";
+	
+	private final String UPDATE_WALLET_REFUND_CREDIT = "Update wallets_refunds_credit_history "
+			+ "set amount_remaining = ? , is_used = 1 where id = ?" ;
+	
 	private final String GET_WALLET_GIFT_HISTORY_BY_SUB_TRANSACTION = "select  gift_id,sub_transaction_id,amount from wallets_gifts_transaction_history "
 			+ "where sub_transaction_id = ? ";
 		
 	private final String GET_WALLET_GIFT_WALLET_ID = "select  id,wallet_id,gift_code ,gift_expiry ,is_expired ,amount_remaining from wallets_gifts "
 			+ "where wallet_id = ? and is_expired = 0 and amount_remaining > 0 "
 			+ "order by gift_expiry";
+	
+	private final String GET_WALLET_REFUND_CREDIT_WALLET_ID = "select id,wallet_id,sub_transaction_id ,amount,credit_date ,amount_remaining,is_used "
+			+ "from wallets_refunds_credit_history "
+			+ "where wallet_id = ? and amount_remaining > 0 "
+			+ "order by credit_date";
 	
 	private final String GET_WALLET_GIFT_BY_ID = "select  id,wallet_id,gift_code ,gift_expiry ,is_expired ,amount_remaining from wallets_gifts "
 			+ "where id= ? ";
@@ -174,7 +192,7 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 					ps.setLong(2, walletTransaction.getWallet().getId());
 					ps.setBigDecimal(3, walletTransaction.getAmount().getAmount());
 					ps.setString(4, walletTransaction.getTransactionType().toString());
-					ps.setDate(5, new Date(walletTransaction.getTimeStamp().getMillis()));
+					ps.setTimestamp(5, new Timestamp(walletTransaction.getTimeStamp().getMillis()));
 					ps.setString(6, walletTransaction.getTransactionNote());
 					return ps;
 				}
@@ -199,21 +217,9 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 						return ps;
 					}
 				}, generatedKeyHolderSubTransaction);
-				if (walletSubTransaction.getSubWalletType().equals(SubWalletType.GIFT)){
-					if (walletTransaction.getTransactionType().equals(TransactionType.CREDIT)){
-						if (walletSubTransaction.getPaymentReversalId() == 0){
-							insertWalletGiftHistory(generatedKeyHolderSubTransaction.getKey().longValue(), walletSubTransaction.getGiftId(), walletSubTransaction.getAmount());
-						}else{
-							long subWalletIdToRevert = jdbcTemplate.queryForLong(GET_SUB_TRANSACTION_ID_BY_TRANSACTION_ID_AND_SUBWALLET_TYPE,new Object[]{walletSubTransaction.getPaymentReversalId(),SubWalletType.GIFT.toString()});
-							revertGiftBySubtransaction(walletSubTransaction.getAmount(),generatedKeyHolderSubTransaction.getKey().longValue(),subWalletIdToRevert);
-						}
-					}
-					else{
-						debitWalletGift(walletTransaction.getWallet().getId(),generatedKeyHolderSubTransaction.getKey().longValue(),walletSubTransaction.getAmount());
-					}
-				}
-			}
-			
+				walletSubTransaction.setId(generatedKeyHolderSubTransaction.getKey().longValue());
+				processSubTransaction(walletTransaction.getWallet().getId(),walletSubTransaction,walletTransaction.getTransactionType());
+			}			
 			return transactionUniqueId;
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -224,8 +230,8 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 	@Override
 	public List<WalletTransaction> walletHistory(Wallet wallet,DateTime fromDateTime, DateTime toDate) {
 		try {
-			Date fromdate = (fromDateTime != null) ? new Date(fromDateTime.getMillis()) : new Date(DateTime.now().minusYears(1).getMillis());
-			Date todate = toDate != null ? new Date(toDate.getMillis()) : new Date(DateTime.now().getMillis());
+			Timestamp fromdate = (fromDateTime != null) ? new Timestamp(fromDateTime.getMillis()) : new Timestamp(DateTime.now().minusYears(1).getMillis());
+			Timestamp todate = toDate != null ? new Timestamp(toDate.getMillis()) : new Timestamp(DateTime.now().getMillis());
 			List<WalletTransaction> walletTransactions = jdbcTemplate.query(GET_TRANSACTION_HISTORY,
 					new Object[]{wallet.getId(),fromdate,todate},
 					new WalletTransactionMapper());
@@ -267,7 +273,7 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			WalletTransaction walletTransaction = new WalletTransaction();
 			walletTransaction.setId(rs.getLong("id"));
 			walletTransaction.setAmount(new Money(rs.getBigDecimal("amount")));
-			walletTransaction.setTimeStamp(new DateTime(rs.getDate("transaction_date")));
+			walletTransaction.setTimeStamp(new DateTime(rs.getTimestamp("transaction_date")));
 			walletTransaction.setTransactionId(rs.getString("transaction_id"));
 			walletTransaction.setTransactionType(TransactionType.valueOf(rs.getString("transaction_type")));
 			walletTransaction.setTransactionNote(rs.getString("transaction_note"));
@@ -313,7 +319,7 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			walletGifts.setGiftId(rs.getLong("id"));
 			walletGifts.setWalletId(rs.getLong("wallet_id"));
 			walletGifts.setExpired(rs.getBoolean("is_expired"));
-			walletGifts.setGiftExpiry(new DateTime(rs.getDate("gift_expiry")));
+			walletGifts.setGiftExpiry(new DateTime(rs.getTimestamp("gift_expiry")));
 			return walletGifts;
 		}
 		
@@ -331,6 +337,24 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 		}
 		
 	}
+	
+	private static class WalletRefundCreditMapper implements RowMapper<WalletRefundCredit> {
+
+		@Override
+		public WalletRefundCredit mapRow(ResultSet rs, int rowNum) throws SQLException {
+			WalletRefundCredit walletRefundCredit = new WalletRefundCredit(
+					rs.getLong("id"),
+					rs.getLong("wallet_id"),
+					rs.getLong("sub_transaction_id"),
+					new Money(rs.getBigDecimal("amount")),
+					new DateTime(rs.getTimestamp("credit_date")),
+					rs.getBoolean("is_used"),
+					new Money(rs.getBigDecimal("amount_remaining")));
+			return walletRefundCredit;
+		}
+		
+	}
+	
 	@Override
 	public WalletTransaction refundTransactionByRefundId(long walletId,
 			long refundId) {		
@@ -381,7 +405,7 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 				PreparedStatement ps = con.prepareStatement(INSERT_WALLET_GIFT , new String[]{"id"});
 				ps.setLong(1, walletId);
 				ps.setString(2, gitfCoupon);
-				ps.setDate(3, new Date(giftExpiry.getMillis()));
+				ps.setTimestamp(3, new Timestamp(giftExpiry.getMillis()));
 				ps.setBoolean(4, false);
 				ps.setBigDecimal(5, amount.getAmount());
 				return ps;
@@ -435,6 +459,7 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 	public Wallet updateGiftExpiry(Wallet wallet) {
 		List<WalletGifts> walletGifts = jdbcTemplate.query(GET_WALLET_GIFT_WALLET_ID, new Object[]{wallet.getId()},new WalletGiftsMapper());
 		for (WalletGifts walletGift : walletGifts){
+			
 			if(walletGift.getGiftExpiry().isBeforeNow()){
 				WalletTransaction walletTransaction = wallet.debit(walletGift.getAmountRemaining(), walletGift.getGiftId(),"The gift : " + walletGift.getGiftCode() + " expired");
 				insertTransaction(walletTransaction);
@@ -445,5 +470,87 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			}			
 		}
 		return walletDao.update(wallet);
+	}
+	
+	private void processSubTransaction (long walletId , WalletSubTransaction walletSubTransaction , TransactionType transactionType){
+		if (walletSubTransaction.getSubWalletType().equals(SubWalletType.GIFT)){
+			if (transactionType.equals(TransactionType.CREDIT)){
+				if (walletSubTransaction.getPaymentReversalId() == 0){
+					insertWalletGiftHistory(walletSubTransaction.getId(), walletSubTransaction.getGiftId(), walletSubTransaction.getAmount());
+				}else{
+					long subWalletIdToRevert = jdbcTemplate.queryForLong(GET_SUB_TRANSACTION_ID_BY_TRANSACTION_ID_AND_SUBWALLET_TYPE,new Object[]{walletSubTransaction.getPaymentReversalId(),SubWalletType.GIFT.toString()});
+					revertGiftBySubtransaction(walletSubTransaction.getAmount(),walletSubTransaction.getId(),subWalletIdToRevert);
+				}
+			}
+			else{
+				debitWalletGift(walletId,walletSubTransaction.getId(),walletSubTransaction.getAmount());
+			}
+		}
+		if (walletSubTransaction.getSubWalletType().equals(SubWalletType.REFUND)){
+			if (transactionType.equals(TransactionType.CREDIT)){
+				insertWalletRefundCredit(walletId,walletSubTransaction);
+			}
+			else{
+				debitWalletRefund(walletId,walletSubTransaction);
+			}
+		}
+	}
+	private void debitWalletRefund(long walletId,WalletSubTransaction walletSubTransaction) {
+		Money amountToDebit = walletSubTransaction.getAmount();
+		List<WalletRefundCredit> walletRefundCredits = jdbcTemplate.query(GET_WALLET_REFUND_CREDIT_WALLET_ID, new Object[] {walletId},new WalletRefundCreditMapper());
+		for(WalletRefundCredit walletRefundCredit : walletRefundCredits){
+			if(walletRefundCredit.getAmountRemaining().gteq(amountToDebit)){
+				insertWalletRefundDebit(walletId,walletSubTransaction,amountToDebit,walletRefundCredit.getId());
+				updateWalletRefundCredit(walletRefundCredit.getId(), walletRefundCredit.getAmountRemaining().minus(amountToDebit));
+				amountToDebit = amountToDebit.minus(amountToDebit);
+			}else{
+				insertWalletRefundDebit(walletId,walletSubTransaction,walletRefundCredit.getAmountRemaining(),walletRefundCredit.getId());
+				updateWalletRefundCredit(walletRefundCredit.getId(),new Money(new BigDecimal("0.00")));
+				amountToDebit = amountToDebit.minus(walletRefundCredit.getAmountRemaining());
+			}
+			if(amountToDebit.lteq(new Money(new BigDecimal("0.00")))){
+				break;
+			}			
+		}
+	}
+	private void insertWalletRefundCredit(long walletId,WalletSubTransaction walletSubTransaction) {
+		jdbcTemplate.update(INSERT_WALLET_REFUND_CREDIT,new Object[] {walletId,walletSubTransaction.getId(),walletSubTransaction.getAmount().getAmount(),new Date(System.currentTimeMillis()),walletSubTransaction.getAmount().getAmount(),0});		
+	}
+	private void insertWalletRefundDebit(long walletId,WalletSubTransaction walletSubTransaction,Money amount,long walletRefundCreditId) {
+		jdbcTemplate.update(INSERT_WALLET_REFUND_DEBIT,new Object[] {walletId,walletSubTransaction.getId(),amount.getAmount(),new Date(System.currentTimeMillis()),walletRefundCreditId});		
+	}
+	private void updateWalletRefundCredit(long walletRefundCreditId,Money amount) {
+		jdbcTemplate.update(UPDATE_WALLET_REFUND_CREDIT,new Object[] {amount.getAmount(),walletRefundCreditId});		
+	}
+	
+	@SuppressWarnings({"serial","unused"})
+	private static class WalletRefundCredit implements Serializable {
+		long Id;
+		long walletId;
+		long subTransactionid;
+		Money amount;
+		DateTime creditDate;
+		boolean isUsed = false;
+		Money amountRemaining ;
+		
+		public WalletRefundCredit(long id, long walletId , 
+				long subTransactionid,Money amount,DateTime creditDate,
+				boolean isUsed , Money amountRemaining){
+			this.Id = id;
+			this.walletId = walletId;
+			this.subTransactionid = subTransactionid;
+			this.amount = amount;
+			this.creditDate = creditDate;
+			this.isUsed = isUsed;
+			this.amountRemaining = amountRemaining;
+		}
+
+		public long getId() {
+			return Id;
+		}
+		public Money getAmountRemaining() {
+			return amountRemaining;
+		}
+		
 	}
 }

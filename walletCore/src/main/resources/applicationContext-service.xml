@@ -16,11 +16,6 @@
     <context:component-scan base-package="com.fb.platform.wallet.cache"></context:component-scan>
 
     <!-- Add new services here -->
-    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location">
-            <value>classpath:wallet.properties</value>
-        </property>
-    </bean>
     <bean id="walletService" class="com.fb.platform.wallet.service.impl.WalletServiceImpl">
         <property name="walletDao" ref="walletDao"/>
         <property name="walletTransactionDao" ref="walletTransactionDao"></property>

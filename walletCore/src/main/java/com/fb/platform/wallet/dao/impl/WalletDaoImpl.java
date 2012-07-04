@@ -4,18 +4,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-
 import com.fb.commons.to.Money;
 import com.fb.platform.wallet.dao.WalletDao;
 import com.fb.platform.wallet.model.Wallet;
@@ -33,7 +30,6 @@ public class WalletDaoImpl implements WalletDao {
 			+ "created_on "
 			+ "from wallets_wallet "
 			+ "where id = ?";
-	
 	private final String UPDATE_WALLET_ID = "Update wallets_wallet set "
 			+ "total_amount = ?, "
 			+ "cash_amount = ?, "
@@ -41,22 +37,18 @@ public class WalletDaoImpl implements WalletDao {
 			+ "refund_amount=?, "
 			+ "modified_on = CURDATE() "
 			+ "where id = ?";
-	
 	private final String GET_WALLET_ID_USER_CLIENT = "Select "
 			+ "wallet_id " 
 			+ "from users_wallet "
 			+ "where user_id = ? and client_id = ?";
-	
 	private final String CREATE_NEW_WALLET = "Insert "
 			+ "into wallets_wallet"
 			+ "(total_amount,cash_amount,gift_amount,refund_amount,created_on,modified_on) "
 			+ "values (0,0,0,0,CURDATE(),CURDATE())" ;
-	
 	private final String CREATE_USER_CLIENT_WALLET = "Insert "
 			+ "into users_wallet "
 			+ "(user_id,client_id,wallet_id) "
 			+ "values (?,?,?)";
-	
 	private JdbcTemplate jdbcTemplate;
 	private Log log = LogFactory.getLog(WalletDaoImpl.class);
 	
@@ -66,7 +58,6 @@ public class WalletDaoImpl implements WalletDao {
 			Wallet wallet = jdbcTemplate.queryForObject(SELECT_WALLET_ID, 
 					new Object[] {walletId},
 					new WalletMapper());
-			// TODO Auto-generated method stub
 			return wallet;
 		}catch (EmptyResultDataAccessException e) {
 			throw new WalletNotFoundException();
@@ -136,7 +127,7 @@ public class WalletDaoImpl implements WalletDao {
     	public Wallet mapRow(ResultSet rs, int rowNum) throws SQLException {
 
     		Wallet wallet = new Wallet();
-    		wallet.setCreatedOn(new DateTime(rs.getDate("created_on")));
+    		wallet.setCreatedOn(new DateTime(rs.getTimestamp("created_on")));
 			wallet.setId(rs.getLong("id"));
 			wallet.setTotalAmount(new Money(rs.getBigDecimal("total_amount")));
 			wallet.setCashSubWallet(new Money(rs.getBigDecimal("cash_amount")));

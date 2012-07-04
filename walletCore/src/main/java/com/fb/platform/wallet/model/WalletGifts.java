@@ -6,6 +6,7 @@ import org.joda.time.DateTime;
 
 import com.fb.commons.to.Money;
 
+@SuppressWarnings("serial")
 public class WalletGifts implements Serializable {
 	long giftId;
 	long walletId;
