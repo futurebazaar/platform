@@ -120,7 +120,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 	private static final String LOAD_USER_MONTHLY_PROMOTION_USES_QUERY = 
 			"SELECT " +
 			"	count(1) as current_count  " +
-			"FROM user_promotion_uses upu WHERE user_id = ? month(date(created_on)) =  month(now())   " ;
+			"FROM user_promotion_uses upu WHERE user_id = ? and promotion_id = ? and month(date(created_on)) =  month(now()) " ;
 
 	
 	/* (non-Javadoc)
@@ -519,15 +519,20 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 	}
 
 	@Override
-	public boolean isNoOfTimesInMonth( int userId ) {
+	public boolean isValidNoOfTimesInMonth( int userId ,  int noOfTimesAllowed, int promotionId) {
 		if(log.isDebugEnabled()) {
 			log.debug("Get from the user promotion uses table record for user for month : " + userId   );
 		}
 		UserPromotionUsesEntry userPromotionUsesEntry = null;
 		int mcount = 0 ;
 		try {
-			userPromotionUsesEntry = jdbcTemplate.queryForObject(LOAD_USER_MONTHLY_PROMOTION_USES_QUERY, new Object [] { userId }, new UserMonthlyOrderPromotionMapper() );
+			userPromotionUsesEntry = jdbcTemplate.queryForObject(LOAD_USER_MONTHLY_PROMOTION_USES_QUERY, new Object [] { userId, promotionId }, new UserMonthlyOrderPromotionMapper() );
+			
 			mcount = userPromotionUsesEntry.getNoOfUseInMonth();
+			if ( mcount < noOfTimesAllowed) {
+				return true;
+			}
+			
 		} catch (IncorrectResultSizeDataAccessException e) {
 			log.warn("No entry found for userId" + userId );
 			throw new PlatformException("No entry in user_coupon_uses found for userId" + userId );

@@ -6,7 +6,7 @@ package com.fb.platform.promotion.rule.config.type;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.fb.platform.promotion.rule.impl.MonthlyDiscountOffRuleImpl;
+import com.fb.platform.promotion.rule.impl.MonthlyDiscountRsOffRuleImpl;
 
 /**
  * @author SalimM
@@ -14,7 +14,7 @@ import com.fb.platform.promotion.rule.impl.MonthlyDiscountOffRuleImpl;
  */
 public class StringToIntegerConvertor implements Convertor {
 
-	private static transient Log log = LogFactory.getLog(MonthlyDiscountOffRuleImpl.class);
+	private static transient Log log = LogFactory.getLog(MonthlyDiscountRsOffRuleImpl.class);
 
 	/* (non-Javadoc)
 	 * @see com.fb.platform.promotion.rule.config.type.Convertor#convert(java.lang.String)

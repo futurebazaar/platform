@@ -18,6 +18,7 @@ import com.fb.platform.promotion.rule.impl.BuyXBrandGetYRsOffOnZProductRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyXGetYFreeRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyXQuantityGetVariablePercentOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.FirstPurchaseBuyWorthXGetYRsOffRuleImpl;
+import com.fb.platform.promotion.rule.impl.MonthlyDiscountRsOffRuleImpl;
 
 /**
  * @author vinayak
@@ -33,7 +34,7 @@ public class PromotionRuleFactory {
 		this.orderDao = orderDao;
 	}
 
-	private static PromotionRule getRule(RulesEnum ruleName) {
+	private static PromotionRule getRule(RulesEnum ruleName, int promotionId) {
 		PromotionRule rule = null;
 
 		switch (ruleName) {
@@ -63,6 +64,11 @@ public class PromotionRuleFactory {
 			rule = new BuyXQuantityGetVariablePercentOffRuleImpl();
 			break;
 			
+		case MONTHLY_DISCOUNT_RS_OFF:
+			rule = new MonthlyDiscountRsOffRuleImpl();
+			((MonthlyDiscountRsOffRuleImpl)rule).setPromotionId(promotionId);
+			break;
+			
 		default:
 			throw new IllegalArgumentException("Unkown RulesEnum object found : " + ruleName);
 		}
@@ -70,14 +76,14 @@ public class PromotionRuleFactory {
 		return rule;
 	}
 	
-	public static List<RuleConfigItemDescriptor> getRuleConfig(RulesEnum ruleName) {
-		PromotionRule rule = getRule(ruleName);
+	public static List<RuleConfigItemDescriptor> getRuleConfig(RulesEnum ruleName, int promotionId) {
+		PromotionRule rule = getRule(ruleName, promotionId);
 		List<RuleConfigItemDescriptor> ruleConfigs = rule.getRuleConfigs();
 		return ruleConfigs;
 	}
 	
-	public static PromotionRule createRule(RulesEnum ruleName, RuleConfiguration ruleConfig) {
-		PromotionRule rule = getRule(ruleName);
+	public static PromotionRule createRule(RulesEnum ruleName, RuleConfiguration ruleConfig, int promotionId) {
+		PromotionRule rule = getRule(ruleName,promotionId);
 		rule.init(ruleConfig);
 		return rule;
 	}
