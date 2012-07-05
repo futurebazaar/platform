@@ -6,6 +6,7 @@ import org.joda.time.DateTime;
 
 import com.fb.commons.to.Money;
 import com.fb.platform.wallet.model.Wallet;
+import com.fb.platform.wallet.model.WalletGifts;
 import com.fb.platform.wallet.model.WalletTransaction;
 
 public interface WalletTransactionDao {
@@ -24,5 +25,9 @@ public interface WalletTransactionDao {
 	public long insertGift(long walletId, String gitfCoupon, DateTime giftExpiry,Money amount);
 
 	public Wallet updateGiftExpiry(Wallet wallet);
+
+	List<WalletGifts> getWalletGifts(long walletId);
+
+	Money getWalletRefundAmount(long walletId);
 
 }

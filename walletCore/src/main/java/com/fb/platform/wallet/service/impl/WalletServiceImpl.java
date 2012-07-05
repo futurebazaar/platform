@@ -13,6 +13,7 @@ import com.fb.platform.wallet.dao.WalletTransactionDao;
 import com.fb.platform.wallet.model.SubWalletType;
 import com.fb.platform.wallet.model.TransactionType;
 import com.fb.platform.wallet.model.Wallet;
+import com.fb.platform.wallet.model.WalletGifts;
 import com.fb.platform.wallet.model.WalletSubTransaction;
 import com.fb.platform.wallet.to.WalletTransaction;
 import com.fb.platform.wallet.service.WalletService;
@@ -35,7 +36,7 @@ public class WalletServiceImpl implements WalletService {
 	public Wallet load(long walletId) throws WalletNotFoundException,PlatformException {
 		try{
 			Wallet wallet = walletDao.load(walletId);
-			return wallet;
+			return walletReturnOperations(wallet);
 		}catch (WalletNotFoundException e){
 			throw new WalletNotFoundException("No wallet found with this walletId");
 		}	
@@ -43,8 +44,7 @@ public class WalletServiceImpl implements WalletService {
 
 	@Override
 	public Wallet load(long userId, long clientId) throws PlatformException {
-		Wallet wallet = load(userId,clientId,true);
-        return walletTransactionDao.updateGiftExpiry(wallet);			
+		return load(userId,clientId,true);			
 	}
 	
 	private Wallet load(long userId,long clientId,boolean createNew) 
@@ -52,7 +52,7 @@ public class WalletServiceImpl implements WalletService {
 		try{
 			Wallet wallet = walletDao.load(userId,clientId,createNew);
 			if(wallet != null){
-				return wallet;
+				return walletReturnOperations(wallet);
 			}else{
 				throw new PlatformException("No wallet found or created with this userId:" + userId + " and clientId ::" + clientId);
 			}
@@ -94,8 +94,8 @@ public class WalletServiceImpl implements WalletService {
 			}
 			com.fb.platform.wallet.model.WalletTransaction walletTransaction = wallet
 					.credit(amount, SubWalletType.valueOf(subWalletType), paymentId, refundId,gift_id);
-			walletTransactionRes.setWallet(walletDao.update(wallet));
 			walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(walletTransaction));
+			walletTransactionRes.setWallet(walletReturnOperations(walletDao.update(wallet)));
 			return walletTransactionRes;
 		} catch (WalletNotFoundException e){
 			throw new WalletNotFoundException("No wallet with this wallet id");
@@ -113,13 +113,11 @@ public class WalletServiceImpl implements WalletService {
 		try{
 			WalletTransaction walletTransactionRes = new WalletTransaction();
 			Wallet wallet = load(userId,clientId,false);
-			// update expiry data for gifts prior to debiting the account
-			wallet = walletTransactionDao.updateGiftExpiry(wallet);
 			if(wallet.isSufficientFund(amount)){
 				com.fb.platform.wallet.model.WalletTransaction walletTransaction = wallet
 						.debit(amount, orderId);
-				walletTransactionRes.setWallet(walletDao.update(wallet));
 				walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(walletTransaction));
+				walletTransactionRes.setWallet(walletReturnOperations(walletDao.update(wallet)));
 				return walletTransactionRes;
 			}else{
 				throw new InSufficientFundsException("Insufficient fund in wallet");
@@ -150,7 +148,7 @@ public class WalletServiceImpl implements WalletService {
 				if(walletSubTransaction.getAmount().eq(amount)){
 					if(ignoreExpiry || walletTransaction.getTimeStamp().plusDays(refundExpiryDays).isAfterNow()){
 						walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(wallet.refund(amount,refundId)));
-						walletTransactionRes.setWallet(walletDao.update(wallet));							
+						walletTransactionRes.setWallet(walletReturnOperations(walletDao.update(wallet)));							
 					}else {
 						throw new RefundExpiredException();
 					}
@@ -187,8 +185,8 @@ public class WalletServiceImpl implements WalletService {
 			Money amountToBeReversed = amount != null ? amount : walletTransaction.getAmount();
 			if(walletTransaction.getAmount().gteq(amountToBeReversed.plus(moneyAlreadyReversed))){
 				com.fb.platform.wallet.model.WalletTransaction walletTransactionNew = wallet.reverseTransaction(walletTransaction,amountToBeReversed,moneyAlreadyReversed);
-				walletTransactionRes.setWallet(walletDao.update(wallet));
 				walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(walletTransactionNew));
+				walletTransactionRes.setWallet(walletReturnOperations(walletDao.update(wallet)));
 				return walletTransactionRes;
 			}else{
 				throw new InSufficientFundsException();
@@ -236,5 +234,25 @@ public class WalletServiceImpl implements WalletService {
 		}
 		walletTransactionRes.setWalletSubTransaction(subTransactionList);
 		return walletTransactionRes;
+	}
+	private Wallet walletReturnOperations(Wallet wallet){
+		wallet = walletTransactionDao.updateGiftExpiry(wallet);
+		wallet.setRefundableAmount(walletTransactionDao.getWalletRefundAmount(wallet.getId()));
+		List<WalletGifts> walletGifts = walletTransactionDao.getWalletGifts(wallet.getId()); 
+		for (int i= 0 ; i < walletGifts.size() && i < 2 ;i++){
+			switch (i) {
+			case 0:
+				wallet.setGiftExpiryAmt1(walletGifts.get(i).getAmountRemaining());
+				wallet.setGiftExpiryDt1(walletGifts.get(i).getGiftExpiry());
+				break;
+			case 1:
+				wallet.setGiftExpiryAmt2(walletGifts.get(i).getAmountRemaining());
+				wallet.setGiftExpiryDt2(walletGifts.get(i).getGiftExpiry());
+				break;
+			default:
+				break;
+			}
+		}
+		return wallet;
 	}
 }

@@ -11,7 +11,11 @@
   <xs:element name="refundAmount" type="xs:decimal"/>
   <xs:element name="giftAmount" type="xs:decimal"/>
   <xs:element name="totalAmount" type="xs:decimal"/>
-  
+  <xs:element name="refundableAmount" type="xs:decimal"/>
+  <xs:element name="giftExpiryAmt1" type="xs:decimal"/>
+  <xs:element name="giftExpiryAmt2" type="xs:decimal"/>
+  <xs:element name="giftExpiryDt1" type="xs:dateTime"/>
+  <xs:element name="giftExpiryDt2" type="xs:dateTime"/>  
   <xs:element name="walletSummaryRequest">
     <xs:complexType>
       <xs:sequence>
@@ -51,7 +55,12 @@
   		<xs:element ref="tns:cashAmount"/>
         <xs:element ref="tns:refundAmount"/>
         <xs:element ref="tns:giftAmount"/>
-        <xs:element ref="tns:totalAmount"/>  			
+        <xs:element ref="tns:totalAmount"/> 
+        <xs:element ref="tns:refundableAmount"/> 
+        <xs:element ref="tns:giftExpiryAmt1"/> 
+        <xs:element ref="tns:giftExpiryAmt2"/> 
+		<xs:element ref="tns:giftExpiryDt1"/> 
+		<xs:element ref="tns:giftExpiryDt2"/>          			
   	  </xs:sequence>
   	</xs:complexType>
   </xs:element>

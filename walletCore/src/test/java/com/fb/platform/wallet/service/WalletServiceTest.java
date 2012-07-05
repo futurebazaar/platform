@@ -132,6 +132,7 @@ public class WalletServiceTest extends BaseTestCase {
 		assertNotNull(walletTransaction2.getWallet());
 		assertEquals(wallet.getId(), walletTransaction2.getWallet().getId());
 		assertEquals(new BigDecimal("400.00"), walletTransaction2.getWallet().getTotalAmount().getAmount());
+		assertEquals(new BigDecimal("400.00"), walletTransaction2.getWallet().getRefundableAmount().getAmount());
 		
 		WalletTransaction walletTransactionDebit = walletService.debit(6,-5,new Money(new BigDecimal("300.00")),32);
 		assertNotNull(walletTransactionDebit);

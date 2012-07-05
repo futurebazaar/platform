@@ -150,7 +150,7 @@ public class WalletManagerTest extends BaseTestCase{
 		
 		assertNotNull(response);
 		assertEquals("SUCCESS", response.getWalletHistoryStatus().toString());
-		assertEquals(3,response.getTransactionList().size());
+		assertEquals(4,response.getTransactionList().size());
 	}
 
 	@Test

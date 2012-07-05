@@ -10,8 +10,6 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joda.time.DateTime;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -117,6 +115,11 @@ public class WalletResource {
 				walletDetails.setRefundAmount(apiWalletDetails.getRefundAmount());
 				walletDetails.setGiftAmount(apiWalletDetails.getGiftAmount());
 				walletDetails.setTotalAmount(apiWalletDetails.getTotalAmount());
+				walletDetails.setRefundableAmount(apiWalletDetails.getRefundableAmount().getAmount());
+				walletDetails.setGiftExpiryAmt1(apiWalletDetails.getGiftExpiryAmt1().getAmount());
+				walletDetails.setGiftExpiryAmt2(apiWalletDetails.getGiftExpiryAmt2().getAmount());
+				walletDetails.setGiftExpiryDt1(apiWalletDetails.getGiftExpiryDt1());
+				walletDetails.setGiftExpiryDt2(apiWalletDetails.getGiftExpiryDt2());
 			}
 			xmlWalletSummaryResponse.setWalletDetails(walletDetails);
 			

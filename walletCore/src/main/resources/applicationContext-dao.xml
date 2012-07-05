@@ -24,7 +24,10 @@
 	</bean>
 	<bean id="walletTransactionDao" class="com.fb.platform.wallet.dao.impl.WalletTransactionDaoImpl">
 		<property name="walletDao" ref="walletDao"/>
-		<property name="jdbcTemplate" ref="jdbcTemplate"/>		
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+		<property name="refundExpiryDays">
+        	<value>${refund.expiry.days}</value>
+        </property>		
 	</bean>
 
 </beans>

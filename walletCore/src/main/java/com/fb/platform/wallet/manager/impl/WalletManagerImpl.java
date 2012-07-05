@@ -98,6 +98,11 @@ public class WalletManagerImpl implements WalletManager {
 			walletDetails.setRefundAmount(wallet.getRefundSubWallet().getAmount());
 			walletDetails.setGiftAmount(wallet.getGiftSubWallet().getAmount());
 			walletDetails.setTotalAmount(wallet.getTotalAmount().getAmount());
+			walletDetails.setRefundableAmount(wallet.getRefundableAmount());
+			walletDetails.setGiftExpiryAmt1(wallet.getGiftExpiryAmt1());
+			walletDetails.setGiftExpiryDt1(wallet.getGiftExpiryDt1());
+			walletDetails.setGiftExpiryAmt2(wallet.getGiftExpiryAmt2());
+			walletDetails.setGiftExpiryDt2(wallet.getGiftExpiryDt2());
 			walletSummaryResponse.setWalletDetails(walletDetails);
 
 		} catch (UserNotFoundException e) {
