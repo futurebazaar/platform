@@ -144,6 +144,15 @@
    <enabled>true</enabled>
   </snapshots>
  </repository>
+ 
+    <repository> 
+        <id>jboss-public-repository-group</id> 
+        <url>http://maven.futurebazaar.com/nexus/content/repositories/jboss-public-repository-group/</url> 
+        <snapshots> 
+            <enabled>false</enabled> 
+        </snapshots> 
+    </repository> 
+
 </repositories>
 
 <!-- download plugins from this repo -->
@@ -196,6 +205,11 @@
             <artifactId>commons-lang</artifactId>
             <version>${commons.lang.version}</version>
         </dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${commons.io.version}</version>
+		</dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
@@ -271,11 +285,11 @@
 			        <groupId>org.springframework</groupId>
 			        <artifactId>spring-context</artifactId>
 			    </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-aop</artifactId>
-                </exclusion>
-            </exclusions>
+			    <exclusion>
+			        <groupId>org.springframework</groupId>
+			        <artifactId>spring-aop</artifactId>
+			    </exclusion>
+			</exclusions>
         </dependency>
 		<dependency>
 			<groupId>joda-time</groupId>
@@ -314,6 +328,11 @@
 		    <version>${spring.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jms</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-aspects</artifactId>
 		    <version>${spring.version}</version>
@@ -327,6 +346,12 @@
 		    <groupId>org.springframework.security</groupId>
 		    <artifactId>spring-security-core</artifactId>
 		    <version>${spring.security.version}</version>
+		    <exclusions>
+		    	<exclusion>
+		    		<groupId>org.springframework</groupId>
+		    		<artifactId>spring-expression</artifactId>
+		    	</exclusion>
+		    </exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -370,24 +395,25 @@
     
     <modules>
     	<module>platformCommons</module>
-	<module>platformMailer</module>
+    	<module>platformMailer</module>
     	<module>platformCaching</module>
-    	<module>catalogCommons</module>
-        <module>catalogCore</module>
-    	<module>orderCore</module>
-        <module>orderWS</module>
         <module>userCore</module>
         <module>userWS</module>
         <module>authenticationCore</module>
         <module>promotionCore</module>
-	<module>fulfilmentCore</module>
-	<module>fulfilmentWS</module>
-	<module>promotionAdminWS</module>
+    	<module>fulfilmentCore</module>
+    	<module>fulfilmentWS</module>
+    	<module>promotionAdminWS</module>
         <module>paybackCore</module>
         <module>paybackWS</module>
-	<module>eGVCore</module>
-	<module>eGVWS</module>
-	<module>promotionWS</module>
+    	<module>eGVCore</module>
+    	<module>eGVWS</module>
+    	<module>promotionWS</module>
+		<module>platformMom</module>
+		<module>sapReceiver</module>
+		<module>mailReceiver</module>
+		<module>inventoryReceiver</module>
+		<module>launcher</module>
     </modules>
 
     <reporting>
@@ -423,6 +449,7 @@
     </reporting>
 
     <properties>
+    	<platform.version>1.0-SNAPSHOT</platform.version>
         <dao.framework>jdbc</dao.framework>
 	<platform.version>1.0-SNAPSHOT</platform.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -435,6 +462,7 @@
 		<log4j.version>1.2.16</log4j.version>
 		<commons.dbcp.version>1.2.2</commons.dbcp.version>
 		<commons.lang.version>2.6</commons.lang.version>
+		<commons.io.version>2.3</commons.io.version>
 		<cglib.version>2.2.2</cglib.version>
 
         <!-- Testing dependency versions -->

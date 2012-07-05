@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>platform</artifactId>
+    <groupId>com.fb</groupId>
+    <version>${platform.version}</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+	<artifactId>launcher</artifactId>
+	<version>${platform.version}</version>
+	<packaging>jar</packaging>
+	
+	<name>Platform Launcher Module</name>
+	<url>http://maven.apache.org</url>
+	
+	<dependencies>
+	  	<dependency>
+	  		<groupId>com.fb</groupId>
+			<artifactId>platformCommons</artifactId>
+			<version>${platform.version}</version>
+	  	</dependency>
+	  	<dependency>
+	  		<groupId>com.fb</groupId>
+			<artifactId>platformMom</artifactId>
+			<version>${platform.version}</version>
+	  	</dependency>
+	  	<dependency>
+	  		<groupId>com.fb</groupId>
+			<artifactId>mailReceiver</artifactId>
+			<version>${platform.version}</version>
+	  	</dependency>
+	  	<dependency>
+	  		<groupId>com.fb</groupId>
+			<artifactId>inventoryReceiver</artifactId>
+			<version>${platform.version}</version>
+	  	</dependency>
+	</dependencies>
+	<build>
+		<defaultGoal>install</defaultGoal>
+        <plugins>
+			<plugin>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<version>2.0.2</version>
+			<configuration>
+				<source>1.6</source>
+				<target>1.6</target>
+			</configuration>
+			</plugin>
+			<plugin>
+            	<artifactId>maven-assembly-plugin</artifactId>
+            	<version>2.3</version>
+            	<configuration>
+                	<archive>
+                    	<manifest>
+                        	<mainClass>com.fb.launcher.LauncherBootstrap</mainClass>
+                    	</manifest>
+                	</archive>
+                	<descriptorRefs>
+                    	<descriptorRef>jar-with-dependencies</descriptorRef>
+                	</descriptorRefs>
+            	</configuration>
+<!--                 <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+ -->        	</plugin>
+                    <plugin>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <phase>install</phase>
+                                    <goals>
+                                        <goal>copy-dependencies</goal>
+                                        <goal>build-classpath</goal>
+                                    </goals>
+                                    <configuration>
+                                        <outputDirectory>${project.build.directory}/dependency</outputDirectory>
+                                        <useRepositoryLayout>true</useRepositoryLayout>
+                                        <outputFile>${project.build.directory}/cp.txt</outputFile>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                    </plugin>
+
+		</plugins>
+	</build>
+</project>

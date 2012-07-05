@@ -1,0 +1,6 @@
+jco.server.progid=ZATGJCAPS_PD1
+jco.server.name=prirdb
+jco.server.gwhost=prirdb
+jco.server.gwserv=3300
+jco.server.connection_count=1
+jco.server.repository_destination=prodbapi

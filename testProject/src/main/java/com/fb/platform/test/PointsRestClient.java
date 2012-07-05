@@ -29,7 +29,7 @@ import com.fb.platform.payback._1_0.PointsRequest;
 import com.fb.platform.payback._1_0.PointsResponse;
 import com.fb.platform.payback._1_0.RollbackPointsRequest;
 import com.fb.platform.payback._1_0.RollbackPointsResponse;
-import com.fb.platform.payback.rule.EarnPointsRuleEnum;
+
 
 
 public class PointsRestClient {
@@ -190,7 +190,7 @@ public class PointsRestClient {
 
 	private static ClearCacheRequest setClearCacheRequest() throws Exception {
 		ClearCacheRequest cacheRequest = new ClearCacheRequest();
-		cacheRequest.setRuleName(EarnPointsRuleEnum.BUY_WORTH_X_EARN_Y_BONUS_POINTS.name());
+		cacheRequest.setRuleName("BUY_WORTH_X_EARN_Y_BONUS_POINTS");
 		cacheRequest.setSessionToken(login());
 		return cacheRequest;
 	}

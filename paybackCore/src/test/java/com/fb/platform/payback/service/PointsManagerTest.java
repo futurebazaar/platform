@@ -103,7 +103,7 @@ public class PointsManagerTest  extends BaseTestCase{
 		
 		pointsManager.getPointsReponse(pr);
 	}
-	
+/*	
 	@Test
 	public void storeEarnPointsTest(){
 		PointsRequest pr = new PointsRequest();
@@ -143,7 +143,7 @@ public class PointsManagerTest  extends BaseTestCase{
 		assertEquals(PointsResponseCodeEnum.INTERNAL_ERROR, pointsResponse3.getPointsResponseCodeEnum());
 		
 	}
-	
+*/
 	@Test
 	public void storeEarnReversalPointsTest(){
 		PointsRequest pr = new PointsRequest();
