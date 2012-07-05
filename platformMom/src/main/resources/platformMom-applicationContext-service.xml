@@ -56,6 +56,8 @@
                 <prop key="java.naming.factory.initial">org.jnp.interfaces.NamingContextFactory</prop>
                 <prop key="java.naming.provider.url">${java.naming.provider.url}</prop>
                 <prop key="java.naming.factory.url.pkgs">org.jnp.interfaces:org.jboss.naming</prop>
+                <prop key="java.naming.security.principal">${java.naming.security.principal}</prop>
+                <prop key="java.naming.security.credentials">${java.naming.security.credentials}</prop>
             </props>
         </property>
     </bean>
