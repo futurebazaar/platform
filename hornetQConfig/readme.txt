@@ -61,7 +61,22 @@ Original:
 
 Replace PORT with 8856 for QA and 8865 for PROD
 
-4)To start the HornetQ navigate to the following location
+4)Edit hornetq-beans.xml
+
+Original:
+   <bean name="JNDIServer" class="org.jnp.server.Main">
+      <property name="namingInfo">
+         <inject bean="Naming"/>
+      </property>
+      <property name="port">${jnp.port:1099}</property>
+      <property name="bindAddress">${jnp.host:MACHINE_IP_ADDRESS}</property>
+      <property name="rmiPort">${jnp.rmiPort:1098}</property>
+      <property name="rmiBindAddress">${jnp.host:MACHINE_IP_ADDRESS}</property>
+   </bean>
+
+Replace MACHINE_IP_ADDRESS with the ipaddress of the machine.
+
+5)To start the HornetQ navigate to the following location
 HORNET_Q_INSTALLATION/bin
 and run the following command:
 ./run.sh ../config/stand-alone/platform
