@@ -271,7 +271,11 @@
 			        <groupId>org.springframework</groupId>
 			        <artifactId>spring-context</artifactId>
 			    </exclusion>
-			</exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-aop</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 		<dependency>
 			<groupId>joda-time</groupId>
@@ -340,17 +344,38 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+		        <groupId>javax.mail</groupId>
+		        <artifactId>mail</artifactId>
+		        <version>1.4</version>
+		</dependency>
+
         <dependency>
             <groupId>org.subethamail</groupId>
             <artifactId>subethasmtp-wiser</artifactId>
             <version>${wiser.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.47</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4</version>
+        </dependency>
     </dependencies>
     
     <modules>
     	<module>platformCommons</module>
+	    <module>platformMailer</module>
     	<module>platformCaching</module>
+    	<module>catalogCommons</module>
+        <module>catalogCore</module>
+    	<module>orderCore</module>
+        <module>orderWS</module>
         <module>userCore</module>
         <module>userWS</module>
         <module>authenticationCore</module>
@@ -358,6 +383,10 @@
 		<module>fulfilmentWS</module>
 		<module>promotionCore</module>
 		<module>promotionAdminWS</module>
+        <module>paybackCore</module>
+        <module>paybackWS</module>
+		<module>eGVCore</module>
+		<module>eGVWS</module>
 		<module>promotionWS</module>
     </modules>
 
@@ -395,7 +424,7 @@
 
     <properties>
         <dao.framework>jdbc</dao.framework>
-	<platform.version>1.0-SNAPSHOT</platform.version>
+        <platform.version>1.0-SNAPSHOT</platform.version>
         
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.version>4.8.2</junit.version>

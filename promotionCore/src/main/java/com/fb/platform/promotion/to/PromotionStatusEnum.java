@@ -19,7 +19,7 @@ public enum PromotionStatusEnum implements Serializable {
 	COUPON_CODE_EXPIRED("COUPON_CODE_EXPIRED", "You are too late in using this coupon. It has already expired."),
 	USER_NOT_AUTHORIZED("USER_NOT_AUTHORIZED", "Are you sure this coupon belongs to you? Our system says you cannot use this coupon. "),
 	NUMBER_OF_USES_EXCEEDED("NUMBER_OF_USES_EXCEEDED", "NUMBER_OF_USES_EXCEEDED"),
-	NOT_APPLICABLE("NOT_APPLICABLE", "Oops, there seems to be a problem with our systems. Can you please try again?"),
+	NOT_APPLICABLE("NOT_APPLICABLE", "This coupon is not applicable on this Order."),
 	LESS_ORDER_AMOUNT("LESS_ORDER_AMOUNT", "This coupon is not applicable on this Order Amount."),
 	INVALID_CLIENT("INVALID_CLIENT", "This is not a valid coupon. Try another one."),
 	CATEGORY_MISMATCH("CATEGORY_MISMATCH", "This coupon is not valid on purchase of the products you selected."),

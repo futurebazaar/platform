@@ -16,7 +16,8 @@ public enum RuleConfigDescriptorEnum {
 	DISCOUNT_PERCENTAGE("Discount percentage", RuleConfigDescriptorType.PERCENT),
 	MAX_DISCOUNT_CEIL_IN_VALUE("Maximum discount in rupees", RuleConfigDescriptorType.DECIMAL),
 	PRODUCT_DISCOUNT_RS_OFF("Product discount", RuleConfigDescriptorType.DECIMAL),
-	PRODUCT_DISCOUNTED_VALUE("Product discounted value", RuleConfigDescriptorType.DECIMAL);
+	PRODUCT_DISCOUNTED_VALUE("Product discounted value", RuleConfigDescriptorType.DECIMAL),
+	VARIABLE_DISCOUNT_PERCENTAGE("Variable Discount percentage", RuleConfigDescriptorType.CSKV);
 	
 	private String description = null;
 	

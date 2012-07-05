@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://www.eclipse.org/jetty/configure.dtd">
+ 
+<Configure class="org.mortbay.jetty.webapp.WebAppContext">
+	<New id="platformDatasource" class="org.mortbay.jetty.plus.naming.Resource">
+		<Arg>jndi/datasource</Arg>
+		<Arg>
+			<New class="org.apache.commons.dbcp.BasicDataSource">
+				<Set name="driverClassName">${jdbc.driverClassName}</Set>
+				<Set name="url">databaseName=${jdbc.url}</Set>
+				<Set name="username">${jdbc.username}</Set>
+				<Set name="password">${jdbc.password}</Set>
+				<Set name="maxActive">100</Set>
+				<Set name="maxIdle">30</Set>
+				<Set name="maxWait">1000</Set>
+				<Set name="defaultAutoCommit">true</Set>
+				<Set name="removeAbandoned">true</Set>
+				<Set name="removeAbandonedTimeout">60</Set>
+			</New>
+		</Arg>
+	</New>
+</Configure>

@@ -10,15 +10,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.NotImplementedException;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fb.commons.PlatformException;
 import com.fb.commons.test.BaseTestCase;
-import com.fb.commons.to.Money;
 import com.fb.platform.promotion.dao.RuleDao;
+import com.fb.platform.promotion.model.OrderDiscount;
 import com.fb.platform.promotion.rule.impl.BuyWorthXGetYPercentOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyWorthXGetYRsOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyXBrandGetYRsOffOnZProductRuleImpl;
+import com.fb.platform.promotion.rule.impl.BuyXQuantityGetVariablePercentOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.FirstPurchaseBuyWorthXGetYRsOffRuleImpl;
 import com.fb.platform.promotion.to.OrderItem;
 import com.fb.platform.promotion.to.OrderRequest;
@@ -31,11 +35,35 @@ public class RuleImplTest extends BaseTestCase {
 	@Autowired
 	private RuleDao ruleDao = null;
 
-	@Test
-	public void testRules() {
+	OrderRequest orderReq1 = null;
+	OrderRequest orderReq2 = null;
+	OrderRequest orderReq3 = null;
+	OrderRequest orderReq4 = null;
+	OrderRequest orderReq5 = null;
+	OrderRequest orderReq6 = null;
+	OrderRequest orderReq7 = null;
+	OrderRequest orderReq8 = null;
+	OrderRequest orderReq9 = null;
+	OrderRequest orderReq10 = null;
+	OrderRequest catMisMatchOrderReq = null;
+	OrderRequest clientMisMatchOrderReq = null;
+	OrderRequest partCatPartBrandOrderReq = null;
+	OrderRequest variablePercentDiscountOrderReq1 = null;
+	OrderRequest variablePercentDiscountOrderReq2 = null;
+	OrderRequest variablePercentDiscountOrderReq3 = null;
+	OrderRequest variablePercentDiscountOrderReq4 = null;
+	
+	int userId;
+	boolean isCouponCommitted;
+	
+	OrderDiscount orderDiscount1;
+	OrderDiscount orderDiscount3;
+	
+	@Before
+	public void createSampleData(){
 		
-		int userId=1;
-		boolean isCouponCommitted = false;
+		userId=1;
+		isCouponCommitted = false;
 		
 		//Create Products
 		Product p1 = new Product();
@@ -59,6 +87,10 @@ public class RuleImplTest extends BaseTestCase {
 		p5.setPrice(new BigDecimal(495));
 		p5.setCategories(Arrays.asList(6,7,8,9,10,11,12,13,14));
 		p5.setBrands(Arrays.asList(3));
+		Product p6 = new Product();
+		p6.setPrice(new BigDecimal(1000));
+		p6.setCategories(Arrays.asList(1,2,3,4,5));
+		p6.setBrands(Arrays.asList(3));
 		
 		Product catMismatchProd = new Product();
 		catMismatchProd.setProductId(5);
@@ -116,9 +148,21 @@ public class RuleImplTest extends BaseTestCase {
 		OrderItem brandMismatchItem = new OrderItem(); //2000 Rs
 		brandMismatchItem.setQuantity(2);
 		brandMismatchItem.setProduct(brandMismatchProd);
+		
+		OrderItem varDisOrderItem1 = new OrderItem(); //1000 Rs
+		varDisOrderItem1.setQuantity(1);
+		varDisOrderItem1.setProduct(p6);
+		
+		OrderItem varDisOrderItem2 = new OrderItem(); //1000 Rs
+		varDisOrderItem2.setQuantity(2);
+		varDisOrderItem2.setProduct(p6);
+		
+		OrderItem varDisOrderItem3 = new OrderItem(); //1000 Rs
+		varDisOrderItem3.setQuantity(3);
+		varDisOrderItem3.setProduct(p6);
 
 		//Create OrderReq
-		OrderRequest orderReq1 = new OrderRequest(); //780 Rs
+		orderReq1 = new OrderRequest(); //780 Rs
 		orderReq1.setOrderId(1);
 		List<OrderItem> oList1 = new ArrayList<OrderItem>();
 		oList1.add(oItem1);
@@ -126,7 +170,7 @@ public class RuleImplTest extends BaseTestCase {
 		oList1.add(oItem3);
 		orderReq1.setOrderItems(oList1);
 		orderReq1.setClientId(5);
-		OrderRequest orderReq2 = new OrderRequest(); // 200 Rs
+		orderReq2 = new OrderRequest(); // 200 Rs
 		orderReq2.setOrderId(2);
 		List<OrderItem> oList2 = new ArrayList<OrderItem>();
 		oList2.add(oItem1);
@@ -134,7 +178,7 @@ public class RuleImplTest extends BaseTestCase {
 		oList2.add(oItem10);
 		orderReq2.setOrderItems(oList2);
 		orderReq2.setClientId(5);
-		OrderRequest orderReq3 = new OrderRequest(); //
+		orderReq3 = new OrderRequest(); //
 		orderReq3.setOrderId(3);
 		List<OrderItem> oList3 = new ArrayList<OrderItem>();
 		oList3.add(oItem7);
@@ -143,7 +187,7 @@ public class RuleImplTest extends BaseTestCase {
 		oList3.add(oItem10);
 		orderReq3.setOrderItems(oList3);
 		orderReq3.setClientId(5);
-		OrderRequest orderReq4 = new OrderRequest();
+		orderReq4 = new OrderRequest();
 		orderReq4.setOrderId(4);
 		List<OrderItem> oList4 = new ArrayList<OrderItem>();
 		oList4.add(oItem3);
@@ -152,7 +196,7 @@ public class RuleImplTest extends BaseTestCase {
 		orderReq4.setOrderItems(oList4);		
 		orderReq4.setClientId(5);
 		
-		OrderRequest orderReq5 = new OrderRequest(); //1275 Rs
+		orderReq5 = new OrderRequest(); //1275 Rs
 		orderReq5.setOrderId(5);
 		List<OrderItem> oList5 = new ArrayList<OrderItem>();
 		oList5.add(oItem1);
@@ -162,8 +206,8 @@ public class RuleImplTest extends BaseTestCase {
 		orderReq5.setOrderItems(oList5);
 		orderReq5.setClientId(5);
 		
-		OrderRequest orderReq6 = new OrderRequest(); //780 Rs
-		orderReq5.setOrderId(6);
+		orderReq6 = new OrderRequest(); //780 Rs
+		orderReq6.setOrderId(6);
 		List<OrderItem> oList6 = new ArrayList<OrderItem>();
 		oList6.add(oItem1);
 		oList6.add(oItem2);
@@ -171,16 +215,16 @@ public class RuleImplTest extends BaseTestCase {
 		orderReq6.setOrderItems(oList6);
 		orderReq6.setClientId(5);
 		
-		OrderRequest orderReq7 = new OrderRequest(); //780 Rs
-		orderReq5.setOrderId(7);
+		orderReq7 = new OrderRequest(); //780 Rs
+		orderReq7.setOrderId(7);
 		List<OrderItem> oList7 = new ArrayList<OrderItem>();
 		oList7.add(oItem1);
 		oList7.add(oItem11);
 		orderReq7.setOrderItems(oList7);
 		orderReq7.setClientId(5);
 		
-		OrderRequest orderReq8 = new OrderRequest(); //780 Rs
-		orderReq5.setOrderId(8);
+		orderReq8 = new OrderRequest(); //780 Rs
+		orderReq8.setOrderId(8);
 		List<OrderItem> oList8 = new ArrayList<OrderItem>();
 		oList8.add(oItem1);
 		oList8.add(oItem11);
@@ -188,14 +232,14 @@ public class RuleImplTest extends BaseTestCase {
 		orderReq8.setOrderItems(oList8);
 		orderReq8.setClientId(5);
 		
-		OrderRequest orderReq9 = new OrderRequest(); //
+		orderReq9 = new OrderRequest(); //
 		orderReq9.setOrderId(9);
 		List<OrderItem> oList9 = new ArrayList<OrderItem>();
 		oList9.add(oItem8);
 		orderReq9.setOrderItems(oList9);
 		orderReq9.setClientId(5);
 		
-		OrderRequest catMisMatchOrderReq = new OrderRequest(); // 3000
+		catMisMatchOrderReq = new OrderRequest(); // 3000
 		catMisMatchOrderReq.setOrderId(10);
 		List<OrderItem> oList10 = new ArrayList<OrderItem>();
 		oList10.add(catMismatchItem);
@@ -203,8 +247,8 @@ public class RuleImplTest extends BaseTestCase {
 		catMisMatchOrderReq.setClientId(5);
 
 		//Part Cat , Part Brand Use case
-		OrderRequest partCatPartBrandOrderReq = new OrderRequest();
-		partCatPartBrandOrderReq.setOrderId(10);
+		partCatPartBrandOrderReq = new OrderRequest();
+		partCatPartBrandOrderReq.setOrderId(11);
 		List<OrderItem> oListPart = new ArrayList<OrderItem>();
 		oListPart.add(oItem2);
 		oListPart.add(oItem1);
@@ -214,12 +258,52 @@ public class RuleImplTest extends BaseTestCase {
 		partCatPartBrandOrderReq.setOrderItems(oListPart);
 		partCatPartBrandOrderReq.setClientId(5);
 		
-		OrderRequest clientMisMatchOrderReq = new OrderRequest(); //
-		clientMisMatchOrderReq.setOrderId(10);
+		clientMisMatchOrderReq = new OrderRequest(); //
+		clientMisMatchOrderReq.setOrderId(12);
 		List<OrderItem> oList11 = new ArrayList<OrderItem>();
 		oList11.add(oItem8);
 		clientMisMatchOrderReq.setOrderItems(oList11);
 		clientMisMatchOrderReq.setClientId(17);
+		
+		variablePercentDiscountOrderReq1 = new OrderRequest(); // Quantity 1 : price 1000
+		variablePercentDiscountOrderReq1.setOrderId(13);
+		List<OrderItem> oList12 = new ArrayList<OrderItem>();
+		oList12.add(varDisOrderItem1);
+		variablePercentDiscountOrderReq1.setOrderItems(oList12);
+		variablePercentDiscountOrderReq1.setClientId(5);
+
+		variablePercentDiscountOrderReq2 = new OrderRequest(); // Quantity 2 : price 2000
+		variablePercentDiscountOrderReq2.setOrderId(14);
+		List<OrderItem> oList13 = new ArrayList<OrderItem>();
+		oList13.add(varDisOrderItem2);
+		variablePercentDiscountOrderReq2.setOrderItems(oList13);
+		variablePercentDiscountOrderReq2.setClientId(5);
+		
+		variablePercentDiscountOrderReq3 = new OrderRequest(); // Quantity 3 : price 3000
+		variablePercentDiscountOrderReq3.setOrderId(15);
+		List<OrderItem> oList14 = new ArrayList<OrderItem>();
+		oList14.add(varDisOrderItem3);
+		variablePercentDiscountOrderReq3.setOrderItems(oList14);
+		variablePercentDiscountOrderReq3.setClientId(5);
+		
+		variablePercentDiscountOrderReq4 = new OrderRequest(); // Quantity 6 : price 6000
+		variablePercentDiscountOrderReq4.setOrderId(16);
+		List<OrderItem> oList15 = new ArrayList<OrderItem>();
+		oList15.add(varDisOrderItem1);
+		oList15.add(varDisOrderItem2);
+		oList15.add(varDisOrderItem3);
+		variablePercentDiscountOrderReq4.setOrderItems(oList15);
+		variablePercentDiscountOrderReq4.setClientId(5);
+				
+		// OrderDiscount Objects
+		orderDiscount1 = new OrderDiscount();
+		orderDiscount3 = new OrderDiscount();
+		orderDiscount1.setOrderRequest(orderReq1);
+		orderDiscount3.setOrderRequest(orderReq3);
+	}
+	
+	@Test
+	public void testBuyWorthXGetYRsOffRule() {
 		
 		//BuyWorthXGetYRsOffRule
 		PromotionRule buyWorthXGetYRsOffRule = ruleDao.load(-7, -2);
@@ -237,10 +321,14 @@ public class RuleImplTest extends BaseTestCase {
 		assertEquals(buyWorthXGetYRsOffRule.isApplicable(orderReq3,userId,isCouponCommitted),PromotionStatusEnum.SUCCESS);;
 		assertEquals(buyWorthXGetYRsOffRule.isApplicable(orderReq4,userId,isCouponCommitted),PromotionStatusEnum.SUCCESS);
 		
-		assertTrue(new Money(new BigDecimal(300)).eq(buyWorthXGetYRsOffRule.execute(orderReq1)));
-//		assertTrue(new Money(new BigDecimal(300)).eq(buyWorthXGetYRsOffRule.execute(orderReq2)));
-		assertTrue(new Money(new BigDecimal(300)).eq(buyWorthXGetYRsOffRule.execute(orderReq3)));
-				
+		assertEquals(0,new BigDecimal(300).compareTo(buyWorthXGetYRsOffRule.execute(orderDiscount1).getTotalOrderDiscount()));
+		assertEquals(0,new BigDecimal(300).compareTo(buyWorthXGetYRsOffRule.execute(orderDiscount3).getTotalOrderDiscount()));
+		
+	}
+	
+	@Test
+	public void testBuyWorthXGetYPercentOffRule() {
+		
 		//BuyWorthXGetYPercentOffRule
 		PromotionRule buyWorthXGetYPercentOffRule = ruleDao.load(-8, -3);
 
@@ -255,9 +343,8 @@ public class RuleImplTest extends BaseTestCase {
 		assertEquals(buyWorthXGetYPercentOffRule.isApplicable(orderReq2,userId,isCouponCommitted),PromotionStatusEnum.LESS_ORDER_AMOUNT);
 		assertEquals(buyWorthXGetYPercentOffRule.isApplicable(orderReq3,userId,isCouponCommitted),PromotionStatusEnum.SUCCESS);
 		
-		assertTrue(new Money(new BigDecimal(78)).eq(buyWorthXGetYPercentOffRule.execute(orderReq1)));
-//		assertTrue(new Money(new BigDecimal(100)).eq(buyWorthXGetYPercentOffRule.execute(orderReq2)));
-		assertTrue(new Money(new BigDecimal(100)).eq(buyWorthXGetYPercentOffRule.execute(orderReq3)));
+		assertEquals(0,new BigDecimal(78).compareTo(buyWorthXGetYPercentOffRule.execute(orderDiscount1).getTotalOrderDiscount()));
+		assertEquals(0,new BigDecimal(100).compareTo(buyWorthXGetYPercentOffRule.execute(orderDiscount3).getTotalOrderDiscount()));
 		
 		//BuyWorthXGetYRsOffOnZCategoryRuleImpl
 		PromotionRule buyWorthXGetYRsOffOnZCategoryRule = ruleDao.load(-9, -2);
@@ -272,32 +359,13 @@ public class RuleImplTest extends BaseTestCase {
 		assertEquals(buyWorthXGetYRsOffOnZCategoryRule.isApplicable(orderReq1,userId,isCouponCommitted),PromotionStatusEnum.SUCCESS);
 		assertEquals(buyWorthXGetYRsOffOnZCategoryRule.isApplicable(orderReq2,userId,isCouponCommitted),PromotionStatusEnum.LESS_ORDER_AMOUNT);
 		
-		assertTrue(new Money(new BigDecimal(150)).eq(buyWorthXGetYRsOffOnZCategoryRule.execute(orderReq1)));
-		
-		
-		
-		//BuyXBrandGetYRsOffOnZProductRuleImpl
-		PromotionRule buyXBrandGetYRsOffOnZProductRule = ruleDao.load(-3004, -5);
+		assertEquals(0,new BigDecimal(150).compareTo(buyWorthXGetYRsOffOnZCategoryRule.execute(orderDiscount1).getTotalOrderDiscount()));
 
-		assertNotNull(buyXBrandGetYRsOffOnZProductRule);
-		assertTrue(buyXBrandGetYRsOffOnZProductRule instanceof BuyXBrandGetYRsOffOnZProductRuleImpl);
+	}
+
+	@Test
+	public void testBuyWorthXGetYRsOffOnZCategoryRuleImpl() {
 		
-		RuleConfiguration buyXBrandGetYRsOffOnZProductRuleImplRuleConfiguration = ruleDao.loadRuleConfiguration(-3004, -5);
-
-		assertNotNull(buyXBrandGetYRsOffOnZProductRuleImplRuleConfiguration);
-		assertEquals(5, buyXBrandGetYRsOffOnZProductRuleImplRuleConfiguration.getConfigItems().size());
-		assertEquals("700", buyXBrandGetYRsOffOnZProductRuleImplRuleConfiguration.getConfigItem("MIN_ORDER_VALUE").getValue());
-
-		assertEquals(buyXBrandGetYRsOffOnZProductRule.isApplicable(orderReq5,userId,isCouponCommitted),PromotionStatusEnum.SUCCESS);
-		assertEquals(buyXBrandGetYRsOffOnZProductRule.isApplicable(orderReq6,userId,isCouponCommitted),PromotionStatusEnum.PRODUCT_NOT_PRESENT);
-		assertEquals(buyXBrandGetYRsOffOnZProductRule.isApplicable(orderReq7,userId,isCouponCommitted),PromotionStatusEnum.LESS_ORDER_AMOUNT);
-		assertEquals(buyXBrandGetYRsOffOnZProductRule.isApplicable(orderReq8,userId,isCouponCommitted),PromotionStatusEnum.LESS_ORDER_AMOUNT_OF_BRAND_PRODUCTS);
-		assertEquals(buyXBrandGetYRsOffOnZProductRule.isApplicable(orderReq9,userId,isCouponCommitted),PromotionStatusEnum.BRAND_MISMATCH);
-		
-		assertTrue(new Money(new BigDecimal(445)).eq(buyXBrandGetYRsOffOnZProductRule.execute(orderReq5)));
-
-
-		//BuyWorthXGetYRsOffOnZCategoryRuleImpl
 		PromotionRule buyWorthXGetYPercentOffOnZCategoryRule = ruleDao.load(-3005, -3);
 
 		assertNotNull(buyWorthXGetYPercentOffOnZCategoryRule);
@@ -314,9 +382,12 @@ public class RuleImplTest extends BaseTestCase {
 		
 		assertEquals(new BigDecimal(780),orderReq1.getOrderValue());
 		
-		assertTrue(new Money(new BigDecimal(195)).eq(buyWorthXGetYPercentOffOnZCategoryRule.execute(orderReq1)));
+		assertEquals(0,new BigDecimal(195).compareTo(buyWorthXGetYPercentOffOnZCategoryRule.execute(orderDiscount1).getTotalOrderDiscount()));
 
-		//FirstPurchaseBuyWorthXGetYRsOffRule
+	}
+		@Test
+		public void testFirstPurchaseBuyWorthXGetYRsOffRule() {
+			
 		PromotionRule firstPurchaseBuyWorthXGetYRsOffRule = ruleDao.load(-3007, -7);
 
 		assertNotNull(firstPurchaseBuyWorthXGetYRsOffRule);
@@ -335,8 +406,13 @@ public class RuleImplTest extends BaseTestCase {
 		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(orderReq4,5,isCouponCommitted),PromotionStatusEnum.NOT_FIRST_PURCHASE);
 		assertEquals(firstPurchaseBuyWorthXGetYRsOffRule.isApplicable(clientMisMatchOrderReq,3,isCouponCommitted),PromotionStatusEnum.INVALID_CLIENT);
 		
-		assertTrue(new Money(new BigDecimal(300)).eq(buyWorthXGetYRsOffRule.execute(orderReq1)));
-		assertTrue(new Money(new BigDecimal(300)).eq(buyWorthXGetYRsOffRule.execute(orderReq3)));
+		assertEquals(0,new BigDecimal(120).compareTo(firstPurchaseBuyWorthXGetYRsOffRule.execute(orderDiscount1).getTotalOrderDiscount()));
+		assertEquals(0,new BigDecimal(120).compareTo(firstPurchaseBuyWorthXGetYRsOffRule.execute(orderDiscount3).getTotalOrderDiscount()));
+
+	}
+	
+	@Test
+	public void testBuyWorthXGetYPercentOffOnZCategoryRuleImpl() {
 		
 		//BuyWorthXGetYPercentOffOnZCategoryRuleImpl : Part Cat, Part Brand Use case
 		PromotionRule buyWorthXGetYPercentOffOnZCategoryOnBrandBRule = ruleDao.load(-3005, -3);
@@ -357,12 +433,109 @@ public class RuleImplTest extends BaseTestCase {
 		
 		assertEquals(new BigDecimal(780),orderReq1.getOrderValue());
 		
-		assertTrue(new Money(new BigDecimal(195)).eq(buyWorthXGetYPercentOffOnZCategoryOnBrandBRule.execute(orderReq1)));
+		assertEquals(0,new BigDecimal(195).compareTo(buyWorthXGetYPercentOffOnZCategoryOnBrandBRule.execute(orderDiscount1).getTotalOrderDiscount()));
 		
 		assertEquals(new BigDecimal(5780),partCatPartBrandOrderReq.getOrderValue());
-		assertTrue(new Money(new BigDecimal(195)).eq(buyWorthXGetYPercentOffOnZCategoryOnBrandBRule.execute(partCatPartBrandOrderReq)));
+		OrderDiscount partCatPartBrandOrderReqDiscout = new OrderDiscount();
+		partCatPartBrandOrderReqDiscout.setOrderRequest(partCatPartBrandOrderReq);
+		assertEquals(0,new BigDecimal(195).compareTo(buyWorthXGetYPercentOffOnZCategoryOnBrandBRule.execute(partCatPartBrandOrderReqDiscout).getTotalOrderDiscount()));
+
 		
+	}
+	
+	@Test
+	public void testBuyXQuantityVariableDiscountPercentOffRuleImpl() {
 		
+		//BuyXQuantityVariableDiscountPercentOffRuleImpl : Part Cat, Part Brand Use case
+		PromotionRule buyXQuantityVariableDiscountPercentOffOnZCategoryOnBrandBRule = ruleDao.load(-3008, -8);
+
+		assertNotNull(buyXQuantityVariableDiscountPercentOffOnZCategoryOnBrandBRule);
+		assertTrue(buyXQuantityVariableDiscountPercentOffOnZCategoryOnBrandBRule instanceof BuyXQuantityGetVariablePercentOffRuleImpl);
+		
+		RuleConfiguration buyXQuantityVariableDiscountPercentOffOnZCategoryOnBrandBRuleConfiguration = ruleDao.loadRuleConfiguration(-3008, -8);
+
+		assertNotNull(buyXQuantityVariableDiscountPercentOffOnZCategoryOnBrandBRuleConfiguration);
+
+		assertEquals(buyXQuantityVariableDiscountPercentOffOnZCategoryOnBrandBRule.isApplicable(orderReq1,userId,isCouponCommitted),PromotionStatusEnum.SUCCESS);
+		assertEquals(buyXQuantityVariableDiscountPercentOffOnZCategoryOnBrandBRule.isApplicable(orderReq2,userId,isCouponCommitted),PromotionStatusEnum.LESS_ORDER_AMOUNT);
+		assertEquals(buyXQuantityVariableDiscountPercentOffOnZCategoryOnBrandBRule.isApplicable(catMisMatchOrderReq,userId,isCouponCommitted),PromotionStatusEnum.CATEGORY_MISMATCH);
+		assertEquals(buyXQuantityVariableDiscountPercentOffOnZCategoryOnBrandBRule.isApplicable(clientMisMatchOrderReq,userId,isCouponCommitted),PromotionStatusEnum.INVALID_CLIENT);
+		//Partial Categry
+		assertEquals(buyXQuantityVariableDiscountPercentOffOnZCategoryOnBrandBRule.isApplicable(partCatPartBrandOrderReq,userId,isCouponCommitted),PromotionStatusEnum.SUCCESS);
+		
+		assertEquals(new BigDecimal(780),orderReq1.getOrderValue());
+		
+		assertEquals(0,new BigDecimal(117.00).compareTo(buyXQuantityVariableDiscountPercentOffOnZCategoryOnBrandBRule.execute(orderDiscount1).getTotalOrderDiscount()));
+		
+		assertEquals(new BigDecimal(5780),partCatPartBrandOrderReq.getOrderValue());
+		OrderDiscount partCatPartBrandOrderReqDiscout = new OrderDiscount();
+		partCatPartBrandOrderReqDiscout.setOrderRequest(partCatPartBrandOrderReq);
+		assertEquals(0,new BigDecimal(117.0).compareTo(buyXQuantityVariableDiscountPercentOffOnZCategoryOnBrandBRule.execute(partCatPartBrandOrderReqDiscout).getTotalOrderDiscount()));
+
+		assertEquals(buyXQuantityVariableDiscountPercentOffOnZCategoryOnBrandBRule.isApplicable(variablePercentDiscountOrderReq1,userId,isCouponCommitted),PromotionStatusEnum.SUCCESS);
+		assertEquals(buyXQuantityVariableDiscountPercentOffOnZCategoryOnBrandBRule.isApplicable(variablePercentDiscountOrderReq2,userId,isCouponCommitted),PromotionStatusEnum.SUCCESS);
+		assertEquals(buyXQuantityVariableDiscountPercentOffOnZCategoryOnBrandBRule.isApplicable(variablePercentDiscountOrderReq3,userId,isCouponCommitted),PromotionStatusEnum.SUCCESS);
+		
+		assertEquals(new BigDecimal(1000),variablePercentDiscountOrderReq1.getOrderValue());
+		assertEquals(new BigDecimal(2000),variablePercentDiscountOrderReq2.getOrderValue());
+		assertEquals(new BigDecimal(3000),variablePercentDiscountOrderReq3.getOrderValue());
+		assertEquals(new BigDecimal(6000),variablePercentDiscountOrderReq4.getOrderValue());
+		
+		//Quantity = 1, Percent Off = 5
+		OrderDiscount variablePercentDiscountOrderReqDiscout1 = new OrderDiscount();
+		variablePercentDiscountOrderReqDiscout1.setOrderRequest(variablePercentDiscountOrderReq1);
+		assertEquals(0,new BigDecimal(50).compareTo(buyXQuantityVariableDiscountPercentOffOnZCategoryOnBrandBRule.execute(variablePercentDiscountOrderReqDiscout1).getTotalOrderDiscount()));
+
+		//Quantity = 2, Percent Off = 10
+		OrderDiscount variablePercentDiscountOrderReqDiscout2 = new OrderDiscount();
+		variablePercentDiscountOrderReqDiscout2.setOrderRequest(variablePercentDiscountOrderReq2);
+		assertEquals(0,new BigDecimal(200).compareTo(buyXQuantityVariableDiscountPercentOffOnZCategoryOnBrandBRule.execute(variablePercentDiscountOrderReqDiscout2).getTotalOrderDiscount()));
+
+		// Quantity = 3, Percent Off = 15
+		OrderDiscount variablePercentDiscountOrderReqDiscout3 = new OrderDiscount();
+		variablePercentDiscountOrderReqDiscout3.setOrderRequest(variablePercentDiscountOrderReq3);
+		assertEquals(0,new BigDecimal(450).compareTo(buyXQuantityVariableDiscountPercentOffOnZCategoryOnBrandBRule.execute(variablePercentDiscountOrderReqDiscout3).getTotalOrderDiscount()));
+		
+		// Quantity = 6, Percent Off = 15
+		OrderDiscount variablePercentDiscountOrderReqDiscout4 = new OrderDiscount();
+		variablePercentDiscountOrderReqDiscout4.setOrderRequest(variablePercentDiscountOrderReq4);
+		assertEquals(0,new BigDecimal(900).compareTo(buyXQuantityVariableDiscountPercentOffOnZCategoryOnBrandBRule.execute(variablePercentDiscountOrderReqDiscout4).getTotalOrderDiscount()));
+		
+	}
+	
+//	@Test(expected = PlatformException.class)
+//	public void BuyXQuantityVariableDiscountPercentOffRuleImplInvalidInput(){
+//		
+//	}
+
+	
+	@Test(expected=NotImplementedException.class)
+	public void buyXBrandGetYRsOffOnZProductRuleTest() {
+		
+		int userId=1;
+		boolean isCouponCommitted = false;
+		
+		//BuyXBrandGetYRsOffOnZProductRuleImpl
+		PromotionRule buyXBrandGetYRsOffOnZProductRule = ruleDao.load(-3004, -5);
+
+		assertNotNull(buyXBrandGetYRsOffOnZProductRule);
+		assertTrue(buyXBrandGetYRsOffOnZProductRule instanceof BuyXBrandGetYRsOffOnZProductRuleImpl);
+		
+		RuleConfiguration buyXBrandGetYRsOffOnZProductRuleImplRuleConfiguration = ruleDao.loadRuleConfiguration(-3004, -5);
+
+		assertNotNull(buyXBrandGetYRsOffOnZProductRuleImplRuleConfiguration);
+		assertEquals(5, buyXBrandGetYRsOffOnZProductRuleImplRuleConfiguration.getConfigItems().size());
+		assertEquals("700", buyXBrandGetYRsOffOnZProductRuleImplRuleConfiguration.getConfigItem("MIN_ORDER_VALUE").getValue());
+
+		assertEquals(buyXBrandGetYRsOffOnZProductRule.isApplicable(orderReq5,userId,isCouponCommitted),PromotionStatusEnum.SUCCESS);
+		assertEquals(buyXBrandGetYRsOffOnZProductRule.isApplicable(orderReq6,userId,isCouponCommitted),PromotionStatusEnum.PRODUCT_NOT_PRESENT);
+		assertEquals(buyXBrandGetYRsOffOnZProductRule.isApplicable(orderReq7,userId,isCouponCommitted),PromotionStatusEnum.LESS_ORDER_AMOUNT_OF_BRAND_PRODUCTS);
+		assertEquals(buyXBrandGetYRsOffOnZProductRule.isApplicable(orderReq8,userId,isCouponCommitted),PromotionStatusEnum.LESS_ORDER_AMOUNT_OF_BRAND_PRODUCTS);
+		assertEquals(buyXBrandGetYRsOffOnZProductRule.isApplicable(orderReq9,userId,isCouponCommitted),PromotionStatusEnum.BRAND_MISMATCH);
+		
+		OrderDiscount orderDiscount5 = new OrderDiscount();
+		orderDiscount5.setOrderRequest(orderReq5);
+		assertEquals(0,new BigDecimal(445).compareTo(buyXBrandGetYRsOffOnZProductRule.execute(orderDiscount5).getTotalOrderDiscount()));
 	}
 
 }

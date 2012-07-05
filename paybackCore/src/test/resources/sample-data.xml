@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+		
+		<table name = "accounts_client">
+			<column>id</column>
+			<column>name</column>
+			<column>confirmed_order_email</column>
+			<column>pending_order_email</column>
+			<column>share_product_email</column>
+			<column>signature</column>
+			<column>pending_order_helpline</column>
+			<column>confirmed_order_helpline</column>
+			<column>sms_mask</column>
+			<column>noreply_email</column>
+			<column>feedback_email</column>
+			<column>promotions_email</column>
+			<column>sale_pricelist</column>
+			<column>list_pricelist</column>
+			<column>clientdomain_name</column>
+			<column>slug</column>
+			
+			<row>
+				<value name="id">5</value>
+				<value name="name">Future Bazaar</value>
+				<value name="confirmed_order_email">anubhav.jain@futuregroup.in</value>
+				<value name="pending_order_email">anubhav.jain@futuregroup.in</value>
+				<value name="share_product_email">anubhav.jain@futuregroup.in</value>
+				<value name="signature">Anubhav</value>
+				<value name="pending_order_helpline">7498410764</value>
+				<value name="confirmed_order_helpline">7498410764</value>
+				<value name="sms_mask">Anubhav</value>
+				<value name="noreply_email">anubhav.jain@futuregroup.in</value>
+				<value name="feedback_email">anubhav.jain@futuregroup.in</value>
+				<value name="promotions_email">anubhav.jain@futuregroup.in</value>
+				<value name="sale_pricelist">TEST_PRICELIST</value>
+				<value name="list_pricelist">TEST_PRICELIST</value>
+				<value name="clientdomain_name">abcd</value>
+				<value name="slug">TEST</value>
+				
+			</row>
+			
+		</table>
+		
+        <table name="accounts_clientdomain">
+        	<column>id</column>
+        	<column>client_id</column>
+        	<column>type</column>
+        	<column>is_public</column>
+        	<column>custom_home_page</column>
+        	<column>domain</column>
+        	<column>default_redirect_to</column>
+        	<column>code</column>
+        	<column>sale_pricelist</column>
+        	<column>list_pricelist</column>
+        	<column>is_second_factor_auth_reqd</column>
+        	<column>is_channel</column>
+
+			<row>
+        		<value name="id">1</value>
+        		<value name="client_id">5</value>
+        		<value name="type">website</value>
+        		<value name="is_public">1</value>
+        		<value name="custom_home_page">web/home/home.html</value>
+        		<value name="domain">beta.fb.com</value>
+        		<value name="default_redirect_to">http://beta.fb.com/</value>
+        		<value name="code">future</value>
+        		<value name="sale_pricelist"></value>
+        		<value name="list_pricelist"></value>
+        		<value name="is_second_factor_auth_reqd">0</value>
+        		<value name="is_channel">1</value>
+        	</row>
+        	<row>
+        		<value name="id">2</value>
+        		<value name="client_id">2</value>
+        		<value name="type">cc</value>
+        		<value name="is_public">1</value>
+        		<value name="custom_home_page">web/home/home.html</value>
+        		<value name="domain">fb.phonepedeal.com</value>
+        		<value name="default_redirect_to">http://fb.phonepedeal.com/</value>
+        		<value name="code">future</value>
+        		<value name="sale_pricelist"></value>
+        		<value name="list_pricelist"></value>
+        		<value name="is_second_factor_auth_reqd">0</value>
+        		<value name="is_channel">1</value>
+        	</row>
+        </table>
+        
+        
+       
+        
+        
+        
+		<table name="rules">        
+			<column>id</column>
+			<column>name</column>
+			
+			<row>
+				<value name="id">1</value>
+				<value name="name">ENTER_LOYALTY_CARD_EARN_X_POINTS</value>
+			</row>
+			<row>
+				<value name="id">2</value>
+				<value name="name">EARN_X_POINTS_ON_Y_DAY</value>
+			</row>
+			<row>
+				<value name="id">3</value>
+				<value name="name">BUY_PRODUCT_X_EARN_Y_POINTS</value>
+			</row>
+			<row>
+				<value name="id">4</value>
+				<value name="name">BUY_DOD_EARN_Y_POINTS</value>
+			</row>
+			<row>
+				<value name="id">5</value>
+				<value name="name">BUY_WORTH_X_EARN_Y_BONUS_POINTS</value>
+			</row>
+			<row>
+				<value name="id">6</value>
+				<value name="name">PURCHASE_ORDER_BURN_X_POINTS</value>
+			</row>
+			
+			<row>
+				<value name="id">7</value>
+				<value name="name">EARN_X_POINTS_ON_Y_PAYMENT_MODE</value>
+			</row>
+	
+		</table>
+        	
+        	<table name="payback_rule_config">
+        		<column>id</column>
+        		<column>name</column>
+        		<column>value</column>
+        		<column>rule_id</column>
+        	
+        		<row>
+        			<value name="id">1</value>
+        			<value name="name">EARN_RATIO</value>
+        			<value name="value">0.03</value>
+        			<value name="rule_id">1</value>
+        		</row>
+        		
+        		<row>
+	    			<value name="id">2</value>
+	    			<value name="name">BONUS_POINTS</value>
+	    			<value name="value">200</value>
+	    			<value name="rule_id">5</value>
+	    		</row>
+	    			<row>
+								<value name="id">3</value>
+								<value name="name">MIN_ORDER_VALUE</value>
+								<value name="value">2000</value>
+								<value name="rule_id">5</value>
+						</row>
+						<row>
+						<value name="id">4</value>
+						<value name="name">VALID_FROM</value>
+						<value name="value">2012-05-22</value>
+						<value name="rule_id">5</value>
+					</row>
+					<row>
+						<value name="id">5</value>
+						<value name="name">VALID_TILL</value>
+						<value name="value">9999-12-31</value>
+						<value name="rule_id">5</value>
+					</row>
+        	
+					<row>
+	    			<value name="id">6</value>
+	    			<value name="name">OFFER_DAY</value>
+	    			<value name="value">Friday</value>
+	    			<value name="rule_id">2</value>
+	    		</row>
+	    			<row>
+								<value name="id">7</value>
+								<value name="name">EARN_RATIO</value>
+								<value name="value">0.03</value>
+								<value name="rule_id">2</value>
+						</row>
+						<row>
+							<value name="id">8</value>
+							<value name="name">POINTS_FACTOR</value>
+							<value name="value">2</value>
+							<value name="rule_id">2</value>
+						</row>
+						<row>
+						<value name="id">9</value>
+						<value name="name">VALID_FROM</value>
+						<value name="value">2012-05-22</value>
+						<value name="rule_id">2</value>
+					</row>
+					<row>
+						<value name="id">10</value>
+						<value name="name">VALID_TILL</value>
+						<value name="value">9999-12-31</value>
+						<value name="rule_id">2</value>
+					</row>
+					
+					<row>
+	    			<value name="id">11</value>
+	    			<value name="name">INCLUDED_CATEGORY_LIST</value>
+	    			<value name="value">1234, 2345, 1193</value>
+	    			<value name="rule_id">3</value>
+	    		</row>
+	    			<row>
+								<value name="id">12</value>
+								<value name="name">EARN_RATIO</value>
+								<value name="value">0.03</value>
+								<value name="rule_id">3</value>
+						</row>
+						<row>
+							<value name="id">13</value>
+							<value name="name">POINTS_FACTOR</value>
+							<value name="value">2</value>
+							<value name="rule_id">3</value>
+						</row>
+						<row>
+						<value name="id">14</value>
+						<value name="name">VALID_FROM</value>
+						<value name="value">2012-05-22</value>
+						<value name="rule_id">3</value>
+					</row>
+					<row>
+						<value name="id">15</value>
+						<value name="name">VALID_TILL</value>
+						<value name="value">9999-12-31</value>
+						<value name="rule_id">3</value>
+					</row>
+					
+	    			<row>
+								<value name="id">16</value>
+								<value name="name">EARN_RATIO</value>
+								<value name="value">0.03</value>
+								<value name="rule_id">4</value>
+						</row>
+						<row>
+							<value name="id">18</value>
+							<value name="name">POINTS_FACTOR</value>
+							<value name="value">2</value>
+							<value name="rule_id">4</value>
+						</row>
+						<row>
+						<value name="id">19</value>
+						<value name="name">VALID_FROM</value>
+						<value name="value">2012-05-22</value>
+						<value name="rule_id">4</value>
+					</row>
+					<row>
+						<value name="id">20</value>
+						<value name="name">VALID_TILL</value>
+						<value name="value">9999-12-31</value>
+						<value name="rule_id">4</value>
+					</row>
+					
+					<row>
+        			<value name="id">21</value>
+        			<value name="name">BURN_RATIO</value>
+        			<value name="value">4</value>
+        			<value name="rule_id">6</value>
+        		</row>
+        		
+        		<row>
+				<value name="id">22</value>
+				<value name="name">VALID_FROM</value>
+				<value name="value">2012-05-22</value>
+				<value name="rule_id">1</value>
+			</row>
+			
+			<row>
+				<value name="id">23</value>
+				<value name="name">VALID_TILL</value>
+				<value name="value">9999-12-31</value>
+				<value name="rule_id">1</value>
+			</row>
+			
+			<row>
+			<value name="id">24</value>
+			<value name="name">EXCLUDED_CATEGORY_LIST</value>
+			<value name="value">0</value>
+			<value name="rule_id">1</value>
+		</row>
+			<row>
+        			<value name="id">25</value>
+        			<value name="name">EARN_RATIO</value>
+        			<value name="value">0.03</value>
+        			<value name="rule_id">7</value>
+        		</row>
+        		
+        		<row>
+				<value name="id">26</value>
+				<value name="name">VALID_FROM</value>
+				<value name="value">2012-05-22</value>
+				<value name="rule_id">7</value>
+			</row>
+			
+			<row>
+				<value name="id">27</value>
+				<value name="name">VALID_TILL</value>
+				<value name="value">9999-12-31</value>
+				<value name="rule_id">7</value>
+			</row>
+			
+			<row>
+				<value name="id">28</value>
+				<value name="name">INCLUDED_CATEGORY_LIST</value>
+				<value name="value">1234,1193</value>
+				<value name="rule_id">7</value>
+			</row>
+			<row>
+				<value name="id">29</value>
+				<value name="name">POINTS_FACTOR</value>
+				<value name="value">10</value>
+				<value name="rule_id">7</value>
+			</row>
+			<row>
+				<value name="id">30</value>
+				<value name="name">PAYMENT_MODE</value>
+				<value name="value">payback</value>
+				<value name="rule_id">7</value>
+			</row>
+        	
+			</table>
+
+</dataset>

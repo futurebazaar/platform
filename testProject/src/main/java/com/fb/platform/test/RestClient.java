@@ -79,7 +79,7 @@ public class RestClient {
 	
 	private static String QAURL = "http://10.0.102.21:8082/";
 	
-	private static String localhost = "http://localhost:8080/";
+	private static String localhost = "http://localhost:8082/";
 	
 	private static String url = localhost;
 
@@ -186,7 +186,7 @@ public class RestClient {
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		ApplyCouponResponse couponResponse = (ApplyCouponResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(applyPromotionResponseStr)));
 		System.out.println(couponResponse.getCouponStatus());
-		return couponResponse.getDiscountValue();
+		return couponResponse.getOrderDiscount().getDiscountValue();
 	}
 
 	private static OrderRequest createSampleOrderRequest(int orderId) {
@@ -195,7 +195,8 @@ public class RestClient {
 		orderRequest.setClientId(5);
 		OrderItem orderItem = new OrderItem();
 		orderItem.setQuantity(2);
-
+		orderItem.setDiscountValue(BigDecimal.ZERO);
+		
 		Product product = new Product();
 		product.setPrice(new BigDecimal("2000"));
 		product.setProductId(20000);

@@ -5,6 +5,7 @@ package com.fb.platform.promotion.rule.impl;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,10 +14,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.fb.commons.to.Money;
+import com.fb.platform.promotion.model.OrderDiscount;
 import com.fb.platform.promotion.rule.PromotionRule;
 import com.fb.platform.promotion.rule.RuleConfigDescriptorItem;
 import com.fb.platform.promotion.rule.RuleConfigDescriptorEnum;
 import com.fb.platform.promotion.rule.RuleConfiguration;
+import com.fb.platform.promotion.to.OrderItem;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.PromotionStatusEnum;
 import com.fb.platform.promotion.util.ListUtil;
@@ -97,11 +100,13 @@ public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule, Serializable {
 	}
 
 	@Override
-	public Money execute(OrderRequest request) {
+	public OrderDiscount execute(OrderDiscount orderDiscount) {
+		OrderRequest request = orderDiscount.getOrderRequest();	
 		if(log.isDebugEnabled()) {
 			log.debug("Executing BuyWorthXGetYRsOffRuleImpl on order : " + request.getOrderId());
 		}
-		return fixedRsOff;
+		orderDiscount.setTotalOrderDiscount(fixedRsOff.getAmount());
+		return orderDiscount.distributeDiscountOnOrder(orderDiscount,this.brands,this.includeCategoryList,this.excludeCategoryList);
 	}
 	
 	@Override
@@ -117,4 +122,5 @@ public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule, Serializable {
 		
 		return ruleConfigs;
 	}
+	
 }

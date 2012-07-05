@@ -25,7 +25,7 @@ public class CouponCodeCreator {
 
 	private Log log = LogFactory.getLog(CouponCodeCreator.class);
 	
-	private static char [] chars;
+	private char [] chars;
 
 	private CouponAdminDao couponAdminDao = null;
 
