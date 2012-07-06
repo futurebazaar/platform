@@ -29,6 +29,7 @@
         <property name="ruleDao" ref="ruleDao"/>
         <property name="couponAdminDao" ref="couponAdminDao"/>
         <property name="userAdminDao" ref="userAdminDao"/>
+        <property name="scratchCardDao" ref="scratchCardDao"/>
         <property name="promotionAdminDao" ref="promotionAdminDao"/>
         <property name="promotionService" ref="promotionService"/>
     </bean>
