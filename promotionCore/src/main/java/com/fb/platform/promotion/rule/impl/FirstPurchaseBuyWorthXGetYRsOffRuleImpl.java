@@ -83,7 +83,7 @@ public class FirstPurchaseBuyWorthXGetYRsOffRuleImpl  implements PromotionRule{
 		if(log.isDebugEnabled()) {
 			log.debug("Executing FirstPurchaseBuyWorthXGetYRsOffRuleImpl on order : " + request.getOrderId());
 		}
-		orderDiscount.setTotalOrderDiscount(data.getFixedRsOff().getAmount());
+		orderDiscount.setOrderDiscountValue(data.getFixedRsOff().getAmount());
 		
 		return orderDiscount.distributeDiscountOnOrder(orderDiscount,data.getBrands(),data.getIncludeCategoryList(),data.getExcludeCategoryList());
 		

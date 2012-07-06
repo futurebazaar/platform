@@ -28,13 +28,13 @@ RuleDataConvertor {
 	public RuleData convert(RuleConfiguration ruleConfig, RuleConfigMetadata metadata) throws MandatoryDataMissingException{
 		BuyXQuantityGetVariablePercentOffRuleData data = new BuyXQuantityGetVariablePercentOffRuleData();
 		
-		data.setClientList((List<Integer>)RuleConfigDescriptorEnum.CLIENT_LIST.parse(ruleConfig, metadata.isMandatory(RuleConfigDescriptorEnum.CLIENT_LIST)));
-		data.setIncludeCategoryList((List<Integer>)RuleConfigDescriptorEnum.CATEGORY_INCLUDE_LIST.parse(ruleConfig, metadata.isMandatory(RuleConfigDescriptorEnum.CATEGORY_INCLUDE_LIST)));
-		data.setExcludeCategoryList((List<Integer>)RuleConfigDescriptorEnum.CATEGORY_EXCLUDE_LIST.parse(ruleConfig, metadata.isMandatory(RuleConfigDescriptorEnum.CATEGORY_EXCLUDE_LIST)));
-		data.setBrands((List<Integer>)RuleConfigDescriptorEnum.BRAND_LIST.parse(ruleConfig, metadata.isMandatory(RuleConfigDescriptorEnum.BRAND_LIST)));
-		data.setMinOrderValue((Money) RuleConfigDescriptorEnum.MIN_ORDER_VALUE.parse(ruleConfig, metadata.isMandatory(RuleConfigDescriptorEnum.MIN_ORDER_VALUE)));
-		data.setMaxDiscountPerUse((Money)RuleConfigDescriptorEnum.MAX_DISCOUNT_CEIL_IN_VALUE.parse(ruleConfig, metadata.isMandatory(RuleConfigDescriptorEnum.MAX_DISCOUNT_CEIL_IN_VALUE)));
-		data.setQuantityDiscountMap((QuantityDiscountMap)RuleConfigDescriptorEnum.VARIABLE_DISCOUNT_PERCENTAGE.parse(ruleConfig, metadata.isMandatory(RuleConfigDescriptorEnum.VARIABLE_DISCOUNT_PERCENTAGE)));
+		data.setClientList((List<Integer>)RuleConfigDescriptorEnum.CLIENT_LIST.parse(ruleConfig, metadata));
+		data.setIncludeCategoryList((List<Integer>)RuleConfigDescriptorEnum.CATEGORY_INCLUDE_LIST.parse(ruleConfig, metadata));
+		data.setExcludeCategoryList((List<Integer>)RuleConfigDescriptorEnum.CATEGORY_EXCLUDE_LIST.parse(ruleConfig, metadata));
+		data.setBrands((List<Integer>)RuleConfigDescriptorEnum.BRAND_LIST.parse(ruleConfig, metadata));
+		data.setMinOrderValue((Money) RuleConfigDescriptorEnum.MIN_ORDER_VALUE.parse(ruleConfig, metadata));
+		data.setMaxDiscountPerUse((Money)RuleConfigDescriptorEnum.MAX_DISCOUNT_CEIL_IN_VALUE.parse(ruleConfig, metadata));
+		data.setQuantityDiscountMap((QuantityDiscountMap)RuleConfigDescriptorEnum.VARIABLE_DISCOUNT_PERCENTAGE.parse(ruleConfig, metadata));
 		
 		return data;
 	

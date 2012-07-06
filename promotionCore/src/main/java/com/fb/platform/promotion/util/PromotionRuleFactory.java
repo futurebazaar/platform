@@ -17,6 +17,7 @@ import com.fb.platform.promotion.rule.impl.BuyWorthXGetYRsOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyXBrandGetYRsOffOnZProductRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyXGetYFreeRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyXQuantityGetVariablePercentOffRuleImpl;
+import com.fb.platform.promotion.rule.impl.CategoryBasedVariablePercentOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.FirstPurchaseBuyWorthXGetYRsOffRuleImpl;
 
 /**
@@ -61,6 +62,10 @@ public class PromotionRuleFactory {
 			
 		case BUY_X_QUANTITY_GET_VARIABLE_PERCENT_OFF:
 			rule = new BuyXQuantityGetVariablePercentOffRuleImpl();
+			break;
+			
+		case CATEGORY_BASED_VARIABLE_PERCENT_OFF:
+			rule = new CategoryBasedVariablePercentOffRuleImpl();
 			break;
 			
 		default:

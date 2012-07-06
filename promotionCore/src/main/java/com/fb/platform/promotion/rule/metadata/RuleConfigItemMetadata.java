@@ -12,7 +12,7 @@ import com.fb.platform.promotion.rule.config.RuleConfigDescriptorEnum;
 public class RuleConfigItemMetadata {
 
 	private RuleConfigDescriptorEnum ruleConfigDescriptorEnum;
-	private RuleConfigItemRepeatEnum ruleConfigItemRepeatEnum;
+	private RuleConfigRepeatEnum ruleConfigItemRepeatEnum;
 	private boolean isMandatory;
 	
 	
@@ -20,32 +20,32 @@ public class RuleConfigItemMetadata {
 			RuleConfigDescriptorEnum ruleConfigDescriptorEnum) {
 		this.ruleConfigDescriptorEnum = ruleConfigDescriptorEnum;
 		this.isMandatory = false;
-		this.ruleConfigItemRepeatEnum = RuleConfigItemRepeatEnum.NON_REPEATABLE;
+		this.ruleConfigItemRepeatEnum = RuleConfigRepeatEnum.NON_REPEATABLE;
 	}
 
 	public RuleConfigItemMetadata(RuleConfigDescriptorEnum ruleConfigDescriptorEnum, 
 				boolean isMandatory) {
 		this.ruleConfigDescriptorEnum = ruleConfigDescriptorEnum;
 		this.isMandatory = isMandatory;
-		this.ruleConfigItemRepeatEnum = RuleConfigItemRepeatEnum.NON_REPEATABLE;
+		this.ruleConfigItemRepeatEnum = RuleConfigRepeatEnum.NON_REPEATABLE;
 	}
 
 	public RuleConfigItemMetadata(
 			RuleConfigDescriptorEnum ruleConfigDescriptorEnum,
-			RuleConfigItemRepeatEnum ruleConfigItemRepeatEnum,
+			RuleConfigRepeatEnum ruleConfigItemRepeatEnum,
 			boolean isMandatory) {
 		this.ruleConfigDescriptorEnum = ruleConfigDescriptorEnum;
 		this.ruleConfigItemRepeatEnum = ruleConfigItemRepeatEnum;
 		this.isMandatory = isMandatory;
 	}
 
-	public RuleConfigItemRepeatEnum getRuleConfigItemRepeatEnum() {
+	public RuleConfigRepeatEnum getRuleConfigItemRepeatEnum() {
 		return ruleConfigItemRepeatEnum;
 	}
 
 
 	public void setRuleConfigItemRepeatEnum(
-			RuleConfigItemRepeatEnum ruleConfigItemRepeatEnum) {
+			RuleConfigRepeatEnum ruleConfigItemRepeatEnum) {
 		this.ruleConfigItemRepeatEnum = ruleConfigItemRepeatEnum;
 	}
 
