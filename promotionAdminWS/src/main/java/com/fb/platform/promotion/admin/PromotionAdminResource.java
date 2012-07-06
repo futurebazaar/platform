@@ -123,10 +123,10 @@ public class PromotionAdminResource {
 			fetchRuleResponse.setSessionToken(apiFetchRuleRequest.getSessionToken());
 			fetchRuleResponse.setFetchRulesEnum(FetchRulesEnum.fromValue(apiFetchRuleResponse.getFetchRulesEnum().toString()));
 			
-			for(com.fb.platform.promotion.rule.RuleConfigDescriptor apiRuleConfigDescriptor: apiFetchRuleResponse.getRulesList()) {
+			for(com.fb.platform.promotion.rule.config.RuleConfigDescriptor apiRuleConfigDescriptor: apiFetchRuleResponse.getRulesList()) {
 				RuleConfigDescriptor ruleConfigDescriptor = new RuleConfigDescriptor();
 				ruleConfigDescriptor.setRulesEnum(RulesEnum.valueOf(apiRuleConfigDescriptor.getRulesEnum().name()));
-				for(com.fb.platform.promotion.rule.RuleConfigDescriptorItem apiRuleConfigDescriptorItem : apiRuleConfigDescriptor.getRuleConfigItemsList()) {
+				for(com.fb.platform.promotion.rule.config.RuleConfigItemDescriptor apiRuleConfigDescriptorItem : apiRuleConfigDescriptor.getRuleConfigItemsList()) {
 					RuleConfigDescriptorItem ruleConfigDescriptorItem = new RuleConfigDescriptorItem();
 					ruleConfigDescriptorItem.setIsMandatory(apiRuleConfigDescriptorItem.isMandatory());
 					ruleConfigDescriptorItem.setRuleConfigDescriptorEnum(RuleConfigDescriptorEnum.valueOf(apiRuleConfigDescriptorItem.getRuleConfigDescriptorEnum().name()));
@@ -367,7 +367,7 @@ public class PromotionAdminResource {
 					
 					ruleConfigItemTO.setRuleConfigName(apiRuleConfigItemTO.getRuleConfigName());
 					
-					ruleConfigItemTO.setRuleConfigDescription(com.fb.platform.promotion.rule.RuleConfigDescriptorEnum.valueOf(apiRuleConfigItemTO.getRuleConfigName()).getDescription());
+					ruleConfigItemTO.setRuleConfigDescription(com.fb.platform.promotion.rule.config.RuleConfigDescriptorEnum.valueOf(apiRuleConfigItemTO.getRuleConfigName()).getDescription());
 					
 					ruleConfigItemTO.setRuleConfigValue(apiRuleConfigItemTO.getRuleConfigValue());
 					

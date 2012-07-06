@@ -113,7 +113,7 @@ public class CouponResource {
 			OrderDiscount xmlOrderDiscount = new OrderDiscount();
 			
 			if (apiOrderDiscount != null) {
-				xmlOrderDiscount.setDiscountValue(apiOrderDiscount.getTotalOrderDiscount());
+				xmlOrderDiscount.setDiscountValue(apiOrderDiscount.getOrderDiscountValue());
 				OrderRequest xmlOrderResponse = getXMLOrderResponse(apiOrderDiscount.getOrderRequest());
 				xmlOrderDiscount.setOrderRequest(xmlOrderResponse);
 			}

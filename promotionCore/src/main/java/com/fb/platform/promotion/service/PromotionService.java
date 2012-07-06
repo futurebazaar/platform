@@ -10,6 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
+import com.fb.platform.promotion.exception.CouponNotCommitedException;
+import com.fb.platform.promotion.exception.CouponNotFoundException;
+import com.fb.platform.promotion.exception.PromotionNotFoundException;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.scratchCard.ScratchCard;
