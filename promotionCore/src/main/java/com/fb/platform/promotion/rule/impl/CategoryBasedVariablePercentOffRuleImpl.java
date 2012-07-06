@@ -55,6 +55,9 @@ public class CategoryBasedVariablePercentOffRuleImpl implements PromotionRule, S
 		if(data.getMinOrderValue() !=null && orderValue.lt(data.getMinOrderValue())){
 			return PromotionStatusEnum.LESS_ORDER_AMOUNT;
 		}
+		if (ListUtil.isValidList(data.getCategoryDiscountPairs().getAllCategoryList()) && !request.isAnyProductInCategory(data.getCategoryDiscountPairs().getAllCategoryList())) {
+			return PromotionStatusEnum.CATEGORY_MISMATCH;
+		}
 		return PromotionStatusEnum.SUCCESS;
 	}
 
@@ -73,19 +76,6 @@ public class CategoryBasedVariablePercentOffRuleImpl implements PromotionRule, S
 			orderDiscount.setOrderDiscountValue(discountCalculated.getAmount());
 			orderDiscount.distributeDiscountOnOrder(orderDiscount,null,pair.getCategoryList(),null);
 		}
-		//[1,2]= 5 : [3-8]=10 : [9,10]=15 : [11,12]=12 : [13,14]=12 : [15,16]=18
-//		Money orderVal = request.getOrderValueForRelevantProducts(null, data.getCategoryDiscountPairs().getAllCategoryList(), null);
-//		Money discountCalculated = (orderVal.times(data.getCategoryDiscountPairs().getCategoryDiscountMap().get(0).getPercent().doubleValue())).div(100);
-//		Money finalDiscountAmount = new Money(new BigDecimal(0));
-//		if(data.getMaxDiscountPerUse() != null && discountCalculated.gt(data.getMaxDiscountPerUse())){
-//			log.info("Maximum discount is less than the calculated discount on this order. Max Discount = "+data.getMaxDiscountPerUse() +" and Discount calculated = "+discountCalculated);
-//			finalDiscountAmount = finalDiscountAmount.plus(data.getMaxDiscountPerUse());
-//		}
-//		else{
-//			log.info("Discount amount calculated is the final discount on order. Discount calculated = "+discountCalculated);
-//			finalDiscountAmount = finalDiscountAmount.plus(discountCalculated);
-//		}
-		
 		orderDiscount.setOrderDiscountValue(finalDiscountAmount.getAmount());
 		return orderDiscount;
 	}
@@ -101,12 +91,9 @@ public class CategoryBasedVariablePercentOffRuleImpl implements PromotionRule, S
 		List<RuleConfigItemDescriptor> ruleConfigs = new ArrayList<RuleConfigItemDescriptor>();
 		
 		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.CLIENT_LIST, false));
-		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.CATEGORY_INCLUDE_LIST, false));
-		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.CATEGORY_EXCLUDE_LIST, false));
-		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.BRAND_LIST, false));
 		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.MIN_ORDER_VALUE, false));
-		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.DISCOUNT_PERCENTAGE, true));
-		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.MAX_DISCOUNT_CEIL_IN_VALUE, false));
+		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.DISCOUNT_PERCENTAGE, true, true));
+		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.CATEGORY_INCLUDE_LIST, true, true));
 		
 		return ruleConfigs;
 	}
