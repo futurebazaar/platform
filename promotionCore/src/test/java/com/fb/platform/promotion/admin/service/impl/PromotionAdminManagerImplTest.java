@@ -52,8 +52,8 @@ import com.fb.platform.promotion.admin.to.ViewPromotionEnum;
 import com.fb.platform.promotion.admin.to.ViewPromotionRequest;
 import com.fb.platform.promotion.admin.to.ViewPromotionResponse;
 import com.fb.platform.promotion.model.coupon.CouponType;
-import com.fb.platform.promotion.rule.RuleConfigDescriptor;
 import com.fb.platform.promotion.rule.RulesEnum;
+import com.fb.platform.promotion.rule.config.RuleConfigDescriptor;
 import com.fb.platform.promotion.to.AlphaNumericType;
 import com.fb.platform.promotion.to.AlphabetCase;
 import com.fb.platform.user.manager.interfaces.UserManager;
@@ -75,40 +75,37 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 	LoginResponse responseUser = null;
 
 	private static int promotionId = -4100;
-
-	private static int[] validFromSort = new int[] { -3001, -3002, -3003 };
-
-	private static int[] validTillSort = new int[] { -3003, -3002, -3001 };
-
-	private static int[] nameSort = new int[] { -3001, -3002, -3003 };
-
-	private static int[] nameSearch = new int[] { -3001, -3002 };
-
-	private static int[] validFromSearch = new int[] { -3001, -3002 };
-
-	private static int[] validTillSearch = new int[] { -3 };
-
-	private static int[] nameValidTillSearch = new int[] { -3002, -3003 };
-
-	private static int[] validFromValidTillSearch = new int[] { -4000, -4100 };
-
-	private static int[] nameValidFromSearch = new int[] { -3001, -3002 };
-
-	private static int[] filterSearch = new int[] { -3001, -3002 };
-
-	private static List<RulesEnum> ruleList = new ArrayList<RulesEnum>() {
-		{
-			add(RulesEnum.BUY_WORTH_X_GET_Y_RS_OFF_ON_Z_CATEGORY);
-			add(RulesEnum.BUY_WORTH_X_GET_Y_RS_OFF);
-			add(RulesEnum.BUY_WORTH_X_GET_Y_PERCENT_OFF);
-			add(RulesEnum.BUY_X_BRAND_GET_Y_RS_OFF_ON_Z_PRODUCT);
-			add(RulesEnum.BUY_WORTH_X_GET_Y_PERCENT_OFF_ON_Z_CATEGORY);
-			add(RulesEnum.FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF);
-			add(RulesEnum.BUY_X_GET_Y_FREE);
-			add(RulesEnum.BUY_X_QUANTITY_GET_VARIABLE_PERCENT_OFF);
-		}
-	};
-
+	
+	private static int[] validFromSort = new int[] {-3001, -3002, -3003};
+	
+	private static int[] validTillSort = new int[] {-3003, -3002, -3001};
+	
+	private static int[] nameSort = new int[] {-3001, -3002, -3003};
+	
+	private static int[] nameSearch = new int[] {-3001, -3002};
+	
+	private static int[] validFromSearch = new int[] {-3001, -3002};
+	
+	private static int[] validTillSearch = new int[] {-3};
+	
+	private static int[] nameValidTillSearch = new int[] {-3002, -3003};
+	
+	private static int[] validFromValidTillSearch = new int[] {-4000, -4100};
+	
+	private static int[] nameValidFromSearch = new int[] {-3001, -3002};
+	
+	private static int[] filterSearch = new int[] {-3001, -3002};
+	
+	private static List<RulesEnum> ruleList = new ArrayList<RulesEnum>() {{
+		add(RulesEnum.BUY_WORTH_X_GET_Y_RS_OFF);
+		add(RulesEnum.BUY_WORTH_X_GET_Y_PERCENT_OFF);
+		add(RulesEnum.BUY_X_BRAND_GET_Y_RS_OFF_ON_Z_PRODUCT);
+		add(RulesEnum.FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF);
+		add(RulesEnum.BUY_X_GET_Y_FREE);
+		add(RulesEnum.BUY_X_QUANTITY_GET_VARIABLE_PERCENT_OFF);
+		add(RulesEnum.CATEGORY_BASED_VARIABLE_PERCENT_OFF);
+	}};
+	
 	@Before
 	public void loginUser() {
 
@@ -153,7 +150,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 				fetchRuleResponse.getFetchRulesEnum());
 		assertNotNull(fetchRuleResponse.getSessionToken());
 		assertNotNull(fetchRuleResponse.getRulesList());
-		assertEquals(6, fetchRuleResponse.getRulesList().size());
+		assertEquals(7, fetchRuleResponse.getRulesList().size());
 		assertNotNull(fetchRuleResponse.getSessionToken());
 		for (RuleConfigDescriptor ruleConfig : fetchRuleResponse.getRulesList()) {
 			assertTrue(ruleList.contains(ruleConfig.getRulesEnum()));
@@ -1019,15 +1016,13 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setStartRecord(0);
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
 		searchPromotionRequest.setValidFrom(new DateTime(2012, 1, 2, 0, 0));
+		
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
+		
+		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
+		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
+		assertEquals(14, searchPromotionResponse.getTotalCount());
 
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
-
-		searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
-		assertEquals(SearchPromotionEnum.SUCCESS,
-				searchPromotionResponse.getSearchPromotionEnum());
-		assertEquals(13, searchPromotionResponse.getTotalCount());
 		assertEquals(2, searchPromotionResponse.getPromotionsList().size());
 
 		int count = 0;
@@ -1190,12 +1185,9 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setBatchSize(10);
 		searchPromotionRequest.setStartRecord(0);
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
-
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
-		assertEquals(SearchPromotionEnum.SUCCESS,
-				searchPromotionResponse.getSearchPromotionEnum());
-		assertEquals(19, searchPromotionResponse.getTotalCount());
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
+		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
+		assertEquals(20, searchPromotionResponse.getTotalCount());
 		assertEquals(10, searchPromotionResponse.getPromotionsList().size());
 	}
 

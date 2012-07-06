@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.promotion.dao.RuleDao;
 import com.fb.platform.promotion.rule.PromotionRule;
-import com.fb.platform.promotion.rule.RuleConfiguration;
+import com.fb.platform.promotion.rule.config.RuleConfiguration;
 import com.fb.platform.promotion.rule.impl.BuyXGetYFreeRuleImpl;
 
 /**

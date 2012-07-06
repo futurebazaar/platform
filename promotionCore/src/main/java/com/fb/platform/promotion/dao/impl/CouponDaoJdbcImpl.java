@@ -24,13 +24,13 @@ import org.springframework.jdbc.support.KeyHolder;
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.dao.CouponDao;
+import com.fb.platform.promotion.exception.CouponNotCommitedException;
 import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
 import com.fb.platform.promotion.model.coupon.CouponType;
 import com.fb.platform.promotion.model.coupon.GlobalCouponUses;
 import com.fb.platform.promotion.model.coupon.UserCouponUses;
 import com.fb.platform.promotion.model.coupon.UserCouponUsesEntry;
-import com.fb.platform.promotion.service.CouponNotCommitedException;
 
 /**
  * @author vinayak

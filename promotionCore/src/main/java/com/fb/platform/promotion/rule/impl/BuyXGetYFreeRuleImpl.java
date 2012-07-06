@@ -10,12 +10,14 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.fb.commons.to.Money;
 import com.fb.platform.promotion.model.OrderDiscount;
 import com.fb.platform.promotion.rule.PromotionRule;
-import com.fb.platform.promotion.rule.RuleConfigDescriptorEnum;
-import com.fb.platform.promotion.rule.RuleConfigDescriptorItem;
-import com.fb.platform.promotion.rule.RuleConfiguration;
+import com.fb.platform.promotion.rule.config.RuleConfigDescriptorEnum;
+import com.fb.platform.promotion.rule.config.RuleConfigItemDescriptor;
+import com.fb.platform.promotion.rule.config.RuleConfiguration;
+import com.fb.platform.promotion.rule.metadata.BuyXGetYFreeRuleMetadata;
+import com.fb.platform.promotion.rule.metadata.RuleConfigItemMetadata;
+import com.fb.platform.promotion.rule.metadata.RuleConfigMetadata;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.Product;
 import com.fb.platform.promotion.to.PromotionStatusEnum;
@@ -54,14 +56,19 @@ public class BuyXGetYFreeRuleImpl implements PromotionRule, Serializable{
 	}
 	
 	@Override
-	public List<RuleConfigDescriptorItem> getRuleConfigs() {
-		List<RuleConfigDescriptorItem> ruleConfigs = new ArrayList<RuleConfigDescriptorItem>();
+	public List<RuleConfigItemDescriptor> getRuleConfigs() {
+		List<RuleConfigItemDescriptor> ruleConfigs = new ArrayList<RuleConfigItemDescriptor>();
 		
-		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CATEGORY_INCLUDE_LIST, false));
-		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CATEGORY_EXCLUDE_LIST, false));
-		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.BRAND_LIST, false));
-		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.MIN_ORDER_VALUE, false));
+		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.CATEGORY_INCLUDE_LIST, false));
+		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.CATEGORY_EXCLUDE_LIST, false));
+		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.BRAND_LIST, false));
+		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.MIN_ORDER_VALUE, false));
 		
 		return ruleConfigs;
+	}
+
+	@Override
+	public RuleConfigMetadata getRuleConfigMetadata() {
+		return new BuyXGetYFreeRuleMetadata();
 	}
 }
