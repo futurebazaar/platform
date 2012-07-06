@@ -4,7 +4,7 @@
 
    <clustered>true</clustered>
 
-   <cluster-user>platformMomUser</cluster-user>
+   <cluster-user>platformMomClusterUser</cluster-user>
    <cluster-password>lenanileindusnarmada</cluster-password>
 
    <paging-directory>${data.dir:../data}/paging</paging-directory>
@@ -20,7 +20,7 @@
    <connectors>      
       <connector name="netty">
          <factory-class>org.hornetq.core.remoting.impl.netty.NettyConnectorFactory</factory-class>
-         <param key="host"  value="${hornetq.remoting.netty.host:MACHINE_IP_ADDRESS}"/>
+         <param key="host"  value="${hornetq.remoting.netty.host:10.202.24.76}"/>
          <param key="port"  value="${hornetq.remoting.netty.port:5445}"/>
       </connector>
       
@@ -35,7 +35,7 @@
    <acceptors>
       <acceptor name="netty">
          <factory-class>org.hornetq.core.remoting.impl.netty.NettyAcceptorFactory</factory-class>
-         <param key="host"  value="${hornetq.remoting.netty.host:MACHINE_IP_ADDRESS}"/>
+         <param key="host"  value="${hornetq.remoting.netty.host:10.202.24.76}"/>
          <param key="port"  value="${hornetq.remoting.netty.port:5445}"/>
       </acceptor>
       
@@ -51,7 +51,7 @@
    <broadcast-groups>
       <broadcast-group name="bg-group1">
          <group-address>229.141.145.81</group-address>
-         <group-port>PORT</group-port>
+         <group-port>9876</group-port>
          <broadcast-period>5000</broadcast-period>
          <connector-ref>netty</connector-ref>
       </broadcast-group>
@@ -60,7 +60,7 @@
    <discovery-groups>
       <discovery-group name="dg-group1">
          <group-address>229.141.145.81</group-address>
-         <group-port>PORT</group-port>
+         <group-port>9876</group-port>
          <refresh-timeout>10000</refresh-timeout>
       </discovery-group>
    </discovery-groups>
@@ -76,10 +76,10 @@
    
    <security-settings>
       <security-setting match="#">
-         <permission type="createNonDurableQueue" roles="guest"/>
-         <permission type="deleteNonDurableQueue" roles="guest"/>
-         <permission type="consume" roles="guest"/>
-         <permission type="send" roles="guest"/>
+         <permission type="createNonDurableQueue" roles="admin"/>
+         <permission type="deleteNonDurableQueue" roles="admin"/>
+         <permission type="consume" roles="admin"/>
+         <permission type="send" roles="admin"/>
       </security-setting>
    </security-settings>
 
