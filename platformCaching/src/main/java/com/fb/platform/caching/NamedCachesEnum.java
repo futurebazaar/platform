@@ -18,6 +18,7 @@ public enum NamedCachesEnum {
 	LSP_CACHE("lspCache"),
 	POINTS_CACHE("pointsCache"),
 	FULFILMENT_CACHE("fulfilmentCache");
+	WALLET_CACHE("walletCache");
 
 	private String name = null;
 

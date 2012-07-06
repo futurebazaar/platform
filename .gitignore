@@ -1,4 +1,5 @@
 .project
+.settings
 copyWar.sh
 restartTomcat.sh
 authenticationCore/.classpath
@@ -70,6 +71,16 @@ migrationWS/.settings/
 platformMailer/.classpath
 platformMailer/.settings/
 platformMailer/bin/
+walletCore/.classpath
+walletCore/.project
+walletCore/.settings/
+walletCore/bin/
+walletCore/target/
+walletWS/.classpath
+walletWS/.project
+walletWS/.settings/
+walletWS/bin/
+walletWS/target/
 .gitignore
 paybackWS/.classpath
 paybackCore/.classpath

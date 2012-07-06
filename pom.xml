@@ -408,12 +408,14 @@
         <module>paybackWS</module>
     	<module>eGVCore</module>
     	<module>eGVWS</module>
-    	<module>promotionWS</module>
 		<module>platformMom</module>
 		<module>sapReceiver</module>
 		<module>mailReceiver</module>
 		<module>inventoryReceiver</module>
 		<module>launcher</module>
+		<module>walletCore</module>
+		<module>walletWS</module>
+    	<module>promotionWS</module>
     </modules>
 
     <reporting>
@@ -451,7 +453,6 @@
     <properties>
     	<platform.version>1.0-SNAPSHOT</platform.version>
         <dao.framework>jdbc</dao.framework>
-	<platform.version>1.0-SNAPSHOT</platform.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.version>4.8.2</junit.version>
 		<spring.version>3.0.5.RELEASE</spring.version>
