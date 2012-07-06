@@ -79,7 +79,7 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule, Serializa
 			finalDiscountAmount = finalDiscountAmount.plus(data.getMaxDiscountPerUse());
 		}
 		else{
-			log.info("Discount amount calculated is the final discount on order. Discount calculated = "+discountCalculated);
+			log.info("Discount amount calculated is = "+discountCalculated);
 			finalDiscountAmount = finalDiscountAmount.plus(discountCalculated);
 		}
 		
@@ -103,7 +103,7 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule, Serializa
 		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.BRAND_LIST, false));
 		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.MIN_ORDER_VALUE, false));
 		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.DISCOUNT_PERCENTAGE, true));
-		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.MAX_DISCOUNT_CEIL_IN_VALUE, false));
+		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.MAX_DISCOUNT_CEIL_IN_VALUE, true));
 		
 		return ruleConfigs;
 	}
