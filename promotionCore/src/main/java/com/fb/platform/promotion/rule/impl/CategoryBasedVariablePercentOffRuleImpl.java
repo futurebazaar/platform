@@ -52,11 +52,11 @@ public class CategoryBasedVariablePercentOffRuleImpl implements PromotionRule, S
 			return PromotionStatusEnum.INVALID_CLIENT;
 		}
 		Money orderValue = request.getOrderValueForRelevantProducts(null, data.getCategoryDiscountPairs().getAllCategoryList(), null);
-		if(data.getMinOrderValue() !=null && orderValue.lt(data.getMinOrderValue())){
-			return PromotionStatusEnum.LESS_ORDER_AMOUNT;
-		}
 		if (ListUtil.isValidList(data.getCategoryDiscountPairs().getAllCategoryList()) && !request.isAnyProductInCategory(data.getCategoryDiscountPairs().getAllCategoryList())) {
 			return PromotionStatusEnum.CATEGORY_MISMATCH;
+		}
+		if(data.getMinOrderValue() !=null && orderValue.lt(data.getMinOrderValue())){
+			return PromotionStatusEnum.LESS_ORDER_AMOUNT;
 		}
 		return PromotionStatusEnum.SUCCESS;
 	}
