@@ -197,8 +197,8 @@
 					
 					<row>
 	    			<value name="id">11</value>
-	    			<value name="name">INCLUDED_CATEGORY_LIST</value>
-	    			<value name="value">1234, 2345, 1193</value>
+	    			<value name="name">GV_CATEGORY_LIST</value>
+	    			<value name="value">12,13</value>
 	    			<value name="rule_id">3</value>
 	    		</row>
 	    			<row>
@@ -209,8 +209,8 @@
 						</row>
 						<row>
 							<value name="id">13</value>
-							<value name="name">POINTS_FACTOR</value>
-							<value name="value">2</value>
+							<value name="name">EARN_MAP</value>
+							<value name="value">gv=5,electronics=2</value>
 							<value name="rule_id">3</value>
 						</row>
 						<row>

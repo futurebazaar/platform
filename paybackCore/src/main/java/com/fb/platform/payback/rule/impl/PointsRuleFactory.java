@@ -33,46 +33,35 @@ public class PointsRuleFactory {
 			this.pointsUtil = pointsUtil;
 		}
 		
-		public static PointsRule createRule(EarnPointsRuleEnum ruleName, RuleConfiguration ruleConfig){
+		private static PointsRule getRule(EarnPointsRuleEnum ruleName){
 			PointsRule rule = null;
 			switch(ruleName){
 			
 				case BUY_WORTH_X_EARN_Y_BONUS_POINTS:
 					rule = new BuyWorthXEarnYBonusPoints();
-					rule.setPointsUtil(pointsUtil);
-					rule.init(ruleConfig);
+				
 					break;
 				
 				case EARN_X_POINTS_ON_Y_DAY:
 					rule = new EarnXPointsOnYDay();
-					rule.setPointsUtil(pointsUtil);
-					rule.init(ruleConfig);
 					break;
 					
 				case BUY_PRODUCT_X_EARN_Y_POINTS:
 					rule = new BuyProductXEarnYPoints();
-					rule.setPointsUtil(pointsUtil);
-					rule.init(ruleConfig);
 					break;
 					
 				case ENTER_LOYALTY_CARD_EARN_X_POINTS:
 					rule = new EnterLoyaltyCardEarnXPoints();
-					rule.setPointsUtil(pointsUtil);
-					rule.init(ruleConfig);
 					break;
 				
 				case EARN_X_POINTS_ON_Y_PAYMENT_MODE:
 					rule = new EarnXPointsOnYPaymentMode();
-					rule.setPointsUtil(pointsUtil);
-					rule.init(ruleConfig);
 					break;
 					
 				case BUY_DOD_EARN_Y_POINTS:
 					rule = new BuyHeroDealEarnYPoints();
 					((BuyHeroDealEarnYPoints) rule).setListDao(listDao);
 					((BuyHeroDealEarnYPoints) rule).setListCacheAccess(listCacheAccess);
-					rule.setPointsUtil(pointsUtil);
-					rule.init(ruleConfig);
 					break;
 					
 				default:
@@ -99,6 +88,13 @@ public class PointsRuleFactory {
 			
 			}
 			
+			return rule;
+		}
+		
+		public static PointsRule createRule(EarnPointsRuleEnum ruleName, RuleConfiguration ruleConfig){
+			PointsRule rule = getRule(ruleName);
+			rule.setPointsUtil(pointsUtil);
+			rule.init(ruleConfig);
 			return rule;
 		}
 

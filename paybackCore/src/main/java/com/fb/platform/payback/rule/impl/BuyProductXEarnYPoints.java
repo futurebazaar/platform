@@ -16,12 +16,17 @@ import com.fb.platform.payback.util.PointsUtil;
 
 public class BuyProductXEarnYPoints implements PointsRule {
 
-	private List<Long> includedCategoryList = new ArrayList<Long>();
-	private BigDecimal earnFactor;
+	//Multiple Category List
+	private List<Long> gvCategoryList = new ArrayList<Long>();
+	
+	private String earnMap;
 	private BigDecimal earnRatio;
 	private DateTime validFrom;
 	private DateTime validTill;
 	private PointsUtil pointsUtil;
+	
+	//Identifies whether it is a gv or electronics or any other
+	private String categoryType;
 	
 	@Override
 	public void setPointsUtil(PointsUtil pointsUtil) {
@@ -31,13 +36,15 @@ public class BuyProductXEarnYPoints implements PointsRule {
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
 		
-		this.earnFactor = new BigDecimal(ruleConfig.getConfigItemValue(PointsRuleConfigConstants.POINTS_FACTOR));
+		this.earnMap = ruleConfig.getConfigItemValue(PointsRuleConfigConstants.EARN_MAP);
 		this.earnRatio =  new BigDecimal(ruleConfig.getConfigItemValue(PointsRuleConfigConstants.EARN_RATIO));
-		String commaSeparatedIncludedCategoryList = ruleConfig.getConfigItemValue(PointsRuleConfigConstants.INCLUDED_CATEGORY_LIST);
-		if (commaSeparatedIncludedCategoryList != null && !commaSeparatedIncludedCategoryList.equals("")){
-			StringTokenizer categoryTokenizer = new StringTokenizer(commaSeparatedIncludedCategoryList, ",");
+		
+		//Different Categories
+		String commaSeparatedgvCategoryList = ruleConfig.getConfigItemValue(PointsRuleConfigConstants.GV_CATEGORY_LIST);
+		if (commaSeparatedgvCategoryList != null && !commaSeparatedgvCategoryList.equals("")){
+			StringTokenizer categoryTokenizer = new StringTokenizer(commaSeparatedgvCategoryList, ",");
 			while (categoryTokenizer.hasMoreTokens()){
-				this.includedCategoryList.add(Long.parseLong(categoryTokenizer.nextToken().replaceAll(" ", "")));
+				this.gvCategoryList.add(Long.parseLong(categoryTokenizer.nextToken().replaceAll(" ", "")));
 			}
 		}
 		
@@ -54,14 +61,19 @@ public class BuyProductXEarnYPoints implements PointsRule {
 		if(request.getTxnTimestamp().toDate().compareTo(validFrom.toDate()) <0 || request.getTxnTimestamp().toDate().compareTo(validTill.toDate()) > 0){
 			return false;
 		}
-		if (includedCategoryList == null || includedCategoryList.isEmpty() || !includedCategoryList.contains(itemRequest.getCategoryId())){
-			return false;
+		
+		//At the end
+		if (gvCategoryList != null && !gvCategoryList.isEmpty() && gvCategoryList.contains(itemRequest.getCategoryId())){
+			this.categoryType = "gv";
+			return true;
 		}
-		return true;
+		
+		return false;
 	}
 
 	@Override
 	public BigDecimal execute(OrderRequest request, OrderItemRequest itemRequest) {
+		BigDecimal earnFactor = new BigDecimal(pointsUtil.getMapValue(earnMap, categoryType));
 		return earnFactor.multiply(earnRatio.multiply(itemRequest.getAmount()));
 	}
 

@@ -3,6 +3,8 @@ package com.fb.platform.payback.rule;
 public class PointsRuleConfigConstants {
 
 	public static final String INCLUDED_CATEGORY_LIST = "INCLUDED_CATEGORY_LIST";
+	
+	public static final String GV_CATEGORY_LIST = "GV_CATEGORY_LIST";
 
 	public static final String EXCLUDED_CATEGORY_LIST = "EXCLUDED_CATEGORY_LIST";
 
@@ -23,5 +25,7 @@ public class PointsRuleConfigConstants {
 	public static final String BURN_RATIO = "BURN_RATIO";
 
 	public static final String PAYMENT_MODE = "PAYMENT_MODE";
+
+	public static final String EARN_MAP = "EARN_MAP";
 
 }

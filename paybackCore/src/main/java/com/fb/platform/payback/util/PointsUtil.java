@@ -3,7 +3,10 @@ package com.fb.platform.payback.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Properties;
+import java.util.StringTokenizer;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
@@ -13,6 +16,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import com.fb.commons.util.MailSender;
+import com.fb.platform.payback.rule.PointsRuleConfigConstants;
 
 public class PointsUtil implements Serializable {
 	
@@ -95,7 +99,15 @@ public class PointsUtil implements Serializable {
 		}
 		return sequenceNumber;
 	}
-
-
+	
+	public String getMapValue(String map, String key) {
+		HashMap<String, String> generatedMap = new HashMap<String, String>();
+		StringTokenizer mapTokenizer = new StringTokenizer(map, ",");
+		while (mapTokenizer.hasMoreTokens()){
+			String singleMap = mapTokenizer.nextToken().replaceAll(" ", "");
+			generatedMap.put(singleMap.split("=")[0], singleMap.split("=")[1]);
+		}
+		return generatedMap.get(key);
+	}
 	
 }

@@ -1,6 +1,8 @@
 package com.fb.platform.payback.util;
 
+import java.util.HashMap;
 import java.util.Properties;
+import java.util.StringTokenizer;
 
 import org.joda.time.DateTime;
 import static org.junit.Assert.assertEquals;
@@ -58,5 +60,17 @@ public class PointsUtilTest extends BaseTestCase {
 		assertTrue(pointsUtil.isValidLoyaltyCard(card));
 	}
 	
+	@Test
+	public void getMapValueTest() {
+		String map = "gv=5, electronics=2";
+		HashMap<String, String> generatedMap = new HashMap<String, String>();
+		StringTokenizer mapTokenizer = new StringTokenizer(map, ",");
+		while (mapTokenizer.hasMoreTokens()){
+			String singleMap = mapTokenizer.nextToken().replaceAll(" ", "");
+			generatedMap.put(singleMap.split("=")[0], singleMap.split("=")[1]);
+		}
+		assertEquals("5", generatedMap.get("gv"));
+		assertEquals("2", generatedMap.get("electronics"));
+	}
 
 }
