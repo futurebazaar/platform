@@ -17,8 +17,8 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.fb.commons.PlatformException;
 import com.fb.platform.promotion.dao.ScratchCardDao;
+import com.fb.platform.promotion.exception.ScratchCardNotFoundException;
 import com.fb.platform.promotion.model.scratchCard.ScratchCard;
-import com.fb.platform.promotion.service.ScratchCardNotFoundException;
 
 /**
  * @author vinayak

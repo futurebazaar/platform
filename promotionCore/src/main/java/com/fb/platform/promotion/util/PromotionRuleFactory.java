@@ -9,14 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.platform.promotion.dao.OrderDao;
 import com.fb.platform.promotion.rule.PromotionRule;
-import com.fb.platform.promotion.rule.RuleConfigDescriptorItem;
-import com.fb.platform.promotion.rule.RuleConfiguration;
 import com.fb.platform.promotion.rule.RulesEnum;
+import com.fb.platform.promotion.rule.config.RuleConfigItemDescriptor;
+import com.fb.platform.promotion.rule.config.RuleConfiguration;
 import com.fb.platform.promotion.rule.impl.BuyWorthXGetYPercentOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyWorthXGetYRsOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyXBrandGetYRsOffOnZProductRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyXGetYFreeRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyXQuantityGetVariablePercentOffRuleImpl;
+import com.fb.platform.promotion.rule.impl.CategoryBasedVariablePercentOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.FirstPurchaseBuyWorthXGetYRsOffRuleImpl;
 
 /**
@@ -63,6 +64,10 @@ public class PromotionRuleFactory {
 			rule = new BuyXQuantityGetVariablePercentOffRuleImpl();
 			break;
 			
+		case CATEGORY_BASED_VARIABLE_PERCENT_OFF:
+			rule = new CategoryBasedVariablePercentOffRuleImpl();
+			break;
+			
 		default:
 			throw new IllegalArgumentException("Unkown RulesEnum object found : " + ruleName);
 		}
@@ -70,9 +75,9 @@ public class PromotionRuleFactory {
 		return rule;
 	}
 	
-	public static List<RuleConfigDescriptorItem> getRuleConfig(RulesEnum ruleName) {
+	public static List<RuleConfigItemDescriptor> getRuleConfig(RulesEnum ruleName) {
 		PromotionRule rule = getRule(ruleName);
-		List<RuleConfigDescriptorItem> ruleConfigs = rule.getRuleConfigs();
+		List<RuleConfigItemDescriptor> ruleConfigs = rule.getRuleConfigs();
 		return ruleConfigs;
 	}
 	

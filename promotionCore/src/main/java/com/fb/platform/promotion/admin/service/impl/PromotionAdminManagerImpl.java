@@ -52,16 +52,16 @@ import com.fb.platform.promotion.admin.to.ViewCouponStatusEnum;
 import com.fb.platform.promotion.admin.to.ViewPromotionEnum;
 import com.fb.platform.promotion.admin.to.ViewPromotionRequest;
 import com.fb.platform.promotion.admin.to.ViewPromotionResponse;
+import com.fb.platform.promotion.exception.CouponAlreadyAssignedToUserException;
+import com.fb.platform.promotion.exception.CouponCodeGenerationException;
+import com.fb.platform.promotion.exception.CouponNotFoundException;
+import com.fb.platform.promotion.exception.InvalidAlphaNumericTypeException;
+import com.fb.platform.promotion.exception.InvalidCouponTypeException;
+import com.fb.platform.promotion.exception.PromotionNotFoundException;
 import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
-import com.fb.platform.promotion.rule.RuleConfigDescriptor;
-import com.fb.platform.promotion.rule.RuleConfigDescriptorItem;
 import com.fb.platform.promotion.rule.RulesEnum;
-import com.fb.platform.promotion.service.CouponAlreadyAssignedToUserException;
-import com.fb.platform.promotion.service.CouponCodeGenerationException;
-import com.fb.platform.promotion.service.CouponNotFoundException;
-import com.fb.platform.promotion.service.InvalidAlphaNumericTypeException;
-import com.fb.platform.promotion.service.InvalidCouponTypeException;
-import com.fb.platform.promotion.service.PromotionNotFoundException;
+import com.fb.platform.promotion.rule.config.RuleConfigDescriptor;
+import com.fb.platform.promotion.rule.config.RuleConfigItemDescriptor;
 import com.fb.platform.promotion.util.MessageTranslatorUtility;
 import com.fb.platform.promotion.util.PromotionRuleFactory;
 import com.fb.platform.user.manager.exception.InvalidUserNameException;
@@ -115,7 +115,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 			List<RulesEnum> rulesList = promotionAdminService.getAllPromotionRules();
 			List<RuleConfigDescriptor> rulesConfigList = new ArrayList<RuleConfigDescriptor>();
 			for(RulesEnum rulesEnum : rulesList) {
-				List<RuleConfigDescriptorItem> rulesConfigItemList = PromotionRuleFactory.getRuleConfig(rulesEnum);
+				List<RuleConfigItemDescriptor> rulesConfigItemList = PromotionRuleFactory.getRuleConfig(rulesEnum);
 				RuleConfigDescriptor ruleConfigDescriptor = new RuleConfigDescriptor();
 				ruleConfigDescriptor.setRulesEnum(rulesEnum);
 				ruleConfigDescriptor.setRuleConfigItemsList(rulesConfigItemList);
@@ -333,7 +333,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 	private String hasValidRuleConfig(PromotionTO promotionTo) {
 		java.util.List<String> missingConfigsList = new ArrayList<String>();
 		
-		List<RuleConfigDescriptorItem> requiredConfigs = PromotionRuleFactory.getRuleConfig(RulesEnum.valueOf(promotionTo.getRuleName()));
+		List<RuleConfigItemDescriptor> requiredConfigs = PromotionRuleFactory.getRuleConfig(RulesEnum.valueOf(promotionTo.getRuleName()));
 		HashMap<String, RuleConfigItemTO> receivedConfigsMap = new HashMap<String, RuleConfigItemTO>();
 		
 		for (int i = promotionTo.getConfigItems().size() - 1 ; i >= 0 ; i--) {
@@ -345,7 +345,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 			}
 		}
 		
-		for (RuleConfigDescriptorItem ruleConfigDescriptorItem : requiredConfigs) {
+		for (RuleConfigItemDescriptor ruleConfigDescriptorItem : requiredConfigs) {
 			if(ruleConfigDescriptorItem.isMandatory() && !receivedConfigsMap.containsKey(ruleConfigDescriptorItem.getRuleConfigDescriptorEnum().toString())) {
 				missingConfigsList.add(ruleConfigDescriptorItem.getRuleConfigDescriptorEnum().toString());
 			}
