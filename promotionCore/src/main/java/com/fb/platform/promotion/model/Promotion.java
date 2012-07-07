@@ -45,8 +45,11 @@ public class Promotion implements Serializable {
 		return limitsConfig.isWithinLimit(globalUses, userUses);
 	}
 
-	public Money apply(OrderRequest request) {
-		return rule.execute(request);
+	public OrderDiscount apply(OrderRequest request) {
+		OrderDiscount orderDiscount = new OrderDiscount();
+		orderDiscount.setOrderRequest(request);
+		
+		return rule.execute(orderDiscount);
 	}
 
 	public void setId(int id) {

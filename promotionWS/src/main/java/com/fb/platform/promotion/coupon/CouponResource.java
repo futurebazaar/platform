@@ -42,6 +42,7 @@ import com.fb.platform.promotion._1_0.CommitCouponRequest;
 import com.fb.platform.promotion._1_0.CommitCouponResponse;
 import com.fb.platform.promotion._1_0.CommitCouponStatus;
 import com.fb.platform.promotion._1_0.CouponStatus;
+import com.fb.platform.promotion._1_0.OrderDiscount;
 import com.fb.platform.promotion._1_0.OrderItem;
 import com.fb.platform.promotion._1_0.OrderRequest;
 import com.fb.platform.promotion._1_0.Product;
@@ -106,7 +107,18 @@ public class CouponResource {
 
 			xmlCouponResponse.setCouponCode(apiCouponResponse.getCouponCode());
 			xmlCouponResponse.setCouponStatus(CouponStatus.fromValue(apiCouponResponse.getCouponStatus().toString()));
-			xmlCouponResponse.setDiscountValue(apiCouponResponse.getDiscountValue());
+			
+			com.fb.platform.promotion.model.OrderDiscount apiOrderDiscount =  apiCouponResponse.getOrderDiscount();
+			
+			OrderDiscount xmlOrderDiscount = new OrderDiscount();
+			
+			if (apiOrderDiscount != null) {
+				xmlOrderDiscount.setDiscountValue(apiOrderDiscount.getOrderDiscountValue());
+				OrderRequest xmlOrderResponse = getXMLOrderResponse(apiOrderDiscount.getOrderRequest());
+				xmlOrderDiscount.setOrderRequest(xmlOrderResponse);
+			}
+			
+			xmlCouponResponse.setOrderDiscount(xmlOrderDiscount);
 			xmlCouponResponse.setSessionToken(apiCouponResponse.getSessionToken());
 			xmlCouponResponse.setPromoName(apiCouponResponse.getPromoName());
 			xmlCouponResponse.setPromoDescription(apiCouponResponse.getPromoDescription());
@@ -356,11 +368,14 @@ public class CouponResource {
 	private com.fb.platform.promotion.to.OrderItem createApiOrderItem(OrderItem xmlOrderItem) {
 		com.fb.platform.promotion.to.OrderItem apiOrderItem = new com.fb.platform.promotion.to.OrderItem();
 		apiOrderItem.setQuantity(xmlOrderItem.getQuantity());
-
+		apiOrderItem.setItemId(xmlOrderItem.getItemId());
 		Product xmlProduct = xmlOrderItem.getProduct();
 		com.fb.platform.promotion.to.Product apiProduct = createApiProduct(xmlProduct);
 		apiOrderItem.setProduct(apiProduct);
 
+		apiOrderItem.setLocked(xmlOrderItem.isIsLocked());
+		apiOrderItem.setTotalDiscount(xmlOrderItem.getDiscountValue());
+		
 		return apiOrderItem;
 	}
 
@@ -371,6 +386,45 @@ public class CouponResource {
 		apiProduct.setPrice(xmlProduct.getPrice());
 		apiProduct.setProductId(xmlProduct.getProductId());
 		return apiProduct;
+	}
+	
+	private OrderRequest getXMLOrderResponse(com.fb.platform.promotion.to.OrderRequest apiOrderResponse) {
+		OrderRequest xmlOrderRequest = new OrderRequest();
+		xmlOrderRequest.setOrderId(apiOrderResponse.getOrderId());
+		xmlOrderRequest.setClientId(apiOrderResponse.getClientId());
+
+		for (com.fb.platform.promotion.to.OrderItem apiOrderItem : apiOrderResponse.getOrderItems()) {
+			OrderItem xmlOrderItem = createXMLOrderItem(apiOrderItem);
+			xmlOrderRequest.getOrderItem().add(xmlOrderItem);
+		}
+		return xmlOrderRequest;
+	}
+	
+	private OrderItem createXMLOrderItem(com.fb.platform.promotion.to.OrderItem apiOrderItem) {
+		OrderItem xmlOrderItem = new OrderItem();
+		xmlOrderItem.setQuantity(apiOrderItem.getQuantity());
+		xmlOrderItem.setItemId(apiOrderItem.getItemId());
+		com.fb.platform.promotion.to.Product apiProduct = apiOrderItem.getProduct();
+		Product xmlProduct = createXMLProduct(apiProduct);
+		xmlOrderItem.setProduct(xmlProduct);
+
+		xmlOrderItem.setIsLocked(apiOrderItem.isLocked());
+		xmlOrderItem.setDiscountValue(apiOrderItem.getTotalDiscount());
+		
+		return xmlOrderItem;
+	}
+
+	private Product createXMLProduct(com.fb.platform.promotion.to.Product apiProduct) {
+		Product xmlProduct = new Product();
+		xmlProduct.setPrice(apiProduct.getPrice());
+		xmlProduct.setProductId(apiProduct.getProductId());
+		for (Integer category : apiProduct.getCategories()){
+			xmlProduct.getCategory().add(category);
+		}
+		for (Integer brand : apiProduct.getBrands()){
+			xmlProduct.getBrand().add(brand);
+		}
+		return xmlProduct;
 	}
 	
 	private DateTime convertToDateTime(String inputDate){

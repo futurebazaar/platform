@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:tx="http://www.springframework.org/schema/tx"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            http://www.springframework.org/schema/tx 
+            http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+    
+    <!-- Enable @Transactional support -->
+    <tx:annotation-driven/>
+    
+    <!-- =================================================================== -->
+    <!-- Services: For accessing DAOs                                        -->
+    <!-- =================================================================== -->
+    <!-- Add new services here -->
+
+     
+     <bean id="legacyPointsService" class="com.fb.platform.payback.service.impl.LegacyPointsServiceImpl">
+        <property name="legacyPointsDao" ref="legacyPointsDao"></property>
+        <property name="legacyPointsUtil" ref="legacyPointsUtil"></property>
+    </bean>
+    
+	 <!-- =================================================================== -->
+    <!-- Managers: For accessing Services                                        -->
+    <!-- =================================================================== -->
+    <!-- Add new Managers here -->
+     
+    <!-- Add new Utilities here -->
+    
+    <bean id="legacyPointsUtil" class="com.fb.platform.payback.util.LegacyPointsUtil">
+    </bean>
+    
+</beans>

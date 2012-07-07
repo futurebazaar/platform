@@ -61,6 +61,9 @@ import com.fb.platform.promotion.admin._1_0.SearchCouponStatus;
 import com.fb.platform.promotion.admin._1_0.SearchPromotionEnum;
 import com.fb.platform.promotion.admin._1_0.SearchPromotionRequest;
 import com.fb.platform.promotion.admin._1_0.SearchPromotionResponse;
+import com.fb.platform.promotion.admin._1_0.SearchScratchCardRequest;
+import com.fb.platform.promotion.admin._1_0.SearchScratchCardResponse;
+import com.fb.platform.promotion.admin._1_0.SearchScratchCardStatusEnum;
 import com.fb.platform.promotion.admin._1_0.UpdatePromotionEnum;
 import com.fb.platform.promotion.admin._1_0.UpdatePromotionRequest;
 import com.fb.platform.promotion.admin._1_0.UpdatePromotionResponse;
@@ -95,6 +98,10 @@ public class PromotionAdminResource {
 	@Autowired
 	private PromotionAdminManager promotionAdminManager = null;
 	
+	public void setPromotionAdminManager(PromotionAdminManager promotionAdminManager) {
+		this.promotionAdminManager = promotionAdminManager;
+	}
+	
 	private static JAXBContext initContext() {
 		try {
 			return JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
@@ -123,10 +130,10 @@ public class PromotionAdminResource {
 			fetchRuleResponse.setSessionToken(apiFetchRuleRequest.getSessionToken());
 			fetchRuleResponse.setFetchRulesEnum(FetchRulesEnum.fromValue(apiFetchRuleResponse.getFetchRulesEnum().toString()));
 			
-			for(com.fb.platform.promotion.rule.RuleConfigDescriptor apiRuleConfigDescriptor: apiFetchRuleResponse.getRulesList()) {
+			for(com.fb.platform.promotion.rule.config.RuleConfigDescriptor apiRuleConfigDescriptor: apiFetchRuleResponse.getRulesList()) {
 				RuleConfigDescriptor ruleConfigDescriptor = new RuleConfigDescriptor();
 				ruleConfigDescriptor.setRulesEnum(RulesEnum.valueOf(apiRuleConfigDescriptor.getRulesEnum().name()));
-				for(com.fb.platform.promotion.rule.RuleConfigDescriptorItem apiRuleConfigDescriptorItem : apiRuleConfigDescriptor.getRuleConfigItemsList()) {
+				for(com.fb.platform.promotion.rule.config.RuleConfigItemDescriptor apiRuleConfigDescriptorItem : apiRuleConfigDescriptor.getRuleConfigItemsList()) {
 					RuleConfigDescriptorItem ruleConfigDescriptorItem = new RuleConfigDescriptorItem();
 					ruleConfigDescriptorItem.setIsMandatory(apiRuleConfigDescriptorItem.isMandatory());
 					ruleConfigDescriptorItem.setRuleConfigDescriptorEnum(RuleConfigDescriptorEnum.valueOf(apiRuleConfigDescriptorItem.getRuleConfigDescriptorEnum().name()));
@@ -367,7 +374,7 @@ public class PromotionAdminResource {
 					
 					ruleConfigItemTO.setRuleConfigName(apiRuleConfigItemTO.getRuleConfigName());
 					
-					ruleConfigItemTO.setRuleConfigDescription(com.fb.platform.promotion.rule.RuleConfigDescriptorEnum.valueOf(apiRuleConfigItemTO.getRuleConfigName()).getDescription());
+					ruleConfigItemTO.setRuleConfigDescription(com.fb.platform.promotion.rule.config.RuleConfigDescriptorEnum.valueOf(apiRuleConfigItemTO.getRuleConfigName()).getDescription());
 					
 					ruleConfigItemTO.setRuleConfigValue(apiRuleConfigItemTO.getRuleConfigValue());
 					
@@ -775,5 +782,57 @@ public class PromotionAdminResource {
 		}
 		
 	}
+	
+	
+	@POST
+	@Path("/scratchCard/search")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String searchScratchCard(String searchScratchCardXML) {
+		logger.info("searchScratchCardXML : " + searchScratchCardXML);
+		try {
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			GregorianCalendar gregCal = new GregorianCalendar();
+		
+			SearchScratchCardRequest searchScratchCardRequest = (SearchScratchCardRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(searchScratchCardXML)));
+			com.fb.platform.promotion.admin.to.SearchScratchCardRequest apiSearchScratchCardRequest = new com.fb.platform.promotion.admin.to.SearchScratchCardRequest();
+			
+			apiSearchScratchCardRequest.setSessionToken(searchScratchCardRequest.getSessionToken());
+			apiSearchScratchCardRequest.setScratchCardNumber(searchScratchCardRequest.getScratchCardNumber());
+			
+			String inputScratchCardNumber = StringUtils.isBlank(searchScratchCardRequest.getScratchCardNumber()) ? null : searchScratchCardRequest.getScratchCardNumber().trim();
+			apiSearchScratchCardRequest.setScratchCardNumber(inputScratchCardNumber);
+			
+			SearchScratchCardResponse searchScratchCardResponse	= new SearchScratchCardResponse();
+			com.fb.platform.promotion.admin.to.SearchScratchCardResponse apiSearchPromotionResponse = promotionAdminManager.searchScratchCard(apiSearchScratchCardRequest);
+			
+			searchScratchCardResponse.setErrorCause(apiSearchPromotionResponse.getErrorCause());
+			searchScratchCardResponse.setSessionToken(apiSearchPromotionResponse.getSessionToken());
+			
+			searchScratchCardResponse.setEmail(apiSearchPromotionResponse.getEmail());
+			searchScratchCardResponse.setMobile(apiSearchPromotionResponse.getMobile()) ;
+			searchScratchCardResponse.setScratchCardNumber(apiSearchPromotionResponse.getScratchCardNumber()) ;
+			searchScratchCardResponse.setClaimStatus ( apiSearchPromotionResponse.getCardStatus()  ) ;
+			searchScratchCardResponse.setUsedDate(apiSearchPromotionResponse.getUsedDate()) ;
+			searchScratchCardResponse.setSearchScratchCardStatusEnum(SearchScratchCardStatusEnum.SUCCESS );
+			searchScratchCardResponse.setUserId(apiSearchPromotionResponse.getUserId());
+			//searchScratchCardResponse.setSearchScratchCardStatus( )
+			//searchScratchCardResponse.set ( apiSearchPromotionResponse.getCardStatus()  ) ;		
+			
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marshaller = context.createMarshaller();
+			marshaller.marshal(searchScratchCardResponse, outStringWriter);
+
+			String xmlResponse = outStringWriter.toString();
+			logger.info("searchCouponXML response :\n" + xmlResponse);
+			return xmlResponse; 
+			
+		} catch (JAXBException e) {
+			logger.error("Error in the searchCoupon call.", e);
+			return "searchCoupon error"; //TODO return proper error response
+		}  
+	} 
+	
+	
 
 }

@@ -24,10 +24,10 @@ import com.fb.platform.promotion.admin.to.CouponTO;
 import com.fb.platform.promotion.admin.to.SearchCouponOrderBy;
 import com.fb.platform.promotion.admin.to.SortOrder;
 import com.fb.platform.promotion.dao.CouponDao;
+import com.fb.platform.promotion.exception.CouponAlreadyAssignedToUserException;
 import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
 import com.fb.platform.promotion.model.coupon.CouponType;
-import com.fb.platform.promotion.service.CouponAlreadyAssignedToUserException;
 
 /**
  * @author vinayak

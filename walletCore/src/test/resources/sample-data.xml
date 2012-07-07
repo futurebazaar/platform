@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<table name="accounts_client">
+		<column>id</column>
+		<column>name</column>
+		<column>confirmed_order_email</column>
+		<column>pending_order_email</column>
+		<column>share_product_email</column>
+		<column>signature</column>
+		<column>pending_order_helpline</column>
+		<column>confirmed_order_helpline</column>
+		<column>sms_mask</column>
+		<column>noreply_email</column>
+		<column>feedback_email</column>
+		<column>promotions_email</column>
+		<column>sale_pricelist</column>
+		<column>list_pricelist</column>
+		<column>clientdomain_name</column>
+		<column>slug</column>
+        <row>
+        	<value description="id">-4</value>
+        	<value description="name">Test Client 1</value>
+            <value description="confirmed_order_email">test confirmed_order_email 1</value>
+        	<value description="pending_order_email">test pending_order_email 1</value>
+            <value description="share_product_email">test share_product_email 1</value>
+            <value description="signature">test signature 1</value>
+        	<value description="pending_order_helpline">1111111111</value>
+            <value description="confirmed_order_helpline">12121212</value>
+        	<value description="sms_mask">test sms_mask 1</value>
+            <value description="noreply_email">test noreply_email 1</value>
+        	<value description="feedback_email">test feedback_email 1</value>
+            <value description="promotions_email">test promotions_email 1</value>
+        	<value description="sale_pricelist">12345678</value>
+            <value description="list_pricelist">123456789</value>
+        	<value description="clientdomain_name">test clientdomain_name 1</value>
+        	<value description="slug">test slug 1</value>
+        </row>
+        <row>
+        	<value description="id">-5</value>
+        	<value description="name">Test Client 2</value>
+            <value description="confirmed_order_email">test confirmed_order_email 2</value>
+        	<value description="pending_order_email">test pending_order_email 2</value>
+            <value description="share_product_email">test share_product_email 2</value>
+            <value description="signature">test signature 2</value>
+        	<value description="pending_order_helpline">2222222222</value>
+            <value description="confirmed_order_helpline">12121212</value>
+        	<value description="sms_mask">test sms_mask 2</value>
+            <value description="noreply_email">test noreply_email 2</value>
+        	<value description="feedback_email">test feedback_email 2</value>
+            <value description="promotions_email">test promotions_email 2</value>
+        	<value description="sale_pricelist">22345678</value>
+            <value description="list_pricelist">223456789</value>
+        	<value description="clientdomain_name">test clientdomain_name 2</value>
+        	<value description="slug">test slug 2</value>
+        </row>
+        <row>
+        	<value description="id">-6</value>
+        	<value description="name">Test Client 3</value>
+            <value description="confirmed_order_email">test confirmed_order_email 3</value>
+        	<value description="pending_order_email">test pending_order_email 3</value>
+            <value description="share_product_email">test share_product_email 3</value>
+            <value description="signature">test signature 3</value>
+        	<value description="pending_order_helpline">3333333333</value>
+            <value description="confirmed_order_helpline">32323232</value>
+        	<value description="sms_mask">test sms_mask 3</value>
+            <value description="noreply_email">test noreply_email 3</value>
+        	<value description="feedback_email">test feedback_email 3</value>
+            <value description="promotions_email">test promotions_email 3</value>
+        	<value description="sale_pricelist">32345678</value>
+            <value description="list_pricelist">323456789</value>
+        	<value description="clientdomain_name">test clientdomain_name 3</value>
+        	<value description="slug">test slug 3</value>
+        </row>
+	</table>
+	<table name="wallets_wallet">
+		<column>id</column>
+		<column>total_amount</column>
+		<column>cash_amount</column>
+		<column>gift_amount</column>
+		<column>refund_amount</column>
+		<column>created_on</column>
+		<column>modified_on</column>
+		<row>
+			<value>1</value>
+			<value>100.00</value>
+			<value>100.00</value>
+			<value>0</value>
+			<value>0</value>
+			<value>2011-04-18 20:42:57</value>
+			<value>2011-04-18 20:42:57</value>
+		</row>
+		<row>
+			<value>2</value>
+			<value>200.00</value>
+			<value>100.00</value>
+			<value>100.00</value>
+			<value>0</value>
+			<value>2011-04-18 20:42:57</value>
+			<value>2011-04-18 20:42:57</value>
+		</row>
+		<row>
+			<value>3</value>
+			<value>300.00</value>
+			<value>100.00</value>
+			<value>100.00</value>
+			<value>100.00</value>
+			<value>2011-04-18 20:42:57</value>
+			<value>2011-04-18 20:42:57</value>
+		</row>
+		<row>
+			<value>4</value>
+			<value>100.00</value>
+			<value>0</value>
+			<value>100.00</value>
+			<value>0</value>
+			<value>2011-04-18 20:42:57</value>
+			<value>2011-04-18 20:42:57</value>
+		</row>
+		<row>
+			<value>5</value>
+			<value>100.00</value>
+			<value>0</value>
+			<value>0</value>
+			<value>100.00</value>
+			<value>2011-04-18 20:42:57</value>
+			<value>2011-04-18 20:42:57</value>
+		</row>
+		<row>
+			<value>6</value>
+			<value>200.00</value>
+			<value>100.00</value>
+			<value>0</value>
+			<value>100.00</value>
+			<value>2011-04-18 20:42:57</value>
+			<value>2011-04-18 20:42:57</value>
+		</row>
+		<row>
+			<value>7</value>
+			<value>200.00</value>
+			<value>100.00</value>
+			<value>100.00</value>
+			<value>0</value>
+			<value>2011-04-18 20:42:57</value>
+			<value>2011-04-18 20:42:57</value>
+		</row>
+		<row>
+			<value>8</value>
+			<value>400.00</value>
+			<value>100.00</value>
+			<value>200.00</value>
+			<value>100.00</value>
+			<value>2011-04-18 20:42:57</value>
+			<value>2011-04-18 20:42:57</value>
+		</row>
+		
+	</table>
+	<table name="users_wallet">
+		<column>id</column>
+		<column>user_id</column>
+		<column>client_id</column>
+		<column>wallet_id</column>
+		<row>
+			<value>1</value>
+			<value>-1</value>
+			<value>-5</value>
+			<value>1</value>
+		</row>
+		<row>
+			<value>2</value>
+			<value>-1</value>
+			<value>-6</value>
+			<value>2</value>
+		</row>
+		<row>
+			<value>3</value>
+			<value>-2</value>
+			<value>-5</value>
+			<value>3</value>
+		</row>
+		<row>
+			<value>4</value>
+			<value>-5</value>
+			<value>-4</value>
+			<value>4</value>
+		</row>
+		<row>
+			<value>5</value>
+			<value>-3</value>
+			<value>-4</value>
+			<value>5</value>
+		</row>
+		<row>
+			<value>6</value>
+			<value>-4</value>
+			<value>-6</value>
+			<value>6</value>
+		</row>
+		<row>
+			<value>7</value>
+			<value>-4</value>
+			<value>-5</value>
+			<value>7</value>
+		</row>
+		<row>
+			<value>8</value>
+			<value>1</value>
+			<value>-5</value>
+			<value>8</value>
+		</row>
+		
+	</table>
+	<table name="wallets_transaction">
+		<column>id</column>
+		<column>transaction_id</column>
+		<column>wallet_id</column>
+		<column>amount</column>
+		<column>transaction_type</column>
+		<column>transaction_date</column>
+		<column>transaction_note</column>
+		<row>
+			<value>1</value>
+			<value>ABSCDFADF12312SASzcv</value>
+			<value>1</value>
+			<value>99</value>
+			<value>DEBIT</value>
+			<value>2011-04-18 20:42:57</value>
+			<value>A debit trnasaction</value>
+		</row>
+		<row>
+			<value>2</value>
+			<value>ABSCDFADF123asdfsadfSASzcv</value>
+			<value>2</value>
+			<value>99</value>
+			<value>CREDIT</value>
+			<value>2011-04-18 20:42:57</value>
+			<value>A credit trnasaction</value>
+		</row>
+		<row>
+			<value>3</value>
+			<value>ABSCDFADasfsMKKNd312SASzcv</value>
+			<value>3</value>
+			<value>199</value>
+			<value>DEBIT</value>
+			<value>2011-04-18 20:42:57</value>
+			<value>A debit trnasaction</value>
+		</row>
+		<row>
+			<value>4</value>
+			<value>ABSCDFADF12312SASz876cv</value>
+			<value>1</value>
+			<value>100</value>
+			<value>CREDIT</value>
+			<value>2011-04-18 20:42:57</value>
+			<value>A credit trnasaction</value>
+		</row>
+		<row>
+			<value>5</value>
+			<value>ABSCDFADF1231lp0bg2SASzcv</value>
+			<value>6</value>
+			<value>99</value>
+			<value>DEBIT</value>
+			<value>2011-04-18 20:42:57</value>
+		</row>
+		<row>
+			<value>6</value>
+			<value>ABSCDFADF1231lp0bg2SASzcva</value>
+			<value>8</value>
+			<value>100</value>
+			<value>CREDIT</value>
+			<value>2012-04-18 20:42:57</value>
+			<value>A credit trnasaction</value>
+		</row>
+		<row>
+			<value>7</value>
+			<value>ABSCDFADF1231lp0bg2SASzcvab</value>
+			<value>8</value>
+			<value>100</value>
+			<value>CREDIT</value>
+			<value>2012-04-18 20:42:57</value>
+			<value>A credit trnasaction</value>
+		</row>
+		<row>
+			<value>8</value>
+			<value>ABSCDFADF1231lp0bg2SASzcvac</value>
+			<value>8</value>
+			<value>100</value>
+			<value>CREDIT</value>
+			<value>2012-04-18 20:42:57</value>
+			<value>A credit transaction</value>
+		</row>
+		
+	</table>
+	<table name="wallets_gifts">
+		<column>id</column>
+		<column>wallet_id</column>
+		<column>gift_code</column>
+		<column>gift_expiry</column>
+		<column>is_expired</column>
+		<column>amount_remaining</column>
+		<row>
+			<value>1</value>
+			<value>8</value>
+			<value>xxyyzz</value>
+			<value>2012-04-18 20:42:57</value>
+			<value>false</value>
+			<value>100</value>
+		</row>
+	</table>
+	<table name="wallets_sub_transaction">
+		<column>id</column>
+		<column>tran_id</column>
+		<column>transaction_subwallet</column>
+		<column>amount</column>
+		<column>order_id</column>
+		<column>refund_id</column>
+		<column>payment_id</column>
+		<column>gift_id</column>
+		<column>transaction_reversal_id</column>
+		<column>transaction_description</column>		
+		<row>
+			<value>1</value>
+			<value>1</value>
+			<value>CASH</value>
+			<value>99</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<value>This is a test transaction</value>
+		</row>
+		<row>
+			<value>2</value>
+			<value>2</value>
+			<value>GIFT</value>
+			<value>99</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<value>This is a test transaction</value>
+		</row>
+		<row>
+			<value>3</value>
+			<value>3</value>
+			<value>CASH</value>
+			<value>99</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<value>This is a test trnasaction</value>
+		</row>
+		<row>
+			<value>4</value>
+			<value>3</value>
+			<value>REFUND</value>
+			<value>100</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<value>This is a test trnasaction</value>
+		</row>
+		<row>
+			<value>5</value>
+			<value>3</value>
+			<value>REFUND</value>
+			<value>100</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<value>This is a test trnasaction</value>
+		</row>
+		<row>
+			<value>6</value>
+			<value>6</value>
+			<value>CASH</value>
+			<value>100</value>
+			<null/>
+			<null/>
+			<value>1</value>
+			<null/>
+			<null/>
+			<value>This is a test transaction</value>
+		</row>
+		<row>
+			<value>7</value>
+			<value>7</value>
+			<value>REFUND</value>
+			<value>100</value>
+			<null/>
+			<value>1</value>
+			<null/>
+			<null/>
+			<null/>
+			<value>This is a test transaction</value>
+		</row>
+		<row>
+			<value>8</value>
+			<value>8</value>
+			<value>GIFT</value>
+			<value>100</value>
+			<null/>
+			<null/>
+			<null/>
+			<value>1</value>
+			<null/>
+			<value>This is a test transaction</value>
+		</row>
+		
+	</table>
+	<table name="wallets_gifts_transaction_history">
+		<column>id</column>
+		<column>gift_id</column>
+		<column>sub_transaction_id</column>
+		<column>amount</column>
+		<row>
+			<value>1</value>
+			<value>1</value>
+			<value>8</value>
+			<value>100</value>
+		</row>
+		<row>
+			<value>2</value>
+			<value>1</value>
+			<value>8</value>
+			<value>-50</value>
+		</row>
+	</table>
+	<table name="wallets_refunds_credit_history">
+		<column>id</column>
+		<column>wallet_id</column>
+		<column>sub_transaction_id</column>
+		<column>amount</column>
+		<column>credit_date</column>
+		<column>amount_remaining</column>
+		<column>is_used</column>
+		<row>
+			<value>1</value>
+			<value>8</value>
+			<value>7</value>
+			<value>100.00</value>
+			<value>2012-07-01 16:42:57</value>
+			<value>100.00</value>
+			<value>0</value>
+		</row>
+		<row>
+			<value>2</value>
+			<value>8</value>
+			<value>10</value>
+			<value>200.00</value>
+			<value>2012-06-01 16:42:57</value>
+			<value>100.00</value>
+			<value>1</value>
+		</row>
+	</table>
+	<table name="wallets_refunds_debit_history">
+		<column>id</column>
+		<column>wallet_id</column>
+		<column>sub_transaction_id</column>
+		<column>amount</column>
+		<column>debit_date</column>
+		<column>refund_credit_id</column>
+		<row>
+			<value>1</value>
+			<value>8</value>
+			<value>11</value>
+			<value>50.00</value>
+			<value>2012-07-01 16:42:57</value>
+			<value>2</value>
+		</row>
+		<row>
+			<value>2</value>
+			<value>8</value>
+			<value>12</value>
+			<value>50.00</value>
+			<value>2012-07-01 20:42:57</value>
+			<value>2</value>
+		</row>
+	</table>
+</dataset>

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.fb.com/platform/egv/1.0.0" xmlns:egv="http://www.fb.com/platform/egv/1.0.0">
+
+  <xs:element name="getInfoRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="egv:sessionToken"/>
+        <xs:element ref="egv:giftVoucherNumber"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="giftVoucherNumber" type="xs:long"/>
+  <xs:element name="giftVoucherPin" type="xs:string"/>
+  <xs:element name="sessionToken" type="xs:string"/>
+
+  <xs:element name="getInfoResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="egv:sessionToken"/>
+        <xs:element ref="egv:getInfoResponseStatus"/>
+        <xs:element ref="egv:number"/>
+        <xs:element ref="egv:validTill"/>
+        <xs:element ref="egv:validFrom"/>
+        <xs:element ref="egv:orderItemId"/>
+        <xs:element ref="egv:email"/>
+        <xs:element ref="egv:userId"/>
+        <xs:element ref="egv:gvStatus"/>
+        <xs:element ref="egv:amount"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="amount" type="xs:decimal"/>
+  <xs:element name="getInfoResponseStatus" type="egv:getInfoResponseStatusEnum"/>
+  <xs:element name="gvStatus" type="xs:string"/>
+  <xs:element name="userId" type="xs:int"/>
+  <xs:element name="email" type="xs:string"/>
+  <xs:element name="number" type="xs:long"/>
+  <xs:element name="validTill" type="xs:dateTime"/>
+  <xs:element name="validFrom" type="xs:dateTime"/>
+  <xs:element name="orderItemId" type="xs:int"/>
+  <xs:element name="orderId" type="xs:int"/>
+  <xs:element name="senderName" type="xs:string"/>
+  <xs:element name="receiverName" type="xs:string"/>
+  
+  <xs:simpleType name="getInfoResponseStatusEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INVALID_GIFT_VOUCHER_NUMBER"/>
+      <xs:enumeration value="INVALID_GIFT_VOUCHER_PIN"/>
+      <xs:enumeration value="USER_NOT_AUTHORIZED"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="createRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="egv:sessionToken"/>
+        <xs:element ref="egv:email"/>
+        <xs:element ref="egv:amount"/>
+        <xs:element ref="egv:orderItemId"/>
+        <xs:element ref="egv:senderName"/>
+        <xs:element ref="egv:receiverName"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="createResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="egv:sessionToken"/>
+        <xs:element ref="egv:createResponseStatus"/>
+        <xs:element ref="egv:number"/>
+        <xs:element ref="egv:amount"/>
+        <xs:element ref="egv:validFrom"/>
+        <xs:element ref="egv:validTill"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="createResponseStatus" type="egv:createResponseStatusEnum"/>
+  
+  <xs:simpleType name="createResponseStatusEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INVALID_AMOUNT"/>
+      <xs:enumeration value="UNABLE_TO_CREATE_ERROR"/>
+      <xs:enumeration value="USER_NOT_AUTHORIZED"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="applyRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="egv:sessionToken"/>
+        <xs:element ref="egv:giftVoucherNumber"/>
+        <xs:element ref="egv:giftVoucherPin"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="applyResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="egv:sessionToken"/>
+        <xs:element ref="egv:applyResponseStatus"/>
+        <xs:element ref="egv:number"/>
+        <xs:element ref="egv:amount"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+
+  <xs:element name="applyResponseStatus" type="egv:applyResponseStatusEnum"/>
+  
+  <xs:simpleType name="applyResponseStatusEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INVALID_GIFT_VOUCHER_NUMBER"/>
+      <xs:enumeration value="INVALID_GIFT_VOUCHER_PIN"/>
+      <xs:enumeration value="USER_NOT_AUTHORIZED"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+      <xs:enumeration value="GIFT_VOUCHER_EXPIRED"/>
+      <xs:enumeration value="ALREADY_USED"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+    <xs:element name="useRequest">
+	    <xs:complexType>
+	      <xs:sequence>
+	        <xs:element ref="egv:sessionToken"/>
+	        <xs:element ref="egv:giftVoucherNumber"/>
+	        <xs:element ref="egv:amount"/>
+	        <xs:element ref="egv:orderId"/>
+	      </xs:sequence>
+	    </xs:complexType>
+  	</xs:element>
+
+  <xs:element name="useResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="egv:sessionToken"/>
+        <xs:element ref="egv:useResponseStatus"/>
+        <xs:element ref="egv:number"/>
+        <xs:element ref="egv:amount"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+
+  <xs:element name="useResponseStatus" type="egv:useResponseStatusEnum"/>
+  
+  <xs:simpleType name="useResponseStatusEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INVALID_GIFT_VOUCHER_NUMBER"/>
+      <xs:enumeration value="INVALID_GIFT_VOUCHER_PIN"/>
+      <xs:enumeration value="USER_NOT_AUTHORIZED"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+      <xs:enumeration value="GIFT_VOUCHER_EXPIRED"/>
+      <xs:enumeration value="ALREADY_USED"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="cancelRequest">
+	    <xs:complexType>
+	      <xs:sequence>
+	        <xs:element ref="egv:sessionToken"/>
+	        <xs:element ref="egv:giftVoucherNumber"/>
+	        <xs:element ref="egv:orderItemId"/>
+	      </xs:sequence>
+	    </xs:complexType>
+  	</xs:element>
+
+  <xs:element name="cancelResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="egv:sessionToken"/>
+        <xs:element ref="egv:cancelResponseStatus"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+
+  <xs:element name="cancelResponseStatus" type="egv:cancelResponseStatusEnum"/>
+  
+  <xs:simpleType name="cancelResponseStatusEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INVALID_GIFT_VOUCHER_NUMBER"/>
+      <xs:enumeration value="USER_NOT_AUTHORIZED"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+      <xs:enumeration value="GIFT_VOUCHER_EXPIRED"/>
+      <xs:enumeration value="ALREADY_USED"/>
+    </xs:restriction>
+  </xs:simpleType>
+    
+</xs:schema>

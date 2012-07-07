@@ -8,15 +8,20 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.text.StrTokenizer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.fb.commons.to.Money;
+import com.fb.platform.promotion.model.OrderDiscount;
 import com.fb.platform.promotion.rule.PromotionRule;
-import com.fb.platform.promotion.rule.RuleConfigDescriptorItem;
-import com.fb.platform.promotion.rule.RuleConfigDescriptorEnum;
-import com.fb.platform.promotion.rule.RuleConfiguration;
+import com.fb.platform.promotion.rule.config.RuleConfigDescriptorEnum;
+import com.fb.platform.promotion.rule.config.RuleConfigItemDescriptor;
+import com.fb.platform.promotion.rule.config.RuleConfiguration;
+import com.fb.platform.promotion.rule.metadata.BuyXBrandGetYRsOffOnZProductRuleMatadata;
+import com.fb.platform.promotion.rule.metadata.RuleConfigItemMetadata;
+import com.fb.platform.promotion.rule.metadata.RuleConfigMetadata;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.PromotionStatusEnum;
 import com.fb.platform.promotion.util.ListUtil;
@@ -34,7 +39,7 @@ public class BuyXBrandGetYRsOffOnZProductRuleImpl implements PromotionRule, Seri
 	private List<Integer> clientList;
 	private int productId;
 	private Money productDiscountValue;
-	private List<RuleConfigDescriptorItem> ruleConfigs = new ArrayList<RuleConfigDescriptorItem>();
+	private List<RuleConfigItemDescriptor> ruleConfigs = new ArrayList<RuleConfigItemDescriptor>();
 	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
@@ -59,13 +64,13 @@ public class BuyXBrandGetYRsOffOnZProductRuleImpl implements PromotionRule, Seri
 		if(log.isDebugEnabled()) {
 			log.debug("Checking if BuyXBrandGetYRsOffOnZProductRuleImpl applies on order : " + request.getOrderId());
 		}
-		Money orderValue = new Money(request.getOrderValue());
+		//Money orderValue = new Money(request.getOrderValue());
 		if(ListUtil.isValidList(clientList) && !request.isValidClient(clientList)){
 			return PromotionStatusEnum.INVALID_CLIENT;
 		}
-		if(orderValue.lt(minOrderValue)){
+		/*if(orderValue.lt(minOrderValue)){
 			return PromotionStatusEnum.LESS_ORDER_AMOUNT;
-		}
+		}*/
 		if(!request.isAnyProductInBrand(brands)){
 			return PromotionStatusEnum.BRAND_MISMATCH;
 		}
@@ -80,22 +85,56 @@ public class BuyXBrandGetYRsOffOnZProductRuleImpl implements PromotionRule, Seri
 	}
 
 	@Override
-	public Money execute(OrderRequest request) {
+	public OrderDiscount execute(OrderDiscount orderDiscount) {
+		
+		throw new NotImplementedException();
+		/*OrderRequest request = orderDiscount.getOrderRequest();
 		if(log.isDebugEnabled()) {
 			log.debug("Executing BuyXBrandGetYRsOffOnZProductRuleImpl on order : " + request.getOrderId());
 		}
-		return request.getProductPrice(productId).minus(productDiscountValue);
+		Money productPrice = request.getProductPrice(productId);
+		Money zeroMoney = new Money(new BigDecimal(0));
+		Money totalDiscountValue = productPrice.eq(zeroMoney) ? zeroMoney : productPrice.minus(productDiscountValue);
+		orderDiscount.setTotalOrderDiscount(totalDiscountValue.getAmount());
+		return distributeDiscountOnOrder(orderDiscount);*/
 	}
 	
+	/*private OrderDiscount distributeDiscountOnOrder(OrderDiscount orderDiscount) {
+		OrderRequest orderRequest = orderDiscount.getOrderRequest();
+		Money totalOrderValueForApplicableItems = orderRequest.getOrderValueForBrand(this.brands);
+		for (OrderItem eachOrderItemInRequest : orderRequest.getOrderItems()) {
+			if(!eachOrderItemInRequest.isLocked() && isApplicableToOrderItem(eachOrderItemInRequest)){
+				BigDecimal orderItemDiscount = new BigDecimal(0);
+				BigDecimal orderItemPrice = eachOrderItemInRequest.getPrice();
+				orderItemDiscount = (orderItemPrice.multiply(orderDiscount.getTotalOrderDiscount())).divide(totalOrderValueForApplicableItems.getAmount());
+				eachOrderItemInRequest.setTotalDiscount(orderItemDiscount);
+				totalOrderValueForApplicableItems = totalOrderValueForApplicableItems.minus(new Money(orderItemPrice));
+			}
+		}
+		return orderDiscount;
+	}
+	
+	private boolean isApplicableToOrderItem(OrderItem orderItem){
+		if(orderItem.isProductPresent(productId)){
+			return true;
+		}
+		return false;
+	}*/
+	
 	@Override
-	public List<RuleConfigDescriptorItem> getRuleConfigs() {
-		List<RuleConfigDescriptorItem> ruleConfigs = new ArrayList<RuleConfigDescriptorItem>();
+	public List<RuleConfigItemDescriptor> getRuleConfigs() {
+		List<RuleConfigItemDescriptor> ruleConfigs = new ArrayList<RuleConfigItemDescriptor>();
 		
-		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CLIENT_LIST, false));
-		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.BRAND_LIST, true));
-		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.PRODUCT_ID, true));
-		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.MIN_ORDER_VALUE, true));
-		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.PRODUCT_DISCOUNTED_VALUE, true));
+		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.CLIENT_LIST, false));
+		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.BRAND_LIST, true));
+		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.PRODUCT_ID, true));
+		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.MIN_ORDER_VALUE, true));
+		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.PRODUCT_DISCOUNTED_VALUE, true));
 		return ruleConfigs;
+	}
+
+	@Override
+	public RuleConfigMetadata getRuleConfigMetadata() {
+		return new BuyXBrandGetYRsOffOnZProductRuleMatadata();
 	}
 }
