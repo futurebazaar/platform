@@ -65,8 +65,6 @@
                 <prop key="java.naming.factory.initial">org.jnp.interfaces.NamingContextFactory</prop>
                 <prop key="java.naming.provider.url">${java.naming.provider.url}</prop>
                 <prop key="java.naming.factory.url.pkgs">org.jnp.interfaces:org.jboss.naming</prop>
-                <!-- <prop key="java.naming.security.principal">${java.naming.security.principal}</prop>
-                <prop key="java.naming.security.credentials">${java.naming.security.credentials}</prop> -->
             </props>
         </property>
     </bean>
@@ -95,7 +93,7 @@
 	<bean id="inventoryListener" class="com.fb.platform.mom.receiver.inventory.InventoryMessageListener"></bean>
 	
 	<bean id="inventoryContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
-		<property name="connectionFactory" ref="connectionFactory"/>
+		<property name="connectionFactory" ref="userCredentialFactory"/>
 		<property name="destination" ref="inventoryDestination"/>
 		<property name="messageListener" ref="inventoryListener" />
 		<property name="autoStartup" value="false"/>
@@ -104,23 +102,23 @@
 
 	<bean id="inventorySender" class="com.fb.platform.mom.receiver.inventory.InventorySenderImpl">
         <property name="jmsTemplate" ref="jmsTemplate"/>
-        <property name="inventoryDestination" ref="inventoryDestination"></property>
+        <property name="inventoryDestination" ref="inventoryDestination"/>
 	</bean>
 
     <!-- Add new services here -->
     <bean id="mailReceiver" class="com.fb.platform.mom.receiver.mail.impl.MailReceiverImpl">
         <property name="jmsTemplate" ref="jmsTemplate"/>
-        <property name="mailDestination" ref="mailDestination"></property>
+        <property name="mailDestination" ref="mailDestination"/>
     </bean>
 
     <bean id="mailSender" class="com.fb.platform.mom.receiver.mail.impl.MailSenderImpl">
         <property name="jmsTemplate" ref="jmsTemplate"/>
-        <property name="mailDestination" ref="mailDestination"></property>
+        <property name="mailDestination" ref="mailDestination"/>
     </bean>
 
     <bean id="momManager" class="com.fb.platform.mom.manager.impl.MomManagerImpl">
         <property name="inventoryListener" ref="inventoryListener"/>
-        <property name="inventorySender" ref="inventorySender"></property>
-        <property name="inventoryContainer" ref="inventoryContainer"></property>
+        <property name="inventorySender" ref="inventorySender"/>
+        <property name="inventoryContainer" ref="inventoryContainer"/>
     </bean>
 </beans>
