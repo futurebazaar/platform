@@ -633,6 +633,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		ScratchCard scratchCard = null;
 		try {
 			scratchCard = promotionAdminService.searchScratchCard(searchScratchCardRequest.getScratchCardNumber() );
+			System.out.println("scratchCard.getCardNumber()"+scratchCard.getCardNumber());
 			response.setUserId(scratchCard.getUserId());
 			response.setEmail(scratchCard.getEmail());
 			response.setMobile(scratchCard.getMobile());
@@ -648,12 +649,15 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		} catch (ScratchCardNotFoundException e) {
 			log.info("No such Scratch Card found "+ searchScratchCardRequest.getScratchCardNumber() , e);
 			response.setStatus(SearchScratchCardStatusEnum.NO_SCRATCH_CARD_FOUND);
+			return response;
 		} catch (InvalidUserNameException e) {
 			response.setStatus(SearchScratchCardStatusEnum.INVALID_USER);
+			return response;
 		} catch (Exception e) {
 			response.setStatus(SearchScratchCardStatusEnum.INTERNAL_ERROR);
-			
+			return response;
 		}
+		
 		
 		return response;
 	} 
