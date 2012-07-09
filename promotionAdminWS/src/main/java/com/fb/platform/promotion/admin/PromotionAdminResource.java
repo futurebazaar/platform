@@ -814,7 +814,7 @@ public class PromotionAdminResource {
 			searchScratchCardResponse.setScratchCardNumber(apiSearchPromotionResponse.getScratchCardNumber()) ;
 			searchScratchCardResponse.setClaimStatus ( apiSearchPromotionResponse.getCardStatus()  ) ;
 			searchScratchCardResponse.setUsedDate(apiSearchPromotionResponse.getUsedDate()) ;
-			searchScratchCardResponse.setSearchScratchCardStatusEnum(SearchScratchCardStatusEnum.SUCCESS );
+			searchScratchCardResponse.setSearchScratchCardStatusEnum(SearchScratchCardStatusEnum.valueOf(apiSearchPromotionResponse.getStatus().toString()));
 			searchScratchCardResponse.setUserId(apiSearchPromotionResponse.getUserId());
 			//searchScratchCardResponse.setSearchScratchCardStatus( )
 			//searchScratchCardResponse.set ( apiSearchPromotionResponse.getCardStatus()  ) ;		
