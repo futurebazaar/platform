@@ -20,6 +20,7 @@ public class OrderRequest implements Serializable {
 	private int orderId = 0;
 	private List<OrderItem> orderItems = new ArrayList<OrderItem>();
 	private int clientId = 0;
+	private int noOfTimesInMonth = 0;
 	
 	public int getOrderId() {
 		return orderId;
@@ -158,6 +159,18 @@ public class OrderRequest implements Serializable {
 			}
 		}
 		return count;
+	}
+	
+	public int getNoOfTimesInMonth() {
+		
+		
+		
+		return noOfTimesInMonth;
+	}
+	
+	
+	public void setNoOfTimesInMonth(int noOfTimesInMonth) {
+		this.noOfTimesInMonth = noOfTimesInMonth;
 	}
 	
 }

@@ -11,6 +11,8 @@ public class UserPromotionUsesEntry implements Serializable {
 	private int promotionId;
 	private int orderId;
 	private Money discountAmount;
+	private int noOfUseInMonth = 0;
+	
 	
 	public int getUserId() {
 		return userId;
@@ -41,5 +43,11 @@ public class UserPromotionUsesEntry implements Serializable {
 	}
 	public void setId(int id) {
 		this.id = id;
+	}
+	public int getNoOfUseInMonth() {
+		return noOfUseInMonth;
+	}
+	public void setNoOfUseInMonth(int noOfUseInMonth) {
+		this.noOfUseInMonth = noOfUseInMonth;
 	}
 }

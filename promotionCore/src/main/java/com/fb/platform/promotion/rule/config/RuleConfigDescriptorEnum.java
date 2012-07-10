@@ -22,8 +22,9 @@ public enum RuleConfigDescriptorEnum {
 	MAX_DISCOUNT_CEIL_IN_VALUE("Maximum discount in rupees", RuleConfigDescriptorTypeEnum.MONEY),
 	PRODUCT_DISCOUNT_RS_OFF("Product discount", RuleConfigDescriptorTypeEnum.MONEY),
 	PRODUCT_DISCOUNTED_VALUE("Product discounted value", RuleConfigDescriptorTypeEnum.MONEY),
-	VARIABLE_DISCOUNT_PERCENTAGE("Variable Discount percentage", RuleConfigDescriptorTypeEnum.CSKV);
-	
+	VARIABLE_DISCOUNT_PERCENTAGE("Variable Discount percentage", RuleConfigDescriptorTypeEnum.CSKV),
+	NUMBER_OF_TIMES_IN_MONTH("Number of Times in Month", RuleConfigDescriptorTypeEnum.INT );
+		
 	private String description = null;
 	
 	private RuleConfigDescriptorTypeEnum type = null;

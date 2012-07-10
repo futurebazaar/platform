@@ -85,7 +85,7 @@ public class RuleDaoJdbcImpl implements RuleDao {
 
 		RuleConfiguration ruleConfig = loadRuleConfiguration(promotionId, ruleId);
 
-		PromotionRule rule = PromotionRuleFactory.createRule(ruleName, ruleConfig);
+		PromotionRule rule = PromotionRuleFactory.createRule(ruleName, ruleConfig, promotionId);
 
 		return rule;
 	}

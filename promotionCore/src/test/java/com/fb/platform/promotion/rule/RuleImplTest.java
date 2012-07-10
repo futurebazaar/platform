@@ -25,6 +25,7 @@ import com.fb.platform.promotion.rule.impl.BuyXBrandGetYRsOffOnZProductRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyXQuantityGetVariablePercentOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.CategoryBasedVariablePercentOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.FirstPurchaseBuyWorthXGetYRsOffRuleImpl;
+import com.fb.platform.promotion.rule.impl.MonthlyDiscountRsOffRuleImpl;
 import com.fb.platform.promotion.to.OrderItem;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.Product;
@@ -46,6 +47,9 @@ public class RuleImplTest extends BaseTestCase {
 	OrderRequest orderReq8 = null;
 	OrderRequest orderReq9 = null;
 	OrderRequest orderReq10 = null;
+	OrderRequest orderReq11 = null;
+	OrderRequest orderReq12 = null;
+	OrderRequest orderReq13 = null;
 	OrderRequest catMisMatchOrderReq = null;
 	OrderRequest clientMisMatchOrderReq = null;
 	OrderRequest partCatPartBrandOrderReq = null;
@@ -97,6 +101,10 @@ public class RuleImplTest extends BaseTestCase {
 		p6.setPrice(new BigDecimal(1000));
 		p6.setCategories(Arrays.asList(15));
 		p6.setBrands(Arrays.asList(3));
+		Product p7 = new Product();
+		p7.setPrice(new BigDecimal(10));
+		p7.setCategories(Arrays.asList(1,2));
+		p7.setBrands(Arrays.asList(1));
 		
 		Product catMismatchProd = new Product();
 		catMismatchProd.setProductId(5);
@@ -150,6 +158,9 @@ public class RuleImplTest extends BaseTestCase {
 		OrderItem catMismatchItem = new OrderItem(); //3000 Rs
 		catMismatchItem.setQuantity(2);
 		catMismatchItem.setProduct(catMismatchProd);
+		OrderItem oItem12 = new OrderItem(); //495 Rs
+		oItem12.setQuantity(1);
+		oItem12.setProduct(p7);
 		
 		OrderItem brandMismatchItem = new OrderItem(); //2000 Rs
 		brandMismatchItem.setQuantity(2);
@@ -355,6 +366,35 @@ public class RuleImplTest extends BaseTestCase {
 		orderDiscount3 = new OrderDiscount();
 		orderDiscount1.setOrderRequest(orderReq1);
 		orderDiscount3.setOrderRequest(orderReq3);
+
+		orderReq11 = new OrderRequest(); //
+		orderReq11.setNoOfTimesInMonth(0);
+		orderReq11.setOrderId(18);
+		List<OrderItem> oList16 = new ArrayList<OrderItem>();
+		oList16.add(oItem1);
+		oList16.add(oItem2);
+		oList16.add(oItem3);
+		orderReq11.setOrderItems(oList16);
+		orderReq11.setClientId(5);
+
+		orderReq12 = new OrderRequest(); //
+		orderReq12.setOrderId(19);
+		List<OrderItem> oList17 = new ArrayList<OrderItem>();
+		oList17.add(oItem7);
+		oList17.add(oItem8);
+		oList17.add(oItem9);
+		oList17.add(oItem12);
+		orderReq12.setOrderItems(oList17);
+		orderReq12.setClientId(5);
+		
+		orderReq13 = new OrderRequest(); //
+		orderReq13.setOrderId(19);
+		List<OrderItem> oList18 = new ArrayList<OrderItem>();
+		oList18.add(oItem12);
+		orderReq13.setOrderItems(oList18);
+		orderReq13.setClientId(5);
+		
+		orderReq13.setNoOfTimesInMonth(2);
 	}
 	
 	@Test
@@ -714,7 +754,7 @@ public class RuleImplTest extends BaseTestCase {
 
 			Total = 1080
 		 */
-		OrderDiscount catBasedDiscountOrderReqDiscount4 = new OrderDiscount();
+			OrderDiscount catBasedDiscountOrderReqDiscount4 = new OrderDiscount();
 		catBasedDiscountOrderReqDiscount4.setOrderRequest(categoryBasedDiscountOrderReq4);
 		OrderDiscount returnDiscount4 = new OrderDiscount();
 		returnDiscount4 = rule.execute(catBasedDiscountOrderReqDiscount4);
@@ -746,4 +786,61 @@ public class RuleImplTest extends BaseTestCase {
 		}
 	}
 
+	@Test
+	public void testMonthlyDiscountRsOffRule() {
+			
+		int userId=1;
+		PromotionRule monthlyDiscountRsOffRule = ruleDao.load(-5001, -9);
+			
+		assertNotNull(monthlyDiscountRsOffRule);
+		assertTrue(monthlyDiscountRsOffRule instanceof MonthlyDiscountRsOffRuleImpl);
+			
+		RuleConfiguration monthlyDiscountRsOffRuleConfig = ruleDao.loadRuleConfiguration(-5001, -9);
+		
+		assertNotNull(monthlyDiscountRsOffRuleConfig);
+		
+
+		assertEquals(monthlyDiscountRsOffRule.isApplicable(orderReq11,userId,isCouponCommitted),PromotionStatusEnum.BRAND_MISMATCH );
+		assertEquals(monthlyDiscountRsOffRule.isApplicable(catMisMatchOrderReq,userId,isCouponCommitted),PromotionStatusEnum.CATEGORY_MISMATCH);
+
+		assertEquals(monthlyDiscountRsOffRule.isApplicable(orderReq12,2,isCouponCommitted),PromotionStatusEnum.SUCCESS);
+
+		assertEquals(monthlyDiscountRsOffRule.isApplicable(orderReq13,userId,isCouponCommitted),PromotionStatusEnum.NUMBER_OF_USES_EXCEEDED);
+		
+		//assertEquals(monthlyDiscountRsOffRule.isApplicable(clientMisMatchOrderReq,userId,isCouponCommitted),PromotionStatusEnum.INVALID_CLIENT);
+		
+	//	assertEquals(0,new BigDecimal(120).compareTo(monthlyDiscountRsOffRule.execute(orderDiscount1).getOrderDiscountValue()));
+	//	assertEquals(0,new BigDecimal(120).compareTo(monthlyDiscountRsOffRule.execute(orderDiscount3).getOrderDiscountValue()));
+	
+	}
+
+	@Test
+	public void testMonthlyDiscountRsOffRuleTwoTimes() {
+			
+		int userId=1;
+		PromotionRule monthlyDiscountRsOffRule = ruleDao.load(-5002, -9);
+			
+		assertNotNull(monthlyDiscountRsOffRule);
+		assertTrue(monthlyDiscountRsOffRule instanceof MonthlyDiscountRsOffRuleImpl);
+			
+		RuleConfiguration monthlyDiscountRsOffRuleConfig = ruleDao.loadRuleConfiguration(-5002, -9);
+		
+		assertNotNull(monthlyDiscountRsOffRuleConfig);
+		
+		assertEquals(monthlyDiscountRsOffRule.isApplicable(orderReq11,userId,isCouponCommitted),PromotionStatusEnum.BRAND_MISMATCH );
+		assertEquals(monthlyDiscountRsOffRule.isApplicable(catMisMatchOrderReq,userId,isCouponCommitted),PromotionStatusEnum.CATEGORY_MISMATCH);
+
+		assertEquals(monthlyDiscountRsOffRule.isApplicable(orderReq12,2,isCouponCommitted),PromotionStatusEnum.SUCCESS);
+
+		assertEquals(monthlyDiscountRsOffRule.isApplicable(orderReq13,userId,isCouponCommitted),PromotionStatusEnum.NUMBER_OF_USES_EXCEEDED);
+		
+		//assertEquals(monthlyDiscountRsOffRule.isApplicable(clientMisMatchOrderReq,userId,isCouponCommitted),PromotionStatusEnum.INVALID_CLIENT);
+		
+	//	assertEquals(0,new BigDecimal(120).compareTo(monthlyDiscountRsOffRule.execute(orderDiscount1).getOrderDiscountValue()));
+	//	assertEquals(0,new BigDecimal(120).compareTo(monthlyDiscountRsOffRule.execute(orderDiscount3).getOrderDiscountValue()));
+	
+	}
+
+	
 }
+

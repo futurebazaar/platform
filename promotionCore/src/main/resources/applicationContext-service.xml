@@ -50,6 +50,7 @@
     <!-- Add new Factory Beans here -->
     <bean id="promotionRuleFactory" class="com.fb.platform.promotion.util.PromotionRuleFactory">
     	<property name="orderDao" ref="orderDao"/>
+    	<property name="promotionDao" ref="promotionDao"/>
     </bean>
     
     <bean id="messageSource"

@@ -5,7 +5,8 @@ public enum RuleConfigDescriptorTypeEnum {
 	DECIMAL(new StringToDecimalConvertor()),
 	PERCENT(new StringToDecimalConvertor()),
 	MONEY(new StringToMoneyConvertor()),
-	CSKV(new StringToDiscountQuantityMapConvertor()); //Comma Separated Key Value Pairs
+	CSKV(new StringToDiscountQuantityMapConvertor() ), //Comma Separated Key Value Pairs
+    INT(new StringToIntegerConvertor()); 
 	
 	private Convertor convertor = null;
 	
@@ -13,6 +14,7 @@ public enum RuleConfigDescriptorTypeEnum {
 		this.convertor = convertor;
 	}
 	
+
 	@Override
 	public String toString() {
 		return this.name();

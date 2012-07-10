@@ -116,6 +116,12 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			"	order_id, " +
 			"	discount_amount " +
 			"FROM user_promotion_uses WHERE promotion_id = ? AND user_id = ? AND order_id = ?";
+
+	private static final String LOAD_USER_MONTHLY_PROMOTION_USES_QUERY = 
+			"SELECT " +
+			"	count(1) as current_count  " +
+			"FROM user_promotion_uses upu WHERE user_id = ? and promotion_id = ? and month(date(created_on)) =  month(now()) " ;
+
 	
 	/* (non-Javadoc)
 	 * @see com.fb.platform.promotion.dao.PromotionDao#load(int)
@@ -487,6 +493,22 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			return releasePromotion;
 		}
 	}
+
+	
+	private static class UserMonthlyOrderPromotionMapper implements RowMapper<UserPromotionUsesEntry> {
+
+		@Override
+		public UserPromotionUsesEntry mapRow(ResultSet rs, int rowNum) throws SQLException {
+			UserPromotionUsesEntry releasePromotion = new UserPromotionUsesEntry();
+
+			releasePromotion.setNoOfUseInMonth( rs.getInt("current_count"));
+
+			
+			return releasePromotion;
+		}
+	}
+
+	
 	
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
@@ -494,5 +516,28 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 
 	public void setRuleDao(RuleDao ruleDao) {
 		this.ruleDao = ruleDao;
+	}
+
+	@Override
+	public boolean isValidNoOfTimesInMonth( int userId ,  int noOfTimesAllowed, int promotionId) {
+		if(log.isDebugEnabled()) {
+			log.debug("Get from the user promotion uses table record for user for month : " + userId   );
+		}
+		UserPromotionUsesEntry userPromotionUsesEntry = null;
+		int mcount = 0 ;
+		try {
+			userPromotionUsesEntry = jdbcTemplate.queryForObject(LOAD_USER_MONTHLY_PROMOTION_USES_QUERY, new Object [] { userId, promotionId }, new UserMonthlyOrderPromotionMapper() );
+			System.out.println("userPromotionUsesEntry.getNoOfUseInMonth()"+ userPromotionUsesEntry.getNoOfUseInMonth());
+			mcount = userPromotionUsesEntry.getNoOfUseInMonth();
+			if ( mcount < noOfTimesAllowed) {
+				return true;
+			}
+			
+		} catch (IncorrectResultSizeDataAccessException e) {
+			log.warn("No entry found for userId" + userId );
+			throw new PlatformException("No entry in user_coupon_uses found for userId" + userId );
+		}
+		
+		return false;
 	}
 }
