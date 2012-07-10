@@ -38,8 +38,11 @@ import com.fb.platform.payback._1_0.DisplayPointsRequest;
 import com.fb.platform.payback._1_0.DisplayPointsResponse;
 import com.fb.platform.payback._1_0.ItemResponse;
 import com.fb.platform.payback._1_0.OrderItemRequest;
+import com.fb.platform.payback._1_0.PaymentRequest;
 import com.fb.platform.payback._1_0.PointsRequest;
 import com.fb.platform.payback._1_0.PointsResponse;
+import com.fb.platform.payback._1_0.RollbackPointsRequest;
+import com.fb.platform.payback._1_0.RollbackPointsResponse;
 import com.fb.platform.payback.service.PointsManager;
 import com.fb.platform.payback.to.PointsResponseCodeEnum;
 
@@ -88,6 +91,7 @@ public class PointsResource {
 			
 			com.fb.platform.payback.to.OrderRequest orderRequest = new com.fb.platform.payback.to.OrderRequest();
 			orderRequest.setAmount(xmlPointsRequest.getOrderRequest().getAmount());
+			orderRequest.setOrderTotal(xmlPointsRequest.getOrderRequest().getOrderTotal());
 			orderRequest.setLoyaltyCard(xmlPointsRequest.getOrderRequest().getLoyaltyCard());
 			orderRequest.setOrderId(xmlPointsRequest.getOrderRequest().getOrderId());
 			XMLGregorianCalendar gregCal = xmlPointsRequest.getOrderRequest().getTimestamp();
@@ -101,13 +105,20 @@ public class PointsResource {
 				orderRequest.getOrderItemRequest().add(orderItemRequest);
 			}
 			
+			for (PaymentRequest  xmlPaymentRequest : xmlPointsRequest.getOrderRequest().getPaymentRequest()){
+				com.fb.platform.payback.to.PaymentRequest paymentRequest = createStorePointsPaymentRequest(xmlPaymentRequest);
+				orderRequest.getPaymentRequest().add(paymentRequest);
+			}
+			
 			pointsHeaderRequest.setOrderRequest(orderRequest);
+			
 			com.fb.platform.payback.to.PointsResponse pointsResponse = pointsManager.getPointsReponse(pointsHeaderRequest);
 			PointsResponse xmlPointsResponse = new PointsResponse();	
 			xmlPointsResponse.setActionCode(ActionCode.valueOf(pointsResponse.getActionCode().name()));
 			xmlPointsResponse.setMessage(pointsResponse.getStatusMessage());
 			xmlPointsResponse.setStatusCode(pointsResponse.getPointsResponseCodeEnum().name());
 			xmlPointsResponse.setTotalPoints(pointsResponse.getTxnPoints());
+			xmlPointsResponse.setHeaderId(pointsResponse.getPointsHeaderId());
 			StringWriter outStringWriter = new StringWriter();
 			Marshaller marsheller = context.createMarshaller();
 			marsheller.marshal(xmlPointsResponse, outStringWriter);
@@ -119,6 +130,14 @@ public class PointsResource {
 			logger.error("Error in the Points call.", e);
 			return null;
 		}
+	}
+
+	private com.fb.platform.payback.to.PaymentRequest createStorePointsPaymentRequest(
+			PaymentRequest xmlPaymentRequest) {
+		com.fb.platform.payback.to.PaymentRequest paymentRequest = new com.fb.platform.payback.to.PaymentRequest();
+		paymentRequest.setAmount(xmlPaymentRequest.getAmount());
+		paymentRequest.setPaymentMode(xmlPaymentRequest.getPaymentMode());
+		return paymentRequest;
 	}
 
 	private com.fb.platform.payback.to.OrderItemRequest createStorePointsItem(OrderItemRequest xmlOrderItem) {
@@ -192,9 +211,11 @@ public class PointsResource {
 			com.fb.platform.payback.to.PointsRequest newPointsRequest= pointsManager.getPointsToBeDisplayed(pointsRequest);
 			
 			DisplayPointsResponse xmlDisplayPointsResponse = new DisplayPointsResponse();
-			xmlDisplayPointsResponse.setTotalPoints(newPointsRequest.getOrderRequest().getTxnPoints().intValue());
+			xmlDisplayPointsResponse.setTotalPoints(newPointsRequest.getOrderRequest().getTotalTxnPoints().intValue());
 			xmlDisplayPointsResponse.setBonusPoints(newPointsRequest.getOrderRequest().getBonusPoints().intValue());
-			for (com.fb.platform.payback.to.OrderItemRequest itemRequest : newPointsRequest.getOrderRequest().getOrderItemRequest()){
+			xmlDisplayPointsResponse.setPurchasablePoints(newPointsRequest.getOrderRequest().getPointsValue().intValue());
+			xmlDisplayPointsResponse.setEarnPoints(newPointsRequest.getOrderRequest().getTxnPoints().intValue());
+			for (com.fb.platform.payback.to.OrderItemRequest itemRequest : newPointsRequest.getOrderRequest().getOrderItemRequest()) {
 				ItemResponse xmlItemResponse = new ItemResponse();
 				xmlItemResponse.setAmount(itemRequest.getAmount());
 				xmlItemResponse.setItemId(itemRequest.getId());
@@ -217,12 +238,50 @@ public class PointsResource {
 
 	}
 	
+	@POST
+	@Path("/rollback")
+	public String rollbackPoints(String pointsXml) throws NoPermissionException{
+		logger.info("Rollback Points Request XML : \n" + pointsXml);
+		try {
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			RollbackPointsRequest xmlRollbackPointsRequest = (RollbackPointsRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(pointsXml)));
+			com.fb.platform.payback.to.RollbackRequest rollbackRequest = new com.fb.platform.payback.to.RollbackRequest();
+			
+			rollbackRequest.setSessionToken(xmlRollbackPointsRequest.getSessionToken());
+			rollbackRequest.setHeaderId(xmlRollbackPointsRequest.getHeaderId());
+			
+			com.fb.platform.payback.to.RollbackResponse rollbackResponse = pointsManager.rollbackTransaction(rollbackRequest);
+			
+			RollbackPointsResponse xmlRollbackPointsResponse = new RollbackPointsResponse();
+			xmlRollbackPointsResponse.setDeletedHeaderRows(rollbackResponse.getDeletedHeaderRows());
+			xmlRollbackPointsResponse.setDeletedItemRows(rollbackResponse.getDeletedItemRows());
+			xmlRollbackPointsResponse.setHeaderId(rollbackResponse.getHeaderId());
+			xmlRollbackPointsResponse.setStatusCode(rollbackResponse.getResponseEnum().name());
+
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marsheller = context.createMarshaller();
+			marsheller.marshal(xmlRollbackPointsResponse, outStringWriter);
+			
+			String xmlResponse = outStringWriter.toString();
+			logger.info("Rollback Points Response : \n" + xmlResponse);
+			return xmlResponse;
+
+		} catch (JAXBException e) {
+			logger.error("Error in the Points call.", e);
+			return null;
+		}
+
+	}
+	
 	@GET
 	@Path("/")
 	public String ping() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Future Platform PAYBACK Websevice. \n");
 		sb.append("To store Points post to : http://hostname:port/paybackWS/points/store \n");
+		sb.append("To store Points post to : http://hostname:port/paybackWS/points/display \n");
+		sb.append("To store Points post to : http://hostname:port/paybackWS/points/rollback \n");
+		sb.append("To store Points post to : http://hostname:port/paybackWS/points/clear/rule \n");
 		return sb.toString();
 	}
 	

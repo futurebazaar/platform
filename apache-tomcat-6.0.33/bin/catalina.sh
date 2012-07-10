@@ -85,7 +85,7 @@
 # -----------------------------------------------------------------------------
 
 # OS specific support.  $var _must_ be set to either true or false.
-JAVA_OPTS=-Xmx4096m
+JAVA_OPTS="-Xmx4096m -XX:MaxPermSize=512M"
 cygwin=false
 os400=false
 darwin=false

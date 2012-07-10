@@ -22,4 +22,6 @@ public class PointsRuleConfigConstants {
 
 	public static final String BURN_RATIO = "BURN_RATIO";
 
+	public static final String PAYMENT_MODE = "PAYMENT_MODE";
+
 }

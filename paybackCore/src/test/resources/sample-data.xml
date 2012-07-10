@@ -115,9 +115,14 @@
 				<value name="name">BUY_WORTH_X_EARN_Y_BONUS_POINTS</value>
 			</row>
 			<row>
-			<value name="id">6</value>
-			<value name="name">PURCHASE_ORDER_BURN_X_POINTS</value>
-		</row>
+				<value name="id">6</value>
+				<value name="name">PURCHASE_ORDER_BURN_X_POINTS</value>
+			</row>
+			
+			<row>
+				<value name="id">7</value>
+				<value name="name">EARN_X_POINTS_ON_Y_PAYMENT_MODE</value>
+			</row>
 	
 		</table>
         	
@@ -273,6 +278,45 @@
 			<value name="value">0</value>
 			<value name="rule_id">1</value>
 		</row>
+			<row>
+        			<value name="id">25</value>
+        			<value name="name">EARN_RATIO</value>
+        			<value name="value">0.03</value>
+        			<value name="rule_id">7</value>
+        		</row>
+        		
+        		<row>
+				<value name="id">26</value>
+				<value name="name">VALID_FROM</value>
+				<value name="value">2012-05-22</value>
+				<value name="rule_id">7</value>
+			</row>
+			
+			<row>
+				<value name="id">27</value>
+				<value name="name">VALID_TILL</value>
+				<value name="value">9999-12-31</value>
+				<value name="rule_id">7</value>
+			</row>
+			
+			<row>
+				<value name="id">28</value>
+				<value name="name">INCLUDED_CATEGORY_LIST</value>
+				<value name="value">1234,1193</value>
+				<value name="rule_id">7</value>
+			</row>
+			<row>
+				<value name="id">29</value>
+				<value name="name">POINTS_FACTOR</value>
+				<value name="value">10</value>
+				<value name="rule_id">7</value>
+			</row>
+			<row>
+				<value name="id">30</value>
+				<value name="name">PAYMENT_MODE</value>
+				<value name="value">payback</value>
+				<value name="rule_id">7</value>
+			</row>
         	
 			</table>
 

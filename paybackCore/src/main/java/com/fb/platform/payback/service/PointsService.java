@@ -1,9 +1,11 @@
 package com.fb.platform.payback.service;
 
 
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fb.platform.payback.model.RollbackHeader;
 import com.fb.platform.payback.to.BurnActionCodesEnum;
 import com.fb.platform.payback.to.EarnActionCodesEnum;
 import com.fb.platform.payback.to.PointsRequest;
@@ -21,6 +23,10 @@ public interface PointsService {
 	public  PointsResponseCodeEnum clearPointsCache(String ruleName);
 
 	public  PointsRequest getPointsToBeDisplayed(PointsRequest request);
+
+	RollbackHeader rollbackTransaction(long headerId);
+	
+	//public PointsRequest rollBackTransaction(long headerId);
 
 	
 }

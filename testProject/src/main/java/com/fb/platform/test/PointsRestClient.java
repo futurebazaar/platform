@@ -24,8 +24,11 @@ import com.fb.platform.payback._1_0.DisplayPointsRequest;
 import com.fb.platform.payback._1_0.DisplayPointsResponse;
 import com.fb.platform.payback._1_0.OrderItemRequest;
 import com.fb.platform.payback._1_0.OrderRequest;
+import com.fb.platform.payback._1_0.PaymentRequest;
 import com.fb.platform.payback._1_0.PointsRequest;
 import com.fb.platform.payback._1_0.PointsResponse;
+import com.fb.platform.payback._1_0.RollbackPointsRequest;
+import com.fb.platform.payback._1_0.RollbackPointsResponse;
 import com.fb.platform.payback.rule.EarnPointsRuleEnum;
 
 
@@ -62,9 +65,45 @@ public class PointsRestClient {
 	}
 	
 	public static void main(String[] args) throws Exception {
-			clearCache();
-			storeEarnPoints();
+			long headerId = storeEarnPoints();
+			rollbackPoints(headerId);
 			displayPoints();
+			clearCache();
+	}
+
+	private static void rollbackPoints(long headerId) throws Exception {
+		HttpClient httpClient = new HttpClient();
+
+		PostMethod pointsMethod = new PostMethod(API_URL + "paybackWS/points/rollback");
+
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.payback._1_0");
+		
+		RollbackPointsRequest request = new RollbackPointsRequest();
+		request.setHeaderId(headerId);
+		request.setSessionToken(login());
+		
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(request, sw);
+
+		System.out.println("\n Rollback Points Req : \n" + sw.toString());
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		pointsMethod.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(pointsMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the points method : " + statusCode);
+			System.exit(1);
+		}
+		String responseStr = pointsMethod.getResponseBodyAsString();
+		System.out.println("Got the Rollback Points Response : \n" + responseStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		RollbackPointsResponse response = (RollbackPointsResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(responseStr)));
+		System.out.println(response.getDeletedHeaderRows());
+		System.out.println(response.getStatusCode());
+		
+		
 	}
 
 	private static void displayPoints() throws Exception {
@@ -105,7 +144,7 @@ public class PointsRestClient {
 		request.setTimestamp(DatatypeFactory.newInstance().newXMLGregorianCalendar(2012, 05, 27, 0, 0, 0, 0, 0));
 		request.setOrderAmount(new BigDecimal(500));
 		OrderItemRequest itemRequest = new OrderItemRequest();
-		itemRequest.setAmount(new BigDecimal(639));
+		itemRequest.setAmount(new BigDecimal(500));
 		itemRequest.setArticleId("1234");
 		itemRequest.setCategoryId(1193);
 		itemRequest.setDepartmentCode(1234);
@@ -158,7 +197,7 @@ public class PointsRestClient {
 
 	private static PointsRequest setPointsRequest() throws Exception {
 		PointsRequest request = new PointsRequest();
-		request.setActionCode(ActionCode.EARN_REVERSAL);
+		request.setActionCode(ActionCode.PREALLOC_EARN);
 		request.setClientName("Future Bazaar");
 		request.setSessionToken(login());
 		
@@ -166,12 +205,13 @@ public class PointsRestClient {
 		orderRequest.setAmount(new BigDecimal(500));
 		orderRequest.setLoyaltyCard("1234567812345678");
 		orderRequest.setOrderId(2);
+		orderRequest.setAmount(new BigDecimal(500));
 		orderRequest.setReason("REST CLIENT");
 		orderRequest.setReferenceId("5052");
 		orderRequest.setTimestamp(DatatypeFactory.newInstance().newXMLGregorianCalendar(2012, 05, 27, 0, 0, 0, 0, 0));
 		
 		OrderItemRequest itemRequest = new OrderItemRequest();
-		itemRequest.setAmount(new BigDecimal(639));
+		itemRequest.setAmount(new BigDecimal(500));
 		itemRequest.setArticleId("1234");
 		itemRequest.setCategoryId(1193);
 		itemRequest.setDepartmentCode(1234);
@@ -182,10 +222,16 @@ public class PointsRestClient {
 		
 		orderRequest.getOrderItemRequest().add(itemRequest);
 		request.setOrderRequest(orderRequest);
+		
+		PaymentRequest paymentRequest = new PaymentRequest();
+		paymentRequest.setAmount(new BigDecimal(500));
+		paymentRequest.setPaymentMode("payback");
+		orderRequest.getPaymentRequest().add(paymentRequest);
+		
 		return request;
 	}
 	
-	public static void storeEarnPoints() throws Exception{
+	public static long storeEarnPoints() throws Exception{
 		HttpClient httpClient = new HttpClient();
 
 		PostMethod pointsMethod = new PostMethod(API_URL + "paybackWS/points/store");
@@ -214,6 +260,7 @@ public class PointsRestClient {
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		PointsResponse response = (PointsResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(responseStr)));
 		System.out.println(response.getStatusCode());
+		return response.getHeaderId();
 
 	}
 	

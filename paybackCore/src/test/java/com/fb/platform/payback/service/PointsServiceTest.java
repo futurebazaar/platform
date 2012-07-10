@@ -15,10 +15,12 @@ import com.fb.commons.PlatformException;
 import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.payback.dao.PointsDao;
 import com.fb.platform.payback.model.PointsHeader;
+import com.fb.platform.payback.model.RollbackHeader;
 import com.fb.platform.payback.to.BurnActionCodesEnum;
 import com.fb.platform.payback.to.EarnActionCodesEnum;
 import com.fb.platform.payback.to.OrderItemRequest;
 import com.fb.platform.payback.to.OrderRequest;
+import com.fb.platform.payback.to.PaymentRequest;
 import com.fb.platform.payback.to.PointsRequest;
 import com.fb.platform.payback.to.PointsResponseCodeEnum;
 import com.sun.jersey.api.MessageException;
@@ -44,6 +46,7 @@ public class PointsServiceTest extends BaseTestCase{
 		request.getOrderItemRequest().add(setItemRequest(1, 2000));
 		pr.setOrderRequest(request);
 		assertEquals(PointsResponseCodeEnum.SUCCESS, pointsService.storePoints(pr));
+		assertNotSame(0, pr.getOrderRequest().getPointsHeaderId());
 	}
 	
 //	@Test
@@ -141,19 +144,32 @@ public class PointsServiceTest extends BaseTestCase{
 		request.getOrderItemRequest().add(setItemRequest(2, 639));
 		pr.setOrderRequest(request);
 		PointsRequest newRequest = pointsService.getPointsToBeDisplayed(pr);
-		assertEquals(68, newRequest.getOrderRequest().getTxnPoints().intValue());
-		
+		assertEquals(342, newRequest.getOrderRequest().getTxnPoints().intValue());
+		assertEquals(542, newRequest.getOrderRequest().getTotalTxnPoints().intValue());
+	
 		pr.setTxnActionCode("BURN_REVERSAL");
+		OrderRequest request1 = setOrderRequest(new Long(1), "1234");
+		pr.setOrderRequest(request1);
 		newRequest = pointsService.getPointsToBeDisplayed(pr);
 		assertEquals(8000, newRequest.getOrderRequest().getTxnPoints().intValue());
+		assertEquals(2000, newRequest.getOrderRequest().getPointsValue().intValue());
 	}
 	
 	private OrderRequest setOrderRequest(Long orderId, String referenceId) {
 		OrderRequest request = new OrderRequest();
 		request.setOrderId(orderId);
 		request.setAmount(new BigDecimal(2000));
+		request.setOrderTotal(new BigDecimal(2000));
 		request.setTxnTimestamp(new DateTime(2012, 05, 24, 10, 0, 0));
 		request.setReferenceId(referenceId);
+		
+		List<PaymentRequest> paymentRequest = new ArrayList<PaymentRequest>();
+		PaymentRequest payment = new PaymentRequest();
+		payment.setAmount(new BigDecimal(2000));
+		payment.setPaymentMode("payback");
+		paymentRequest.add(payment);
+		
+		request.setPaymentRequest(paymentRequest);
 		return request;
 		
 	}
@@ -169,6 +185,29 @@ public class PointsServiceTest extends BaseTestCase{
 		orderItem1.setQuantity(1);
 		orderItem1.setSellerRateChartId(1);
 		return orderItem1;
+	}
+	
+	@Test
+	public void rollbackTransactionTest() {
+		PointsRequest pr = new PointsRequest();
+		pr.setTxnActionCode("PREALLOC_EARN");
+		pr.setClientName("Future Bazaar");
+		
+		OrderRequest request = setOrderRequest(new Long(2), "1234");
+		request.setLoyaltyCard("1234123412341234");
+		pr.setOrderRequest(request);
+		assertEquals(PointsResponseCodeEnum.INVALID_POINTS, pointsService.storePoints(pr));
+		RollbackHeader header = pointsService.rollbackTransaction(pr.getOrderRequest().getPointsHeaderId());
+		assertEquals(0, header.getItemRowsDeleted());
+		assertEquals(0, header.getHeaderRowsDeleted());
+		assertEquals(pr.getOrderRequest().getPointsHeaderId(),  header.getHeaderId());
+		
+		request.getOrderItemRequest().add(setItemRequest(1, 2000));
+		pr.setOrderRequest(request);
+		assertEquals(PointsResponseCodeEnum.SUCCESS, pointsService.storePoints(pr));
+		header = pointsService.rollbackTransaction(pr.getOrderRequest().getPointsHeaderId());
+		assertEquals(1, header.getHeaderRowsDeleted());
+		assertEquals(pr.getOrderRequest().getPointsHeaderId(),  header.getHeaderId());
 	}
 	
 }

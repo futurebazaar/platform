@@ -78,7 +78,6 @@ public class PromotionRuleFactory {
 			((MonthlyDiscountRsOffRuleImpl)rule).setPromotionId(promotionId);
 			((MonthlyDiscountRsOffRuleImpl)rule).setPromotionDao(promotionDao);
 			break;
-			
 		case CATEGORY_BASED_VARIABLE_PERCENT_OFF:
 			rule = new CategoryBasedVariablePercentOffRuleImpl();
 			break;
