@@ -95,7 +95,7 @@ public class MonthlyDiscountRsOffRuleImpl implements PromotionRule, Serializable
 			log.debug("Executing BuyWorthXGetYRsOffRuleImpl on order : " + request.getOrderId());
 		}
 		
-		orderDiscount.setTotalOrderDiscount(data.getFixedRsOff().getAmount());
+		orderDiscount.setOrderDiscountValue(data.getFixedRsOff().getAmount());
 
 		return orderDiscount.distributeDiscountOnOrder(orderDiscount,data.getBrands(),data.getIncludeCategoryList(),data.getExcludeCategoryList());
 	}

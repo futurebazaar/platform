@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.platform.promotion.dao.OrderDao;
+import com.fb.platform.promotion.dao.PromotionDao;
 import com.fb.platform.promotion.rule.PromotionRule;
 import com.fb.platform.promotion.rule.RulesEnum;
 import com.fb.platform.promotion.rule.config.RuleConfigItemDescriptor;
@@ -17,6 +18,7 @@ import com.fb.platform.promotion.rule.impl.BuyWorthXGetYRsOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyXBrandGetYRsOffOnZProductRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyXGetYFreeRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyXQuantityGetVariablePercentOffRuleImpl;
+import com.fb.platform.promotion.rule.impl.CategoryBasedVariablePercentOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.FirstPurchaseBuyWorthXGetYRsOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.MonthlyDiscountRsOffRuleImpl;
 
@@ -30,8 +32,15 @@ public class PromotionRuleFactory {
 	@Autowired
 	private static OrderDao orderDao = null;
 	
+	@Autowired
+	private static PromotionDao promotionDao = null;
+	
 	public void setOrderDao(OrderDao orderDao) {
 		this.orderDao = orderDao;
+	}
+	
+	public void setPromotionDao(PromotionDao promotionDao) {
+		this.promotionDao = promotionDao;
 	}
 
 	private static PromotionRule getRule(RulesEnum ruleName, int promotionId) {
@@ -67,6 +76,11 @@ public class PromotionRuleFactory {
 		case MONTHLY_DISCOUNT_RS_OFF:
 			rule = new MonthlyDiscountRsOffRuleImpl();
 			((MonthlyDiscountRsOffRuleImpl)rule).setPromotionId(promotionId);
+			((MonthlyDiscountRsOffRuleImpl)rule).setPromotionDao(promotionDao);
+			break;
+			
+		case CATEGORY_BASED_VARIABLE_PERCENT_OFF:
+			rule = new CategoryBasedVariablePercentOffRuleImpl();
 			break;
 			
 		default:

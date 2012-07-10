@@ -12,7 +12,7 @@ import com.fb.platform.promotion.to.OrderRequest;
 public class OrderDiscount implements Serializable {
 
 	private OrderRequest orderRequest = null;
-	private BigDecimal totalOrderDiscount = BigDecimal.ZERO;
+	private BigDecimal orderDiscountValue = BigDecimal.ZERO;
 	
 	public OrderRequest getOrderRequest() {
 		return orderRequest;
@@ -20,17 +20,17 @@ public class OrderDiscount implements Serializable {
 	public void setOrderRequest(OrderRequest orderRequest) {
 		this.orderRequest = orderRequest;
 	}
-	public BigDecimal getTotalOrderDiscount() {
-		return totalOrderDiscount;
+	public BigDecimal getOrderDiscountValue() {
+		return orderDiscountValue;
 	}
-	public void setTotalOrderDiscount(BigDecimal totalOrderDiscount) {
-		this.totalOrderDiscount = totalOrderDiscount;
+	public void setOrderDiscountValue(BigDecimal orderDiscountValue) {
+		this.orderDiscountValue = orderDiscountValue;
 	}
 	
 	public OrderDiscount distributeDiscountOnOrder(OrderDiscount orderDiscount,List<Integer> brands, List<Integer> includeCategoryList, List<Integer> excludeCategoryList){ 
 
 		OrderRequest orderRequest = orderDiscount.getOrderRequest();
-		BigDecimal totalRemainingDiscountOnOrder = orderDiscount.getTotalOrderDiscount();
+		BigDecimal totalRemainingDiscountOnOrder = orderDiscount.getOrderDiscountValue();
 		List<OrderItem> notLockedAplicableOrderItems = new ArrayList<OrderItem>();
 		BigDecimal totalOrderValueForRemainingApplicableItems = BigDecimal.ZERO;
 		

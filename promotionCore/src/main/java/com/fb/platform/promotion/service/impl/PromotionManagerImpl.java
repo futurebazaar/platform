@@ -115,7 +115,7 @@ public class PromotionManagerImpl implements PromotionManager {
 			
 			OrderDiscount orderDiscount = promotion.apply(request.getOrderReq());
 			if(orderDiscount!=null){
-				Money discount = orderDiscount.getTotalOrderDiscount()==null ? null : new Money(orderDiscount.getTotalOrderDiscount());
+				Money discount = orderDiscount.getOrderDiscountValue()==null ? null : new Money(orderDiscount.getOrderDiscountValue());
 				response.setOrderDiscount(orderDiscount);
 				PromotionStatusEnum postDiscountCheckStatus = promotionService.isApplicable(userId, request.getOrderReq(), discount, coupon, promotion, request.getIsOrderCommitted());
 				if(PromotionStatusEnum.SUCCESS.compareTo(postDiscountCheckStatus)!=0){

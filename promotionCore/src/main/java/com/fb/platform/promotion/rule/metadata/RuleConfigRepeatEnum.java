@@ -7,7 +7,7 @@ package com.fb.platform.promotion.rule.metadata;
  * @author keith
  *
  */
-public enum RuleConfigItemRepeatEnum {
+public enum RuleConfigRepeatEnum {
 	
 	REPEATABLE,
 	NON_REPEATABLE;

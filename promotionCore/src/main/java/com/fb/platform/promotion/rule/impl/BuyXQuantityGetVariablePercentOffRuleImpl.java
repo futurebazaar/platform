@@ -96,7 +96,7 @@ public class BuyXQuantityGetVariablePercentOffRuleImpl implements PromotionRule,
 			log.info("Discount amount calculated is the final discount on order. Discount calculated = "+discountCalculated);
 			finalDiscountAmount = finalDiscountAmount.plus(discountCalculated);
 		}
-		orderDiscount.setTotalOrderDiscount(finalDiscountAmount.getAmount());
+		orderDiscount.setOrderDiscountValue(finalDiscountAmount.getAmount());
 
 		return orderDiscount.distributeDiscountOnOrder(orderDiscount,data.getBrands(),data.getIncludeCategoryList(),data.getExcludeCategoryList());
 		
