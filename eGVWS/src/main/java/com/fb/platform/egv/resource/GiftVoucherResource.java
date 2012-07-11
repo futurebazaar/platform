@@ -28,9 +28,9 @@ import com.fb.platform.egv.mapper.ApplyMapper;
 import com.fb.platform.egv.mapper.CancelMapper;
 import com.fb.platform.egv.mapper.CreateGVMapper;
 import com.fb.platform.egv.mapper.GetInfoMapper;
+import com.fb.platform.egv.mapper.RollbackUseMapper;
 import com.fb.platform.egv.mapper.UseMapper;
 import com.fb.platform.egv.service.GiftVoucherManager;
-import com.fb.platform.egv.to.UseResponseStatusEnum;
 
 /**
  * @author keith
@@ -213,6 +213,36 @@ public class GiftVoucherResource {
 		}
 	}
 
+
+	@POST
+	@Path("/rollbackUse")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String rollbackUse(String rollbackUseRequestXml) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("RollbackUseRequestXML : \n" + rollbackUseRequestXml);
+		}
+		try {
+			com.fb.platform.egv.to.RollbackUseRequest useRollbackRequest = RollbackUseMapper.xmlToCoreRequest(rollbackUseRequestXml);
+			
+			com.fb.platform.egv.to.RollbackUseResponse useRollbackResponse = giftVoucherManager.rollbackUse(useRollbackRequest);
+			
+			String useRollbackResponseXml = RollbackUseMapper.coreResponseToXml(useRollbackResponse);
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("Use Response XML :\n" + useRollbackResponseXml);
+			}
+			
+			return useRollbackResponseXml;
+
+		} catch (JAXBException e) {
+			logger.error("Error in the use GiftVoucher call : ", e);
+			return "error"; //TODO return proper error response
+		} catch (DatatypeConfigurationException e) {
+			logger.error("Error in the use GiftVoucher call : ", e);
+			return "error"; //TODO return proper error response
+		}
+	}
 
 	
 	@GET

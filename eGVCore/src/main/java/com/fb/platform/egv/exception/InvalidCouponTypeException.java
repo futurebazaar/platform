@@ -1,15 +1,14 @@
 /**
  * 
  */
-package com.fb.platform.egv.service;
+package com.fb.platform.egv.exception;
 
-import com.fb.commons.PlatformException;
 
 /**
  * @author vinayak
  *
  */
-public class InvalidCouponTypeException extends PlatformException {
+public class InvalidCouponTypeException extends GiftVoucherException {
 
 	/**
 	 * 

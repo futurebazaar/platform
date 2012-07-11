@@ -202,5 +202,44 @@
       <xs:enumeration value="ALREADY_USED"/>
     </xs:restriction>
   </xs:simpleType>
+
+
+  <xs:element name="rollbackUseRequest">
+	    <xs:complexType>
+	      <xs:sequence>
+	        <xs:element ref="egv:sessionToken"/>
+	        <xs:element ref="egv:giftVoucherNumber"/>
+	        <xs:element ref="egv:orderId"/>
+	      </xs:sequence>
+	    </xs:complexType>
+  	</xs:element>
+
+  <xs:element name="rollbackUseResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="egv:sessionToken"/>
+        <xs:element ref="egv:rollbackUseResponseStatus"/>
+		<xs:element ref="egv:giftVoucherNumber"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+
+  <xs:element name="rollbackUseResponseStatus" type="egv:rollbackUseResponseStatusEnum"/>
+  
+  <xs:simpleType name="rollbackUseResponseStatusEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INVALID_GIFT_VOUCHER_NUMBER"/>
+      <xs:enumeration value="USER_NOT_AUTHORIZED"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+      <xs:enumeration value="GIFT_VOUCHER_EXPIRED"/>
+      <xs:enumeration value="ALREADY_USED"/>
+      <xs:enumeration value="ROLLBACK_FAILED"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  
     
 </xs:schema>

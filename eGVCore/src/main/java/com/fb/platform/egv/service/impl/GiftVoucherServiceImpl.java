@@ -16,18 +16,18 @@ import com.fb.commons.mail.MailSender;
 import com.fb.commons.mail.exception.MailerException;
 import com.fb.commons.mail.to.MailTO;
 import com.fb.platform.egv.dao.GiftVoucherDao;
-import com.fb.platform.egv.dao.OrderItemDao;
+import com.fb.platform.egv.exception.GiftVoucherAlreadyUsedException;
+import com.fb.platform.egv.exception.GiftVoucherException;
+import com.fb.platform.egv.exception.GiftVoucherExpiredException;
+import com.fb.platform.egv.exception.GiftVoucherNotFoundException;
+import com.fb.platform.egv.exception.InvalidPinException;
+import com.fb.platform.egv.exception.NoOrderItemExistsException;
 import com.fb.platform.egv.model.GiftVoucher;
 import com.fb.platform.egv.model.GiftVoucherStatusEnum;
-import com.fb.platform.egv.service.GiftVoucherAlreadyUsedException;
-import com.fb.platform.egv.service.GiftVoucherExpiredException;
-import com.fb.platform.egv.service.GiftVoucherNotFoundException;
 import com.fb.platform.egv.service.GiftVoucherService;
-import com.fb.platform.egv.service.InvalidPinException;
-import com.fb.platform.egv.service.NoOrderItemExistsException;
 import com.fb.platform.egv.util.GiftVoucherPinUtil;
-import com.fb.platform.egv.util.RandomGenerator;
 import com.fb.platform.egv.util.MailHelper;
+import com.fb.platform.egv.util.RandomGenerator;
 
 /**
  * @author keith
@@ -43,10 +43,7 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 	
 	@Autowired
 	private GiftVoucherDao giftVoucherDao = null;
-	
-	@Autowired
-	private OrderItemDao orderItemDao = null;
-	
+		
 	@Autowired
 	private MailSender mailSender = null;
 
@@ -211,5 +208,41 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 			logger.error("Error while loading the GiftVoucher. GiftVoucherId  : " + giftVoucherNumber);
 			throw new PlatformException("Error while loading the GiftVoucher. GiftVoucherId  : " + giftVoucherNumber, e);
 		}
+	}
+
+	@Override
+	public void rollbackUseGiftVoucher(int userId, int orderId,
+			long giftVoucherNumber) {
+		GiftVoucher eGV = new GiftVoucher();
+		try {
+			eGV = giftVoucherDao.load(giftVoucherNumber);
+			if(eGV.isUsed())
+			{
+				eGV.setStatus(GiftVoucherStatusEnum.USE_ROLLBACKED);
+				giftVoucherDao.changeState(giftVoucherNumber, GiftVoucherStatusEnum.USE_ROLLBACKED);
+				giftVoucherDao.deleteUse(giftVoucherNumber, userId, orderId);
+				System.out.println("Delete success");
+			} else {
+				throw new GiftVoucherException("Gift Voucher with GV number : " + giftVoucherNumber + " is not used");
+			}
+		} catch (GiftVoucherNotFoundException e) {
+			logger.error("Unable to Rollback : No Such Gift Voucher Exists :  " + giftVoucherNumber);
+			throw new GiftVoucherNotFoundException("No Such Gift Voucher Exists :  " + giftVoucherNumber, e);
+		} catch (GiftVoucherExpiredException e) {
+			logger.info("Unable to Rollback : Gift Voucher has expired, GV number : " + giftVoucherNumber);
+			throw new GiftVoucherExpiredException("Gift Voucher has expired GV number : " + giftVoucherNumber, e);
+		} catch (DataAccessException e) {
+			logger.error("Unable to Rollback : Error while loading the GiftVoucher. GiftVoucherId  : " + giftVoucherNumber);
+			throw new GiftVoucherException("Error while loading the GiftVoucher. GiftVoucherId  : " + giftVoucherNumber, e);
+		} 
+		catch (GiftVoucherException e) {
+			logger.error("Unable to Rollback : Gift Voucher with GV number : " + giftVoucherNumber + " is not used");
+			throw new GiftVoucherException("Gift Voucher with GV number : " + giftVoucherNumber + " is not used");
+		} catch (PlatformException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 }

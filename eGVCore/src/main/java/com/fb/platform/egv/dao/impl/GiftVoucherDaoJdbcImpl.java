@@ -23,11 +23,12 @@ import org.springframework.jdbc.support.KeyHolder;
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.egv.dao.GiftVoucherDao;
+import com.fb.platform.egv.exception.GiftVoucherException;
+import com.fb.platform.egv.exception.GiftVoucherNotFoundException;
 import com.fb.platform.egv.model.GiftVoucher;
 import com.fb.platform.egv.model.GiftVoucherDates;
 import com.fb.platform.egv.model.GiftVoucherStatusEnum;
 import com.fb.platform.egv.model.GiftVoucherUse;
-import com.fb.platform.egv.service.GiftVoucherNotFoundException;
 
 /**
  * @author keith
@@ -131,6 +132,13 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 			"	used_on,"	+
 			"	amount_used"	+
 			"	) VALUES ( ?, ?, ?, ?, ? )";
+	
+	private static final String DELETE_GIFT_VOUCHER_USAGE_QUERY = 
+			"DELETE FROM " +
+			"	gift_voucher_usage where " +
+			"	gift_voucher_number = ?  "	+
+			"	AND used_by = ? "	+
+			"	AND order_id = ?";
 
 	
 	@Override
@@ -257,7 +265,7 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 		jdbcTemplate.query(GET_GIFT_VOUCHER_USAGE_BY_NUMBER_QUERY, gvurcbh, giftVoucherNumber);
 		if (gvurcbh.giftVoucherUse == null) {
 			log.error("No Gift Voucher found : GV NUmber - " + giftVoucherNumber);
-			return null;
+			throw new GiftVoucherException("eGV Error : Unable to find any usage entry for eGV num : " + giftVoucherNumber);
 		}
 		gvUse = gvurcbh.giftVoucherUse;
 
@@ -281,7 +289,6 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 	
 	@Override
 	public boolean deleteGiftVoucher(long gvNumber, int userId, int orderItemId) {
-		
 		return false;
 	}
 
@@ -338,6 +345,16 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 			if (usedOnTS != null) {
 				giftVoucherUse.setUsedOn(new DateTime(usedOnTS));
 			}
+		}
+	}
+	
+	@Override
+	public void deleteUse(long giftVoucherNumber, int userId,
+			int orderId) {
+		int rowsDeleted = jdbcTemplate.update(DELETE_GIFT_VOUCHER_USAGE_QUERY,new Object[] {giftVoucherNumber,userId,orderId} );
+		if (rowsDeleted == 0) {
+			log.error("eGV Rollback Error : Unable to delete the eGV Usage Entry for eGV number  : " + giftVoucherNumber);
+			throw new PlatformException("eGV Rollback Error : Unable to delete the eGV Usage Entry for eGV number  : " + giftVoucherNumber);
 		}
 	}
 	

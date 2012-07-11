@@ -27,7 +27,8 @@ public interface GiftVoucherDao {
 	
 	public boolean deleteGiftVoucher(final long gvNumber,final int userId, final int orderItemId);
 	
-	
 	public GiftVoucherUse loadUse(long giftVoucherNumber);
+	
+	public void deleteUse(long giftVoucherNumber, final int userId, final int orderId);
 
 }

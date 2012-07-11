@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fb.commons.PlatformException;
+import com.fb.platform.egv.exception.GiftVoucherNotFoundException;
 import com.fb.platform.egv.model.GiftVoucher;
 
 /**
@@ -75,5 +76,17 @@ public interface GiftVoucherService {
 	 */
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void cancelGiftVoucher(long giftVoucherNumber, int userId, int orderItemId);
+
+	/**
+	 * @param userId
+	 * @param amount
+	 * @param orderId
+	 * @param giftVoucherNumber
+	 * @param giftVoucherPin
+	 * @return
+	 */
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void rollbackUseGiftVoucher(int userId, int orderId,
+			long giftVoucherNumber);
 
 }

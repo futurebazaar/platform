@@ -83,7 +83,11 @@ public class GiftVoucher implements Serializable {
 	}
 	
 	public boolean isUsable() {
-		return (getStatus() == GiftVoucherStatusEnum.CONFIRMED);
+		return (getStatus() == GiftVoucherStatusEnum.CONFIRMED || getStatus() == GiftVoucherStatusEnum.USE_ROLLBACKED );
+	}
+	
+	public boolean isUsed() {
+		return (this.status == GiftVoucherStatusEnum.USED);
 	}
 	
 	public boolean isValidPin(String pin) {
