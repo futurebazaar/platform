@@ -109,7 +109,7 @@ public class PointsManagerImpl implements PointsManager {
 					if (dataToUpload != null && !dataToUpload.equals("")) {
 						pointsUtil.sendMail(txnActionCode.name(), merchantId,
 								txnActionCode.toString() + ".txt",
-								dataToUpload, "POINTS");
+								dataToUpload, "EARN_POINTS");
 					}
 				} catch (Exception e) {
 					logger.error(e.toString());
