@@ -5,8 +5,6 @@ package com.fb.platform.mom.inventory.receiver;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -14,12 +12,11 @@ import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.fb.commons.PlatformException;
-import com.fb.platform.mom.inventory.to.InventoryTO;
+import com.fb.commons.mom.to.InventoryTO;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
 
 /**
@@ -38,7 +35,7 @@ public class InventoryMessageReceiver implements PlatformMessageReceiver {
 
 	private static Properties initProperties() {
 		Properties properties = new Properties();
-		InputStream propertiesStream = InventoryMessageReceiver.class.getClassLoader().getResourceAsStream("tinlaReceivers.properties");
+		InputStream propertiesStream = InventoryMessageReceiver.class.getClassLoader().getResourceAsStream("receivers.properties");
 		try {
 			properties.load(propertiesStream);
 		} catch (IOException e) {

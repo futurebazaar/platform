@@ -21,7 +21,7 @@
 	  	<dependency>
 	  		<groupId>com.fb</groupId>
 			<artifactId>platformCommons</artifactId>
-			<version>1.0</version>
+			<version>${platform.version}</version>
 	  	</dependency>
 	  	
 	  	<dependency>

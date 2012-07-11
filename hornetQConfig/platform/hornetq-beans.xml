@@ -10,9 +10,9 @@
          <inject bean="Naming"/>
       </property>
       <property name="port">${jnp.port:1099}</property>
-      <property name="bindAddress">${jnp.host:0.0.0.0}</property>
+      <property name="bindAddress">${jnp.host:10.202.24.76}</property>
       <property name="rmiPort">${jnp.rmiPort:1098}</property>
-      <property name="rmiBindAddress">${jnp.host:0.0.0.0}</property>
+      <property name="rmiBindAddress">${jnp.host:10.202.24.76}</property>
    </bean>
 
    <!-- MBean server -->

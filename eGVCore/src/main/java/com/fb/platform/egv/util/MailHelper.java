@@ -13,7 +13,7 @@ import org.joda.time.DateTime;
 import org.springframework.mail.MailException;
 
 import com.fb.commons.mail.exception.MailerException;
-import com.fb.commons.mail.to.MailTO;
+import com.fb.commons.mom.to.MailTO;
 
 
 /**

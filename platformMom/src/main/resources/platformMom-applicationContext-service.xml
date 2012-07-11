@@ -82,10 +82,6 @@
 		<property name="connectionFactory" ref="userCredentialFactory"/>
 	</bean>
 
-	<bean id="mailDestination" class="org.hornetq.api.jms.HornetQJMSClient" factory-method="createQueue">
-	   <constructor-arg index="0" value="platformMail"/>
-	</bean>
-
 	<bean id="inventoryDestination" class="org.hornetq.api.jms.HornetQJMSClient" factory-method="createQueue">
 	   <constructor-arg index="0" value="inventory"/>
 	</bean>
@@ -104,21 +100,49 @@
         <property name="jmsTemplate" ref="jmsTemplate"/>
         <property name="inventoryDestination" ref="inventoryDestination"/>
 	</bean>
+	
+	<bean id="mailDestination" class="org.hornetq.api.jms.HornetQJMSClient" factory-method="createQueue">
+	   <constructor-arg index="0" value="platformMail"/>
+	</bean>
+	
+	<bean id="mailListener" class="com.fb.platform.mom.receiver.mail.MailMessageListener"></bean>
+	
+	<bean id="mailContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="userCredentialFactory"/>
+		<property name="destination" ref="mailDestination"/>
+		<property name="messageListener" ref="mailListener" />
+		<property name="autoStartup" value="false"/>
+		<property name="sessionTransacted" value="true"/>
+	</bean>
 
-    <!-- Add new services here -->
-    <bean id="mailReceiver" class="com.fb.platform.mom.receiver.mail.impl.MailReceiverImpl">
+	<bean id="mailMsgSender" class="com.fb.platform.mom.receiver.mail.MailSenderImpl">
         <property name="jmsTemplate" ref="jmsTemplate"/>
         <property name="mailDestination" ref="mailDestination"/>
-    </bean>
-
-    <bean id="mailSender" class="com.fb.platform.mom.receiver.mail.impl.MailSenderImpl">
-        <property name="jmsTemplate" ref="jmsTemplate"/>
-        <property name="mailDestination" ref="mailDestination"/>
-    </bean>
+	</bean>
+	
+	<bean id="dlqDestination" class="org.hornetq.api.jms.HornetQJMSClient" factory-method="createQueue">
+	   <constructor-arg index="0" value="platformDLQ"/>
+	</bean>
+	
+	<bean id="dlqListener" class="com.fb.platform.mom.receiver.dlq.DLQMessageListener">
+	</bean>
+	
+	<bean id="dlqContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="userCredentialFactory"/>
+		<property name="destination" ref="dlqDestination"/>
+		<property name="messageListener" ref="dlqListener" />
+		<property name="autoStartup" value="false"/>
+		<property name="sessionTransacted" value="true"/>
+	</bean>
 
     <bean id="momManager" class="com.fb.platform.mom.manager.impl.MomManagerImpl">
         <property name="inventoryListener" ref="inventoryListener"/>
         <property name="inventorySender" ref="inventorySender"/>
         <property name="inventoryContainer" ref="inventoryContainer"/>
+        <property name="mailListener" ref="mailListener"/>
+        <property name="mailMsgSender" ref="mailMsgSender"/>
+        <property name="mailContainer" ref="mailContainer"/>
+        <property name="dlqListener" ref="dlqListener"/>
+        <property name="dlqContainer" ref="dlqContainer"/>
     </bean>
 </beans>
