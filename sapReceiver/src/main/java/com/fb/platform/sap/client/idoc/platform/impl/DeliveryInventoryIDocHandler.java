@@ -19,19 +19,19 @@ import com.fb.commons.mom.to.InventoryTO;
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler;
-import com.fb.platform.sap.idoc.generated.ztinlaIDocType.ObjectFactory;
-import com.fb.platform.sap.idoc.generated.ztinlaIDocType.ZTINLAIDOCTYP;
-import com.fb.platform.sap.idoc.generated.ztinlaIDocType.ZTINLASEGDLVR;
+import com.fb.platform.sap.idoc.generated.ztinlaDlvry.ObjectFactory;
+import com.fb.platform.sap.idoc.generated.ztinlaDlvry.ZTINLADLVRY;
+import com.fb.platform.sap.idoc.generated.ztinlaDlvry.ZTINLADLVRYTOP;
 
 /**
  * @author vinayak
  *
  */
-public class InventoryIDocHandler implements PlatformIDocHandler {
+public class DeliveryInventoryIDocHandler implements PlatformIDocHandler {
 
-	private static Log logger = LogFactory.getLog(InventoryIDocHandler.class);
+	private static Log logger = LogFactory.getLog(DeliveryInventoryIDocHandler.class);
 
-	public static final String INVENTORY_IDOC_TYPE = "ZTINLA_IDOCTYP";
+	public static final String DELIVERY_INVENTORY_IDOC_TYPE = "ZTINLA_DLVRY";
 
 	private MomManager momManager = null;
 
@@ -48,18 +48,39 @@ public class InventoryIDocHandler implements PlatformIDocHandler {
 		}
 	}
 
+
+	/* (non-Javadoc)
+	 * @see com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler#init(com.fb.platform.mom.manager.MomManager)
+	 */
+	@Override
+	public void init(MomManager momManager) {
+		this.momManager = momManager;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler#handle(java.lang.String)
+	 */
 	@Override
 	public void handle(String idocXml) {
-		logger.info("Begin handling Inventory idoc message.");
+		logger.info("Begin handling Delivery Inventory idoc message.");
 
 		//convert the message xml into jaxb bean
 		try {
+			//the xml received from Sap is flawed. It contains ZTINLA_DLVRY as parent and child level item. We will replace the top level ZTINLA_DLVRY with ZTINLA_DLVRY_TOP
+			String tempidocXml = idocXml.replaceFirst("ZTINLA_DLVRY", "ZTINLA_DLVRY_TOP");
+			int index = tempidocXml.lastIndexOf("ZTINLA_DLVRY");
+			StringBuffer sb = new StringBuffer();
+			sb.append(tempidocXml.substring(0, index));
+			sb.append("ZTINLA_DLVRY_TOP");
+			sb.append(tempidocXml.substring(index + 12));
+			idocXml = sb.toString();
+			
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 
-			ZTINLAIDOCTYP inventoryIdoc = (ZTINLAIDOCTYP)unmarshaller.unmarshal(new StreamSource(new StringReader(idocXml)));
+			ZTINLADLVRYTOP inventoryIdoc = (ZTINLADLVRYTOP)unmarshaller.unmarshal(new StreamSource(new StringReader(idocXml)));
 
-			List<ZTINLASEGDLVR> sapInventoryAckList = inventoryIdoc.getIDOC().getZTINLASEGDLVR();
-			for (ZTINLASEGDLVR sapInventoryAck : sapInventoryAckList) {
+			List<ZTINLADLVRY> sapInventoryAckList = inventoryIdoc.getIDOC().getZTINLADLVRY();
+			for (ZTINLADLVRY sapInventoryAck : sapInventoryAckList) {
 				InventoryTO inventoryTo = new InventoryTO();
 				inventoryTo.setArticleId(sapInventoryAck.getMATNR());
 				inventoryTo.setIssuingSite(sapInventoryAck.getIWERKS());
@@ -74,15 +95,12 @@ public class InventoryIDocHandler implements PlatformIDocHandler {
 				logger.debug("Sending InventoryTO to Inventory destination : " + inventoryTo.toString());
 				momManager.send(PlatformDestinationEnum.INVENTORY, inventoryTo);
 			}
+
 		} catch (JAXBException e) {
-			logger.error("Unable to create Inventory Message for inventory idoc :\n" + idocXml);
+			logger.error("Unable to create Inventory Message for delivery inventory idoc :\n" + idocXml);
 			//TODO send this to some kind of error queue
-			throw new PlatformException("Exception while unmarshalling the inventory idoc xml", e);
+			throw new PlatformException("Exception while unmarshalling the delivery inventory idoc xml", e);
 		}
 	}
 
-	@Override
-	public void init(MomManager momManager) {
-		this.momManager = momManager;
-	}
 }

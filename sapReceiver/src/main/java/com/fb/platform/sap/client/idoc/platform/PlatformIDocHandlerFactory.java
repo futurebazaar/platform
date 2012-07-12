@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.sap.client.idoc.platform.impl.DefaultIDocHandler;
+import com.fb.platform.sap.client.idoc.platform.impl.DeliveryInventoryIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.impl.InventoryIDocHandler;
 
 /**
@@ -21,12 +22,17 @@ public class PlatformIDocHandlerFactory {
 
 	private InventoryIDocHandler inventoryIDocHandler = null;
 
+	private DeliveryInventoryIDocHandler deliveryInventoryIDocHandler = null;
+
 	@Autowired
 	private MomManager momManager = null;
 
 	public void init() {
 		inventoryIDocHandler = new InventoryIDocHandler();
 		inventoryIDocHandler.init(momManager);
+
+		deliveryInventoryIDocHandler = new DeliveryInventoryIDocHandler();
+		deliveryInventoryIDocHandler.init(momManager);
 	}
 
 	public PlatformIDocHandler getHandler(String idocType) {
@@ -36,6 +42,9 @@ public class PlatformIDocHandlerFactory {
 
 		if (idocType.equals(InventoryIDocHandler.INVENTORY_IDOC_TYPE)) {
 			return inventoryIDocHandler;
+		}
+		if (idocType.equals(DeliveryInventoryIDocHandler.DELIVERY_INVENTORY_IDOC_TYPE)) {
+			return deliveryInventoryIDocHandler;
 		}
 		logger.error("No Handler is configured for idocType : " + idocType + ", returning default handler.");
 		return new DefaultIDocHandler();
