@@ -4,11 +4,10 @@
 package com.fb.platform.promotion.admin.to;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.joda.time.DateTime;
 
 /**
  * @author SalimM
@@ -22,17 +21,14 @@ public class SearchScratchCardResponse implements Serializable{
 		private String email = null;
 		private String mobile  = null;
 		private String user = null;
-		private XMLGregorianCalendar usedDate = null;
+		private Timestamp usedDate = null;
 		private String scratchCardNumber = null;
 		private String cardStatus = null;
 		private int userId = 0;
 		private String store = null;
 		private String couponCode = null; 
-		private XMLGregorianCalendar timeStamp = null;
+		private Timestamp timeStamp = null;
 				
-		
-		
-	
 		
 
 		private String errorCause;
@@ -77,11 +73,11 @@ public class SearchScratchCardResponse implements Serializable{
 		public void setUser(String user) {
 			this.user = user;
 		}
-		public XMLGregorianCalendar getUsedDate() {
+		public Timestamp getUsedDate() {
 			return usedDate;
 		}
-		public void setUsedDate(XMLGregorianCalendar dateTime) {
-			this.usedDate = dateTime;
+		public void setUsedDate(Timestamp timestamp2) {
+			this.usedDate = timestamp2;
 		}
 		public String getScratchCardNumber() {
 			return scratchCardNumber;
@@ -115,11 +111,11 @@ public class SearchScratchCardResponse implements Serializable{
 		public void setCouponCode(String couponCode) {
 			this.couponCode = couponCode;
 		}
-		public XMLGregorianCalendar getTimeStamp() {
+		public Timestamp getTimeStamp() {
 			return timeStamp;
 		}
-		public void setTimeStamp(XMLGregorianCalendar timeStamp) {
-			this.timeStamp = timeStamp;
+		public void setTimeStamp(Timestamp date) {
+			this.timeStamp = date;
 		}
 
 		

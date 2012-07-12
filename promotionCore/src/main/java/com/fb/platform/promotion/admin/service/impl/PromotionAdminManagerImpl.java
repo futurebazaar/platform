@@ -646,6 +646,8 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 			response.setCardStatus( scratchCard.getCardStatus() );
 			response.setStatus(SearchScratchCardStatusEnum.SUCCESS );
 			
+			System.out.println("scratchCard.getUsedDate()"+scratchCard.getUsedDate());
+			System.out.println("scratchCard.getTimestamp()"+scratchCard.getTimestamp());
 		} catch (ScratchCardNotFoundException e) {
 			log.info("No such Scratch Card found "+ searchScratchCardRequest.getScratchCardNumber() , e);
 			response.setStatus(SearchScratchCardStatusEnum.NO_SCRATCH_CARD_FOUND);
