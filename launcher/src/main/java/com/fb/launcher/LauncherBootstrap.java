@@ -23,6 +23,9 @@ public class LauncherBootstrap {
 		ReceiverManager inventoryManager = (ReceiverManager) appContext.getBean("inventoryManager");
 		inventoryManager.start();
 		
+		ReceiverManager mailManager = (ReceiverManager) appContext.getBean("mailManager");
+		mailManager.start();
+		
 	}
 
 }

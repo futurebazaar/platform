@@ -13,8 +13,11 @@ import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
+import com.fb.platform.mom.receiver.dlq.DLQMessageListener;
 import com.fb.platform.mom.receiver.inventory.InventoryMessageListener;
 import com.fb.platform.mom.receiver.inventory.InventorySender;
+import com.fb.platform.mom.receiver.mail.MailMessageListener;
+import com.fb.platform.mom.receiver.mail.MailMsgSender;
 
 /**
  * @author vinayak
@@ -32,6 +35,21 @@ public class MomManagerImpl implements MomManager {
 
 	@Autowired
 	private DefaultMessageListenerContainer inventoryContainer = null;
+	
+	@Autowired
+	private MailMessageListener mailListener = null;
+
+	@Autowired
+	private MailMsgSender mailMsgSender = null;
+
+	@Autowired
+	private DefaultMessageListenerContainer mailContainer = null;
+	
+	@Autowired
+	private DLQMessageListener dlqListener = null;
+
+	@Autowired
+	private DefaultMessageListenerContainer dlqContainer = null;
 
 	/* (non-Javadoc)
 	 * @see com.fb.platform.mom.manager.MomManager#send(com.fb.platform.mom.manager.PlatformDestinationEnum, java.lang.Object)
@@ -40,9 +58,14 @@ public class MomManagerImpl implements MomManager {
 	public void send(PlatformDestinationEnum destination, Serializable message) {
 		logger.debug("Sending message to destination : " + destination);
 
-		if (PlatformDestinationEnum.INVENTORY == destination) {
+		switch (destination) {
+		case INVENTORY:
 			inventorySender.sendMessage(message);
-		} else {
+			break;
+		case MAIL:
+			mailMsgSender.sendMessage(message);
+			break;
+		default:
 			throw new IllegalStateException("No sender is configured for the destination : " + destination);
 		}
 	}
@@ -54,12 +77,26 @@ public class MomManagerImpl implements MomManager {
 	public void registerReceiver(PlatformDestinationEnum destination, PlatformMessageReceiver receiver) {
 		logger.debug("Registering receiver : " + receiver + " for destination : " + destination);
 
-		inventoryListener.addReceiver(receiver);
-		if (PlatformDestinationEnum.INVENTORY == destination) {
+		switch (destination) {
+		case INVENTORY:
+			inventoryListener.addReceiver(receiver);
 			if (!inventoryContainer.isRunning()) {
 				inventoryContainer.start();
 			}
-		} else {
+			break;
+		case MAIL:
+			mailListener.addReceiver(receiver);
+			if(!mailContainer.isRunning()) {
+				mailContainer.start();
+			}
+			break;
+		case DLQ:
+			dlqListener.addReceiver(receiver);
+			if(!dlqContainer.isRunning()) {
+				dlqContainer.start();
+			}
+			break;
+		default:
 			throw new IllegalStateException("no Receiver is configured for the destination : " + destination);
 		}
 	}
@@ -75,4 +112,25 @@ public class MomManagerImpl implements MomManager {
 	public void setInventoryContainer(DefaultMessageListenerContainer inventoryContainer) {
 		this.inventoryContainer = inventoryContainer;
 	}
+
+	public void setMailListener(MailMessageListener mailListener) {
+		this.mailListener = mailListener;
+	}
+
+	public void setMailMsgSender(MailMsgSender mailMsgSender) {
+		this.mailMsgSender = mailMsgSender;
+	}
+
+	public void setMailContainer(DefaultMessageListenerContainer mailContainer) {
+		this.mailContainer = mailContainer;
+	}
+
+	public void setDlqListener(DLQMessageListener dlqListener) {
+		this.dlqListener = dlqListener;
+	}
+
+	public void setDlqContainer(DefaultMessageListenerContainer dlqContainer) {
+		this.dlqContainer = dlqContainer;
+	}
+	
 }

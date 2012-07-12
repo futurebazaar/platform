@@ -65,8 +65,6 @@
                 <prop key="java.naming.factory.initial">org.jnp.interfaces.NamingContextFactory</prop>
                 <prop key="java.naming.provider.url">${java.naming.provider.url}</prop>
                 <prop key="java.naming.factory.url.pkgs">org.jnp.interfaces:org.jboss.naming</prop>
-                <!-- <prop key="java.naming.security.principal">${java.naming.security.principal}</prop>
-                <prop key="java.naming.security.credentials">${java.naming.security.credentials}</prop> -->
             </props>
         </property>
     </bean>
@@ -84,10 +82,6 @@
 		<property name="connectionFactory" ref="userCredentialFactory"/>
 	</bean>
 
-	<bean id="mailDestination" class="org.hornetq.api.jms.HornetQJMSClient" factory-method="createQueue">
-	   <constructor-arg index="0" value="platformMail"/>
-	</bean>
-
 	<bean id="inventoryDestination" class="org.hornetq.api.jms.HornetQJMSClient" factory-method="createQueue">
 	   <constructor-arg index="0" value="inventory"/>
 	</bean>
@@ -95,7 +89,7 @@
 	<bean id="inventoryListener" class="com.fb.platform.mom.receiver.inventory.InventoryMessageListener"></bean>
 	
 	<bean id="inventoryContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
-		<property name="connectionFactory" ref="connectionFactory"/>
+		<property name="connectionFactory" ref="userCredentialFactory"/>
 		<property name="destination" ref="inventoryDestination"/>
 		<property name="messageListener" ref="inventoryListener" />
 		<property name="autoStartup" value="false"/>
@@ -104,23 +98,51 @@
 
 	<bean id="inventorySender" class="com.fb.platform.mom.receiver.inventory.InventorySenderImpl">
         <property name="jmsTemplate" ref="jmsTemplate"/>
-        <property name="inventoryDestination" ref="inventoryDestination"></property>
+        <property name="inventoryDestination" ref="inventoryDestination"/>
+	</bean>
+	
+	<bean id="mailDestination" class="org.hornetq.api.jms.HornetQJMSClient" factory-method="createQueue">
+	   <constructor-arg index="0" value="platformMail"/>
+	</bean>
+	
+	<bean id="mailListener" class="com.fb.platform.mom.receiver.mail.MailMessageListener"></bean>
+	
+	<bean id="mailContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="userCredentialFactory"/>
+		<property name="destination" ref="mailDestination"/>
+		<property name="messageListener" ref="mailListener" />
+		<property name="autoStartup" value="false"/>
+		<property name="sessionTransacted" value="true"/>
 	</bean>
 
-    <!-- Add new services here -->
-    <bean id="mailReceiver" class="com.fb.platform.mom.receiver.mail.impl.MailReceiverImpl">
+	<bean id="mailMsgSender" class="com.fb.platform.mom.receiver.mail.MailSenderImpl">
         <property name="jmsTemplate" ref="jmsTemplate"/>
-        <property name="mailDestination" ref="mailDestination"></property>
-    </bean>
-
-    <bean id="mailSender" class="com.fb.platform.mom.receiver.mail.impl.MailSenderImpl">
-        <property name="jmsTemplate" ref="jmsTemplate"/>
-        <property name="mailDestination" ref="mailDestination"></property>
-    </bean>
+        <property name="mailDestination" ref="mailDestination"/>
+	</bean>
+	
+	<bean id="dlqDestination" class="org.hornetq.api.jms.HornetQJMSClient" factory-method="createQueue">
+	   <constructor-arg index="0" value="platformDLQ"/>
+	</bean>
+	
+	<bean id="dlqListener" class="com.fb.platform.mom.receiver.dlq.DLQMessageListener">
+	</bean>
+	
+	<bean id="dlqContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="userCredentialFactory"/>
+		<property name="destination" ref="dlqDestination"/>
+		<property name="messageListener" ref="dlqListener" />
+		<property name="autoStartup" value="false"/>
+		<property name="sessionTransacted" value="true"/>
+	</bean>
 
     <bean id="momManager" class="com.fb.platform.mom.manager.impl.MomManagerImpl">
         <property name="inventoryListener" ref="inventoryListener"/>
-        <property name="inventorySender" ref="inventorySender"></property>
-        <property name="inventoryContainer" ref="inventoryContainer"></property>
+        <property name="inventorySender" ref="inventorySender"/>
+        <property name="inventoryContainer" ref="inventoryContainer"/>
+        <property name="mailListener" ref="mailListener"/>
+        <property name="mailMsgSender" ref="mailMsgSender"/>
+        <property name="mailContainer" ref="mailContainer"/>
+        <property name="dlqListener" ref="dlqListener"/>
+        <property name="dlqContainer" ref="dlqContainer"/>
     </bean>
 </beans>

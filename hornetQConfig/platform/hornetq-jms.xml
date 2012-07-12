@@ -4,6 +4,7 @@
 
    <connection-factory name="NettyConnectionFactory">
       <xa>true</xa>
+      <ha>true</ha>
       <discovery-group-ref discovery-group-name="dg-group1"/>
 <!--
       <connectors>
@@ -62,6 +63,14 @@
 
    <queue name="inventory">
       <entry name="/queue/inventory"/>
+   </queue>
+
+   <queue name="mailDLQ">
+      <entry name="/queue/mailDLQ"/>
+   </queue>
+
+   <queue name="platformDLQ">
+      <entry name="/queue/platformDLQ"/>
    </queue>
 
 </configuration>

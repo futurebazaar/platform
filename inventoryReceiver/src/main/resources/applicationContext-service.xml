@@ -20,7 +20,7 @@
     </bean>
     
     <bean id="inventoryManager" class="com.fb.platform.mom.inventory.manager.impl.InventoryManagerImpl">
-    	<property name="messageReceiver" ref="inventoryMessageReceiver"/>
+    	<property name="inventoryMessageReceiver" ref="inventoryMessageReceiver"/>
     	<property name="momManager" ref="momManager"></property>
     </bean>
     

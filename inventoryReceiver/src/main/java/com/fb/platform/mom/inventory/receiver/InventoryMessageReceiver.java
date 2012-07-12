@@ -23,7 +23,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
 import com.fb.commons.PlatformException;
-import com.fb.platform.mom.inventory.to.InventoryTO;
+import com.fb.commons.mom.to.InventoryTO;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
 
 /**
@@ -42,7 +42,7 @@ public class InventoryMessageReceiver implements PlatformMessageReceiver {
 
 	private static Properties initProperties() {
 		Properties properties = new Properties();
-		InputStream propertiesStream = InventoryMessageReceiver.class.getClassLoader().getResourceAsStream("tinlaReceivers.properties");
+		InputStream propertiesStream = InventoryMessageReceiver.class.getClassLoader().getResourceAsStream("receivers.properties");
 		try {
 			properties.load(propertiesStream);
 		} catch (IOException e) {

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.fb.platform.mom.inventory.to;
+package com.fb.commons.mom.to;
 
 import java.io.Serializable;
 

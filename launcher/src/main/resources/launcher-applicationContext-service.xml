@@ -20,8 +20,31 @@
     </bean>
     
     <bean id="inventoryManager" class="com.fb.platform.mom.inventory.manager.impl.InventoryManagerImpl">
-    	<property name="messageReceiver" ref="inventoryMessageReceiver"/>
+    	<property name="inventoryMessageReceiver" ref="inventoryMessageReceiver"/>
     	<property name="momManager" ref="momManager"></property>
     </bean>
     
+    <bean id="mailMessageReceiver" class="com.fb.platform.mom.mail.receiver.MailMessageReceiver">
+    	<property name="mailSender" ref="mailSender"/>
+    </bean>
+    
+    <bean id="mailManager" class="com.fb.platform.mom.mail.manager.impl.MailManagerImpl">
+    	<property name="mailMessageReceiver" ref="mailMessageReceiver"/>
+    	<property name="momManager" ref="momManager"/>
+    </bean>
+    
+    <bean id="springMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+  		<property name="host" value="MUMOPBL01.fb.dc"/>
+        <property name="port" value="25"/>
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.localhost">mail.pantaloon.com</prop>
+            </props>
+         </property>
+	</bean>
+	
+	<bean id="mailSender" class="com.fb.commons.mail.impl.MailSenderImpl">
+	  	<property name="springMailSender" ref="springMailSender"/>
+	</bean>
+	
 </beans>
