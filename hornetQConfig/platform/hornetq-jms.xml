@@ -69,6 +69,10 @@
       <entry name="/queue/mailDLQ"/>
    </queue>
 
+   <queue name="preDLQ">
+      <entry name="/queue/preDLQ"/>
+   </queue>
+
    <queue name="platformDLQ">
       <entry name="/queue/platformDLQ"/>
    </queue>
