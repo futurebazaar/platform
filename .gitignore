@@ -136,4 +136,8 @@ authenticationCore/bin/
 dummyTinlaListner/.classpath
 dummyTinlaListner/.settings/
 dummyTinlaListner/bin/
+fulfilmentCore/.classpath
+fulfilmentCore/.settings
+fulfilmentWS/.classpath
+fulfilmentWS/.settings
 

@@ -23,7 +23,7 @@
         <property name="environment">
             <props>
                 <prop key="java.naming.factory.initial">org.jnp.interfaces.NamingContextFactory</prop>
-                <prop key="java.naming.provider.url">jnp://10.202.24.76:1099</prop>
+                <prop key="java.naming.provider.url">jnp://10.202.25.97:1099</prop>
                 <prop key="java.naming.factory.url.pkgs">org.jnp.interfaces:org.jboss.naming</prop>
                 <!-- <prop key="java.naming.security.principal">platformMomAdmin</prop>
                 <prop key="java.naming.security.credentials">lenanileindusnarmada</prop> -->
