@@ -45,7 +45,7 @@ public class FBSapServer {
 			idocServer.addServerErrorListener(platformSapErrorListener);
 			idocServer.addServerExceptionListener(platformSapErrorListener);
 
-			idocServer.setConnectionCount(1);
+			idocServer.setConnectionCount(2);
 
 			idocServer.start();
 
