@@ -20,9 +20,9 @@ import org.springframework.jms.core.MessageCreator;
  * @author nehaga
  *
  */
-public class MailSenderImpl implements MailMsgSender {
+public class MailMsgSenderImpl implements MailMsgSender {
 
-	private static Log logger = LogFactory.getLog(MailSenderImpl.class);
+	private static Log logger = LogFactory.getLog(MailMsgSenderImpl.class);
 
 	private JmsTemplate jmsTemplate;
 

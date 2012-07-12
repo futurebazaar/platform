@@ -11,5 +11,5 @@ public enum PlatformDestinationEnum {
 
 	INVENTORY,
 	MAIL,
-	DLQ;
+	PREDLQ;
 }

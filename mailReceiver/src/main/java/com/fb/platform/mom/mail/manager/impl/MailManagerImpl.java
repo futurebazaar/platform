@@ -12,7 +12,6 @@ import com.fb.platform.mom.mail.manager.MailManager;
 import com.fb.platform.mom.mail.receiver.MailMessageReceiver;
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
-import com.fb.platform.mom.manager.PlatformMessageReceiver;
 
 /**
  * @author nehaga
@@ -34,7 +33,7 @@ public class MailManagerImpl implements ReceiverManager, MailManager {
 	public void start() {
 		log.info("Registering the mail receiver.");
 		momManager.registerReceiver(PlatformDestinationEnum.MAIL, mailMessageReceiver);
-		momManager.registerReceiver(PlatformDestinationEnum.DLQ, mailMessageReceiver);
+		momManager.registerReceiver(PlatformDestinationEnum.PREDLQ, mailMessageReceiver);
 
 	}
 	

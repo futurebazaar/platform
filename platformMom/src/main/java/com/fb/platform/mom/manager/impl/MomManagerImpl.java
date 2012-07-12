@@ -13,7 +13,7 @@ import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
-import com.fb.platform.mom.receiver.dlq.DLQMessageListener;
+import com.fb.platform.mom.receiver.dlq.PreDLQMessageListener;
 import com.fb.platform.mom.receiver.inventory.InventoryMessageListener;
 import com.fb.platform.mom.receiver.inventory.InventorySender;
 import com.fb.platform.mom.receiver.mail.MailMessageListener;
@@ -46,10 +46,10 @@ public class MomManagerImpl implements MomManager {
 	private DefaultMessageListenerContainer mailContainer = null;
 	
 	@Autowired
-	private DLQMessageListener dlqListener = null;
+	private PreDLQMessageListener preDLQListener = null;
 
 	@Autowired
-	private DefaultMessageListenerContainer dlqContainer = null;
+	private DefaultMessageListenerContainer preDLQContainer = null;
 
 	/* (non-Javadoc)
 	 * @see com.fb.platform.mom.manager.MomManager#send(com.fb.platform.mom.manager.PlatformDestinationEnum, java.lang.Object)
@@ -90,10 +90,10 @@ public class MomManagerImpl implements MomManager {
 				mailContainer.start();
 			}
 			break;
-		case DLQ:
-			dlqListener.addReceiver(receiver);
-			if(!dlqContainer.isRunning()) {
-				dlqContainer.start();
+		case PREDLQ:
+			preDLQListener.addReceiver(receiver);
+			if(!preDLQContainer.isRunning()) {
+				preDLQContainer.start();
 			}
 			break;
 		default:
@@ -125,12 +125,12 @@ public class MomManagerImpl implements MomManager {
 		this.mailContainer = mailContainer;
 	}
 
-	public void setDlqListener(DLQMessageListener dlqListener) {
-		this.dlqListener = dlqListener;
+	public void setPreDLQListener(PreDLQMessageListener preDLQListener) {
+		this.preDLQListener = preDLQListener;
 	}
 
-	public void setDlqContainer(DefaultMessageListenerContainer dlqContainer) {
-		this.dlqContainer = dlqContainer;
+	public void setPreDLQContainer(DefaultMessageListenerContainer preDLQContainer) {
+		this.preDLQContainer = preDLQContainer;
 	}
 	
 }
