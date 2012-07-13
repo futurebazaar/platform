@@ -21,13 +21,13 @@ public class SearchScratchCardResponse implements Serializable{
 		private String email = null;
 		private String mobile  = null;
 		private String user = null;
-		private Timestamp usedDate = null;
+		private XMLGregorianCalendar usedDate = null;
 		private String scratchCardNumber = null;
 		private String cardStatus = null;
 		private int userId = 0;
 		private String store = null;
 		private String couponCode = null; 
-		private Timestamp timeStamp = null;
+		private XMLGregorianCalendar timeStamp = null;
 				
 		
 
@@ -73,11 +73,11 @@ public class SearchScratchCardResponse implements Serializable{
 		public void setUser(String user) {
 			this.user = user;
 		}
-		public Timestamp getUsedDate() {
+		public XMLGregorianCalendar getUsedDate() {
 			return usedDate;
 		}
-		public void setUsedDate(Timestamp timestamp2) {
-			this.usedDate = timestamp2;
+		public void setUsedDate(XMLGregorianCalendar xmlGregorianCalendar) {
+			this.usedDate = xmlGregorianCalendar;
 		}
 		public String getScratchCardNumber() {
 			return scratchCardNumber;
@@ -111,10 +111,10 @@ public class SearchScratchCardResponse implements Serializable{
 		public void setCouponCode(String couponCode) {
 			this.couponCode = couponCode;
 		}
-		public Timestamp getTimeStamp() {
+		public XMLGregorianCalendar getTimeStamp() {
 			return timeStamp;
 		}
-		public void setTimeStamp(Timestamp date) {
+		public void setTimeStamp(XMLGregorianCalendar date) {
 			this.timeStamp = date;
 		}
 
