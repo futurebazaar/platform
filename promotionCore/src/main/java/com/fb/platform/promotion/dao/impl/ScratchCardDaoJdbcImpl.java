@@ -6,6 +6,10 @@ package com.fb.platform.promotion.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -134,7 +138,10 @@ public class ScratchCardDaoJdbcImpl implements ScratchCardDao {
 		@Override
 		public ScratchCard mapRow(ResultSet rs, int rowNum) throws SQLException {
 			ScratchCard scratchCard = new ScratchCard();
-			DatatypeFactory df = null;
+
+			DateFormat format = new SimpleDateFormat("yyyyMMddHHmmss"); 
+			
+			/*DatatypeFactory df = null;
 			try {
 				df = DatatypeFactory.newInstance();
 			} catch (DatatypeConfigurationException e) {
@@ -142,7 +149,7 @@ public class ScratchCardDaoJdbcImpl implements ScratchCardDao {
 				e.printStackTrace();
 			} ; 
 			
-			GregorianCalendar gc = new GregorianCalendar(); 
+			GregorianCalendar gc = new GregorianCalendar(); */ 
 			
 			String activeStr = rs.getString("status");
 			if (ACTIVE_STATUS_IN_DB.equals(activeStr)) {
@@ -161,18 +168,17 @@ public class ScratchCardDaoJdbcImpl implements ScratchCardDao {
 			scratchCard.setName(rs.getString("name"));
 
 			Timestamp ts = rs.getTimestamp("timestamp");
-			
-            if (ts != null) {
-    			gc.setTime(ts );
-            	scratchCard.setTimestamp(df.newXMLGregorianCalendar(gc) );
-            }
+			scratchCard.setTimestamp( ts );
 			
 			Timestamp usedOnTS = rs.getTimestamp("used_date");
+			scratchCard.setUsedDate( usedOnTS );
 			
-            if (usedOnTS != null) {
+            /*if (usedOnTS != null) {
+            	System.out.println("usedOnTS"+usedOnTS);
     			gc.setTime(usedOnTS );
+    			System.out.println("df.newXMLGregorianCalendar(gc)"+df.newXMLGregorianCalendar(gc));
             	scratchCard.setUsedDate(df.newXMLGregorianCalendar(gc) );
-            }
+            } */
 
 			
 
