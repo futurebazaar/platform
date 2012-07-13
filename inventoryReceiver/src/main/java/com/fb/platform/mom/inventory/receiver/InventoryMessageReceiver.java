@@ -91,41 +91,15 @@ public class InventoryMessageReceiver implements PlatformMessageReceiver {
 			}
 			log.info("Inventory ack delivered to tinla. Status code : " + statusCode);
 		} catch (UnsupportedEncodingException e) {
+			log.error("Error communicating with tinla on url : " + inventoryURL, e);
 			throw new PlatformException("Error communicating with tinla on url : " + inventoryURL, e);
 		} catch (ClientProtocolException e) {
+			log.error("Error communicating with tinla on url : " + inventoryURL, e);
 			throw new PlatformException("Error communicating with tinla on url : " + inventoryURL, e);
 		} catch (IOException e) {
+			log.error("Error communicating with tinla on url : " + inventoryURL, e);
 			throw new PlatformException("Error communicating with tinla on url : " + inventoryURL, e);
 		}
 
-		//PostMethod inventoryAckMethod = new PostMethod(inventoryURL);
-		
-		/*java.util.List<NameValuePair> postParams = new java.util.ArrayList<NameValuePair>();
-
-		NameValuePair[] parameters = {new NameValuePair("transactioncode", inventoryTO.getTransactionCode()),
-				new NameValuePair("articleid", inventoryTO.getArticleId()),
-				new NameValuePair("issuingsite", inventoryTO.getIssuingSite()),
-				new NameValuePair("receivingsite", inventoryTO.getReceivingSite()),
-				new NameValuePair("issuingstorageloc", inventoryTO.getIssuingStorageLoc()),
-				new NameValuePair("receivingstorageloc", inventoryTO.getReceivingStorageLoc()),
-				new NameValuePair("movementtype", inventoryTO.getMovementType()),
-				new NameValuePair("sellingunit", inventoryTO.getSellingUnit()),
-				new NameValuePair("quantity", inventoryTO.getQuantity())};
-		
-		inventoryAckMethod.setRequestBody(parameters);
-		
-		int statusCode;
-		try {
-			statusCode = httpClient.executeMethod(inventoryAckMethod);
-			if (statusCode != HttpStatus.SC_OK) {
-				log.error("Inventory ack not delivered : " + inventoryTO.toString());
-				throw new PlatformException("Inventory ack not delivered to tinla on URL : " + inventoryURL);
-			}
-			log.info("Inventory ack delivered to tinla. Status code : " + statusCode);
-		} catch (HttpException e) {
-			throw new PlatformException("Error communicating with tinla on url : " + inventoryURL, e);
-		} catch (IOException e) {
-			throw new PlatformException("Error communicating with tinla on url : " + inventoryURL, e);
-		}*/
 	}
 }

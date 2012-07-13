@@ -89,6 +89,7 @@ public class PreDLQMessageListener extends AbstractPlatformListener implements M
 
 			super.notify(dlqMail);
 		} catch (JMSException e) {
+			logger.error("JMSException in preDLQ", e);
 			throw JmsUtils.convertJmsAccessException(e);
 		}
 	}
