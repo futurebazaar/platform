@@ -29,6 +29,10 @@ public class MockInventorySapServer {
 	private static String INVENTORY_IDOC_0 = null;
 	private static String INVENTORY_IDOC_1 = null;
 	private static String INVENTORY_IDOC_2 = null;
+	private static String INVENTORY_IDOC_3 = null;
+	private static String INVENTORY_IDOC_4 = null;
+	private static String INVENTORY_IDOC_5 = null;
+	private static String INVENTORY_IDOC_6 = null;
 	private static String DELIVERY_INVENTORY_IDOC_0 = null;
 
 	static {
@@ -61,6 +65,46 @@ public class MockInventorySapServer {
 			e.printStackTrace();
 		}
 		INVENTORY_IDOC_2 = sw.toString();
+		
+		inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ZATG_SO_CREATE-idoc.xml");
+		sw = new StringWriter();
+		try {
+			IOUtils.copy(inputStream, sw);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		INVENTORY_IDOC_3 = sw.toString();
+		
+		inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ZATGDELD-idoc.xml");
+		sw = new StringWriter();
+		try {
+			IOUtils.copy(inputStream, sw);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		INVENTORY_IDOC_4 = sw.toString();
+		
+		inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ZATGFLOW-idoc.xml");
+		sw = new StringWriter();
+		try {
+			IOUtils.copy(inputStream, sw);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		INVENTORY_IDOC_5 = sw.toString();
+		
+		inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ZATGINVOICE-idoc.xml");
+		sw = new StringWriter();
+		try {
+			IOUtils.copy(inputStream, sw);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		INVENTORY_IDOC_6 = sw.toString();
 
 		inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ztinla_dlvry.xml");
 		sw = new StringWriter();
@@ -93,12 +137,20 @@ public class MockInventorySapServer {
 				inventoryIDocHandler.handle(INVENTORY_IDOC_2);
 			} else  if (count == 2) {
 				inventoryIDocHandler.handle(INVENTORY_IDOC_1);
+			} else if (count == 3) {
+				inventoryIDocHandler.handle(INVENTORY_IDOC_3);
+			} else  if (count == 4) {
+				inventoryIDocHandler.handle(INVENTORY_IDOC_4);
+			} else if (count == 5) {
+				inventoryIDocHandler.handle(INVENTORY_IDOC_5);
+			} else  if (count == 6) {
+				inventoryIDocHandler.handle(INVENTORY_IDOC_6);
 			} else {
 				deliveryInventoryIDocHandler.handle(DELIVERY_INVENTORY_IDOC_0);
 			}
 			logger.info("sent the inventory message. sleeping for 15 seconds");
 			count ++;
-			if (count > 3) {
+			if (count > 7) {
 				break;
 			}
 			Thread.sleep(20000);

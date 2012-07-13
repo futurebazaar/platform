@@ -39,7 +39,7 @@ public class InventoryTest extends BaseTestCase {
 	public void sendTwoMessages() {
 
 		//inventoryListener.addReceiver(testReceiver);
-		//momManager.registerReceiver(PlatformDestinationEnum.INVENTORY, testReceiver);
+		momManager.registerReceiver(PlatformDestinationEnum.INVENTORY, testReceiver);
 
 		InventoryTO inventory1 = new InventoryTO();
 		inventory1.setArticleId("article1");

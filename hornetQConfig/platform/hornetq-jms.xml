@@ -76,4 +76,8 @@
       <entry name="/queue/platformDLQ"/>
    </queue>
 
+   <queue name="corrupt">
+      <entry name="/queue/corrupt"/>
+   </queue>
+
 </configuration>

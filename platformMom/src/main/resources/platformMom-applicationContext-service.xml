@@ -138,6 +138,25 @@
 	<bean id="dlqDestination" class="org.hornetq.api.jms.HornetQJMSClient" factory-method="createQueue">
 	   <constructor-arg index="0" value="platformDLQ"/>
 	</bean>
+	
+	<bean id="corruptDestination" class="org.hornetq.api.jms.HornetQJMSClient" factory-method="createQueue">
+	   <constructor-arg index="0" value="corrupt"/>
+	</bean>
+	
+	<bean id="corruptListener" class="com.fb.platform.mom.receiver.corrupt.CorruptMessageListener"></bean>
+	
+	<bean id="corruptContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="userCredentialFactory"/>
+		<property name="destination" ref="corruptDestination"/>
+		<property name="messageListener" ref="corruptListener" />
+		<property name="autoStartup" value="false"/>
+		<property name="sessionTransacted" value="true"/>
+	</bean>
+
+	<bean id="corruptSender" class="com.fb.platform.mom.receiver.corrupt.CorruptSenderImpl">
+        <property name="jmsTemplate" ref="jmsTemplate"/>
+        <property name="corruptDestination" ref="corruptDestination"/>
+	</bean>
 
     <bean id="momManager" class="com.fb.platform.mom.manager.impl.MomManagerImpl">
         <property name="inventoryListener" ref="inventoryListener"/>
@@ -148,5 +167,8 @@
         <property name="mailContainer" ref="mailContainer"/>
         <property name="preDLQListener" ref="preDLQListener"/>
         <property name="preDLQContainer" ref="preDLQContainer"/>
+        <property name="corruptListener" ref="corruptListener"/>
+        <property name="corruptSender" ref="corruptSender"/>
+        <property name="corruptContainer" ref="corruptContainer"/>
     </bean>
 </beans>

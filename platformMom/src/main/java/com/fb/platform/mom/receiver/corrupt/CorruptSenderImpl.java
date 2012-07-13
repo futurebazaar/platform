@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.fb.platform.mom.receiver.mail;
+package com.fb.platform.mom.receiver.corrupt;
 
 import java.io.Serializable;
 
@@ -20,25 +20,25 @@ import org.springframework.jms.core.MessageCreator;
  * @author nehaga
  *
  */
-public class MailMsgSenderImpl implements MailMsgSender {
+public class CorruptSenderImpl implements CorruptSender {
 
-	private static Log logger = LogFactory.getLog(MailMsgSenderImpl.class);
+	private static Log logger = LogFactory.getLog(CorruptSenderImpl.class);
 
 	private JmsTemplate jmsTemplate;
 
-	private Destination mailDestination;
+	private Destination corruptDestination;
 
 	/* (non-Javadoc)
-	 * @see com.fb.platform.mom.receiver.inventory.MailMsgSender#sendMessage(java.lang.Object)
+	 * @see com.fb.platform.mom.receiver.inventory.CorruptSender#sendMessage(java.lang.Object)
 	 */
 	@Override
 	public void sendMessage(final Serializable message) {
-		jmsTemplate.send(mailDestination, new MessageCreator() {
+		jmsTemplate.send(corruptDestination, new MessageCreator() {
 			
 			@Override
 			public Message createMessage(Session session) throws JMSException {
-				logger.info("Creating the Mail Message for sending.");
-				System.out.println("Creating the Mail Message for sending.");
+				logger.info("Creating the Corrupt Message for sending.");
+				System.out.println("Creating the Corrupt Message for sending.");
 				ObjectMessage jmsMessage = session.createObjectMessage();
 				jmsMessage.setObject(message);
 				return jmsMessage;
@@ -50,8 +50,8 @@ public class MailMsgSenderImpl implements MailMsgSender {
 		this.jmsTemplate = jmsTemplate;
 	}
 
-	public void setMailDestination(Destination mailDestination) {
-		this.mailDestination = mailDestination;
+	public void setCorruptDestination(Destination corruptDestination) {
+		this.corruptDestination = corruptDestination;
 	}
 
 }
