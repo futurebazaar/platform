@@ -38,6 +38,8 @@ public class MailHelper {
 	public static String EGV_VALIDITY_MESSAGE_TEMPLATE_STR = "egv.validity";
 	
 	public static String EGV_AMOUNT_MESSAGE_TEMPLATE_STR = "egv.amount";
+	
+	public static String EGV_GIFT_MESSAGE_MESSAGE_TEMPLATE_STR = "egv.message";
 		
 	public static final String FROM = "order@futurebazaar.com";
 	
@@ -67,7 +69,7 @@ public class MailHelper {
 	 * @return
 	 * @throws MailException
 	 */
-	public static MailTO createMailTO(String to, BigDecimal amount, String eGVNumber, String eGVPin, DateTime date, String senderName, String receiverName) throws MailException{
+	public static MailTO createMailTO(String to, BigDecimal amount, String eGVNumber, String eGVPin, DateTime date, String senderName, String receiverName, String giftMessage) throws MailException{
 		MailTO mail = new MailTO();
 		int intAmount = amount.intValue();
 		mail.setFrom(FROM);
@@ -78,7 +80,8 @@ public class MailHelper {
 				.replaceAll(EGV_AMOUNT_MESSAGE_TEMPLATE_STR, String.valueOf(intAmount))
 				.replaceAll(EGV_VALIDITY_MESSAGE_TEMPLATE_STR, date.getDayOfMonth() + " " + date.monthOfYear().getAsShortText() + ", " + date.getYear())
 				.replaceAll(EGV_SENDER_MESSAGE_TEMPLATE_STR, senderName)
-				.replaceAll(EGV_RECEIVER_MESSAGE_TEMPLATE_STR, receiverName);
+				.replaceAll(EGV_RECEIVER_MESSAGE_TEMPLATE_STR, receiverName)
+				.replaceAll(EGV_GIFT_MESSAGE_MESSAGE_TEMPLATE_STR, giftMessage);
 		mail.setMessage(message);
 		mail.setSubject(SUBJECT.replaceAll(EGV_SENDER_MESSAGE_TEMPLATE_STR, senderName));
 		mail.setTo(new String[] { to });		

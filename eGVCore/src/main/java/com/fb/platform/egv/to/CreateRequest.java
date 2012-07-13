@@ -17,6 +17,7 @@ public class CreateRequest implements GiftVoucherRequest{
 	private BigDecimal amount;
 	private String senderName;
 	private String receiverName;
+	private String giftMessage;
 
 	public String getSessionToken() {
 		return sessionToken;
@@ -64,6 +65,14 @@ public class CreateRequest implements GiftVoucherRequest{
 
 	public void setReceiverName(String receiverName) {
 		this.receiverName = receiverName;
+	}
+
+	public String getGiftMessage() {
+		return giftMessage;
+	}
+
+	public void setGiftMessage(String giftMessage) {
+		this.giftMessage = giftMessage;
 	}
 	
 }

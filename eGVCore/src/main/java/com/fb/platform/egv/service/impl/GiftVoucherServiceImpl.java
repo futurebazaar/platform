@@ -125,7 +125,7 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 	
 	@Override
 	public GiftVoucher createGiftVoucher(String email, int userId,
-			BigDecimal amount, int orderItemId, String senderName, String receiverName) throws NoOrderItemExistsException, MailerException, PlatformException {
+			BigDecimal amount, int orderItemId, String senderName, String receiverName, String giftMessage) throws NoOrderItemExistsException, MailerException, PlatformException {
 		String numGenerated = RandomGenerator.integerRandomGenerator(GV_NUMBER_LENGTH);
 		long gvNumber = Long.parseLong(numGenerated);
 		GiftVoucher eGV = new GiftVoucher();
@@ -144,7 +144,7 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 			eGV = giftVoucherDao.load(gvNumber);
 			
 		    //code to send email
-		 	MailTO message = MailHelper.createMailTO(eGV.getEmail(), amount, Long.toString(gvNumber), gvPin, eGV.getValidTill(), senderName, receiverName);
+		 	MailTO message = MailHelper.createMailTO(eGV.getEmail(), amount, Long.toString(gvNumber), gvPin, eGV.getValidTill(), senderName, receiverName,giftMessage);
 			mailSender.send(message);
 		 } catch (MailException e) {
 			throw new MailerException("Error sending mail", e);

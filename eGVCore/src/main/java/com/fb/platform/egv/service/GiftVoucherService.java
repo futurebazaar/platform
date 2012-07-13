@@ -54,7 +54,7 @@ public interface GiftVoucherService {
 	 * @throws PlatformException
 	 */
 	@Transactional(propagation=Propagation.REQUIRED,isolation=Isolation.READ_COMMITTED)
-	public GiftVoucher createGiftVoucher(String email, int userId, BigDecimal amount, int orderItemId, String senderName, String receiverName) throws PlatformException;
+	public GiftVoucher createGiftVoucher(String email, int userId, BigDecimal amount, int orderItemId, String senderName, String receiverName, String message) throws PlatformException;
 
 	/**
 	 * @param userId

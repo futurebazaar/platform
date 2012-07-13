@@ -43,6 +43,7 @@
   <xs:element name="orderId" type="xs:int"/>
   <xs:element name="senderName" type="xs:string"/>
   <xs:element name="receiverName" type="xs:string"/>
+  <xs:element name="giftMessage" type="xs:string"/>
   
   <xs:simpleType name="getInfoResponseStatusEnum">
     <xs:restriction base="xs:string">
@@ -64,6 +65,7 @@
         <xs:element ref="egv:orderItemId"/>
         <xs:element ref="egv:senderName"/>
         <xs:element ref="egv:receiverName"/>
+        <xs:element ref="egv:giftMessage"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>

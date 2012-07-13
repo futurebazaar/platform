@@ -81,7 +81,7 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 		GiftVoucher gv = new GiftVoucher();
 		try {
 			//create the gift voucher
-			gv = giftVoucherService.createGiftVoucher(request.getEmail(), userId, request.getAmount(), request.getOrderItemId(),request.getSenderName(),request.getReceiverName());
+			gv = giftVoucherService.createGiftVoucher(request.getEmail(), userId, request.getAmount(), request.getOrderItemId(),request.getSenderName(),request.getReceiverName(),request.getGiftMessage());
 			response.setGvNumber(Long.parseLong(gv.getNumber()));
 			response.setValidFrom(gv.getValidFrom());
 			response.setValidTill(gv.getValidTill());
