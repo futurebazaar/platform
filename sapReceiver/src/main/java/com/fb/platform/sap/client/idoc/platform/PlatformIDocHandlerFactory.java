@@ -24,6 +24,8 @@ public class PlatformIDocHandlerFactory {
 
 	private DeliveryInventoryIDocHandler deliveryInventoryIDocHandler = null;
 
+	private DefaultIDocHandler defaultIDocHandler = null;
+
 	@Autowired
 	private MomManager momManager = null;
 
@@ -33,6 +35,9 @@ public class PlatformIDocHandlerFactory {
 
 		deliveryInventoryIDocHandler = new DeliveryInventoryIDocHandler();
 		deliveryInventoryIDocHandler.init(momManager);
+
+		defaultIDocHandler = new DefaultIDocHandler();
+		defaultIDocHandler.init(momManager);
 	}
 
 	public PlatformIDocHandler getHandler(String idocType) {
@@ -47,7 +52,7 @@ public class PlatformIDocHandlerFactory {
 			return deliveryInventoryIDocHandler;
 		}
 		logger.error("No Handler is configured for idocType : " + idocType + ", returning default handler.");
-		return new DefaultIDocHandler();
+		return defaultIDocHandler;
 	}
 
 	public void setMomManager(MomManager momManager) {
