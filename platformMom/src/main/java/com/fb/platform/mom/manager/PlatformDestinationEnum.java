@@ -11,6 +11,6 @@ public enum PlatformDestinationEnum {
 
 	INVENTORY,
 	MAIL,
-	DLQ,
-	CORRUPT_IDOCS;
+	CORRUPT_IDOCS,
+	PREDLQ;
 }

@@ -26,7 +26,7 @@
    <connectors>      
       <connector name="netty">
          <factory-class>org.hornetq.core.remoting.impl.netty.NettyConnectorFactory</factory-class>
-         <param key="host"  value="${hornetq.remoting.netty.host:10.202.24.76}"/>
+         <param key="host"  value="${hornetq.remoting.netty.host:10.202.25.97}"/>
          <param key="port"  value="${hornetq.remoting.netty.port:5445}"/>
       </connector>
       
@@ -41,7 +41,7 @@
    <acceptors>
       <acceptor name="netty">
          <factory-class>org.hornetq.core.remoting.impl.netty.NettyAcceptorFactory</factory-class>
-         <param key="host"  value="${hornetq.remoting.netty.host:10.202.24.76}"/>
+         <param key="host"  value="${hornetq.remoting.netty.host:10.202.25.97}"/>
          <param key="port"  value="${hornetq.remoting.netty.port:5445}"/>
       </acceptor>
       
@@ -79,6 +79,38 @@
          <discovery-group-ref discovery-group-name="dg-group1"/>
       </cluster-connection>
    </cluster-connections>
+
+   <!-- We need to create a core queue for the JMS queue explicitly because the bridge will be deployed
+   before the JMS queue is deployed, so the first time, it otherwise won't find the queue  --> 
+   <queues>   
+      <queue name="preDLQ">
+         <address>jms.queue.preDLQ</address>
+      </queue>
+      <queue name="platformDLQ">
+         <address>jms.queue.platformDLQ</address>
+      </queue>
+  </queues>
+
+   <!-- We set-up a bridge that forwards from a queue on this node to an address on another node.
+   We specify a filter with the bridge, and a transformer too. The filter and transformer are optional -->
+   <bridges>
+      <bridge name="platform-bridge">
+          <queue-name>preDLQ</queue-name>
+          <forwarding-address>jms.queue.platformDLQ</forwarding-address>
+          <reconnect-attempts>-1</reconnect-attempts> 
+          <user>platformMomClusterUser</user>
+          <password>lenanileindusnarmada</password>
+          <static-connectors>
+             <connector-ref>netty</connector-ref>
+          </static-connectors>
+
+          <!-- <discovery-group-ref discovery-group-name="dg-group1"/>
+          <transformer-class-name>org.hornetq.jms.example.HatColourChangeTransformer</transformer-class-name>
+          <static-connectors>
+             <connector-ref>remote-connector</connector-ref>
+          </static-connectors> -->
+       </bridge>
+   </bridges>
    
    <security-settings>
       <security-setting match="#">
@@ -116,7 +148,7 @@
          <redistribution-delay>0</redistribution-delay>
       </address-setting>
       <address-setting match="jms.queue.#">
-         <dead-letter-address>jms.queue.platformDLQ</dead-letter-address>
+         <dead-letter-address>jms.queue.preDLQ</dead-letter-address>
          <expiry-address>jms.queue.ExpiryQueue</expiry-address>
          <redelivery-delay>5000</redelivery-delay>
          <max-size-bytes>10485760</max-size-bytes>       

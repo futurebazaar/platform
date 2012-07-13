@@ -26,15 +26,15 @@ import com.fb.platform.mom.manager.impl.AbstractPlatformListener;
  * @author vinayak
  *
  */
-public class DLQMessageListener extends AbstractPlatformListener implements MessageListener {
+public class PreDLQMessageListener extends AbstractPlatformListener implements MessageListener {
 
-	private static Log logger = LogFactory.getLog(DLQMessageListener.class);
+	private static Log logger = LogFactory.getLog(PreDLQMessageListener.class);
 	
 	private static Properties prop = initProperties();
 
 	private static Properties initProperties() {
 		Properties properties = new Properties();
-		InputStream propertiesStream = DLQMessageListener.class.getClassLoader().getResourceAsStream("receivers.properties");
+		InputStream propertiesStream = PreDLQMessageListener.class.getClassLoader().getResourceAsStream("receivers.properties");
 		try {
 			properties.load(propertiesStream);
 		} catch (IOException e) {

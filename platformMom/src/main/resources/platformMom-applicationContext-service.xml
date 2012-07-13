@@ -115,24 +115,28 @@
 		<property name="sessionTransacted" value="true"/>
 	</bean>
 
-	<bean id="mailMsgSender" class="com.fb.platform.mom.receiver.mail.MailSenderImpl">
+	<bean id="mailMsgSender" class="com.fb.platform.mom.receiver.mail.MailMsgSenderImpl">
         <property name="jmsTemplate" ref="jmsTemplate"/>
         <property name="mailDestination" ref="mailDestination"/>
 	</bean>
 	
-	<bean id="dlqDestination" class="org.hornetq.api.jms.HornetQJMSClient" factory-method="createQueue">
-	   <constructor-arg index="0" value="platformDLQ"/>
+	<bean id="preDLQDestination" class="org.hornetq.api.jms.HornetQJMSClient" factory-method="createQueue">
+	   <constructor-arg index="0" value="preDLQ"/>
 	</bean>
 	
-	<bean id="dlqListener" class="com.fb.platform.mom.receiver.dlq.DLQMessageListener">
+	<bean id="preDLQListener" class="com.fb.platform.mom.receiver.dlq.PreDLQMessageListener">
 	</bean>
 	
-	<bean id="dlqContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+	<bean id="preDLQContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
 		<property name="connectionFactory" ref="userCredentialFactory"/>
-		<property name="destination" ref="dlqDestination"/>
-		<property name="messageListener" ref="dlqListener" />
+		<property name="destination" ref="preDLQDestination"/>
+		<property name="messageListener" ref="preDLQListener" />
 		<property name="autoStartup" value="false"/>
 		<property name="sessionTransacted" value="true"/>
+	</bean>
+	
+	<bean id="dlqDestination" class="org.hornetq.api.jms.HornetQJMSClient" factory-method="createQueue">
+	   <constructor-arg index="0" value="platformDLQ"/>
 	</bean>
 
     <bean id="momManager" class="com.fb.platform.mom.manager.impl.MomManagerImpl">
@@ -142,7 +146,7 @@
         <property name="mailListener" ref="mailListener"/>
         <property name="mailMsgSender" ref="mailMsgSender"/>
         <property name="mailContainer" ref="mailContainer"/>
-        <property name="dlqListener" ref="dlqListener"/>
-        <property name="dlqContainer" ref="dlqContainer"/>
+        <property name="preDLQListener" ref="preDLQListener"/>
+        <property name="preDLQContainer" ref="preDLQContainer"/>
     </bean>
 </beans>
