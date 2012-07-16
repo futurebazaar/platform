@@ -59,9 +59,11 @@ public class MailSenderImpl implements MailSender {
             		hasReceiver = true;
             	}
             	if(!hasReceiver) {
+            		logger.error("Mail should contain to or cc or bcc.");
             		throw new MailNoReceiverException("Mail should contain to or cc or bcc.");
             	}
             	if(StringUtils.isBlank(mailTO.getFrom())) {
+            		logger.error("Mail should have a sender.");
             		throw new MailNoSenderException("Mail should have a sender.");
             	}
             	if(mailTO.getFromPersonal()!=null) {
@@ -83,6 +85,7 @@ public class MailSenderImpl implements MailSender {
         	this.springMailSender.send(preparator);
         } catch (MailException e) {
         	e.printStackTrace();
+        	logger.error("Error sending mail", e);
 			throw new MailerException("Error sending mail", e);
 		}
     }

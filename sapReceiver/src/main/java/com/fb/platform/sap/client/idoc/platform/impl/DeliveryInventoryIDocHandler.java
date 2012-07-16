@@ -15,6 +15,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.fb.commons.PlatformException;
+import com.fb.commons.mom.to.CorruptMessageCause;
+import com.fb.commons.mom.to.CorruptMessageTO;
 import com.fb.commons.mom.to.InventoryTO;
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
@@ -97,9 +99,14 @@ public class DeliveryInventoryIDocHandler implements PlatformIDocHandler {
 			}
 
 		} catch (JAXBException e) {
+			CorruptMessageTO corruptMessage = new CorruptMessageTO();
+			corruptMessage.setMessage(idocXml);
+			corruptMessage.setCause(CorruptMessageCause.CORRUPT_IDOC);
+			momManager.send(PlatformDestinationEnum.CORRUPT_IDOCS, corruptMessage);
+			
 			logger.error("Unable to create Inventory Message for delivery inventory idoc :\n" + idocXml);
-			//TODO send this to some kind of error queue
-			throw new PlatformException("Exception while unmarshalling the delivery inventory idoc xml", e);
+			logger.error("Message logged in corrupt queue.");
+			//throw new PlatformException("Exception while unmarshalling the delivery inventory idoc xml", e);
 		}
 	}
 

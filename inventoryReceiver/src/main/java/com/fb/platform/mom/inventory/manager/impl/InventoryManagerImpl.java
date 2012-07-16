@@ -12,7 +12,6 @@ import com.fb.platform.mom.inventory.manager.InventoryManager;
 import com.fb.platform.mom.inventory.receiver.InventoryMessageReceiver;
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
-import com.fb.platform.mom.manager.PlatformMessageReceiver;
 
 /**
  * @author nehaga

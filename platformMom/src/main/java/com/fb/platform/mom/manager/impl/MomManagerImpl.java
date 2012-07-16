@@ -13,6 +13,8 @@ import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
+import com.fb.platform.mom.receiver.corrupt.CorruptMessageListener;
+import com.fb.platform.mom.receiver.corrupt.CorruptSender;
 import com.fb.platform.mom.receiver.dlq.PreDLQMessageListener;
 import com.fb.platform.mom.receiver.inventory.InventoryMessageListener;
 import com.fb.platform.mom.receiver.inventory.InventorySender;
@@ -50,6 +52,15 @@ public class MomManagerImpl implements MomManager {
 
 	@Autowired
 	private DefaultMessageListenerContainer preDLQContainer = null;
+	
+	@Autowired
+	private CorruptMessageListener corruptListener = null;
+
+	@Autowired
+	private CorruptSender corruptSender = null;
+
+	@Autowired
+	private DefaultMessageListenerContainer corruptContainer = null;
 
 	/* (non-Javadoc)
 	 * @see com.fb.platform.mom.manager.MomManager#send(com.fb.platform.mom.manager.PlatformDestinationEnum, java.lang.Object)
@@ -64,6 +75,9 @@ public class MomManagerImpl implements MomManager {
 			break;
 		case MAIL:
 			mailMsgSender.sendMessage(message);
+			break;
+		case CORRUPT_IDOCS:
+			corruptSender.sendMessage(message);
 			break;
 		default:
 			throw new IllegalStateException("No sender is configured for the destination : " + destination);
@@ -94,6 +108,12 @@ public class MomManagerImpl implements MomManager {
 			preDLQListener.addReceiver(receiver);
 			if(!preDLQContainer.isRunning()) {
 				preDLQContainer.start();
+			}
+			break;
+		case CORRUPT_IDOCS:
+			corruptListener.addReceiver(receiver);
+			if(!corruptContainer.isRunning()) {
+				corruptContainer.start();
 			}
 			break;
 		default:
@@ -132,5 +152,18 @@ public class MomManagerImpl implements MomManager {
 	public void setPreDLQContainer(DefaultMessageListenerContainer preDLQContainer) {
 		this.preDLQContainer = preDLQContainer;
 	}
+
+	public void setCorruptListener(CorruptMessageListener corruptListener) {
+		this.corruptListener = corruptListener;
+	}
+
+	public void setCorruptSender(CorruptSender corruptSender) {
+		this.corruptSender = corruptSender;
+	}
+
+	public void setCorruptContainer(DefaultMessageListenerContainer corruptContainer) {
+		this.corruptContainer = corruptContainer;
+	}
+	
 	
 }

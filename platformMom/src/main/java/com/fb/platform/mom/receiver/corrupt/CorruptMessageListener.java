@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.fb.platform.mom.receiver.dlq;
+package com.fb.platform.mom.receiver.corrupt;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,16 +19,18 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.jms.support.JmsUtils;
 
 import com.fb.commons.PlatformException;
+import com.fb.commons.mom.to.CorruptMessageTO;
 import com.fb.commons.mom.to.MailTO;
 import com.fb.platform.mom.manager.impl.AbstractPlatformListener;
+import com.fb.platform.mom.receiver.dlq.PreDLQMessageListener;
 
 /**
- * @author vinayak
+ * @author nehaga
  *
  */
-public class PreDLQMessageListener extends AbstractPlatformListener implements MessageListener {
+public class CorruptMessageListener extends AbstractPlatformListener implements MessageListener {
 
-	private static Log logger = LogFactory.getLog(PreDLQMessageListener.class);
+	private static Log logger = LogFactory.getLog(CorruptMessageListener.class);
 	
 	private static Properties prop = initProperties();
 
@@ -48,48 +50,51 @@ public class PreDLQMessageListener extends AbstractPlatformListener implements M
 	public void onMessage(Message message) {
 		try {
 			ObjectMessage objectMessage = (ObjectMessage) message;
-			MailTO dlqMail = new MailTO();
-			String to = StringUtils.trim(prop.getProperty("receiver.mail.dlq.to"));
-			String cc = StringUtils.trim(prop.getProperty("receiver.mail.dlq.cc"));
-			String bcc = StringUtils.trim(prop.getProperty("receiver.mail.dlq.bcc"));
+			CorruptMessageTO corruptMessage = (CorruptMessageTO) objectMessage.getObject();
+			
+			MailTO corruptMail = new MailTO();
+			String to = StringUtils.trim(prop.getProperty("receiver.mail.corrupt.to"));
+			String cc = StringUtils.trim(prop.getProperty("receiver.mail.corrupt.cc"));
+			String bcc = StringUtils.trim(prop.getProperty("receiver.mail.corrupt.bcc"));
 			
 			if(StringUtils.isNotBlank(to)) {
-				dlqMail.setTo(to.split(","));
+				corruptMail.setTo(to.split(","));
 			}
 			if(StringUtils.isNotBlank(cc)) {
-				dlqMail.setCc(cc.split(","));
+				corruptMail.setCc(cc.split(","));
 			}
 			if(StringUtils.isNotBlank(bcc)) {
-				dlqMail.setBcc(bcc.split(","));
+				corruptMail.setBcc(bcc.split(","));
 			}
 			
-			dlqMail.setFrom(prop.getProperty("receiver.mail.dlq.from"));
-			Date date = new Date();
-			dlqMail.setSubject("MOM message delivery failed : " + date.toString());
-			dlqMail.setMessage("MOM message delivery failed : " + date.toString() 
-					+ "\n\n destination : " + objectMessage.getObjectProperty("_HQ_ORIG_ADDRESS") 
-					+ "\n\n message timestamp : " + message.getJMSTimestamp() 
-					+ "\n\n message id : " + message.getJMSMessageID()
-					+ "\n\n priority : " + message.getJMSPriority()
-					+ "\n\n object : " + objectMessage.getObject().toString() );
-
-			logger.info("MOM message delivery failed : " + date.toString() 
-					+ "\n\n destination : " + objectMessage.getObjectProperty("_HQ_ORIG_ADDRESS") 
-					+ "\n\n message timestamp : " + message.getJMSTimestamp() 
-					+ "\n\n message id : " + message.getJMSMessageID()
-					+ "\n\n priority : " + message.getJMSPriority()
-					+ "\n\n object : " + objectMessage.getObject().toString() );
+			corruptMail.setFrom(prop.getProperty("receiver.mail.corrupt.from"));
 			
-			System.out.println("MOM message delivery failed : " + date.toString() 
-					+ "\n\n destination : " + objectMessage.getObjectProperty("_HQ_ORIG_ADDRESS") 
+			Date date = new Date();
+			corruptMail.setSubject("MOM corrupt message received : " + date.toString());
+			corruptMail.setMessage("MOM corrupt message received : " + date.toString() 
 					+ "\n\n message timestamp : " + message.getJMSTimestamp() 
 					+ "\n\n message id : " + message.getJMSMessageID()
 					+ "\n\n priority : " + message.getJMSPriority()
-					+ "\n\n object : " + objectMessage.getObject().toString() );
+					+ "\n\n error cause : " + corruptMessage.getCause()
+					+ "\n\n object : " + corruptMessage.getMessage().toString() );
 
-			super.notify(dlqMail);
+			logger.info("MOM corrupt message received : " + date.toString() 
+					+ "\n\n message timestamp : " + message.getJMSTimestamp() 
+					+ "\n\n message id : " + message.getJMSMessageID()
+					+ "\n\n priority : " + message.getJMSPriority()
+					+ "\n\n error cause : " + corruptMessage.getCause()
+					+ "\n\n object : " + corruptMessage.getMessage().toString() );
+			
+			System.out.println("MOM corrupt message received : " + date.toString() 
+					+ "\n\n message timestamp : " + message.getJMSTimestamp() 
+					+ "\n\n message id : " + message.getJMSMessageID()
+					+ "\n\n priority : " + message.getJMSPriority()
+					+ "\n\n error cause : " + corruptMessage.getCause()
+					+ "\n\n object : " + corruptMessage.getMessage().toString() );
+
+			super.notify(corruptMail);
 		} catch (JMSException e) {
-			logger.error("JMSException in preDLQ", e);
+			logger.error("JMSException in corru[tion queue", e);
 			throw JmsUtils.convertJmsAccessException(e);
 		}
 	}
