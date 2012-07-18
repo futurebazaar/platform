@@ -1805,7 +1805,7 @@
         		<value name="store">scratch_and_win</value>
         		<null/>
         		<value name="used_date">2012-06-29 19:34:00</value>
-        	</row>
+        	</row>	
         </table>
         <table name="promotions_scratchcardcoupons">
         	<column>id</column>
