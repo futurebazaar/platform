@@ -1646,8 +1646,6 @@
         </row>
         <!-- End -->
         
-<<<<<<< HEAD
-
 		<row>
 			<value name="id">-4000</value>
 			<value name="name">CLIENT_LIST</value>
@@ -1986,7 +1984,6 @@
         		<null/>
         		<value name="used_date">2012-06-29 19:34:00</value>
         	</row>
-
 	</table>
 	<table name="promotions_scratchcardcoupons">
 		<column>id</column>
