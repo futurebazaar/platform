@@ -1625,7 +1625,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 	public void testSearchScratchCard() {
 		SearchScratchCardRequest searchScratchCardRequest = new SearchScratchCardRequest();
 
-		searchScratchCardRequest.setScratchCardNumber("NG2911BMJ");
+		searchScratchCardRequest.setScratchCardNumber("SAM2911BMJ");
 		searchScratchCardRequest
 				.setSessionToken(responseUser.getSessionToken());
 
