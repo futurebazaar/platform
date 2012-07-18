@@ -157,7 +157,26 @@
         <property name="jmsTemplate" ref="jmsTemplate"/>
         <property name="corruptDestination" ref="corruptDestination"/>
 	</bean>
+	
+	<bean id="deliveryDeleteDestination" class="org.hornetq.api.jms.HornetQJMSClient" factory-method="createQueue">
+	   <constructor-arg index="0" value="deliveryDelete"/>
+	</bean>
 
+	<bean id="deliveryDeleteListener" class="com.fb.platform.mom.receiver.delivery.DeliveryDeleteListener"></bean>
+	
+	<bean id="deliveryDeleteContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="userCredentialFactory"/>
+		<property name="destination" ref="deliveryDeleteDestination"/>
+		<property name="messageListener" ref="deliveryDeleteListener" />
+		<property name="autoStartup" value="false"/>
+		<property name="sessionTransacted" value="true"/>
+	</bean>
+
+	<bean id="deliveryDeleteSender" class="com.fb.platform.mom.receiver.delivery.DeliveryDeleteSenderImpl">
+        <property name="jmsTemplate" ref="jmsTemplate"/>
+        <property name="inventoryDestination" ref="deliveryDeleteDestination"/>
+	</bean>
+	
     <bean id="momManager" class="com.fb.platform.mom.manager.impl.MomManagerImpl">
         <property name="inventoryListener" ref="inventoryListener"/>
         <property name="inventorySender" ref="inventorySender"/>

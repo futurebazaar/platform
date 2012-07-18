@@ -140,4 +140,9 @@ fulfilmentCore/.classpath
 fulfilmentCore/.settings
 fulfilmentWS/.classpath
 fulfilmentWS/.settings
-
+socketSample/
+sapReceiver/src/main/resources/backup_ztinla_idoctype1.xml
+execution/launcher.tar.gz
+execution/sapReceiver.tar.gz
+fulfilmentWS/.settings/org.eclipse.wst.common.component
+fulfilmentCore/.settings/org.eclipse.wst.common.component
