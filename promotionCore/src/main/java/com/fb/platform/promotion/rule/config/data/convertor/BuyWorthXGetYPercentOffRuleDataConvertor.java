@@ -25,7 +25,7 @@ public class BuyWorthXGetYPercentOffRuleDataConvertor implements
 	 * @see com.fb.platform.promotion.rule.config.data.convertor.DBConfigToRuleDataConvertor#convert(com.fb.platform.promotion.rule.config.RuleConfiguration)
 	 */
 	@Override
-	public RuleData convert(RuleConfiguration ruleConfig, RuleConfigMetadata metadata) throws MandatoryDataMissingException{
+	public RuleData convert(RuleConfiguration ruleConfig, RuleConfigMetadata metadata) throws MandatoryDataMissingException {
 		BuyWorthXGetYPercentOffRuleData data = new BuyWorthXGetYPercentOffRuleData();
 		
 		data.setClientList((List<Integer>)RuleConfigDescriptorEnum.CLIENT_LIST.parse(ruleConfig, metadata));

@@ -23,10 +23,10 @@ public class StringToIntegerListConvertor implements Convertor {
 		return convertStringToIntegerList(strTokCategories.getTokenList());
 	}
 	
-	private List<Integer> convertStringToIntegerList(List<String> strList){
+	private List<Integer> convertStringToIntegerList(List<String> strList) {
 		List<Integer> intList = new ArrayList<Integer>();
-		for(Object str : strList){
-			if(StringUtils.isNotBlank((String)str)){
+		for(Object str : strList) {
+			if(StringUtils.isNotBlank((String)str)) {
 				intList.add(Integer.valueOf(((String)str).trim()));	
 			}
 		}
