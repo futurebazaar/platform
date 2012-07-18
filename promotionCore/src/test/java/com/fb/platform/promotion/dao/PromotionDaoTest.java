@@ -197,7 +197,7 @@ public class PromotionDaoTest extends BaseTestCase {
 	@Test
 	public void getScratchCard(){
 
-		ScratchCard scrachCard = scratchCardDao.load("NG2911BMJ");
+		ScratchCard scrachCard = scratchCardDao.load("SAM2911BMJ");
 
 		assertNotNull(scrachCard);
 		
@@ -206,7 +206,7 @@ public class PromotionDaoTest extends BaseTestCase {
 		
 
 		assertEquals(true, "active".equals(scrachCard.getCardStatus() )) ;
-		assertEquals(true, "NG2911BMJ".equals(scrachCard.getCardNumber() )) ;
+		assertEquals(true, "SAM2911BMJ".equals(scrachCard.getCardNumber() )) ;
 
 		assertNotNull(scrachCard.getStore());
 //		assertEquals(true, "big_bazaar".equals(scrachCard.getStore()));
