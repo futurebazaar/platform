@@ -12,7 +12,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.jms.support.JmsUtils;
 
-import com.fb.platform.mom.inventory.to.InventoryTO;
+import com.fb.commons.mom.to.InventoryTO;
 import com.fb.platform.mom.manager.impl.AbstractPlatformListener;
 
 /**

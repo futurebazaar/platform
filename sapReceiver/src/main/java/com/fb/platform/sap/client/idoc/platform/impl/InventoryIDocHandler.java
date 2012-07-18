@@ -3,10 +3,6 @@
  */
 package com.fb.platform.sap.client.idoc.platform.impl;
 
-import generated.ObjectFactory;
-import generated.ZTINLAIDOCTYP;
-import generated.ZTINLASEGDLVR;
-
 import java.io.StringReader;
 import java.util.List;
 
@@ -19,10 +15,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.fb.commons.PlatformException;
-import com.fb.platform.mom.inventory.to.InventoryTO;
+import com.fb.commons.mom.to.CorruptMessageCause;
+import com.fb.commons.mom.to.CorruptMessageTO;
+import com.fb.commons.mom.to.InventoryTO;
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler;
+import com.fb.platform.sap.idoc.generated.ztinlaIDocType.ObjectFactory;
+import com.fb.platform.sap.idoc.generated.ztinlaIDocType.ZTINLAIDOCTYP;
+import com.fb.platform.sap.idoc.generated.ztinlaIDocType.ZTINLASEGDLVR;
 
 /**
  * @author vinayak
@@ -51,7 +52,7 @@ public class InventoryIDocHandler implements PlatformIDocHandler {
 
 	@Override
 	public void handle(String idocXml) {
-		logger.info("Begin handling idoc message.");
+		logger.info("Begin handling Inventory idoc message.");
 
 		//convert the message xml into jaxb bean
 		try {
@@ -76,9 +77,14 @@ public class InventoryIDocHandler implements PlatformIDocHandler {
 				momManager.send(PlatformDestinationEnum.INVENTORY, inventoryTo);
 			}
 		} catch (JAXBException e) {
-			logger.error("Unable to create Inventory Message for inventory idoc :\n" + idocXml);
+			CorruptMessageTO corruptMessage = new CorruptMessageTO();
+			corruptMessage.setMessage(idocXml);
+			corruptMessage.setCause(CorruptMessageCause.CORRUPT_IDOC);
+			momManager.send(PlatformDestinationEnum.CORRUPT_IDOCS, corruptMessage);
 			//TODO send this to some kind of error queue
-			throw new PlatformException("Exception while unmarshalling the inventory idoc xml", e);
+			logger.error("Unable to create Inventory Message for inventory idoc :\n" + idocXml);
+			logger.error("Message logged in corrupt queue.");
+			//throw new PlatformException("Exception while unmarshalling the inventory idoc xml", e);
 		}
 	}
 

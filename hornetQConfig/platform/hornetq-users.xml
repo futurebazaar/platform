@@ -4,4 +4,7 @@
    <defaultuser name="guest" password="guest">
       <role name="guest"/>
    </defaultuser>
+   <user name="platformMomAdmin" password="lenanileindusnarmada">
+      <role name="admin"/>
+   </user>
 </configuration>

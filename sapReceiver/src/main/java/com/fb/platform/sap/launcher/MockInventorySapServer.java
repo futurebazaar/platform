@@ -15,6 +15,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandlerFactory;
+import com.fb.platform.sap.client.idoc.platform.impl.DeliveryInventoryIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.impl.InventoryIDocHandler;
 
 /**
@@ -28,6 +29,12 @@ public class MockInventorySapServer {
 	private static String INVENTORY_IDOC_0 = null;
 	private static String INVENTORY_IDOC_1 = null;
 	private static String INVENTORY_IDOC_2 = null;
+	private static String INVENTORY_IDOC_3 = null;
+	private static String INVENTORY_IDOC_4 = null;
+	private static String INVENTORY_IDOC_5 = null;
+	private static String INVENTORY_IDOC_6 = null;
+	private static String DELIVERY_INVENTORY_IDOC_0 = null;
+
 	static {
 		InputStream inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ztinla_idoctype1.xml");
 		StringWriter sw = new StringWriter();
@@ -58,7 +65,56 @@ public class MockInventorySapServer {
 			e.printStackTrace();
 		}
 		INVENTORY_IDOC_2 = sw.toString();
+		
+		inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ZATG_SO_CREATE-idoc.xml");
+		sw = new StringWriter();
+		try {
+			IOUtils.copy(inputStream, sw);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		INVENTORY_IDOC_3 = sw.toString();
+		
+		inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ZATGDELD-idoc.xml");
+		sw = new StringWriter();
+		try {
+			IOUtils.copy(inputStream, sw);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		INVENTORY_IDOC_4 = sw.toString();
+		
+		inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ZATGFLOW-idoc.xml");
+		sw = new StringWriter();
+		try {
+			IOUtils.copy(inputStream, sw);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		INVENTORY_IDOC_5 = sw.toString();
+		
+		inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ZATGINVOICE-idoc.xml");
+		sw = new StringWriter();
+		try {
+			IOUtils.copy(inputStream, sw);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		INVENTORY_IDOC_6 = sw.toString();
 
+		inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ztinla_dlvry.xml");
+		sw = new StringWriter();
+		try {
+			IOUtils.copy(inputStream, sw);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		DELIVERY_INVENTORY_IDOC_0 = sw.toString();
 	}
 	/**
 	 * @param args
@@ -69,20 +125,32 @@ public class MockInventorySapServer {
 		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext-service.xml", "platformMom-applicationContext-resources.xml", "platformMom-applicationContext-service.xml");
 
 		PlatformIDocHandlerFactory idocFactory = (PlatformIDocHandlerFactory) applicationContext.getBean("platformIDocHandlerFactory");
-		PlatformIDocHandler platformIDocHandler = idocFactory.getHandler(InventoryIDocHandler.INVENTORY_IDOC_TYPE);
+		PlatformIDocHandler inventoryIDocHandler = idocFactory.getHandler(InventoryIDocHandler.INVENTORY_IDOC_TYPE);
+
+		PlatformIDocHandler deliveryInventoryIDocHandler = idocFactory.getHandler(DeliveryInventoryIDocHandler.DELIVERY_INVENTORY_IDOC_TYPE);
 
 		int count = 0;
 		while (true) {
 			if (count == 0) {
-				platformIDocHandler.handle(INVENTORY_IDOC_0);
+				inventoryIDocHandler.handle(INVENTORY_IDOC_0);
 			} else if (count == 1) {
-				platformIDocHandler.handle(INVENTORY_IDOC_2);
+				inventoryIDocHandler.handle(INVENTORY_IDOC_2);
+			} else  if (count == 2) {
+				inventoryIDocHandler.handle(INVENTORY_IDOC_1);
+			} else if (count == 3) {
+				inventoryIDocHandler.handle(INVENTORY_IDOC_3);
+			} else  if (count == 4) {
+				inventoryIDocHandler.handle(INVENTORY_IDOC_4);
+			} else if (count == 5) {
+				inventoryIDocHandler.handle(INVENTORY_IDOC_5);
+			} else  if (count == 6) {
+				inventoryIDocHandler.handle(INVENTORY_IDOC_6);
 			} else {
-				platformIDocHandler.handle(INVENTORY_IDOC_1);
+				deliveryInventoryIDocHandler.handle(DELIVERY_INVENTORY_IDOC_0);
 			}
 			logger.info("sent the inventory message. sleeping for 15 seconds");
 			count ++;
-			if (count > 2) {
+			if (count > 7) {
 				break;
 			}
 			Thread.sleep(20000);

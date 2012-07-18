@@ -10,8 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fb.commons.mom.to.InventoryTO;
 import com.fb.commons.test.BaseTestCase;
-import com.fb.platform.mom.inventory.to.InventoryTO;
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
@@ -52,6 +52,24 @@ public class InventoryTest extends BaseTestCase {
 		inventory2.setIssuingSite("issuingsite2");
 		inventory2.setIssuingStorageLoc("issuingstoragelocation2");
 		inventorySender.sendMessage(inventory2);
+		
+		InventoryTO inventory3 = new InventoryTO();
+		inventory1.setArticleId("neha1");
+		inventory1.setIssuingSite("neha1");
+		inventory1.setIssuingStorageLoc("neha1");
+		inventorySender.sendMessage(inventory3);
+
+		InventoryTO inventory4 = new InventoryTO();
+		inventory2.setArticleId("neha2");
+		inventory2.setIssuingSite("neha2");
+		inventory2.setIssuingStorageLoc("neha2");
+		inventorySender.sendMessage(inventory4);
+		
+		InventoryTO inventory5 = new InventoryTO();
+		inventory1.setArticleId("neha3");
+		inventory1.setIssuingSite("neha3");
+		inventory1.setIssuingStorageLoc("neha3");
+		inventorySender.sendMessage(inventory5);
 	}
 
 	@After

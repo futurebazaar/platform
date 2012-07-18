@@ -1,4 +1,5 @@
 .project
+.classpath
 .settings
 copyWar.sh
 restartTomcat.sh
@@ -122,8 +123,21 @@ platformMom/.settings/
 platformMom/target/
 platformMom/bin/
 platformMom/.project
+sapReceiver/cp.txt
+launcher/cp.txt
+dummyTinlaListner/.classpath
+dummyTinlaListner/.settings/
+sapReceiver/dev_jco_rfc.trc
+execution/launcher/dependency/
+execution/launcher/launcher-1.0-SNAPSHOT.jar
+execution/sapReceiver/dependency/
+execution/sapReceiver/sapReceiver-1.0-SNAPSHOT.jar
 authenticationCore/bin/
 dummyTinlaListner/.classpath
 dummyTinlaListner/.settings/
 dummyTinlaListner/bin/
+fulfilmentCore/.classpath
+fulfilmentCore/.settings
+fulfilmentWS/.classpath
+fulfilmentWS/.settings
 

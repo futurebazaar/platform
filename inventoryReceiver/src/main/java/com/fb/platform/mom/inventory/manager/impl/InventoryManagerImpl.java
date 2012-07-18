@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.mom.receiver.ReceiverManager;
 import com.fb.platform.mom.inventory.manager.InventoryManager;
+import com.fb.platform.mom.inventory.receiver.InventoryMessageReceiver;
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
-import com.fb.platform.mom.manager.PlatformMessageReceiver;
 
 /**
  * @author nehaga
@@ -21,10 +21,10 @@ public class InventoryManagerImpl implements ReceiverManager, InventoryManager {
 	private static Log log = LogFactory.getLog(InventoryManagerImpl.class);
 
 	@Autowired
-	MomManager momManager;
+	private MomManager momManager;
 	
 	@Autowired
-	PlatformMessageReceiver messageReceiver;
+	private InventoryMessageReceiver inventoryMessageReceiver;
 	
 	/* (non-Javadoc)
 	 * @see com.fb.launcher.receiver.ReceiverManager#start()
@@ -32,7 +32,7 @@ public class InventoryManagerImpl implements ReceiverManager, InventoryManager {
 	@Override
 	public void start() {
 		log.info("Registering the receiver.");
-		momManager.registerReceiver(PlatformDestinationEnum.INVENTORY, messageReceiver);
+		momManager.registerReceiver(PlatformDestinationEnum.INVENTORY, inventoryMessageReceiver);
 
 	}
 	
@@ -40,8 +40,8 @@ public class InventoryManagerImpl implements ReceiverManager, InventoryManager {
 		this.momManager = momManager;
 	}
 	
-	public void setMessageReceiver(PlatformMessageReceiver messageReceiver) {
-		this.messageReceiver = messageReceiver;
+	public void setInventoryMessageReceiver(InventoryMessageReceiver inventoryMessageReceiver) {
+		this.inventoryMessageReceiver = inventoryMessageReceiver;
 	}
 
 }

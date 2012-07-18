@@ -10,5 +10,7 @@ package com.fb.platform.mom.manager;
 public enum PlatformDestinationEnum {
 
 	INVENTORY,
-	MAIL;
+	MAIL,
+	CORRUPT_IDOCS,
+	PREDLQ;
 }

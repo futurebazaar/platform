@@ -5,21 +5,25 @@ package com.fb.platform.mom.inventory.receiver;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 
 import com.fb.commons.PlatformException;
-import com.fb.platform.mom.inventory.to.InventoryTO;
+import com.fb.commons.mom.to.InventoryTO;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
 
 /**
@@ -38,7 +42,7 @@ public class InventoryMessageReceiver implements PlatformMessageReceiver {
 
 	private static Properties initProperties() {
 		Properties properties = new Properties();
-		InputStream propertiesStream = InventoryMessageReceiver.class.getClassLoader().getResourceAsStream("tinlaReceivers.properties");
+		InputStream propertiesStream = InventoryMessageReceiver.class.getClassLoader().getResourceAsStream("receivers.properties");
 		try {
 			properties.load(propertiesStream);
 		} catch (IOException e) {
@@ -60,33 +64,42 @@ public class InventoryMessageReceiver implements PlatformMessageReceiver {
 
 		String inventoryURL = prop.getProperty("receiver.inventory.url");
 		
-		HttpClient httpClient = new HttpClient();
-		PostMethod inventoryAckMethod = new PostMethod(inventoryURL);
-		
-		NameValuePair[] parameters = {new NameValuePair("transactioncode", inventoryTO.getTransactionCode()),
-				new NameValuePair("articleid", inventoryTO.getArticleId()),
-				new NameValuePair("issuingsite", inventoryTO.getIssuingSite()),
-				new NameValuePair("receivingsite", inventoryTO.getReceivingSite()),
-				new NameValuePair("issuingstorageloc", inventoryTO.getIssuingStorageLoc()),
-				new NameValuePair("receivingstorageloc", inventoryTO.getReceivingStorageLoc()),
-				new NameValuePair("movementtype", inventoryTO.getMovementType()),
-				new NameValuePair("sellingunit", inventoryTO.getSellingUnit()),
-				new NameValuePair("quantity", inventoryTO.getQuantity())};
-		
-		inventoryAckMethod.setRequestBody(parameters);
-		
-		int statusCode;
+		HttpClient httpClient = new DefaultHttpClient();
+		HttpPost httpPost = new HttpPost(inventoryURL);
+
+		List<NameValuePair> parameters = new ArrayList<NameValuePair>();
+
+		parameters.add(new BasicNameValuePair("transactioncode", inventoryTO.getTransactionCode()));
+		parameters.add(new BasicNameValuePair("articleid", inventoryTO.getArticleId()));
+		parameters.add(new BasicNameValuePair("issuingsite", inventoryTO.getIssuingSite()));
+		parameters.add(new BasicNameValuePair("receivingsite", inventoryTO.getReceivingSite()));
+		parameters.add(new BasicNameValuePair("issuingstorageloc", inventoryTO.getIssuingStorageLoc()));
+		parameters.add(new BasicNameValuePair("receivingstorageloc", inventoryTO.getReceivingStorageLoc()));
+		parameters.add(new BasicNameValuePair("movementtype", inventoryTO.getMovementType()));
+		parameters.add(new BasicNameValuePair("sellingunit", inventoryTO.getSellingUnit()));
+		parameters.add(new BasicNameValuePair("quantity", inventoryTO.getQuantity()));
+
+		UrlEncodedFormEntity entity;
 		try {
-			statusCode = httpClient.executeMethod(inventoryAckMethod);
+			entity = new UrlEncodedFormEntity(parameters, "UTF-8");
+			httpPost.setEntity(entity);
+			HttpResponse response = httpClient.execute(httpPost);
+			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode != HttpStatus.SC_OK) {
 				log.error("Inventory ack not delivered : " + inventoryTO.toString());
 				throw new PlatformException("Inventory ack not delivered to tinla on URL : " + inventoryURL);
 			}
 			log.info("Inventory ack delivered to tinla. Status code : " + statusCode);
-		} catch (HttpException e) {
+		} catch (UnsupportedEncodingException e) {
+			log.error("Error communicating with tinla on url : " + inventoryURL, e);
+			throw new PlatformException("Error communicating with tinla on url : " + inventoryURL, e);
+		} catch (ClientProtocolException e) {
+			log.error("Error communicating with tinla on url : " + inventoryURL, e);
 			throw new PlatformException("Error communicating with tinla on url : " + inventoryURL, e);
 		} catch (IOException e) {
+			log.error("Error communicating with tinla on url : " + inventoryURL, e);
 			throw new PlatformException("Error communicating with tinla on url : " + inventoryURL, e);
 		}
+
 	}
 }

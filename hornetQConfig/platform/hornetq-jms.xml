@@ -64,4 +64,20 @@
       <entry name="/queue/inventory"/>
    </queue>
 
+   <queue name="mailDLQ">
+      <entry name="/queue/mailDLQ"/>
+   </queue>
+
+   <queue name="preDLQ">
+      <entry name="/queue/preDLQ"/>
+   </queue>
+
+   <queue name="platformDLQ">
+      <entry name="/queue/platformDLQ"/>
+   </queue>
+
+   <queue name="corrupt">
+      <entry name="/queue/corrupt"/>
+   </queue>
+
 </configuration>
