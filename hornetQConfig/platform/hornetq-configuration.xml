@@ -26,7 +26,7 @@
    <connectors>      
       <connector name="netty">
          <factory-class>org.hornetq.core.remoting.impl.netty.NettyConnectorFactory</factory-class>
-         <param key="host"  value="${hornetq.remoting.netty.host:10.202.24.76}"/>
+         <param key="host"  value="${hornetq.remoting.netty.host:<MACHINE_IP>}"/>
          <param key="port"  value="${hornetq.remoting.netty.port:5445}"/>
       </connector>
       
@@ -41,7 +41,7 @@
    <acceptors>
       <acceptor name="netty">
          <factory-class>org.hornetq.core.remoting.impl.netty.NettyAcceptorFactory</factory-class>
-         <param key="host"  value="${hornetq.remoting.netty.host:10.202.24.76}"/>
+         <param key="host"  value="${hornetq.remoting.netty.host:0.0.0.0}"/>
          <param key="port"  value="${hornetq.remoting.netty.port:5445}"/>
       </acceptor>
       
