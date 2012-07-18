@@ -1,4 +1,4 @@
-export CLASSPATH=.:./launcher-1.0-SNAPSHOT.jar:LAUNCHER_DEPENDENCY
+export CLASSPATH=.:./LAUNCHER_JAR:LAUNCHER_DEPENDENCY
 
 java com.fb.launcher.LauncherBootstrap
 
