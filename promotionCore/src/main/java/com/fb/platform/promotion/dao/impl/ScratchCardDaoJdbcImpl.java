@@ -139,9 +139,8 @@ public class ScratchCardDaoJdbcImpl implements ScratchCardDao {
 		public ScratchCard mapRow(ResultSet rs, int rowNum) throws SQLException {
 			ScratchCard scratchCard = new ScratchCard();
 
-			DateFormat format = new SimpleDateFormat("yyyyMMddHHmmss"); 
 			
-			/*DatatypeFactory df = null;
+			DatatypeFactory df = null;
 			try {
 				df = DatatypeFactory.newInstance();
 			} catch (DatatypeConfigurationException e) {
@@ -149,7 +148,7 @@ public class ScratchCardDaoJdbcImpl implements ScratchCardDao {
 				e.printStackTrace();
 			} ; 
 			
-			GregorianCalendar gc = new GregorianCalendar(); */ 
+			GregorianCalendar gc = new GregorianCalendar();  
 			
 			String activeStr = rs.getString("status");
 			if (ACTIVE_STATUS_IN_DB.equals(activeStr)) {
@@ -168,17 +167,18 @@ public class ScratchCardDaoJdbcImpl implements ScratchCardDao {
 			scratchCard.setName(rs.getString("name"));
 
 			Timestamp ts = rs.getTimestamp("timestamp");
-			scratchCard.setTimestamp( ts );
 			
 			Timestamp usedOnTS = rs.getTimestamp("used_date");
-			scratchCard.setUsedDate( usedOnTS );
 			
-            /*if (usedOnTS != null) {
-            	System.out.println("usedOnTS"+usedOnTS);
-    			gc.setTime(usedOnTS );
-    			System.out.println("df.newXMLGregorianCalendar(gc)"+df.newXMLGregorianCalendar(gc));
+            if (ts != null) {
+    			gc.setTime(ts );
             	scratchCard.setUsedDate(df.newXMLGregorianCalendar(gc) );
-            } */
+            } 
+			
+            if (usedOnTS != null) {
+    			gc.setTime(usedOnTS );
+            	scratchCard.setUsedDate(df.newXMLGregorianCalendar(gc) );
+            } 
 
 			
 

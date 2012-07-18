@@ -1660,10 +1660,11 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 	public void testSearchScratchCardInvalidRequest() {
 		SearchScratchCardRequest searchScratchCardRequest = new SearchScratchCardRequest();
 
-		searchScratchCardRequest.setScratchCardNumber("BB000UGDC");
+		searchScratchCardRequest.setScratchCardNumber("BB000UGDCDDD");
 		searchScratchCardRequest
 				.setSessionToken(responseUser.getSessionToken());
 
+		
 		SearchScratchCardResponse searchScratchCardResponse = promotionAdminManager
 				.searchScratchCard(searchScratchCardRequest);
 
@@ -1671,6 +1672,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 				.searchScratchCard(searchScratchCardRequest);
 		assertEquals(SearchScratchCardStatusEnum.NO_SCRATCH_CARD_FOUND,
 				searchScratchCardResponse.getStatus());
+		System.out.println("searchScratchCardResponse.getStatus()"+searchScratchCardResponse.getStatus());
 
 	}
 

@@ -27,8 +27,8 @@ public class ScratchCard implements Serializable {
 	private String mobile = null;
 	private String email = null;
 	private String name = null;
-	private Timestamp timestamp = null;
-	private Timestamp usedDate = null; 
+	private XMLGregorianCalendar timestamp = null;
+	private XMLGregorianCalendar usedDate = null; 
 	private String user = null;
 	private String cardStatus = null;
 			
@@ -81,10 +81,10 @@ public class ScratchCard implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Timestamp  getTimestamp() {
+	public XMLGregorianCalendar  getTimestamp() {
 		return timestamp;
 	}
-	public void setTimestamp(Timestamp dt) {
+	public void setTimestamp(XMLGregorianCalendar dt) {
 		this.timestamp = dt;
 	}
 	public int getUserId() {
@@ -93,11 +93,11 @@ public class ScratchCard implements Serializable {
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
-	public Timestamp getUsedDate() {
+	public XMLGregorianCalendar getUsedDate() {
 		return usedDate;
 	}
-	public void setUsedDate(Timestamp usedOnTS) {
-		this.usedDate = usedOnTS;
+	public void setUsedDate(XMLGregorianCalendar xmlGregorianCalendar) {
+		this.usedDate = xmlGregorianCalendar;
 	}
 	public String getUser() {
 		return user;
