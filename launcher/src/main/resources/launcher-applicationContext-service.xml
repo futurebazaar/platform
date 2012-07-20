@@ -47,4 +47,12 @@
 	  	<property name="springMailSender" ref="springMailSender"/>
 	</bean>
 	
+	<bean id="deliveryDeleteMessageReceiver" class="com.fb.platform.mom.deliveryDelete.receiver.DeliveryDeleteMessageReceiver">
+    </bean>
+    
+    <bean id="deliveryDeleteManager" class="com.fb.platform.mom.deliveryDelete.manager.impl.DeliveryDeleteManagerImpl">
+    	<property name="deliveryDeleteMessageReceiver" ref="deliveryDeleteMessageReceiver"/>
+    	<property name="momManager" ref="momManager"></property>
+    </bean>
+	
 </beans>

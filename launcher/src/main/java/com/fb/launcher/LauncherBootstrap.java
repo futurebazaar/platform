@@ -26,6 +26,9 @@ public class LauncherBootstrap {
 		ReceiverManager mailManager = (ReceiverManager) appContext.getBean("mailManager");
 		mailManager.start();
 		
+		ReceiverManager deliveryDeleteManager = (ReceiverManager) appContext.getBean("deliveryDeleteManager");
+		deliveryDeleteManager.start();
+		
 	}
 
 }

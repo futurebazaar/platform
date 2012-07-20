@@ -31,7 +31,7 @@ public class MailManagerImpl implements ReceiverManager, MailManager {
 	 */
 	@Override
 	public void start() {
-		log.info("Registering the mail receiver.");
+		log.info("Registering the mail receiver MailManagerImpl.");
 		momManager.registerReceiver(PlatformDestinationEnum.MAIL, mailMessageReceiver);
 		momManager.registerReceiver(PlatformDestinationEnum.PREDLQ, mailMessageReceiver);
 		momManager.registerReceiver(PlatformDestinationEnum.CORRUPT_IDOCS, mailMessageReceiver);

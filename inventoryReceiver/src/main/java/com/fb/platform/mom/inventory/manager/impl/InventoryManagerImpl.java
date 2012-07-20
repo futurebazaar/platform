@@ -31,7 +31,7 @@ public class InventoryManagerImpl implements ReceiverManager, InventoryManager {
 	 */
 	@Override
 	public void start() {
-		log.info("Registering the receiver.");
+		log.info("Registering the receiver InventoryManagerImpl.");
 		momManager.registerReceiver(PlatformDestinationEnum.INVENTORY, inventoryMessageReceiver);
 
 	}

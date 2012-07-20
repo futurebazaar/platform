@@ -11,6 +11,7 @@ import java.io.Serializable;
  */
 public class DeliveryDeleteTO implements Serializable{
 	private SapMomTO sapIdoc;
+	private String orderNo;
 	private String deliveryNo;
 	private int itemNo;
 	private String user;
@@ -18,6 +19,12 @@ public class DeliveryDeleteTO implements Serializable{
 	private String date;
 	private String time;
 	
+	public String getOrderNo() {
+		return orderNo;
+	}
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
+	}
 	public String getDeliveryNo() {
 		return deliveryNo;
 	}
@@ -64,6 +71,7 @@ public class DeliveryDeleteTO implements Serializable{
 	@Override
 	public String toString() {
 		String deliveryDelete = "delivery number:" + deliveryNo
+				+ "\norder number:" + orderNo
 				+ "\nitem number:" + itemNo
 				+ "\nuser:" + user
 				+ "\ntransaction code:" + transactionCode

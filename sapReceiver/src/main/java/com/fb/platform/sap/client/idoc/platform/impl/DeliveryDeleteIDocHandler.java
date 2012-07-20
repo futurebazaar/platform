@@ -62,6 +62,7 @@ public class DeliveryDeleteIDocHandler implements PlatformIDocHandler {
 			ZATGDELD deliveryDelIdoc = (ZATGDELD)unmarshaller.unmarshal(new StreamSource(new StringReader(sapIdoc.getIdoc())));
 
 			List<ZATGSOD> sapDelvDelList = deliveryDelIdoc.getIDOC().getZATGSOH().getZATGSOD();
+			String orderNo = deliveryDelIdoc.getIDOC().getZATGSOH().getVBELN();
 			for (ZATGSOD sapDelvDel : sapDelvDelList) {
 				DeliveryDeleteTO deliveryDelete = new DeliveryDeleteTO();
 				deliveryDelete.setDate(sapDelvDel.getDELDATE());
