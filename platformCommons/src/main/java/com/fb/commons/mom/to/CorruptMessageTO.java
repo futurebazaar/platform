@@ -10,7 +10,8 @@ import java.io.Serializable;
  *
  */
 public class CorruptMessageTO implements Serializable{
-	private Object message;
+	private SapMomTO sapIdoc;
+	private Object message ;
 	private CorruptMessageCause cause;
 	
 	public Object getMessage() {
@@ -25,4 +26,26 @@ public class CorruptMessageTO implements Serializable{
 	public void setCause(CorruptMessageCause cause) {
 		this.cause = cause;
 	}
+	public SapMomTO getSapIdoc() {
+		return sapIdoc;
+	}
+	public void setSapIdoc(SapMomTO sapIdoc) {
+		this.sapIdoc = sapIdoc;
+	}
+	@Override
+	public String toString() {
+		String corruptMessage = "";
+		if(cause != null) {
+			corruptMessage = "cause : " + cause.toString();
+		}
+		if(message != null) {
+			corruptMessage += "\nmessage : " + message.toString();
+		}
+		if(sapIdoc != null) {
+			corruptMessage += "\n" + sapIdoc.toString();
+		}
+		
+		return corruptMessage; 
+	}
+	
 }

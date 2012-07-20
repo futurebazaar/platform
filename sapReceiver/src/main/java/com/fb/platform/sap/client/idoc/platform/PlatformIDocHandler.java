@@ -3,6 +3,7 @@
  */
 package com.fb.platform.sap.client.idoc.platform;
 
+import com.fb.commons.mom.to.SapMomTO;
 import com.fb.platform.mom.manager.MomManager;
 
 /**
@@ -13,5 +14,5 @@ public interface PlatformIDocHandler {
 
 	public void init(MomManager momManager);
 
-	public void handle(String idocXml);
+	public void handle(SapMomTO sapIdoc);
 }

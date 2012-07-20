@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="ZATGDELD">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="IDOC"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="IDOC">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="EDI_DC40"/>
+        <xs:element ref="ZATGSOH"/>
+      </xs:sequence>
+      <xs:attribute name="BEGIN" use="required" type="xs:int"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="EDI_DC40">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="TABNAM"/>
+        <xs:element ref="MANDT"/>
+        <xs:element ref="DOCNUM"/>
+        <xs:element ref="DOCREL"/>
+        <xs:element ref="STATUS"/>
+        <xs:element ref="DIRECT"/>
+        <xs:element ref="OUTMOD"/>
+        <xs:element ref="IDOCTYP"/>
+        <xs:element ref="MESTYP"/>
+        <xs:element ref="SNDPOR"/>
+        <xs:element ref="SNDPRT"/>
+        <xs:element ref="SNDPRN"/>
+        <xs:element ref="RCVPOR"/>
+        <xs:element ref="RCVPRT"/>
+        <xs:element ref="RCVPRN"/>
+        <xs:element ref="CREDAT"/>
+        <xs:element ref="CRETIM"/>
+        <xs:element ref="SERIAL"/>
+      </xs:sequence>
+      <xs:attribute name="SEGMENT" use="required" type="xs:int"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="TABNAM" type="xs:string"/>
+  <xs:element name="MANDT" type="xs:int"/>
+  <xs:element name="DOCNUM" type="xs:int"/>
+  <xs:element name="DOCREL" type="xs:int"/>
+  <xs:element name="STATUS" type="xs:int"/>
+  <xs:element name="DIRECT" type="xs:int"/>
+  <xs:element name="OUTMOD" type="xs:int"/>
+  <xs:element name="IDOCTYP" type="xs:string"/>
+  <xs:element name="MESTYP" type="xs:string"/>
+  <xs:element name="SNDPOR" type="xs:string"/>
+  <xs:element name="SNDPRT" type="xs:string"/>
+  <xs:element name="SNDPRN" type="xs:string"/>
+  <xs:element name="RCVPOR" type="xs:string"/>
+  <xs:element name="RCVPRT" type="xs:string"/>
+  <xs:element name="RCVPRN" type="xs:string"/>
+  <xs:element name="CREDAT" type="xs:int"/>
+  <xs:element name="CRETIM" type="xs:int"/>
+  <xs:element name="SERIAL" type="xs:int"/>
+  <xs:element name="ZATGSOH">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="VBELN"/>
+        <xs:element maxOccurs="unbounded" ref="ZATGSOD"/>
+      </xs:sequence>
+      <xs:attribute name="SEGMENT" use="required" type="xs:int"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ZATGSOD">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="VBELN"/>
+        <xs:element ref="POSNR"/>
+        <xs:element ref="DELUSER"/>
+        <xs:element ref="DELTCODE"/>
+        <xs:element ref="DELDATE"/>
+        <xs:element ref="DELTIME"/>
+      </xs:sequence>
+      <xs:attribute name="SEGMENT" use="required" type="xs:int"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="POSNR" type="xs:int"/>
+  <xs:element name="DELUSER" type="xs:string"/>
+  <xs:element name="DELTCODE" type="xs:string"/>
+  <xs:element name="DELDATE" type="xs:string"/>
+  <xs:element name="DELTIME" type="xs:string"/>
+  <xs:element name="VBELN" type="xs:string"/>
+</xs:schema>

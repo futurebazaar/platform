@@ -27,9 +27,9 @@ public class InventoryMessageListener extends AbstractPlatformListener implement
 	public void onMessage(Message message) {
 		logger.info("Received the message for the Inventor destination.");
 		System.out.println("Received the message for the Inventor destination.");
-		ObjectMessage objectMessage = (ObjectMessage) message;
 
 		try {
+			ObjectMessage objectMessage = (ObjectMessage) message;
 			InventoryTO inventory = (InventoryTO) objectMessage.getObject();
 
 			logger.info("Received the Inventory Message from SAP. \n" + inventory.toString());
@@ -38,6 +38,8 @@ public class InventoryMessageListener extends AbstractPlatformListener implement
 			super.notify(inventory);
 		} catch (JMSException e) {
 			throw JmsUtils.convertJmsAccessException(e);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }

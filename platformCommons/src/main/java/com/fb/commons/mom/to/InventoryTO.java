@@ -10,7 +10,7 @@ import java.io.Serializable;
  *
  */
 public class InventoryTO implements Serializable {
-
+	private SapMomTO sapIdoc;
 	private String transactionCode;
 	private String articleId;
 	private String issuingSite;
@@ -76,9 +76,16 @@ public class InventoryTO implements Serializable {
 	public void setSellingUnit(String sellingUnit) {
 		this.sellingUnit = sellingUnit;
 	}
+	public SapMomTO getSapIdoc() {
+		return sapIdoc;
+	}
+	public void setSapIdoc(SapMomTO sapIdoc) {
+		this.sapIdoc = sapIdoc;
+	}
+	
 	@Override
 	public String toString() {
-		return "transactionCode:" + transactionCode
+		String inventory = "transactionCode:" + transactionCode
 				+ "\narticleId:" + articleId
 				+ "\nissuingSite:" + issuingSite
 				+ "\nreceivingSite:" + receivingSite
@@ -87,6 +94,10 @@ public class InventoryTO implements Serializable {
 				+ "\nmovementType:"+ movementType
 				+ "\nsellingUnit:"+ sellingUnit
 				+ "\nquantity:" + quantity;
+		if(sapIdoc != null) {
+			inventory += "\n" + sapIdoc.toString();
+		}
+		return inventory;
 		
 	}
 		   

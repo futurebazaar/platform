@@ -158,7 +158,7 @@
         <property name="corruptDestination" ref="corruptDestination"/>
 	</bean>
 	
-	<!-- <bean id="deliveryDeleteDestination" class="org.hornetq.api.jms.HornetQJMSClient" factory-method="createQueue">
+	<bean id="deliveryDeleteDestination" class="org.hornetq.api.jms.HornetQJMSClient" factory-method="createQueue">
 	   <constructor-arg index="0" value="deliveryDelete"/>
 	</bean>
 
@@ -175,7 +175,7 @@
 	<bean id="deliveryDeleteSender" class="com.fb.platform.mom.receiver.delivery.DeliveryDeleteSenderImpl">
         <property name="jmsTemplate" ref="jmsTemplate"/>
         <property name="deliveryDeleteDestination" ref="deliveryDeleteDestination"/>
-	</bean> -->
+	</bean>
 	
     <bean id="momManager" class="com.fb.platform.mom.manager.impl.MomManagerImpl">
         <property name="inventoryListener" ref="inventoryListener"/>
@@ -189,5 +189,8 @@
         <property name="corruptListener" ref="corruptListener"/>
         <property name="corruptSender" ref="corruptSender"/>
         <property name="corruptContainer" ref="corruptContainer"/>
+        <property name="deliveryDeleteListener" ref="deliveryDeleteListener"/>
+        <property name="deliveryDeleteSender" ref="deliveryDeleteSender"/>
+        <property name="deliveryDeleteContainer" ref="deliveryDeleteContainer"/>
     </bean>
 </beans>

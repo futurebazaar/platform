@@ -78,6 +78,10 @@ public class InventoryMessageReceiver implements PlatformMessageReceiver {
 		parameters.add(new BasicNameValuePair("movementtype", inventoryTO.getMovementType()));
 		parameters.add(new BasicNameValuePair("sellingunit", inventoryTO.getSellingUnit()));
 		parameters.add(new BasicNameValuePair("quantity", inventoryTO.getQuantity()));
+		if(inventoryTO.getSapIdoc() != null) {
+			parameters.add(new BasicNameValuePair("idocnumber", inventoryTO.getSapIdoc().getIdocNumber()));
+		}
+		parameters.add(new BasicNameValuePair("sender", "MOM"));
 
 		UrlEncodedFormEntity entity;
 		try {

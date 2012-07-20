@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.fb.commons.mom.to.CorruptMessageCause;
 import com.fb.commons.mom.to.CorruptMessageTO;
+import com.fb.commons.mom.to.SapMomTO;
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler;
@@ -28,14 +29,14 @@ public class DefaultIDocHandler implements PlatformIDocHandler {
 	}
 
 	@Override
-	public void handle(String idocXml) {
+	public void handle(SapMomTO sapIdoc) {
 		
 		CorruptMessageTO corruptMessage = new CorruptMessageTO();
-		corruptMessage.setMessage(idocXml);
 		corruptMessage.setCause(CorruptMessageCause.NO_HANDLER);
+		corruptMessage.setSapIdoc(sapIdoc);
 		momManager.send(PlatformDestinationEnum.CORRUPT_IDOCS, corruptMessage);
 		
-		logger.error("Unable to process idoc :\n" + idocXml);
+		logger.error("Unable to process idoc :\n" + sapIdoc.toString());
 		logger.error("Message logged in corrupt queue.");
 	}
 }

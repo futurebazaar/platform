@@ -19,6 +19,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.jms.support.JmsUtils;
 
 import com.fb.commons.PlatformException;
+import com.fb.commons.mom.to.CorruptMessageCause;
 import com.fb.commons.mom.to.CorruptMessageTO;
 import com.fb.commons.mom.to.MailTO;
 import com.fb.platform.mom.manager.impl.AbstractPlatformListener;
@@ -75,26 +76,25 @@ public class CorruptMessageListener extends AbstractPlatformListener implements 
 					+ "\n\n message timestamp : " + message.getJMSTimestamp() 
 					+ "\n\n message id : " + message.getJMSMessageID()
 					+ "\n\n priority : " + message.getJMSPriority()
-					+ "\n\n error cause : " + corruptMessage.getCause()
-					+ "\n\n object : " + corruptMessage.getMessage().toString() );
+					+ "\n\n error cause : " + corruptMessage.toString());
 
 			logger.info("MOM corrupt message received : " + date.toString() 
 					+ "\n\n message timestamp : " + message.getJMSTimestamp() 
 					+ "\n\n message id : " + message.getJMSMessageID()
 					+ "\n\n priority : " + message.getJMSPriority()
-					+ "\n\n error cause : " + corruptMessage.getCause()
-					+ "\n\n object : " + corruptMessage.getMessage().toString() );
+					+ "\n\n error cause : " + corruptMessage.toString());
 			
 			System.out.println("MOM corrupt message received : " + date.toString() 
 					+ "\n\n message timestamp : " + message.getJMSTimestamp() 
 					+ "\n\n message id : " + message.getJMSMessageID()
 					+ "\n\n priority : " + message.getJMSPriority()
-					+ "\n\n error cause : " + corruptMessage.getCause()
-					+ "\n\n object : " + corruptMessage.getMessage().toString() );
-
-			super.notify(corruptMail);
+					+ "\n\n error cause : " + corruptMessage.toString());
+			
+			if(corruptMessage.getCause().equals(CorruptMessageCause.CORRUPT_IDOC)) {
+				super.notify(corruptMail);
+			}
 		} catch (JMSException e) {
-			logger.error("JMSException in corru[tion queue", e);
+			logger.error("JMSException in corruption queue", e);
 			throw JmsUtils.convertJmsAccessException(e);
 		}
 	}

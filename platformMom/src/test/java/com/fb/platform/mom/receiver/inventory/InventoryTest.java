@@ -94,7 +94,7 @@ public class InventoryTest extends BaseTestCase {
 				assertEquals("article1", inventory.getArticleId());
 			} else if (count == 1) {
 				assertEquals("article2", inventory.getArticleId());
-			} else {
+			} else if (count > 5){
 				throw new IllegalArgumentException("Invalid message");
 			}
 			count ++;

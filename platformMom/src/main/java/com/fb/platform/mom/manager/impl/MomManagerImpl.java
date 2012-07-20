@@ -15,6 +15,8 @@ import com.fb.platform.mom.manager.PlatformDestinationEnum;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
 import com.fb.platform.mom.receiver.corrupt.CorruptMessageListener;
 import com.fb.platform.mom.receiver.corrupt.CorruptSender;
+import com.fb.platform.mom.receiver.delivery.DeliveryDeleteMessageListener;
+import com.fb.platform.mom.receiver.delivery.DeliveryDeleteSender;
 import com.fb.platform.mom.receiver.dlq.PreDLQMessageListener;
 import com.fb.platform.mom.receiver.inventory.InventoryMessageListener;
 import com.fb.platform.mom.receiver.inventory.InventorySender;
@@ -61,6 +63,15 @@ public class MomManagerImpl implements MomManager {
 
 	@Autowired
 	private DefaultMessageListenerContainer corruptContainer = null;
+	
+	@Autowired
+	private DeliveryDeleteMessageListener deliveryDeleteListener = null;
+
+	@Autowired
+	private DeliveryDeleteSender deliveryDeleteSender = null;
+
+	@Autowired
+	private DefaultMessageListenerContainer deliveryDeleteContainer = null;
 
 	/* (non-Javadoc)
 	 * @see com.fb.platform.mom.manager.MomManager#send(com.fb.platform.mom.manager.PlatformDestinationEnum, java.lang.Object)
@@ -79,6 +90,9 @@ public class MomManagerImpl implements MomManager {
 		case CORRUPT_IDOCS:
 			corruptSender.sendMessage(message);
 			break;
+		case DELIVERY_DELETE:
+			deliveryDeleteSender.sendMessage(message);
+			break;
 		default:
 			throw new IllegalStateException("No sender is configured for the destination : " + destination);
 		}
@@ -89,7 +103,7 @@ public class MomManagerImpl implements MomManager {
 	 */
 	@Override
 	public void registerReceiver(PlatformDestinationEnum destination, PlatformMessageReceiver receiver) {
-		logger.debug("Registering receiver : " + receiver + " for destination : " + destination);
+		logger.info("Registering receiver : " + receiver + " for destination : " + destination);
 
 		switch (destination) {
 		case INVENTORY:
@@ -114,6 +128,12 @@ public class MomManagerImpl implements MomManager {
 			corruptListener.addReceiver(receiver);
 			if(!corruptContainer.isRunning()) {
 				corruptContainer.start();
+			}
+			break;
+		case DELIVERY_DELETE:
+			deliveryDeleteListener.addReceiver(receiver);
+			if(!deliveryDeleteContainer.isRunning()) {
+				deliveryDeleteContainer.start();
 			}
 			break;
 		default:
@@ -163,6 +183,20 @@ public class MomManagerImpl implements MomManager {
 
 	public void setCorruptContainer(DefaultMessageListenerContainer corruptContainer) {
 		this.corruptContainer = corruptContainer;
+	}
+
+	public void setDeliveryDeleteListener(
+			DeliveryDeleteMessageListener deliveryDeleteListener) {
+		this.deliveryDeleteListener = deliveryDeleteListener;
+	}
+
+	public void setDeliveryDeleteSender(DeliveryDeleteSender deliveryDeleteSender) {
+		this.deliveryDeleteSender = deliveryDeleteSender;
+	}
+
+	public void setDeliveryDeleteContainer(
+			DefaultMessageListenerContainer deliveryDeleteContainer) {
+		this.deliveryDeleteContainer = deliveryDeleteContainer;
 	}
 	
 	

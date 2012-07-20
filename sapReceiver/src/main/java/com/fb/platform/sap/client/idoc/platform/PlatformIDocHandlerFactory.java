@@ -50,6 +50,8 @@ public class PlatformIDocHandlerFactory {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Returning handler for idocType : " + idocType);
 		}
+		System.out.println("Returning handler for idocType : " + idocType);
+		logger.info("Returning handler for idocType : " + idocType);
 
 		if (idocType.equals(InventoryIDocHandler.INVENTORY_IDOC_TYPE)) {
 			return inventoryIDocHandler;

@@ -28,11 +28,11 @@ public class MailTest extends BaseTestCase {
 	@Autowired
 	private MomManager momManager = null;
 
-	private MailInventoryReceiver testReceiver = null;
+	private MailReceiver testReceiver = null;
 
 	@Before
 	public void init() {
-		testReceiver = new MailInventoryReceiver();
+		testReceiver = new MailReceiver();
 	}
 
 	@Test
@@ -63,7 +63,7 @@ public class MailTest extends BaseTestCase {
 		//assertEquals(2, testReceiver.getCount());
 	}
 
-	private static class MailInventoryReceiver implements PlatformMessageReceiver {
+	private static class MailReceiver implements PlatformMessageReceiver {
 
 		private int count = 0;
 

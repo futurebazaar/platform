@@ -64,6 +64,14 @@
       <entry name="/queue/inventory"/>
    </queue>
 
+   <queue name="deliveryDelete">
+      <entry name="/queue/deliveryDelete"/>
+   </queue>
+
+   <queue name="order">
+      <entry name="/queue/order"/>
+   </queue>
+
    <queue name="mailDLQ">
       <entry name="/queue/mailDLQ"/>
    </queue>
