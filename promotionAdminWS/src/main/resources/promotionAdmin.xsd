@@ -33,6 +33,7 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
       	<xs:sequence>
   			<xs:element ref="promotionAdmin:rulesEnum"/>
   			<xs:element ref="promotionAdmin:ruleConfigDescriptorItem" maxOccurs="unbounded"/>
+  			<xs:element ref="promotionAdmin:ruleConfigDescriptorBundle" maxOccurs="unbounded"/>
   		</xs:sequence>
   	</xs:complexType>
   </xs:element>
@@ -59,6 +60,15 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
       		<xs:element ref="promotionAdmin:ruleConfigDescription"/>
       		<xs:element ref="promotionAdmin:ruleConfigType"/>
       		<xs:element ref="promotionAdmin:ruleConfigDescriptorEnum"/>
+      	</xs:sequence>
+   	</xs:complexType>
+  </xs:element>
+  
+  <xs:element name="ruleConfigDescriptorBundle">
+  	<xs:complexType>
+      	<xs:sequence>
+      		<xs:element ref="promotionAdmin:isMandatory"/>
+      		<xs:element ref="promotionAdmin:ruleConfigDescriptorItem" maxOccurs="unbounded"/>
       	</xs:sequence>
    	</xs:complexType>
   </xs:element>

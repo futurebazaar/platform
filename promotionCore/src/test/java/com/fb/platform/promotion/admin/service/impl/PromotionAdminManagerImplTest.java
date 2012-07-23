@@ -43,8 +43,6 @@ import com.fb.platform.promotion.admin.to.SortOrder;
 import com.fb.platform.promotion.admin.to.UpdatePromotionEnum;
 import com.fb.platform.promotion.admin.to.UpdatePromotionRequest;
 import com.fb.platform.promotion.admin.to.UpdatePromotionResponse;
-import com.fb.platform.promotion.admin.to.ViewCouponRequest;
-import com.fb.platform.promotion.admin.to.ViewCouponResponse;
 import com.fb.platform.promotion.admin.to.ViewPromotionEnum;
 import com.fb.platform.promotion.admin.to.ViewPromotionRequest;
 import com.fb.platform.promotion.admin.to.ViewPromotionResponse;
@@ -59,101 +57,103 @@ import com.fb.platform.user.manager.model.auth.LoginResponse;
 
 /**
  * @author nehaga
- *
+ * 
  */
 public class PromotionAdminManagerImplTest extends BaseTestCase {
-	
+
 	@Autowired
 	private PromotionAdminManager promotionAdminManager = null;
-	
+
 	@Autowired
 	private UserManager userManager = null;
-	
+
 	LoginResponse responseUser = null;
-	
+
 	private static int promotionId = -4100;
-	
-	private static int[] validFromSort = new int[] {-3001, -3002, -3003};
-	
-	private static int[] validTillSort = new int[] {-3003, -3002, -3001};
-	
-	private static int[] nameSort = new int[] {-3001, -3002, -3003};
-	
-	private static int[] nameSearch = new int[] {-3001, -3002};
-	
-	private static int[] validFromSearch = new int[] {-3001, -3002};
-	
-	private static int[] validTillSearch = new int[] {-3};
-	
-	private static int[] nameValidTillSearch = new int[] {-3002, -3003};
-	
-	private static int[] validFromValidTillSearch = new int[] {-4000, -4100};
-	
-	private static int[] nameValidFromSearch = new int[] {-3001, -3002};
-	
-	private static int[] filterSearch = new int[] {-3001, -3002};
-	
-	private static List<RulesEnum> ruleList = new ArrayList<RulesEnum>() {{
-		add(RulesEnum.BUY_WORTH_X_GET_Y_RS_OFF);
-		add(RulesEnum.BUY_WORTH_X_GET_Y_PERCENT_OFF);
-		add(RulesEnum.BUY_X_BRAND_GET_Y_RS_OFF_ON_Z_PRODUCT);
-		add(RulesEnum.FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF);
-		add(RulesEnum.BUY_X_GET_Y_FREE);
-		add(RulesEnum.BUY_X_QUANTITY_GET_VARIABLE_PERCENT_OFF);
-		add(RulesEnum.CATEGORY_BASED_VARIABLE_PERCENT_OFF);
-	}};
-	
+
+	private static int[] validFromSort = new int[] { -3001, -3002, -3003 };
+
+	private static int[] validTillSort = new int[] { -3003, -3002, -3001 };
+
+	private static int[] nameSort = new int[] { -3001, -3002, -3003 };
+
+	private static int[] nameSearch = new int[] { -3001, -3002 };
+
+	private static int[] validFromSearch = new int[] { -3001, -3002 };
+
+	private static int[] validTillSearch = new int[] { -3 };
+
+	private static int[] nameValidTillSearch = new int[] { -3002, -3003 };
+
+	private static int[] validFromValidTillSearch = new int[] { -4000, -4100 };
+
+	private static int[] nameValidFromSearch = new int[] { -3001, -3002 };
+
+	private static int[] filterSearch = new int[] { -3001, -3002 };
+
+	private static List<RulesEnum> ruleList = new ArrayList<RulesEnum>() {
+		{
+			add(RulesEnum.BUY_WORTH_X_GET_Y_RS_OFF);
+			add(RulesEnum.BUY_WORTH_X_GET_Y_PERCENT_OFF);
+			add(RulesEnum.BUY_X_BRAND_GET_Y_RS_OFF_ON_Z_PRODUCT);
+			add(RulesEnum.FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF);
+			add(RulesEnum.BUY_X_GET_Y_FREE);
+			add(RulesEnum.BUY_X_QUANTITY_GET_VARIABLE_PERCENT_OFF);
+			add(RulesEnum.CATEGORY_BASED_VARIABLE_PERCENT_OFF);
+		}
+	};
+
 	@Before
 	public void loginUser() {
-		
+
 		LoginRequest request = new LoginRequest();
 		request.setUsername("neha.garani@gmail.com");
 		request.setPassword("testpass");
 
 		responseUser = userManager.login(request);
 	}
-	
+
 	@Test
 	public void testFetchRulesNoSession() {
 		FetchRuleRequest fetchRuleRequest = new FetchRuleRequest();
 		FetchRuleResponse fetchRuleResponse = promotionAdminManager.fetchRules(fetchRuleRequest);
 		assertEquals(FetchRulesEnum.NO_SESSION, fetchRuleResponse.getFetchRulesEnum());
-		
+
 		fetchRuleRequest.setSessionToken("INVALID_SESSION");
-		
+
 		fetchRuleResponse = promotionAdminManager.fetchRules(fetchRuleRequest);
 		assertEquals(FetchRulesEnum.NO_SESSION, fetchRuleResponse.getFetchRulesEnum());
-		
+
 		fetchRuleRequest.setSessionToken(responseUser.getSessionToken());
-		
+
 		fetchRuleResponse = promotionAdminManager.fetchRules(fetchRuleRequest);
 		assertEquals(FetchRulesEnum.SUCCESS, fetchRuleResponse.getFetchRulesEnum());
-		
+
 	}
-	
+
 	@Test
 	public void testFetchRules() {
 		FetchRuleRequest fetchRuleRequest = new FetchRuleRequest();
 		fetchRuleRequest.setSessionToken(responseUser.getSessionToken());
-		
+
 		FetchRuleResponse fetchRuleResponse = promotionAdminManager.fetchRules(fetchRuleRequest);
-		
+
 		assertEquals(FetchRulesEnum.SUCCESS, fetchRuleResponse.getFetchRulesEnum());
 		assertNotNull(fetchRuleResponse.getSessionToken());
 		assertNotNull(fetchRuleResponse.getRulesList());
 		assertEquals(7, fetchRuleResponse.getRulesList().size());
 		assertNotNull(fetchRuleResponse.getSessionToken());
-		for(RuleConfigDescriptor ruleConfig : fetchRuleResponse.getRulesList()) {
+		for (RuleConfigDescriptor ruleConfig : fetchRuleResponse.getRulesList()) {
 			assertTrue(ruleList.contains(ruleConfig.getRulesEnum()));
 		}
-		
+
 	}
-	
+
 	@Test
 	public void testCreatePromotionNoSession() {
 		CreatePromotionRequest createPromotionRequest = new CreatePromotionRequest();
 		PromotionTO promotionTO = new PromotionTO();
-		
+
 		promotionTO.setPromotionName("New Promotion");
 		promotionTO.setValidFrom(new DateTime(2012, 02, 29, 0, 0));
 		promotionTO.setValidTill(new DateTime(2013, 02, 22, 0, 0));
@@ -164,90 +164,97 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		promotionTO.setMaxAmount(new Money(new BigDecimal(20000.00)));
 		promotionTO.setMaxAmountPerUser(new Money(new BigDecimal(1000.00)));
 		promotionTO.setRuleName("BUY_WORTH_X_GET_Y_RS_OFF");
-		
+
 		List<RuleConfigItemTO> ruleConfigList = new ArrayList<RuleConfigItemTO>();
 		RuleConfigItemTO configItem = new RuleConfigItemTO();
-		
+
 		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
 		configItem.setRuleConfigValue("100");
 		ruleConfigList.add(configItem);
-		
+
 		promotionTO.setConfigItems(ruleConfigList);
-		
+
 		createPromotionRequest.setPromotion(promotionTO);
-		
+
 		createPromotionRequest.setSessionToken("INVALILD_SESSION");
-		
-		CreatePromotionResponse createPromotionResponse = promotionAdminManager.createPromotion(createPromotionRequest);
-		assertEquals(CreatePromotionEnum.NO_SESSION, createPromotionResponse.getCreatePromotionEnum());
+
+		CreatePromotionResponse createPromotionResponse = promotionAdminManager
+				.createPromotion(createPromotionRequest);
+		assertEquals(CreatePromotionEnum.NO_SESSION,
+				createPromotionResponse.getCreatePromotionEnum());
 	}
-	
+
 	@Test
 	public void testCreatePromotionInsufficientData() {
 		CreatePromotionRequest createPromotionRequest = new CreatePromotionRequest();
 		PromotionTO promotionTO = new PromotionTO();
 		createPromotionRequest.setPromotion(promotionTO);
-		
-		CreatePromotionResponse createPromotionResponse = promotionAdminManager.createPromotion(createPromotionRequest);
-		assertEquals(CreatePromotionEnum.INSUFFICIENT_DATA, createPromotionResponse.getCreatePromotionEnum());
-		
+
+		CreatePromotionResponse createPromotionResponse = promotionAdminManager
+				.createPromotion(createPromotionRequest);
+		assertEquals(CreatePromotionEnum.INSUFFICIENT_DATA,
+				createPromotionResponse.getCreatePromotionEnum());
+
 		promotionTO.setPromotionName("New Promotion");
-		
+
 		createPromotionResponse = promotionAdminManager.createPromotion(createPromotionRequest);
-		assertEquals(CreatePromotionEnum.INSUFFICIENT_DATA, createPromotionResponse.getCreatePromotionEnum());
-		
+		assertEquals(CreatePromotionEnum.INSUFFICIENT_DATA,
+				createPromotionResponse.getCreatePromotionEnum());
+
 		promotionTO.setValidFrom(new DateTime(2012, 02, 29, 0, 0));
 		promotionTO.setValidTill(new DateTime(2011, 02, 22, 0, 0));
-		
+
 		createPromotionResponse = promotionAdminManager.createPromotion(createPromotionRequest);
-		assertEquals(CreatePromotionEnum.INSUFFICIENT_DATA, createPromotionResponse.getCreatePromotionEnum());
-		
+		assertEquals(CreatePromotionEnum.INSUFFICIENT_DATA,
+				createPromotionResponse.getCreatePromotionEnum());
+
 		promotionTO.setValidTill(new DateTime(2013, 02, 22, 0, 0));
-		
+
 		promotionTO.setDescription("Test new promotion");
 		promotionTO.setActive(true);
 
 		createPromotionResponse = promotionAdminManager.createPromotion(createPromotionRequest);
-		assertEquals(CreatePromotionEnum.INSUFFICIENT_DATA, createPromotionResponse.getCreatePromotionEnum());
-		
+		assertEquals(CreatePromotionEnum.INSUFFICIENT_DATA,
+				createPromotionResponse.getCreatePromotionEnum());
+
 		promotionTO.setMaxUses(20);
 		promotionTO.setMaxUsesPerUser(1);
 		promotionTO.setMaxAmount(new Money(new BigDecimal(20000.00)));
 		promotionTO.setMaxAmountPerUser(new Money(new BigDecimal(1000.00)));
-		
-		
+
 		promotionTO.setRuleName("BUY_WORTH_X_GET_Y_RS_OFF_WRONG");
-		
+
 		createPromotionResponse = promotionAdminManager.createPromotion(createPromotionRequest);
-		assertEquals(CreatePromotionEnum.INSUFFICIENT_DATA, createPromotionResponse.getCreatePromotionEnum());
-		
+		assertEquals(CreatePromotionEnum.INSUFFICIENT_DATA,
+				createPromotionResponse.getCreatePromotionEnum());
+
 		promotionTO.setRuleName("BUY_WORTH_X_GET_Y_RS_OFF");
-		
+
 		createPromotionRequest.setSessionToken(responseUser.getSessionToken());
-		
+
 		List<RuleConfigItemTO> ruleConfigList = new ArrayList<RuleConfigItemTO>();
 		RuleConfigItemTO configItem = new RuleConfigItemTO();
 
 		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
 		configItem.setRuleConfigValue("100");
 		ruleConfigList.add(configItem);
-		
+
 		promotionTO.setConfigItems(ruleConfigList);
-		
+
 		createPromotionRequest.setPromotion(promotionTO);
-		
+
 		createPromotionResponse = promotionAdminManager.createPromotion(createPromotionRequest);
 		assertEquals(CreatePromotionEnum.SUCCESS, createPromotionResponse.getCreatePromotionEnum());
 	}
-	
+
 	@Test
 	public void testCreatePromotionRuleConfigMissing() {
 		CreatePromotionRequest createPromotionRequest = new CreatePromotionRequest();
 		CreatePromotionResponse createPromotionResponse = null;
 		PromotionTO promotionTO = new PromotionTO();
-		
+
 		createPromotionRequest.setSessionToken(responseUser.getSessionToken());
-		
+
 		promotionTO.setPromotionName("New Promotion");
 		promotionTO.setValidFrom(new DateTime(2012, 02, 29, 0, 0));
 		promotionTO.setValidTill(new DateTime(2011, 02, 22, 0, 0));
@@ -259,30 +266,31 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		promotionTO.setMaxAmount(new Money(new BigDecimal(20000.00)));
 		promotionTO.setMaxAmountPerUser(new Money(new BigDecimal(1000.00)));
 		promotionTO.setRuleName("BUY_WORTH_X_GET_Y_RS_OFF");
-		
+
 		List<RuleConfigItemTO> ruleConfigList = new ArrayList<RuleConfigItemTO>();
 		RuleConfigItemTO configItem = new RuleConfigItemTO();
 		ruleConfigList.add(configItem);
-		
+
 		createPromotionRequest.setPromotion(promotionTO);
-		
+
 		createPromotionResponse = promotionAdminManager.createPromotion(createPromotionRequest);
-		assertEquals(CreatePromotionEnum.RULE_CONFIG_MISSING, createPromotionResponse.getCreatePromotionEnum());
-		
+		assertEquals(CreatePromotionEnum.RULE_CONFIG_MISSING,
+				createPromotionResponse.getCreatePromotionEnum());
+
 		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
 		configItem.setRuleConfigValue("100");
-		
+
 		promotionTO.setConfigItems(ruleConfigList);
-		
+
 		createPromotionResponse = promotionAdminManager.createPromotion(createPromotionRequest);
 		assertEquals(CreatePromotionEnum.SUCCESS, createPromotionResponse.getCreatePromotionEnum());
 	}
-	
+
 	@Test
 	public void testCreatePromotion() {
 		CreatePromotionRequest createPromotionRequest = new CreatePromotionRequest();
 		PromotionTO promotionTO = new PromotionTO();
-		
+
 		promotionTO.setPromotionName("New Promotion");
 		promotionTO.setValidFrom(new DateTime(2012, 02, 29, 0, 0));
 		promotionTO.setValidTill(new DateTime(2011, 02, 22, 0, 0));
@@ -294,83 +302,90 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		promotionTO.setMaxAmount(new Money(new BigDecimal(20000.00)));
 		promotionTO.setMaxAmountPerUser(new Money(new BigDecimal(1000.00)));
 		promotionTO.setRuleName("BUY_WORTH_X_GET_Y_RS_OFF");
-		
+
 		List<RuleConfigItemTO> ruleConfigList = new ArrayList<RuleConfigItemTO>();
 		RuleConfigItemTO configItem = new RuleConfigItemTO();
 
 		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
 		configItem.setRuleConfigValue("100");
 		ruleConfigList.add(configItem);
-		
+
 		promotionTO.setConfigItems(ruleConfigList);
-		
+
 		createPromotionRequest.setPromotion(promotionTO);
-		
+
 		createPromotionRequest.setSessionToken(responseUser.getSessionToken());
-		
-		CreatePromotionResponse createPromotionResponse = promotionAdminManager.createPromotion(createPromotionRequest);
+
+		CreatePromotionResponse createPromotionResponse = promotionAdminManager
+				.createPromotion(createPromotionRequest);
 		assertEquals(CreatePromotionEnum.SUCCESS, createPromotionResponse.getCreatePromotionEnum());
 		assertTrue(createPromotionResponse.getPromotionId() > 0);
 		assertNotNull(createPromotionResponse.getSessionToken());
-		
+
 	}
-	
+
 	@Test
 	public void testViewPromotionInsufficientData() {
 		ViewPromotionRequest viewPromotionRequest = new ViewPromotionRequest();
 
-		ViewPromotionResponse viewPromotionResponse = promotionAdminManager.viewPromotion(viewPromotionRequest);
-		assertEquals(ViewPromotionEnum.INSUFFICIENT_DATA, viewPromotionResponse.getViewPromotionEnum());
-		
+		ViewPromotionResponse viewPromotionResponse = promotionAdminManager
+				.viewPromotion(viewPromotionRequest);
+		assertEquals(ViewPromotionEnum.INSUFFICIENT_DATA,
+				viewPromotionResponse.getViewPromotionEnum());
+
 		viewPromotionRequest.setPromotionId(promotionId);
 		viewPromotionRequest.setSessionToken(responseUser.getSessionToken());
-		
+
 		viewPromotionResponse = promotionAdminManager.viewPromotion(viewPromotionRequest);
-		
+
 		assertEquals(ViewPromotionEnum.SUCCESS, viewPromotionResponse.getViewPromotionEnum());
 	}
-	
+
 	@Test
 	public void testViewPromotionNoSession() {
 		ViewPromotionRequest viewPromotionRequest = new ViewPromotionRequest();
 		viewPromotionRequest.setPromotionId(promotionId);
 		viewPromotionRequest.setSessionToken("INVALID_SESSION");
-		
-		ViewPromotionResponse viewPromotionResponse = promotionAdminManager.viewPromotion(viewPromotionRequest);
+
+		ViewPromotionResponse viewPromotionResponse = promotionAdminManager
+				.viewPromotion(viewPromotionRequest);
 		assertEquals(ViewPromotionEnum.NO_SESSION, viewPromotionResponse.getViewPromotionEnum());
-		
+
 		viewPromotionRequest.setSessionToken(responseUser.getSessionToken());
-		
+
 		viewPromotionResponse = promotionAdminManager.viewPromotion(viewPromotionRequest);
 		assertEquals(ViewPromotionEnum.SUCCESS, viewPromotionResponse.getViewPromotionEnum());
 	}
-	
+
 	@Test
 	public void testViewPromotionNoDataFound() {
-		
+
 		ViewPromotionRequest viewPromotionRequest = new ViewPromotionRequest();
 		viewPromotionRequest.setPromotionId(5000);
 		viewPromotionRequest.setSessionToken(responseUser.getSessionToken());
-		
-		ViewPromotionResponse viewPromotionResponse = promotionAdminManager.viewPromotion(viewPromotionRequest);
+
+		ViewPromotionResponse viewPromotionResponse = promotionAdminManager
+				.viewPromotion(viewPromotionRequest);
 		assertEquals(ViewPromotionEnum.NO_DATA_FOUND, viewPromotionResponse.getViewPromotionEnum());
-		
+
 	}
-	
+
 	@Test
 	public void testViewPromotion() {
 		ViewPromotionRequest viewPromotionRequest = new ViewPromotionRequest();
-		
+
 		viewPromotionRequest.setSessionToken(responseUser.getSessionToken());
 		viewPromotionRequest.setPromotionId(promotionId);
-		
-		ViewPromotionResponse viewPromotionResponse = promotionAdminManager.viewPromotion(viewPromotionRequest);
-		
+
+		ViewPromotionResponse viewPromotionResponse = promotionAdminManager
+				.viewPromotion(viewPromotionRequest);
+
 		assertEquals(ViewPromotionEnum.SUCCESS, viewPromotionResponse.getViewPromotionEnum());
 		PromotionTO completePromotionView = viewPromotionResponse.getPromotionCompleteView();
-		
+
 		assertEquals("New Promotion Copy", completePromotionView.getPromotionName());
-		assertEquals("Test new promotion via Promotion Admin", completePromotionView.getDescription());
+		assertEquals("Test new promotion via Promotion Admin",
+				completePromotionView.getDescription());
 		assertEquals(29, completePromotionView.getValidFrom().getDayOfMonth());
 		assertEquals(2012, completePromotionView.getValidFrom().getYear());
 		assertEquals(12, completePromotionView.getValidFrom().getMonthOfYear());
@@ -388,88 +403,97 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		assertEquals(6, completePromotionView.getConfigItems().size());
 		assertNotNull(viewPromotionResponse.getSessionToken());
 	}
-	
+
 	@Test
 	public void testUpdatePromotionInsufficientData() {
-		
+
 		PromotionTO promotionView = new PromotionTO();
-		
+
 		UpdatePromotionRequest updatePromotionRequest = new UpdatePromotionRequest();
 		updatePromotionRequest.setPromotion(promotionView);
-		
-		UpdatePromotionResponse updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
-		
-		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA, updatePromotionResponse.getUpdatePromotionEnum());
-		
+
+		UpdatePromotionResponse updatePromotionResponse = promotionAdminManager
+				.updatePromotion(updatePromotionRequest);
+
+		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA,
+				updatePromotionResponse.getUpdatePromotionEnum());
+
 		promotionView.setPromotionName("New Promotion updated");
-		
+
 		updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
-		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA, updatePromotionResponse.getUpdatePromotionEnum());	
-		
+		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA,
+				updatePromotionResponse.getUpdatePromotionEnum());
+
 		promotionView.setValidFrom(new DateTime(2012, 2, 22, 0, 0));
 		promotionView.setValidTill(new DateTime(2011, 2, 22, 0, 0));
-		
+
 		updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
-		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA, updatePromotionResponse.getUpdatePromotionEnum());
-		
+		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA,
+				updatePromotionResponse.getUpdatePromotionEnum());
+
 		promotionView.setValidTill(new DateTime(2013, 2, 22, 0, 0));
-		
+
 		updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
-		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA, updatePromotionResponse.getUpdatePromotionEnum());
-		
+		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA,
+				updatePromotionResponse.getUpdatePromotionEnum());
+
 		promotionView.setDescription("Test new promotion update");
 		promotionView.setActive(false);
-		
+
 		updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
-		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA, updatePromotionResponse.getUpdatePromotionEnum());
-		
+		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA,
+				updatePromotionResponse.getUpdatePromotionEnum());
+
 		promotionView.setMaxUses(22);
 		promotionView.setMaxUsesPerUser(2);
 		promotionView.setMaxAmount(new Money(new BigDecimal(2222.00)));
 		promotionView.setMaxAmountPerUser(new Money(new BigDecimal(2222.00)));
-		
+
 		updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
-		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA, updatePromotionResponse.getUpdatePromotionEnum());
-		
+		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA,
+				updatePromotionResponse.getUpdatePromotionEnum());
+
 		promotionView.setRuleName("FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF_WRONG");
-		
+
 		updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
-		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA, updatePromotionResponse.getUpdatePromotionEnum());
-		
+		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA,
+				updatePromotionResponse.getUpdatePromotionEnum());
+
 		promotionView.setRuleName("FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF");
-		
+
 		updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
-		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA, updatePromotionResponse.getUpdatePromotionEnum());
-		
+		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA,
+				updatePromotionResponse.getUpdatePromotionEnum());
+
 		List<RuleConfigItemTO> ruleConfigList = new ArrayList<RuleConfigItemTO>();
 		promotionView.setConfigItems(ruleConfigList);
-		
+
 		RuleConfigItemTO configItem = new RuleConfigItemTO();
-		
+
 		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
 		configItem.setRuleConfigValue("222");
 		ruleConfigList.add(configItem);
-		
+
 		promotionView.setConfigItems(ruleConfigList);
-		
+
 		promotionView.setId(promotionId);
-		
+
 		updatePromotionRequest.setSessionToken(responseUser.getSessionToken());
-		
+
 		updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
-		
+
 		assertEquals(UpdatePromotionEnum.SUCCESS, updatePromotionResponse.getUpdatePromotionEnum());
-		
+
 	}
-	
+
 	@Test
 	public void testUpdatePromotionNoSession() {
 
 		PromotionTO promotionView = new PromotionTO();
-		
+
 		UpdatePromotionRequest updatePromotionRequest = new UpdatePromotionRequest();
 		updatePromotionRequest.setPromotion(promotionView);
-		
+
 		promotionView.setPromotionName("New Promotion updated");
 		promotionView.setValidFrom(new DateTime(2012, 2, 22, 0, 0));
 		promotionView.setValidTill(new DateTime(2011, 2, 22, 0, 0));
@@ -481,33 +505,35 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		promotionView.setMaxAmount(new Money(new BigDecimal(2222.00)));
 		promotionView.setMaxAmountPerUser(new Money(new BigDecimal(2222.00)));
 		promotionView.setRuleName("FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF");
-		
+
 		List<RuleConfigItemTO> ruleConfigList = new ArrayList<RuleConfigItemTO>();
 		promotionView.setConfigItems(ruleConfigList);
-		
+
 		RuleConfigItemTO configItem = new RuleConfigItemTO();
-		
+
 		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
 		configItem.setRuleConfigValue("222");
 		ruleConfigList.add(configItem);
-		
+
 		promotionView.setId(promotionId);
-		
+
 		updatePromotionRequest.setSessionToken("INVALID_SESSION");
-		
-		UpdatePromotionResponse updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
-		
-		assertEquals(UpdatePromotionEnum.NO_SESSION, updatePromotionResponse.getUpdatePromotionEnum());
+
+		UpdatePromotionResponse updatePromotionResponse = promotionAdminManager
+				.updatePromotion(updatePromotionRequest);
+
+		assertEquals(UpdatePromotionEnum.NO_SESSION,
+				updatePromotionResponse.getUpdatePromotionEnum());
 	}
-	
+
 	@Test
 	public void testUpdatePromotionRuleConfigMissing() {
 
 		PromotionTO promotionView = new PromotionTO();
-		
+
 		UpdatePromotionRequest updatePromotionRequest = new UpdatePromotionRequest();
 		updatePromotionRequest.setPromotion(promotionView);
-		
+
 		promotionView.setPromotionName("New Promotion updated");
 		promotionView.setValidFrom(new DateTime(2012, 2, 22, 0, 0));
 		promotionView.setValidTill(new DateTime(2011, 2, 22, 0, 0));
@@ -521,35 +547,38 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		promotionView.setRuleName("FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF");
 		promotionView.setId(promotionId);
 		updatePromotionRequest.setSessionToken(responseUser.getSessionToken());
-		
+
 		List<RuleConfigItemTO> ruleConfigList = new ArrayList<RuleConfigItemTO>();
 		promotionView.setConfigItems(ruleConfigList);
-		
-		UpdatePromotionResponse updatePromotionResponse  = promotionAdminManager.updatePromotion(updatePromotionRequest);
-		assertEquals(UpdatePromotionEnum.RULE_CONFIG_MISSING, updatePromotionResponse.getUpdatePromotionEnum());
-		
+
+		UpdatePromotionResponse updatePromotionResponse = promotionAdminManager
+				.updatePromotion(updatePromotionRequest);
+		assertEquals(UpdatePromotionEnum.RULE_CONFIG_MISSING,
+				updatePromotionResponse.getUpdatePromotionEnum());
+
 		RuleConfigItemTO configItem = new RuleConfigItemTO();
-		
+
 		updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
-		assertEquals(UpdatePromotionEnum.RULE_CONFIG_MISSING, updatePromotionResponse.getUpdatePromotionEnum());
-		
+		assertEquals(UpdatePromotionEnum.RULE_CONFIG_MISSING,
+				updatePromotionResponse.getUpdatePromotionEnum());
+
 		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
 		configItem.setRuleConfigValue("222");
 		ruleConfigList.add(configItem);
-		
+
 		updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
-		
+
 		assertEquals(UpdatePromotionEnum.SUCCESS, updatePromotionResponse.getUpdatePromotionEnum());
 	}
-	
+
 	@Test
 	public void testUpdatePromotionNoDataFound() {
-		
+
 		PromotionTO promotionView = new PromotionTO();
-		
+
 		UpdatePromotionRequest updatePromotionRequest = new UpdatePromotionRequest();
 		updatePromotionRequest.setPromotion(promotionView);
-		
+
 		promotionView.setPromotionName("New Promotion updated");
 		promotionView.setValidFrom(new DateTime(2012, 2, 22, 0, 0));
 		promotionView.setValidTill(new DateTime(2013, 2, 22, 0, 0));
@@ -561,29 +590,31 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		promotionView.setMaxAmountPerUser(new Money(new BigDecimal(2222.00)));
 		promotionView.setRuleName("FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF");
 		updatePromotionRequest.setSessionToken(responseUser.getSessionToken());
-		
+
 		List<RuleConfigItemTO> ruleConfigList = new ArrayList<RuleConfigItemTO>();
 		promotionView.setConfigItems(ruleConfigList);
-		
+
 		RuleConfigItemTO configItem = new RuleConfigItemTO();
-		
+
 		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
 		configItem.setRuleConfigValue("222");
 		ruleConfigList.add(configItem);
-		
+
 		promotionView.setId(5000);
-		
-		UpdatePromotionResponse updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
-		assertEquals(UpdatePromotionEnum.INVALID_PROMOTION_ID, updatePromotionResponse.getUpdatePromotionEnum());
+
+		UpdatePromotionResponse updatePromotionResponse = promotionAdminManager
+				.updatePromotion(updatePromotionRequest);
+		assertEquals(UpdatePromotionEnum.INVALID_PROMOTION_ID,
+				updatePromotionResponse.getUpdatePromotionEnum());
 	}
-	
+
 	@Test
 	public void testUpdatePromotion() {
 		PromotionTO promotionView = new PromotionTO();
-		
+
 		UpdatePromotionRequest updatePromotionRequest = new UpdatePromotionRequest();
 		updatePromotionRequest.setPromotion(promotionView);
-		
+
 		promotionView.setPromotionName("New Promotion updated");
 		promotionView.setValidFrom(new DateTime(2012, 2, 22, 0, 0));
 		promotionView.setValidTill(new DateTime(2013, 2, 22, 0, 0));
@@ -595,28 +626,30 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		promotionView.setMaxAmountPerUser(new Money(new BigDecimal(2222.00)));
 		promotionView.setRuleName("FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF");
 		updatePromotionRequest.setSessionToken(responseUser.getSessionToken());
-		
+
 		List<RuleConfigItemTO> ruleConfigList = new ArrayList<RuleConfigItemTO>();
 		promotionView.setConfigItems(ruleConfigList);
-		
+
 		RuleConfigItemTO configItem = new RuleConfigItemTO();
-		
+
 		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
 		configItem.setRuleConfigValue("222");
 		ruleConfigList.add(configItem);
-		
+
 		promotionView.setId(promotionId);
-		
-		UpdatePromotionResponse updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
+
+		UpdatePromotionResponse updatePromotionResponse = promotionAdminManager
+				.updatePromotion(updatePromotionRequest);
 		assertEquals(UpdatePromotionEnum.SUCCESS, updatePromotionResponse.getUpdatePromotionEnum());
-		
+
 		ViewPromotionRequest viewPromotionRequest = new ViewPromotionRequest();
 		viewPromotionRequest.setPromotionId(promotionId);
 		viewPromotionRequest.setSessionToken(responseUser.getSessionToken());
-		ViewPromotionResponse viewPromotionResponse = promotionAdminManager.viewPromotion(viewPromotionRequest);
-		
+		ViewPromotionResponse viewPromotionResponse = promotionAdminManager
+				.viewPromotion(viewPromotionRequest);
+
 		PromotionTO completePromotionView = viewPromotionResponse.getPromotionCompleteView();
-		
+
 		assertEquals("New Promotion updated", completePromotionView.getPromotionName());
 		assertEquals("Test new promotion update", completePromotionView.getDescription());
 		assertEquals(22, completePromotionView.getValidFrom().getDayOfMonth());
@@ -635,439 +668,463 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		assertNotNull(completePromotionView.getConfigItems());
 		assertEquals(1, completePromotionView.getConfigItems().size());
 		assertNotNull(updatePromotionResponse.getSessionToken());
-		
+
 	}
-	
+
 	@Test
 	public void testSearchPromotionInsufficientData() {
-		
+
 		SearchPromotionRequest searchPromotionRequest = new SearchPromotionRequest();
-		
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
-		assertEquals(SearchPromotionEnum.INSUFFICIENT_DATA, searchPromotionResponse.getSearchPromotionEnum());
-		
+
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
+				.searchPromotion(searchPromotionRequest);
+		assertEquals(SearchPromotionEnum.INSUFFICIENT_DATA,
+				searchPromotionResponse.getSearchPromotionEnum());
+
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
-		
+
 		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
-		assertEquals(SearchPromotionEnum.INSUFFICIENT_DATA, searchPromotionResponse.getSearchPromotionEnum());
-		
+		assertEquals(SearchPromotionEnum.INSUFFICIENT_DATA,
+				searchPromotionResponse.getSearchPromotionEnum());
+
 		searchPromotionRequest.setStartRecord(-5);
-		
+
 		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
-		assertEquals(SearchPromotionEnum.INSUFFICIENT_DATA, searchPromotionResponse.getSearchPromotionEnum());
-		
+		assertEquals(SearchPromotionEnum.INSUFFICIENT_DATA,
+				searchPromotionResponse.getSearchPromotionEnum());
+
 		searchPromotionRequest.setStartRecord(0);
-		
+
 		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
-		assertEquals(SearchPromotionEnum.INSUFFICIENT_DATA, searchPromotionResponse.getSearchPromotionEnum());
-		
+		assertEquals(SearchPromotionEnum.INSUFFICIENT_DATA,
+				searchPromotionResponse.getSearchPromotionEnum());
+
 		searchPromotionRequest.setBatchSize(10);
-		
+
 		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
 	}
-	
+
 	@Test
 	public void testSearchPromotionNoSession() {
-		
+
 		SearchPromotionRequest searchPromotionRequest = new SearchPromotionRequest();
-		
+
 		searchPromotionRequest.setActive(true);
 		searchPromotionRequest.setBatchSize(10);
 		searchPromotionRequest.setStartRecord(0);
 		searchPromotionRequest.setSessionToken("INVALID_SESSION");
-		
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
-		assertEquals(SearchPromotionEnum.NO_SESSION, searchPromotionResponse.getSearchPromotionEnum());
+
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
+				.searchPromotion(searchPromotionRequest);
+		assertEquals(SearchPromotionEnum.NO_SESSION,
+				searchPromotionResponse.getSearchPromotionEnum());
 	}
-	
+
 	@Test
 	public void testSearchPromotionNoDataFound() {
 		SearchPromotionRequest searchPromotionRequest = new SearchPromotionRequest();
-		
+
 		searchPromotionRequest.setActive(true);
 		searchPromotionRequest.setBatchSize(10);
 		searchPromotionRequest.setStartRecord(0);
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
 		searchPromotionRequest.setPromotionName("future");
-		
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
-		assertEquals(SearchPromotionEnum.NO_DATA_FOUND, searchPromotionResponse.getSearchPromotionEnum());
+
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
+				.searchPromotion(searchPromotionRequest);
+		assertEquals(SearchPromotionEnum.NO_DATA_FOUND,
+				searchPromotionResponse.getSearchPromotionEnum());
 		assertNotNull(searchPromotionResponse.getSessionToken());
 	}
-	
+
 	@Test
 	public void testSearchPromotionValidFromSortAscending() {
 		int count = 0;
-		
+
 		SearchPromotionRequest searchPromotionRequest = new SearchPromotionRequest();
-		
+
 		searchPromotionRequest.setActive(true);
 		searchPromotionRequest.setBatchSize(3);
 		searchPromotionRequest.setStartRecord(0);
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
-		
+
 		searchPromotionRequest.setPromotionName("end to end");
 		searchPromotionRequest.setValidFrom(new DateTime(2012, 1, 2, 0, 0));
 		searchPromotionRequest.setValidTill(new DateTime(2013, 6, 30, 0, 0));
 		searchPromotionRequest.setSearchPromotionOrderBy(SearchPromotionOrderBy.VALID_FROM);
 		searchPromotionRequest.setSortOrder(SortOrder.ASCENDING);
-		
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
-		
+
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
+				.searchPromotion(searchPromotionRequest);
+
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
-		
-		for(PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
+
+		for (PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
 			assertEquals(validFromSort[count], promotion.getId());
 			count++;
 		}
 	}
-	
+
 	@Test
 	public void testSearchPromotionValidFromSortDescending() {
 		int count = 2;
-		
+
 		SearchPromotionRequest searchPromotionRequest = new SearchPromotionRequest();
-		
+
 		searchPromotionRequest.setActive(true);
 		searchPromotionRequest.setBatchSize(3);
 		searchPromotionRequest.setStartRecord(0);
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
-		
+
 		searchPromotionRequest.setPromotionName("end to end");
 		searchPromotionRequest.setValidFrom(new DateTime(2012, 1, 2, 0, 0));
 		searchPromotionRequest.setValidTill(new DateTime(2013, 6, 30, 0, 0));
 		searchPromotionRequest.setSearchPromotionOrderBy(SearchPromotionOrderBy.VALID_FROM);
 		searchPromotionRequest.setSortOrder(SortOrder.DESCENDING);
-		
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
-		
+
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
+				.searchPromotion(searchPromotionRequest);
+
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
-		
-		for(PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
+
+		for (PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
 			assertEquals(validFromSort[count], promotion.getId());
 			count--;
 		}
 	}
-	
+
 	@Test
 	public void testSearchPromotionValidTillSortAscending() {
 		int count = 0;
-		
+
 		SearchPromotionRequest searchPromotionRequest = new SearchPromotionRequest();
-		
+
 		searchPromotionRequest.setActive(true);
 		searchPromotionRequest.setBatchSize(3);
 		searchPromotionRequest.setStartRecord(0);
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
-		
+
 		searchPromotionRequest.setPromotionName("end to end");
 		searchPromotionRequest.setValidFrom(new DateTime(2012, 1, 2, 0, 0));
 		searchPromotionRequest.setValidTill(new DateTime(2013, 6, 30, 0, 0));
 		searchPromotionRequest.setSearchPromotionOrderBy(SearchPromotionOrderBy.VALID_TILL);
 		searchPromotionRequest.setSortOrder(SortOrder.ASCENDING);
-		
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
-		
+
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
+				.searchPromotion(searchPromotionRequest);
+
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
-		
-		for(PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
+
+		for (PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
 			assertEquals(validTillSort[count], promotion.getId());
 			count++;
 		}
 	}
-	
+
 	@Test
 	public void testSearchPromotionValidTillSortDescending() {
 		int count = 2;
-		
+
 		SearchPromotionRequest searchPromotionRequest = new SearchPromotionRequest();
-		
+
 		searchPromotionRequest.setActive(true);
 		searchPromotionRequest.setBatchSize(3);
 		searchPromotionRequest.setStartRecord(0);
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
-		
+
 		searchPromotionRequest.setPromotionName("end to end");
 		searchPromotionRequest.setValidFrom(new DateTime(2012, 1, 2, 0, 0));
 		searchPromotionRequest.setValidTill(new DateTime(2013, 6, 30, 0, 0));
 		searchPromotionRequest.setSearchPromotionOrderBy(SearchPromotionOrderBy.VALID_TILL);
 		searchPromotionRequest.setSortOrder(SortOrder.DESCENDING);
-		
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
-		
+
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
+				.searchPromotion(searchPromotionRequest);
+
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
-		
-		for(PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
+
+		for (PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
 			assertEquals(validTillSort[count], promotion.getId());
 			count--;
 		}
 	}
-	
+
 	@Test
 	public void testSearchPromotionNameSortAscending() {
 		int count = 0;
-		
+
 		SearchPromotionRequest searchPromotionRequest = new SearchPromotionRequest();
-		
+
 		searchPromotionRequest.setActive(true);
 		searchPromotionRequest.setBatchSize(3);
 		searchPromotionRequest.setStartRecord(0);
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
-		
+
 		searchPromotionRequest.setPromotionName("end to end");
 		searchPromotionRequest.setValidFrom(new DateTime(2012, 1, 2, 0, 0));
 		searchPromotionRequest.setValidTill(new DateTime(2013, 6, 30, 0, 0));
 		searchPromotionRequest.setSearchPromotionOrderBy(SearchPromotionOrderBy.NAME);
 		searchPromotionRequest.setSortOrder(SortOrder.ASCENDING);
-		
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
-		
+
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
+				.searchPromotion(searchPromotionRequest);
+
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
-		
-		for(PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
+
+		for (PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
 			assertEquals(nameSort[count], promotion.getId());
 			count++;
 		}
 	}
-	
+
 	@Test
 	public void testSearchPromotionNameSortDescending() {
 		int count = 2;
-		
+
 		SearchPromotionRequest searchPromotionRequest = new SearchPromotionRequest();
-		
+
 		searchPromotionRequest.setActive(true);
 		searchPromotionRequest.setBatchSize(3);
 		searchPromotionRequest.setStartRecord(0);
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
-		
+
 		searchPromotionRequest.setPromotionName("end to end");
 		searchPromotionRequest.setValidFrom(new DateTime(2012, 1, 2, 0, 0));
 		searchPromotionRequest.setValidTill(new DateTime(2013, 6, 30, 0, 0));
 		searchPromotionRequest.setSearchPromotionOrderBy(SearchPromotionOrderBy.NAME);
 		searchPromotionRequest.setSortOrder(SortOrder.DESCENDING);
-		
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
-		
+
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
+				.searchPromotion(searchPromotionRequest);
+
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
-		
-		for(PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
+
+		for (PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
 			assertEquals(nameSort[count], promotion.getId());
 			count--;
 		}
 	}
-	
+
 	@Test
 	public void testSearchPromotionName() {
 		SearchPromotionRequest searchPromotionRequest = new SearchPromotionRequest();
-		
+
 		searchPromotionRequest.setActive(true);
 		searchPromotionRequest.setBatchSize(2);
 		searchPromotionRequest.setStartRecord(0);
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
 		searchPromotionRequest.setPromotionName("end to end");
-		
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
-		
+
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
+				.searchPromotion(searchPromotionRequest);
+
 		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
 		assertEquals(3, searchPromotionResponse.getTotalCount());
 		assertEquals(2, searchPromotionResponse.getPromotionsList().size());
-		
+
 		int count = 0;
-		
-		for(PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
+
+		for (PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
 			assertEquals(nameSearch[count], promotion.getId());
 			count++;
 		}
 	}
-	
+
 	@Test
 	public void testSearchPromotionValidFrom() {
 		SearchPromotionRequest searchPromotionRequest = new SearchPromotionRequest();
-		
+
 		searchPromotionRequest.setActive(true);
 		searchPromotionRequest.setBatchSize(2);
 		searchPromotionRequest.setStartRecord(0);
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
 		searchPromotionRequest.setValidFrom(new DateTime(2012, 1, 2, 0, 0));
-		
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
-		
+
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
+				.searchPromotion(searchPromotionRequest);
+
 		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
 		assertEquals(14, searchPromotionResponse.getTotalCount());
 		assertEquals(2, searchPromotionResponse.getPromotionsList().size());
-		
+
 		int count = 0;
-		
-		for(PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
+
+		for (PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
 			assertEquals(validFromSearch[count], promotion.getId());
 			count++;
 		}
 	}
-	
+
 	@Test
 	public void testSearchPromotionValidTill() {
 		SearchPromotionRequest searchPromotionRequest = new SearchPromotionRequest();
-		
+
 		searchPromotionRequest.setActive(true);
 		searchPromotionRequest.setBatchSize(2);
 		searchPromotionRequest.setStartRecord(0);
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
 		searchPromotionRequest.setValidTill(new DateTime(2012, 5, 21, 0, 0));
-		
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
-		
+
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
+				.searchPromotion(searchPromotionRequest);
+
 		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
 		assertEquals(1, searchPromotionResponse.getTotalCount());
 		assertEquals(1, searchPromotionResponse.getPromotionsList().size());
-		
+
 		int count = 0;
-		
-		for(PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
+
+		for (PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
 			assertEquals(validTillSearch[count], promotion.getId());
 			count++;
-		}	
+		}
 	}
-	
+
 	@Test
 	public void testSearchPromotionNameAndValidTill() {
 		SearchPromotionRequest searchPromotionRequest = new SearchPromotionRequest();
-		
+
 		searchPromotionRequest.setActive(true);
 		searchPromotionRequest.setBatchSize(2);
 		searchPromotionRequest.setStartRecord(0);
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
 		searchPromotionRequest.setPromotionName("end to end");
 		searchPromotionRequest.setValidTill(new DateTime(2013, 5, 21, 0, 0));
-		
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
-		
+
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
+				.searchPromotion(searchPromotionRequest);
+
 		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
 		assertEquals(2, searchPromotionResponse.getTotalCount());
 		assertEquals(2, searchPromotionResponse.getPromotionsList().size());
-		
+
 		int count = 0;
-		
-		for(PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
+
+		for (PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
 			assertEquals(nameValidTillSearch[count], promotion.getId());
 			count++;
 		}
 	}
-	
+
 	@Test
 	public void testSearchPromotionNameAndValidFrom() {
 		SearchPromotionRequest searchPromotionRequest = new SearchPromotionRequest();
-		
+
 		searchPromotionRequest.setActive(true);
 		searchPromotionRequest.setBatchSize(2);
 		searchPromotionRequest.setStartRecord(0);
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
 		searchPromotionRequest.setPromotionName("end to end");
 		searchPromotionRequest.setValidFrom(new DateTime(2012, 1, 2, 0, 0));
-		
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
-		
+
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
+				.searchPromotion(searchPromotionRequest);
+
 		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
 		assertEquals(3, searchPromotionResponse.getTotalCount());
 		assertEquals(2, searchPromotionResponse.getPromotionsList().size());
-		
+
 		int count = 0;
-		
-		for(PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
+
+		for (PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
 			assertEquals(nameValidFromSearch[count], promotion.getId());
 			count++;
 		}
 	}
-	
+
 	@Test
 	public void testSearchPromotionValidFromAndValidTill() {
 		SearchPromotionRequest searchPromotionRequest = new SearchPromotionRequest();
-		
+
 		searchPromotionRequest.setActive(true);
 		searchPromotionRequest.setBatchSize(2);
 		searchPromotionRequest.setStartRecord(0);
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
-		
+
 		searchPromotionRequest.setValidFrom(new DateTime(2012, 11, 2, 0, 0));
 		searchPromotionRequest.setValidTill(new DateTime(2013, 3, 22, 0, 0));
-		
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
-		
+
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
+				.searchPromotion(searchPromotionRequest);
+
 		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
 		assertEquals(2, searchPromotionResponse.getTotalCount());
 		assertEquals(2, searchPromotionResponse.getPromotionsList().size());
-		
+
 		int count = 0;
-		
-		for(PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
+
+		for (PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
 			assertEquals(validFromValidTillSearch[count], promotion.getId());
 			count++;
 		}
 	}
-	
+
 	@Test
 	public void testSearchPromotionInActive() {
 		SearchPromotionRequest searchPromotionRequest = new SearchPromotionRequest();
-		
+
 		searchPromotionRequest.setActive(false);
 		searchPromotionRequest.setBatchSize(10);
 		searchPromotionRequest.setStartRecord(0);
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
-		
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
-		
+
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
+				.searchPromotion(searchPromotionRequest);
+
 		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
 		assertEquals(1, searchPromotionResponse.getTotalCount());
 		assertEquals(1, searchPromotionResponse.getPromotionsList().size());
 		assertEquals(-6, searchPromotionResponse.getPromotionsList().get(0).getId());
 	}
-	
+
 	@Test
 	public void testSearchAllPromotion() {
-		
+
 		SearchPromotionRequest searchPromotionRequest = new SearchPromotionRequest();
-		
+
 		searchPromotionRequest.setActive(true);
 		searchPromotionRequest.setBatchSize(10);
 		searchPromotionRequest.setStartRecord(0);
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
-		
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
+
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
+				.searchPromotion(searchPromotionRequest);
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
 		assertEquals(20, searchPromotionResponse.getTotalCount());
 		assertEquals(10, searchPromotionResponse.getPromotionsList().size());
 	}
-	
+
 	@Test
 	public void testSearchPromotion() {
 		int count = 0;
-		
+
 		SearchPromotionRequest searchPromotionRequest = new SearchPromotionRequest();
-		
+
 		searchPromotionRequest.setActive(true);
 		searchPromotionRequest.setBatchSize(2);
 		searchPromotionRequest.setStartRecord(0);
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
-		
+
 		searchPromotionRequest.setPromotionName("end to end");
 		searchPromotionRequest.setValidFrom(new DateTime(2012, 1, 2, 0, 0));
 		searchPromotionRequest.setValidTill(new DateTime(2013, 6, 30, 0, 0));
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
-		
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
+				.searchPromotion(searchPromotionRequest);
+
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
 		assertEquals(3, searchPromotionResponse.getTotalCount());
 		assertEquals(2, searchPromotionResponse.getPromotionsList().size());
 		assertNotNull(searchPromotionResponse.getSessionToken());
-		
-		for(PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
+
+		for (PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
 			assertEquals(filterSearch[count], promotion.getId());
 			count++;
 		}
@@ -1139,7 +1196,8 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
 
 		assertNotNull(response);
-		assertEquals(AssignCouponToUserStatusEnum.COUPON_ALREADY_ASSIGNED_TO_USER, response.getStatus());
+		assertEquals(AssignCouponToUserStatusEnum.COUPON_ALREADY_ASSIGNED_TO_USER,
+				response.getStatus());
 		assertNotNull(response.getSessionToken());
 	}
 
@@ -1206,206 +1264,207 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 	}
 
 	@Test
-	public void searchCouponDataFound(){
+	public void searchCouponDataFound() {
 		SearchCouponRequest searchCouponRequest = new SearchCouponRequest();
-		
+
 		searchCouponRequest.setCouponCode("GlobalCoupon1000Off4");
 		searchCouponRequest.setSessionToken(responseUser.getSessionToken());
-		
+
 		SearchCouponResponse response = promotionAdminManager.searchCoupons(searchCouponRequest);
-		
+
 		assertNotNull(response);
 		assertEquals(SearchCouponStatusEnum.SUCCESS, response.getStatus());
 		assertEquals(1, response.getCouponBasicDetailsList().size());
-		
+
 		CouponBasicDetails couponBasicDetails = response.getCouponBasicDetailsList().get(0);
 		assertEquals("GlobalCoupon1000Off4", couponBasicDetails.getCouponCode());
 		assertEquals(CouponType.GLOBAL, couponBasicDetails.getCouponType());
 		assertEquals(-2003, couponBasicDetails.getCouponId());
 	}
-	
+
 	@Test
-	public void searchCouponUserNameCouponCode(){
+	public void searchCouponUserNameCouponCode() {
 		SearchCouponRequest request = new SearchCouponRequest();
-		
+
 		request.setUserName("test.admin@gmail.com");
 		request.setSessionToken(responseUser.getSessionToken());
 		request.setCouponCode("WINFUTURE");
-		
+
 		SearchCouponResponse response = promotionAdminManager.searchCoupons(request);
-		
+
 		assertNotNull(response);
 		assertEquals(SearchCouponStatusEnum.SUCCESS, response.getStatus());
 		assertEquals(1, response.getCouponBasicDetailsList().size());
 		assertEquals(1, response.getTotalCount());
-		
+
 	}
-	
+
 	@Test
-	public void searchCouponOnlyUserName(){
+	public void searchCouponOnlyUserName() {
 		SearchCouponRequest searchCouponRequest = new SearchCouponRequest();
-		
+
 		searchCouponRequest.setUserName("test.admin@gmail.com");
 		searchCouponRequest.setSessionToken(responseUser.getSessionToken());
-		searchCouponRequest.setStartRecord(0);;
+		searchCouponRequest.setStartRecord(0);
+		;
 		searchCouponRequest.setBatchSize(100);
-		
+
 		SearchCouponResponse response = promotionAdminManager.searchCoupons(searchCouponRequest);
-		
+
 		assertNotNull(response);
 		assertEquals(SearchCouponStatusEnum.SUCCESS, response.getStatus());
 		assertEquals(8, response.getCouponBasicDetailsList().size());
 		assertEquals(8, response.getTotalCount());
 	}
-	
+
 	@Test
-	public void searchCouponOnlyUserNameBatchSize(){
+	public void searchCouponOnlyUserNameBatchSize() {
 		SearchCouponRequest request = new SearchCouponRequest();
-		
+
 		request.setUserName("test.admin@gmail.com");
 		request.setSessionToken(responseUser.getSessionToken());
 		request.setBatchSize(4);
-		
+
 		SearchCouponResponse response = promotionAdminManager.searchCoupons(request);
-		
+
 		assertNotNull(response);
 		assertEquals(SearchCouponStatusEnum.SUCCESS, response.getStatus());
 		assertEquals(4, response.getCouponBasicDetailsList().size());
 		assertEquals(8, response.getTotalCount());
-		
+
 	}
-	
+
 	@Test
-	public void searchCouponOnlyCouponCode(){
+	public void searchCouponOnlyCouponCode() {
 		SearchCouponRequest request = new SearchCouponRequest();
-		
+
 		request.setSessionToken(responseUser.getSessionToken());
 		request.setCouponCode("WINFUTURE");
-		
+
 		SearchCouponResponse response = promotionAdminManager.searchCoupons(request);
-		
+
 		assertNotNull(response);
 		assertEquals(SearchCouponStatusEnum.SUCCESS, response.getStatus());
 		assertEquals(1, response.getCouponBasicDetailsList().size());
 		assertEquals(1, response.getTotalCount());
-		
+
 	}
-	
+
 	@Test
-	public void searchCouponInvalidCouponCode(){
+	public void searchCouponInvalidCouponCode() {
 		SearchCouponRequest request = new SearchCouponRequest();
-		
+
 		request.setSessionToken(responseUser.getSessionToken());
 		request.setCouponCode("WINFUTU");
-		
+
 		SearchCouponResponse response = promotionAdminManager.searchCoupons(request);
-		
+
 		assertNotNull(response);
 		assertEquals(SearchCouponStatusEnum.NO_DATA_FOUND, response.getStatus());
 		assertEquals(0, response.getCouponBasicDetailsList().size());
 		assertEquals(0, response.getTotalCount());
-		
+
 	}
-	
+
 	@Test
-	public void searchCouponUserNameInvalidCouponCode(){
+	public void searchCouponUserNameInvalidCouponCode() {
 		SearchCouponRequest request = new SearchCouponRequest();
-		
+
 		request.setUserName("test.admin@gmail.com");
 		request.setSessionToken(responseUser.getSessionToken());
 		request.setCouponCode("WINFUTU");
-		
+
 		SearchCouponResponse response = promotionAdminManager.searchCoupons(request);
-		
+
 		assertNotNull(response);
 		assertEquals(SearchCouponStatusEnum.NO_DATA_FOUND, response.getStatus());
 		assertEquals(0, response.getCouponBasicDetailsList().size());
 		assertEquals(0, response.getTotalCount());
 	}
-	
+
 	@Test
-	public void searchCouponCouponCodeInvalidUserName(){
+	public void searchCouponCouponCodeInvalidUserName() {
 		SearchCouponRequest request = new SearchCouponRequest();
-		
+
 		request.setUserName("test.admin@gmail.");
 		request.setSessionToken(responseUser.getSessionToken());
 		request.setCouponCode("WINFUTURE");
-		
+
 		SearchCouponResponse response = promotionAdminManager.searchCoupons(request);
-		
+
 		assertNotNull(response);
 		assertEquals(SearchCouponStatusEnum.INVALID_USER, response.getStatus());
 		assertEquals(0, response.getCouponBasicDetailsList().size());
 		assertEquals(0, response.getTotalCount());
 	}
-	
+
 	@Test
-	public void searchCouponBothInvalidCouponCodeUserName(){
+	public void searchCouponBothInvalidCouponCodeUserName() {
 		SearchCouponRequest request = new SearchCouponRequest();
-		
+
 		request.setUserName("test.admin@gmail.");
 		request.setSessionToken(responseUser.getSessionToken());
 		request.setCouponCode("WINFUTE");
-		
+
 		SearchCouponResponse response = promotionAdminManager.searchCoupons(request);
-		
+
 		assertNotNull(response);
 		assertEquals(SearchCouponStatusEnum.INVALID_USER, response.getStatus());
 		assertEquals(0, response.getCouponBasicDetailsList().size());
 		assertEquals(0, response.getTotalCount());
 	}
-	
+
 	@Test
-	public void searchCouponInsufficientData(){
+	public void searchCouponInsufficientData() {
 		SearchCouponRequest searchCouponRequest = new SearchCouponRequest();
-		
+
 		searchCouponRequest.setSessionToken(responseUser.getSessionToken());
-		
+
 		SearchCouponResponse response = promotionAdminManager.searchCoupons(searchCouponRequest);
-		
+
 		assertNotNull(response);
 		assertEquals(SearchCouponStatusEnum.INSUFFICIENT_DATA, response.getStatus());
 		assertEquals(0, response.getCouponBasicDetailsList().size());
 	}
-	
+
 	@Test
-	public void searchCouponNoDataFound(){
+	public void searchCouponNoDataFound() {
 		SearchCouponRequest searchCouponRequest = new SearchCouponRequest();
-		
+
 		searchCouponRequest.setCouponCode("invalid_coupon_code");
 		searchCouponRequest.setSessionToken(responseUser.getSessionToken());
-		
+
 		SearchCouponResponse response = promotionAdminManager.searchCoupons(searchCouponRequest);
-		
+
 		assertNotNull(response);
 		assertEquals(SearchCouponStatusEnum.NO_DATA_FOUND, response.getStatus());
 		assertEquals(0, response.getCouponBasicDetailsList().size());
 	}
-	
+
 	@Test
-	public void searchCouponNoSession(){
+	public void searchCouponNoSession() {
 		SearchCouponRequest searchCouponRequest = new SearchCouponRequest();
-		
+
 		searchCouponRequest.setCouponCode("invalid_coupon_code");
-		
+
 		SearchCouponResponse response = promotionAdminManager.searchCoupons(searchCouponRequest);
-		
+
 		assertNotNull(response);
 		assertEquals(SearchCouponStatusEnum.INSUFFICIENT_DATA, response.getStatus());
 		assertEquals(0, response.getCouponBasicDetailsList().size());
 	}
-	
+
 	@Test
-	public void searchCouponNullRequest(){
+	public void searchCouponNullRequest() {
 		SearchCouponResponse response = promotionAdminManager.searchCoupons(null);
-		
+
 		assertNotNull(response);
 		assertEquals(SearchCouponStatusEnum.NO_SESSION, response.getStatus());
 		assertEquals(0, response.getCouponBasicDetailsList().size());
 	}
 
 	@Test
-	public void createCouponValid(){
+	public void createCouponValid() {
 		CreateCouponRequest request = new CreateCouponRequest();
 		request.setSessionToken(responseUser.getSessionToken());
 		request.setAlphabetCase(AlphabetCase.MIXED);
@@ -1418,9 +1477,9 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		request.setMaxAmountPerUser(new BigDecimal(1000));
 		request.setMaxUses(4);
 		request.setMaxUsesPerUser(2);
-		
+
 		CreateCouponResponse response = promotionAdminManager.createCoupons(request);
-		
+
 		assertNotNull(response);
 		assertEquals(CreateCouponStatusEnum.SUCCESS, response.getStatus());
 		assertEquals(10, response.getNumberOfCouponsCreated());
@@ -1429,9 +1488,9 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 	public void setPromotionAdminManager(PromotionAdminManager promotionAdminManager) {
 		this.promotionAdminManager = promotionAdminManager;
 	}
-	
+
 	public void setUserManager(UserManager userManager) {
 		this.userManager = userManager;
 	}
-	
+
 }
