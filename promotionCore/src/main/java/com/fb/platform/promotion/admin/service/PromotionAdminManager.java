@@ -12,6 +12,8 @@ import com.fb.platform.promotion.admin.to.SearchCouponRequest;
 import com.fb.platform.promotion.admin.to.SearchCouponResponse;
 import com.fb.platform.promotion.admin.to.SearchPromotionRequest;
 import com.fb.platform.promotion.admin.to.SearchPromotionResponse;
+import com.fb.platform.promotion.admin.to.SearchScratchCardRequest;
+import com.fb.platform.promotion.admin.to.SearchScratchCardResponse;
 import com.fb.platform.promotion.admin.to.UpdatePromotionRequest;
 import com.fb.platform.promotion.admin.to.UpdatePromotionResponse;
 import com.fb.platform.promotion.admin.to.ViewCouponRequest;
@@ -85,5 +87,12 @@ public interface PromotionAdminManager {
 	 * @return
 	 */
 	public ViewCouponResponse viewCoupon(ViewCouponRequest viewCouponRequest);
+
+	/**
+	 * Searches scratch card on the basis of the input given in the request.
+	 * @param searchScratchCardRequest
+	 * @return
+	 */
+	public SearchScratchCardResponse searchScratchCard(SearchScratchCardRequest searchScratchCardRequest);
 	
 }

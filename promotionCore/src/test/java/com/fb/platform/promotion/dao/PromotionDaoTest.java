@@ -22,6 +22,7 @@ import com.fb.platform.promotion.model.GlobalPromotionUses;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.PromotionLimitsConfig;
 import com.fb.platform.promotion.model.UserPromotionUses;
+import com.fb.platform.promotion.model.scratchCard.ScratchCard;
 
 /**
  * @author vinayak
@@ -31,6 +32,11 @@ public class PromotionDaoTest extends BaseTestCase {
 
 	@Autowired
 	private PromotionDao promotionDao;
+	
+	@Autowired
+	private ScratchCardDao scratchCardDao;
+	
+	
 
 	@Test
 	public void get() {
@@ -186,6 +192,26 @@ public class PromotionDaoTest extends BaseTestCase {
 		assertNotNull(userPromotionUses);
 		assertEquals(3, userPromotionUses.getUserId());
 		assertEquals(-3, userPromotionUses.getPromotionId());
+	}
+	
+	@Test
+	public void getScratchCard(){
+
+		ScratchCard scrachCard = scratchCardDao.load("SAM2911BMJ");
+
+		assertNotNull(scrachCard);
+		
+		assertNotNull(scrachCard.getCardNumber());
+		assertNotNull(scrachCard.getCardStatus() );
+		
+
+		assertEquals(true, "active".equals(scrachCard.getCardStatus() )) ;
+		assertEquals(true, "SAM2911BMJ".equals(scrachCard.getCardNumber() )) ;
+
+		assertNotNull(scrachCard.getStore());
+//		assertEquals(true, "big_bazaar".equals(scrachCard.getStore()));
+		assertNotNull(scrachCard.getUsedDate());
+				
 	}
 	
 	/*@Test

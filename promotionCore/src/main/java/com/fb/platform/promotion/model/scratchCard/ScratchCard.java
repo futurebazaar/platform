@@ -4,6 +4,11 @@
 package com.fb.platform.promotion.model.scratchCard;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.joda.time.DateTime;
 
@@ -22,8 +27,12 @@ public class ScratchCard implements Serializable {
 	private String mobile = null;
 	private String email = null;
 	private String name = null;
-	private DateTime timestamp = null;
-
+	private XMLGregorianCalendar timestamp = null;
+	private XMLGregorianCalendar usedDate = null; 
+	private String user = null;
+	private String cardStatus = null;
+			
+		
 	public int getId() {
 		return id;
 	}
@@ -72,16 +81,34 @@ public class ScratchCard implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public DateTime getTimestamp() {
+	public XMLGregorianCalendar  getTimestamp() {
 		return timestamp;
 	}
-	public void setTimestamp(DateTime timestamp) {
-		this.timestamp = timestamp;
+	public void setTimestamp(XMLGregorianCalendar dt) {
+		this.timestamp = dt;
 	}
 	public int getUserId() {
 		return userId;
 	}
 	public void setUserId(int userId) {
 		this.userId = userId;
+	}
+	public XMLGregorianCalendar getUsedDate() {
+		return usedDate;
+	}
+	public void setUsedDate(XMLGregorianCalendar xmlGregorianCalendar) {
+		this.usedDate = xmlGregorianCalendar;
+	}
+	public String getUser() {
+		return user;
+	}
+	public void setUser(String user) {
+		this.user = user;
+	}
+	public String getCardStatus() {
+		return cardStatus;
+	}
+	public void setCardStatus(String cardStatus) {
+		this.cardStatus = cardStatus;
 	}
 }

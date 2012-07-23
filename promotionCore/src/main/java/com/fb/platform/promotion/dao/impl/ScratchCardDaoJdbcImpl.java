@@ -6,10 +6,20 @@ package com.fb.platform.promotion.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTime;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -39,7 +49,13 @@ public class ScratchCardDaoJdbcImpl implements ScratchCardDao {
 			"	scratch_card_no, " +
 			"	coupon_code, " +
 			"	status, " +
-			"	store " +
+			"	store ," +
+			"	used_date ,  " +
+			"	email ," +
+			"	mobile ," +
+			"	user_id ," +
+			"	timestamp, " +
+			"	name " +
 			"FROM promotions_scratchcard " +
 			"WHERE scratch_card_no = ?";
 
@@ -123,6 +139,17 @@ public class ScratchCardDaoJdbcImpl implements ScratchCardDao {
 		public ScratchCard mapRow(ResultSet rs, int rowNum) throws SQLException {
 			ScratchCard scratchCard = new ScratchCard();
 
+			
+			DatatypeFactory df = null;
+			try {
+				df = DatatypeFactory.newInstance();
+			} catch (DatatypeConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} ; 
+			
+			GregorianCalendar gc = new GregorianCalendar();  
+			
 			String activeStr = rs.getString("status");
 			if (ACTIVE_STATUS_IN_DB.equals(activeStr)) {
 				scratchCard.setActive(true);
@@ -133,6 +160,27 @@ public class ScratchCardDaoJdbcImpl implements ScratchCardDao {
 			scratchCard.setId(rs.getInt("id"));
 			scratchCard.setCouponCode(rs.getString("coupon_code"));
 			scratchCard.setStore(rs.getString("store"));
+			scratchCard.setCardStatus( rs.getString("status"));
+			scratchCard.setMobile(rs.getString("mobile"));
+			scratchCard.setEmail(rs.getString("email"));
+			scratchCard.setUserId(rs.getInt("user_id"));
+			scratchCard.setName(rs.getString("name"));
+
+			Timestamp ts = rs.getTimestamp("timestamp");
+			
+			Timestamp usedOnTS = rs.getTimestamp("used_date");
+			
+            if (ts != null) {
+    			gc.setTime(ts );
+            	scratchCard.setUsedDate(df.newXMLGregorianCalendar(gc) );
+            } 
+			
+            if (usedOnTS != null) {
+    			gc.setTime(usedOnTS );
+            	scratchCard.setUsedDate(df.newXMLGregorianCalendar(gc) );
+            } 
+
+			
 
 			return scratchCard;
 		}

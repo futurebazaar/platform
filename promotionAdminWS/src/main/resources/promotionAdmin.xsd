@@ -555,4 +555,54 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
 	</xs:restriction>
   </xs:simpleType>
   
+	<xs:element name="searchScratchCardRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="promotionAdmin:scratchCardNumber" />
+				<xs:element ref="promotionAdmin:sessionToken" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="scratchCardNumber" type="xs:string" />
+
+	<xs:element name="searchScratchCardResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="promotionAdmin:scratchCardNumber" />
+				<xs:element ref="promotionAdmin:sessionToken" />
+				<xs:element ref="promotionAdmin:claimStatus" />
+				<xs:element ref="promotionAdmin:email" />
+				<xs:element ref="promotionAdmin:mobile" />
+				<xs:element ref="promotionAdmin:name" />
+				<xs:element ref="promotionAdmin:couponCode" />
+				<xs:element ref="promotionAdmin:store" />
+				<xs:element ref="promotionAdmin:usedDate" />
+				<xs:element ref="promotionAdmin:timeStamp" />
+				<xs:element ref="promotionAdmin:userId" />
+				<xs:element ref="promotionAdmin:searchScratchCardStatusEnum" />
+				<xs:element ref="promotionAdmin:errorCause" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="claimStatus" type="xs:string" />
+	<xs:element name="email" type="xs:string" />
+	<xs:element name="mobile" type="xs:string" />
+	<xs:element name="name" type="xs:string" />
+	<xs:element name="store" type="xs:string" />
+	<xs:element name="usedDate" type="xs:dateTime" />
+	<xs:element name="timeStamp" type="xs:dateTime" />
+	
+
+	<xs:element name="searchScratchCardStatusEnum"
+		type="promotionAdmin:searchScratchCardStatusEnum" />
+	<xs:simpleType name="searchScratchCardStatusEnum">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="SUCCESS" />
+			<xs:enumeration value="NO_SESSION" />
+			<xs:enumeration value="INTERNAL_ERROR" />
+			<xs:enumeration value="INVALID_USER" />
+			<xs:enumeration value="NO_SCRATCH_CARD_FOUND" />
+		</xs:restriction>
+	</xs:simpleType>
 </xs:schema>
