@@ -10,7 +10,9 @@ import java.io.Serializable;
  *
  */
 public class InventoryTO implements Serializable {
-
+	
+	private String idocNumber;
+	private String refUID;
 	private String transactionCode;
 	private String articleId;
 	private String issuingSite;
@@ -76,16 +78,30 @@ public class InventoryTO implements Serializable {
 	public void setSellingUnit(String sellingUnit) {
 		this.sellingUnit = sellingUnit;
 	}
+	public String getIdocNumber() {
+		return idocNumber;
+	}
+	public void setIdocNumber(String idocNumber) {
+		this.idocNumber = idocNumber;
+	}
+	public String getRefUID() {
+		return refUID;
+	}
+	public void setRefUID(String refUID) {
+		this.refUID = refUID;
+	}
 	@Override
 	public String toString() {
-		return "transactionCode:" + transactionCode
-				+ "\narticleId:" + articleId
-				+ "\nissuingSite:" + issuingSite
-				+ "\nreceivingSite:" + receivingSite
-				+ "\nissuingStorageLoc:" + issuingStorageLoc
-				+ "\nreceivingStorageLoc:" + receivingStorageLoc
-				+ "\nmovementType:"+ movementType
-				+ "\nsellingUnit:"+ sellingUnit
+		return  "idocNumber : " + idocNumber
+				+ "\nreference UID : " + refUID
+				+ "transactionCode : " + transactionCode
+				+ "\narticleId : " + articleId
+				+ "\nissuingSite : " + issuingSite
+				+ "\nreceivingSite : " + receivingSite
+				+ "\nissuingStorageLoc : " + issuingStorageLoc
+				+ "\nreceivingStorageLoc : " + receivingStorageLoc
+				+ "\nmovementType : "+ movementType
+				+ "\nsellingUnit : "+ sellingUnit
 				+ "\nquantity:" + quantity;
 		
 	}

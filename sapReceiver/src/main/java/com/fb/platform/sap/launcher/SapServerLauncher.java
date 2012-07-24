@@ -24,7 +24,7 @@ public class SapServerLauncher {
 	 */
 	public static void main(String[] args) {
 		logger.warn("Starting the Sap Server Connector.");
-		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext-service.xml", "platformMom-applicationContext-resources.xml", "platformMom-applicationContext-service.xml");
+		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("sapReceiver-applicationContext-service.xml", "platformMom-applicationContext-resources.xml", "platformMom-applicationContext-service.xml");
 
 		FBSapServer fbSapServer = (FBSapServer) applicationContext.getBean("fbSapServer");
 		if (args.length > 0 && args[0].equalsIgnoreCase("qa")) {

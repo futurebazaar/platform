@@ -87,7 +87,7 @@ public class EDIDC40 {
     @XmlElement(name = "MANDT")
     protected int mandt;
     @XmlElement(name = "DOCNUM")
-    protected int docnum;
+    protected String docnum;
     @XmlElement(name = "DOCREL")
     protected int docrel;
     @XmlElement(name = "STATUS")
@@ -120,6 +120,8 @@ public class EDIDC40 {
     protected int serial;
     @XmlAttribute(name = "SEGMENT", required = true)
     protected int segment;
+    @XmlAttribute(name = "MAT_DOC", required = true)
+    protected String matdoc;
 
     /**
      * Gets the value of the tabnam property.
@@ -165,7 +167,7 @@ public class EDIDC40 {
      * Gets the value of the docnum property.
      * 
      */
-    public int getDOCNUM() {
+    public String getDOCNUM() {
         return docnum;
     }
 
@@ -173,7 +175,7 @@ public class EDIDC40 {
      * Sets the value of the docnum property.
      * 
      */
-    public void setDOCNUM(int value) {
+    public void setDOCNUM(String value) {
         this.docnum = value;
     }
 
@@ -495,6 +497,22 @@ public class EDIDC40 {
      */
     public void setSEGMENT(int value) {
         this.segment = value;
+    }
+    
+    /**
+     * Gets the value of the matdoc property.
+     * 
+     */
+    public String getMATDOC() {
+        return matdoc;
+    }
+
+    /**
+     * Sets the value of the matdoc property.
+     * 
+     */
+    public void setMATDOC(String value) {
+        this.matdoc = value;
     }
 
 }
