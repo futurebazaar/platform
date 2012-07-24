@@ -527,7 +527,6 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		int mcount = 0 ;
 		try {
 			userPromotionUsesEntry = jdbcTemplate.queryForObject(LOAD_USER_MONTHLY_PROMOTION_USES_QUERY, new Object [] { userId, promotionId }, new UserMonthlyOrderPromotionMapper() );
-			System.out.println("userPromotionUsesEntry.getNoOfUseInMonth()"+ userPromotionUsesEntry.getNoOfUseInMonth());
 			mcount = userPromotionUsesEntry.getNoOfUseInMonth();
 			if ( mcount < noOfTimesAllowed) {
 				return true;
