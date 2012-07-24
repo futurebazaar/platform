@@ -81,8 +81,8 @@ public class MonthlyDiscountRsOffRuleImpl implements PromotionRule, Serializable
 		log.info("No of times allowed " +  data.getNoOfTimesinMonth()) ;
 		
 		if (   !promotionDao.isValidNoOfTimesInMonth(userId, data.getNoOfTimesinMonth() , this.promotionId )  ) {
-			return PromotionStatusEnum.NUMBER_OF_USES_EXCEEDED ;
-		}
+			return PromotionStatusEnum.NUMBER_OF_MONTHLY_USE_EXCEEDED ;
+		} 
 		
 		return PromotionStatusEnum.SUCCESS;
 	}
