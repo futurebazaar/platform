@@ -400,7 +400,7 @@ public class RuleImplTest extends BaseTestCase {
 	@Test
 	public void testBuyWorthXGetYRsOffRule() {
 		
-		System.out.println("In Test testBuyWorthXGetYRsOffRule ");
+		//System.out.println("In Test testBuyWorthXGetYRsOffRule ");
 		//BuyWorthXGetYRsOffRule
 		PromotionRule rule = ruleDao.load(-7, -2);
 
@@ -832,7 +832,7 @@ public class RuleImplTest extends BaseTestCase {
 
 		assertEquals(monthlyDiscountRsOffRule.isApplicable(orderReq12,2,isCouponCommitted),PromotionStatusEnum.SUCCESS);
 
-		assertEquals(monthlyDiscountRsOffRule.isApplicable(orderReq13,userId,isCouponCommitted),PromotionStatusEnum.NUMBER_OF_USES_EXCEEDED);
+		assertEquals(monthlyDiscountRsOffRule.isApplicable(orderReq13,userId,isCouponCommitted),PromotionStatusEnum.NUMBER_OF_MONTHLY_USE_EXCEEDED);
 		
 		//assertEquals(monthlyDiscountRsOffRule.isApplicable(clientMisMatchOrderReq,userId,isCouponCommitted),PromotionStatusEnum.INVALID_CLIENT);
 		
