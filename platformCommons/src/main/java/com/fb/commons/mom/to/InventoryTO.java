@@ -94,7 +94,7 @@ public class InventoryTO implements Serializable {
 	public String toString() {
 		return  "idocNumber : " + idocNumber
 				+ "\nreference UID : " + refUID
-				+ "transactionCode : " + transactionCode
+				+ "\ntransactionCode : " + transactionCode
 				+ "\narticleId : " + articleId
 				+ "\nissuingSite : " + issuingSite
 				+ "\nreceivingSite : " + receivingSite

@@ -77,6 +77,7 @@
         <xs:element ref="BWART"/>
         <xs:element ref="MEINS"/>
         <xs:element ref="TRNSFR_QUAN"/>
+        <xs:element ref="MAT_DOC"/>
       </xs:sequence>
       <xs:attribute name="SEGMENT" use="required" type="xs:int"/>
     </xs:complexType>
@@ -90,4 +91,5 @@
   <xs:element name="BWART" type="xs:string"/>
   <xs:element name="MEINS" type="xs:string"/>
   <xs:element name="TRNSFR_QUAN" type="xs:string"/>
+  <xs:element name="MAT_DOC" type="xs:string"/>
 </xs:schema>

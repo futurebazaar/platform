@@ -120,8 +120,6 @@ public class EDIDC40 {
     protected int serial;
     @XmlAttribute(name = "SEGMENT", required = true)
     protected int segment;
-    @XmlAttribute(name = "MAT_DOC", required = true)
-    protected String matdoc;
 
     /**
      * Gets the value of the tabnam property.
@@ -499,21 +497,4 @@ public class EDIDC40 {
         this.segment = value;
     }
     
-    /**
-     * Gets the value of the matdoc property.
-     * 
-     */
-    public String getMATDOC() {
-        return matdoc;
-    }
-
-    /**
-     * Sets the value of the matdoc property.
-     * 
-     */
-    public void setMATDOC(String value) {
-        this.matdoc = value;
-    }
-    
-
 }

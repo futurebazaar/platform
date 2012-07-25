@@ -64,8 +64,8 @@ public class SapIDocHandler implements JCoIDocHandler {
 	protected boolean checkDuplicate(String idocXml) {
 		int startIndex = idocXml.indexOf(uidTag);
 		startIndex += (uidTag.length() + 1);
-		int endIndex = idocXml.lastIndexOf(uidTag);
-		endIndex -= 2;
+		int endIndex = idocXml.indexOf("/" + uidTag);
+		endIndex -= 1;
 		String sapId = idocXml.substring(startIndex, endIndex);
 		boolean isDuplicate = sapUniqueIds.contains(sapId);
 		if(!isDuplicate) {
