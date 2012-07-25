@@ -22,6 +22,8 @@ import com.fb.platform.mom.receiver.inventory.InventoryMessageListener;
 import com.fb.platform.mom.receiver.inventory.InventorySender;
 import com.fb.platform.mom.receiver.mail.MailMessageListener;
 import com.fb.platform.mom.receiver.mail.MailMsgSender;
+import com.fb.platform.mom.receiver.order.OrderMessageListener;
+import com.fb.platform.mom.receiver.order.OrderSender;
 
 /**
  * @author vinayak
@@ -72,6 +74,16 @@ public class MomManagerImpl implements MomManager {
 
 	@Autowired
 	private DefaultMessageListenerContainer deliveryDeleteContainer = null;
+	
+	@Autowired
+	private OrderMessageListener orderMessageListener = null;
+
+	@Autowired
+	private OrderSender orderSender = null;
+
+	@Autowired
+	private DefaultMessageListenerContainer orderContainer = null;
+	
 
 	/* (non-Javadoc)
 	 * @see com.fb.platform.mom.manager.MomManager#send(com.fb.platform.mom.manager.PlatformDestinationEnum, java.lang.Object)
@@ -92,6 +104,9 @@ public class MomManagerImpl implements MomManager {
 			break;
 		case DELIVERY_DELETE:
 			deliveryDeleteSender.sendMessage(message);
+			break;
+		case ORDER:
+			orderSender.sendMessage(message);
 			break;
 		default:
 			throw new IllegalStateException("No sender is configured for the destination : " + destination);
@@ -134,6 +149,12 @@ public class MomManagerImpl implements MomManager {
 			deliveryDeleteListener.addReceiver(receiver);
 			if(!deliveryDeleteContainer.isRunning()) {
 				deliveryDeleteContainer.start();
+			}
+			break;
+		case ORDER:
+			orderMessageListener.addReceiver(receiver);
+			if(!orderContainer.isRunning()) {
+				orderContainer.start();
 			}
 			break;
 		default:
@@ -198,6 +219,17 @@ public class MomManagerImpl implements MomManager {
 			DefaultMessageListenerContainer deliveryDeleteContainer) {
 		this.deliveryDeleteContainer = deliveryDeleteContainer;
 	}
-	
+
+	public void setOrderMessageListener(OrderMessageListener orderMessageListener) {
+		this.orderMessageListener = orderMessageListener;
+	}
+
+	public void setOrderSender(OrderSender orderSender) {
+		this.orderSender = orderSender;
+	}
+
+	public void setOrderContainer(DefaultMessageListenerContainer orderContainer) {
+		this.orderContainer = orderContainer;
+	}
 	
 }
