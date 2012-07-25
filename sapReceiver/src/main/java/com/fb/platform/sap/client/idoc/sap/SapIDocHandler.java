@@ -62,23 +62,26 @@ public class SapIDocHandler implements JCoIDocHandler {
 	}
 	
 	protected boolean checkDuplicate(String idocXml) {
-		int startIndex = idocXml.indexOf(uidTag);
-		startIndex += (uidTag.length() + 1);
-		int endIndex = idocXml.indexOf("/" + uidTag);
-		endIndex -= 1;
-		String sapId = idocXml.substring(startIndex, endIndex);
-		boolean isDuplicate = sapUniqueIds.contains(sapId);
-		if(!isDuplicate) {
-			if(sapUniqueIds.size() >= 1000) {
-				while(sapUniqueIds.size() > 900) {
-					String removedSapId = sapUniqueIds.remove();
-					logger.info("Sap unique ids reached : " + sapUniqueIds.size() + " , removed : " + removedSapId);
+		boolean isDuplicate = true;
+		if(idocXml.contains(uidTag)) {
+			int startIndex = idocXml.indexOf(uidTag);
+			startIndex += (uidTag.length() + 1);
+			int endIndex = idocXml.indexOf("/" + uidTag);
+			endIndex -= 1;
+			String sapId = idocXml.substring(startIndex, endIndex);
+			isDuplicate = sapUniqueIds.contains(sapId);
+			if(!isDuplicate) {
+				if(sapUniqueIds.size() >= 1000) {
+					while(sapUniqueIds.size() > 900) {
+						String removedSapId = sapUniqueIds.remove();
+						logger.info("Sap unique ids reached : " + sapUniqueIds.size() + " , removed : " + removedSapId);
+					}
 				}
+				logger.info("Inserting sap id : " + sapId);
+				sapUniqueIds.add(sapId);
+			} else {
+				logger.info("Duplicate idoc entry : " + sapId);
 			}
-			logger.info("Inserting sap id : " + sapId);
-			sapUniqueIds.add(sapId);
-		} else {
-			logger.info("Duplicate idoc entry : " + sapId);
 		}
 		return isDuplicate;
 	}
