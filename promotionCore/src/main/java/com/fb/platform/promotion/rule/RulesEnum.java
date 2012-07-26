@@ -12,6 +12,7 @@ import com.fb.platform.promotion.rule.config.data.convertor.BuyXGetYFreeRuleData
 import com.fb.platform.promotion.rule.config.data.convertor.BuyXQuantityGetVariablePercentOffRuleDataConvertor;
 import com.fb.platform.promotion.rule.config.data.convertor.CategoryBasedVariablePercentOffRuleDataConvertor;
 import com.fb.platform.promotion.rule.config.data.convertor.FirstPurchaseBuyWorthXGetYRsOffRuleDataConvertor;
+import com.fb.platform.promotion.rule.config.data.convertor.MonthlyDiscountRsOffDataConverter;
 import com.fb.platform.promotion.rule.config.data.convertor.RuleDataConvertor;
 import com.fb.platform.promotion.rule.metadata.BuyWorthXGetYPercentOffRuleMetadata;
 import com.fb.platform.promotion.rule.metadata.BuyWorthXGetYRsOffRuleMetadata;
@@ -20,6 +21,7 @@ import com.fb.platform.promotion.rule.metadata.BuyXGetYFreeRuleMetadata;
 import com.fb.platform.promotion.rule.metadata.BuyXQuantityGetVariablePercentOffRuleMetadata;
 import com.fb.platform.promotion.rule.metadata.CategoryBasedVariablePercentOffRuleMetadata;
 import com.fb.platform.promotion.rule.metadata.FirstPurchaseBuyWorthXGetYRsOffRuleMetadata;
+import com.fb.platform.promotion.rule.metadata.MonthlyDiscountRsOffRuleMetadata;
 import com.fb.platform.promotion.rule.metadata.RuleConfigMetadata;
 
 /**
@@ -37,6 +39,7 @@ public enum RulesEnum {
 	BUY_X_BRAND_GET_Y_RS_OFF_ON_Z_PRODUCT("BUY_X_BRAND_GET_Y_RS_OFF_ON_Z_PRODUCT", new BuyXBrandGetYRsOffOnZProductRuleMatadata(), new BuyXBrandGetYRsOffOnZProductRuleDataConvertor()),
 	FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF("FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF", new FirstPurchaseBuyWorthXGetYRsOffRuleMetadata(), new FirstPurchaseBuyWorthXGetYRsOffRuleDataConvertor()),
 	BUY_X_QUANTITY_GET_VARIABLE_PERCENT_OFF("BUY_X_QUANTITY_GET_VARIABLE_PERCENT_OFF", new BuyXQuantityGetVariablePercentOffRuleMetadata(), new BuyXQuantityGetVariablePercentOffRuleDataConvertor()),
+	MONTHLY_DISCOUNT_RS_OFF("MONTHLY_DISCOUNT_RS_OFF", new MonthlyDiscountRsOffRuleMetadata(), new MonthlyDiscountRsOffDataConverter() ),
 	CATEGORY_BASED_VARIABLE_PERCENT_OFF("CATEGORY_BASED_VARIABLE_PERCENT_OFF",new CategoryBasedVariablePercentOffRuleMetadata(), new CategoryBasedVariablePercentOffRuleDataConvertor());
 	
 	public static boolean isRuleValid(String ruleName) {

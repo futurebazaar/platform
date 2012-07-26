@@ -4,11 +4,10 @@
 package com.fb.platform.promotion.admin.to;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.joda.time.DateTime;
 
 /**
  * @author SalimM
@@ -30,9 +29,6 @@ public class SearchScratchCardResponse implements Serializable{
 		private String couponCode = null; 
 		private XMLGregorianCalendar timeStamp = null;
 				
-		
-		
-	
 		
 
 		private String errorCause;
@@ -80,8 +76,8 @@ public class SearchScratchCardResponse implements Serializable{
 		public XMLGregorianCalendar getUsedDate() {
 			return usedDate;
 		}
-		public void setUsedDate(XMLGregorianCalendar dateTime) {
-			this.usedDate = dateTime;
+		public void setUsedDate(XMLGregorianCalendar xmlGregorianCalendar) {
+			this.usedDate = xmlGregorianCalendar;
 		}
 		public String getScratchCardNumber() {
 			return scratchCardNumber;
@@ -118,8 +114,8 @@ public class SearchScratchCardResponse implements Serializable{
 		public XMLGregorianCalendar getTimeStamp() {
 			return timeStamp;
 		}
-		public void setTimeStamp(XMLGregorianCalendar timeStamp) {
-			this.timeStamp = timeStamp;
+		public void setTimeStamp(XMLGregorianCalendar date) {
+			this.timeStamp = date;
 		}
 
 		

@@ -85,20 +85,20 @@ public class InventoryTO implements Serializable {
 	
 	@Override
 	public String toString() {
-		String inventory = "transactionCode:" + transactionCode
-				+ "\narticleId:" + articleId
-				+ "\nissuingSite:" + issuingSite
-				+ "\nreceivingSite:" + receivingSite
-				+ "\nissuingStorageLoc:" + issuingStorageLoc
-				+ "\nreceivingStorageLoc:" + receivingStorageLoc
-				+ "\nmovementType:"+ movementType
-				+ "\nsellingUnit:"+ sellingUnit
+		String inventory = "transactionCode : " + transactionCode
+				+ "\narticleId : " + articleId
+				+ "\nissuingSite : " + issuingSite
+				+ "\nreceivingSite : " + receivingSite
+				+ "\nissuingStorageLoc : " + issuingStorageLoc
+				+ "\nreceivingStorageLoc : " + receivingStorageLoc
+				+ "\nmovementType : "+ movementType
+				+ "\nsellingUnit : "+ sellingUnit
 				+ "\nquantity:" + quantity;
+		
 		if(sapIdoc != null) {
 			inventory += "\n" + sapIdoc.toString();
 		}
 		return inventory;
-		
 	}
 		   
 		   

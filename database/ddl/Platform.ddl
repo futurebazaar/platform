@@ -810,6 +810,7 @@ CREATE TABLE fulfillment_sellerpincodemap (
 	INDEX (pincode), 
 	INDEX (seller_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  
   CREATE TABLE gift_voucher ( 
 	id int primary key auto_increment,
 	number varchar(30) unique key,

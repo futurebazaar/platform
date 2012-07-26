@@ -9,6 +9,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -34,6 +36,10 @@ import com.sap.conn.jco.server.JCoServerContext;
 public class SapIDocHandler implements JCoIDocHandler {
 
 	private static Log logger = LogFactory.getLog(SapIDocHandler.class);
+	
+	private static Deque<String> sapUniqueIds = new LinkedList<String>();
+	
+	private static final String uidTag = "MAT_DOC";
 
 	@Autowired
 	private PlatformIDocHandlerFactory platformIDocHandlerFactory = null;
@@ -75,9 +81,12 @@ public class SapIDocHandler implements JCoIDocHandler {
 					SapMomTO sapIdoc = new SapMomTO();
 					sapIdoc.setIdoc(idocXml);
 					sapIdoc.setIdocNumber(idocNumber);
-					sapIdoc.setIdocType(idocType);
 					logger.info("Sending to idoc handler : " + sapIdoc.toString());
-					platformIDocHandler.handle(sapIdoc);
+					
+					boolean isDuplicate = checkDuplicate(idocXml);
+					if(!isDuplicate) {
+						platformIDocHandler.handle(sapIdoc);
+					}
 				} catch (Exception e) {
 					saveIdoc(idocNumber, idocXml, "xml");
 					logger.error("Could not insert idoc into hornet Q : " + idocNumber, e);
@@ -114,6 +123,28 @@ public class SapIDocHandler implements JCoIDocHandler {
 			logger.error("Error writing to file : " + fileName, ioException);
 			new PlatformException("Error writing to file : " + fileName, ioException);
 		}
+	}
+	
+	protected boolean checkDuplicate(String idocXml) {
+		int startIndex = idocXml.indexOf(uidTag);
+		startIndex += (uidTag.length() + 1);
+		int endIndex = idocXml.lastIndexOf(uidTag);
+		endIndex -= 2;
+		String sapId = idocXml.substring(startIndex, endIndex);
+		boolean isDuplicate = sapUniqueIds.contains(sapId);
+		if(!isDuplicate) {
+			if(sapUniqueIds.size() >= 1000) {
+				while(sapUniqueIds.size() > 900) {
+					String removedSapId = sapUniqueIds.remove();
+					logger.info("Sap unique ids reached : " + sapUniqueIds.size() + " , removed : " + removedSapId);
+				}
+			}
+			logger.info("Inserting sap id : " + sapId);
+			sapUniqueIds.add(sapId);
+		} else {
+			logger.info("Duplicate idoc entry : " + sapId);
+		}
+		return isDuplicate;
 	}
 
 	public void setPlatformIDocHandlerFactory(PlatformIDocHandlerFactory platformIDocHandlerFactory) {

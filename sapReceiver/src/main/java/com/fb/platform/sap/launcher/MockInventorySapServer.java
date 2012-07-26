@@ -48,7 +48,7 @@ public class MockInventorySapServer {
 		}
 		INVENTORY_IDOC_0.setIdoc(sw.toString());
 		INVENTORY_IDOC_0.setIdocNumber("INVENTORY_IDOC_0");
-		INVENTORY_IDOC_0.setIdocType(InventoryIDocHandler.INVENTORY_IDOC_TYPE);
+		//INVENTORY_IDOC_0.setIdocType(InventoryIDocHandler.INVENTORY_IDOC_TYPE);
 
 		inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ztinla_idoctype2.xml");
 		sw = new StringWriter();
@@ -60,7 +60,7 @@ public class MockInventorySapServer {
 		}
 		INVENTORY_IDOC_1.setIdoc(sw.toString());
 		INVENTORY_IDOC_1.setIdocNumber("INVENTORY_IDOC_1");
-		INVENTORY_IDOC_1.setIdocType(InventoryIDocHandler.INVENTORY_IDOC_TYPE);
+		//INVENTORY_IDOC_1.setIdocType(InventoryIDocHandler.INVENTORY_IDOC_TYPE);
 
 		inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ztinla_idoctype3.xml");
 		sw = new StringWriter();
@@ -72,7 +72,7 @@ public class MockInventorySapServer {
 		}
 		INVENTORY_IDOC_2.setIdoc(sw.toString());
 		INVENTORY_IDOC_2.setIdocNumber("INVENTORY_IDOC_2");
-		INVENTORY_IDOC_2.setIdocType(InventoryIDocHandler.INVENTORY_IDOC_TYPE);
+		//INVENTORY_IDOC_2.setIdocType(InventoryIDocHandler.INVENTORY_IDOC_TYPE);
 		
 		inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ZATG_SO_CREATE-idoc.xml");
 		sw = new StringWriter();
@@ -84,7 +84,7 @@ public class MockInventorySapServer {
 		}
 		INVENTORY_IDOC_3.setIdoc(sw.toString());
 		INVENTORY_IDOC_3.setIdocNumber("INVENTORY_IDOC_3");
-		INVENTORY_IDOC_3.setIdocType("ZATG_SO_CREATEFROMDAT202");
+		//INVENTORY_IDOC_3.setIdocType("ZATG_SO_CREATEFROMDAT202");
 		
 		inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ZATGDELD-idoc.xml");
 		sw = new StringWriter();
@@ -96,7 +96,7 @@ public class MockInventorySapServer {
 		}
 		INVENTORY_IDOC_4.setIdoc(sw.toString());
 		INVENTORY_IDOC_4.setIdocNumber("INVENTORY_IDOC_4");
-		INVENTORY_IDOC_4.setIdocType("ZATGDELD");
+		//INVENTORY_IDOC_4.setIdocType("ZATGDELD");
 		
 		inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ZATGFLOW-idoc.xml");
 		sw = new StringWriter();
@@ -108,7 +108,7 @@ public class MockInventorySapServer {
 		}
 		INVENTORY_IDOC_5.setIdoc(sw.toString());
 		INVENTORY_IDOC_5.setIdocNumber("INVENTORY_IDOC_5");
-		INVENTORY_IDOC_5.setIdocType("ZATGFLOW");
+		//INVENTORY_IDOC_5.setIdocType("ZATGFLOW");
 		
 		inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ZATGINVOICE-idoc.xml");
 		sw = new StringWriter();
@@ -120,7 +120,7 @@ public class MockInventorySapServer {
 		}
 		INVENTORY_IDOC_6.setIdoc(sw.toString());
 		INVENTORY_IDOC_6.setIdocNumber("INVENTORY_IDOC_6");
-		INVENTORY_IDOC_6.setIdocType("ZATGINVOICE");
+		//INVENTORY_IDOC_6.setIdocType("ZATGINVOICE");
 
 		inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ztinla_dlvry.xml");
 		sw = new StringWriter();
@@ -132,7 +132,7 @@ public class MockInventorySapServer {
 		}
 		DELIVERY_INVENTORY_IDOC_0.setIdoc(sw.toString());
 		DELIVERY_INVENTORY_IDOC_0.setIdocNumber("DELIVERY_INVENTORY_IDOC_0");
-		DELIVERY_INVENTORY_IDOC_0.setIdocType("ZTINLA_DLVRY");
+		//DELIVERY_INVENTORY_IDOC_0.setIdocType("ZTINLA_DLVRY");
 	}
 	/**
 	 * @param args
@@ -140,7 +140,7 @@ public class MockInventorySapServer {
 	 */
 	public static void main(String[] args) throws InterruptedException {
 		logger.warn("Starting the Sap Server Connector.");
-		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext-service.xml", "platformMom-applicationContext-resources.xml", "platformMom-applicationContext-service.xml");
+		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("sapReceiver-applicationContext-service.xml", "platformMom-applicationContext-resources.xml", "platformMom-applicationContext-service.xml");
 
 		PlatformIDocHandlerFactory idocFactory = (PlatformIDocHandlerFactory) applicationContext.getBean("platformIDocHandlerFactory");
 		PlatformIDocHandler inventoryIDocHandler = idocFactory.getHandler(InventoryIDocHandler.INVENTORY_IDOC_TYPE);

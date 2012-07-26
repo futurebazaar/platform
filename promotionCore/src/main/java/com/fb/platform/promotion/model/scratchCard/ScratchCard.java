@@ -4,6 +4,9 @@
 package com.fb.platform.promotion.model.scratchCard;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -81,8 +84,8 @@ public class ScratchCard implements Serializable {
 	public XMLGregorianCalendar  getTimestamp() {
 		return timestamp;
 	}
-	public void setTimestamp(XMLGregorianCalendar timestamp) {
-		this.timestamp = timestamp;
+	public void setTimestamp(XMLGregorianCalendar dt) {
+		this.timestamp = dt;
 	}
 	public int getUserId() {
 		return userId;
@@ -93,8 +96,8 @@ public class ScratchCard implements Serializable {
 	public XMLGregorianCalendar getUsedDate() {
 		return usedDate;
 	}
-	public void setUsedDate(XMLGregorianCalendar usedDate) {
-		this.usedDate = usedDate;
+	public void setUsedDate(XMLGregorianCalendar xmlGregorianCalendar) {
+		this.usedDate = xmlGregorianCalendar;
 	}
 	public String getUser() {
 		return user;

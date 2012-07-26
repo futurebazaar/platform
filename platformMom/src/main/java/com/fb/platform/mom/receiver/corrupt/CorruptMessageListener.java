@@ -52,50 +52,73 @@ public class CorruptMessageListener extends AbstractPlatformListener implements 
 		try {
 			ObjectMessage objectMessage = (ObjectMessage) message;
 			CorruptMessageTO corruptMessage = (CorruptMessageTO) objectMessage.getObject();
-			
-			MailTO corruptMail = new MailTO();
-			String to = StringUtils.trim(prop.getProperty("receiver.mail.corrupt.to"));
-			String cc = StringUtils.trim(prop.getProperty("receiver.mail.corrupt.cc"));
-			String bcc = StringUtils.trim(prop.getProperty("receiver.mail.corrupt.bcc"));
-			
-			if(StringUtils.isNotBlank(to)) {
-				corruptMail.setTo(to.split(","));
-			}
-			if(StringUtils.isNotBlank(cc)) {
-				corruptMail.setCc(cc.split(","));
-			}
-			if(StringUtils.isNotBlank(bcc)) {
-				corruptMail.setBcc(bcc.split(","));
-			}
-			
-			corruptMail.setFrom(prop.getProperty("receiver.mail.corrupt.from"));
-			
-			Date date = new Date();
-			corruptMail.setSubject("MOM corrupt message received : " + date.toString());
-			corruptMail.setMessage("MOM corrupt message received : " + date.toString() 
-					+ "\n\n message timestamp : " + message.getJMSTimestamp() 
-					+ "\n\n message id : " + message.getJMSMessageID()
-					+ "\n\n priority : " + message.getJMSPriority()
-					+ "\n\n error cause : " + corruptMessage.toString());
-
-			logger.info("MOM corrupt message received : " + date.toString() 
-					+ "\n\n message timestamp : " + message.getJMSTimestamp() 
-					+ "\n\n message id : " + message.getJMSMessageID()
-					+ "\n\n priority : " + message.getJMSPriority()
-					+ "\n\n error cause : " + corruptMessage.toString());
-			
-			System.out.println("MOM corrupt message received : " + date.toString() 
-					+ "\n\n message timestamp : " + message.getJMSTimestamp() 
-					+ "\n\n message id : " + message.getJMSMessageID()
-					+ "\n\n priority : " + message.getJMSPriority()
-					+ "\n\n error cause : " + corruptMessage.toString());
-			
-			if(corruptMessage.getCause().equals(CorruptMessageCause.CORRUPT_IDOC)) {
-				super.notify(corruptMail);
+			if(corruptMessage.getCause() == CorruptMessageCause.NO_HANDLER) {
+				Date date = new Date();
+				logger.error("MOM no handler message received : " + date.toString() 
+						+ "\n\n message timestamp : " + message.getJMSTimestamp() 
+						+ "\n\n message id : " + message.getJMSMessageID()
+						+ "\n\n priority : " + message.getJMSPriority()
+						+ "\n\n error cause : " + corruptMessage.getCause()
+						+ "\n\n object : " + corruptMessage.getMessage().toString() );
+				
+				System.out.println("MOM no handler message received : " + date.toString() 
+						+ "\n\n message timestamp : " + message.getJMSTimestamp() 
+						+ "\n\n message id : " + message.getJMSMessageID()
+						+ "\n\n priority : " + message.getJMSPriority()
+						+ "\n\n error cause : " + corruptMessage.getCause()
+						+ "\n\n object : " + corruptMessage.getMessage().toString() );
+			} else if(corruptMessage.getCause() == CorruptMessageCause.CORRUPT_IDOC) {
+				sendMail(message);
 			}
 		} catch (JMSException e) {
-			logger.error("JMSException in corruption queue", e);
+			logger.error("JMSException in corrupt queue", e);
 			throw JmsUtils.convertJmsAccessException(e);
 		}
+	}
+	
+	private void sendMail(Message message) throws JMSException{
+		ObjectMessage objectMessage = (ObjectMessage) message;
+		CorruptMessageTO corruptMessage = (CorruptMessageTO) objectMessage.getObject();
+		MailTO corruptMail = new MailTO();
+		String to = StringUtils.trim(prop.getProperty("receiver.mail.corrupt.to"));
+		String cc = StringUtils.trim(prop.getProperty("receiver.mail.corrupt.cc"));
+		String bcc = StringUtils.trim(prop.getProperty("receiver.mail.corrupt.bcc"));
+		
+		if(StringUtils.isNotBlank(to)) {
+			corruptMail.setTo(to.split(","));
+		}
+		if(StringUtils.isNotBlank(cc)) {
+			corruptMail.setCc(cc.split(","));
+		}
+		if(StringUtils.isNotBlank(bcc)) {
+			corruptMail.setBcc(bcc.split(","));
+		}
+		
+		corruptMail.setFrom(prop.getProperty("receiver.mail.corrupt.from"));
+		
+		Date date = new Date();
+		corruptMail.setSubject("MOM corrupt message received : " + date.toString());
+		corruptMail.setMessage("MOM corrupt message received : " + date.toString() 
+				+ "\n\n message timestamp : " + message.getJMSTimestamp() 
+				+ "\n\n message id : " + message.getJMSMessageID()
+				+ "\n\n priority : " + message.getJMSPriority()
+				+ "\n\n error cause : " + corruptMessage.getCause()
+				+ "\n\n object : " + corruptMessage.getMessage().toString() );
+
+		logger.info("MOM corrupt message received : " + date.toString() 
+				+ "\n\n message timestamp : " + message.getJMSTimestamp() 
+				+ "\n\n message id : " + message.getJMSMessageID()
+				+ "\n\n priority : " + message.getJMSPriority()
+				+ "\n\n error cause : " + corruptMessage.getCause()
+				+ "\n\n object : " + corruptMessage.getMessage().toString() );
+		
+		System.out.println("MOM corrupt message received : " + date.toString() 
+				+ "\n\n message timestamp : " + message.getJMSTimestamp() 
+				+ "\n\n message id : " + message.getJMSMessageID()
+				+ "\n\n priority : " + message.getJMSPriority()
+				+ "\n\n error cause : " + corruptMessage.getCause()
+				+ "\n\n object : " + corruptMessage.getMessage().toString() );
+
+		super.notify(corruptMail);
 	}
 }

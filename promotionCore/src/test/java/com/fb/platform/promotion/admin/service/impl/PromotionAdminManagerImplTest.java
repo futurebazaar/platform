@@ -103,6 +103,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		add(RulesEnum.FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF);
 		add(RulesEnum.BUY_X_GET_Y_FREE);
 		add(RulesEnum.BUY_X_QUANTITY_GET_VARIABLE_PERCENT_OFF);
+		add(RulesEnum.MONTHLY_DISCOUNT_RS_OFF);
 		add(RulesEnum.CATEGORY_BASED_VARIABLE_PERCENT_OFF);
 	}};
 	
@@ -150,7 +151,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 				fetchRuleResponse.getFetchRulesEnum());
 		assertNotNull(fetchRuleResponse.getSessionToken());
 		assertNotNull(fetchRuleResponse.getRulesList());
-		assertEquals(7, fetchRuleResponse.getRulesList().size());
+		assertEquals(8, fetchRuleResponse.getRulesList().size());
 		assertNotNull(fetchRuleResponse.getSessionToken());
 		for (RuleConfigDescriptor ruleConfig : fetchRuleResponse.getRulesList()) {
 			assertTrue(ruleList.contains(ruleConfig.getRulesEnum()));
@@ -1021,8 +1022,8 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		
 		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
-		assertEquals(14, searchPromotionResponse.getTotalCount());
 
+		assertEquals(16, searchPromotionResponse.getTotalCount());
 		assertEquals(2, searchPromotionResponse.getPromotionsList().size());
 
 		int count = 0;
@@ -1187,7 +1188,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
 		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
-		assertEquals(20, searchPromotionResponse.getTotalCount());
+		assertEquals(22, searchPromotionResponse.getTotalCount());
 		assertEquals(10, searchPromotionResponse.getPromotionsList().size());
 	}
 
@@ -1625,7 +1626,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 	public void testSearchScratchCard() {
 		SearchScratchCardRequest searchScratchCardRequest = new SearchScratchCardRequest();
 
-		searchScratchCardRequest.setScratchCardNumber("NG2911BMJ");
+		searchScratchCardRequest.setScratchCardNumber("SAM2911BMJ");
 		searchScratchCardRequest
 				.setSessionToken(responseUser.getSessionToken());
 
@@ -1659,10 +1660,11 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 	public void testSearchScratchCardInvalidRequest() {
 		SearchScratchCardRequest searchScratchCardRequest = new SearchScratchCardRequest();
 
-		searchScratchCardRequest.setScratchCardNumber("BB000UGDC");
+		searchScratchCardRequest.setScratchCardNumber("BB000UGDCDDD");
 		searchScratchCardRequest
 				.setSessionToken(responseUser.getSessionToken());
 
+		
 		SearchScratchCardResponse searchScratchCardResponse = promotionAdminManager
 				.searchScratchCard(searchScratchCardRequest);
 
@@ -1670,6 +1672,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 				.searchScratchCard(searchScratchCardRequest);
 		assertEquals(SearchScratchCardStatusEnum.NO_SCRATCH_CARD_FOUND,
 				searchScratchCardResponse.getStatus());
+		System.out.println("searchScratchCardResponse.getStatus()"+searchScratchCardResponse.getStatus());
 
 	}
 

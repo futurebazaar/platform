@@ -60,7 +60,7 @@ public class PlatformIDocHandlerFactory {
 		logger.info("Returning handler for idocType : " + idocType);
 
 		if (idocType.equals(InventoryIDocHandler.INVENTORY_IDOC_TYPE)) {
-			return inventoryIDocHandler;
+		return inventoryIDocHandler;
 		}
 		if (idocType.equals(DeliveryInventoryIDocHandler.DELIVERY_INVENTORY_IDOC_TYPE)) {
 			return deliveryInventoryIDocHandler;

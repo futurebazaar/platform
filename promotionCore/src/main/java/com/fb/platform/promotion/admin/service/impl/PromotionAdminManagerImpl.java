@@ -120,7 +120,9 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 			List<RulesEnum> rulesList = promotionAdminService.getAllPromotionRules();
 			List<RuleConfigDescriptor> rulesConfigList = new ArrayList<RuleConfigDescriptor>();
 			for(RulesEnum rulesEnum : rulesList) {
-				List<RuleConfigItemDescriptor> rulesConfigItemList = PromotionRuleFactory.getRuleConfig(rulesEnum);
+				//Pass 0 as dummy promotionId, as is irrelevant in this case
+				// TODO : Change to use metadata
+				List<RuleConfigItemDescriptor> rulesConfigItemList = PromotionRuleFactory.getRuleConfig(rulesEnum,-1);
 				RuleConfigDescriptor ruleConfigDescriptor = new RuleConfigDescriptor();
 				ruleConfigDescriptor.setRulesEnum(rulesEnum);
 				ruleConfigDescriptor.setRuleConfigItemsList(rulesConfigItemList);
@@ -338,7 +340,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 	private String hasValidRuleConfig(PromotionTO promotionTo) {
 		java.util.List<String> missingConfigsList = new ArrayList<String>();
 		
-		List<RuleConfigItemDescriptor> requiredConfigs = PromotionRuleFactory.getRuleConfig(RulesEnum.valueOf(promotionTo.getRuleName()));
+		List<RuleConfigItemDescriptor> requiredConfigs = PromotionRuleFactory.getRuleConfig(RulesEnum.valueOf(promotionTo.getRuleName()),promotionTo.getId());
 		HashMap<String, RuleConfigItemTO> receivedConfigsMap = new HashMap<String, RuleConfigItemTO>();
 		
 		for (int i = promotionTo.getConfigItems().size() - 1 ; i >= 0 ; i--) {
@@ -633,6 +635,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		ScratchCard scratchCard = null;
 		try {
 			scratchCard = promotionAdminService.searchScratchCard(searchScratchCardRequest.getScratchCardNumber() );
+			System.out.println("scratchCard.getCardNumber()"+scratchCard.getCardNumber());
 			response.setUserId(scratchCard.getUserId());
 			response.setEmail(scratchCard.getEmail());
 			response.setMobile(scratchCard.getMobile());
@@ -645,15 +648,20 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 			response.setCardStatus( scratchCard.getCardStatus() );
 			response.setStatus(SearchScratchCardStatusEnum.SUCCESS );
 			
+			System.out.println("scratchCard.getUsedDate()"+scratchCard.getUsedDate());
+			System.out.println("scratchCard.getTimestamp()"+scratchCard.getTimestamp());
 		} catch (ScratchCardNotFoundException e) {
 			log.info("No such Scratch Card found "+ searchScratchCardRequest.getScratchCardNumber() , e);
 			response.setStatus(SearchScratchCardStatusEnum.NO_SCRATCH_CARD_FOUND);
+			return response;
 		} catch (InvalidUserNameException e) {
 			response.setStatus(SearchScratchCardStatusEnum.INVALID_USER);
+			return response;
 		} catch (Exception e) {
 			response.setStatus(SearchScratchCardStatusEnum.INTERNAL_ERROR);
-			
+			return response;
 		}
+		
 		
 		return response;
 	} 

@@ -11,7 +11,7 @@ import java.io.Serializable;
  */
 public class SapMomTO implements Serializable {
 	private String idocNumber;
-	private String idocType;
+	private String refUID;
 	private String idoc;
 	
 	public String getIdocNumber() {
@@ -20,11 +20,12 @@ public class SapMomTO implements Serializable {
 	public void setIdocNumber(String idocNumber) {
 		this.idocNumber = idocNumber;
 	}
-	public String getIdocType() {
-		return idocType;
+	
+	public String getRefUID() {
+		return refUID;
 	}
-	public void setIdocType(String idocType) {
-		this.idocType = idocType;
+	public void setRefUID(String refUID) {
+		this.refUID = refUID;
 	}
 	public String getIdoc() {
 		return idoc;
@@ -36,7 +37,7 @@ public class SapMomTO implements Serializable {
 	@Override
 	public String toString() {
 		return "idoc number : " + idocNumber
-				+ "\nidoc type : " + idocType
+				+ "\nreference UID : " + refUID
 				+ "\nidoc : " + idoc;
 	}
 	
