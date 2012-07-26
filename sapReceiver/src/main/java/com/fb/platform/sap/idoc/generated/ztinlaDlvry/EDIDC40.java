@@ -499,5 +499,4 @@ public class EDIDC40 {
     public void setSEGMENT(int value) {
         this.segment = value;
     }
-
 }

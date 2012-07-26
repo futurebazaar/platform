@@ -16,6 +16,7 @@ rm sapReceiver*.jar
 rm sapReceiverRun.sh
 rm mockSapReceiverRun.sh
 
+
 #return to the platform folder
 cd ../..
 
@@ -59,7 +60,7 @@ mvn dependency:build-classpath -Dmdep.outputFile=cp.txt
 #replace the M2_REPO path with .dependency
 sed  "s|$M2_REPO|./dependency|g" cp.txt >target/cp.txt
 
-#copy the dependency folder and the launcher jar to execution/sapReceiver
+#copy the dependency folder and the sapReceiver jar to execution/sapReceiver
 cd target
 cp -r dependency/ ../../execution/sapReceiver/
 cp sapReceiver*.jar ../../execution/sapReceiver/
@@ -79,11 +80,14 @@ cd ../..
 cd execution/sapReceiver
 sed  "s|SAP_DEPENDENCY|$dependency|g" sapReceiverTemplate.sh >sapReceiverRun.sh
 sed  "s|MOCK_SAP_DEPENDENCY|$dependency|g" mockSapReceiverTemplate.sh >mockSapReceiverRun.sh
+sed  "s|MOCK_SAP_LOAD_DEPENDENCY|$dependency|g" mockSapLoadTesterTemplate.sh >mockSapLoadTesterRun.sh
 sed -i "s|SAP_RECEIVER_JAR|$jarFile|g" sapReceiverRun.sh
 sed -i "s|SAP_RECEIVER_JAR|$jarFile|g" mockSapReceiverRun.sh
+sed -i "s|SAP_LOAD_RECEIVER_JAR|$jarFile|g" mockSapLoadTesterRun.sh
 
 chmod 777 sapReceiverRun.sh
 chmod 777 mockSapReceiverRun.sh
+chmod 777 MockSapLoadTesterRun.sh
 
 #return to execution folder
 cd ..

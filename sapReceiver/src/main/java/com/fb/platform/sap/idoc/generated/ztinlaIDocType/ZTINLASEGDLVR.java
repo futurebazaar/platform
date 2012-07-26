@@ -305,7 +305,7 @@ public class ZTINLASEGDLVR {
     public void setTRNSFRQUAN(String value) {
         this.trnsfrquan = value;
     }
-
+    
     /**
      * Gets the value of the matdoc property.
      * 
