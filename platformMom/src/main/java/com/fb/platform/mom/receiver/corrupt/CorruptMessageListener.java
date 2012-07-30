@@ -52,22 +52,7 @@ public class CorruptMessageListener extends AbstractPlatformListener implements 
 		try {
 			ObjectMessage objectMessage = (ObjectMessage) message;
 			CorruptMessageTO corruptMessage = (CorruptMessageTO) objectMessage.getObject();
-			if(corruptMessage.getCause() == CorruptMessageCause.NO_HANDLER) {
-				Date date = new Date();
-				logger.error("MOM no handler message received : " + date.toString() 
-						+ "\n\n message timestamp : " + message.getJMSTimestamp() 
-						+ "\n\n message id : " + message.getJMSMessageID()
-						+ "\n\n priority : " + message.getJMSPriority()
-						+ "\n\n error cause : " + corruptMessage.getCause()
-						+ "\n\n object : " + corruptMessage.getMessage().toString() );
-				
-				System.out.println("MOM no handler message received : " + date.toString() 
-						+ "\n\n message timestamp : " + message.getJMSTimestamp() 
-						+ "\n\n message id : " + message.getJMSMessageID()
-						+ "\n\n priority : " + message.getJMSPriority()
-						+ "\n\n error cause : " + corruptMessage.getCause()
-						+ "\n\n object : " + corruptMessage.getMessage().toString() );
-			} else if(corruptMessage.getCause() == CorruptMessageCause.CORRUPT_IDOC) {
+			if(corruptMessage.getCause() == CorruptMessageCause.CORRUPT_IDOC) {
 				sendMail(message);
 			}
 		} catch (JMSException e) {

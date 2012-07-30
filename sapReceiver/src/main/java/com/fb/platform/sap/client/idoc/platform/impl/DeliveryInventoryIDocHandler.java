@@ -64,13 +64,13 @@ public class DeliveryInventoryIDocHandler implements PlatformIDocHandler {
 	 * @see com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler#handle(java.lang.String)
 	 */
 	@Override
-	public void handle(SapMomTO sapIdoc) {
+	public void handle(String idocXml) {
 		logger.info("Begin handling Delivery Inventory idoc message.");
-		String idocXml = null;
+		SapMomTO sapIdoc = new SapMomTO();
 		//convert the message xml into jaxb bean
 		try {
 			//the xml received from Sap is flawed. It contains ZTINLA_DLVRY as parent and child level item. We will replace the top level ZTINLA_DLVRY with ZTINLA_DLVRY_TOP
-			String tempidocXml = sapIdoc.getIdoc().replaceFirst("ZTINLA_DLVRY", "ZTINLA_DLVRY_TOP");
+			String tempidocXml = idocXml.replaceFirst("ZTINLA_DLVRY", "ZTINLA_DLVRY_TOP");
 			int index = tempidocXml.lastIndexOf("ZTINLA_DLVRY");
 			StringBuffer sb = new StringBuffer();
 			sb.append(tempidocXml.substring(0, index));
@@ -81,12 +81,17 @@ public class DeliveryInventoryIDocHandler implements PlatformIDocHandler {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 
 			ZTINLADLVRYTOP inventoryIdoc = (ZTINLADLVRYTOP)unmarshaller.unmarshal(new StreamSource(new StringReader(idocXml)));
+			
+			sapIdoc.setIdoc(idocXml);
+			sapIdoc.setIdocNumber(inventoryIdoc.getIDOC().getEDIDC40().getDOCNUM());
 
 			List<ZTINLADLVRY> sapInventoryAckList = inventoryIdoc.getIDOC().getZTINLADLVRY();
 			for (ZTINLADLVRY sapInventoryAck : sapInventoryAckList) {
 				InventoryTO inventoryTo = new InventoryTO();
-				//inventoryTo.setIdocNumber(inventoryIdoc.getIDOC().getEDIDC40().getDOCNUM());
-				//inventoryTo.setRefUID(inventoryIdoc.getIDOC().getEDIDC40().getMATDOC());
+				
+				sapIdoc.setRefUID(sapInventoryAck.getMATDOC());
+				
+				inventoryTo.setSapIdoc(sapIdoc);
 				inventoryTo.setArticleId(sapInventoryAck.getMATNR());
 				inventoryTo.setIssuingSite(sapInventoryAck.getIWERKS());
 				inventoryTo.setIssuingStorageLoc(sapInventoryAck.getILGORT());

@@ -57,7 +57,6 @@
   <xs:element name="RCVPRN" type="xs:string"/>
   <xs:element name="CREDAT" type="xs:int"/>
   <xs:element name="CRETIM" type="xs:int"/>
-  <xs:element name="LSP_NAME" type="xs:string"/>
   <xs:element name="SERIAL" type="xs:int"/>
   <xs:element name="ZATGFLOW">
     <xs:complexType>
@@ -154,7 +153,7 @@
   <xs:element name="PKSTK" type="xs:string"/>
   <xs:element name="FKSAK" type="xs:string"/>
   <xs:element name="COMPLETENESS" type="xs:string"/>
-  <xs:element name="MATERIAL" type="xs:string"/>
+  <xs:element name="MATERIAL" type="xs:int"/>
   <xs:element name="SITE" type="xs:int"/>
   <xs:element name="AUDAT" type="xs:int"/>
   <xs:element name="AUART" type="xs:string"/>

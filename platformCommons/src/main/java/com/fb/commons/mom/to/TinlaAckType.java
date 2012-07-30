@@ -1,11 +1,11 @@
 package com.fb.commons.mom.to;
 
-/**
- * @author nehaga
- *
- */
-public enum CorruptMessageCause {
-	CORRUPT_IDOC;
+public enum TinlaAckType {
+	DEL_ACK,
+	ORDER_ACK,
+	MOD_ACK,
+	CAN_ACK,
+	ITEM_ACK;
 	
 	@Override
 	public String toString() {

@@ -78,14 +78,11 @@ public class SapIDocHandler implements JCoIDocHandler {
 
 				PlatformIDocHandler platformIDocHandler = platformIDocHandlerFactory.getHandler(idocType);
 				try {
-					SapMomTO sapIdoc = new SapMomTO();
-					sapIdoc.setIdoc(idocXml);
-					sapIdoc.setIdocNumber(idocNumber);
-					logger.info("Sending to idoc handler : " + sapIdoc.toString());
+					logger.info("Sending to idoc handler : " + idocXml);
 					
 					boolean isDuplicate = checkDuplicate(idocXml);
 					if(!isDuplicate) {
-						platformIDocHandler.handle(sapIdoc);
+						platformIDocHandler.handle(idocXml);
 					}
 				} catch (Exception e) {
 					saveIdoc(idocNumber, idocXml, "xml");

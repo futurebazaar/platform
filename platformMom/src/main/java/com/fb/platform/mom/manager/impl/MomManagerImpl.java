@@ -20,6 +20,8 @@ import com.fb.platform.mom.receiver.delivery.DeliveryDeleteSender;
 import com.fb.platform.mom.receiver.dlq.PreDLQMessageListener;
 import com.fb.platform.mom.receiver.inventory.InventoryMessageListener;
 import com.fb.platform.mom.receiver.inventory.InventorySender;
+import com.fb.platform.mom.receiver.itemAck.ItemAckMessageListener;
+import com.fb.platform.mom.receiver.itemAck.ItemAckSender;
 import com.fb.platform.mom.receiver.mail.MailMessageListener;
 import com.fb.platform.mom.receiver.mail.MailMsgSender;
 import com.fb.platform.mom.receiver.order.OrderMessageListener;
@@ -84,6 +86,15 @@ public class MomManagerImpl implements MomManager {
 	@Autowired
 	private DefaultMessageListenerContainer orderContainer = null;
 	
+	@Autowired
+	private ItemAckMessageListener itemAckMessageListener = null;
+
+	@Autowired
+	private ItemAckSender itemAckSender = null;
+
+	@Autowired
+	private DefaultMessageListenerContainer itemAckContainer = null;
+	
 
 	/* (non-Javadoc)
 	 * @see com.fb.platform.mom.manager.MomManager#send(com.fb.platform.mom.manager.PlatformDestinationEnum, java.lang.Object)
@@ -107,6 +118,9 @@ public class MomManagerImpl implements MomManager {
 			break;
 		case ORDER:
 			orderSender.sendMessage(message);
+			break;
+		case ITEM_ACK:
+			itemAckSender.sendMessage(message);
 			break;
 		default:
 			throw new IllegalStateException("No sender is configured for the destination : " + destination);
@@ -155,6 +169,12 @@ public class MomManagerImpl implements MomManager {
 			orderMessageListener.addReceiver(receiver);
 			if(!orderContainer.isRunning()) {
 				orderContainer.start();
+			}
+			break;
+		case ITEM_ACK:
+			itemAckMessageListener.addReceiver(receiver);
+			if(!itemAckContainer.isRunning()) {
+				itemAckContainer.start();
 			}
 			break;
 		default:
@@ -230,6 +250,19 @@ public class MomManagerImpl implements MomManager {
 
 	public void setOrderContainer(DefaultMessageListenerContainer orderContainer) {
 		this.orderContainer = orderContainer;
+	}
+
+	public void setItemAckMessageListener(
+			ItemAckMessageListener itemAckMessageListener) {
+		this.itemAckMessageListener = itemAckMessageListener;
+	}
+
+	public void setItemAckSender(ItemAckSender itemAckSender) {
+		this.itemAckSender = itemAckSender;
+	}
+
+	public void setItemAckContainer(DefaultMessageListenerContainer itemAckContainer) {
+		this.itemAckContainer = itemAckContainer;
 	}
 	
 }

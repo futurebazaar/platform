@@ -52,20 +52,25 @@ public class InventoryIDocHandler implements PlatformIDocHandler {
 	}
 
 	@Override
-	public void handle(SapMomTO sapIdoc) {
+	public void handle(String idocXml) {
 		logger.info("Begin handling Inventory idoc message.");
-
+		SapMomTO sapIdoc = new SapMomTO();
 		//convert the message xml into jaxb bean
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
-
-			ZTINLAIDOCTYP inventoryIdoc = (ZTINLAIDOCTYP)unmarshaller.unmarshal(new StreamSource(new StringReader(sapIdoc.getIdoc())));
+			
+			ZTINLAIDOCTYP inventoryIdoc = (ZTINLAIDOCTYP)unmarshaller.unmarshal(new StreamSource(new StringReader(idocXml)));
+			
+			sapIdoc.setIdoc(idocXml);
+			sapIdoc.setIdocNumber(inventoryIdoc.getIDOC().getEDIDC40().getDOCNUM());
 
 			List<ZTINLASEGDLVR> sapInventoryAckList = inventoryIdoc.getIDOC().getZTINLASEGDLVR();
 			for (ZTINLASEGDLVR sapInventoryAck : sapInventoryAckList) {
 				InventoryTO inventoryTo = new InventoryTO();
-				//inventoryTo.setIdocNumber(inventoryIdoc.getIDOC().getEDIDC40().getDOCNUM());
-				//inventoryTo.setRefUID(inventoryIdoc.getIDOC().getEDIDC40().getMATDOC());
+				
+				sapIdoc.setRefUID(sapInventoryAck.getMATDOC());
+				
+				inventoryTo.setSapIdoc(sapIdoc);
 				inventoryTo.setArticleId(sapInventoryAck.getMATNR());
 				inventoryTo.setIssuingSite(sapInventoryAck.getIWERKS());
 				inventoryTo.setIssuingStorageLoc(sapInventoryAck.getILGORT());

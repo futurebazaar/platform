@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.fb.platform.mom.order.receiver;
+package com.fb.platform.mom.itemAck.receiver;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,26 +23,26 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
 import com.fb.commons.PlatformException;
-import com.fb.commons.mom.to.OrderTO;
+import com.fb.commons.mom.to.ItemTO;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
 
 /**
  * @author nehaga
  *
  */
-public class OrderMessageReceiver implements PlatformMessageReceiver {
+public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 
 	/* (non-Javadoc)
 	 * @see com.fb.platform.mom.manager.PlatformMessageReceiver#handleMessage(java.lang.Object)
 	 */
 	
-	private static Log log = LogFactory.getLog(OrderMessageReceiver.class);
+	private static Log log = LogFactory.getLog(ItemAckMessageReceiver.class);
 	
 	private static Properties prop = initProperties();
 
 	private static Properties initProperties() {
 		Properties properties = new Properties();
-		InputStream propertiesStream = OrderMessageReceiver.class.getClassLoader().getResourceAsStream("receivers.properties");
+		InputStream propertiesStream = ItemAckMessageReceiver.class.getClassLoader().getResourceAsStream("receivers.properties");
 		try {
 			properties.load(propertiesStream);
 		} catch (IOException e) {
@@ -56,13 +56,13 @@ public class OrderMessageReceiver implements PlatformMessageReceiver {
 	public void handleMessage(Object message) {
 		log.info("Received the message : " + message);
 
-		OrderTO orderTo = (OrderTO) message;
-		sendAck(orderTo);
+		ItemTO itemAck = (ItemTO) message;
+		sendAck(itemAck);
 	}
 
-	private void sendAck(OrderTO orderTO) {
+	private void sendAck(ItemTO itemAck) {
 
-		String orderURL = prop.getProperty("receiver.order.url");
+		String orderURL = prop.getProperty("receiver.itemAck.url");
 		
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpPost httpPost = new HttpPost(orderURL);
@@ -71,8 +71,8 @@ public class OrderMessageReceiver implements PlatformMessageReceiver {
 		
 		parameters.add(new BasicNameValuePair("sender", "MOM"));
 		
-		if(orderTO.getSapIdoc() != null) {
-			parameters.add(new BasicNameValuePair("idocnumber", orderTO.getSapIdoc().getIdocNumber()));
+		if(itemAck.getSapIdoc() != null) {
+			parameters.add(new BasicNameValuePair("idocnumber", itemAck.getSapIdoc().getIdocNumber()));
 		}
 		parameters.add(new BasicNameValuePair("sender", "MOM"));
 
@@ -83,10 +83,10 @@ public class OrderMessageReceiver implements PlatformMessageReceiver {
 			HttpResponse response = httpClient.execute(httpPost);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode != HttpStatus.SC_OK) {
-				log.error("Order ack not delivered : " + orderTO.toString());
-				throw new PlatformException("Order ack not delivered to tinla on URL : " + orderURL);
+				log.error("Item ack not delivered : " + itemAck.toString());
+				throw new PlatformException("Item ack not delivered to tinla on URL : " + orderURL);
 			}
-			log.info("Order ack delivered to tinla. Status code : " + statusCode);
+			log.info("Item ack delivered to tinla. Status code : " + statusCode);
 		} catch (UnsupportedEncodingException e) {
 			log.error("Error communicating with tinla on url : " + orderURL, e);
 			throw new PlatformException("Error communicating with tinla on url : " + orderURL, e);

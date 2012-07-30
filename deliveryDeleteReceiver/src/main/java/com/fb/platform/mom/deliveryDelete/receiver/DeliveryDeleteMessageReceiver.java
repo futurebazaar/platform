@@ -25,6 +25,7 @@ import org.joda.time.DateTime;
 
 import com.fb.commons.PlatformException;
 import com.fb.commons.mom.to.DeliveryDeleteTO;
+import com.fb.commons.mom.to.TinlaAckType;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
 
 /**
@@ -75,6 +76,13 @@ public class DeliveryDeleteMessageReceiver implements PlatformMessageReceiver {
 		parameters.add(new BasicNameValuePair("deletedUser", deliveryDeleteTO.getUser()));
 		parameters.add(new BasicNameValuePair("deletedTCode", deliveryDeleteTO.getTransactionCode()));
 		parameters.add(new BasicNameValuePair("deliveryNumber", deliveryDeleteTO.getDeliveryNo()));
+		parameters.add(new BasicNameValuePair("atgDocumentId", ""));
+		parameters.add(new BasicNameValuePair("header", TinlaAckType.DEL_ACK.toString()));
+		parameters.add(new BasicNameValuePair("lspUpdDescr", ""));
+		parameters.add(new BasicNameValuePair("lspName", ""));
+		parameters.add(new BasicNameValuePair("lspUpdDescr", ""));
+		parameters.add(new BasicNameValuePair("awbNumber", ""));	
+		
 		Integer year = new Integer(deliveryDeleteTO.getDate().substring(0, 4));
 		Integer month = new Integer(deliveryDeleteTO.getDate().substring(4, 6));
 		Integer date = new Integer(deliveryDeleteTO.getDate().substring(6));

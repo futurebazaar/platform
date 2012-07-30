@@ -14,5 +14,6 @@ public enum PlatformDestinationEnum {
 	CORRUPT_IDOCS,
 	PREDLQ,
 	DELIVERY_DELETE,
-	ORDER;
+	ORDER,
+	ITEM_ACK;
 }

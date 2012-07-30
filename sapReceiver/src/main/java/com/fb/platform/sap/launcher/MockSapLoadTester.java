@@ -19,6 +19,7 @@ import org.terracotta.agent.repkg.de.schlichtherle.io.FileInputStream;
 import com.fb.commons.PlatformException;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandlerFactory;
+import com.fb.platform.sap.client.idoc.platform.impl.DeliveryDeleteIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.impl.DeliveryInventoryIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.impl.InventoryIDocHandler;
 
@@ -55,6 +56,7 @@ public class MockSapLoadTester {
 		
 		sendInventoryIdoc(idocFactory.getHandler(InventoryIDocHandler.INVENTORY_IDOC_TYPE));
 		sendDeliveryInventoryIdoc(idocFactory.getHandler(DeliveryInventoryIDocHandler.DELIVERY_INVENTORY_IDOC_TYPE));
+		sendDeliveryDeleteIdoc(idocFactory.getHandler(DeliveryDeleteIDocHandler.DELIVERY_DELETE));
 
 	}
 	
@@ -69,8 +71,7 @@ public class MockSapLoadTester {
 				inputStream = new FileInputStream(idoc);
 				sw = new StringWriter();
 				IOUtils.copy(inputStream, sw);
-				//TODO send sapMomTO
-				//inventoryIDocHandler.handle(sw.toString());
+				inventoryIDocHandler.handle(sw.toString());
 			}
 		} catch (Exception e) {
 			logger.error("Error in sendInventoryIdoc : ", e);
@@ -88,11 +89,28 @@ public class MockSapLoadTester {
 				inputStream = new FileInputStream(idoc);
 				sw = new StringWriter();
 				IOUtils.copy(inputStream, sw);
-				//TODO send sapMomTO
-				//deliveryInventoryIDocHandler.handle(sw.toString());
+				deliveryInventoryIDocHandler.handle(sw.toString());
 			}
 		} catch (Exception e) {
 			logger.error("Error in sendDeliveryInventoryIdoc : ", e);
+		}
+	}
+	
+	private static void sendDeliveryDeleteIdoc(PlatformIDocHandler deliveryDeleteIDocHandler) {
+		try {
+			StringWriter sw ;
+			InputStream inputStream ;
+			String deliveryDeletePath = prop.getProperty("sap.load.deliveryDelete.path");
+			System.out.println("Delivery Delete idoc path : " + deliveryDeletePath);
+			File deliveryDeleteDir = new File(deliveryDeletePath);
+			for (File idoc : deliveryDeleteDir.listFiles()) {
+				inputStream = new FileInputStream(idoc);
+				sw = new StringWriter();
+				IOUtils.copy(inputStream, sw);
+				deliveryDeleteIDocHandler.handle(sw.toString());
+			}
+		} catch (Exception e) {
+			logger.error("Error in sendDeliveryDeleteIdoc : ", e);
 		}
 	}
 

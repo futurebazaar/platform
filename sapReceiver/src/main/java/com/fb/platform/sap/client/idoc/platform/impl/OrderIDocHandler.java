@@ -17,6 +17,7 @@ import org.apache.commons.logging.LogFactory;
 import com.fb.commons.PlatformException;
 import com.fb.commons.mom.to.CorruptMessageCause;
 import com.fb.commons.mom.to.CorruptMessageTO;
+import com.fb.commons.mom.to.ItemTO;
 import com.fb.commons.mom.to.OrderTO;
 import com.fb.commons.mom.to.SapMomTO;
 import com.fb.platform.mom.manager.MomManager;
@@ -54,13 +55,13 @@ public class OrderIDocHandler implements PlatformIDocHandler {
 	}
 
 	@Override
-	public void handle(SapMomTO sapIdoc) {
+	public void handle(String idocXml) {
 		logger.info("Begin handling order idoc message.");
-		String idocXml = null;
+		SapMomTO sapIdoc = new SapMomTO();
 		//convert the message xml into jaxb bean
 		try {
 			//the xml received from Sap is flawed. It contains ZATGFLOW as parent and child level item. We will replace the top level ZATGFLOW with ZATGFLOW_TOP
-			String tempidocXml = sapIdoc.getIdoc().replaceFirst("ZATGFLOW", "ZATGFLOW_TOP");
+			String tempidocXml = idocXml.replaceFirst("ZATGFLOW", "ZATGFLOW_TOP");
 			int index = tempidocXml.lastIndexOf("ZATGFLOW");
 			StringBuffer sb = new StringBuffer();
 			sb.append(tempidocXml.substring(0, index));
@@ -68,17 +69,23 @@ public class OrderIDocHandler implements PlatformIDocHandler {
 			sb.append(tempidocXml.substring(index + 8));
 			idocXml = sb.toString();
 			
-			sapIdoc.setIdoc(idocXml);
-			
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 
 			ZATGFLOWTOP orderIdoc = (ZATGFLOWTOP)unmarshaller.unmarshal(new StreamSource(new StringReader(sapIdoc.getIdoc())));
+			
+			sapIdoc.setIdoc(idocXml);
+			sapIdoc.setIdocNumber(orderIdoc.getIDOC().getEDIDC40().getDOCNUM());
 
 			List<ZATGFLOW> orderList = orderIdoc.getIDOC().getZATGFLOW();
 			for (ZATGFLOW sapOrderAck : orderList) {
 				OrderTO order = new OrderTO();
 				logger.debug("Sending OrderTO to Order destination : " + order.toString());
 				momManager.send(PlatformDestinationEnum.ORDER, order);
+			}
+			for (ZATGFLOW sapOrderAck : orderList) {
+				ItemTO itemAck = new ItemTO();
+				logger.debug("Sending OrderTO to item ack destination : " + itemAck.toString());
+				momManager.send(PlatformDestinationEnum.ITEM_ACK, itemAck);
 			}
 		} catch (JAXBException e) {
 			CorruptMessageTO corruptMessage = new CorruptMessageTO();

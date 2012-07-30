@@ -52,19 +52,23 @@ public class DeliveryDeleteIDocHandler implements PlatformIDocHandler {
 	}
 
 	@Override
-	public void handle(SapMomTO sapIdoc) {
+	public void handle(String idocXml) {
 		logger.info("Begin handling delivery delete idoc message.");
-
+		SapMomTO sapIdoc = new SapMomTO();
 		//convert the message xml into jaxb bean
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 
-			ZATGDELD deliveryDelIdoc = (ZATGDELD)unmarshaller.unmarshal(new StreamSource(new StringReader(sapIdoc.getIdoc())));
-
+			ZATGDELD deliveryDelIdoc = (ZATGDELD)unmarshaller.unmarshal(new StreamSource(new StringReader(idocXml)));
+			
+			sapIdoc.setIdoc(idocXml);
+			sapIdoc.setIdocNumber(deliveryDelIdoc.getIDOC().getEDIDC40().getDOCNUM());
+			
 			List<ZATGSOD> sapDelvDelList = deliveryDelIdoc.getIDOC().getZATGSOH().getZATGSOD();
 			String orderNo = deliveryDelIdoc.getIDOC().getZATGSOH().getVBELN();
 			for (ZATGSOD sapDelvDel : sapDelvDelList) {
 				DeliveryDeleteTO deliveryDelete = new DeliveryDeleteTO();
+				deliveryDelete.setOrderNo(orderNo);
 				deliveryDelete.setDate(sapDelvDel.getDELDATE());
 				deliveryDelete.setDeliveryNo(sapDelvDel.getVBELN());
 				deliveryDelete.setItemNo(sapDelvDel.getPOSNR());

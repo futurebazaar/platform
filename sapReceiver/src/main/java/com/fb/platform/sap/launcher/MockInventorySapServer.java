@@ -28,14 +28,14 @@ public class MockInventorySapServer {
 
 	private static Log logger = LogFactory.getLog(MockInventorySapServer.class);
 
-	private static SapMomTO INVENTORY_IDOC_0 = new SapMomTO();
-	private static SapMomTO INVENTORY_IDOC_1 = new SapMomTO();
-	private static SapMomTO INVENTORY_IDOC_2 = new SapMomTO();
-	private static SapMomTO INVENTORY_IDOC_3 = new SapMomTO();
-	private static SapMomTO INVENTORY_IDOC_4 = new SapMomTO();
-	private static SapMomTO INVENTORY_IDOC_5 = new SapMomTO();
-	private static SapMomTO INVENTORY_IDOC_6 = new SapMomTO();
-	private static SapMomTO DELIVERY_INVENTORY_IDOC_0 = new SapMomTO();
+	private static String INVENTORY_IDOC_0 = null;
+	private static String INVENTORY_IDOC_1 = null;
+	private static String INVENTORY_IDOC_2 = null;
+	private static String INVENTORY_IDOC_3 = null;
+	private static String INVENTORY_IDOC_4 = null;
+	private static String INVENTORY_IDOC_5 = null;
+	private static String INVENTORY_IDOC_6 = null;
+	private static String DELIVERY_INVENTORY_IDOC_0 = null;
 
 	static {
 		InputStream inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ztinla_idoctype1.xml");
@@ -46,9 +46,7 @@ public class MockInventorySapServer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		INVENTORY_IDOC_0.setIdoc(sw.toString());
-		INVENTORY_IDOC_0.setIdocNumber("INVENTORY_IDOC_0");
-		//INVENTORY_IDOC_0.setIdocType(InventoryIDocHandler.INVENTORY_IDOC_TYPE);
+		INVENTORY_IDOC_0 = sw.toString();
 
 		inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ztinla_idoctype2.xml");
 		sw = new StringWriter();
@@ -58,9 +56,7 @@ public class MockInventorySapServer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		INVENTORY_IDOC_1.setIdoc(sw.toString());
-		INVENTORY_IDOC_1.setIdocNumber("INVENTORY_IDOC_1");
-		//INVENTORY_IDOC_1.setIdocType(InventoryIDocHandler.INVENTORY_IDOC_TYPE);
+		INVENTORY_IDOC_1 = sw.toString();
 
 		inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ztinla_idoctype3.xml");
 		sw = new StringWriter();
@@ -70,9 +66,7 @@ public class MockInventorySapServer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		INVENTORY_IDOC_2.setIdoc(sw.toString());
-		INVENTORY_IDOC_2.setIdocNumber("INVENTORY_IDOC_2");
-		//INVENTORY_IDOC_2.setIdocType(InventoryIDocHandler.INVENTORY_IDOC_TYPE);
+		INVENTORY_IDOC_2 = sw.toString();
 		
 		inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ZATG_SO_CREATE-idoc.xml");
 		sw = new StringWriter();
@@ -82,9 +76,7 @@ public class MockInventorySapServer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		INVENTORY_IDOC_3.setIdoc(sw.toString());
-		INVENTORY_IDOC_3.setIdocNumber("INVENTORY_IDOC_3");
-		//INVENTORY_IDOC_3.setIdocType("ZATG_SO_CREATEFROMDAT202");
+		INVENTORY_IDOC_3 = sw.toString();
 		
 		inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ZATGDELD-idoc.xml");
 		sw = new StringWriter();
@@ -94,9 +86,7 @@ public class MockInventorySapServer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		INVENTORY_IDOC_4.setIdoc(sw.toString());
-		INVENTORY_IDOC_4.setIdocNumber("INVENTORY_IDOC_4");
-		//INVENTORY_IDOC_4.setIdocType("ZATGDELD");
+		INVENTORY_IDOC_4 = sw.toString();
 		
 		inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ZATGFLOW-idoc.xml");
 		sw = new StringWriter();
@@ -106,9 +96,7 @@ public class MockInventorySapServer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		INVENTORY_IDOC_5.setIdoc(sw.toString());
-		INVENTORY_IDOC_5.setIdocNumber("INVENTORY_IDOC_5");
-		//INVENTORY_IDOC_5.setIdocType("ZATGFLOW");
+		INVENTORY_IDOC_5 = sw.toString();
 		
 		inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ZATGINVOICE-idoc.xml");
 		sw = new StringWriter();
@@ -118,9 +106,7 @@ public class MockInventorySapServer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		INVENTORY_IDOC_6.setIdoc(sw.toString());
-		INVENTORY_IDOC_6.setIdocNumber("INVENTORY_IDOC_6");
-		//INVENTORY_IDOC_6.setIdocType("ZATGINVOICE");
+		INVENTORY_IDOC_6 = sw.toString();
 
 		inputStream = MockInventorySapServer.class.getClassLoader().getResourceAsStream("ztinla_dlvry.xml");
 		sw = new StringWriter();
@@ -130,9 +116,7 @@ public class MockInventorySapServer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		DELIVERY_INVENTORY_IDOC_0.setIdoc(sw.toString());
-		DELIVERY_INVENTORY_IDOC_0.setIdocNumber("DELIVERY_INVENTORY_IDOC_0");
-		//DELIVERY_INVENTORY_IDOC_0.setIdocType("ZTINLA_DLVRY");
+		DELIVERY_INVENTORY_IDOC_0 = sw.toString();
 	}
 	/**
 	 * @param args

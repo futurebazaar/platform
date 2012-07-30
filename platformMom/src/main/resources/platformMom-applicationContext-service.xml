@@ -196,6 +196,25 @@
         <property name="orderDestination" ref="orderDestination"/>
 	</bean>
 	
+	<bean id="itemAckDestination" class="org.hornetq.api.jms.HornetQJMSClient" factory-method="createQueue">
+	   <constructor-arg index="0" value="itemAck"/>
+	</bean>
+
+	<bean id="itemAckMessageListener" class="com.fb.platform.mom.receiver.itemAck.ItemAckMessageListener"></bean>
+	
+	<bean id="itemAckContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="userCredentialFactory"/>
+		<property name="destination" ref="itemAckDestination"/>
+		<property name="messageListener" ref="itemAckMessageListener" />
+		<property name="autoStartup" value="false"/>
+		<property name="sessionTransacted" value="true"/>
+	</bean>
+
+	<bean id="itemAckSender" class="com.fb.platform.mom.receiver.itemAck.ItemAckSenderImpl">
+        <property name="jmsTemplate" ref="jmsTemplate"/>
+        <property name="itemAckDestination" ref="itemAckDestination"/>
+	</bean>
+	
     <bean id="momManager" class="com.fb.platform.mom.manager.impl.MomManagerImpl">
         <property name="inventoryListener" ref="inventoryListener"/>
         <property name="inventorySender" ref="inventorySender"/>
@@ -214,5 +233,8 @@
         <property name="orderMessageListener" ref="orderMessageListener"/>
         <property name="orderSender" ref="orderSender"/>
         <property name="orderContainer" ref="orderContainer"/>
+        <property name="itemAckMessageListener" ref="itemAckMessageListener"/>
+        <property name="itemAckSender" ref="itemAckSender"/>
+        <property name="itemAckContainer" ref="itemAckContainer"/>
     </bean>
 </beans>
