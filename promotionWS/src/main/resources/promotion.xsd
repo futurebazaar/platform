@@ -91,6 +91,7 @@
       <xs:enumeration value="COUPON_CODE_EXPIRED"/>
       <xs:enumeration value="USER_NOT_AUTHORIZED"/>
       <xs:enumeration value="NUMBER_OF_USES_EXCEEDED"/>
+      <xs:enumeration value="NUMBER_OF_MONTHLY_USE_EXCEEDED"/>
       <xs:enumeration value="NOT_APPLICABLE"/>
       <xs:enumeration value="LESS_ORDER_AMOUNT"/>
       <xs:enumeration value="ALREADY_APPLIED_COUPON_ON_ORDER"/>
@@ -142,6 +143,7 @@
       <xs:enumeration value="SUCCESS"/>
       <xs:enumeration value="INVALID_COUPON_CODE"/>
       <xs:enumeration value="NUMBER_OF_USES_EXCEEDED"/>
+      <xs:enumeration value="NUMBER_OF_MONTHLY_USE_EXCEEDED"/>
       <xs:enumeration value="INTERNAL_ERROR"/>
       <xs:enumeration value="NO_SESSION"/>
       <xs:enumeration value="ALREADY_APPLIED_COUPON_ON_ORDER"/>

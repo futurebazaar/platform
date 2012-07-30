@@ -49,6 +49,7 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
       	<xs:enumeration value="FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF"/>
       	<xs:enumeration value="BUY_X_QUANTITY_GET_VARIABLE_PERCENT_OFF"/>
       	<xs:enumeration value="CATEGORY_BASED_VARIABLE_PERCENT_OFF"/>
+      	<xs:enumeration value="MONTHLY_DISCOUNT_RS_OFF"/>
 	</xs:restriction>
   </xs:simpleType>
   
@@ -82,6 +83,7 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
       	<xs:enumeration value="CATEGORY_INCLUDE_LIST"/>
       	<xs:enumeration value="CATEGORY_EXCLUDE_LIST"/>
       	<xs:enumeration value="VARIABLE_DISCOUNT_PERCENTAGE"/>
+      	<xs:enumeration value="NUMBER_OF_TIMES_IN_MONTH"/>
 	</xs:restriction>
   </xs:simpleType>
  

@@ -120,7 +120,9 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 			List<RulesEnum> rulesList = promotionAdminService.getAllPromotionRules();
 			List<RuleConfigDescriptor> rulesConfigList = new ArrayList<RuleConfigDescriptor>();
 			for(RulesEnum rulesEnum : rulesList) {
-				List<RuleConfigItemDescriptor> rulesConfigItemList = PromotionRuleFactory.getRuleConfig(rulesEnum);
+				//Pass 0 as dummy promotionId, as is irrelevant in this case
+				// TODO : Change to use metadata
+				List<RuleConfigItemDescriptor> rulesConfigItemList = PromotionRuleFactory.getRuleConfig(rulesEnum,-1);
 				RuleConfigDescriptor ruleConfigDescriptor = new RuleConfigDescriptor();
 				ruleConfigDescriptor.setRulesEnum(rulesEnum);
 				ruleConfigDescriptor.setRuleConfigItemsList(rulesConfigItemList);
@@ -338,7 +340,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 	private String hasValidRuleConfig(PromotionTO promotionTo) {
 		java.util.List<String> missingConfigsList = new ArrayList<String>();
 		
-		List<RuleConfigItemDescriptor> requiredConfigs = PromotionRuleFactory.getRuleConfig(RulesEnum.valueOf(promotionTo.getRuleName()));
+		List<RuleConfigItemDescriptor> requiredConfigs = PromotionRuleFactory.getRuleConfig(RulesEnum.valueOf(promotionTo.getRuleName()),promotionTo.getId());
 		HashMap<String, RuleConfigItemTO> receivedConfigsMap = new HashMap<String, RuleConfigItemTO>();
 		
 		for (int i = promotionTo.getConfigItems().size() - 1 ; i >= 0 ; i--) {
