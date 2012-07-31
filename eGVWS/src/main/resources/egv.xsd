@@ -24,6 +24,7 @@
         <xs:element ref="egv:validFrom"/>
         <xs:element ref="egv:orderItemId"/>
         <xs:element ref="egv:email"/>
+        <xs:element ref="egv:mobile"/>
         <xs:element ref="egv:userId"/>
         <xs:element ref="egv:gvStatus"/>
         <xs:element ref="egv:amount"/>
@@ -36,6 +37,7 @@
   <xs:element name="gvStatus" type="xs:string"/>
   <xs:element name="userId" type="xs:int"/>
   <xs:element name="email" type="xs:string"/>
+  <xs:element name="mobile" type="xs:string"/>
   <xs:element name="number" type="xs:long"/>
   <xs:element name="validTill" type="xs:dateTime"/>
   <xs:element name="validFrom" type="xs:dateTime"/>
@@ -61,6 +63,7 @@
       <xs:sequence>
         <xs:element ref="egv:sessionToken"/>
         <xs:element ref="egv:email"/>
+        <xs:element ref="egv:mobile"/>
         <xs:element ref="egv:amount"/>
         <xs:element ref="egv:orderItemId"/>
         <xs:element ref="egv:senderName"/>

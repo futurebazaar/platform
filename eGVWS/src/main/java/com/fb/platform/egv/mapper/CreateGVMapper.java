@@ -37,6 +37,7 @@ public class CreateGVMapper {
 			coreRequest.setSenderName(webRequest.getSenderName());
 			coreRequest.setReceiverName(webRequest.getReceiverName());
 			coreRequest.setGiftMessage(webRequest.getGiftMessage());
+			coreRequest.setMobile(webRequest.getMobile());
 
 		}catch (JAXBException e) {
 			throw new JAXBException("Problem in XML Parsing");

@@ -97,9 +97,67 @@ public class GiftVoucherManagerImplTest extends BaseTestCase{
 	}
 
 	@Test
-	public void testCreateGiftVoucher(){
+	public void testCreateGiftVoucherWithEmail(){
 		CreateRequest createGiftVoucherRequest = new CreateRequest();
 		createGiftVoucherRequest.setEmail("keith.fernandez@futuregroup.in");
+		createGiftVoucherRequest.setOrderItemId(1);
+		createGiftVoucherRequest.setAmount(new BigDecimal(1000.00));
+		createGiftVoucherRequest.setSessionToken(responseUser1.getSessionToken());
+		createGiftVoucherRequest.setSenderName("Keith Fernandez");
+		createGiftVoucherRequest.setReceiverName("Zishaan");
+		
+		
+		CreateResponse createGiftVoucherResponse = giftVoucherManager.create(createGiftVoucherRequest);
+		
+		assertNotNull(createGiftVoucherResponse);
+		assertNotNull(createGiftVoucherResponse.getSessionToken());
+		assertEquals(CreateResponseStatusEnum.SUCCESS,createGiftVoucherResponse.getResponseStatus());
+		
+	}
+	
+	@Test
+	public void testCreateGiftVoucherWithMobile(){
+		CreateRequest createGiftVoucherRequest = new CreateRequest();
+		createGiftVoucherRequest.setMobile("917498459473");
+		createGiftVoucherRequest.setOrderItemId(1);
+		createGiftVoucherRequest.setAmount(new BigDecimal(1000.00));
+		createGiftVoucherRequest.setSessionToken(responseUser1.getSessionToken());
+		createGiftVoucherRequest.setSenderName("Keith Fernandez");
+		createGiftVoucherRequest.setReceiverName("Zishaan");
+		
+		
+		CreateResponse createGiftVoucherResponse = giftVoucherManager.create(createGiftVoucherRequest);
+		
+		assertNotNull(createGiftVoucherResponse);
+		assertNotNull(createGiftVoucherResponse.getSessionToken());
+		assertEquals(CreateResponseStatusEnum.SUCCESS,createGiftVoucherResponse.getResponseStatus());
+		
+	}
+	
+	@Test
+	public void testCreateGiftVoucherWithInvalidMobile(){
+		CreateRequest createGiftVoucherRequest = new CreateRequest();
+		createGiftVoucherRequest.setMobile("91749845947");
+		createGiftVoucherRequest.setOrderItemId(1);
+		createGiftVoucherRequest.setAmount(new BigDecimal(1000.00));
+		createGiftVoucherRequest.setSessionToken(responseUser1.getSessionToken());
+		createGiftVoucherRequest.setSenderName("Keith Fernandez");
+		createGiftVoucherRequest.setReceiverName("Zishaan");
+		
+		
+		CreateResponse createGiftVoucherResponse = giftVoucherManager.create(createGiftVoucherRequest);
+		
+		assertNotNull(createGiftVoucherResponse);
+		assertNotNull(createGiftVoucherResponse.getSessionToken());
+		assertEquals(CreateResponseStatusEnum.SUCCESS,createGiftVoucherResponse.getResponseStatus());
+		
+	}
+	
+	@Test
+	public void testCreateGiftVoucherWithEmailAndMobile(){
+		CreateRequest createGiftVoucherRequest = new CreateRequest();
+		createGiftVoucherRequest.setEmail("keith.fernandez@futuregroup.in");
+		createGiftVoucherRequest.setMobile("917498459473");
 		createGiftVoucherRequest.setOrderItemId(1);
 		createGiftVoucherRequest.setAmount(new BigDecimal(1000.00));
 		createGiftVoucherRequest.setSessionToken(responseUser1.getSessionToken());

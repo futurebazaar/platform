@@ -17,6 +17,7 @@
     <bean id="giftVoucherService" class="com.fb.platform.egv.service.impl.GiftVoucherServiceImpl">
         <property name="giftVoucherDao" ref="giftVoucherDao"></property>
         <property name="mailSender" ref="mailSender"></property>
+         <property name="smsSender" ref="smsSender"></property>
     </bean>
     
     <bean id="springMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
@@ -28,8 +29,12 @@
             </props>
          </property>
 	</bean>
+	
     <bean id="mailSender" class="com.fb.commons.mail.MailSender">
 	  	<property name="springMailSender" ref="springMailSender"/>
+	</bean>
+	
+	<bean id="smsSender" class="com.fb.commons.sms.SmsSender">
 	</bean>
     
 

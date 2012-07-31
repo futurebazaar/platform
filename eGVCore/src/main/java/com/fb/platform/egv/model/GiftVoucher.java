@@ -23,6 +23,7 @@ public class GiftVoucher implements Serializable {
 	private GiftVoucherDates dates;
 	private int orderItemId;
 	private String email;
+	private String mobile;
 	private int userId;
 	private GiftVoucherStatusEnum status;
 	private Money amount;
@@ -62,6 +63,12 @@ public class GiftVoucher implements Serializable {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public String getMobile() {
+		return mobile;
+	}
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
 	}
 	public int getUserId() {
 		return userId;

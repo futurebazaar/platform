@@ -21,7 +21,7 @@ public interface GiftVoucherDao {
 	
 	public void changeState(long giftVoucherNumber, GiftVoucherStatusEnum newState);
 	
-	public boolean createGiftVoucher(final long gvNumber, final String pin,final String email, final int userId, final BigDecimal amount, final GiftVoucherStatusEnum status, final int orderItemId);
+	public boolean createGiftVoucher(final long gvNumber, final String pin,final String email, final int userId, final BigDecimal amount, final GiftVoucherStatusEnum status, final int orderItemId, final String mobile);
 	
 	public boolean createGiftVoucherUse(final long gvNumber,final int userId, final int orderId,final BigDecimal amountUsed);
 	

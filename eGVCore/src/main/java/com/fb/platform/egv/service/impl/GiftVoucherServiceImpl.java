@@ -12,9 +12,12 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.mail.MailException;
 
 import com.fb.commons.PlatformException;
+import com.fb.commons.communication.to.MailTO;
+import com.fb.commons.communication.to.SmsTO;
 import com.fb.commons.mail.MailSender;
 import com.fb.commons.mail.exception.MailerException;
-import com.fb.commons.mail.to.MailTO;
+import com.fb.commons.mail.exception.SmsException;
+import com.fb.commons.sms.SmsSender;
 import com.fb.platform.egv.dao.GiftVoucherDao;
 import com.fb.platform.egv.exception.GiftVoucherAlreadyUsedException;
 import com.fb.platform.egv.exception.GiftVoucherException;
@@ -28,6 +31,7 @@ import com.fb.platform.egv.service.GiftVoucherService;
 import com.fb.platform.egv.util.GiftVoucherPinUtil;
 import com.fb.platform.egv.util.MailHelper;
 import com.fb.platform.egv.util.RandomGenerator;
+import com.fb.platform.egv.util.SmsHelper;
 
 /**
  * @author keith
@@ -47,12 +51,20 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 	@Autowired
 	private MailSender mailSender = null;
 
+	@Autowired
+	private SmsSender smsSender = null;
+
+	
 	public void setGiftVoucherDao(GiftVoucherDao giftVoucherDao) {
 		this.giftVoucherDao = giftVoucherDao;
 	}
 	
 	public void setMailSender(MailSender mailSender) {
 		this.mailSender = mailSender;
+	}
+	
+	public void setSmsSender(SmsSender smsSender) {
+		this.smsSender = smsSender;
 	}
 
 	@Override
@@ -125,15 +137,15 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 	
 	@Override
 	public GiftVoucher createGiftVoucher(String email, int userId,
-			BigDecimal amount, int orderItemId, String senderName, String receiverName, String giftMessage) throws NoOrderItemExistsException, MailerException, PlatformException {
+			BigDecimal amount, int orderItemId, String senderName, String receiverName, String giftMessage, String mobile) throws NoOrderItemExistsException, MailerException, PlatformException {
 		String numGenerated = RandomGenerator.integerRandomGenerator(GV_NUMBER_LENGTH);
 		long gvNumber = Long.parseLong(numGenerated);
 		GiftVoucher eGV = new GiftVoucher();
 		String gvPin = RandomGenerator.integerRandomGenerator(GV_PIN_LENGTH);
-		 giftVoucherDao.createGiftVoucher(gvNumber,GiftVoucherPinUtil.getEncryptedPassword(gvPin),email,userId,amount,GiftVoucherStatusEnum.CONFIRMED,orderItemId);
+		 giftVoucherDao.createGiftVoucher(gvNumber,GiftVoucherPinUtil.getEncryptedPassword(gvPin),email,userId,amount,GiftVoucherStatusEnum.CONFIRMED,orderItemId,mobile);
 		 logger.debug("eGV created, now checking if valid orderItemId " + orderItemId);
 		 try {
-			 
+			
 			// Removed the constraint (due to Txn prob ) and Added below check : Remove after constraint is added
 //			if(!orderItemDao.isValidId(orderItemId)) {
 //				 throw new NoOrderItemExistsException("No such OrderItem " + orderItemId);  
@@ -143,12 +155,22 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 			// load the eGV info
 			eGV = giftVoucherDao.load(gvNumber);
 			
-		    //code to send email
-		 	MailTO message = MailHelper.createMailTO(eGV.getEmail(), amount, Long.toString(gvNumber), gvPin, eGV.getValidTill(), senderName, receiverName,giftMessage);
-			mailSender.send(message);
+			if(!(email == null || email.isEmpty())) {
+			    //code to send email
+			 	MailTO message = MailHelper.createMailTO(eGV.getEmail(), amount, Long.toString(gvNumber), gvPin, eGV.getValidTill(), senderName, receiverName,giftMessage);
+				mailSender.send(message);
+			}
+			if(!(mobile == null || mobile.isEmpty())) {
+			    //code to send email
+			 	SmsTO smsTo = SmsHelper.createSmsTO(eGV.getMobile(), amount, Long.toString(gvNumber), gvPin, eGV.getValidTill(), senderName, receiverName,giftMessage);
+				smsSender.send(smsTo);
+			}
 		 } catch (MailException e) {
 			throw new MailerException("Error sending mail", e);
+		 } catch (SmsException e) {
+				throw new SmsException("Error sending SMS", e);
 		 }
+		 
 
 		return eGV;
 		
@@ -221,7 +243,6 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 				eGV.setStatus(GiftVoucherStatusEnum.USE_ROLLBACKED);
 				giftVoucherDao.changeState(giftVoucherNumber, GiftVoucherStatusEnum.USE_ROLLBACKED);
 				giftVoucherDao.deleteUse(giftVoucherNumber, userId, orderId);
-				System.out.println("Delete success");
 			} else {
 				throw new GiftVoucherException("Gift Voucher with GV number : " + giftVoucherNumber + " is not used");
 			}

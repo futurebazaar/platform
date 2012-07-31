@@ -1,4 +1,4 @@
-package com.fb.commons.mail.to;
+package com.fb.commons.communication.to;
 
 import java.io.File;
 import java.util.List;
