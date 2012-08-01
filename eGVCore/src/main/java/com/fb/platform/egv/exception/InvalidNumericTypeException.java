@@ -1,15 +1,14 @@
 /**
  * 
  */
-package com.fb.platform.egv.service;
+package com.fb.platform.egv.exception;
 
-import com.fb.commons.PlatformException;
 
 /**
  * @author ashish
  *
  */
-public class InvalidNumericTypeException extends PlatformException {
+public class InvalidNumericTypeException extends GiftVoucherException {
 
 	public InvalidNumericTypeException() {
 		super();

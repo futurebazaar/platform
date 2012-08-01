@@ -23,11 +23,12 @@ import org.springframework.jdbc.support.KeyHolder;
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.egv.dao.GiftVoucherDao;
+import com.fb.platform.egv.exception.GiftVoucherException;
+import com.fb.platform.egv.exception.GiftVoucherNotFoundException;
 import com.fb.platform.egv.model.GiftVoucher;
 import com.fb.platform.egv.model.GiftVoucherDates;
 import com.fb.platform.egv.model.GiftVoucherStatusEnum;
 import com.fb.platform.egv.model.GiftVoucherUse;
-import com.fb.platform.egv.service.GiftVoucherNotFoundException;
 
 /**
  * @author keith
@@ -50,6 +51,7 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 			"	order_item_id, " +
 			"	user_id, " +
 			"	email, " +
+			"	mobile, " +
 			"	amount, " +
 			"	created_on, " +
 			"	last_modified_on " +
@@ -66,6 +68,7 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 			"	order_item_id, " +
 			"	user_id, " +
 			"	email, " +
+			"	mobile, " +
 			"	amount, " +
 			"	created_on, " +
 			"	last_modified_on " +
@@ -83,6 +86,7 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 			"	order_item_id, " +
 			"	user_id, " +
 			"	email, " +
+			"	mobile, " +
 			"	amount, " +
 			"	created_on, " +
 			"	last_modified_on " +
@@ -95,6 +99,7 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 			"	number,"	+
 			"	pin,"	+
 			"	email,"	+
+			"	mobile,"	+
 			"	status,"	+
 			"	amount,"	+
 			"	user_id,"	+
@@ -103,7 +108,7 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 			"	last_modified_on,"	+
 			"	valid_from,"	+
 			"	valid_till"	+
-			"	) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,? )";
+			"	) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,? )";
 
 	private static final String UPDATE_GIFT_VOUCHER_STATE_QUERY = 
 			"UPDATE " +
@@ -131,6 +136,13 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 			"	used_on,"	+
 			"	amount_used"	+
 			"	) VALUES ( ?, ?, ?, ?, ? )";
+	
+	private static final String DELETE_GIFT_VOUCHER_USAGE_QUERY = 
+			"DELETE FROM " +
+			"	gift_voucher_usage where " +
+			"	gift_voucher_number = ?  "	+
+			"	AND used_by = ? "	+
+			"	AND order_id = ?";
 
 	
 	@Override
@@ -173,7 +185,7 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 	}
 	
 	@Override
-	public boolean createGiftVoucher(final long gvNumber, final String pin,final String email, final int userId, final BigDecimal amount, final GiftVoucherStatusEnum status, final int orderItemId) {
+	public boolean createGiftVoucher(final long gvNumber, final String pin,final String email, final int userId, final BigDecimal amount, final GiftVoucherStatusEnum status, final int orderItemId, final String mobile) {
 		
 		if(log.isDebugEnabled()) {
 			log.debug("Insert in the gift_voucher table ");
@@ -190,17 +202,18 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 					ps.setLong(1,gvNumber);
 					ps.setString(2,pin);
 					ps.setString(3,email);
-					ps.setString(4,status.toString());
-					ps.setBigDecimal(5, amount);
-					ps.setInt(6, userId);
-					ps.setInt(7, orderItemId);
+					ps.setString(4,mobile);
+					ps.setString(5,status.toString());
+					ps.setBigDecimal(6, amount);
+					ps.setInt(7, userId);
+					ps.setInt(8, orderItemId);
 					
 					Timestamp timestamp = new java.sql.Timestamp(System.currentTimeMillis());
 					
-					ps.setTimestamp(8, timestamp);
 					ps.setTimestamp(9, timestamp);
 					ps.setTimestamp(10, timestamp);
-					ps.setTimestamp(11, new java.sql.Timestamp(DateTime.now().plusMonths(6).getMillis()));
+					ps.setTimestamp(11, timestamp);
+					ps.setTimestamp(12, new java.sql.Timestamp(DateTime.now().plusMonths(6).getMillis()));
 					return ps;
 				}
 			}, giftVoucherKeyHolder);
@@ -257,7 +270,7 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 		jdbcTemplate.query(GET_GIFT_VOUCHER_USAGE_BY_NUMBER_QUERY, gvurcbh, giftVoucherNumber);
 		if (gvurcbh.giftVoucherUse == null) {
 			log.error("No Gift Voucher found : GV NUmber - " + giftVoucherNumber);
-			return null;
+			throw new GiftVoucherException("eGV Error : Unable to find any usage entry for eGV num : " + giftVoucherNumber);
 		}
 		gvUse = gvurcbh.giftVoucherUse;
 
@@ -281,7 +294,6 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 	
 	@Override
 	public boolean deleteGiftVoucher(long gvNumber, int userId, int orderItemId) {
-		
 		return false;
 	}
 
@@ -295,6 +307,7 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 			giftVoucher = new GiftVoucher();
 			giftVoucher.setId(rs.getInt("id"));
 			giftVoucher.setEmail(rs.getString("email"));
+			giftVoucher.setMobile(rs.getString("mobile"));
 			giftVoucher.setAmount(new Money(rs.getBigDecimal("amount")));
 			giftVoucher.setStatus(GiftVoucherStatusEnum.valueOf(rs.getString("status")));
 			giftVoucher.setNumber(rs.getString("number"));
@@ -338,6 +351,16 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 			if (usedOnTS != null) {
 				giftVoucherUse.setUsedOn(new DateTime(usedOnTS));
 			}
+		}
+	}
+	
+	@Override
+	public void deleteUse(long giftVoucherNumber, int userId,
+			int orderId) {
+		int rowsDeleted = jdbcTemplate.update(DELETE_GIFT_VOUCHER_USAGE_QUERY,new Object[] {giftVoucherNumber,userId,orderId} );
+		if (rowsDeleted == 0) {
+			log.error("eGV Rollback Error : Unable to delete the eGV Usage Entry for eGV number  : " + giftVoucherNumber);
+			throw new PlatformException("eGV Rollback Error : Unable to delete the eGV Usage Entry for eGV number  : " + giftVoucherNumber);
 		}
 	}
 	

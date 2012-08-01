@@ -11,6 +11,8 @@ import com.fb.platform.egv.to.CreateRequest;
 import com.fb.platform.egv.to.CreateResponse;
 import com.fb.platform.egv.to.GetInfoRequest;
 import com.fb.platform.egv.to.GetInfoResponse;
+import com.fb.platform.egv.to.RollbackUseRequest;
+import com.fb.platform.egv.to.RollbackUseResponse;
 import com.fb.platform.egv.to.UseRequest;
 import com.fb.platform.egv.to.UseResponse;
 
@@ -29,5 +31,7 @@ public interface GiftVoucherManager {
 	public UseResponse use(UseRequest request);
 	
 	public ApplyResponse apply(ApplyRequest request);
+	
+	public RollbackUseResponse rollbackUse(RollbackUseRequest request);
 	
 }

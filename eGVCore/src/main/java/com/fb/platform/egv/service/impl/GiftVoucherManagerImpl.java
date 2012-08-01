@@ -13,13 +13,14 @@ import com.fb.commons.PlatformException;
 import com.fb.commons.mail.exception.MailerException;
 import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
+import com.fb.platform.egv.exception.GiftVoucherAlreadyUsedException;
+import com.fb.platform.egv.exception.GiftVoucherException;
+import com.fb.platform.egv.exception.GiftVoucherExpiredException;
+import com.fb.platform.egv.exception.GiftVoucherNotFoundException;
+import com.fb.platform.egv.exception.InvalidPinException;
 import com.fb.platform.egv.model.GiftVoucher;
-import com.fb.platform.egv.service.GiftVoucherAlreadyUsedException;
-import com.fb.platform.egv.service.GiftVoucherExpiredException;
 import com.fb.platform.egv.service.GiftVoucherManager;
-import com.fb.platform.egv.service.GiftVoucherNotFoundException;
 import com.fb.platform.egv.service.GiftVoucherService;
-import com.fb.platform.egv.service.InvalidPinException;
 import com.fb.platform.egv.to.ApplyRequest;
 import com.fb.platform.egv.to.ApplyResponse;
 import com.fb.platform.egv.to.ApplyResponseStatusEnum;
@@ -32,6 +33,9 @@ import com.fb.platform.egv.to.CreateResponseStatusEnum;
 import com.fb.platform.egv.to.GetInfoRequest;
 import com.fb.platform.egv.to.GetInfoResponse;
 import com.fb.platform.egv.to.GetInfoResponseStatusEnum;
+import com.fb.platform.egv.to.RollbackUseRequest;
+import com.fb.platform.egv.to.RollbackUseResponse;
+import com.fb.platform.egv.to.RollbackUseResponseStatusEnum;
 import com.fb.platform.egv.to.UseRequest;
 import com.fb.platform.egv.to.UseResponse;
 import com.fb.platform.egv.to.UseResponseStatusEnum;
@@ -77,7 +81,7 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 		GiftVoucher gv = new GiftVoucher();
 		try {
 			//create the gift voucher
-			gv = giftVoucherService.createGiftVoucher(request.getEmail(), userId, request.getAmount(), request.getOrderItemId(),request.getSenderName(),request.getReceiverName());
+			gv = giftVoucherService.createGiftVoucher(request.getEmail(), userId, request.getAmount(), request.getOrderItemId(),request.getSenderName(),request.getReceiverName(),request.getGiftMessage(), request.getMobile());
 			response.setGvNumber(Long.parseLong(gv.getNumber()));
 			response.setValidFrom(gv.getValidFrom());
 			response.setValidTill(gv.getValidTill());
@@ -266,6 +270,54 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 		return response;
 
 	}
+	
+	@Override
+	public RollbackUseResponse rollbackUse(RollbackUseRequest request) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("Rollback Use of Gift Voucher : " + request.getGiftVoucherNumber() + " as payment in order : " + request.getOrderId());
+		}
+		RollbackUseResponse response = new RollbackUseResponse();
+
+		if (request == null || StringUtils.isBlank(request.getSessionToken())) {
+			response.setResponseStatus(RollbackUseResponseStatusEnum.NO_SESSION);
+			return response;
+		}
+
+		//authenticate the session token and find out the userId
+		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
+		if (authentication == null) {
+			//invalid session token
+			response.setResponseStatus(RollbackUseResponseStatusEnum.NO_SESSION);
+			return response;
+		}
+		
+		response.setSessionToken(request.getSessionToken());
+		
+		int userId = authentication.getUserID();
+
+		try {
+			//use the gift voucher
+			giftVoucherService.rollbackUseGiftVoucher(userId, request.getOrderId(),request.getGiftVoucherNumber());
+			response.setResponseStatus(RollbackUseResponseStatusEnum.SUCCESS);
+
+		} catch (GiftVoucherNotFoundException e) {
+			logger.error("Rollback eGV Usage Error : GV not found, GV num = " + request.getGiftVoucherNumber());
+			response.setResponseStatus(RollbackUseResponseStatusEnum.INTERNAL_ERROR);
+		} catch (GiftVoucherExpiredException e) {
+			logger.error("Rollback eGV Usage Error : GV Expired, GV num = " + request.getGiftVoucherNumber());
+			response.setResponseStatus(RollbackUseResponseStatusEnum.GIFT_VOUCHER_EXPIRED);
+		} catch (GiftVoucherException e) {
+			logger.error("Rollback eGV Usage Error : GV num = " + request.getGiftVoucherNumber(),e);
+			response.setResponseStatus(RollbackUseResponseStatusEnum.INTERNAL_ERROR);
+		} catch (PlatformException e) {
+			logger.error("Rollback eGV Usage Error : GV num = " + request.getGiftVoucherNumber(),e);
+			response.setResponseStatus(RollbackUseResponseStatusEnum.INTERNAL_ERROR);
+		}
+
+		return response;
+	}
+
+	
 	
 	public void setAuthenticationService(AuthenticationService authenticationService) {
 		this.authenticationService = authenticationService;

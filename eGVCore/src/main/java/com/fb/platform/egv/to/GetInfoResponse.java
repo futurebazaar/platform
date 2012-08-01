@@ -25,6 +25,7 @@ public class GetInfoResponse implements GiftVoucherResponse{
 	private DateTime validTill;
 	private int orderItemId;
 	private String email;
+	private String mobile;
 	private int userId;
 	private GiftVoucherStatusEnum gvStatus;
 	private BigDecimal amount;
@@ -116,6 +117,22 @@ public class GetInfoResponse implements GiftVoucherResponse{
 
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public GiftVoucherStatusEnum getGvStatus() {
+		return gvStatus;
+	}
+
+	public void setGvStatus(GiftVoucherStatusEnum gvStatus) {
+		this.gvStatus = gvStatus;
 	}
 	
 }

@@ -1,15 +1,14 @@
 /**
  * 
  */
-package com.fb.platform.egv.service;
+package com.fb.platform.egv.exception;
 
-import com.fb.commons.PlatformException;
 
 /**
  * @author keith
  *
  */
-public class GiftVoucherNotFoundException extends PlatformException {
+public class GiftVoucherNotFoundException extends GiftVoucherException {
 
 	/**
 	 * 

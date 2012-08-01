@@ -24,6 +24,7 @@
         <xs:element ref="egv:validFrom"/>
         <xs:element ref="egv:orderItemId"/>
         <xs:element ref="egv:email"/>
+        <xs:element ref="egv:mobile"/>
         <xs:element ref="egv:userId"/>
         <xs:element ref="egv:gvStatus"/>
         <xs:element ref="egv:amount"/>
@@ -36,6 +37,7 @@
   <xs:element name="gvStatus" type="xs:string"/>
   <xs:element name="userId" type="xs:int"/>
   <xs:element name="email" type="xs:string"/>
+  <xs:element name="mobile" type="xs:string"/>
   <xs:element name="number" type="xs:long"/>
   <xs:element name="validTill" type="xs:dateTime"/>
   <xs:element name="validFrom" type="xs:dateTime"/>
@@ -43,6 +45,7 @@
   <xs:element name="orderId" type="xs:int"/>
   <xs:element name="senderName" type="xs:string"/>
   <xs:element name="receiverName" type="xs:string"/>
+  <xs:element name="giftMessage" type="xs:string"/>
   
   <xs:simpleType name="getInfoResponseStatusEnum">
     <xs:restriction base="xs:string">
@@ -60,10 +63,12 @@
       <xs:sequence>
         <xs:element ref="egv:sessionToken"/>
         <xs:element ref="egv:email"/>
+        <xs:element ref="egv:mobile"/>
         <xs:element ref="egv:amount"/>
         <xs:element ref="egv:orderItemId"/>
         <xs:element ref="egv:senderName"/>
         <xs:element ref="egv:receiverName"/>
+        <xs:element ref="egv:giftMessage"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -202,5 +207,44 @@
       <xs:enumeration value="ALREADY_USED"/>
     </xs:restriction>
   </xs:simpleType>
+
+
+  <xs:element name="rollbackUseRequest">
+	    <xs:complexType>
+	      <xs:sequence>
+	        <xs:element ref="egv:sessionToken"/>
+	        <xs:element ref="egv:giftVoucherNumber"/>
+	        <xs:element ref="egv:orderId"/>
+	      </xs:sequence>
+	    </xs:complexType>
+  	</xs:element>
+
+  <xs:element name="rollbackUseResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="egv:sessionToken"/>
+        <xs:element ref="egv:rollbackUseResponseStatus"/>
+		<xs:element ref="egv:giftVoucherNumber"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+
+  <xs:element name="rollbackUseResponseStatus" type="egv:rollbackUseResponseStatusEnum"/>
+  
+  <xs:simpleType name="rollbackUseResponseStatusEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INVALID_GIFT_VOUCHER_NUMBER"/>
+      <xs:enumeration value="USER_NOT_AUTHORIZED"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+      <xs:enumeration value="GIFT_VOUCHER_EXPIRED"/>
+      <xs:enumeration value="ALREADY_USED"/>
+      <xs:enumeration value="ROLLBACK_FAILED"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  
     
 </xs:schema>

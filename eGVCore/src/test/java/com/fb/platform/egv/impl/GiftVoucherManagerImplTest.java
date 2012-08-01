@@ -31,6 +31,9 @@ import com.fb.platform.egv.to.CreateResponseStatusEnum;
 import com.fb.platform.egv.to.GetInfoRequest;
 import com.fb.platform.egv.to.GetInfoResponse;
 import com.fb.platform.egv.to.GetInfoResponseStatusEnum;
+import com.fb.platform.egv.to.RollbackUseRequest;
+import com.fb.platform.egv.to.RollbackUseResponse;
+import com.fb.platform.egv.to.RollbackUseResponseStatusEnum;
 import com.fb.platform.egv.to.UseRequest;
 import com.fb.platform.egv.to.UseResponse;
 import com.fb.platform.egv.to.UseResponseStatusEnum;
@@ -94,9 +97,67 @@ public class GiftVoucherManagerImplTest extends BaseTestCase{
 	}
 
 	@Test
-	public void testCreateGiftVoucher(){
+	public void testCreateGiftVoucherWithEmail(){
 		CreateRequest createGiftVoucherRequest = new CreateRequest();
 		createGiftVoucherRequest.setEmail("keith.fernandez@futuregroup.in");
+		createGiftVoucherRequest.setOrderItemId(1);
+		createGiftVoucherRequest.setAmount(new BigDecimal(1000.00));
+		createGiftVoucherRequest.setSessionToken(responseUser1.getSessionToken());
+		createGiftVoucherRequest.setSenderName("Keith Fernandez");
+		createGiftVoucherRequest.setReceiverName("Zishaan");
+		
+		
+		CreateResponse createGiftVoucherResponse = giftVoucherManager.create(createGiftVoucherRequest);
+		
+		assertNotNull(createGiftVoucherResponse);
+		assertNotNull(createGiftVoucherResponse.getSessionToken());
+		assertEquals(CreateResponseStatusEnum.SUCCESS,createGiftVoucherResponse.getResponseStatus());
+		
+	}
+	
+	@Test
+	public void testCreateGiftVoucherWithMobile(){
+		CreateRequest createGiftVoucherRequest = new CreateRequest();
+		createGiftVoucherRequest.setMobile("917498459473");
+		createGiftVoucherRequest.setOrderItemId(1);
+		createGiftVoucherRequest.setAmount(new BigDecimal(1000.00));
+		createGiftVoucherRequest.setSessionToken(responseUser1.getSessionToken());
+		createGiftVoucherRequest.setSenderName("Keith Fernandez");
+		createGiftVoucherRequest.setReceiverName("Zishaan");
+		
+		
+		CreateResponse createGiftVoucherResponse = giftVoucherManager.create(createGiftVoucherRequest);
+		
+		assertNotNull(createGiftVoucherResponse);
+		assertNotNull(createGiftVoucherResponse.getSessionToken());
+		assertEquals(CreateResponseStatusEnum.SUCCESS,createGiftVoucherResponse.getResponseStatus());
+		
+	}
+	
+	@Test
+	public void testCreateGiftVoucherWithInvalidMobile(){
+		CreateRequest createGiftVoucherRequest = new CreateRequest();
+		createGiftVoucherRequest.setMobile("91749845947");
+		createGiftVoucherRequest.setOrderItemId(1);
+		createGiftVoucherRequest.setAmount(new BigDecimal(1000.00));
+		createGiftVoucherRequest.setSessionToken(responseUser1.getSessionToken());
+		createGiftVoucherRequest.setSenderName("Keith Fernandez");
+		createGiftVoucherRequest.setReceiverName("Zishaan");
+		
+		
+		CreateResponse createGiftVoucherResponse = giftVoucherManager.create(createGiftVoucherRequest);
+		
+		assertNotNull(createGiftVoucherResponse);
+		assertNotNull(createGiftVoucherResponse.getSessionToken());
+		assertEquals(CreateResponseStatusEnum.SUCCESS,createGiftVoucherResponse.getResponseStatus());
+		
+	}
+	
+	@Test
+	public void testCreateGiftVoucherWithEmailAndMobile(){
+		CreateRequest createGiftVoucherRequest = new CreateRequest();
+		createGiftVoucherRequest.setEmail("keith.fernandez@futuregroup.in");
+		createGiftVoucherRequest.setMobile("917498459473");
 		createGiftVoucherRequest.setOrderItemId(1);
 		createGiftVoucherRequest.setAmount(new BigDecimal(1000.00));
 		createGiftVoucherRequest.setSessionToken(responseUser1.getSessionToken());
@@ -140,6 +201,20 @@ public class GiftVoucherManagerImplTest extends BaseTestCase{
 		assertNotNull(useGiftVoucherResponse);
 		assertNotNull(useGiftVoucherResponse.getSessionToken());
 		assertEquals(UseResponseStatusEnum.SUCCESS,useGiftVoucherResponse.getResponseStatus());
+	}
+	
+	@Test
+	public void testRollbackUseGiftVoucher(){
+		RollbackUseRequest rollbackUseGiftVoucherRequest = new RollbackUseRequest();
+		rollbackUseGiftVoucherRequest.setGiftVoucherNumber(-12345678923L);
+		rollbackUseGiftVoucherRequest.setOrderId(-7);
+		rollbackUseGiftVoucherRequest.setSessionToken(responseUser1.getSessionToken());
+		
+		RollbackUseResponse rollbackUseGiftVoucherResponse = giftVoucherManager.rollbackUse(rollbackUseGiftVoucherRequest);
+		
+		assertNotNull(rollbackUseGiftVoucherResponse);
+		assertNotNull(rollbackUseGiftVoucherResponse.getSessionToken());
+		assertEquals(RollbackUseResponseStatusEnum.SUCCESS,rollbackUseGiftVoucherResponse.getResponseStatus());
 		
 	}
 	
