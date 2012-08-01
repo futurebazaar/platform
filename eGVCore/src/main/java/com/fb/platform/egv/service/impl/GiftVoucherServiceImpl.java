@@ -12,11 +12,11 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.mail.MailException;
 
 import com.fb.commons.PlatformException;
-import com.fb.commons.communication.to.MailTO;
 import com.fb.commons.communication.to.SmsTO;
 import com.fb.commons.mail.MailSender;
 import com.fb.commons.mail.exception.MailerException;
 import com.fb.commons.mail.exception.SmsException;
+import com.fb.commons.mom.to.MailTO;
 import com.fb.commons.sms.SmsSender;
 import com.fb.platform.egv.dao.GiftVoucherDao;
 import com.fb.platform.egv.exception.GiftVoucherAlreadyUsedException;

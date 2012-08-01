@@ -1,4 +1,4 @@
-package com.fb.commons.communication.to;
+package com.fb.commons.mom.to;
 
 import java.io.File;
 import java.util.List;
