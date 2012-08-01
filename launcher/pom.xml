@@ -43,6 +43,11 @@
 			<artifactId>deliveryDeleteReceiver</artifactId>
 			<version>${platform.version}</version>
 	  	</dependency>
+	  	<dependency>
+	  		<groupId>com.fb</groupId>
+			<artifactId>itemAckReceiver</artifactId>
+			<version>${platform.version}</version>
+	  	</dependency>
 	</dependencies>
 	<build>
 		<defaultGoal>install</defaultGoal>

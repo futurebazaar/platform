@@ -420,7 +420,6 @@
     	<module>mailReceiver</module>
 	<module>inventoryReceiver</module>
 	<module>deliveryDeleteReceiver</module>
-	<module>orderReceiver</module>
 	<module>itemAckReceiver</module>
 	<module>launcher</module>
 	<module>walletCore</module>

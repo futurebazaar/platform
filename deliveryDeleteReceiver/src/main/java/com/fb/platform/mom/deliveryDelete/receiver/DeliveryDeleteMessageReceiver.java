@@ -83,12 +83,12 @@ public class DeliveryDeleteMessageReceiver implements PlatformMessageReceiver {
 		parameters.add(new BasicNameValuePair("lspUpdDescr", ""));
 		parameters.add(new BasicNameValuePair("awbNumber", ""));	
 		
-		Integer year = new Integer(deliveryDeleteTO.getDate().substring(0, 4));
-		Integer month = new Integer(deliveryDeleteTO.getDate().substring(4, 6));
-		Integer date = new Integer(deliveryDeleteTO.getDate().substring(6));
-		Integer hour = new Integer(deliveryDeleteTO.getTime().substring(0, 2));
-		Integer minute = new Integer(deliveryDeleteTO.getTime().substring(2, 4));
-		Integer second = new Integer(deliveryDeleteTO.getTime().substring(4));
+		Integer year = Integer.parseInt(deliveryDeleteTO.getDate().substring(0, 4));
+		Integer month = Integer.parseInt(deliveryDeleteTO.getDate().substring(4, 6));
+		Integer date = Integer.parseInt(deliveryDeleteTO.getDate().substring(6));
+		Integer hour = Integer.parseInt(deliveryDeleteTO.getTime().substring(0, 2));
+		Integer minute = Integer.parseInt(deliveryDeleteTO.getTime().substring(2, 4));
+		Integer second = Integer.parseInt(deliveryDeleteTO.getTime().substring(4));
 		DateTime dateTime = new DateTime(year, month, date, hour, minute, second);
 		parameters.add(new BasicNameValuePair("deletionDateTime", dateTime.toString()));
 		if(deliveryDeleteTO.getSapIdoc() != null) {

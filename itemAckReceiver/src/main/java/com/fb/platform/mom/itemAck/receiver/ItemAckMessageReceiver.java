@@ -24,6 +24,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import com.fb.commons.PlatformException;
 import com.fb.commons.mom.to.ItemTO;
+import com.fb.platform.mom.itemAck.sender.ItemAckParameterFactory;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
 
 /**
@@ -67,13 +68,8 @@ public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpPost httpPost = new HttpPost(orderURL);
 
-		List<NameValuePair> parameters = new ArrayList<NameValuePair>();
+		List<NameValuePair> parameters = new ItemAckParameterFactory().getParameters(itemAck);
 		
-		parameters.add(new BasicNameValuePair("sender", "MOM"));
-		
-		if(itemAck.getSapIdoc() != null) {
-			parameters.add(new BasicNameValuePair("idocnumber", itemAck.getSapIdoc().getIdocNumber()));
-		}
 		parameters.add(new BasicNameValuePair("sender", "MOM"));
 
 		UrlEncodedFormEntity entity;

@@ -12,7 +12,7 @@ import com.fb.platform.sap.client.idoc.platform.impl.DefaultIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.impl.DeliveryDeleteIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.impl.DeliveryInventoryIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.impl.InventoryIDocHandler;
-import com.fb.platform.sap.client.idoc.platform.impl.OrderIDocHandler;
+import com.fb.platform.sap.client.idoc.platform.impl.ItemAckIDocHandler;
 
 /**
  * @author vinayak
@@ -28,7 +28,7 @@ public class PlatformIDocHandlerFactory {
 	
 	private DeliveryDeleteIDocHandler deliveryDeleteIDocHandler = null;
 	
-	private OrderIDocHandler orderIDocHandler = null;
+	private ItemAckIDocHandler orderIDocHandler = null;
 
 	private DefaultIDocHandler defaultIDocHandler = null;
 
@@ -45,7 +45,7 @@ public class PlatformIDocHandlerFactory {
 		deliveryDeleteIDocHandler = new DeliveryDeleteIDocHandler();
 		deliveryDeleteIDocHandler.init(momManager);
 		
-		orderIDocHandler = new OrderIDocHandler();
+		orderIDocHandler = new ItemAckIDocHandler();
 		orderIDocHandler.init(momManager);
 
 		defaultIDocHandler = new DefaultIDocHandler();
@@ -68,7 +68,7 @@ public class PlatformIDocHandlerFactory {
 		if (idocType.equals(DeliveryDeleteIDocHandler.DELIVERY_DELETE)) {
 			return deliveryDeleteIDocHandler;
 		}
-		if (idocType.equals(OrderIDocHandler.ORDER_IDOC_TYPE)) {
+		if (idocType.equals(ItemAckIDocHandler.ITEM_ACK_IDOC_TYPE)) {
 			return orderIDocHandler;
 		}
 		logger.error("No Handler is configured for idocType : " + idocType + ", returning default handler.");

@@ -70,6 +70,11 @@
         <xs:element ref="VBELN"/>
         <xs:element ref="POSNN"/>
         <xs:element ref="VBTYP_N"/>
+        <xs:element ref="WADAT_PGI"/>
+        <xs:element ref="WADAT_PGR"/>
+        <xs:element ref="FKDAT"/>
+        <xs:element ref="LGORT"/>
+        <xs:element ref="NETWR"/>
         <xs:element ref="RFMNG"/>
         <xs:element minOccurs="0" ref="MEINS"/>
         <xs:element ref="RFWRT"/>
@@ -130,6 +135,11 @@
   <xs:element name="VBELN" type="xs:int"/>
   <xs:element name="POSNN" type="xs:int"/>
   <xs:element name="VBTYP_N" type="xs:string"/>
+  <xs:element name="WADAT_PGI" type="xs:string"/>
+  <xs:element name="WADAT_PGR" type="xs:string"/>
+  <xs:element name="FKDAT" type="xs:string"/>
+  <xs:element name="NETWR" type="xs:string"/>
+  <xs:element name="LGORT" type="xs:string"/>
   <xs:element name="RFMNG" type="xs:decimal"/>
   <xs:element name="MEINS" type="xs:string"/>
   <xs:element name="RFWRT" type="xs:decimal"/>

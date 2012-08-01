@@ -9,6 +9,7 @@
 package com.fb.platform.sap.idoc.generated.zatgflow;
 
 import java.math.BigDecimal;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -103,6 +104,11 @@ import javax.xml.bind.annotation.XmlType;
     "vbeln",
     "posnn",
     "vbtypn",
+    "wadatpgi",
+    "wadatpgr",
+    "fkdat",
+    "lgort",
+    "netwr",
     "rfmng",
     "meins",
     "rfwrt",
@@ -135,15 +141,27 @@ import javax.xml.bind.annotation.XmlType;
     "pstyv",
     "lfart",
     "erdatdel",
-    "ernamdel"
+    "ernamdel",
+    "lspname",
+    "lspnor",
+    "lspupddescr",
+    "ordstat"
 })
 @XmlRootElement(name = "ZATGFLOW")
 public class ZATGFLOW {
 
     @XmlElement(name = "MANDT")
     protected int mandt;
+    @XmlElement(name = "LSP_NAME")
+    protected String lspname;
+    @XmlElement(name = "LSP_NOR")
+    protected String lspnor;
+    @XmlElement(name = "LSP_UPD_DESCR")
+    protected String lspupddescr;
+    @XmlElement(name = "ORD_STAT")
+    protected String ordstat;
     @XmlElement(name = "SO_VBELN")
-    protected int sovbeln;
+    protected String sovbeln;
     @XmlElement(name = "SO_POSNR")
     protected int soposnr;
     @XmlElement(name = "VBELV")
@@ -151,11 +169,21 @@ public class ZATGFLOW {
     @XmlElement(name = "POSNV")
     protected int posnv;
     @XmlElement(name = "VBELN")
-    protected int vbeln;
+    protected String vbeln;
     @XmlElement(name = "POSNN")
     protected int posnn;
     @XmlElement(name = "VBTYP_N", required = true)
     protected String vbtypn;
+    @XmlElement(name = "WADAT_PGI", required = true)
+    protected String wadatpgi;
+    @XmlElement(name = "WADAT_PGR", required = true)
+    protected String wadatpgr;
+    @XmlElement(name = "FKDAT", required = true)
+    protected String fkdat;
+    @XmlElement(name = "LGORT", required = true)
+    protected String lgort;
+    @XmlElement(name = "NETWR", required = true)
+    protected String netwr;
     @XmlElement(name = "RFMNG", required = true)
     protected BigDecimal rfmng;
     @XmlElement(name = "MEINS")
@@ -163,7 +191,7 @@ public class ZATGFLOW {
     @XmlElement(name = "RFWRT", required = true)
     protected BigDecimal rfwrt;
     @XmlElement(name = "BWART")
-    protected Integer bwart;
+    protected int bwart;
     @XmlElement(name = "WAERS")
     protected String waers;
     @XmlElement(name = "MATNR")
@@ -171,7 +199,7 @@ public class ZATGFLOW {
     @XmlElement(name = "ERZET")
     protected int erzet;
     @XmlElement(name = "ERDAT")
-    protected int erdat;
+    protected String erdat;
     @XmlElement(name = "PLMIN")
     protected String plmin;
     @XmlElement(name = "VBTYP_V")
@@ -205,9 +233,9 @@ public class ZATGFLOW {
     @XmlElement(name = "COMPLETENESS")
     protected String completeness;
     @XmlElement(name = "MATERIAL")
-    protected Integer material;
+    protected int material;
     @XmlElement(name = "SITE")
-    protected Integer site;
+    protected String site;
     @XmlElement(name = "AUDAT")
     protected int audat;
     @XmlElement(name = "AUART", required = true)
@@ -219,7 +247,7 @@ public class ZATGFLOW {
     @XmlElement(name = "LFART")
     protected String lfart;
     @XmlElement(name = "ERDAT_DEL")
-    protected Integer erdatdel;
+    protected String erdatdel;
     @XmlElement(name = "ERNAM_DEL")
     protected String ernamdel;
     @XmlAttribute(name = "SEGMENT", required = true)
@@ -245,7 +273,7 @@ public class ZATGFLOW {
      * Gets the value of the sovbeln property.
      * 
      */
-    public int getSOVBELN() {
+    public String getSOVBELN() {
         return sovbeln;
     }
 
@@ -253,7 +281,7 @@ public class ZATGFLOW {
      * Sets the value of the sovbeln property.
      * 
      */
-    public void setSOVBELN(int value) {
+    public void setSOVBELN(String value) {
         this.sovbeln = value;
     }
 
@@ -317,7 +345,7 @@ public class ZATGFLOW {
      * Gets the value of the vbeln property.
      * 
      */
-    public int getVBELN() {
+    public String getVBELN() {
         return vbeln;
     }
 
@@ -325,7 +353,7 @@ public class ZATGFLOW {
      * Sets the value of the vbeln property.
      * 
      */
-    public void setVBELN(int value) {
+    public void setVBELN(String value) {
         this.vbeln = value;
     }
 
@@ -345,6 +373,125 @@ public class ZATGFLOW {
         this.posnn = value;
     }
 
+    /**
+     * Gets the value of the wadatpgi property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getWADATPGI() {
+        return wadatpgi;
+    }
+
+    /**
+     * Sets the value of the wadatpgi property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setWADATPGI(String value) {
+        this.wadatpgi = value;
+    }
+    
+    /**
+     * Gets the value of the wadatpgr property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getWADATPGR() {
+        return wadatpgr;
+    }
+
+    /**
+     * Sets the value of the wadatpgr property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setWADATPGR(String value) {
+        this.wadatpgr = value;
+    }
+    
+    /**
+     * Gets the value of the fkdat property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getFKDAT() {
+        return fkdat;
+    }
+
+    /**
+     * Sets the value of the fkdat property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    
+    /**
+     * Gets the value of the lgort property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getLGORT() {
+        return lgort;
+    }
+
+    /**
+     * Sets the value of the lgort property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    
+    public void setLGORT(String value) {
+        this.lgort = value;
+    }
+    
+    /**
+     * Gets the value of the netwr property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getNETWR() {
+        return netwr;
+    }
+
+    /**
+     * Sets the value of the netwr property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    
+    public void setNETWR(String value) {
+        this.netwr = value;
+    }
+    
     /**
      * Gets the value of the vbtypn property.
      * 
@@ -446,10 +593,10 @@ public class ZATGFLOW {
      * 
      * @return
      *     possible object is
-     *     {@link Integer }
+     *     {@link int }
      *     
      */
-    public Integer getBWART() {
+    public int getBWART() {
         return bwart;
     }
 
@@ -458,10 +605,10 @@ public class ZATGFLOW {
      * 
      * @param value
      *     allowed object is
-     *     {@link Integer }
+     *     {@link int }
      *     
      */
-    public void setBWART(Integer value) {
+    public void setBWART(int value) {
         this.bwart = value;
     }
 
@@ -533,7 +680,7 @@ public class ZATGFLOW {
      * Gets the value of the erdat property.
      * 
      */
-    public int getERDAT() {
+    public String getERDAT() {
         return erdat;
     }
 
@@ -541,7 +688,7 @@ public class ZATGFLOW {
      * Sets the value of the erdat property.
      * 
      */
-    public void setERDAT(int value) {
+    public void setERDAT(String value) {
         this.erdat = value;
     }
 
@@ -926,10 +1073,10 @@ public class ZATGFLOW {
      * 
      * @return
      *     possible object is
-     *     {@link Integer }
+     *     {@link int }
      *     
      */
-    public Integer getMATERIAL() {
+    public int getMATERIAL() {
         return material;
     }
 
@@ -938,10 +1085,10 @@ public class ZATGFLOW {
      * 
      * @param value
      *     allowed object is
-     *     {@link Integer }
+     *     {@link int }
      *     
      */
-    public void setMATERIAL(Integer value) {
+    public void setMATERIAL(int value) {
         this.material = value;
     }
 
@@ -950,10 +1097,10 @@ public class ZATGFLOW {
      * 
      * @return
      *     possible object is
-     *     {@link Integer }
+     *     {@link int }
      *     
      */
-    public Integer getSITE() {
+    public String getSITE() {
         return site;
     }
 
@@ -962,10 +1109,10 @@ public class ZATGFLOW {
      * 
      * @param value
      *     allowed object is
-     *     {@link Integer }
+     *     {@link int }
      *     
      */
-    public void setSITE(Integer value) {
+    public void setSITE(String value) {
         this.site = value;
     }
 
@@ -1086,10 +1233,10 @@ public class ZATGFLOW {
      * 
      * @return
      *     possible object is
-     *     {@link Integer }
+     *     {@link int }
      *     
      */
-    public Integer getERDATDEL() {
+    public String getERDATDEL() {
         return erdatdel;
     }
 
@@ -1098,13 +1245,109 @@ public class ZATGFLOW {
      * 
      * @param value
      *     allowed object is
-     *     {@link Integer }
+     *     {@link int }
      *     
      */
-    public void setERDATDEL(Integer value) {
+    public void setERDATDEL(String value) {
         this.erdatdel = value;
     }
 
+    /**
+     * Gets the value of the lspname property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getLSPNAME() {
+        return lspname;
+    }
+
+    /**
+     * Sets the value of the lspname property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setLSPNAME(String value) {
+        this.lspname = value;
+    }
+    
+    /**
+     * Gets the value of the lspnor property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getLSPNOR() {
+        return lspnor;
+    }
+
+    /**
+     * Sets the value of the lspnor property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setLSPNOR(String value) {
+        this.lspnor = value;
+    }
+    
+    /**
+     * Gets the value of the ordstat property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getORDSTAT() {
+        return ordstat;
+    }
+
+    /**
+     * Sets the value of the ordstat property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setORDSTAT(String value) {
+        this.ordstat = value;
+    }
+    
+    /**
+     * Gets the value of the lspupddescr property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getLSPUPDDESCR() {
+        return lspupddescr;
+    }
+
+    /**
+     * Sets the value of the lspupddescr property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setLSPUPDDESCR(String value) {
+        this.lspupddescr = value;
+    }
+    
     /**
      * Gets the value of the ernamdel property.
      * 
@@ -1128,7 +1371,7 @@ public class ZATGFLOW {
     public void setERNAMDEL(String value) {
         this.ernamdel = value;
     }
-
+    
     /**
      * Gets the value of the segment property.
      * 

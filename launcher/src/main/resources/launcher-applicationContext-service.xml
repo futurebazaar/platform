@@ -54,5 +54,13 @@
     	<property name="deliveryDeleteMessageReceiver" ref="deliveryDeleteMessageReceiver"/>
     	<property name="momManager" ref="momManager"></property>
     </bean>
+    
+    <bean id="itemAckMessageReceiver" class="com.fb.platform.mom.itemAck.receiver.ItemAckMessageReceiver">
+    </bean>
+    
+    <bean id="itemAckManager" class="com.fb.platform.mom.itemAck.manager.impl.ItemAckManagerImpl">
+    	<property name="itemAckMessageReceiver" ref="itemAckMessageReceiver"/>
+    	<property name="momManager" ref="momManager"></property>
+    </bean>
 	
 </beans>

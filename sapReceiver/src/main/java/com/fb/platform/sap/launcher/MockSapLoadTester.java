@@ -22,6 +22,7 @@ import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandlerFactory;
 import com.fb.platform.sap.client.idoc.platform.impl.DeliveryDeleteIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.impl.DeliveryInventoryIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.impl.InventoryIDocHandler;
+import com.fb.platform.sap.client.idoc.platform.impl.ItemAckIDocHandler;
 
 /**
  * @author nehaga
@@ -54,9 +55,10 @@ public class MockSapLoadTester {
 		PlatformIDocHandlerFactory idocFactory = (PlatformIDocHandlerFactory) applicationContext.getBean("platformIDocHandlerFactory");
 
 		
-		sendInventoryIdoc(idocFactory.getHandler(InventoryIDocHandler.INVENTORY_IDOC_TYPE));
-		sendDeliveryInventoryIdoc(idocFactory.getHandler(DeliveryInventoryIDocHandler.DELIVERY_INVENTORY_IDOC_TYPE));
-		sendDeliveryDeleteIdoc(idocFactory.getHandler(DeliveryDeleteIDocHandler.DELIVERY_DELETE));
+		//sendInventoryIdoc(idocFactory.getHandler(InventoryIDocHandler.INVENTORY_IDOC_TYPE));
+		//sendDeliveryInventoryIdoc(idocFactory.getHandler(DeliveryInventoryIDocHandler.DELIVERY_INVENTORY_IDOC_TYPE));
+		//sendDeliveryDeleteIdoc(idocFactory.getHandler(DeliveryDeleteIDocHandler.DELIVERY_DELETE));
+		sendItemAckIdoc(idocFactory.getHandler(ItemAckIDocHandler.ITEM_ACK_IDOC_TYPE));
 
 	}
 	
@@ -111,6 +113,24 @@ public class MockSapLoadTester {
 			}
 		} catch (Exception e) {
 			logger.error("Error in sendDeliveryDeleteIdoc : ", e);
+		}
+	}
+	
+	private static void sendItemAckIdoc(PlatformIDocHandler itemAckIDocHandler) {
+		try {
+			StringWriter sw ;
+			InputStream inputStream ;
+			String itemAckPath = prop.getProperty("sap.load.itemAck.path");
+			System.out.println("Item Ack idoc path : " + itemAckPath);
+			File itemAckDir = new File(itemAckPath);
+			for (File idoc : itemAckDir.listFiles()) {
+				inputStream = new FileInputStream(idoc);
+				sw = new StringWriter();
+				IOUtils.copy(inputStream, sw);
+				itemAckIDocHandler.handle(sw.toString());
+			}
+		} catch (Exception e) {
+			logger.error("Error in sendItemAckIdoc : ", e);
 		}
 	}
 

@@ -177,25 +177,6 @@
         <property name="deliveryDeleteDestination" ref="deliveryDeleteDestination"/>
 	</bean>
 	
-	<bean id="orderDestination" class="org.hornetq.api.jms.HornetQJMSClient" factory-method="createQueue">
-	   <constructor-arg index="0" value="order"/>
-	</bean>
-
-	<bean id="orderMessageListener" class="com.fb.platform.mom.receiver.order.OrderMessageListener"></bean>
-	
-	<bean id="orderContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
-		<property name="connectionFactory" ref="userCredentialFactory"/>
-		<property name="destination" ref="orderDestination"/>
-		<property name="messageListener" ref="orderMessageListener" />
-		<property name="autoStartup" value="false"/>
-		<property name="sessionTransacted" value="true"/>
-	</bean>
-
-	<bean id="orderSender" class="com.fb.platform.mom.receiver.order.OrderSenderImpl">
-        <property name="jmsTemplate" ref="jmsTemplate"/>
-        <property name="orderDestination" ref="orderDestination"/>
-	</bean>
-	
 	<bean id="itemAckDestination" class="org.hornetq.api.jms.HornetQJMSClient" factory-method="createQueue">
 	   <constructor-arg index="0" value="itemAck"/>
 	</bean>
@@ -230,9 +211,6 @@
         <property name="deliveryDeleteListener" ref="deliveryDeleteListener"/>
         <property name="deliveryDeleteSender" ref="deliveryDeleteSender"/>
         <property name="deliveryDeleteContainer" ref="deliveryDeleteContainer"/>
-        <property name="orderMessageListener" ref="orderMessageListener"/>
-        <property name="orderSender" ref="orderSender"/>
-        <property name="orderContainer" ref="orderContainer"/>
         <property name="itemAckMessageListener" ref="itemAckMessageListener"/>
         <property name="itemAckSender" ref="itemAckSender"/>
         <property name="itemAckContainer" ref="itemAckContainer"/>

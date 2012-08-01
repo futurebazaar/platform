@@ -4,6 +4,7 @@
 package com.fb.commons.mom.to;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import org.joda.time.DateTime;
 
@@ -14,28 +15,28 @@ import org.joda.time.DateTime;
  */
 public class ItemTO implements Serializable {
 	private SapMomTO sapIdoc;
+	private String header;
 	private int sapDocumentId;
 	private String orderHeaderDelBlock;
-	private String header;
 	private DateTime deliveryDate;
-	private String atgDocumentId;
 	private String unitOfMeasurement;
 	private String shipmentComments;
 	private String orderType;
 	private String deliveryNumber;
+	private String blockMsg;
+	private String itemCategory;
+	private String orderId;
+	private String deliveryType;
 	private String lspName;
 	private String awbNumber;
 	private String createdBy;
 	private DateTime createdDate;
 	private String skuID;
 	private String lspUpdateDesc;
-	private DateTime pgiCreationDate;
 	private String plantId;
 	private String itemState;
 	private DateTime orderDate;
-	private int quantity;
-	private int invoiceNumber;
-	private DateTime invoiceDate;
+	private BigDecimal quantity;
 	
 	public SapMomTO getSapIdoc() {
 		return sapIdoc;
@@ -56,23 +57,11 @@ public class ItemTO implements Serializable {
 	public void setOrderHeaderDelBlock(String orderHeaderDelBlock) {
 		this.orderHeaderDelBlock = orderHeaderDelBlock;
 	}
-	public String getHeader() {
-		return header;
-	}
-	public void setHeader(String header) {
-		this.header = header;
-	}
 	public DateTime getDeliveryDate() {
 		return deliveryDate;
 	}
 	public void setDeliveryDate(DateTime deliveryDate) {
 		this.deliveryDate = deliveryDate;
-	}
-	public String getAtgDocumentId() {
-		return atgDocumentId;
-	}
-	public void setAtgDocumentId(String atgDocumentId) {
-		this.atgDocumentId = atgDocumentId;
 	}
 	public String getUnitOfMeasurement() {
 		return unitOfMeasurement;
@@ -134,12 +123,6 @@ public class ItemTO implements Serializable {
 	public void setLspUpdateDesc(String lspUpdateDesc) {
 		this.lspUpdateDesc = lspUpdateDesc;
 	}
-	public DateTime getPgiCreationDate() {
-		return pgiCreationDate;
-	}
-	public void setPgiCreationDate(DateTime pgiCreationDate) {
-		this.pgiCreationDate = pgiCreationDate;
-	}
 	public String getPlantId() {
 		return plantId;
 	}
@@ -158,48 +141,66 @@ public class ItemTO implements Serializable {
 	public void setOrderDate(DateTime orderDate) {
 		this.orderDate = orderDate;
 	}
-	public int getQuantity() {
+	public BigDecimal getQuantity() {
 		return quantity;
 	}
-	public void setQuantity(int quantity) {
+	public void setQuantity(BigDecimal quantity) {
 		this.quantity = quantity;
 	}
-	public int getInvoiceNumber() {
-		return invoiceNumber;
+	public String getBlockMsg() {
+		return blockMsg;
 	}
-	public void setInvoiceNumber(int invoiceNumber) {
-		this.invoiceNumber = invoiceNumber;
+	public void setBlockMsg(String blockMsg) {
+		this.blockMsg = blockMsg;
 	}
-	public DateTime getInvoiceDate() {
-		return invoiceDate;
+	public String getItemCategory() {
+		return itemCategory;
 	}
-	public void setInvoiceDate(DateTime invoiceDate) {
-		this.invoiceDate = invoiceDate;
+	public void setItemCategory(String itemCategory) {
+		this.itemCategory = itemCategory;
+	}
+	public String getOrderId() {
+		return orderId;
+	}
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+	public String getDeliveryType() {
+		return deliveryType;
+	}
+	public void setDeliveryType(String deliveryType) {
+		this.deliveryType = deliveryType;
+	}
+	public String getHeader() {
+		return header;
+	}
+	public void setHeader(String header) {
+		this.header = header;
 	}
 	@Override
 	public String toString() {
 		String order = "sap Document Id: " + sapDocumentId
-				+ "\norder header del block : " + orderHeaderDelBlock
 				+ "\nheader : " + header
+				+ "\norder header del block : " + orderHeaderDelBlock
 				+ "\ndelivery date : " + deliveryDate
-				+ "\natg document id : " + atgDocumentId
 				+ "\nunit of measurement : " + unitOfMeasurement
 				+ "\nshipment comments : " + shipmentComments
 				+ "\norder type : " + orderType
-				+ "\n delivery number : " + deliveryNumber
+				+ "\ndelivery number : " + deliveryNumber
+				+ "\nblock msg : " + blockMsg
+				+ "\nitem category : " + itemCategory
+				+ "\norder id : " + orderId
+				+ "\ndelivery type : " + deliveryType
 				+ "\nlsp name : " + lspName
 				+ "\nawb number : " + awbNumber
 				+ "\ncreated by : " + createdBy
 				+ "\ncreated date : " + createdDate
 				+ "\nsku id : " + skuID
 				+ "\nlsp update description : " + lspUpdateDesc
-				+ "\npgi description date : " + pgiCreationDate
 				+ "\nplant id : " + plantId
 				+ "\nitem state : " + itemState
 				+ "\norder date : " + orderDate
-				+ "\nquantity : " + quantity
-				+ "\ninvoice number : " + invoiceNumber
-				+ "\ninvoice date : " + invoiceDate;
+				+ "\nquantity : " + quantity;
 		if(sapIdoc != null) {
 			order += "\n" + sapIdoc.toString();
 		}

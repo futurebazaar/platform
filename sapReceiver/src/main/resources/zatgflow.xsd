@@ -62,6 +62,10 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="MANDT"/>
+        <xs:element ref="LSP_NAME"/>
+        <xs:element ref="LSP_NOR"/>
+        <xs:element ref="LSP_UPD_DESCR"/>
+        <xs:element ref="ORD_STAT"/>
         <xs:element ref="SO_VBELN"/>
         <xs:element ref="SO_POSNR"/>
         <xs:element minOccurs="0" ref="VBELV"/>
@@ -122,11 +126,11 @@
       <xs:attribute name="SEGMENT" use="required" type="xs:int"/>
     </xs:complexType>
   </xs:element>
-  <xs:element name="SO_VBELN" type="xs:int"/>
+  <xs:element name="SO_VBELN" type="xs:string"/>
   <xs:element name="SO_POSNR" type="xs:int"/>
   <xs:element name="VBELV" type="xs:string"/>
   <xs:element name="POSNV" type="xs:int"/>
-  <xs:element name="VBELN" type="xs:int"/>
+  <xs:element name="VBELN" type="xs:string"/>
   <xs:element name="POSNN" type="xs:int"/>
   <xs:element name="VBTYP_N" type="xs:string"/>
   <xs:element name="RFMNG" type="xs:decimal"/>
@@ -136,7 +140,7 @@
   <xs:element name="WAERS" type="xs:string"/>
   <xs:element name="MATNR" type="xs:string"/>
   <xs:element name="ERZET" type="xs:int"/>
-  <xs:element name="ERDAT" type="xs:int"/>
+  <xs:element name="ERDAT" type="xs:string"/>
   <xs:element name="PLMIN" type="xs:string"/>
   <xs:element name="VBTYP_V" type="xs:string"/>
   <xs:element name="AEDAT" type="xs:int"/>
@@ -154,13 +158,17 @@
   <xs:element name="FKSAK" type="xs:string"/>
   <xs:element name="COMPLETENESS" type="xs:string"/>
   <xs:element name="MATERIAL" type="xs:int"/>
-  <xs:element name="SITE" type="xs:int"/>
+  <xs:element name="SITE" type="xs:string"/>
   <xs:element name="AUDAT" type="xs:int"/>
   <xs:element name="AUART" type="xs:string"/>
   <xs:element name="ZMEINS" type="xs:string"/>
   <xs:element name="PSTYV" type="xs:string"/>
   <xs:element name="LFART" type="xs:string"/>
-  <xs:element name="ERDAT_DEL" type="xs:int"/>
+  <xs:element name="ERDAT_DEL" type="xs:string"/>
   <xs:element name="ERNAM_DEL" type="xs:string"/>
   <xs:element name="MANDT" type="xs:int"/>
+  <xs:element name="LSP_NAME" type="xs:string"/>
+  <xs:element name="LSP_NOR" type="xs:string"/>
+  <xs:element name="LSP_UPD_DESCR" type="xs:string"/>
+  <xs:element name="ORD_STAT" type="xs:string"/>
 </xs:schema>

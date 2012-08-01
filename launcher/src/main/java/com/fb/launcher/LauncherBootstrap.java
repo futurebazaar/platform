@@ -29,6 +29,9 @@ public class LauncherBootstrap {
 		ReceiverManager deliveryDeleteManager = (ReceiverManager) appContext.getBean("deliveryDeleteManager");
 		deliveryDeleteManager.start();
 		
+		ReceiverManager itemAckManager = (ReceiverManager) appContext.getBean("itemAckManager");
+		itemAckManager.start();
+		
 	}
 
 }
