@@ -32,7 +32,7 @@ import com.fb.platform.egv.model.GiftVoucherUse;
 
 /**
  * @author keith
- *
+ * 
  */
 public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 
@@ -40,120 +40,50 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 
 	private Log log = LogFactory.getLog(GiftVoucherDaoJdbcImpl.class);
 
-	private static final String GET_GIFT_VOUCHER_BY_ID_QUERY = 
-			"SELECT " +
-			"	id, " +
-			"	valid_from, " +
-			"	valid_till, " +
-			"	number, " +
-			"	pin, " +
-			"	status," +
-			"	order_item_id, " +
-			"	user_id, " +
-			"	email, " +
-			"	mobile, " +
-			"	amount, " +
-			"	created_on, " +
-			"	last_modified_on " +
-			"FROM gift_voucher where id = ?";
+	private static final String GET_GIFT_VOUCHER_BY_ID_QUERY = "SELECT " + "	id, " + "	valid_from, " + "	valid_till, "
+			+ "	number, " + "	pin, " + "	status," + "	order_item_id, " + "	user_id, " + "	email, " + "	mobile, "
+			+ "	amount, " + "	created_on, " + "	last_modified_on " + "FROM gift_voucher where id = ?";
 
-	private static final String GET_GIFT_VOUCHER_BY_NUMBER_QUERY = 
-			"SELECT " +
-			"	id, " +
-			"	valid_from, " +
-			"	valid_till, " +
-			"	number, " +
-			"	pin, " +
-			"	status," +
-			"	order_item_id, " +
-			"	user_id, " +
-			"	email, " +
-			"	mobile, " +
-			"	amount, " +
-			"	created_on, " +
-			"	last_modified_on " +
-			"FROM gift_voucher where number = ?";
+	private static final String GET_GIFT_VOUCHER_BY_NUMBER_QUERY = "SELECT " + "	id, " + "	valid_from, "
+			+ "	valid_till, " + "	number, " + "	pin, " + "	status," + "	order_item_id, " + "	user_id, " + "	email, "
+			+ "	mobile, " + "	amount, " + "	created_on, " + "	last_modified_on " + "FROM gift_voucher where number = ?";
 
-	
-	private static final String GET_GIFT_VOUCHER_BY_NUMBER_PIN_QUERY = 
-			"SELECT " +
-			"	id, " +
-			"	valid_from, " +
-			"	valid_till, " +
-			"	number, " +
-			"	pin, " +
-			"	status," +
-			"	order_item_id, " +
-			"	user_id, " +
-			"	email, " +
-			"	mobile, " +
-			"	amount, " +
-			"	created_on, " +
-			"	last_modified_on " +
-			"FROM gift_voucher where number = ? and pin = ?";
+	private static final String GET_GIFT_VOUCHER_BY_NUMBER_PIN_QUERY = "SELECT " + "	id, " + "	valid_from, "
+			+ "	valid_till, " + "	number, " + "	pin, " + "	status," + "	order_item_id, " + "	user_id, " + "	email, "
+			+ "	mobile, " + "	amount, " + "	created_on, " + "	last_modified_on "
+			+ "FROM gift_voucher where number = ? and pin = ?";
 
-	
-	private static final String CREATE_GIFT_VOUCHER_QUERY = 
-			"INSERT INTO " +
-			"	gift_voucher(" +
-			"	number,"	+
-			"	pin,"	+
-			"	email,"	+
-			"	mobile,"	+
-			"	status,"	+
-			"	amount,"	+
-			"	user_id,"	+
-			"	order_item_id,"	+
-			"	created_on,"	+
-			"	last_modified_on,"	+
-			"	valid_from,"	+
-			"	valid_till"	+
-			"	) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,? )";
+	private static final String CREATE_GIFT_VOUCHER_QUERY = "INSERT INTO " + "	gift_voucher(" + "	number," + "	pin,"
+			+ "	email," + "	mobile," + "	status," + "	amount," + "	user_id," + "	order_item_id," + "	created_on,"
+			+ "	last_modified_on," + "	valid_from," + "	valid_till" + "	) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,? )";
 
-	private static final String UPDATE_GIFT_VOUCHER_STATE_QUERY = 
-			"UPDATE " +
-			"	gift_voucher set " +
-			"	last_modified_on = ? , "	+
-			"	status = ? "	+
-			" where number = ? ";
+	private static final String UPDATE_GIFT_VOUCHER_QUERY = "UPDATE gift_voucher " + "	set number= ?," + "	pin= ?,"
+			+ "	email= ?," + "	mobile= ?," + "	status= ?," + "	amount= ?," + "	user_id= ?," + "	order_item_id= ?,"
+			+ "	last_modified_on= ?," + "	valid_from= ?," + "	valid_till= ?" + "	) where number = ? ";
 
-	private static final String GET_GIFT_VOUCHER_USAGE_BY_NUMBER_QUERY = 
-			"SELECT " +
-			"	gift_voucher_number, " +
-			"	used_by, " +
-			"	order_id," +
-			"	used_on, " +
-			"	amount_used " +
-			"FROM gift_voucher_usage where gift_voucher_number = ?";
+	private static final String UPDATE_GIFT_VOUCHER_STATE_QUERY = "UPDATE " + "	gift_voucher set "
+			+ "	last_modified_on = ? , " + "	status = ? " + " where number = ? ";
 
-	
-	private static final String CREATE_GIFT_VOUCHER_USAGE_QUERY = 
-			"INSERT INTO " +
-			"	gift_voucher_usage(" +
-			"	gift_voucher_number,"	+
-			"	used_by,"	+
-			"	order_id,"	+
-			"	used_on,"	+
-			"	amount_used"	+
-			"	) VALUES ( ?, ?, ?, ?, ? )";
-	
-	private static final String DELETE_GIFT_VOUCHER_USAGE_QUERY = 
-			"DELETE FROM " +
-			"	gift_voucher_usage where " +
-			"	gift_voucher_number = ?  "	+
-			"	AND used_by = ? "	+
-			"	AND order_id = ?";
+	private static final String GET_GIFT_VOUCHER_USAGE_BY_NUMBER_QUERY = "SELECT " + "	gift_voucher_number, "
+			+ "	used_by, " + "	order_id," + "	used_on, " + "	amount_used "
+			+ "FROM gift_voucher_usage where gift_voucher_number = ?";
 
-	
+	private static final String CREATE_GIFT_VOUCHER_USAGE_QUERY = "INSERT INTO " + "	gift_voucher_usage("
+			+ "	gift_voucher_number," + "	used_by," + "	order_id," + "	used_on," + "	amount_used"
+			+ "	) VALUES ( ?, ?, ?, ?, ? )";
+
+	private static final String DELETE_GIFT_VOUCHER_USAGE_QUERY = "DELETE FROM " + "	gift_voucher_usage where "
+			+ "	gift_voucher_number = ?  " + "	AND used_by = ? " + "	AND order_id = ?";
+
 	@Override
 	public GiftVoucher load(int giftVoucherId) {
-		
-		if(log.isDebugEnabled()) {
+
+		if (log.isDebugEnabled()) {
 			log.debug("Geting the details for the Gift Voucher id : " + giftVoucherId);
 		}
-		
+
 		GiftVoucher eGV = null;
-		GiftVoucherRowCallBackHandler gvrcbh = new GiftVoucherRowCallBackHandler(); 
+		GiftVoucherRowCallBackHandler gvrcbh = new GiftVoucherRowCallBackHandler();
 		jdbcTemplate.query(GET_GIFT_VOUCHER_BY_ID_QUERY, gvrcbh, giftVoucherId);
 		if (gvrcbh.giftVoucher == null) {
 			log.error("No Gift Voucher found for the id - " + giftVoucherId);
@@ -163,114 +93,127 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 
 		return eGV;
 	}
-	
+
 	@Override
 	public GiftVoucher load(long giftVoucherNumber) {
-		
-		if(log.isDebugEnabled()) {
+
+		if (log.isDebugEnabled()) {
 			log.debug("Geting the details for the Gift Voucher Number : " + giftVoucherNumber);
 		}
-		
+
 		GiftVoucher eGV = null;
-		GiftVoucherRowCallBackHandler gvrcbh = new GiftVoucherRowCallBackHandler(); 
-		jdbcTemplate.query(GET_GIFT_VOUCHER_BY_NUMBER_QUERY, gvrcbh, new Object[] {giftVoucherNumber});
-		if(gvrcbh.giftVoucher == null) {
-			//no gift voucher in the database for this number
-			log.error("No Gift Voucher found for the eGV " + giftVoucherNumber );
+		GiftVoucherRowCallBackHandler gvrcbh = new GiftVoucherRowCallBackHandler();
+		jdbcTemplate.query(GET_GIFT_VOUCHER_BY_NUMBER_QUERY, gvrcbh, new Object[]{giftVoucherNumber});
+		if (gvrcbh.giftVoucher == null) {
+			// no gift voucher in the database for this number
+			log.error("No Gift Voucher found for the eGV " + giftVoucherNumber);
 			throw new GiftVoucherNotFoundException();
 		}
 		eGV = gvrcbh.giftVoucher;
 
 		return eGV;
 	}
-	
+
 	@Override
-	public boolean createGiftVoucher(final long gvNumber, final String pin,final String email, final int userId, final BigDecimal amount, final GiftVoucherStatusEnum status, final int orderItemId, final String mobile) {
-		
-		if(log.isDebugEnabled()) {
+	public boolean createGiftVoucher(final long gvNumber, final String pin, final String email, final int userId,
+			final BigDecimal amount, final GiftVoucherStatusEnum status, final int orderItemId, final String mobile,
+			final DateTime validFrom, final DateTime validTill) {
+
+		if (log.isDebugEnabled()) {
 			log.debug("Insert in the gift_voucher table ");
 		}
 		int rowAffected = 0;
 		KeyHolder giftVoucherKeyHolder = new GeneratedKeyHolder();
-		
+
 		try {
 			rowAffected = jdbcTemplate.update(new PreparedStatementCreator() {
-				
+
 				@Override
 				public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-					PreparedStatement ps = con.prepareStatement(CREATE_GIFT_VOUCHER_QUERY, new String [] {"id"});
-					ps.setLong(1,gvNumber);
-					ps.setString(2,pin);
-					ps.setString(3,email);
-					ps.setString(4,mobile);
-					ps.setString(5,status.toString());
+					PreparedStatement ps = con.prepareStatement(CREATE_GIFT_VOUCHER_QUERY, new String[]{"id"});
+					ps.setLong(1, gvNumber);
+					ps.setString(2, pin);
+					ps.setString(3, email);
+					ps.setString(4, mobile);
+					ps.setString(5, status.toString());
 					ps.setBigDecimal(6, amount);
 					ps.setInt(7, userId);
 					ps.setInt(8, orderItemId);
-					
+
 					Timestamp timestamp = new java.sql.Timestamp(System.currentTimeMillis());
-					
+
 					ps.setTimestamp(9, timestamp);
 					ps.setTimestamp(10, timestamp);
-					ps.setTimestamp(11, timestamp);
-					ps.setTimestamp(12, new java.sql.Timestamp(DateTime.now().plusMonths(6).getMillis()));
+					if (validFrom == null) {
+						ps.setTimestamp(11, timestamp);
+					} else {
+						ps.setTimestamp(11, new Timestamp(validFrom.getMillis()));
+					}
+					if (validTill == null) {
+						// default 6 months validity
+						ps.setTimestamp(12, new java.sql.Timestamp(DateTime.now().plusMonths(6).getMillis()));
+					} else {
+						ps.setTimestamp(11, new Timestamp(validTill.getMillis()));
+					}
 					return ps;
 				}
 			}, giftVoucherKeyHolder);
 		} catch (DuplicateKeyException e) {
 			log.error("Duplicate key insertion exception " + e);
-			throw new PlatformException("Duplicate key insertion exception "+e);
+			throw new PlatformException("Duplicate key insertion exception " + e);
 		}
-		
-		return rowAffected>0 ? true : false;
+
+		return rowAffected > 0 ? true : false;
 	}
-	
+
 	@Override
-	public boolean createGiftVoucherUse(final long gvNumber, final int userId, final int orderId,final BigDecimal amountUsed) {
-		
-		if(log.isDebugEnabled()) {
+	public boolean createGiftVoucherUse(final long gvNumber, final int userId, final int orderId,
+			final BigDecimal amountUsed) {
+
+		if (log.isDebugEnabled()) {
 			log.debug("Insert in the gift_voucher table ");
 		}
 		int rowAffected = 0;
 		KeyHolder gvUsesKeyHolder = new GeneratedKeyHolder();
-		
+
 		try {
 			rowAffected = jdbcTemplate.update(new PreparedStatementCreator() {
-				
+
 				@Override
 				public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-					PreparedStatement ps = con.prepareStatement(CREATE_GIFT_VOUCHER_USAGE_QUERY, new String [] {"id"});
-					
-					ps.setLong(1,gvNumber);
+					PreparedStatement ps = con.prepareStatement(CREATE_GIFT_VOUCHER_USAGE_QUERY, new String[]{"id"});
+
+					ps.setLong(1, gvNumber);
 					ps.setInt(2, userId);
 					ps.setInt(3, orderId);
 					Timestamp timestamp = new java.sql.Timestamp(System.currentTimeMillis());
 					ps.setTimestamp(4, timestamp);
 					ps.setBigDecimal(5, amountUsed);
-					
+
 					return ps;
 				}
 			}, gvUsesKeyHolder);
 		} catch (DuplicateKeyException e) {
 			log.error("Duplicate key insertion exception " + e);
-			throw new PlatformException("Duplicate key insertion exception "+e);
+			throw new PlatformException("Duplicate key insertion exception " + e);
 		}
-		
-		return rowAffected>0 ? true : false;
+
+		return rowAffected > 0 ? true : false;
 	}
 
 	@Override
 	public GiftVoucherUse loadUse(long giftVoucherNumber) {
-		if(log.isDebugEnabled()) {
+		if (log.isDebugEnabled()) {
 			log.debug("Geting the details for the Gift Voucher : GV NUmber " + giftVoucherNumber);
 		}
-		
+
 		GiftVoucherUse gvUse = null;
-		GiftVoucherUseRowCallBackHandler gvurcbh = new GiftVoucherUseRowCallBackHandler(); 
+		GiftVoucherUseRowCallBackHandler gvurcbh = new GiftVoucherUseRowCallBackHandler();
 		jdbcTemplate.query(GET_GIFT_VOUCHER_USAGE_BY_NUMBER_QUERY, gvurcbh, giftVoucherNumber);
 		if (gvurcbh.giftVoucherUse == null) {
 			log.error("No Gift Voucher found : GV NUmber - " + giftVoucherNumber);
-			throw new GiftVoucherException("eGV Error : Unable to find any usage entry for eGV num : " + giftVoucherNumber);
+			throw new GiftVoucherException("eGV Error : Unable to find any usage entry for eGV num : "
+					+ giftVoucherNumber);
 		}
 		gvUse = gvurcbh.giftVoucherUse;
 
@@ -279,25 +222,24 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 	}
 
 	@Override
-	public void changeState(long giftVoucherNumber,
-			GiftVoucherStatusEnum newState) {
-		
-		log.info("Update state of Gift Voucher " +giftVoucherNumber + " to => " + newState);
-		
+	public void changeState(long giftVoucherNumber, GiftVoucherStatusEnum newState) {
+
+		log.info("Update state of Gift Voucher " + giftVoucherNumber + " to => " + newState);
+
 		Timestamp modifiedOnTimestamp = new java.sql.Timestamp(System.currentTimeMillis());
-		int gvUpdated = jdbcTemplate.update(UPDATE_GIFT_VOUCHER_STATE_QUERY, new Object[] {modifiedOnTimestamp, newState.toString(),Long.toString(giftVoucherNumber)});
+		int gvUpdated = jdbcTemplate.update(UPDATE_GIFT_VOUCHER_STATE_QUERY,
+				new Object[]{modifiedOnTimestamp, newState.toString(), Long.toString(giftVoucherNumber)});
 		if (gvUpdated != 1) {
 			log.error("Error while updating the Gift Voucher : " + giftVoucherNumber);
 			throw new PlatformException("Error while updating the Gift Voucher : " + giftVoucherNumber);
 		}
 	}
-	
+
 	@Override
 	public boolean deleteGiftVoucher(long gvNumber, int userId, int orderItemId) {
 		return false;
 	}
 
-	
 	private static class GiftVoucherRowCallBackHandler implements RowCallbackHandler {
 
 		private GiftVoucher giftVoucher;
@@ -314,7 +256,7 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 			giftVoucher.setPin(rs.getString("pin"));
 			giftVoucher.setOrderItemId(rs.getInt("order_item_id"));
 			giftVoucher.setUserId(rs.getInt("user_id"));
-			
+
 			GiftVoucherDates dates = new GiftVoucherDates();
 			Timestamp validFromTS = rs.getTimestamp("valid_from");
 			if (validFromTS != null) {
@@ -335,7 +277,7 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 			giftVoucher.setDates(dates);
 		}
 	}
-	
+
 	private static class GiftVoucherUseRowCallBackHandler implements RowCallbackHandler {
 
 		private GiftVoucherUse giftVoucherUse;
@@ -353,19 +295,44 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 			}
 		}
 	}
-	
+
 	@Override
-	public void deleteUse(long giftVoucherNumber, int userId,
-			int orderId) {
-		int rowsDeleted = jdbcTemplate.update(DELETE_GIFT_VOUCHER_USAGE_QUERY,new Object[] {giftVoucherNumber,userId,orderId} );
+	public void deleteUse(long giftVoucherNumber, int userId, int orderId) {
+		int rowsDeleted = jdbcTemplate.update(DELETE_GIFT_VOUCHER_USAGE_QUERY, new Object[]{giftVoucherNumber, userId,
+				orderId});
 		if (rowsDeleted == 0) {
-			log.error("eGV Rollback Error : Unable to delete the eGV Usage Entry for eGV number  : " + giftVoucherNumber);
-			throw new PlatformException("eGV Rollback Error : Unable to delete the eGV Usage Entry for eGV number  : " + giftVoucherNumber);
+			log.error("eGV Rollback Error : Unable to delete the eGV Usage Entry for eGV number  : "
+					+ giftVoucherNumber);
+			throw new PlatformException("eGV Rollback Error : Unable to delete the eGV Usage Entry for eGV number  : "
+					+ giftVoucherNumber);
 		}
 	}
-	
-    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
+	}
+
+	@Override
+	public boolean updateGiftVoucher(final long gvNumber, final String pin, final String email, final int userId,
+			final BigDecimal amount, final GiftVoucherStatusEnum status, final int orderItemId, final String mobile,
+			final DateTime validFrom, final DateTime validTill) {
+		if (log.isDebugEnabled()) {
+			log.debug("Update in the gift_voucher : " + gvNumber);
+		}
+		Timestamp modifiedOnTimestamp = new java.sql.Timestamp(System.currentTimeMillis());
+		try {
+			int gvUpdated = jdbcTemplate.update(UPDATE_GIFT_VOUCHER_QUERY, new Object[]{gvNumber, pin, email, mobile,
+					status.toString(), amount, userId, orderItemId, modifiedOnTimestamp, validFrom, validTill});
+			if (gvUpdated != 1) {
+				log.error("Error while updating the gift voucher num : " + gvNumber);
+				throw new PlatformException("Error while updating the gift voucher num : " + gvNumber);
+			}
+		} catch (DuplicateKeyException e) {
+			log.error("Duplicate key insertion exception " + e);
+			throw new PlatformException("Duplicate key insertion exception " + e);
+		}
+
+		return true;
 	}
 
 }

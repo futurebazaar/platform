@@ -5,6 +5,8 @@ package com.fb.platform.egv.to;
 
 import java.math.BigDecimal;
 
+import org.joda.time.DateTime;
+
 /**
  * @author keith
  *
@@ -19,6 +21,17 @@ public class CreateRequest implements GiftVoucherRequest{
 	private String senderName;
 	private String receiverName;
 	private String giftMessage;
+	private DateTime validFrom;
+	private DateTime validTill;
+	private boolean isDeferActivation;
+
+	public DateTime getValidTill() {
+		return validTill;
+	}
+
+	public void setValidTill(DateTime validTill) {
+		this.validTill = validTill;
+	}
 
 	public String getSessionToken() {
 		return sessionToken;
@@ -82,6 +95,22 @@ public class CreateRequest implements GiftVoucherRequest{
 
 	public void setGiftMessage(String giftMessage) {
 		this.giftMessage = giftMessage;
+	}
+
+	public boolean isDeferActivation() {
+		return isDeferActivation;
+	}
+
+	public void setDeferActivation(boolean isDeferActivation) {
+		this.isDeferActivation = isDeferActivation;
+	}
+
+	public DateTime getValidFrom() {
+		return validFrom;
+	}
+
+	public void setValidFrom(DateTime validFrom) {
+		this.validFrom = validFrom;
 	}
 	
 }
