@@ -14,7 +14,8 @@ public enum GiftVoucherStatusEnum implements Serializable{
 	INACTIVE("INACTIVE"),
 	CONFIRMED("CONFIRMED"),
 	CANCELLED("CANCELLED"),
-	USED("USED");
+	USED("USED"),
+	USE_ROLLBACKED("USE_ROLLBACKED");
 
 	private String status = null; 
 	
