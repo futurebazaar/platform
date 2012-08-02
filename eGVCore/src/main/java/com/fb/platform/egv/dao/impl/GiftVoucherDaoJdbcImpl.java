@@ -135,6 +135,7 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 					ps.setString(2, pin);
 					ps.setString(3, email);
 					ps.setString(4, mobile);
+					log.debug("In Dao, Status = " + status.toString());
 					ps.setString(5, status.toString());
 					ps.setBigDecimal(6, amount);
 					ps.setInt(7, userId);
@@ -151,9 +152,11 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 					}
 					if (validTill == null) {
 						// default 6 months validity
+						log.info("Setting default Validity of 6 months ");
 						ps.setTimestamp(12, new java.sql.Timestamp(DateTime.now().plusMonths(6).getMillis()));
+						log.info("Setting default Validity of 6 months ");
 					} else {
-						ps.setTimestamp(11, new Timestamp(validTill.getMillis()));
+						ps.setTimestamp(12, new Timestamp(validTill.getMillis()));
 					}
 					return ps;
 				}
