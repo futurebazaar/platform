@@ -166,12 +166,15 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 				// Send email
 				if (!(email == null || email.isEmpty())) {
 					// code to send email
+					logger.debug("Sending Email to " + email);
 					MailTO message = MailHelper.createMailTO(eGV.getEmail(), amount, Long.toString(gvNumber), gvPin,
 							eGV.getValidTill(), senderName, receiverName, giftMessage);
 					mailSender.send(message);
 				}
 				// Send SMS
+
 				if (!(mobile == null || mobile.isEmpty())) {
+					logger.debug("Sending SMS to " + mobile);
 					// code to send email
 					SmsTO smsTo = SmsHelper.createSmsTO(eGV.getMobile(), amount, Long.toString(gvNumber), gvPin,
 							eGV.getValidTill(), senderName, receiverName, giftMessage);
@@ -320,6 +323,7 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 					eGV.getOrderItemId(), eGV.getMobile(), eGV.getValidFrom(), eGV.getValidTill());
 			// Send email
 			if (!(eGV.getEmail() == null || eGV.getEmail().isEmpty())) {
+				logger.debug("Sending Email to " + email);
 				MailTO message = MailHelper.createMailTO(eGV.getEmail(), eGV.getAmount().getAmount(),
 						Long.toString(giftVoucherNumber), gvPin, eGV.getValidTill(), senderName, receiverName,
 						giftMessage);
@@ -327,6 +331,7 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 			}
 			// Send SMS
 			if (!(eGV.getMobile() == null || eGV.getMobile().isEmpty())) {
+				logger.debug("Sending Mobile to " + mobile);
 				SmsTO smsTo = SmsHelper.createSmsTO(eGV.getMobile(), eGV.getAmount().getAmount(),
 						Long.toString(giftVoucherNumber), gvPin, eGV.getValidTill(), senderName, receiverName,
 						giftMessage);
