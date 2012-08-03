@@ -35,6 +35,8 @@ import com.fb.platform.egv._1_0.CreateRequest;
 import com.fb.platform.egv._1_0.CreateResponse;
 import com.fb.platform.egv._1_0.GetInfoRequest;
 import com.fb.platform.egv._1_0.GetInfoResponse;
+import com.fb.platform.egv._1_0.SendPinRequest;
+import com.fb.platform.egv._1_0.SendPinResponse;
 import com.fb.platform.egv._1_0.UseRequest;
 import com.fb.platform.egv._1_0.UseResponse;
 /**
@@ -71,8 +73,8 @@ public class eGVRestClient {
 		boolean isDefer = true;
 		int orderItemId = -1;
 		int orderId = -1;
-		pingGV();
-		xsdDisplayGV();
+		// pingGV();
+		// xsdDisplayGV();
 		long newGVNum = createGV(sessionToken, mail, amount, orderItemId, senderName, receiverName, giftMessage,
 				isDefer, mobile, validFrom, validTill);
 		// getInfoGV(sessionToken, gvNumber);
@@ -80,6 +82,7 @@ public class eGVRestClient {
 		// useGV(sessionToken, gvNumber, amount, orderId);
 		// cancelGV(sessionToken, gvNumber);
 		activateGV(sessionToken, Long.toString(newGVNum), amount, validFrom, validTill);
+		sendPineGV(sessionToken, gvNumber, mail, mobile, senderName, receiverName, giftMessage);
 		logout(sessionToken);
 	}
 
@@ -408,6 +411,48 @@ public class eGVRestClient {
 		System.out.println("\n\n ============= Use Web Service Call Over =============== \n\n");
 	}
 
+	private static void sendPineGV(String sessionToken, String gvNumber, String email, String mobile,
+			String senderName, String receiverName, String giftMessage) throws Exception {
+		HttpClient httpClient = new HttpClient();
+		String url = EGV_URL + "/activate";
+		PostMethod postMethod = new PostMethod(url);
+
+		SendPinRequest sendPinRequest = new SendPinRequest();
+		sendPinRequest.setGiftVoucherNumber(Long.parseLong(gvNumber));
+		sendPinRequest.setSessionToken(sessionToken);
+		sendPinRequest.setEmail(email);
+		sendPinRequest.setMobile(mobile);
+		sendPinRequest.setSenderName(senderName);
+		sendPinRequest.setReceiverName(receiverName);
+		sendPinRequest.setGiftMessage(giftMessage);
+
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.egv._1_0");
+
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(sendPinRequest, sw);
+
+		System.out.println("\n================== Testing eGV Use Web Service Call ============ \n" + "The URL is : "
+				+ url);
+		System.out.println("\n\n Request  : \n   " + sw.toString());
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		postMethod.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(postMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("\n\nunable to execute the Web Service method : " + statusCode);
+			System.exit(1);
+		}
+		String responseString = postMethod.getResponseBodyAsString();
+		System.out.println("\n\nGot the Response : \n   " + responseString);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		SendPinResponse response = (SendPinResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(
+				responseString)));
+		System.out.println("Response Status " + response.getSendPinResponseStatus());
+
+		System.out.println("\n\n ============= Use Web Service Call Over =============== \n\n");
+	}
 	private static void logout(String sessionToken) throws Exception {
 		HttpClient httpClient = new HttpClient();
 

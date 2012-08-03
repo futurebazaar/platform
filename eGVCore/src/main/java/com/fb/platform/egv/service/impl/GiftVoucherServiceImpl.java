@@ -310,11 +310,11 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 
 	@Override
 	public void sendGiftVoucherPin(long giftVoucherNumber, String email, String mobile, String senderName,
-			String receiverName) {
+			String receiverName, String giftMessage) {
 
 		GiftVoucher eGV;
 
-		String giftMessage = "";
+		giftMessage = giftMessage == null ? "" : giftMessage;
 
 		try {
 			eGV = giftVoucherDao.load(giftVoucherNumber);
@@ -323,20 +323,22 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 					eGV.getEmail(), eGV.getUserId(), eGV.getAmount().getAmount(), GiftVoucherStatusEnum.CONFIRMED,
 					eGV.getOrderItemId(), eGV.getMobile(), eGV.getValidFrom(), eGV.getValidTill());
 			// Send email
-			if (!(eGV.getEmail() == null || eGV.getEmail().isEmpty())) {
+			if (!(email == null || email.isEmpty())) {
 				logger.debug("Sending Email to " + email);
-				MailTO message = MailHelper.createMailTO(eGV.getEmail(), eGV.getAmount().getAmount(),
+				MailTO message = MailHelper.createMailTO(email, eGV.getAmount().getAmount(),
 						Long.toString(giftVoucherNumber), gvPin, eGV.getValidTill(), senderName, receiverName,
 						giftMessage);
 				mailSender.send(message);
 			}
 			// Send SMS
-			if (!(eGV.getMobile() == null || eGV.getMobile().isEmpty())) {
+			if (!(mobile == null || mobile.isEmpty())) {
 				logger.debug("Sending Mobile to " + mobile);
-				SmsTO smsTo = SmsHelper.createSmsTO(eGV.getMobile(), eGV.getAmount().getAmount(),
+				SmsTO smsTo = SmsHelper.createSmsTO(mobile, eGV.getAmount().getAmount(),
 						Long.toString(giftVoucherNumber), gvPin, eGV.getValidTill(), senderName, receiverName,
 						giftMessage);
-				smsSender.send(smsTo);
+				logger.debug("Sending SMS to " + mobile);
+				String smsOutput = smsSender.send(smsTo);
+				logger.debug(" SMS output is " + smsOutput);
 			}
 		} catch (GiftVoucherNotFoundException e) {
 			logger.info("No Such Gift Voucher Exists :  " + giftVoucherNumber);

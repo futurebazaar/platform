@@ -402,7 +402,8 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 		try {
 			// Find the gift voucher
 			giftVoucherService.sendGiftVoucherPin(request.getGiftVoucherNumber(), request.getEmail(),
-					request.getMobile(), request.getSenderName(), request.getReceiverName());
+					request.getMobile(), request.getSenderName(), request.getReceiverName(), request.getGiftMessage());
+			response.setNumber(request.getGiftVoucherNumber());
 			response.setResponseStatus(SendPinResponseStatusEnum.SUCCESS);
 
 		} catch (GiftVoucherNotFoundException e) {
