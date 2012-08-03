@@ -16,6 +16,7 @@ import com.fb.platform.egv.service.GiftVoucherManager;
 import com.fb.platform.egv.service.GiftVoucherService;
 import com.fb.platform.egv.to.ActivateRequest;
 import com.fb.platform.egv.to.ActivateResponse;
+import com.fb.platform.egv.to.ActivateResponseStatusEnum;
 import com.fb.platform.egv.to.ApplyRequest;
 import com.fb.platform.egv.to.ApplyResponse;
 import com.fb.platform.egv.to.ApplyResponseStatusEnum;
@@ -31,6 +32,9 @@ import com.fb.platform.egv.to.GetInfoResponseStatusEnum;
 import com.fb.platform.egv.to.RollbackUseRequest;
 import com.fb.platform.egv.to.RollbackUseResponse;
 import com.fb.platform.egv.to.RollbackUseResponseStatusEnum;
+import com.fb.platform.egv.to.SendPinRequest;
+import com.fb.platform.egv.to.SendPinResponse;
+import com.fb.platform.egv.to.SendPinResponseStatusEnum;
 import com.fb.platform.egv.to.UseRequest;
 import com.fb.platform.egv.to.UseResponse;
 import com.fb.platform.egv.to.UseResponseStatusEnum;
@@ -255,37 +259,39 @@ public class GiftVoucherManagerImplTest extends BaseTestCase {
 	@Test
 	public void testActivateGiftVoucherWithEmailAndMobile() {
 
-		CreateRequest createGiftVoucherRequest = new CreateRequest();
-		createGiftVoucherRequest.setMobile("917498459473");
-		createGiftVoucherRequest.setOrderItemId(1);
-		createGiftVoucherRequest.setAmount(new BigDecimal(1000.00));
-		createGiftVoucherRequest.setSessionToken(responseUser1.getSessionToken());
-		createGiftVoucherRequest.setSenderName("Keith Fernandez");
-		createGiftVoucherRequest.setReceiverName("Zishaan");
-		createGiftVoucherRequest.setDeferActivation(true);
-		DateTime validTill = new DateTime(2012, 9, 1, 0, 0, 0);
-		createGiftVoucherRequest.setValidTill(validTill);
-
-		CreateResponse createGiftVoucherResponse = giftVoucherManager.create(createGiftVoucherRequest);
-
-		assertNotNull(createGiftVoucherResponse);
-		assertNotNull(createGiftVoucherResponse.getSessionToken());
-		assertEquals(CreateResponseStatusEnum.SUCCESS, createGiftVoucherResponse.getResponseStatus());
-		assertEquals(0, createGiftVoucherResponse.getValidTill().compareTo(validTill));
-		newEGVNum = createGiftVoucherResponse.getGvNumber();
-
 		ActivateRequest activateGiftVoucherRequest = new ActivateRequest();
 		activateGiftVoucherRequest.setAmount(new BigDecimal(1000.00));
 		activateGiftVoucherRequest.setSessionToken(responseUser1.getSessionToken());
 		DateTime newValidTill = new DateTime(2012, 10, 1, 0, 0, 0);
-		activateGiftVoucherRequest.setValidTill(validTill);
-		activateGiftVoucherRequest.setGiftVoucherNumber(newEGVNum);
+		activateGiftVoucherRequest.setValidTill(newValidTill);
+		activateGiftVoucherRequest.setGiftVoucherNumber(-12345678924L);
 
 		ActivateResponse activateGiftVoucherResponse = giftVoucherManager.activate(activateGiftVoucherRequest);
 
 		assertNotNull(activateGiftVoucherResponse);
 		assertNotNull(activateGiftVoucherResponse.getSessionToken());
-		assertEquals(CreateResponseStatusEnum.SUCCESS, activateGiftVoucherResponse.getResponseStatus());
+		assertEquals(ActivateResponseStatusEnum.SUCCESS, activateGiftVoucherResponse.getResponseStatus());
+
+	}
+
+	@Test
+	public void testSendPinGiftVoucherWithEmailAndMobile() {
+
+		SendPinRequest sendPinGiftVoucherRequest = new SendPinRequest();
+		sendPinGiftVoucherRequest.setSessionToken(responseUser1.getSessionToken());
+		sendPinGiftVoucherRequest.setGiftVoucherNumber(-12345678924L);
+		sendPinGiftVoucherRequest.setMobile("917498459473");
+		sendPinGiftVoucherRequest.setEmail("keith.fernandez@futuregroup.in");
+		sendPinGiftVoucherRequest.setMobile("917498459473");
+		sendPinGiftVoucherRequest.setSenderName("Keith Fernandez");
+		sendPinGiftVoucherRequest.setReceiverName("Zishaan");
+		sendPinGiftVoucherRequest.setGiftMessage("This is the new Gift Message with egv.number worth egv.amount");
+
+		SendPinResponse sendPinGiftVoucherResponse = giftVoucherManager.sendPin(sendPinGiftVoucherRequest);
+
+		assertNotNull(sendPinGiftVoucherResponse);
+		assertNotNull(sendPinGiftVoucherResponse.getSessionToken());
+		assertEquals(SendPinResponseStatusEnum.SUCCESS, sendPinGiftVoucherResponse.getResponseStatus());
 
 	}
 
