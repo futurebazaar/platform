@@ -16,7 +16,7 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 /**
  * @author keith
- *
+ * 
  */
 public class SmsSender {
 
@@ -31,13 +31,12 @@ public class SmsSender {
 
 	public static String SMS_API_URL = "http://bulkpush.mytoday.com/BulkSms/SingleMsgApi";
 
-
-
 	/**
-	 * @param smsTO : Contains to whom and the SMS Message to be sent
+	 * @param smsTO
+	 *            : Contains to whom and the SMS Message to be sent
 	 * @throws SmsException
 	 */
-	public void send(final SmsTO smsTO) throws SmsException{
+	public String send(final SmsTO smsTO) throws SmsException {
 		try {
 
 			Properties prop = System.getProperties();
@@ -46,8 +45,7 @@ public class SmsSender {
 
 			Client client = Client.create();
 
-			WebResource webResource = client
-					.resource(SMS_API_URL);
+			WebResource webResource = client.resource(SMS_API_URL);
 
 			MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
 			queryParams.add(SMS_FEED_ID_STR, "315128");
@@ -57,25 +55,24 @@ public class SmsSender {
 			queryParams.add(SMS_TO_STR, smsTO.toListAsString());
 			queryParams.add(SMS_SENDER_ID_STR, "FutrBazr");
 
-			ClientResponse response = webResource.queryParams(queryParams)
-					.accept("application/xml")
+			ClientResponse response = webResource.queryParams(queryParams).accept("application/xml")
 					.get(ClientResponse.class);
 
 			System.out.println(webResource.getURI().toURL().toString());
 			System.setProperties(prop);
 
 			if (response.getStatus() != 200) {
-				throw new RuntimeException("Failed : HTTP error code : "
-						+ response.getStatus());
+				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
 			}
 
 			String output = response.getEntity(String.class);
 
-			System.out.println(output);
+			return output;
 			//
-			//			if(output.indexOf("<ERROR") != -1) {
-			//				throw new SmsException("Error While Sending SMS" + output.toString());
-			//			}
+			// if(output.indexOf("<ERROR") != -1) {
+			// throw new SmsException("Error While Sending SMS" +
+			// output.toString());
+			// }
 		} catch (SmsException e) {
 			throw new SmsException("Error While Sending SMS", e);
 		} catch (Exception e) {

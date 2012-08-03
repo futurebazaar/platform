@@ -63,6 +63,6 @@ public interface GiftVoucherService {
 
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void sendGiftVoucherPin(long giftVoucherNumber, String email, String mobile, String senderName,
-			String receiverName);
+			String receiverName, String giftMessage);
 
 }
