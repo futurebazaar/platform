@@ -379,7 +379,7 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 	@Override
 	public SendPinResponse sendPin(SendPinRequest request) {
 		if (logger.isDebugEnabled()) {
-			logger.debug("Getting Gift Voucher  : " + request.getGiftVoucherNumber());
+			logger.debug("SendPin of Gift Voucher  : " + request.getGiftVoucherNumber());
 		}
 		SendPinResponse response = new SendPinResponse();
 

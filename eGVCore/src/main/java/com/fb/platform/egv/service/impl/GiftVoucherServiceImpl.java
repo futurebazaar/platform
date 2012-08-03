@@ -332,11 +332,10 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 			}
 			// Send SMS
 			if (!(mobile == null || mobile.isEmpty())) {
-				logger.debug("Sending Mobile to " + mobile);
+				logger.debug("Sending SMS to " + mobile);
 				SmsTO smsTo = SmsHelper.createSmsTO(mobile, eGV.getAmount().getAmount(),
 						Long.toString(giftVoucherNumber), gvPin, eGV.getValidTill(), senderName, receiverName,
 						giftMessage);
-				logger.debug("Sending SMS to " + mobile);
 				String smsOutput = smsSender.send(smsTo);
 				logger.debug(" SMS output is " + smsOutput);
 			}

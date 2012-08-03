@@ -82,7 +82,7 @@ public class eGVRestClient {
 		// useGV(sessionToken, gvNumber, amount, orderId);
 		// cancelGV(sessionToken, gvNumber);
 		activateGV(sessionToken, Long.toString(newGVNum), amount, validFrom, validTill);
-		sendPineGV(sessionToken, gvNumber, mail, mobile, senderName, receiverName, giftMessage);
+		sendPineGV(sessionToken, Long.toString(newGVNum), mail, mobile, senderName, receiverName, giftMessage);
 		logout(sessionToken);
 	}
 
@@ -414,7 +414,7 @@ public class eGVRestClient {
 	private static void sendPineGV(String sessionToken, String gvNumber, String email, String mobile,
 			String senderName, String receiverName, String giftMessage) throws Exception {
 		HttpClient httpClient = new HttpClient();
-		String url = EGV_URL + "/activate";
+		String url = EGV_URL + "/sendPin";
 		PostMethod postMethod = new PostMethod(url);
 
 		SendPinRequest sendPinRequest = new SendPinRequest();
