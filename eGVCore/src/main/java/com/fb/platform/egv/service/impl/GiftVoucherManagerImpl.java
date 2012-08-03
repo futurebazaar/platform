@@ -340,6 +340,9 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 		}
 		ActivateResponse response = new ActivateResponse();
 
+		System.out.println("Session Token is " + request.getSessionToken());
+		logger.debug("Session Token is " + request.getSessionToken());
+
 		if (request == null || StringUtils.isBlank(request.getSessionToken())) {
 			response.setResponseStatus(ActivateResponseStatusEnum.NO_SESSION);
 			return response;
@@ -373,7 +376,6 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 		return response;
 
 	}
-
 	@Override
 	public SendPinResponse sendPin(SendPinRequest request) {
 		if (logger.isDebugEnabled()) {

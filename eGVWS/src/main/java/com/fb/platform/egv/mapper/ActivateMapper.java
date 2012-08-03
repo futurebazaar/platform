@@ -26,7 +26,6 @@ public class ActivateMapper {
 
 	public static com.fb.platform.egv.to.ActivateRequest xmlToCoreRequest(String webRequestXml) throws JAXBException {
 		com.fb.platform.egv.to.ActivateRequest coreRequest = new com.fb.platform.egv.to.ActivateRequest();
-		GregorianCalendar gregCal = new GregorianCalendar();
 		try {
 			Unmarshaller unmarshaller = GiftVoucherResource.getContext().createUnmarshaller();
 
@@ -35,6 +34,7 @@ public class ActivateMapper {
 
 			// Mapping Code
 			coreRequest.setSessionToken(webRequest.getSessionToken());
+			System.out.println(webRequest.getSessionToken());
 			coreRequest.setGiftVoucherNumber(webRequest.getGiftVoucherNumber());
 			coreRequest.setAmount(webRequest.getAmount());
 			if (webRequest.getValidFrom() == null) {

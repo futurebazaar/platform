@@ -68,7 +68,7 @@ public class eGVRestClient {
 		BigDecimal amount = new BigDecimal(1000);
 		DateTime validFrom = new DateTime(2012, 8, 1, 0, 0, 0);
 		DateTime validTill = new DateTime(2012, 9, 1, 0, 0, 0);
-		boolean isDefer = false;
+		boolean isDefer = true;
 		int orderItemId = -1;
 		int orderId = -1;
 		pingGV();
