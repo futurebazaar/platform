@@ -59,7 +59,7 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 
 	private static final String UPDATE_GIFT_VOUCHER_QUERY = "UPDATE gift_voucher " + "	set pin= ?," + "	email= ?,"
 			+ "	mobile= ?," + "	status= ?," + "	amount= ?," + "	user_id= ?," + "	order_item_id= ?,"
-			+ "	last_modified_on= ?," + "	valid_from= ?," + "	valid_till= ?" + "	) where number = ? ";
+			+ "	last_modified_on= ?," + "	valid_from= ?," + "	valid_till= ?" + " where number = ? ";
 
 	private static final String UPDATE_GIFT_VOUCHER_STATE_QUERY = "UPDATE " + "	gift_voucher set "
 			+ "	last_modified_on = ? , " + "	status = ? " + " where number = ? ";
@@ -324,9 +324,11 @@ public class GiftVoucherDaoJdbcImpl implements GiftVoucherDao {
 		}
 		Timestamp modifiedOnTimestamp = new java.sql.Timestamp(System.currentTimeMillis());
 		try {
-			int gvUpdated = jdbcTemplate.update(UPDATE_GIFT_VOUCHER_QUERY,
+			int gvUpdated = jdbcTemplate.update(
+					UPDATE_GIFT_VOUCHER_QUERY,
 					new Object[]{pin, email, mobile, status.toString(), amount, userId, orderItemId,
-							modifiedOnTimestamp, validFrom, validTill, gvNumber});
+							modifiedOnTimestamp, new Timestamp(validFrom.getMillis()),
+							new Timestamp(validTill.getMillis()), gvNumber});
 			if (gvUpdated != 1) {
 				log.error("Error while updating the gift voucher num : " + gvNumber);
 				throw new PlatformException("Error while updating the gift voucher num : " + gvNumber);

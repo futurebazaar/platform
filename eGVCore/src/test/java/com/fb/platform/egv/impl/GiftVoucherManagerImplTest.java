@@ -14,6 +14,8 @@ import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.egv.service.GiftVoucherManager;
 import com.fb.platform.egv.service.GiftVoucherService;
+import com.fb.platform.egv.to.ActivateRequest;
+import com.fb.platform.egv.to.ActivateResponse;
 import com.fb.platform.egv.to.ApplyRequest;
 import com.fb.platform.egv.to.ApplyResponse;
 import com.fb.platform.egv.to.ApplyResponseStatusEnum;
@@ -55,6 +57,8 @@ public class GiftVoucherManagerImplTest extends BaseTestCase {
 	LoginResponse responseUser2 = null;
 
 	LoginResponse responseUser6 = null;
+
+	long newEGVNum;
 
 	@Before
 	public void loginUser1() {
@@ -244,6 +248,44 @@ public class GiftVoucherManagerImplTest extends BaseTestCase {
 		assertNotNull(createGiftVoucherResponse.getSessionToken());
 		assertEquals(CreateResponseStatusEnum.SUCCESS, createGiftVoucherResponse.getResponseStatus());
 		assertEquals(0, createGiftVoucherResponse.getValidTill().compareTo(validTill));
+		newEGVNum = createGiftVoucherResponse.getGvNumber();
+
+	}
+
+	@Test
+	public void testActivateGiftVoucherWithEmailAndMobile() {
+
+		CreateRequest createGiftVoucherRequest = new CreateRequest();
+		createGiftVoucherRequest.setMobile("917498459473");
+		createGiftVoucherRequest.setOrderItemId(1);
+		createGiftVoucherRequest.setAmount(new BigDecimal(1000.00));
+		createGiftVoucherRequest.setSessionToken(responseUser1.getSessionToken());
+		createGiftVoucherRequest.setSenderName("Keith Fernandez");
+		createGiftVoucherRequest.setReceiverName("Zishaan");
+		createGiftVoucherRequest.setDeferActivation(true);
+		DateTime validTill = new DateTime(2012, 9, 1, 0, 0, 0);
+		createGiftVoucherRequest.setValidTill(validTill);
+
+		CreateResponse createGiftVoucherResponse = giftVoucherManager.create(createGiftVoucherRequest);
+
+		assertNotNull(createGiftVoucherResponse);
+		assertNotNull(createGiftVoucherResponse.getSessionToken());
+		assertEquals(CreateResponseStatusEnum.SUCCESS, createGiftVoucherResponse.getResponseStatus());
+		assertEquals(0, createGiftVoucherResponse.getValidTill().compareTo(validTill));
+		newEGVNum = createGiftVoucherResponse.getGvNumber();
+
+		ActivateRequest activateGiftVoucherRequest = new ActivateRequest();
+		activateGiftVoucherRequest.setAmount(new BigDecimal(1000.00));
+		activateGiftVoucherRequest.setSessionToken(responseUser1.getSessionToken());
+		DateTime newValidTill = new DateTime(2012, 10, 1, 0, 0, 0);
+		activateGiftVoucherRequest.setValidTill(validTill);
+		activateGiftVoucherRequest.setGiftVoucherNumber(newEGVNum);
+
+		ActivateResponse activateGiftVoucherResponse = giftVoucherManager.activate(activateGiftVoucherRequest);
+
+		assertNotNull(activateGiftVoucherResponse);
+		assertNotNull(activateGiftVoucherResponse.getSessionToken());
+		assertEquals(CreateResponseStatusEnum.SUCCESS, activateGiftVoucherResponse.getResponseStatus());
 
 	}
 

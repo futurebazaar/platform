@@ -302,6 +302,7 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 			throw new GiftVoucherNotFoundException("No Such Gift Voucher Exists :  " + giftVoucherNumber, e);
 		} catch (DataAccessException e) {
 			logger.error("Error while loading the GiftVoucher. GiftVoucherId  : " + giftVoucherNumber);
+			e.printStackTrace();
 			throw new PlatformException("Error while loading the GiftVoucher. GiftVoucherId  : " + giftVoucherNumber, e);
 		}
 
