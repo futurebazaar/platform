@@ -16,6 +16,8 @@ public interface PointsRule extends Serializable {
 	BigDecimal execute(OrderRequest orderRequest, OrderItemRequest itemRequest);
 
 	public void setPointsUtil(PointsUtil pointsUtil);
+	
+	public void setClientName(String clientName);
 
 	boolean allowNext();
 

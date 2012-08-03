@@ -192,7 +192,7 @@ public class PointsResource {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			DisplayPointsRequest xmlDisplayPointsRequest = (DisplayPointsRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(pointsXml)));
 			com.fb.platform.payback.to.PointsRequest pointsRequest = new com.fb.platform.payback.to.PointsRequest();
-			
+			pointsRequest.setClientName(xmlDisplayPointsRequest.getClientName());
 			pointsRequest.setTxnActionCode(xmlDisplayPointsRequest.getActionCode().name());
 			
 			com.fb.platform.payback.to.OrderRequest orderRequest = new com.fb.platform.payback.to.OrderRequest();

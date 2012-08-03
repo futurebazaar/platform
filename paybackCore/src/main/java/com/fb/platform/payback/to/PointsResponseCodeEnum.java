@@ -10,7 +10,8 @@ public enum PointsResponseCodeEnum {
 	INVALID_ACTION_CODE("Action Code specified is invalid"), 
 	INVALID_REQUEST("This Request is not Valid. Please check."), 
 	NO_SESSION("No session attached/ Invalid session."), 
-	HEADER_DOES_NOT_EXIST("No Earn Data exists.");
+	HEADER_DOES_NOT_EXIST("No Earn Data exists."), 
+	POINTS_ALREADY_GIVEN("Points already allocated for the given order");
 	
 	private String responseCode = null;
 	

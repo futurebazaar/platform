@@ -40,7 +40,7 @@ public class CacheTest extends BaseTestCase{
 	
 	@Test
 	public void loyaltyCardRuleCacheAccessTest(){
-		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.ENTER_LOYALTY_CARD_EARN_X_POINTS);
+		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.ENTER_LOYALTY_CARD_EARN_X_POINTS, "FUTUREBAZAAR");
 		ruleCacheAccess.put(EarnPointsRuleEnum.ENTER_LOYALTY_CARD_EARN_X_POINTS.name(), rule);
 		PointsRule cacheRule =ruleCacheAccess.get(EarnPointsRuleEnum.ENTER_LOYALTY_CARD_EARN_X_POINTS.name());
 		assertTrue(cacheRule.allowNext());
@@ -59,7 +59,7 @@ public class CacheTest extends BaseTestCase{
 	
 	@Test
 	public void bonusPointsRuleCacheTest(){
-		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.BUY_WORTH_X_EARN_Y_BONUS_POINTS);
+		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.BUY_WORTH_X_EARN_Y_BONUS_POINTS, "FUTUREBAZAAR");
 		ruleCacheAccess.put(EarnPointsRuleEnum.BUY_WORTH_X_EARN_Y_BONUS_POINTS.name(), rule);
 		PointsRule cacheRule =ruleCacheAccess.get(EarnPointsRuleEnum.BUY_WORTH_X_EARN_Y_BONUS_POINTS.name());
 		assertTrue(cacheRule.allowNext());
@@ -79,7 +79,7 @@ public class CacheTest extends BaseTestCase{
 	
 	@Test
 	public void offerDayTest(){
-		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.EARN_X_POINTS_ON_Y_DAY);
+		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.EARN_X_POINTS_ON_Y_DAY, "FUTUREBAZAAR");
 		ruleCacheAccess.put(EarnPointsRuleEnum.EARN_X_POINTS_ON_Y_DAY.name(), rule);
 		PointsRule cacheRule =ruleCacheAccess.get(EarnPointsRuleEnum.EARN_X_POINTS_ON_Y_DAY.name());
 		assertFalse(cacheRule.allowNext());

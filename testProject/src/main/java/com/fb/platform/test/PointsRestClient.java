@@ -140,7 +140,8 @@ public class PointsRestClient {
 
 	private static DisplayPointsRequest setDisplayPointsRequest() throws Exception {
 		DisplayPointsRequest request = new DisplayPointsRequest();
-		request.setActionCode(ActionCode.BURN_REVERSAL);
+		request.setActionCode(ActionCode.PREALLOC_EARN	);
+		request.setClientName("Big Bazaar");
 		request.setTimestamp(DatatypeFactory.newInstance().newXMLGregorianCalendar(2012, 05, 27, 0, 0, 0, 0, 0));
 		request.setOrderAmount(new BigDecimal(500));
 		OrderItemRequest itemRequest = new OrderItemRequest();
@@ -190,7 +191,7 @@ public class PointsRestClient {
 
 	private static ClearCacheRequest setClearCacheRequest() throws Exception {
 		ClearCacheRequest cacheRequest = new ClearCacheRequest();
-		cacheRequest.setRuleName(EarnPointsRuleEnum.BUY_WORTH_X_EARN_Y_BONUS_POINTS.name());
+		cacheRequest.setRuleName(EarnPointsRuleEnum.ENTER_LOYALTY_CARD_EARN_X_POINTS.name() + "_" + "BIGBAZAAR");
 		cacheRequest.setSessionToken(login());
 		return cacheRequest;
 	}
@@ -198,7 +199,7 @@ public class PointsRestClient {
 	private static PointsRequest setPointsRequest() throws Exception {
 		PointsRequest request = new PointsRequest();
 		request.setActionCode(ActionCode.PREALLOC_EARN);
-		request.setClientName("Future Bazaar");
+		request.setClientName("Big Bazaar");
 		request.setSessionToken(login());
 		
 		OrderRequest orderRequest = new OrderRequest();
@@ -208,6 +209,7 @@ public class PointsRestClient {
 		orderRequest.setAmount(new BigDecimal(500));
 		orderRequest.setReason("REST CLIENT");
 		orderRequest.setReferenceId("5052");
+		orderRequest.setOrderTotal(new BigDecimal("2000"));
 		orderRequest.setTimestamp(DatatypeFactory.newInstance().newXMLGregorianCalendar(2012, 05, 27, 0, 0, 0, 0, 0));
 		
 		OrderItemRequest itemRequest = new OrderItemRequest();

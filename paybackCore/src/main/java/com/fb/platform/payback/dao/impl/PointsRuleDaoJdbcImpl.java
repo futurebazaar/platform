@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
 
+import com.fb.commons.PlatformException;
 import com.fb.platform.payback.dao.PointsRuleDao;
 import com.fb.platform.payback.rule.BurnPointsRuleEnum;
 import com.fb.platform.payback.rule.EarnPointsRuleEnum;
@@ -23,7 +24,8 @@ public class PointsRuleDaoJdbcImpl implements PointsRuleDao {
 	private Log log = LogFactory.getLog(PointsRuleDaoJdbcImpl.class);
 
 	private static String LOAD_RULE_CONFIG_ITEMS_QUERY = "SELECT name, value FROM "
-			+ "payback_rule_config WHERE " + "rule_id = ?";
+			+ "payback_rule_config WHERE " + 
+			"rule_id = ? AND client_name = ? " ;
 
 	private static String LOAD_RULE_QUERY = "SELECT * FROM " + "rules WHERE "
 			+ "name = ? ";
@@ -35,7 +37,7 @@ public class PointsRuleDaoJdbcImpl implements PointsRuleDao {
 	}
 
 	@Override
-	public PointsRule loadEarnRule(EarnPointsRuleEnum ruleName) {
+	public PointsRule loadEarnRule(EarnPointsRuleEnum ruleName, String clientName) {
 		if (log.isDebugEnabled()) {
 			log.debug("Geting the payback rule details for the rule id : "
 					+ ruleName);
@@ -49,9 +51,9 @@ public class PointsRuleDaoJdbcImpl implements PointsRuleDao {
 
 		EarnPointsRuleEnum ruleEnum = EarnPointsRuleEnum.valueOf(rcbh.ruleName);
 
-		RuleConfiguration ruleConfig = loadRuleConfiguration(rcbh.ruleId);
+		RuleConfiguration ruleConfig = loadRuleConfiguration(rcbh.ruleId, clientName);
 
-		PointsRule rule = PointsRuleFactory.createRule(ruleEnum, ruleConfig);
+		PointsRule rule = PointsRuleFactory.createRule(ruleEnum, ruleConfig, clientName);
 
 		return rule;
 	}
@@ -70,14 +72,17 @@ public class PointsRuleDaoJdbcImpl implements PointsRuleDao {
 		}
 	}
 
-	private RuleConfiguration loadRuleConfiguration(long ruleId) {
+	private RuleConfiguration loadRuleConfiguration(long ruleId, String clientName) {
 		if (log.isDebugEnabled()) {
 			log.debug("Geting the rule details for the Payback rule id : "
 					+ ruleId);
 		}
 		List<com.fb.platform.payback.rule.RuleConfigItem> ruleConfigItems = jdbcTemplate
-				.query(LOAD_RULE_CONFIG_ITEMS_QUERY,
-						new RuleConfigItemRowMapper(), ruleId);
+				.query(LOAD_RULE_CONFIG_ITEMS_QUERY, new Object[] {ruleId, clientName}, 
+						new RuleConfigItemRowMapper());
+		if (ruleConfigItems == null || ruleConfigItems.isEmpty()){
+			throw new PlatformException("No Rule Config Items found for Rule Id: " + ruleId + " and clientName: " + clientName);
+		}
 		RuleConfiguration ruleConfig = new RuleConfiguration(ruleConfigItems);
 		return ruleConfig;
 	}
@@ -94,7 +99,7 @@ public class PointsRuleDaoJdbcImpl implements PointsRuleDao {
 	}
 
 	@Override
-	public PointsRule loadBurnRule(BurnPointsRuleEnum ruleName) {
+	public PointsRule loadBurnRule(BurnPointsRuleEnum ruleName, String clientName) {
 		if (log.isDebugEnabled()) {
 			log.debug("Geting the Payback rule details for the rule id : "
 					+ ruleName);
@@ -108,9 +113,12 @@ public class PointsRuleDaoJdbcImpl implements PointsRuleDao {
 
 		BurnPointsRuleEnum ruleEnum = BurnPointsRuleEnum.valueOf(rcbh.ruleName);
 
-		RuleConfiguration ruleConfig = loadRuleConfiguration(rcbh.ruleId);
+		RuleConfiguration ruleConfig = loadRuleConfiguration(rcbh.ruleId, clientName);
+		if (ruleConfig == null){
+			return null;
+		}
 
-		PointsRule rule = PointsRuleFactory.createRule(ruleEnum, ruleConfig);
+		PointsRule rule = PointsRuleFactory.createRule(ruleEnum, ruleConfig, clientName);
 
 		return rule;
 	}

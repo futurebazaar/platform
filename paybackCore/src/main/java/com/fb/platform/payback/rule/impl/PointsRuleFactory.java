@@ -72,7 +72,7 @@ public class PointsRuleFactory {
 			return rule;
 		}
 		
-		public static PointsRule createRule(BurnPointsRuleEnum ruleName, RuleConfiguration ruleConfig){
+		public static PointsRule createRule(BurnPointsRuleEnum ruleName, RuleConfiguration ruleConfig, String clientName){
 			PointsRule rule = null;
 			
 			switch(ruleName){
@@ -91,7 +91,7 @@ public class PointsRuleFactory {
 			return rule;
 		}
 		
-		public static PointsRule createRule(EarnPointsRuleEnum ruleName, RuleConfiguration ruleConfig){
+		public static PointsRule createRule(EarnPointsRuleEnum ruleName, RuleConfiguration ruleConfig, String clientName){
 			PointsRule rule = getRule(ruleName);
 			rule.setPointsUtil(pointsUtil);
 			rule.init(ruleConfig);

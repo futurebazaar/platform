@@ -131,12 +131,14 @@
         		<column>name</column>
         		<column>value</column>
         		<column>rule_id</column>
+        		<column>client_name</column>
         	
         		<row>
         			<value name="id">1</value>
         			<value name="name">EARN_RATIO</value>
         			<value name="value">0.03</value>
         			<value name="rule_id">1</value>
+        			<value name="client_name">FUTUREBAZAAR</value>
         		</row>
         		
         		<row>
@@ -144,24 +146,28 @@
 	    			<value name="name">BONUS_POINTS</value>
 	    			<value name="value">200</value>
 	    			<value name="rule_id">5</value>
+	    			<value name="client_name">FUTUREBAZAAR</value>
 	    		</row>
 	    			<row>
 								<value name="id">3</value>
 								<value name="name">MIN_ORDER_VALUE</value>
 								<value name="value">2000</value>
 								<value name="rule_id">5</value>
+								<value name="client_name">FUTUREBAZAAR</value>
 						</row>
 						<row>
 						<value name="id">4</value>
 						<value name="name">VALID_FROM</value>
 						<value name="value">2012-05-22</value>
 						<value name="rule_id">5</value>
+						<value name="client_name">FUTUREBAZAAR</value>
 					</row>
 					<row>
 						<value name="id">5</value>
 						<value name="name">VALID_TILL</value>
 						<value name="value">9999-12-31</value>
 						<value name="rule_id">5</value>
+						<value name="client_name">FUTUREBAZAAR</value>
 					</row>
         	
 					<row>
@@ -169,30 +175,35 @@
 	    			<value name="name">OFFER_DAY</value>
 	    			<value name="value">Friday</value>
 	    			<value name="rule_id">2</value>
+	    			<value name="client_name">FUTUREBAZAAR</value>
 	    		</row>
 	    			<row>
 								<value name="id">7</value>
 								<value name="name">EARN_RATIO</value>
 								<value name="value">0.03</value>
 								<value name="rule_id">2</value>
+								<value name="client_name">FUTUREBAZAAR</value>
 						</row>
 						<row>
 							<value name="id">8</value>
 							<value name="name">POINTS_FACTOR</value>
 							<value name="value">2</value>
 							<value name="rule_id">2</value>
+							<value name="client_name">FUTUREBAZAAR</value>
 						</row>
 						<row>
 						<value name="id">9</value>
 						<value name="name">VALID_FROM</value>
 						<value name="value">2012-05-22</value>
 						<value name="rule_id">2</value>
+						<value name="client_name">FUTUREBAZAAR</value>
 					</row>
 					<row>
 						<value name="id">10</value>
 						<value name="name">VALID_TILL</value>
 						<value name="value">9999-12-31</value>
 						<value name="rule_id">2</value>
+						<value name="client_name">FUTUREBAZAAR</value>
 					</row>
 					
 					<row>
@@ -200,30 +211,35 @@
 	    			<value name="name">GV_CATEGORY_LIST</value>
 	    			<value name="value">12,13</value>
 	    			<value name="rule_id">3</value>
+	    			<value name="client_name">FUTUREBAZAAR</value>
 	    		</row>
 	    			<row>
 								<value name="id">12</value>
 								<value name="name">EARN_RATIO</value>
 								<value name="value">0.03</value>
 								<value name="rule_id">3</value>
+								<value name="client_name">FUTUREBAZAAR</value>
 						</row>
 						<row>
 							<value name="id">13</value>
 							<value name="name">EARN_MAP</value>
 							<value name="value">gv=5,electronics=2</value>
 							<value name="rule_id">3</value>
+							<value name="client_name">FUTUREBAZAAR</value>
 						</row>
 						<row>
 						<value name="id">14</value>
 						<value name="name">VALID_FROM</value>
 						<value name="value">2012-05-22</value>
 						<value name="rule_id">3</value>
+						<value name="client_name">FUTUREBAZAAR</value>
 					</row>
 					<row>
 						<value name="id">15</value>
 						<value name="name">VALID_TILL</value>
 						<value name="value">9999-12-31</value>
 						<value name="rule_id">3</value>
+						<value name="client_name">FUTUREBAZAAR</value>
 					</row>
 					
 	    			<row>
@@ -231,24 +247,28 @@
 								<value name="name">EARN_RATIO</value>
 								<value name="value">0.03</value>
 								<value name="rule_id">4</value>
+								<value name="client_name">FUTUREBAZAAR</value>
 						</row>
 						<row>
 							<value name="id">18</value>
 							<value name="name">POINTS_FACTOR</value>
 							<value name="value">2</value>
 							<value name="rule_id">4</value>
+							<value name="client_name">FUTUREBAZAAR</value>
 						</row>
 						<row>
 						<value name="id">19</value>
 						<value name="name">VALID_FROM</value>
 						<value name="value">2012-05-22</value>
 						<value name="rule_id">4</value>
+						<value name="client_name">FUTUREBAZAAR</value>
 					</row>
 					<row>
 						<value name="id">20</value>
 						<value name="name">VALID_TILL</value>
 						<value name="value">9999-12-31</value>
 						<value name="rule_id">4</value>
+						<value name="client_name">FUTUREBAZAAR</value>
 					</row>
 					
 					<row>
@@ -256,6 +276,7 @@
         			<value name="name">BURN_RATIO</value>
         			<value name="value">4</value>
         			<value name="rule_id">6</value>
+        			<value name="client_name">FUTUREBAZAAR</value>
         		</row>
         		
         		<row>
@@ -263,6 +284,7 @@
 				<value name="name">VALID_FROM</value>
 				<value name="value">2012-05-22</value>
 				<value name="rule_id">1</value>
+				<value name="client_name">FUTUREBAZAAR</value>
 			</row>
 			
 			<row>
@@ -270,6 +292,7 @@
 				<value name="name">VALID_TILL</value>
 				<value name="value">9999-12-31</value>
 				<value name="rule_id">1</value>
+				<value name="client_name">FUTUREBAZAAR</value>
 			</row>
 			
 			<row>
@@ -277,12 +300,14 @@
 			<value name="name">EXCLUDED_CATEGORY_LIST</value>
 			<value name="value">0</value>
 			<value name="rule_id">1</value>
+			<value name="client_name">FUTUREBAZAAR</value>
 		</row>
 			<row>
         			<value name="id">25</value>
         			<value name="name">EARN_RATIO</value>
         			<value name="value">0.03</value>
         			<value name="rule_id">7</value>
+        			<value name="client_name">FUTUREBAZAAR</value>
         		</row>
         		
         		<row>
@@ -290,6 +315,7 @@
 				<value name="name">VALID_FROM</value>
 				<value name="value">2012-05-22</value>
 				<value name="rule_id">7</value>
+				<value name="client_name">FUTUREBAZAAR</value>
 			</row>
 			
 			<row>
@@ -297,6 +323,7 @@
 				<value name="name">VALID_TILL</value>
 				<value name="value">9999-12-31</value>
 				<value name="rule_id">7</value>
+				<value name="client_name">FUTUREBAZAAR</value>
 			</row>
 			
 			<row>
@@ -304,18 +331,43 @@
 				<value name="name">INCLUDED_CATEGORY_LIST</value>
 				<value name="value">1234,1193</value>
 				<value name="rule_id">7</value>
+				<value name="client_name">FUTUREBAZAAR</value>
 			</row>
 			<row>
 				<value name="id">29</value>
 				<value name="name">POINTS_FACTOR</value>
 				<value name="value">10</value>
 				<value name="rule_id">7</value>
+				<value name="client_name">FUTUREBAZAAR</value>
 			</row>
 			<row>
 				<value name="id">30</value>
 				<value name="name">PAYMENT_MODE</value>
 				<value name="value">payback</value>
 				<value name="rule_id">7</value>
+				<value name="client_name">FUTUREBAZAAR</value>
+			</row>
+			<row>
+        			<value name="id">31</value>
+        			<value name="name">EARN_RATIO</value>
+        			<value name="value">0.03</value>
+        			<value name="rule_id">1</value>
+        			<value name="client_name">BIGBAZAAR</value>
+        		</row>
+        	<row>
+				<value name="id">32</value>
+				<value name="name">VALID_FROM</value>
+				<value name="value">2012-05-22</value>
+				<value name="rule_id">1</value>
+				<value name="client_name">BIGBAZAAR</value>
+			</row>
+			
+			<row>
+				<value name="id">33</value>
+				<value name="name">VALID_TILL</value>
+				<value name="value">9999-12-31</value>
+				<value name="rule_id">1</value>
+				<value name="client_name">BIGBAZAAR</value>
 			</row>
         	
 			</table>

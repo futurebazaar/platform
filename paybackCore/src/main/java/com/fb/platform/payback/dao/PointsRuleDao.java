@@ -6,7 +6,7 @@ import com.fb.platform.payback.rule.PointsRule;
 
 public interface PointsRuleDao {
 
-	public PointsRule loadEarnRule(EarnPointsRuleEnum ruleName);
+	public PointsRule loadEarnRule(EarnPointsRuleEnum ruleName, String clientName);
 
-	public PointsRule loadBurnRule(BurnPointsRuleEnum ruleName);
+	public PointsRule loadBurnRule(BurnPointsRuleEnum ruleName, String clientName);
 }

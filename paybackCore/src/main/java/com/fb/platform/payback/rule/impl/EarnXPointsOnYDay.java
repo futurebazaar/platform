@@ -23,6 +23,7 @@ public class EarnXPointsOnYDay implements PointsRule {
 	private DateTime validTill;
 	private DateTime validFrom;
 	private PointsUtil pointsUtil;
+	private String clientName;
 	
 	@Override
 	public void setPointsUtil(PointsUtil pointsUtil) {
@@ -72,6 +73,12 @@ public class EarnXPointsOnYDay implements PointsRule {
 	@Override
 	public boolean allowNext() {
 		return false;
+	}
+
+
+	@Override
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
 	}
 
 }

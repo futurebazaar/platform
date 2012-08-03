@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fb.commons.PlatformException;
 import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.payback.cache.ListCacheAccess;
 import com.fb.platform.payback.dao.ListDao;
@@ -86,7 +87,7 @@ public class RulesTest extends BaseTestCase{
 	@Test
 	public void buyHeroDeailEarnYPointsTest(){
 		
-		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.BUY_DOD_EARN_Y_POINTS);
+		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.BUY_DOD_EARN_Y_POINTS, "FUTUREBAZAAR");
 		((BuyHeroDealEarnYPoints)rule).setPointsUtil(pointsUtil);
 		((BuyHeroDealEarnYPoints)rule).setListDao(listDao);
 		((BuyHeroDealEarnYPoints)rule).setListCacheAccess(listCacheAccess);
@@ -104,7 +105,7 @@ public class RulesTest extends BaseTestCase{
 	
 	@Test
 	public void buyWorthXEarnYBonusPointsTest(){
-		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.BUY_WORTH_X_EARN_Y_BONUS_POINTS);
+		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.BUY_WORTH_X_EARN_Y_BONUS_POINTS, "FUTUREBAZAAR");
 		BigDecimal txnPoints = BigDecimal.ZERO;
 		for (OrderItemRequest itemRequest : orderRequest.getOrderItemRequest()){
 			if (rule.isApplicable(orderRequest, itemRequest)){
@@ -118,7 +119,7 @@ public class RulesTest extends BaseTestCase{
 	
 	@Test
 	public void earnXPointsOnYDayTest(){
-		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.EARN_X_POINTS_ON_Y_DAY);
+		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.EARN_X_POINTS_ON_Y_DAY, "FUTUREBAZAAR");
 		BigDecimal txnPoints = BigDecimal.ZERO;
 		orderRequest.setTxnTimestamp(new DateTime(2012, 05, 25, 0, 0, 0));
 		for (OrderItemRequest itemRequest : orderRequest.getOrderItemRequest()){
@@ -132,8 +133,19 @@ public class RulesTest extends BaseTestCase{
 	
 	@Test
 	public void enterLoyaltyCardEarnXPoints(){
-		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.ENTER_LOYALTY_CARD_EARN_X_POINTS);
+		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.ENTER_LOYALTY_CARD_EARN_X_POINTS, "FUTUREBAZAAR");
 		BigDecimal txnPoints = BigDecimal.ZERO;
+		orderRequest.setTxnTimestamp(new DateTime(2012, 05, 25, 0, 0, 0));
+		for (OrderItemRequest itemRequest : orderRequest.getOrderItemRequest()){
+			if (rule.isApplicable(orderRequest, itemRequest)){
+				txnPoints = txnPoints.add(rule.execute(orderRequest, itemRequest));
+			}
+		}
+		
+		assertEquals(new BigDecimal(120).intValue(), txnPoints.intValue());
+		
+		rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.ENTER_LOYALTY_CARD_EARN_X_POINTS, "BIGBAZAAR");
+		txnPoints = BigDecimal.ZERO;
 		orderRequest.setTxnTimestamp(new DateTime(2012, 05, 25, 0, 0, 0));
 		for (OrderItemRequest itemRequest : orderRequest.getOrderItemRequest()){
 			if (rule.isApplicable(orderRequest, itemRequest)){
@@ -146,7 +158,7 @@ public class RulesTest extends BaseTestCase{
 	
 	@Test
 	public void purchaseOrderBurnXPoints(){
-		PointsRule rule = pointsRuleDao.loadBurnRule(BurnPointsRuleEnum.PURCHASE_ORDER_BURN_X_POINTS);
+		PointsRule rule = pointsRuleDao.loadBurnRule(BurnPointsRuleEnum.PURCHASE_ORDER_BURN_X_POINTS, "FUTUREBAZAAR");
 		BigDecimal txnPoints = BigDecimal.ZERO;
 		orderRequest.setTxnTimestamp(new DateTime(2012, 05, 25, 0, 0, 0));
 		for (OrderItemRequest itemRequest : orderRequest.getOrderItemRequest()){
@@ -160,7 +172,7 @@ public class RulesTest extends BaseTestCase{
 	
 	@Test
 	public void earnXPointsOnYPaymentMode(){
-		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.EARN_X_POINTS_ON_Y_PAYMENT_MODE);
+		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.EARN_X_POINTS_ON_Y_PAYMENT_MODE, "FUTUREBAZAAR");
 		BigDecimal txnPoints = BigDecimal.ZERO;
 		orderRequest.setTxnTimestamp(new DateTime(2012, 05, 25, 0, 0, 0));
 		for (OrderItemRequest itemRequest : orderRequest.getOrderItemRequest()){
@@ -171,9 +183,9 @@ public class RulesTest extends BaseTestCase{
 		assertEquals(new BigDecimal(600).intValue(), txnPoints.intValue());
 	}
 	
-	@Test
+	@Test(expected=PlatformException.class)
 	public void buyProductXEarnYPoints(){
-		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.BUY_PRODUCT_X_EARN_Y_POINTS);
+		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.BUY_PRODUCT_X_EARN_Y_POINTS, "FUTUREBAZAAR");
 		BigDecimal txnPoints = BigDecimal.ZERO;
 		String categoryList = "12,13";
 		int count = 0;
@@ -186,6 +198,21 @@ public class RulesTest extends BaseTestCase{
 		}
 		
 		assertEquals(new BigDecimal(600).intValue(), txnPoints.intValue());
+		
+		rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.BUY_PRODUCT_X_EARN_Y_POINTS, "BIGBAZAAR");
+		txnPoints = BigDecimal.ZERO;
+		count = 0;
+		for (OrderItemRequest itemRequest : orderRequest.getOrderItemRequest()){
+			itemRequest.setCategoryId(new Long(categoryList.split(",")[count]));
+			if (rule.isApplicable(orderRequest, itemRequest)){
+				txnPoints = txnPoints.add(rule.execute(orderRequest, itemRequest));
+			}
+			count ++;
+		}
+		
+		assertEquals(new BigDecimal(600).intValue(), txnPoints.intValue());
+		
+		
 		
 	}
 	

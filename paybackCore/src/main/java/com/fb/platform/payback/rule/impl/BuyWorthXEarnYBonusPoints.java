@@ -22,6 +22,7 @@ public class BuyWorthXEarnYBonusPoints implements PointsRule {
 	private DateTime validFrom;
 	private DateTime validTill;
 	private PointsUtil pointsUtil;
+	private String clientName;
 	
 	@Override
 	public void setPointsUtil(PointsUtil pointsUtil) {
@@ -68,6 +69,12 @@ public class BuyWorthXEarnYBonusPoints implements PointsRule {
 	@Override
 	public boolean allowNext() {
 		return true;
+	}
+
+	@Override
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
+		
 	}
 
 }

@@ -122,6 +122,21 @@ public class PointsServiceTest extends BaseTestCase{
 	}
 	
 	@Test
+	public void storeClientBasedEarnReversalPoints(){
+		PointsRequest pr = new PointsRequest();
+		pr.setTxnActionCode("EARN_REVERSAL");
+		pr.setClientName("Big Bazaar");
+		
+		OrderRequest request = setOrderRequest(new Long(1), "1234");
+		request.setLoyaltyCard("1234567812345678");
+		
+		request.getOrderItemRequest().add(setItemRequest(1, 100));
+		pr.setOrderRequest(request);
+		assertEquals(PointsResponseCodeEnum.SUCCESS, pointsService.storePoints(pr));
+		
+	}
+	
+	@Test
 	public void storeBurnReversalPoints(){
 		
 		PointsRequest pr = new PointsRequest();
@@ -138,6 +153,7 @@ public class PointsServiceTest extends BaseTestCase{
 	@Test
 	public void getPointsToBeDisplayed(){
 		PointsRequest pr = new PointsRequest();
+		pr.setClientName("FUTUREBAZAAR");
 		pr.setTxnActionCode("PREALLOC_EARN");
 		OrderRequest request = setOrderRequest(new Long(1), "1234");
 		request.getOrderItemRequest().add(setItemRequest(1, 500));
@@ -153,6 +169,28 @@ public class PointsServiceTest extends BaseTestCase{
 		newRequest = pointsService.getPointsToBeDisplayed(pr);
 		assertEquals(8000, newRequest.getOrderRequest().getTxnPoints().intValue());
 		assertEquals(2000, newRequest.getOrderRequest().getPointsValue().intValue());
+	}
+	
+	@Test
+	public void getClientBasedDisplayPointsTest(){
+		PointsRequest pr = new PointsRequest();
+		pr.setClientName("BIGBAZAAR");
+		pr.setTxnActionCode("PREALLOC_EARN");
+		OrderRequest request = setOrderRequest(new Long(1), "1234");
+		request.getOrderItemRequest().add(setItemRequest(1, 500));
+		request.getOrderItemRequest().add(setItemRequest(2, 639));
+		pr.setOrderRequest(request);
+		PointsRequest newRequest = pointsService.getPointsToBeDisplayed(pr);
+		assertEquals(34, newRequest.getOrderRequest().getTxnPoints().intValue());
+		assertEquals(34, newRequest.getOrderRequest().getTotalTxnPoints().intValue());
+	
+		pr.setTxnActionCode("BURN_REVERSAL");
+		OrderRequest request1 = setOrderRequest(new Long(1), "1234");
+		pr.setOrderRequest(request1);
+		newRequest = pointsService.getPointsToBeDisplayed(pr);
+		assertEquals(0, newRequest.getOrderRequest().getTxnPoints().intValue());
+		assertEquals(0, newRequest.getOrderRequest().getPointsValue().intValue());
+		
 	}
 	
 	private OrderRequest setOrderRequest(Long orderId, String referenceId) {

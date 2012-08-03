@@ -20,6 +20,7 @@ public class EnterLoyaltyCardEarnXPoints implements PointsRule {
 	private List<Long> excludedCategoryList = new ArrayList<Long>();
 	private DateTime validFrom;
 	private DateTime validTill;
+	private String clientName;
 	
 	private boolean isNextRuleApplicable = true;
 
@@ -65,6 +66,12 @@ public class EnterLoyaltyCardEarnXPoints implements PointsRule {
 	@Override
 	public boolean allowNext() {
 		return isNextRuleApplicable;
+	}
+
+	@Override
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
+		
 	}
 
 }

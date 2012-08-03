@@ -12,6 +12,7 @@ import com.fb.platform.payback.util.PointsUtil;
 public class PurchaseOrderBurnXPoints implements PointsRule {
 	private BigDecimal burnRatio;
 	private PointsUtil pointsUtil;
+	private String clientName;
 	
 	@Override
 	public void setPointsUtil(PointsUtil pointsUtil) {
@@ -40,6 +41,12 @@ public class PurchaseOrderBurnXPoints implements PointsRule {
 	@Override
 	public boolean allowNext() {
 		return true;
+	}
+
+	@Override
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
+		
 	}
 
 }

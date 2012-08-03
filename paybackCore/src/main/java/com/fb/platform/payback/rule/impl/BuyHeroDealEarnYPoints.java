@@ -30,6 +30,7 @@ public class BuyHeroDealEarnYPoints implements PointsRule {
 	private transient ListDao listDao;
 	private ListCacheAccess listCacheAccess;
 	private PointsUtil pointsUtil;
+	private String clientName;
 
 	private static Log logger = LogFactory.getLog(ListDaoJdbcImpl.class);
 	
@@ -75,18 +76,18 @@ public class BuyHeroDealEarnYPoints implements PointsRule {
 			return false;
 		}
 
-		if (!getHeroDealSellerRateChart(request	.getTxnTimestamp()).contains(itemRequest.getSellerRateChartId())) {
+		if (!getHeroDealSellerRateChart(request.getTxnTimestamp(), this.clientName).contains(itemRequest.getSellerRateChartId())) {
 			return false;
 		}
 
 		return true;
 	}
 
-	private List<Long> getHeroDealSellerRateChart(DateTime orderDate) {
+	private List<Long> getHeroDealSellerRateChart(DateTime orderDate, String clientName) {
 		List<Long> sellerRateChartId = new ArrayList<Long>();
 		String bookingDate = pointsUtil.convertDateToFormat(orderDate,
 				"yyyy-MM-dd");
-		String key = PointsCacheConstants.HERO_DEAL + "#" + bookingDate;
+		String key = PointsCacheConstants.HERO_DEAL + "#" + bookingDate + "#" + clientName;
 		String heroDeals = listCacheAccess.get(key);
 		if (heroDeals != null && heroDeals.equals("")){
 			String[] deals = heroDeals.split(",");
@@ -134,6 +135,11 @@ public class BuyHeroDealEarnYPoints implements PointsRule {
 	@Override
 	public boolean allowNext() {
 		return true;
+	}
+
+	@Override
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
 	}
 
 }

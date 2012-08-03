@@ -24,6 +24,7 @@ public class BuyProductXEarnYPoints implements PointsRule {
 	private DateTime validFrom;
 	private DateTime validTill;
 	private PointsUtil pointsUtil;
+	private String clientName;
 	
 	//Identifies whether it is a gv or electronics or any other
 	private String categoryType;
@@ -80,6 +81,12 @@ public class BuyProductXEarnYPoints implements PointsRule {
 	@Override
 	public boolean allowNext() {
 		return true;
+	}
+
+	@Override
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
+		
 	}
 
 }

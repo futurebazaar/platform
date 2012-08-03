@@ -73,11 +73,18 @@ public class DaoTest extends BaseTestCase{
 	public void loadRuleTest(){
 		
 		for (EarnPointsRuleEnum ruleName: EarnPointsRuleEnum.values()){
-			assertNotNull(pointsRuleDao.loadEarnRule(ruleName));
+			assertNotNull(pointsRuleDao.loadEarnRule(ruleName, "FUTUREBAZAAR"));
 		}
 		for(BurnPointsRuleEnum ruleName: BurnPointsRuleEnum.values()){
-			assertNotNull(pointsRuleDao.loadBurnRule(ruleName));
+			assertNotNull(pointsRuleDao.loadBurnRule(ruleName, "FUTUREBAZAAR"));
 		}
+		assertNotNull(pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.ENTER_LOYALTY_CARD_EARN_X_POINTS, "BIGBAZAAR"));
+		
+	}
+	
+	@Test(expected=PlatformException.class)
+	public void noRuleConfigItemsTest(){
+		assertNull(pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.BUY_DOD_EARN_Y_POINTS, "BIGBAZAAR"));
 	}
 	
 	@Test(expected=EmptyResultDataAccessException.class)

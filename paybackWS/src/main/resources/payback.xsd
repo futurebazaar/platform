@@ -123,6 +123,7 @@
       	<xs:element ref="payback:actionCode"/>
       	<xs:element ref="payback:timestamp" />
       	<xs:element ref="payback:orderAmount" />
+      	<xs:element ref="payback:clientName" />
       	<xs:element maxOccurs="unbounded" ref="payback:orderItemRequest" />
       </xs:sequence>
     </xs:complexType>

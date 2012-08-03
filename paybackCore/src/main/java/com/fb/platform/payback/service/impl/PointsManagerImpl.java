@@ -73,12 +73,16 @@ public class PointsManagerImpl implements PointsManager {
 			pointsResponse.setTxnPoints(request.getOrderRequest().getTxnPoints().intValue());
 			pointsResponse.setPointsHeaderId(request.getOrderRequest().getPointsHeaderId());
 		} catch (PointsHeaderDoesNotExist e) {
+			logger.error(e.toString());
 			responseEnum = PointsResponseCodeEnum.HEADER_DOES_NOT_EXIST;
 		} catch (InvalidReferenceId e) {
+			logger.error(e.toString());
 			responseEnum = PointsResponseCodeEnum.INVALID_REFERENCE_ID;
 		}catch (InvalidSession e) {
+			logger.error(e.toString());
 			responseEnum = PointsResponseCodeEnum.NO_SESSION;
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.error(e.toString());
 			responseEnum = PointsResponseCodeEnum.INTERNAL_ERROR;
 		}

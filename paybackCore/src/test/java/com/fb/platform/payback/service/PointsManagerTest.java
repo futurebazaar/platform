@@ -206,6 +206,7 @@ public class PointsManagerTest  extends BaseTestCase{
 	@Test
 	public void getPointsToBeDisplayedTest() throws NoPermissionException{
 		PointsRequest pr = new PointsRequest();
+		pr.setClientName("FUTUREBAZAAR");
 		pr.setTxnActionCode("PREALLOC_EARN");
 		OrderRequest request = setOrderRequest(new Long(1), "1234");
 		
