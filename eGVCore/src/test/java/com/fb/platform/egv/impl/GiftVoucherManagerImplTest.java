@@ -283,7 +283,7 @@ public class GiftVoucherManagerImplTest extends BaseTestCase {
 		sendPinGiftVoucherRequest.setMobile("917498459473");
 		sendPinGiftVoucherRequest.setEmail("keith.fernandez@futuregroup.in");
 		sendPinGiftVoucherRequest.setMobile("917498459473");
-		sendPinGiftVoucherRequest.setSenderName("Keith Fernandez");
+		sendPinGiftVoucherRequest.setSenderName("KEITH FB");
 		sendPinGiftVoucherRequest.setReceiverName("Zishaan");
 		sendPinGiftVoucherRequest.setGiftMessage("This is the new Gift Message with egv.number worth egv.amount");
 
