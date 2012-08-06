@@ -24,6 +24,7 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
+import com.fb.platform.promotion.coupon.model.CouponPromotion;
 import com.fb.platform.promotion.dao.PromotionDao;
 import com.fb.platform.promotion.dao.RuleDao;
 import com.fb.platform.promotion.model.GlobalPromotionUses;
@@ -32,6 +33,7 @@ import com.fb.platform.promotion.model.PromotionDates;
 import com.fb.platform.promotion.model.PromotionLimitsConfig;
 import com.fb.platform.promotion.model.UserPromotionUses;
 import com.fb.platform.promotion.model.UserPromotionUsesEntry;
+import com.fb.platform.promotion.product.model.promotion.ProductPromotion;
 import com.fb.platform.promotion.rule.PromotionRule;
 
 /**
@@ -147,9 +149,10 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		}
 		promotion.setLimitsConfig(limits);
 
-		PromotionRule rule = ruleDao.load(promotionId, prcbh.ruleId);
-
-		promotion.setRule(rule);
+		if (promotion instanceof CouponPromotion) {
+			PromotionRule rule = ruleDao.load(promotionId, prcbh.ruleId);
+			((CouponPromotion)promotion).setRule(rule);
+		}
 
 		return promotion;
 	}
@@ -364,10 +367,17 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 
 		private int ruleId;
 		private Promotion promotion;
+		private boolean isCouponPromotion = false;
 
 		@Override
 		public void processRow(ResultSet rs) throws SQLException {
-			promotion = new Promotion();
+			isCouponPromotion = rs.getBoolean("is_coupon");
+			boolean isCouponNull = rs.wasNull(); //existing promotions were all coupon promotions but isCoupon was null which is mapped to false in jdbc
+			if (isCouponPromotion || isCouponNull) {
+				promotion = new CouponPromotion();
+			} else {
+				promotion = new ProductPromotion();
+			}
 			promotion.setDescription(rs.getString("description"));
 			promotion.setId(rs.getInt("id"));
 			promotion.setName(rs.getString("name"));

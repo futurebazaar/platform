@@ -23,7 +23,7 @@
 				<value name="order_item_id">-5</value>
 				<value name="status">CONFIRMED</value>
 				<value name="valid_from">2012-05-28 00:00:00</value>
-				<value name="valid_till">2012-07-31 00:00:00</value>
+				<value name="valid_till">2015-07-31 00:00:00</value>
 				<value name="created_on">2012-04-30 00:00:00</value>
 				<value name="last_modified_on">2012-04-30 00:00:00</value>
         </row>
@@ -37,7 +37,7 @@
 				<value name="order_item_id">-5</value>
 				<value name="status">USED</value>
 				<value name="valid_from">2012-05-28 00:00:00</value>
-				<value name="valid_till">2012-07-31 00:00:00</value>
+				<value name="valid_till">2015-07-31 00:00:00</value>
 				<value name="created_on">2012-04-30 00:00:00</value>
 				<value name="last_modified_on">2012-04-30 00:00:00</value>
         </row>

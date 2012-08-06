@@ -79,7 +79,7 @@ public class RestClient {
 	
 	private static String QAURL = "http://10.0.102.21:8082/";
 	
-	private static String localhost = "http://localhost:8082/";
+	private static String localhost = "http://localhost:8080/";
 	
 	private static String url = localhost;
 
