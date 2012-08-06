@@ -40,6 +40,7 @@
       <xs:sequence>
         <xs:element ref="promotion:productId"/>
         <xs:element maxOccurs="unbounded" ref="promotion:category"/>
+        <xs:element ref="promotion:sellerId"/>
         <xs:element maxOccurs="unbounded" ref="promotion:brand"/>
         <xs:element ref="promotion:price"/>
       </xs:sequence>
@@ -49,6 +50,7 @@
   <xs:element name="productId" type="xs:int"/>
   <xs:element name="category" type="xs:int"/>
   <xs:element name="brand" type="xs:int"/>
+  <xs:element name="sellerId" type="xs:int"/>
   <xs:element name="quantity" type="xs:int"/>
   <xs:element name="clientId" type="xs:int"/>
   <xs:element name="sessionToken" type="xs:string"/>
@@ -99,6 +101,7 @@
       <xs:enumeration value="INVALID_CLIENT"/>
       <xs:enumeration value="CATEGORY_MISMATCH"/>
       <xs:enumeration value="BRAND_MISMATCH"/>
+      <xs:enumeration value="SELLER_MISMATCH"/>
       <xs:enumeration value="INACTIVE_COUPON"/>
       <xs:enumeration value="TOTAL_MAX_USES_EXCEEDED"/>
       <xs:enumeration value="TOTAL_MAX_USES_PER_USER_EXCEEDED"/>
@@ -160,6 +163,7 @@
 	  <xs:enumeration value="INVALID_CLIENT"/>
 	  <xs:enumeration value="CATEGORY_MISMATCH"/>
 	  <xs:enumeration value="BRAND_MISMATCH"/>
+	  <xs:enumeration value="SELLER_MISMATCH"/>
 	  <xs:enumeration value="LIMIT_SUCCESS"/>
     </xs:restriction>
   </xs:simpleType>

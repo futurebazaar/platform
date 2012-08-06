@@ -15,14 +15,15 @@ public enum RuleConfigDescriptorEnum {
 	CATEGORY_INCLUDE_LIST("Include category ID", RuleConfigDescriptorTypeEnum.CSI),
 	CATEGORY_EXCLUDE_LIST("Exclude category ID", RuleConfigDescriptorTypeEnum.CSI),
 	BRAND_LIST("Brand ID", RuleConfigDescriptorTypeEnum.CSI),
-	PRODUCT_ID("Product ID", RuleConfigDescriptorTypeEnum.CSI),
+	PRODUCT_ID("Product ID", RuleConfigDescriptorTypeEnum.INTEGER),
 	MIN_ORDER_VALUE("Minimum order value", RuleConfigDescriptorTypeEnum.MONEY),
 	FIXED_DISCOUNT_RS_OFF("Fixed discount", RuleConfigDescriptorTypeEnum.MONEY),
 	DISCOUNT_PERCENTAGE("Discount percentage", RuleConfigDescriptorTypeEnum.PERCENT),
 	MAX_DISCOUNT_CEIL_IN_VALUE("Maximum discount in rupees", RuleConfigDescriptorTypeEnum.MONEY),
 	PRODUCT_DISCOUNT_RS_OFF("Product discount", RuleConfigDescriptorTypeEnum.MONEY),
 	PRODUCT_DISCOUNTED_VALUE("Product discounted value", RuleConfigDescriptorTypeEnum.MONEY),
-	VARIABLE_DISCOUNT_PERCENTAGE("Variable Discount percentage", RuleConfigDescriptorTypeEnum.CSKV);
+	VARIABLE_DISCOUNT_PERCENTAGE("Variable Discount percentage", RuleConfigDescriptorTypeEnum.CSKV),
+	SELLER_LIST("Seller List", RuleConfigDescriptorTypeEnum.CSI);
 	
 	private String description = null;
 	

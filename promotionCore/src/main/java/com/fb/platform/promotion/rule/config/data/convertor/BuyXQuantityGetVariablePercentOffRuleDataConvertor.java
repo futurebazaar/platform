@@ -31,7 +31,8 @@ RuleDataConvertor {
 		data.setClientList((List<Integer>)RuleConfigDescriptorEnum.CLIENT_LIST.parse(ruleConfig, metadata));
 		data.setIncludeCategoryList((List<Integer>)RuleConfigDescriptorEnum.CATEGORY_INCLUDE_LIST.parse(ruleConfig, metadata));
 		data.setExcludeCategoryList((List<Integer>)RuleConfigDescriptorEnum.CATEGORY_EXCLUDE_LIST.parse(ruleConfig, metadata));
-		data.setBrands((List<Integer>)RuleConfigDescriptorEnum.BRAND_LIST.parse(ruleConfig, metadata));
+		data.setBrandList((List<Integer>)RuleConfigDescriptorEnum.BRAND_LIST.parse(ruleConfig, metadata));
+		data.setSellerList((List<Integer>)RuleConfigDescriptorEnum.SELLER_LIST.parse(ruleConfig, metadata));
 		data.setMinOrderValue((Money) RuleConfigDescriptorEnum.MIN_ORDER_VALUE.parse(ruleConfig, metadata));
 		data.setMaxDiscountPerUse((Money)RuleConfigDescriptorEnum.MAX_DISCOUNT_CEIL_IN_VALUE.parse(ruleConfig, metadata));
 		data.setQuantityDiscountMap((QuantityDiscountMap)RuleConfigDescriptorEnum.VARIABLE_DISCOUNT_PERCENTAGE.parse(ruleConfig, metadata));

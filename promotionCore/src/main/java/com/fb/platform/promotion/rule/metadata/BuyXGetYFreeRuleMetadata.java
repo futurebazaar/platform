@@ -21,6 +21,7 @@ public class BuyXGetYFreeRuleMetadata extends RuleConfigMetadata {
 		ruleConfigItemMetadata.add(new RuleConfigItemMetadata(RuleConfigDescriptorEnum.CATEGORY_INCLUDE_LIST, false));
 		ruleConfigItemMetadata.add(new RuleConfigItemMetadata(RuleConfigDescriptorEnum.CATEGORY_EXCLUDE_LIST, false));
 		ruleConfigItemMetadata.add(new RuleConfigItemMetadata(RuleConfigDescriptorEnum.BRAND_LIST, false));
+		ruleConfigItemMetadata.add(new RuleConfigItemMetadata(RuleConfigDescriptorEnum.SELLER_LIST, false));
 		
 		setRuleConfigItemMetadata(ruleConfigItemMetadata);
 		

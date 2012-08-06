@@ -1,6 +1,7 @@
 package com.fb.platform.promotion.rule.config.type;
 
 public enum RuleConfigDescriptorTypeEnum {
+	INTEGER(new StringToIntegerConvertor()),
 	CSI(new StringToIntegerListConvertor()),
 	DECIMAL(new StringToDecimalConvertor()),
 	PERCENT(new StringToDecimalConvertor()),

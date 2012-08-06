@@ -11,23 +11,16 @@ import com.fb.commons.to.Money;
  * @author keith
  * 
  */
-public class BuyWorthXGetYRsOffRuleData implements RuleData {
+public class BuyXGetYRsOffOnZProductRuleData implements RuleData {
 
-	private Money fixedRsOff = null;
 	private Money minOrderValue = null;
 	private List<Integer> clientList = null;
 	private List<Integer> includeCategoryList = null;
 	private List<Integer> excludeCategoryList = null;
 	private List<Integer> brandList = null;
 	private List<Integer> sellerList = null;
-
-	public Money getFixedRsOff() {
-		return fixedRsOff;
-	}
-
-	public void setFixedRsOff(Money fixedRsOff) {
-		this.fixedRsOff = fixedRsOff;
-	}
+	private int productId;
+	private Money productDiscountValue;
 
 	public Money getMinOrderValue() {
 		return minOrderValue;
@@ -43,6 +36,14 @@ public class BuyWorthXGetYRsOffRuleData implements RuleData {
 
 	public void setClientList(List<Integer> clientList) {
 		this.clientList = clientList;
+	}
+
+	public List<Integer> getBrandList() {
+		return brandList;
+	}
+
+	public void setBrandList(List<Integer> brands) {
+		this.brandList = brands;
 	}
 
 	public List<Integer> getIncludeCategoryList() {
@@ -61,20 +62,28 @@ public class BuyWorthXGetYRsOffRuleData implements RuleData {
 		this.excludeCategoryList = excludeCategoryList;
 	}
 
-	public List<Integer> getBrandList() {
-		return brandList;
-	}
-
-	public void setBrandList(List<Integer> brands) {
-		this.brandList = brands;
-	}
-
 	public List<Integer> getSellerList() {
 		return sellerList;
 	}
 
 	public void setSellerList(List<Integer> sellerList) {
 		this.sellerList = sellerList;
+	}
+
+	public int getProductId() {
+		return productId;
+	}
+
+	public void setProductId(int productId) {
+		this.productId = productId;
+	}
+
+	public Money getProductDiscountValue() {
+		return productDiscountValue;
+	}
+
+	public void setProductDiscountValue(Money productDiscountValue) {
+		this.productDiscountValue = productDiscountValue;
 	}
 
 }

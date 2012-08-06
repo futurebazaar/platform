@@ -7,7 +7,7 @@ import com.fb.platform.promotion.rule.config.RuleConfiguration;
 import com.fb.platform.promotion.rule.config.data.RuleData;
 import com.fb.platform.promotion.rule.config.data.convertor.BuyWorthXGetYPercentOffRuleDataConvertor;
 import com.fb.platform.promotion.rule.config.data.convertor.BuyWorthXGetYRsOffRuleDataConvertor;
-import com.fb.platform.promotion.rule.config.data.convertor.BuyXBrandGetYRsOffOnZProductRuleDataConvertor;
+import com.fb.platform.promotion.rule.config.data.convertor.BuyXGetYRsOffOnZProductRuleDataConvertor;
 import com.fb.platform.promotion.rule.config.data.convertor.BuyXGetYFreeRuleDataConvertor;
 import com.fb.platform.promotion.rule.config.data.convertor.BuyXQuantityGetVariablePercentOffRuleDataConvertor;
 import com.fb.platform.promotion.rule.config.data.convertor.CategoryBasedVariablePercentOffRuleDataConvertor;
@@ -15,7 +15,7 @@ import com.fb.platform.promotion.rule.config.data.convertor.FirstPurchaseBuyWort
 import com.fb.platform.promotion.rule.config.data.convertor.RuleDataConvertor;
 import com.fb.platform.promotion.rule.metadata.BuyWorthXGetYPercentOffRuleMetadata;
 import com.fb.platform.promotion.rule.metadata.BuyWorthXGetYRsOffRuleMetadata;
-import com.fb.platform.promotion.rule.metadata.BuyXBrandGetYRsOffOnZProductRuleMatadata;
+import com.fb.platform.promotion.rule.metadata.BuyXGetYRsOffOnZProductRuleMetadata;
 import com.fb.platform.promotion.rule.metadata.BuyXGetYFreeRuleMetadata;
 import com.fb.platform.promotion.rule.metadata.BuyXQuantityGetVariablePercentOffRuleMetadata;
 import com.fb.platform.promotion.rule.metadata.CategoryBasedVariablePercentOffRuleMetadata;
@@ -34,7 +34,7 @@ public enum RulesEnum {
 	BUY_X_GET_Y_FREE("BUY_X_GET_Y_FREE", new BuyXGetYFreeRuleMetadata(), new BuyXGetYFreeRuleDataConvertor()),
 	BUY_WORTH_X_GET_Y_RS_OFF("BUY_WORTH_X_GET_Y_RS_OFF", new BuyWorthXGetYRsOffRuleMetadata(), new BuyWorthXGetYRsOffRuleDataConvertor()),
 	BUY_WORTH_X_GET_Y_PERCENT_OFF("BUY_WORTH_X_GET_Y_PERCENT_OFF", new BuyWorthXGetYPercentOffRuleMetadata(), new BuyWorthXGetYPercentOffRuleDataConvertor()),
-	BUY_X_BRAND_GET_Y_RS_OFF_ON_Z_PRODUCT("BUY_X_BRAND_GET_Y_RS_OFF_ON_Z_PRODUCT", new BuyXBrandGetYRsOffOnZProductRuleMatadata(), new BuyXBrandGetYRsOffOnZProductRuleDataConvertor()),
+	BUY_X_GET_Y_RS_OFF_ON_Z_PRODUCT("BUY_X_BRAND_GET_Y_RS_OFF_ON_Z_PRODUCT", new BuyXGetYRsOffOnZProductRuleMetadata(), new BuyXGetYRsOffOnZProductRuleDataConvertor()),
 	FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF("FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF", new FirstPurchaseBuyWorthXGetYRsOffRuleMetadata(), new FirstPurchaseBuyWorthXGetYRsOffRuleDataConvertor()),
 	BUY_X_QUANTITY_GET_VARIABLE_PERCENT_OFF("BUY_X_QUANTITY_GET_VARIABLE_PERCENT_OFF", new BuyXQuantityGetVariablePercentOffRuleMetadata(), new BuyXQuantityGetVariablePercentOffRuleDataConvertor()),
 	CATEGORY_BASED_VARIABLE_PERCENT_OFF("CATEGORY_BASED_VARIABLE_PERCENT_OFF",new CategoryBasedVariablePercentOffRuleMetadata(), new CategoryBasedVariablePercentOffRuleDataConvertor());

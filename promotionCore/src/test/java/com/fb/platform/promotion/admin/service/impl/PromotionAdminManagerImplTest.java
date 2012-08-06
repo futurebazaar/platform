@@ -46,8 +46,6 @@ import com.fb.platform.promotion.admin.to.SortOrder;
 import com.fb.platform.promotion.admin.to.UpdatePromotionEnum;
 import com.fb.platform.promotion.admin.to.UpdatePromotionRequest;
 import com.fb.platform.promotion.admin.to.UpdatePromotionResponse;
-import com.fb.platform.promotion.admin.to.ViewCouponRequest;
-import com.fb.platform.promotion.admin.to.ViewCouponResponse;
 import com.fb.platform.promotion.admin.to.ViewPromotionEnum;
 import com.fb.platform.promotion.admin.to.ViewPromotionRequest;
 import com.fb.platform.promotion.admin.to.ViewPromotionResponse;
@@ -75,37 +73,39 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 	LoginResponse responseUser = null;
 
 	private static int promotionId = -4100;
-	
-	private static int[] validFromSort = new int[] {-3001, -3002, -3003};
-	
-	private static int[] validTillSort = new int[] {-3003, -3002, -3001};
-	
-	private static int[] nameSort = new int[] {-3001, -3002, -3003};
-	
-	private static int[] nameSearch = new int[] {-3001, -3002};
-	
-	private static int[] validFromSearch = new int[] {-3001, -3002};
-	
-	private static int[] validTillSearch = new int[] {-3};
-	
-	private static int[] nameValidTillSearch = new int[] {-3002, -3003};
-	
-	private static int[] validFromValidTillSearch = new int[] {-4000, -4100};
-	
-	private static int[] nameValidFromSearch = new int[] {-3001, -3002};
-	
-	private static int[] filterSearch = new int[] {-3001, -3002};
-	
-	private static List<RulesEnum> ruleList = new ArrayList<RulesEnum>() {{
-		add(RulesEnum.BUY_WORTH_X_GET_Y_RS_OFF);
-		add(RulesEnum.BUY_WORTH_X_GET_Y_PERCENT_OFF);
-		add(RulesEnum.BUY_X_BRAND_GET_Y_RS_OFF_ON_Z_PRODUCT);
-		add(RulesEnum.FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF);
-		add(RulesEnum.BUY_X_GET_Y_FREE);
-		add(RulesEnum.BUY_X_QUANTITY_GET_VARIABLE_PERCENT_OFF);
-		add(RulesEnum.CATEGORY_BASED_VARIABLE_PERCENT_OFF);
-	}};
-	
+
+	private static int[] validFromSort = new int[] { -3001, -3002, -3003 };
+
+	private static int[] validTillSort = new int[] { -3003, -3002, -3001 };
+
+	private static int[] nameSort = new int[] { -3001, -3002, -3003 };
+
+	private static int[] nameSearch = new int[] { -3001, -3002 };
+
+	private static int[] validFromSearch = new int[] { -3001, -3002 };
+
+	private static int[] validTillSearch = new int[] { -3 };
+
+	private static int[] nameValidTillSearch = new int[] { -3002, -3003 };
+
+	private static int[] validFromValidTillSearch = new int[] { -4000, -4100 };
+
+	private static int[] nameValidFromSearch = new int[] { -3001, -3002 };
+
+	private static int[] filterSearch = new int[] { -3001, -3002 };
+
+	private static List<RulesEnum> ruleList = new ArrayList<RulesEnum>() {
+		{
+			add(RulesEnum.BUY_WORTH_X_GET_Y_RS_OFF);
+			add(RulesEnum.BUY_WORTH_X_GET_Y_PERCENT_OFF);
+			add(RulesEnum.BUY_X_GET_Y_RS_OFF_ON_Z_PRODUCT);
+			add(RulesEnum.FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF);
+			add(RulesEnum.BUY_X_GET_Y_FREE);
+			add(RulesEnum.BUY_X_QUANTITY_GET_VARIABLE_PERCENT_OFF);
+			add(RulesEnum.CATEGORY_BASED_VARIABLE_PERCENT_OFF);
+		}
+	};
+
 	@Before
 	public void loginUser() {
 
@@ -119,22 +119,18 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 	@Test
 	public void testFetchRulesNoSession() {
 		FetchRuleRequest fetchRuleRequest = new FetchRuleRequest();
-		FetchRuleResponse fetchRuleResponse = promotionAdminManager
-				.fetchRules(fetchRuleRequest);
-		assertEquals(FetchRulesEnum.NO_SESSION,
-				fetchRuleResponse.getFetchRulesEnum());
+		FetchRuleResponse fetchRuleResponse = promotionAdminManager.fetchRules(fetchRuleRequest);
+		assertEquals(FetchRulesEnum.NO_SESSION, fetchRuleResponse.getFetchRulesEnum());
 
 		fetchRuleRequest.setSessionToken("INVALID_SESSION");
 
 		fetchRuleResponse = promotionAdminManager.fetchRules(fetchRuleRequest);
-		assertEquals(FetchRulesEnum.NO_SESSION,
-				fetchRuleResponse.getFetchRulesEnum());
+		assertEquals(FetchRulesEnum.NO_SESSION, fetchRuleResponse.getFetchRulesEnum());
 
 		fetchRuleRequest.setSessionToken(responseUser.getSessionToken());
 
 		fetchRuleResponse = promotionAdminManager.fetchRules(fetchRuleRequest);
-		assertEquals(FetchRulesEnum.SUCCESS,
-				fetchRuleResponse.getFetchRulesEnum());
+		assertEquals(FetchRulesEnum.SUCCESS, fetchRuleResponse.getFetchRulesEnum());
 
 	}
 
@@ -143,11 +139,9 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		FetchRuleRequest fetchRuleRequest = new FetchRuleRequest();
 		fetchRuleRequest.setSessionToken(responseUser.getSessionToken());
 
-		FetchRuleResponse fetchRuleResponse = promotionAdminManager
-				.fetchRules(fetchRuleRequest);
+		FetchRuleResponse fetchRuleResponse = promotionAdminManager.fetchRules(fetchRuleRequest);
 
-		assertEquals(FetchRulesEnum.SUCCESS,
-				fetchRuleResponse.getFetchRulesEnum());
+		assertEquals(FetchRulesEnum.SUCCESS, fetchRuleResponse.getFetchRulesEnum());
 		assertNotNull(fetchRuleResponse.getSessionToken());
 		assertNotNull(fetchRuleResponse.getRulesList());
 		assertEquals(7, fetchRuleResponse.getRulesList().size());
@@ -187,10 +181,8 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 
 		createPromotionRequest.setSessionToken("INVALILD_SESSION");
 
-		CreatePromotionResponse createPromotionResponse = promotionAdminManager
-				.createPromotion(createPromotionRequest);
-		assertEquals(CreatePromotionEnum.NO_SESSION,
-				createPromotionResponse.getCreatePromotionEnum());
+		CreatePromotionResponse createPromotionResponse = promotionAdminManager.createPromotion(createPromotionRequest);
+		assertEquals(CreatePromotionEnum.NO_SESSION, createPromotionResponse.getCreatePromotionEnum());
 	}
 
 	@Test
@@ -199,35 +191,27 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		PromotionTO promotionTO = new PromotionTO();
 		createPromotionRequest.setPromotion(promotionTO);
 
-		CreatePromotionResponse createPromotionResponse = promotionAdminManager
-				.createPromotion(createPromotionRequest);
-		assertEquals(CreatePromotionEnum.INSUFFICIENT_DATA,
-				createPromotionResponse.getCreatePromotionEnum());
+		CreatePromotionResponse createPromotionResponse = promotionAdminManager.createPromotion(createPromotionRequest);
+		assertEquals(CreatePromotionEnum.INSUFFICIENT_DATA, createPromotionResponse.getCreatePromotionEnum());
 
 		promotionTO.setPromotionName("New Promotion");
 
-		createPromotionResponse = promotionAdminManager
-				.createPromotion(createPromotionRequest);
-		assertEquals(CreatePromotionEnum.INSUFFICIENT_DATA,
-				createPromotionResponse.getCreatePromotionEnum());
+		createPromotionResponse = promotionAdminManager.createPromotion(createPromotionRequest);
+		assertEquals(CreatePromotionEnum.INSUFFICIENT_DATA, createPromotionResponse.getCreatePromotionEnum());
 
 		promotionTO.setValidFrom(new DateTime(2012, 02, 29, 0, 0));
 		promotionTO.setValidTill(new DateTime(2011, 02, 22, 0, 0));
 
-		createPromotionResponse = promotionAdminManager
-				.createPromotion(createPromotionRequest);
-		assertEquals(CreatePromotionEnum.INSUFFICIENT_DATA,
-				createPromotionResponse.getCreatePromotionEnum());
+		createPromotionResponse = promotionAdminManager.createPromotion(createPromotionRequest);
+		assertEquals(CreatePromotionEnum.INSUFFICIENT_DATA, createPromotionResponse.getCreatePromotionEnum());
 
 		promotionTO.setValidTill(new DateTime(2013, 02, 22, 0, 0));
 
 		promotionTO.setDescription("Test new promotion");
 		promotionTO.setActive(true);
 
-		createPromotionResponse = promotionAdminManager
-				.createPromotion(createPromotionRequest);
-		assertEquals(CreatePromotionEnum.INSUFFICIENT_DATA,
-				createPromotionResponse.getCreatePromotionEnum());
+		createPromotionResponse = promotionAdminManager.createPromotion(createPromotionRequest);
+		assertEquals(CreatePromotionEnum.INSUFFICIENT_DATA, createPromotionResponse.getCreatePromotionEnum());
 
 		promotionTO.setMaxUses(20);
 		promotionTO.setMaxUsesPerUser(1);
@@ -236,10 +220,8 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 
 		promotionTO.setRuleName("BUY_WORTH_X_GET_Y_RS_OFF_WRONG");
 
-		createPromotionResponse = promotionAdminManager
-				.createPromotion(createPromotionRequest);
-		assertEquals(CreatePromotionEnum.INSUFFICIENT_DATA,
-				createPromotionResponse.getCreatePromotionEnum());
+		createPromotionResponse = promotionAdminManager.createPromotion(createPromotionRequest);
+		assertEquals(CreatePromotionEnum.INSUFFICIENT_DATA, createPromotionResponse.getCreatePromotionEnum());
 
 		promotionTO.setRuleName("BUY_WORTH_X_GET_Y_RS_OFF");
 
@@ -256,10 +238,8 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 
 		createPromotionRequest.setPromotion(promotionTO);
 
-		createPromotionResponse = promotionAdminManager
-				.createPromotion(createPromotionRequest);
-		assertEquals(CreatePromotionEnum.SUCCESS,
-				createPromotionResponse.getCreatePromotionEnum());
+		createPromotionResponse = promotionAdminManager.createPromotion(createPromotionRequest);
+		assertEquals(CreatePromotionEnum.SUCCESS, createPromotionResponse.getCreatePromotionEnum());
 	}
 
 	@Test
@@ -288,20 +268,16 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 
 		createPromotionRequest.setPromotion(promotionTO);
 
-		createPromotionResponse = promotionAdminManager
-				.createPromotion(createPromotionRequest);
-		assertEquals(CreatePromotionEnum.RULE_CONFIG_MISSING,
-				createPromotionResponse.getCreatePromotionEnum());
+		createPromotionResponse = promotionAdminManager.createPromotion(createPromotionRequest);
+		assertEquals(CreatePromotionEnum.RULE_CONFIG_MISSING, createPromotionResponse.getCreatePromotionEnum());
 
 		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
 		configItem.setRuleConfigValue("100");
 
 		promotionTO.setConfigItems(ruleConfigList);
 
-		createPromotionResponse = promotionAdminManager
-				.createPromotion(createPromotionRequest);
-		assertEquals(CreatePromotionEnum.SUCCESS,
-				createPromotionResponse.getCreatePromotionEnum());
+		createPromotionResponse = promotionAdminManager.createPromotion(createPromotionRequest);
+		assertEquals(CreatePromotionEnum.SUCCESS, createPromotionResponse.getCreatePromotionEnum());
 	}
 
 	@Test
@@ -334,10 +310,8 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 
 		createPromotionRequest.setSessionToken(responseUser.getSessionToken());
 
-		CreatePromotionResponse createPromotionResponse = promotionAdminManager
-				.createPromotion(createPromotionRequest);
-		assertEquals(CreatePromotionEnum.SUCCESS,
-				createPromotionResponse.getCreatePromotionEnum());
+		CreatePromotionResponse createPromotionResponse = promotionAdminManager.createPromotion(createPromotionRequest);
+		assertEquals(CreatePromotionEnum.SUCCESS, createPromotionResponse.getCreatePromotionEnum());
 		assertTrue(createPromotionResponse.getPromotionId() > 0);
 		assertNotNull(createPromotionResponse.getSessionToken());
 
@@ -347,19 +321,15 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 	public void testViewPromotionInsufficientData() {
 		ViewPromotionRequest viewPromotionRequest = new ViewPromotionRequest();
 
-		ViewPromotionResponse viewPromotionResponse = promotionAdminManager
-				.viewPromotion(viewPromotionRequest);
-		assertEquals(ViewPromotionEnum.INSUFFICIENT_DATA,
-				viewPromotionResponse.getViewPromotionEnum());
+		ViewPromotionResponse viewPromotionResponse = promotionAdminManager.viewPromotion(viewPromotionRequest);
+		assertEquals(ViewPromotionEnum.INSUFFICIENT_DATA, viewPromotionResponse.getViewPromotionEnum());
 
 		viewPromotionRequest.setPromotionId(promotionId);
 		viewPromotionRequest.setSessionToken(responseUser.getSessionToken());
 
-		viewPromotionResponse = promotionAdminManager
-				.viewPromotion(viewPromotionRequest);
+		viewPromotionResponse = promotionAdminManager.viewPromotion(viewPromotionRequest);
 
-		assertEquals(ViewPromotionEnum.SUCCESS,
-				viewPromotionResponse.getViewPromotionEnum());
+		assertEquals(ViewPromotionEnum.SUCCESS, viewPromotionResponse.getViewPromotionEnum());
 	}
 
 	@Test
@@ -368,17 +338,13 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		viewPromotionRequest.setPromotionId(promotionId);
 		viewPromotionRequest.setSessionToken("INVALID_SESSION");
 
-		ViewPromotionResponse viewPromotionResponse = promotionAdminManager
-				.viewPromotion(viewPromotionRequest);
-		assertEquals(ViewPromotionEnum.NO_SESSION,
-				viewPromotionResponse.getViewPromotionEnum());
+		ViewPromotionResponse viewPromotionResponse = promotionAdminManager.viewPromotion(viewPromotionRequest);
+		assertEquals(ViewPromotionEnum.NO_SESSION, viewPromotionResponse.getViewPromotionEnum());
 
 		viewPromotionRequest.setSessionToken(responseUser.getSessionToken());
 
-		viewPromotionResponse = promotionAdminManager
-				.viewPromotion(viewPromotionRequest);
-		assertEquals(ViewPromotionEnum.SUCCESS,
-				viewPromotionResponse.getViewPromotionEnum());
+		viewPromotionResponse = promotionAdminManager.viewPromotion(viewPromotionRequest);
+		assertEquals(ViewPromotionEnum.SUCCESS, viewPromotionResponse.getViewPromotionEnum());
 	}
 
 	@Test
@@ -388,10 +354,8 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		viewPromotionRequest.setPromotionId(5000);
 		viewPromotionRequest.setSessionToken(responseUser.getSessionToken());
 
-		ViewPromotionResponse viewPromotionResponse = promotionAdminManager
-				.viewPromotion(viewPromotionRequest);
-		assertEquals(ViewPromotionEnum.NO_DATA_FOUND,
-				viewPromotionResponse.getViewPromotionEnum());
+		ViewPromotionResponse viewPromotionResponse = promotionAdminManager.viewPromotion(viewPromotionRequest);
+		assertEquals(ViewPromotionEnum.NO_DATA_FOUND, viewPromotionResponse.getViewPromotionEnum());
 
 	}
 
@@ -402,18 +366,13 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		viewPromotionRequest.setSessionToken(responseUser.getSessionToken());
 		viewPromotionRequest.setPromotionId(promotionId);
 
-		ViewPromotionResponse viewPromotionResponse = promotionAdminManager
-				.viewPromotion(viewPromotionRequest);
+		ViewPromotionResponse viewPromotionResponse = promotionAdminManager.viewPromotion(viewPromotionRequest);
 
-		assertEquals(ViewPromotionEnum.SUCCESS,
-				viewPromotionResponse.getViewPromotionEnum());
-		PromotionTO completePromotionView = viewPromotionResponse
-				.getPromotionCompleteView();
+		assertEquals(ViewPromotionEnum.SUCCESS, viewPromotionResponse.getViewPromotionEnum());
+		PromotionTO completePromotionView = viewPromotionResponse.getPromotionCompleteView();
 
-		assertEquals("New Promotion Copy",
-				completePromotionView.getPromotionName());
-		assertEquals("Test new promotion via Promotion Admin",
-				completePromotionView.getDescription());
+		assertEquals("New Promotion Copy", completePromotionView.getPromotionName());
+		assertEquals("Test new promotion via Promotion Admin", completePromotionView.getDescription());
 		assertEquals(29, completePromotionView.getValidFrom().getDayOfMonth());
 		assertEquals(2012, completePromotionView.getValidFrom().getYear());
 		assertEquals(12, completePromotionView.getValidFrom().getMonthOfYear());
@@ -423,11 +382,9 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		assertEquals(true, completePromotionView.isActive());
 		assertEquals(0, completePromotionView.getCouponCount());
 		assertEquals(20, completePromotionView.getMaxUses());
-		assertEquals(2000, completePromotionView.getMaxAmount().getAmount()
-				.intValue());
+		assertEquals(2000, completePromotionView.getMaxAmount().getAmount().intValue());
 		assertEquals(1, completePromotionView.getMaxUsesPerUser());
-		assertEquals(1000, completePromotionView.getMaxAmountPerUser()
-				.getAmount().intValue());
+		assertEquals(1000, completePromotionView.getMaxAmountPerUser().getAmount().intValue());
 		assertEquals(-2, completePromotionView.getRuleId());
 		assertNotNull(completePromotionView.getConfigItems());
 		assertEquals(6, completePromotionView.getConfigItems().size());
@@ -442,66 +399,49 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		UpdatePromotionRequest updatePromotionRequest = new UpdatePromotionRequest();
 		updatePromotionRequest.setPromotion(promotionView);
 
-		UpdatePromotionResponse updatePromotionResponse = promotionAdminManager
-				.updatePromotion(updatePromotionRequest);
+		UpdatePromotionResponse updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
 
-		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA,
-				updatePromotionResponse.getUpdatePromotionEnum());
+		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA, updatePromotionResponse.getUpdatePromotionEnum());
 
 		promotionView.setPromotionName("New Promotion updated");
 
-		updatePromotionResponse = promotionAdminManager
-				.updatePromotion(updatePromotionRequest);
-		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA,
-				updatePromotionResponse.getUpdatePromotionEnum());
+		updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
+		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA, updatePromotionResponse.getUpdatePromotionEnum());
 
 		promotionView.setValidFrom(new DateTime(2012, 2, 22, 0, 0));
 		promotionView.setValidTill(new DateTime(2011, 2, 22, 0, 0));
 
-		updatePromotionResponse = promotionAdminManager
-				.updatePromotion(updatePromotionRequest);
-		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA,
-				updatePromotionResponse.getUpdatePromotionEnum());
+		updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
+		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA, updatePromotionResponse.getUpdatePromotionEnum());
 
 		promotionView.setValidTill(new DateTime(2013, 2, 22, 0, 0));
 
-		updatePromotionResponse = promotionAdminManager
-				.updatePromotion(updatePromotionRequest);
-		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA,
-				updatePromotionResponse.getUpdatePromotionEnum());
+		updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
+		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA, updatePromotionResponse.getUpdatePromotionEnum());
 
 		promotionView.setDescription("Test new promotion update");
 		promotionView.setActive(false);
 
-		updatePromotionResponse = promotionAdminManager
-				.updatePromotion(updatePromotionRequest);
-		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA,
-				updatePromotionResponse.getUpdatePromotionEnum());
+		updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
+		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA, updatePromotionResponse.getUpdatePromotionEnum());
 
 		promotionView.setMaxUses(22);
 		promotionView.setMaxUsesPerUser(2);
 		promotionView.setMaxAmount(new Money(new BigDecimal(2222.00)));
 		promotionView.setMaxAmountPerUser(new Money(new BigDecimal(2222.00)));
 
-		updatePromotionResponse = promotionAdminManager
-				.updatePromotion(updatePromotionRequest);
-		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA,
-				updatePromotionResponse.getUpdatePromotionEnum());
+		updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
+		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA, updatePromotionResponse.getUpdatePromotionEnum());
 
-		promotionView
-				.setRuleName("FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF_WRONG");
+		promotionView.setRuleName("FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF_WRONG");
 
-		updatePromotionResponse = promotionAdminManager
-				.updatePromotion(updatePromotionRequest);
-		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA,
-				updatePromotionResponse.getUpdatePromotionEnum());
+		updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
+		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA, updatePromotionResponse.getUpdatePromotionEnum());
 
 		promotionView.setRuleName("FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF");
 
-		updatePromotionResponse = promotionAdminManager
-				.updatePromotion(updatePromotionRequest);
-		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA,
-				updatePromotionResponse.getUpdatePromotionEnum());
+		updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
+		assertEquals(UpdatePromotionEnum.INSUFFICIENT_DATA, updatePromotionResponse.getUpdatePromotionEnum());
 
 		List<RuleConfigItemTO> ruleConfigList = new ArrayList<RuleConfigItemTO>();
 		promotionView.setConfigItems(ruleConfigList);
@@ -518,11 +458,9 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 
 		updatePromotionRequest.setSessionToken(responseUser.getSessionToken());
 
-		updatePromotionResponse = promotionAdminManager
-				.updatePromotion(updatePromotionRequest);
+		updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
 
-		assertEquals(UpdatePromotionEnum.SUCCESS,
-				updatePromotionResponse.getUpdatePromotionEnum());
+		assertEquals(UpdatePromotionEnum.SUCCESS, updatePromotionResponse.getUpdatePromotionEnum());
 
 	}
 
@@ -559,11 +497,9 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 
 		updatePromotionRequest.setSessionToken("INVALID_SESSION");
 
-		UpdatePromotionResponse updatePromotionResponse = promotionAdminManager
-				.updatePromotion(updatePromotionRequest);
+		UpdatePromotionResponse updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
 
-		assertEquals(UpdatePromotionEnum.NO_SESSION,
-				updatePromotionResponse.getUpdatePromotionEnum());
+		assertEquals(UpdatePromotionEnum.NO_SESSION, updatePromotionResponse.getUpdatePromotionEnum());
 	}
 
 	@Test
@@ -591,27 +527,21 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		List<RuleConfigItemTO> ruleConfigList = new ArrayList<RuleConfigItemTO>();
 		promotionView.setConfigItems(ruleConfigList);
 
-		UpdatePromotionResponse updatePromotionResponse = promotionAdminManager
-				.updatePromotion(updatePromotionRequest);
-		assertEquals(UpdatePromotionEnum.RULE_CONFIG_MISSING,
-				updatePromotionResponse.getUpdatePromotionEnum());
+		UpdatePromotionResponse updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
+		assertEquals(UpdatePromotionEnum.RULE_CONFIG_MISSING, updatePromotionResponse.getUpdatePromotionEnum());
 
 		RuleConfigItemTO configItem = new RuleConfigItemTO();
 
-		updatePromotionResponse = promotionAdminManager
-				.updatePromotion(updatePromotionRequest);
-		assertEquals(UpdatePromotionEnum.RULE_CONFIG_MISSING,
-				updatePromotionResponse.getUpdatePromotionEnum());
+		updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
+		assertEquals(UpdatePromotionEnum.RULE_CONFIG_MISSING, updatePromotionResponse.getUpdatePromotionEnum());
 
 		configItem.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
 		configItem.setRuleConfigValue("222");
 		ruleConfigList.add(configItem);
 
-		updatePromotionResponse = promotionAdminManager
-				.updatePromotion(updatePromotionRequest);
+		updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
 
-		assertEquals(UpdatePromotionEnum.SUCCESS,
-				updatePromotionResponse.getUpdatePromotionEnum());
+		assertEquals(UpdatePromotionEnum.SUCCESS, updatePromotionResponse.getUpdatePromotionEnum());
 	}
 
 	@Test
@@ -645,10 +575,8 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 
 		promotionView.setId(5000);
 
-		UpdatePromotionResponse updatePromotionResponse = promotionAdminManager
-				.updatePromotion(updatePromotionRequest);
-		assertEquals(UpdatePromotionEnum.INVALID_PROMOTION_ID,
-				updatePromotionResponse.getUpdatePromotionEnum());
+		UpdatePromotionResponse updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
+		assertEquals(UpdatePromotionEnum.INVALID_PROMOTION_ID, updatePromotionResponse.getUpdatePromotionEnum());
 	}
 
 	@Test
@@ -681,24 +609,18 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 
 		promotionView.setId(promotionId);
 
-		UpdatePromotionResponse updatePromotionResponse = promotionAdminManager
-				.updatePromotion(updatePromotionRequest);
-		assertEquals(UpdatePromotionEnum.SUCCESS,
-				updatePromotionResponse.getUpdatePromotionEnum());
+		UpdatePromotionResponse updatePromotionResponse = promotionAdminManager.updatePromotion(updatePromotionRequest);
+		assertEquals(UpdatePromotionEnum.SUCCESS, updatePromotionResponse.getUpdatePromotionEnum());
 
 		ViewPromotionRequest viewPromotionRequest = new ViewPromotionRequest();
 		viewPromotionRequest.setPromotionId(promotionId);
 		viewPromotionRequest.setSessionToken(responseUser.getSessionToken());
-		ViewPromotionResponse viewPromotionResponse = promotionAdminManager
-				.viewPromotion(viewPromotionRequest);
+		ViewPromotionResponse viewPromotionResponse = promotionAdminManager.viewPromotion(viewPromotionRequest);
 
-		PromotionTO completePromotionView = viewPromotionResponse
-				.getPromotionCompleteView();
+		PromotionTO completePromotionView = viewPromotionResponse.getPromotionCompleteView();
 
-		assertEquals("New Promotion updated",
-				completePromotionView.getPromotionName());
-		assertEquals("Test new promotion update",
-				completePromotionView.getDescription());
+		assertEquals("New Promotion updated", completePromotionView.getPromotionName());
+		assertEquals("Test new promotion update", completePromotionView.getDescription());
 		assertEquals(22, completePromotionView.getValidFrom().getDayOfMonth());
 		assertEquals(2012, completePromotionView.getValidFrom().getYear());
 		assertEquals(2, completePromotionView.getValidFrom().getMonthOfYear());
@@ -708,11 +630,9 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		assertEquals(false, completePromotionView.isActive());
 		assertEquals(0, completePromotionView.getCouponCount());
 		assertEquals(22, completePromotionView.getMaxUses());
-		assertEquals(2222, completePromotionView.getMaxAmount().getAmount()
-				.intValue());
+		assertEquals(2222, completePromotionView.getMaxAmount().getAmount().intValue());
 		assertEquals(2, completePromotionView.getMaxUsesPerUser());
-		assertEquals(2222, completePromotionView.getMaxAmountPerUser()
-				.getAmount().intValue());
+		assertEquals(2222, completePromotionView.getMaxAmountPerUser().getAmount().intValue());
 		assertEquals(-7, completePromotionView.getRuleId());
 		assertNotNull(completePromotionView.getConfigItems());
 		assertEquals(1, completePromotionView.getConfigItems().size());
@@ -725,38 +645,28 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 
 		SearchPromotionRequest searchPromotionRequest = new SearchPromotionRequest();
 
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
-		assertEquals(SearchPromotionEnum.INSUFFICIENT_DATA,
-				searchPromotionResponse.getSearchPromotionEnum());
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
+		assertEquals(SearchPromotionEnum.INSUFFICIENT_DATA, searchPromotionResponse.getSearchPromotionEnum());
 
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
 
-		searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
-		assertEquals(SearchPromotionEnum.INSUFFICIENT_DATA,
-				searchPromotionResponse.getSearchPromotionEnum());
+		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
+		assertEquals(SearchPromotionEnum.INSUFFICIENT_DATA, searchPromotionResponse.getSearchPromotionEnum());
 
 		searchPromotionRequest.setStartRecord(-5);
 
-		searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
-		assertEquals(SearchPromotionEnum.INSUFFICIENT_DATA,
-				searchPromotionResponse.getSearchPromotionEnum());
+		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
+		assertEquals(SearchPromotionEnum.INSUFFICIENT_DATA, searchPromotionResponse.getSearchPromotionEnum());
 
 		searchPromotionRequest.setStartRecord(0);
 
-		searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
-		assertEquals(SearchPromotionEnum.INSUFFICIENT_DATA,
-				searchPromotionResponse.getSearchPromotionEnum());
+		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
+		assertEquals(SearchPromotionEnum.INSUFFICIENT_DATA, searchPromotionResponse.getSearchPromotionEnum());
 
 		searchPromotionRequest.setBatchSize(10);
 
-		searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
-		assertEquals(SearchPromotionEnum.SUCCESS,
-				searchPromotionResponse.getSearchPromotionEnum());
+		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
+		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
 	}
 
 	@Test
@@ -769,10 +679,8 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setStartRecord(0);
 		searchPromotionRequest.setSessionToken("INVALID_SESSION");
 
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
-		assertEquals(SearchPromotionEnum.NO_SESSION,
-				searchPromotionResponse.getSearchPromotionEnum());
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
+		assertEquals(SearchPromotionEnum.NO_SESSION, searchPromotionResponse.getSearchPromotionEnum());
 	}
 
 	@Test
@@ -785,10 +693,8 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
 		searchPromotionRequest.setPromotionName("future");
 
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
-		assertEquals(SearchPromotionEnum.NO_DATA_FOUND,
-				searchPromotionResponse.getSearchPromotionEnum());
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
+		assertEquals(SearchPromotionEnum.NO_DATA_FOUND, searchPromotionResponse.getSearchPromotionEnum());
 		assertNotNull(searchPromotionResponse.getSessionToken());
 	}
 
@@ -806,18 +712,14 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setPromotionName("end to end");
 		searchPromotionRequest.setValidFrom(new DateTime(2012, 1, 2, 0, 0));
 		searchPromotionRequest.setValidTill(new DateTime(2013, 6, 30, 0, 0));
-		searchPromotionRequest
-				.setSearchPromotionOrderBy(SearchPromotionOrderBy.VALID_FROM);
+		searchPromotionRequest.setSearchPromotionOrderBy(SearchPromotionOrderBy.VALID_FROM);
 		searchPromotionRequest.setSortOrder(SortOrder.ASCENDING);
 
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 
-		assertEquals(SearchPromotionEnum.SUCCESS,
-				searchPromotionResponse.getSearchPromotionEnum());
+		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
 
-		for (PromotionTO promotion : searchPromotionResponse
-				.getPromotionsList()) {
+		for (PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
 			assertEquals(validFromSort[count], promotion.getId());
 			count++;
 		}
@@ -837,18 +739,14 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setPromotionName("end to end");
 		searchPromotionRequest.setValidFrom(new DateTime(2012, 1, 2, 0, 0));
 		searchPromotionRequest.setValidTill(new DateTime(2013, 6, 30, 0, 0));
-		searchPromotionRequest
-				.setSearchPromotionOrderBy(SearchPromotionOrderBy.VALID_FROM);
+		searchPromotionRequest.setSearchPromotionOrderBy(SearchPromotionOrderBy.VALID_FROM);
 		searchPromotionRequest.setSortOrder(SortOrder.DESCENDING);
 
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 
-		assertEquals(SearchPromotionEnum.SUCCESS,
-				searchPromotionResponse.getSearchPromotionEnum());
+		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
 
-		for (PromotionTO promotion : searchPromotionResponse
-				.getPromotionsList()) {
+		for (PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
 			assertEquals(validFromSort[count], promotion.getId());
 			count--;
 		}
@@ -868,18 +766,14 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setPromotionName("end to end");
 		searchPromotionRequest.setValidFrom(new DateTime(2012, 1, 2, 0, 0));
 		searchPromotionRequest.setValidTill(new DateTime(2013, 6, 30, 0, 0));
-		searchPromotionRequest
-				.setSearchPromotionOrderBy(SearchPromotionOrderBy.VALID_TILL);
+		searchPromotionRequest.setSearchPromotionOrderBy(SearchPromotionOrderBy.VALID_TILL);
 		searchPromotionRequest.setSortOrder(SortOrder.ASCENDING);
 
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 
-		assertEquals(SearchPromotionEnum.SUCCESS,
-				searchPromotionResponse.getSearchPromotionEnum());
+		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
 
-		for (PromotionTO promotion : searchPromotionResponse
-				.getPromotionsList()) {
+		for (PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
 			assertEquals(validTillSort[count], promotion.getId());
 			count++;
 		}
@@ -899,18 +793,14 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setPromotionName("end to end");
 		searchPromotionRequest.setValidFrom(new DateTime(2012, 1, 2, 0, 0));
 		searchPromotionRequest.setValidTill(new DateTime(2013, 6, 30, 0, 0));
-		searchPromotionRequest
-				.setSearchPromotionOrderBy(SearchPromotionOrderBy.VALID_TILL);
+		searchPromotionRequest.setSearchPromotionOrderBy(SearchPromotionOrderBy.VALID_TILL);
 		searchPromotionRequest.setSortOrder(SortOrder.DESCENDING);
 
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 
-		assertEquals(SearchPromotionEnum.SUCCESS,
-				searchPromotionResponse.getSearchPromotionEnum());
+		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
 
-		for (PromotionTO promotion : searchPromotionResponse
-				.getPromotionsList()) {
+		for (PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
 			assertEquals(validTillSort[count], promotion.getId());
 			count--;
 		}
@@ -930,18 +820,14 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setPromotionName("end to end");
 		searchPromotionRequest.setValidFrom(new DateTime(2012, 1, 2, 0, 0));
 		searchPromotionRequest.setValidTill(new DateTime(2013, 6, 30, 0, 0));
-		searchPromotionRequest
-				.setSearchPromotionOrderBy(SearchPromotionOrderBy.NAME);
+		searchPromotionRequest.setSearchPromotionOrderBy(SearchPromotionOrderBy.NAME);
 		searchPromotionRequest.setSortOrder(SortOrder.ASCENDING);
 
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 
-		assertEquals(SearchPromotionEnum.SUCCESS,
-				searchPromotionResponse.getSearchPromotionEnum());
+		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
 
-		for (PromotionTO promotion : searchPromotionResponse
-				.getPromotionsList()) {
+		for (PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
 			assertEquals(nameSort[count], promotion.getId());
 			count++;
 		}
@@ -961,18 +847,14 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setPromotionName("end to end");
 		searchPromotionRequest.setValidFrom(new DateTime(2012, 1, 2, 0, 0));
 		searchPromotionRequest.setValidTill(new DateTime(2013, 6, 30, 0, 0));
-		searchPromotionRequest
-				.setSearchPromotionOrderBy(SearchPromotionOrderBy.NAME);
+		searchPromotionRequest.setSearchPromotionOrderBy(SearchPromotionOrderBy.NAME);
 		searchPromotionRequest.setSortOrder(SortOrder.DESCENDING);
 
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 
-		assertEquals(SearchPromotionEnum.SUCCESS,
-				searchPromotionResponse.getSearchPromotionEnum());
+		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
 
-		for (PromotionTO promotion : searchPromotionResponse
-				.getPromotionsList()) {
+		for (PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
 			assertEquals(nameSort[count], promotion.getId());
 			count--;
 		}
@@ -988,20 +870,16 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
 		searchPromotionRequest.setPromotionName("end to end");
 
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 
-		searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
-		assertEquals(SearchPromotionEnum.SUCCESS,
-				searchPromotionResponse.getSearchPromotionEnum());
+		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
+		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
 		assertEquals(3, searchPromotionResponse.getTotalCount());
 		assertEquals(2, searchPromotionResponse.getPromotionsList().size());
 
 		int count = 0;
 
-		for (PromotionTO promotion : searchPromotionResponse
-				.getPromotionsList()) {
+		for (PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
 			assertEquals(nameSearch[count], promotion.getId());
 			count++;
 		}
@@ -1016,19 +894,18 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setStartRecord(0);
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
 		searchPromotionRequest.setValidFrom(new DateTime(2012, 1, 2, 0, 0));
-		
+
 		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
-		
+
 		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
-		assertEquals(14, searchPromotionResponse.getTotalCount());
+		assertEquals(16, searchPromotionResponse.getTotalCount());
 
 		assertEquals(2, searchPromotionResponse.getPromotionsList().size());
 
 		int count = 0;
 
-		for (PromotionTO promotion : searchPromotionResponse
-				.getPromotionsList()) {
+		for (PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
 			assertEquals(validFromSearch[count], promotion.getId());
 			count++;
 		}
@@ -1044,20 +921,16 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
 		searchPromotionRequest.setValidTill(new DateTime(2012, 5, 21, 0, 0));
 
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 
-		searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
-		assertEquals(SearchPromotionEnum.SUCCESS,
-				searchPromotionResponse.getSearchPromotionEnum());
+		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
+		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
 		assertEquals(1, searchPromotionResponse.getTotalCount());
 		assertEquals(1, searchPromotionResponse.getPromotionsList().size());
 
 		int count = 0;
 
-		for (PromotionTO promotion : searchPromotionResponse
-				.getPromotionsList()) {
+		for (PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
 			assertEquals(validTillSearch[count], promotion.getId());
 			count++;
 		}
@@ -1074,20 +947,16 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setPromotionName("end to end");
 		searchPromotionRequest.setValidTill(new DateTime(2013, 5, 21, 0, 0));
 
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 
-		searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
-		assertEquals(SearchPromotionEnum.SUCCESS,
-				searchPromotionResponse.getSearchPromotionEnum());
+		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
+		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
 		assertEquals(2, searchPromotionResponse.getTotalCount());
 		assertEquals(2, searchPromotionResponse.getPromotionsList().size());
 
 		int count = 0;
 
-		for (PromotionTO promotion : searchPromotionResponse
-				.getPromotionsList()) {
+		for (PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
 			assertEquals(nameValidTillSearch[count], promotion.getId());
 			count++;
 		}
@@ -1104,20 +973,16 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setPromotionName("end to end");
 		searchPromotionRequest.setValidFrom(new DateTime(2012, 1, 2, 0, 0));
 
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 
-		searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
-		assertEquals(SearchPromotionEnum.SUCCESS,
-				searchPromotionResponse.getSearchPromotionEnum());
+		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
+		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
 		assertEquals(3, searchPromotionResponse.getTotalCount());
 		assertEquals(2, searchPromotionResponse.getPromotionsList().size());
 
 		int count = 0;
 
-		for (PromotionTO promotion : searchPromotionResponse
-				.getPromotionsList()) {
+		for (PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
 			assertEquals(nameValidFromSearch[count], promotion.getId());
 			count++;
 		}
@@ -1135,20 +1000,16 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setValidFrom(new DateTime(2012, 11, 2, 0, 0));
 		searchPromotionRequest.setValidTill(new DateTime(2013, 3, 22, 0, 0));
 
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 
-		searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
-		assertEquals(SearchPromotionEnum.SUCCESS,
-				searchPromotionResponse.getSearchPromotionEnum());
+		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
+		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
 		assertEquals(2, searchPromotionResponse.getTotalCount());
 		assertEquals(2, searchPromotionResponse.getPromotionsList().size());
 
 		int count = 0;
 
-		for (PromotionTO promotion : searchPromotionResponse
-				.getPromotionsList()) {
+		for (PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
 			assertEquals(validFromValidTillSearch[count], promotion.getId());
 			count++;
 		}
@@ -1163,17 +1024,13 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setStartRecord(0);
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
 
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 
-		searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
-		assertEquals(SearchPromotionEnum.SUCCESS,
-				searchPromotionResponse.getSearchPromotionEnum());
+		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
+		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
 		assertEquals(1, searchPromotionResponse.getTotalCount());
 		assertEquals(1, searchPromotionResponse.getPromotionsList().size());
-		assertEquals(-6, searchPromotionResponse.getPromotionsList().get(0)
-				.getId());
+		assertEquals(-6, searchPromotionResponse.getPromotionsList().get(0).getId());
 	}
 
 	@Test
@@ -1187,7 +1044,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
 		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
-		assertEquals(20, searchPromotionResponse.getTotalCount());
+		assertEquals(22, searchPromotionResponse.getTotalCount());
 		assertEquals(10, searchPromotionResponse.getPromotionsList().size());
 	}
 
@@ -1205,17 +1062,14 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setPromotionName("end to end");
 		searchPromotionRequest.setValidFrom(new DateTime(2012, 1, 2, 0, 0));
 		searchPromotionRequest.setValidTill(new DateTime(2013, 6, 30, 0, 0));
-		SearchPromotionResponse searchPromotionResponse = promotionAdminManager
-				.searchPromotion(searchPromotionRequest);
+		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 
-		assertEquals(SearchPromotionEnum.SUCCESS,
-				searchPromotionResponse.getSearchPromotionEnum());
+		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
 		assertEquals(3, searchPromotionResponse.getTotalCount());
 		assertEquals(2, searchPromotionResponse.getPromotionsList().size());
 		assertNotNull(searchPromotionResponse.getSessionToken());
 
-		for (PromotionTO promotion : searchPromotionResponse
-				.getPromotionsList()) {
+		for (PromotionTO promotion : searchPromotionResponse.getPromotionsList()) {
 			assertEquals(filterSearch[count], promotion.getId());
 			count++;
 		}
@@ -1228,8 +1082,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		request.setUserName("test@test.com");
 		request.setSessionToken(responseUser.getSessionToken());
 
-		AssignCouponToUserResponse response = promotionAdminManager
-				.assignCouponToUser(request);
+		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
 
 		assertNotNull(response);
 		assertEquals(AssignCouponToUserStatusEnum.SUCCESS, response.getStatus());
@@ -1243,12 +1096,10 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		request.setUserName("test@test");
 		request.setSessionToken(responseUser.getSessionToken());
 
-		AssignCouponToUserResponse response = promotionAdminManager
-				.assignCouponToUser(request);
+		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
 
 		assertNotNull(response);
-		assertEquals(AssignCouponToUserStatusEnum.INVALID_USER,
-				response.getStatus());
+		assertEquals(AssignCouponToUserStatusEnum.INVALID_USER, response.getStatus());
 		assertNotNull(response.getSessionToken());
 	}
 
@@ -1259,12 +1110,10 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		request.setUserName("test@test.com");
 		request.setSessionToken(responseUser.getSessionToken());
 
-		AssignCouponToUserResponse response = promotionAdminManager
-				.assignCouponToUser(request);
+		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
 
 		assertNotNull(response);
-		assertEquals(AssignCouponToUserStatusEnum.INVALID_COUPON_CODE,
-				response.getStatus());
+		assertEquals(AssignCouponToUserStatusEnum.INVALID_COUPON_CODE, response.getStatus());
 		assertNotNull(response.getSessionToken());
 	}
 
@@ -1275,12 +1124,10 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		request.setUserName("test@test.com");
 		request.setSessionToken(responseUser.getSessionToken());
 
-		AssignCouponToUserResponse response = promotionAdminManager
-				.assignCouponToUser(request);
+		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
 
 		assertNotNull(response);
-		assertEquals(AssignCouponToUserStatusEnum.INVALID_COUPON_TYPE,
-				response.getStatus());
+		assertEquals(AssignCouponToUserStatusEnum.INVALID_COUPON_TYPE, response.getStatus());
 		assertNotNull(response.getSessionToken());
 	}
 
@@ -1291,13 +1138,10 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		request.setUserName("jasvipul@gmail.com");
 		request.setSessionToken(responseUser.getSessionToken());
 
-		AssignCouponToUserResponse response = promotionAdminManager
-				.assignCouponToUser(request);
+		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
 
 		assertNotNull(response);
-		assertEquals(
-				AssignCouponToUserStatusEnum.COUPON_ALREADY_ASSIGNED_TO_USER,
-				response.getStatus());
+		assertEquals(AssignCouponToUserStatusEnum.COUPON_ALREADY_ASSIGNED_TO_USER, response.getStatus());
 		assertNotNull(response.getSessionToken());
 	}
 
@@ -1307,23 +1151,19 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		request.setCouponCode("pre_issued_1");
 		request.setUserName("jasvipul@gmail.com");
 
-		AssignCouponToUserResponse response = promotionAdminManager
-				.assignCouponToUser(request);
+		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
 
 		assertNotNull(response);
-		assertEquals(AssignCouponToUserStatusEnum.NO_SESSION,
-				response.getStatus());
+		assertEquals(AssignCouponToUserStatusEnum.NO_SESSION, response.getStatus());
 		assertNull(response.getSessionToken());
 	}
 
 	@Test
 	public void nullAssignRequest() {
-		AssignCouponToUserResponse response = promotionAdminManager
-				.assignCouponToUser(null);
+		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(null);
 
 		assertNotNull(response);
-		assertEquals(AssignCouponToUserStatusEnum.NO_SESSION,
-				response.getStatus());
+		assertEquals(AssignCouponToUserStatusEnum.NO_SESSION, response.getStatus());
 		assertNull(response.getSessionToken());
 	}
 
@@ -1333,12 +1173,10 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		request.setUserName("jasvipul@gmail.com");
 		request.setSessionToken(responseUser.getSessionToken());
 
-		AssignCouponToUserResponse response = promotionAdminManager
-				.assignCouponToUser(request);
+		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
 
 		assertNotNull(response);
-		assertEquals(AssignCouponToUserStatusEnum.INVALID_COUPON_CODE,
-				response.getStatus());
+		assertEquals(AssignCouponToUserStatusEnum.INVALID_COUPON_CODE, response.getStatus());
 		assertNotNull(response.getSessionToken());
 	}
 
@@ -1349,12 +1187,10 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		request.setUserName("jasvipul@gmail.com");
 		request.setSessionToken(responseUser.getSessionToken());
 
-		AssignCouponToUserResponse response = promotionAdminManager
-				.assignCouponToUser(request);
+		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
 
 		assertNotNull(response);
-		assertEquals(AssignCouponToUserStatusEnum.INVALID_COUPON_CODE,
-				response.getStatus());
+		assertEquals(AssignCouponToUserStatusEnum.INVALID_COUPON_CODE, response.getStatus());
 		assertNotNull(response.getSessionToken());
 	}
 
@@ -1364,12 +1200,10 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		request.setCouponCode("pre_issued_1");
 		request.setSessionToken(responseUser.getSessionToken());
 
-		AssignCouponToUserResponse response = promotionAdminManager
-				.assignCouponToUser(request);
+		AssignCouponToUserResponse response = promotionAdminManager.assignCouponToUser(request);
 
 		assertNotNull(response);
-		assertEquals(AssignCouponToUserStatusEnum.INVALID_USER,
-				response.getStatus());
+		assertEquals(AssignCouponToUserStatusEnum.INVALID_USER, response.getStatus());
 		assertNotNull(response.getSessionToken());
 	}
 
@@ -1380,15 +1214,13 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchCouponRequest.setCouponCode("GlobalCoupon1000Off4");
 		searchCouponRequest.setSessionToken(responseUser.getSessionToken());
 
-		SearchCouponResponse response = promotionAdminManager
-				.searchCoupons(searchCouponRequest);
+		SearchCouponResponse response = promotionAdminManager.searchCoupons(searchCouponRequest);
 
 		assertNotNull(response);
 		assertEquals(SearchCouponStatusEnum.SUCCESS, response.getStatus());
 		assertEquals(1, response.getCouponBasicDetailsList().size());
 
-		CouponBasicDetails couponBasicDetails = response
-				.getCouponBasicDetailsList().get(0);
+		CouponBasicDetails couponBasicDetails = response.getCouponBasicDetailsList().get(0);
 		assertEquals("GlobalCoupon1000Off4", couponBasicDetails.getCouponCode());
 		assertEquals(CouponType.GLOBAL, couponBasicDetails.getCouponType());
 		assertEquals(-2003, couponBasicDetails.getCouponId());
@@ -1402,8 +1234,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		request.setSessionToken(responseUser.getSessionToken());
 		request.setCouponCode("WINFUTURE");
 
-		SearchCouponResponse response = promotionAdminManager
-				.searchCoupons(request);
+		SearchCouponResponse response = promotionAdminManager.searchCoupons(request);
 
 		assertNotNull(response);
 		assertEquals(SearchCouponStatusEnum.SUCCESS, response.getStatus());
@@ -1422,8 +1253,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		;
 		searchCouponRequest.setBatchSize(100);
 
-		SearchCouponResponse response = promotionAdminManager
-				.searchCoupons(searchCouponRequest);
+		SearchCouponResponse response = promotionAdminManager.searchCoupons(searchCouponRequest);
 
 		assertNotNull(response);
 		assertEquals(SearchCouponStatusEnum.SUCCESS, response.getStatus());
@@ -1439,8 +1269,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		request.setSessionToken(responseUser.getSessionToken());
 		request.setBatchSize(4);
 
-		SearchCouponResponse response = promotionAdminManager
-				.searchCoupons(request);
+		SearchCouponResponse response = promotionAdminManager.searchCoupons(request);
 
 		assertNotNull(response);
 		assertEquals(SearchCouponStatusEnum.SUCCESS, response.getStatus());
@@ -1456,8 +1285,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		request.setSessionToken(responseUser.getSessionToken());
 		request.setCouponCode("WINFUTURE");
 
-		SearchCouponResponse response = promotionAdminManager
-				.searchCoupons(request);
+		SearchCouponResponse response = promotionAdminManager.searchCoupons(request);
 
 		assertNotNull(response);
 		assertEquals(SearchCouponStatusEnum.SUCCESS, response.getStatus());
@@ -1473,8 +1301,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		request.setSessionToken(responseUser.getSessionToken());
 		request.setCouponCode("WINFUTU");
 
-		SearchCouponResponse response = promotionAdminManager
-				.searchCoupons(request);
+		SearchCouponResponse response = promotionAdminManager.searchCoupons(request);
 
 		assertNotNull(response);
 		assertEquals(SearchCouponStatusEnum.NO_DATA_FOUND, response.getStatus());
@@ -1491,8 +1318,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		request.setSessionToken(responseUser.getSessionToken());
 		request.setCouponCode("WINFUTU");
 
-		SearchCouponResponse response = promotionAdminManager
-				.searchCoupons(request);
+		SearchCouponResponse response = promotionAdminManager.searchCoupons(request);
 
 		assertNotNull(response);
 		assertEquals(SearchCouponStatusEnum.NO_DATA_FOUND, response.getStatus());
@@ -1508,8 +1334,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		request.setSessionToken(responseUser.getSessionToken());
 		request.setCouponCode("WINFUTURE");
 
-		SearchCouponResponse response = promotionAdminManager
-				.searchCoupons(request);
+		SearchCouponResponse response = promotionAdminManager.searchCoupons(request);
 
 		assertNotNull(response);
 		assertEquals(SearchCouponStatusEnum.INVALID_USER, response.getStatus());
@@ -1525,8 +1350,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		request.setSessionToken(responseUser.getSessionToken());
 		request.setCouponCode("WINFUTE");
 
-		SearchCouponResponse response = promotionAdminManager
-				.searchCoupons(request);
+		SearchCouponResponse response = promotionAdminManager.searchCoupons(request);
 
 		assertNotNull(response);
 		assertEquals(SearchCouponStatusEnum.INVALID_USER, response.getStatus());
@@ -1540,12 +1364,10 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 
 		searchCouponRequest.setSessionToken(responseUser.getSessionToken());
 
-		SearchCouponResponse response = promotionAdminManager
-				.searchCoupons(searchCouponRequest);
+		SearchCouponResponse response = promotionAdminManager.searchCoupons(searchCouponRequest);
 
 		assertNotNull(response);
-		assertEquals(SearchCouponStatusEnum.INSUFFICIENT_DATA,
-				response.getStatus());
+		assertEquals(SearchCouponStatusEnum.INSUFFICIENT_DATA, response.getStatus());
 		assertEquals(0, response.getCouponBasicDetailsList().size());
 	}
 
@@ -1556,8 +1378,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchCouponRequest.setCouponCode("invalid_coupon_code");
 		searchCouponRequest.setSessionToken(responseUser.getSessionToken());
 
-		SearchCouponResponse response = promotionAdminManager
-				.searchCoupons(searchCouponRequest);
+		SearchCouponResponse response = promotionAdminManager.searchCoupons(searchCouponRequest);
 
 		assertNotNull(response);
 		assertEquals(SearchCouponStatusEnum.NO_DATA_FOUND, response.getStatus());
@@ -1570,19 +1391,16 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 
 		searchCouponRequest.setCouponCode("invalid_coupon_code");
 
-		SearchCouponResponse response = promotionAdminManager
-				.searchCoupons(searchCouponRequest);
+		SearchCouponResponse response = promotionAdminManager.searchCoupons(searchCouponRequest);
 
 		assertNotNull(response);
-		assertEquals(SearchCouponStatusEnum.INSUFFICIENT_DATA,
-				response.getStatus());
+		assertEquals(SearchCouponStatusEnum.INSUFFICIENT_DATA, response.getStatus());
 		assertEquals(0, response.getCouponBasicDetailsList().size());
 	}
 
 	@Test
 	public void searchCouponNullRequest() {
-		SearchCouponResponse response = promotionAdminManager
-				.searchCoupons(null);
+		SearchCouponResponse response = promotionAdminManager.searchCoupons(null);
 
 		assertNotNull(response);
 		assertEquals(SearchCouponStatusEnum.NO_SESSION, response.getStatus());
@@ -1604,16 +1422,14 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		request.setMaxUses(4);
 		request.setMaxUsesPerUser(2);
 
-		CreateCouponResponse response = promotionAdminManager
-				.createCoupons(request);
+		CreateCouponResponse response = promotionAdminManager.createCoupons(request);
 
 		assertNotNull(response);
 		assertEquals(CreateCouponStatusEnum.SUCCESS, response.getStatus());
 		assertEquals(10, response.getNumberOfCouponsCreated());
 	}
 
-	public void setPromotionAdminManager(
-			PromotionAdminManager promotionAdminManager) {
+	public void setPromotionAdminManager(PromotionAdminManager promotionAdminManager) {
 		this.promotionAdminManager = promotionAdminManager;
 	}
 
@@ -1626,14 +1442,12 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		SearchScratchCardRequest searchScratchCardRequest = new SearchScratchCardRequest();
 
 		searchScratchCardRequest.setScratchCardNumber("SAM2911BMJ");
-		searchScratchCardRequest
-				.setSessionToken(responseUser.getSessionToken());
+		searchScratchCardRequest.setSessionToken(responseUser.getSessionToken());
 
 		SearchScratchCardResponse searchScratchCardResponse = promotionAdminManager
-				.searchScratchCard(searchScratchCardRequest);
+			.searchScratchCard(searchScratchCardRequest);
 
-		searchScratchCardResponse = promotionAdminManager
-				.searchScratchCard(searchScratchCardRequest);
+		searchScratchCardResponse = promotionAdminManager.searchScratchCard(searchScratchCardRequest);
 		assertEquals("active", searchScratchCardResponse.getCardStatus());
 
 	}
@@ -1645,13 +1459,10 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		// searchScratchCardRequest.setScratchCardNumber(null);
 		// searchScratchCardRequest.setSessionToken(responseUser.getSessionToken());
 
-		SearchScratchCardResponse searchScratchCardResponse = promotionAdminManager
-				.searchScratchCard(null);
+		SearchScratchCardResponse searchScratchCardResponse = promotionAdminManager.searchScratchCard(null);
 
-		searchScratchCardResponse = promotionAdminManager
-				.searchScratchCard(searchScratchCardRequest);
-		assertEquals(SearchScratchCardStatusEnum.INSUFFICIENT_DATA,
-				searchScratchCardResponse.getStatus());
+		searchScratchCardResponse = promotionAdminManager.searchScratchCard(searchScratchCardRequest);
+		assertEquals(SearchScratchCardStatusEnum.INSUFFICIENT_DATA, searchScratchCardResponse.getStatus());
 
 	}
 
@@ -1660,18 +1471,14 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		SearchScratchCardRequest searchScratchCardRequest = new SearchScratchCardRequest();
 
 		searchScratchCardRequest.setScratchCardNumber("BB000UGDCDDD");
-		searchScratchCardRequest
-				.setSessionToken(responseUser.getSessionToken());
+		searchScratchCardRequest.setSessionToken(responseUser.getSessionToken());
 
-		
 		SearchScratchCardResponse searchScratchCardResponse = promotionAdminManager
-				.searchScratchCard(searchScratchCardRequest);
+			.searchScratchCard(searchScratchCardRequest);
 
-		searchScratchCardResponse = promotionAdminManager
-				.searchScratchCard(searchScratchCardRequest);
-		assertEquals(SearchScratchCardStatusEnum.NO_SCRATCH_CARD_FOUND,
-				searchScratchCardResponse.getStatus());
-		System.out.println("searchScratchCardResponse.getStatus()"+searchScratchCardResponse.getStatus());
+		searchScratchCardResponse = promotionAdminManager.searchScratchCard(searchScratchCardRequest);
+		assertEquals(SearchScratchCardStatusEnum.NO_SCRATCH_CARD_FOUND, searchScratchCardResponse.getStatus());
+		System.out.println("searchScratchCardResponse.getStatus()" + searchScratchCardResponse.getStatus());
 
 	}
 
@@ -1683,12 +1490,10 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchScratchCardRequest.setSessionToken("test");
 
 		SearchScratchCardResponse searchScratchCardResponse = promotionAdminManager
-				.searchScratchCard(searchScratchCardRequest);
+			.searchScratchCard(searchScratchCardRequest);
 
-		searchScratchCardResponse = promotionAdminManager
-				.searchScratchCard(searchScratchCardRequest);
-		assertEquals(SearchScratchCardStatusEnum.NO_SESSION,
-				searchScratchCardResponse.getStatus());
+		searchScratchCardResponse = promotionAdminManager.searchScratchCard(searchScratchCardRequest);
+		assertEquals(SearchScratchCardStatusEnum.NO_SESSION, searchScratchCardResponse.getStatus());
 
 	}
 

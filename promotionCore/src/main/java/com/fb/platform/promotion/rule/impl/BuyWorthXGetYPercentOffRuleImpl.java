@@ -26,40 +26,46 @@ import com.fb.platform.promotion.util.ListUtil;
 
 /**
  * @author keith
- *
+ * 
  */
 public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule, Serializable {
 
 	private static transient Log log = LogFactory.getLog(BuyWorthXGetYPercentOffRuleImpl.class);
 
 	BuyWorthXGetYPercentOffRuleData data = null;
-	
+
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
 
 		data = (BuyWorthXGetYPercentOffRuleData) RulesEnum.BUY_WORTH_X_GET_Y_PERCENT_OFF.getRuleData(ruleConfig);
-		
+
 	}
 
 	@Override
-	public PromotionStatusEnum isApplicable(OrderRequest request,int userId,boolean isCouponCommitted) {
+	public PromotionStatusEnum isApplicable(OrderRequest request, int userId, boolean isCouponCommitted) {
 		if (log.isDebugEnabled()) {
 			log.debug("Checking if BuyWorthXGetYPercentOffRuleImpl applies on order : " + request.getOrderId());
 		}
 		if (ListUtil.isValidList(data.getClientList()) && !request.isValidClient(data.getClientList())) {
 			return PromotionStatusEnum.INVALID_CLIENT;
 		}
-		if (ListUtil.isValidList(data.getIncludeCategoryList()) && !request.isAnyProductInCategory(data.getIncludeCategoryList())) {
+		if (ListUtil.isValidList(data.getIncludeCategoryList())
+			&& !request.isAnyProductInCategory(data.getIncludeCategoryList())) {
 			return PromotionStatusEnum.CATEGORY_MISMATCH;
 		}
-		if (ListUtil.isValidList(data.getExcludeCategoryList()) && request.isAnyProductInCategory(data.getExcludeCategoryList())){
+		if (ListUtil.isValidList(data.getExcludeCategoryList())
+			&& request.isAnyProductInCategory(data.getExcludeCategoryList())) {
 			return PromotionStatusEnum.CATEGORY_MISMATCH;
 		}
-		if (ListUtil.isValidList(data.getBrands()) && !request.isAnyProductInBrand(data.getBrands())){
+		if (ListUtil.isValidList(data.getBrandList()) && !request.isAnyProductInBrand(data.getBrandList())) {
 			return PromotionStatusEnum.BRAND_MISMATCH;
 		}
-		Money orderValue = request.getOrderValueForRelevantProducts(data.getBrands(), data.getIncludeCategoryList(), data.getExcludeCategoryList());
-		if(data.getMinOrderValue() !=null && orderValue.lt(data.getMinOrderValue())){
+		if (ListUtil.isValidList(data.getSellerList()) && !request.isAnyProductInBrand(data.getSellerList())) {
+			return PromotionStatusEnum.SELLER_MISMATCH;
+		}
+		Money orderValue = request.getOrderValueForRelevantProducts(data.getBrandList(), data.getIncludeCategoryList(),
+			data.getExcludeCategoryList(), data.getSellerList());
+		if (data.getMinOrderValue() != null && orderValue.lt(data.getMinOrderValue())) {
 			return PromotionStatusEnum.LESS_ORDER_AMOUNT;
 		}
 		return PromotionStatusEnum.SUCCESS;
@@ -68,35 +74,36 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule, Serializa
 	@Override
 	public OrderDiscount execute(OrderDiscount orderDiscount) {
 		OrderRequest request = orderDiscount.getOrderRequest();
-		if(log.isDebugEnabled()) {
+		if (log.isDebugEnabled()) {
 			log.debug("Executing BuyWorthXGetYPercentOffRuleImpl on order : " + request.getOrderId());
 		}
-		Money orderVal = request.getOrderValueForRelevantProducts(data.getBrands(), data.getIncludeCategoryList(), data.getExcludeCategoryList());
+		Money orderVal = request.getOrderValueForRelevantProducts(data.getBrandList(), data.getIncludeCategoryList(),
+			data.getExcludeCategoryList(), data.getSellerList());
 		Money discountCalculated = (orderVal.times(data.getDiscountPercentage().doubleValue())).div(100);
 		Money finalDiscountAmount = new Money(new BigDecimal(0));
-		if(data.getMaxDiscountPerUse() != null && discountCalculated.gt(data.getMaxDiscountPerUse())){
-			log.info("Maximum discount is less than the calculated discount on this order. Max Discount = "+data.getMaxDiscountPerUse() +" and Discount calculated = "+discountCalculated);
+		if (data.getMaxDiscountPerUse() != null && discountCalculated.gt(data.getMaxDiscountPerUse())) {
+			log.info("Maximum discount is less than the calculated discount on this order. Max Discount = "
+				+ data.getMaxDiscountPerUse() + " and Discount calculated = " + discountCalculated);
 			finalDiscountAmount = finalDiscountAmount.plus(data.getMaxDiscountPerUse());
-		}
-		else{
-			log.info("Discount amount calculated is = "+discountCalculated);
+		} else {
+			log.info("Discount amount calculated is = " + discountCalculated);
 			finalDiscountAmount = finalDiscountAmount.plus(discountCalculated);
 		}
-		
+
 		orderDiscount.setOrderDiscountValue(finalDiscountAmount.getAmount());
-		return orderDiscount.distributeDiscountOnOrder(orderDiscount,data.getBrands(),data.getIncludeCategoryList(),data.getExcludeCategoryList());
+		return orderDiscount.distributeDiscountOnOrder(orderDiscount, data.getBrandList(),
+			data.getIncludeCategoryList(), data.getExcludeCategoryList(), data.getSellerList());
 	}
-	
+
 	@Override
 	public RuleConfigMetadata getRuleConfigMetadata() {
 		return RulesEnum.BUY_WORTH_X_GET_Y_PERCENT_OFF.getMetaData();
 	}
-	
-	
+
 	@Override
 	public List<RuleConfigItemDescriptor> getRuleConfigs() {
 		List<RuleConfigItemDescriptor> ruleConfigs = new ArrayList<RuleConfigItemDescriptor>();
-		
+
 		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.CLIENT_LIST, false));
 		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.CATEGORY_INCLUDE_LIST, false));
 		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.CATEGORY_EXCLUDE_LIST, false));
@@ -104,7 +111,7 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule, Serializa
 		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.MIN_ORDER_VALUE, false));
 		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.DISCOUNT_PERCENTAGE, true));
 		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.MAX_DISCOUNT_CEIL_IN_VALUE, true));
-		
+
 		return ruleConfigs;
 	}
 

@@ -13,64 +13,82 @@ public class OrderDiscount implements Serializable {
 
 	private OrderRequest orderRequest = null;
 	private BigDecimal orderDiscountValue = BigDecimal.ZERO;
-	
+
 	public OrderRequest getOrderRequest() {
 		return orderRequest;
 	}
+
 	public void setOrderRequest(OrderRequest orderRequest) {
 		this.orderRequest = orderRequest;
 	}
+
 	public BigDecimal getOrderDiscountValue() {
 		return orderDiscountValue;
 	}
+
 	public void setOrderDiscountValue(BigDecimal orderDiscountValue) {
 		this.orderDiscountValue = orderDiscountValue;
 	}
-	
-	public OrderDiscount distributeDiscountOnOrder(OrderDiscount orderDiscount,List<Integer> brands, List<Integer> includeCategoryList, List<Integer> excludeCategoryList){ 
+
+	public OrderDiscount distributeDiscountOnOrder(OrderDiscount orderDiscount,
+			List<Integer> brands, List<Integer> includeCategoryList,
+			List<Integer> excludeCategoryList, List<Integer> sellerList) {
 
 		OrderRequest orderRequest = orderDiscount.getOrderRequest();
 		BigDecimal totalRemainingDiscountOnOrder = orderDiscount.getOrderDiscountValue();
 		List<OrderItem> notLockedAplicableOrderItems = new ArrayList<OrderItem>();
 		BigDecimal totalOrderValueForRemainingApplicableItems = BigDecimal.ZERO;
-		
+
 		for (OrderItem eachOrderItemInRequest : orderRequest.getOrderItems()) {
-			if(eachOrderItemInRequest.isApplicableToOrderItem(eachOrderItemInRequest,brands,includeCategoryList,excludeCategoryList)){
-				if(eachOrderItemInRequest.isLocked()){
-					totalRemainingDiscountOnOrder = totalRemainingDiscountOnOrder.subtract(eachOrderItemInRequest.getTotalDiscount());
-				}else{
+			if (eachOrderItemInRequest.isApplicableToOrderItem(eachOrderItemInRequest, brands,
+					includeCategoryList, excludeCategoryList, sellerList)) {
+				if (eachOrderItemInRequest.isLocked()) {
+					totalRemainingDiscountOnOrder = totalRemainingDiscountOnOrder
+							.subtract(eachOrderItemInRequest.getTotalDiscount());
+				} else {
 					notLockedAplicableOrderItems.add(eachOrderItemInRequest);
-					totalOrderValueForRemainingApplicableItems = totalOrderValueForRemainingApplicableItems.add(eachOrderItemInRequest.getPrice());
+					totalOrderValueForRemainingApplicableItems = totalOrderValueForRemainingApplicableItems
+							.add(eachOrderItemInRequest.getPrice());
 				}
 			}
 		}
-		
-		return distributeRemainingDiscountOnRemainingOrderItems(orderDiscount, totalRemainingDiscountOnOrder, notLockedAplicableOrderItems, 
+
+		return distributeRemainingDiscountOnRemainingOrderItems(orderDiscount,
+				totalRemainingDiscountOnOrder, notLockedAplicableOrderItems,
 				totalOrderValueForRemainingApplicableItems);
 	}
-	
-	private OrderDiscount distributeRemainingDiscountOnRemainingOrderItems(OrderDiscount orderDiscount, BigDecimal totalRemainingDiscountOnOrder,
+
+	private OrderDiscount distributeRemainingDiscountOnRemainingOrderItems(
+			OrderDiscount orderDiscount, BigDecimal totalRemainingDiscountOnOrder,
 			List<OrderItem> notLockedAplicableOrderItems,
 			BigDecimal totalOrderValueForRemainingApplicableItems) {
-		
+
 		for (OrderItem eachOrderItemInRequest : notLockedAplicableOrderItems) {
 			BigDecimal orderItemDiscount = new BigDecimal(0);
 			BigDecimal orderItemPrice = eachOrderItemInRequest.getPrice();
-			orderItemDiscount = (orderItemPrice.multiply(totalRemainingDiscountOnOrder)).divide(totalOrderValueForRemainingApplicableItems, 2, RoundingMode.HALF_EVEN).setScale(0, RoundingMode.HALF_EVEN);
+			orderItemDiscount = (orderItemPrice.multiply(totalRemainingDiscountOnOrder)).divide(
+					totalOrderValueForRemainingApplicableItems, 2, RoundingMode.HALF_EVEN)
+					.setScale(0, RoundingMode.HALF_EVEN);
 			eachOrderItemInRequest.setTotalDiscount(orderItemDiscount);
 			/*
 			 * after setting the right discount for the current order item,
-			 * Subtract the discount (set in the current order item) from the total discount to be distributed and 
-			 * Subtract the order item value from the total applicable unlocked order item values
+			 * Subtract the discount (set in the current order item) from the
+			 * total discount to be distributed and Subtract the order item
+			 * value from the total applicable unlocked order item values
 			 * 
-			 * For Example:
-			 *  discountOnOrderItemA = (priceOfA / priceOfA + priceOfB + priceOfC + priceOfD) X totalDiscountToBeDistributedOnABCD ;
-			 *  totalDiscountToBeDistributedOnBCD = totalDiscountToBeDistributedOnABCD - discountOnOrderItemA ;
-			 *  
-			 *  discountOnOrderItemB = (priceOfB / priceOfB + priceOfC + priceOfD) X totalDiscountToBeDistributedOnBCD ;
+			 * For Example: discountOnOrderItemA = (priceOfA / priceOfA +
+			 * priceOfB + priceOfC + priceOfD) X
+			 * totalDiscountToBeDistributedOnABCD ;
+			 * totalDiscountToBeDistributedOnBCD =
+			 * totalDiscountToBeDistributedOnABCD - discountOnOrderItemA ;
+			 * 
+			 * discountOnOrderItemB = (priceOfB / priceOfB + priceOfC +
+			 * priceOfD) X totalDiscountToBeDistributedOnBCD ;
 			 */
-			totalOrderValueForRemainingApplicableItems = totalOrderValueForRemainingApplicableItems.subtract(orderItemPrice);
-			totalRemainingDiscountOnOrder = totalRemainingDiscountOnOrder.subtract(orderItemDiscount);
+			totalOrderValueForRemainingApplicableItems = totalOrderValueForRemainingApplicableItems
+					.subtract(orderItemPrice);
+			totalRemainingDiscountOnOrder = totalRemainingDiscountOnOrder
+					.subtract(orderItemDiscount);
 		}
 		return orderDiscount;
 	}

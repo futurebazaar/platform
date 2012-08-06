@@ -24,6 +24,7 @@ public enum PromotionStatusEnum implements Serializable {
 	INVALID_CLIENT("INVALID_CLIENT", "This is not a valid coupon. Try another one."),
 	CATEGORY_MISMATCH("CATEGORY_MISMATCH", "This coupon is not valid on purchase of the products you selected."),
 	BRAND_MISMATCH("BRAND_MISMATCH", "This coupon is not valid on purchase of the products you selected."),
+	SELLER_MISMATCH("SELLER_MISMATCH", "This coupon is not valid on purchase of the products you selected."),
 	LIMIT_SUCCESS("LIMIT_SUCCESS", "LIMIT_SUCCESS"),
 	PRODUCT_NOT_PRESENT("PRODUCT_NOT_PRESENT","REQUIRED PRODUCT IS NOT PRESENT IN ORDER"),
 	LESS_ORDER_AMOUNT_OF_BRAND_PRODUCTS("LESS_ORDER_AMOUNT_OF_BRAND_PRODUCTS", "This coupon is not applicable on this Order Amount."),
