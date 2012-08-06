@@ -82,6 +82,7 @@ public class SapIDocHandler implements JCoIDocHandler {
 					
 					boolean isDuplicate = checkDuplicate(idocXml);
 					if(!isDuplicate) {
+						logger.info("Not a duplicate idoc sending it to :" + platformIDocHandler);
 						platformIDocHandler.handle(idocXml);
 					}
 				} catch (Exception e) {
@@ -123,7 +124,7 @@ public class SapIDocHandler implements JCoIDocHandler {
 	}
 	
 	protected boolean checkDuplicate(String idocXml) {
-		boolean isDuplicate = true;
+		boolean isDuplicate = false;
 		if(idocXml.contains(uidTag)) {
 			int startIndex = idocXml.indexOf(uidTag);
 			startIndex += (uidTag.length() + 1);

@@ -1,5 +1,6 @@
 package com.fb.platform.mom.itemAck.sender.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
@@ -15,7 +16,7 @@ public class PgrCreationParameterImpl implements ItemAckParameters {
 	public List<NameValuePair> getParameters(List<NameValuePair> parameters, ItemTO itemAck) {
 		PgrCreationItemTO pgrCreationTO = (PgrCreationItemTO) itemAck;
 		if(pgrCreationTO.getPgrCreationDate() != null) {
-			parameters.add(new BasicNameValuePair("pgrCreationDate", pgrCreationTO.getPgrCreationDate().toString()));
+			parameters.add(new BasicNameValuePair("pgrCreationDate", new SimpleDateFormat("dd-MM-yyyy").format(pgrCreationTO.getPgrCreationDate())));
 		}
 		return parameters;
 	}

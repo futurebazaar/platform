@@ -87,7 +87,7 @@ public class ItemAckIDocHandler implements PlatformIDocHandler {
 			corruptMessage.setCause(CorruptMessageCause.CORRUPT_IDOC);
 			momManager.send(PlatformDestinationEnum.CORRUPT_IDOCS, corruptMessage);
 			//TODO send this to some kind of error queue
-			logger.error("Unable to create Message for zatgflow idoc :\n" + sapIdoc.getIdoc());
+			logger.error("Unable to create Message for item ack idoc :\n" + sapIdoc.getIdoc());
 			logger.error("Message logged in corrupt queue.", e);
 			//throw new PlatformException("Exception while unmarshalling the inventory idoc xml", e);
 		}

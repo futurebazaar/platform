@@ -43,6 +43,7 @@ public class ItemAckIdocMapperImpl {
 		itemAck.setPlantId(sapItemAck.getSITE());
 		itemAck.setItemState(sapItemAck.getORDSTAT());
 		itemAck.setQuantity(sapItemAck.getRFMNG());
+		itemAck.setOrderState(sapItemAck.getVBTYPN());
 		if(sapItemAck.getERDAT() != null && sapItemAck.getERDAT().length() == 8) {
 			year = Integer.parseInt(sapItemAck.getERDAT().substring(0, 4));
 			month = Integer.parseInt(sapItemAck.getERDAT().substring(4, 6));

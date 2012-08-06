@@ -1,5 +1,6 @@
 package com.fb.platform.mom.itemAck.sender.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
@@ -16,7 +17,7 @@ public class InvoiceParameterImpl implements ItemAckParameters {
 		ItemInvoiceTO itemInvoiceTO = (ItemInvoiceTO) itemAck;
 		parameters.add(new BasicNameValuePair("invoiceNumber", itemInvoiceTO.getInvoiceNumber()));
 		if(itemInvoiceTO.getInvoiceDate() != null) {
-			parameters.add(new BasicNameValuePair("invoiceDate", itemInvoiceTO.getInvoiceDate().toString()));
+			parameters.add(new BasicNameValuePair("invoiceDate", new SimpleDateFormat("dd-MM-yyyy").format(itemInvoiceTO.getInvoiceDate())));
 		}
 		return parameters;
 	}

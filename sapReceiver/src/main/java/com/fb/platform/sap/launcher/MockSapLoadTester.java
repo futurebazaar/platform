@@ -55,9 +55,9 @@ public class MockSapLoadTester {
 		PlatformIDocHandlerFactory idocFactory = (PlatformIDocHandlerFactory) applicationContext.getBean("platformIDocHandlerFactory");
 
 		
-		//sendInventoryIdoc(idocFactory.getHandler(InventoryIDocHandler.INVENTORY_IDOC_TYPE));
-		//sendDeliveryInventoryIdoc(idocFactory.getHandler(DeliveryInventoryIDocHandler.DELIVERY_INVENTORY_IDOC_TYPE));
-		//sendDeliveryDeleteIdoc(idocFactory.getHandler(DeliveryDeleteIDocHandler.DELIVERY_DELETE));
+		sendInventoryIdoc(idocFactory.getHandler(InventoryIDocHandler.INVENTORY_IDOC_TYPE));
+		sendDeliveryInventoryIdoc(idocFactory.getHandler(DeliveryInventoryIDocHandler.DELIVERY_INVENTORY_IDOC_TYPE));
+		sendDeliveryDeleteIdoc(idocFactory.getHandler(DeliveryDeleteIDocHandler.DELIVERY_DELETE));
 		sendItemAckIdoc(idocFactory.getHandler(ItemAckIDocHandler.ITEM_ACK_IDOC_TYPE));
 
 	}

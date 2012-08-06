@@ -1,5 +1,6 @@
 package com.fb.platform.mom.itemAck.sender.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
@@ -17,7 +18,7 @@ public class ReturnDeliveryParameterImpl implements ItemAckParameters {
 		parameters.add(new BasicNameValuePair("returndeliveryno", returnDeliveryTO.getNumber()));
 		parameters.add(new BasicNameValuePair("returndeliveryType", returnDeliveryTO.getType()));
 		if(returnDeliveryTO.getReturnCreatedDate() != null) {
-			parameters.add(new BasicNameValuePair("returnCreatedDate", returnDeliveryTO.getReturnCreatedDate().toString()));
+			parameters.add(new BasicNameValuePair("returnCreatedDate", new SimpleDateFormat("dd-MM-yyyy").format(returnDeliveryTO.getReturnCreatedDate())));
 		}
 		parameters.add(new BasicNameValuePair("returnCreatedBy", returnDeliveryTO.getReturnCreatedBy()));
 		return parameters;

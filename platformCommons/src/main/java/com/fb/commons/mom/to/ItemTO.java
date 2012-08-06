@@ -37,6 +37,7 @@ public class ItemTO implements Serializable {
 	private String itemState;
 	private DateTime orderDate;
 	private BigDecimal quantity;
+	private String orderState;
 	
 	public SapMomTO getSapIdoc() {
 		return sapIdoc;
@@ -177,9 +178,16 @@ public class ItemTO implements Serializable {
 	public void setHeader(String header) {
 		this.header = header;
 	}
+	public String getOrderState() {
+		return orderState;
+	}
+	public void setOrderState(String orderState) {
+		this.orderState = orderState;
+	}
 	@Override
 	public String toString() {
 		String order = "sap Document Id: " + sapDocumentId
+				+ "\norder state : " + orderState
 				+ "\nheader : " + header
 				+ "\norder header del block : " + orderHeaderDelBlock
 				+ "\ndelivery date : " + deliveryDate

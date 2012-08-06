@@ -6,7 +6,6 @@ package com.fb.platform.mom.itemAck.receiver;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -74,15 +73,19 @@ public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 
 		UrlEncodedFormEntity entity;
 		try {
-			entity = new UrlEncodedFormEntity(parameters, "UTF-8");
-			httpPost.setEntity(entity);
-			HttpResponse response = httpClient.execute(httpPost);
-			int statusCode = response.getStatusLine().getStatusCode();
-			if (statusCode != HttpStatus.SC_OK) {
-				log.error("Item ack not delivered : " + itemAck.toString());
-				throw new PlatformException("Item ack not delivered to tinla on URL : " + orderURL);
+			if(!itemAck.getOrderState().equalsIgnoreCase("C")) {
+				entity = new UrlEncodedFormEntity(parameters, "UTF-8");
+				httpPost.setEntity(entity);
+				HttpResponse response = httpClient.execute(httpPost);
+				int statusCode = response.getStatusLine().getStatusCode();
+				if (statusCode != HttpStatus.SC_OK) {
+					log.error("Item ack not delivered : " + itemAck.toString());
+					throw new PlatformException("Item ack not delivered to tinla on URL : " + orderURL);
+				}
+				log.info("Item ack delivered to tinla. Status code : " + statusCode);
+			} else {
+				log.info("Request not sent to tinla because plant id is blank : " + itemAck.toString());
 			}
-			log.info("Item ack delivered to tinla. Status code : " + statusCode);
 		} catch (UnsupportedEncodingException e) {
 			log.error("Error communicating with tinla on url : " + orderURL, e);
 			throw new PlatformException("Error communicating with tinla on url : " + orderURL, e);
