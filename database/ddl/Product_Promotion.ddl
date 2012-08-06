@@ -17,8 +17,8 @@ CREATE TABLE condition_config (
 	product_ids VARCHAR(100),
 	brand_ids VARCHAR(100),
 	category_ids VARCHAR(100),
-	min_order_value INTEGER,
-	max_order_value INTEGER,
+	min_order_value DECIMAL(18, 2),
+	max_order_value DECIMAL(18, 2),
 	join_type VARCHAR(10),
 	PRIMARY KEY (id),
 	CONSTRAINT condition_config_fk1 FOREIGN KEY (promotion_config_module_id) REFERENCES promotion_config_module(id) ON DELETE CASCADE
@@ -34,7 +34,7 @@ CREATE TABLE results_config (
 	category_ids VARCHAR(100),
 	join_type VARCHAR(10),
 	offer_type VARCHAR(30),
-	offer_value VARCHAR(30),
+	offer_value DECIMAL(18, 2),
 	PRIMARY KEY (id),
 	CONSTRAINT results_config_fk1 FOREIGN KEY (promotion_config_module_id) REFERENCES promotion_config_module(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
