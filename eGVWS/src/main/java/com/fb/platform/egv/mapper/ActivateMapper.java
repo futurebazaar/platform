@@ -22,26 +22,21 @@ import com.fb.platform.egv.resource.GiftVoucherResource;
  * @author keith
  * 
  */
-public class CreateGVMapper {
+public class ActivateMapper {
 
-	public static com.fb.platform.egv.to.CreateRequest xmlToCoreRequest(String webRequestXml) throws JAXBException {
-		com.fb.platform.egv.to.CreateRequest coreRequest = new com.fb.platform.egv.to.CreateRequest();
+	public static com.fb.platform.egv.to.ActivateRequest xmlToCoreRequest(String webRequestXml) throws JAXBException {
+		com.fb.platform.egv.to.ActivateRequest coreRequest = new com.fb.platform.egv.to.ActivateRequest();
 		try {
 			Unmarshaller unmarshaller = GiftVoucherResource.getContext().createUnmarshaller();
 
-			com.fb.platform.egv._1_0.CreateRequest webRequest = (com.fb.platform.egv._1_0.CreateRequest) unmarshaller
+			com.fb.platform.egv._1_0.ActivateRequest webRequest = (com.fb.platform.egv._1_0.ActivateRequest) unmarshaller
 					.unmarshal(new StreamSource(new StringReader(webRequestXml)));
 
 			// Mapping Code
 			coreRequest.setSessionToken(webRequest.getSessionToken());
+			System.out.println(webRequest.getSessionToken());
+			coreRequest.setGiftVoucherNumber(webRequest.getGiftVoucherNumber());
 			coreRequest.setAmount(webRequest.getAmount());
-			coreRequest.setEmail(webRequest.getEmail());
-			coreRequest.setOrderItemId(webRequest.getOrderItemId());
-			coreRequest.setSenderName(webRequest.getSenderName());
-			coreRequest.setReceiverName(webRequest.getReceiverName());
-			coreRequest.setGiftMessage(webRequest.getGiftMessage());
-			coreRequest.setMobile(webRequest.getMobile());
-			coreRequest.setDeferActivation(webRequest.isIsDeferActivation());
 			if (webRequest.getValidFrom() == null) {
 				coreRequest.setValidFrom(null);
 			} else {
@@ -54,21 +49,23 @@ public class CreateGVMapper {
 			}
 
 		} catch (JAXBException e) {
-			throw new JAXBException("Problem in XML Parsing");
+			// TODO: handle exception
 		}
 		return coreRequest;
 	}
 
-	public static String coreResponseToXml(com.fb.platform.egv.to.CreateResponse coreResponse) throws JAXBException,
+	public static String coreResponseToXml(com.fb.platform.egv.to.ActivateResponse coreResponse) throws JAXBException,
 			DatatypeConfigurationException {
 
-		com.fb.platform.egv._1_0.CreateResponse webResponse = new com.fb.platform.egv._1_0.CreateResponse();
+		com.fb.platform.egv._1_0.ActivateResponse webResponse = new com.fb.platform.egv._1_0.ActivateResponse();
+
 		GregorianCalendar gregCal = new GregorianCalendar();
 
 		// Mapping Code
-		webResponse.setCreateResponseStatus(com.fb.platform.egv._1_0.CreateResponseStatusEnum.fromValue(coreResponse
-				.getResponseStatus().toString()));
-		webResponse.setNumber(coreResponse.getGvNumber());
+		webResponse.setAmount(coreResponse.getAmount());
+		webResponse.setActivateResponseStatus(com.fb.platform.egv._1_0.ActivateResponseStatusEnum
+				.fromValue(coreResponse.getResponseStatus().toString()));
+		webResponse.setNumber(coreResponse.getNumber());
 		webResponse.setSessionToken(coreResponse.getSessionToken());
 		if (coreResponse.getValidFrom() != null) {
 			gregCal.set(coreResponse.getValidFrom().getYear(), coreResponse.getValidFrom().getMonthOfYear() - 1,
@@ -82,7 +79,7 @@ public class CreateGVMapper {
 					coreResponse.getValidTill().getDayOfMonth(), 0, 0, 0);
 			webResponse.setValidTill(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
 		} else {
-			webResponse.setValidFrom(null);
+			webResponse.setValidTill(null);
 		}
 
 		StringWriter outStringWriter = new StringWriter();
@@ -90,7 +87,6 @@ public class CreateGVMapper {
 		marshaller.marshal(webResponse, outStringWriter);
 
 		return outStringWriter.toString();
-
 	}
 
 }
