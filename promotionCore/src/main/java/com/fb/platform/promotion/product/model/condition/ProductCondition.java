@@ -30,4 +30,10 @@ public class ProductCondition implements Condition {
 		this.quantity = quantity;
 	}
 
+	public boolean isApplicableOn(int productId) {
+		if (productIds.contains(productId)) {
+			return true;
+		}
+		return false;
+	}
 }

@@ -36,4 +36,9 @@ public class BrandCondition implements Condition {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
+	@Override
+	public boolean isApplicableOn(int productId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

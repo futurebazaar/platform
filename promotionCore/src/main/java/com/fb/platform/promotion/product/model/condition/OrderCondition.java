@@ -27,4 +27,9 @@ public class OrderCondition implements Condition {
 	public void setMaximumOrderValue(Money maximumOrderValue) {
 		this.maximumOrderValue = maximumOrderValue;
 	}
+	@Override
+	public boolean isApplicableOn(int productId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

@@ -18,6 +18,7 @@ import com.fb.commons.to.Money;
 import com.fb.platform.promotion.admin.dao.CouponAdminDao;
 import com.fb.platform.promotion.cache.CouponCacheAccess;
 import com.fb.platform.promotion.cache.PromotionCacheAccess;
+import com.fb.platform.promotion.coupon.model.CouponPromotion;
 import com.fb.platform.promotion.dao.CouponDao;
 import com.fb.platform.promotion.dao.PromotionDao;
 import com.fb.platform.promotion.dao.ScratchCardDao;
@@ -151,7 +152,7 @@ public class PromotionServiceImpl implements PromotionService {
 		}
 		
 		//check if the promotion is applicable on this request.
-		PromotionStatusEnum promotionStatusEnum = promotion.isApplicable(orderRequest,userId,isCouponCommitted);
+		PromotionStatusEnum promotionStatusEnum = ((CouponPromotion)promotion).isApplicable(orderRequest,userId,isCouponCommitted);
 		if (PromotionStatusEnum.SUCCESS.compareTo(promotionStatusEnum) !=0) {
 			logger.warn("Coupon code used when not applicable. Coupon code : " + coupon.getCode());
 			return promotionStatusEnum;

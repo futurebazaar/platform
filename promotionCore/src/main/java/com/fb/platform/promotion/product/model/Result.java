@@ -8,10 +8,4 @@ package com.fb.platform.promotion.product.model;
  *
  */
 public interface Result {
-/*
-	private ResultConfigType resultConfigType = null;
-	private String configValue = null;
-	private ResultType resultType = null;
-	private String resultValue = null;
-*/
 }

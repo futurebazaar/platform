@@ -18,11 +18,29 @@ public class PromotionConfig {
 	private List<ConfigModule> modules = new ArrayList<ConfigModule>();
 	private PriceApplicable priceApplicable = null;
 
-	public PromotionConfig getApplicableResults(int productId) {
+	public boolean isApplicableOn(int productId) {
 		for (ConfigModule module : modules) {
-			
+			if (module.isApplicableOn(productId)) {
+				return true;
+			}
 		}
-		return null;
+		return false;
+	}
+
+	public List<ConfigModule> getModules() {
+		return modules;
+	}
+
+	public void setModules(List<ConfigModule> modules) {
+		this.modules = modules;
+	}
+
+	public PriceApplicable getPriceApplicable() {
+		return priceApplicable;
+	}
+
+	public void setPriceApplicable(PriceApplicable priceApplicable) {
+		this.priceApplicable = priceApplicable;
 	}
 
 }

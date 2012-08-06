@@ -6,35 +6,18 @@ package com.fb.platform.promotion.product.model.result;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fb.platform.promotion.product.model.Result;
-import com.fb.platform.promotion.product.model.ResultType;
-
 /**
  * @author vinayak
  *
  */
-public class CategoryResult implements Result {
+public class CategoryResult extends AbstractResult {
 
 	private List<Integer> categoryIds = new ArrayList<Integer>();
-	private ResultType resultType = null;
-	private String resultValue = null;
 
 	public List<Integer> getCategoryIds() {
 		return categoryIds;
 	}
 	public void setCategoryIds(List<Integer> categoryIds) {
 		this.categoryIds = categoryIds;
-	}
-	public ResultType getResultType() {
-		return resultType;
-	}
-	public void setResultType(ResultType resultType) {
-		this.resultType = resultType;
-	}
-	public String getResultValue() {
-		return resultValue;
-	}
-	public void setResultValue(String resultValue) {
-		this.resultValue = resultValue;
 	}
 }
