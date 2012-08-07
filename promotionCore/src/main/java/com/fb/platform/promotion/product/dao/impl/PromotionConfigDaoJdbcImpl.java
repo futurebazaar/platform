@@ -106,11 +106,15 @@ public class PromotionConfigDaoJdbcImpl implements PromotionConfigDao {
 	public PromotionConfig load(int promotionId) {
 		log.info("Get promotion config for promotion id : " + promotionId);
 		PromotionConfig promotionConfig = new PromotionConfig();
+		promotionConfig.setPromotionId(promotionId);
+
 		List<Integer> configModuleIds = getPromotionConfigIds(promotionId);
-		ConfigModule configModule = null;
+
 		for(Integer configId : configModuleIds) {
-			configModule = new ConfigModule();
 			log.info("Get conditions and results for promotion config id : " + configId);
+
+			ConfigModule configModule = new ConfigModule();
+
 			Conditions conditions = jdbcTemplate.query(GET_CONDITION_FOR_CONFIG_ID, new Object[] {configId}, new ConditionResultSetExtractor());
 			if(conditions != null) {
 				Results results = jdbcTemplate.query(GET_RESULT_FOR_CONFIG_ID, new Object[] {configId}, new PromotionResultSetExtractor());
@@ -162,12 +166,14 @@ public class PromotionConfigDaoJdbcImpl implements PromotionConfigDao {
 					CategoryCondition categoryCondition = new CategoryCondition();
 					categoryCondition.setQuantity(rs.getInt("quantity"));
 					categoryCondition.setCategoryIds(getIds(rs.getString("category_ids")));
+					categoryCondition.setInclude(rs.getBoolean("include"));
 					moduleJoin = getJoin(rs.getString("join_type"));
 					condition = categoryCondition;
 				} else if (conditionType.equalsIgnoreCase("brand")) {
 					BrandCondition brandCondition = new BrandCondition();
 					brandCondition.setQuantity(rs.getInt("quantity"));
 					brandCondition.setBrandIds(getIds(rs.getString("brand_ids")));
+					brandCondition.setInclude(rs.getBoolean("include"));
 					moduleJoin = getJoin(rs.getString("join_type"));
 					condition = brandCondition;
 				} else if (conditionType.equalsIgnoreCase("order")) {
