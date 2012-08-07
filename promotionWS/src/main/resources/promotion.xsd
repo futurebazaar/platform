@@ -277,4 +277,45 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:element name="applyAutoPromotionRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:orderRequest"/>
+        <xs:element ref="promotion:sessionToken"/>
+        <xs:element ref="promotion:orderBookingDate"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="applyAutoPromotionResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:orderDiscount"/>
+        <xs:element ref="promotion:applyAutoPromotionStatus"/>
+        <xs:element maxOccurs="unbounded" ref="promotion:promotion"/>
+        <xs:element ref="promotion:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="applyAutoPromotionStatus" type="promotion:applyAutoPromotionStatus"/>
+  <xs:simpleType name="applyAutoPromotionStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="promotion">
+    <xs:complexType>
+      <xs:sequence>
+      	<xs:element ref="promotion:promotionId"/>
+        <xs:element ref="promotion:promotionName"/>
+        <xs:element ref="promotion:description"/>
+        <xs:element ref="promotion:isActive"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="promotionName" type="xs:string"/>
+  <xs:element name="description" type="xs:string"/>
+  <xs:element name="isActive" type="xs:boolean"/>
+
 </xs:schema>

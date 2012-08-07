@@ -24,7 +24,6 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
-import com.fb.platform.promotion.coupon.model.CouponPromotion;
 import com.fb.platform.promotion.dao.PromotionDao;
 import com.fb.platform.promotion.dao.RuleDao;
 import com.fb.platform.promotion.model.GlobalPromotionUses;
@@ -33,6 +32,7 @@ import com.fb.platform.promotion.model.PromotionDates;
 import com.fb.platform.promotion.model.PromotionLimitsConfig;
 import com.fb.platform.promotion.model.UserPromotionUses;
 import com.fb.platform.promotion.model.UserPromotionUsesEntry;
+import com.fb.platform.promotion.model.coupon.CouponPromotion;
 import com.fb.platform.promotion.product.model.promotion.ProductPromotion;
 import com.fb.platform.promotion.rule.PromotionRule;
 

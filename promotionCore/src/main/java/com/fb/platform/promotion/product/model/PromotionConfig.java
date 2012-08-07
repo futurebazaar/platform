@@ -15,6 +15,7 @@ import java.util.List;
  */
 public class PromotionConfig {
 
+	private int promotionId = 0;
 	private List<ConfigModule> modules = new ArrayList<ConfigModule>();
 	private PriceApplicable priceApplicable = null;
 
@@ -41,6 +42,14 @@ public class PromotionConfig {
 
 	public void setPriceApplicable(PriceApplicable priceApplicable) {
 		this.priceApplicable = priceApplicable;
+	}
+
+	public int getPromotionId() {
+		return promotionId;
+	}
+
+	public void setPromotionId(int promotionId) {
+		this.promotionId = promotionId;
 	}
 
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<applyAutoPromotionResponse xmlns="http://www.fb.com/platform/promotion/1.0.0">
+	<promotion>
+		<promotionName>xxxxxx</promotionName>
+	</promotion>
+	<promotion>
+		<promotionName>xxxxxx</promotionName>
+	</promotion>
+	<promotion>
+		<promotionName>xxxxxx</promotionName>
+	</promotion>
+	<sessionToken>5XanuEts8sXd34WkVJpccGsjgsAgT1xSbV+7uREEpYVSwgigf4R2Mw==</sessionToken>
+</applyAutoPromotionResponse>
