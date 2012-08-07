@@ -3,9 +3,10 @@
  */
 package com.fb.platform.promotion.cache.auto;
 
+import java.util.List;
+
 import com.fb.platform.caching.AbstractCacheAccess;
 import com.fb.platform.caching.NamedCachesEnum;
-import com.fb.platform.promotion.model.Promotion;
 
 /**
  * @author vinayak
@@ -13,24 +14,26 @@ import com.fb.platform.promotion.model.Promotion;
  */
 public class AutoPromotionIdsCache extends AbstractCacheAccess {
 
-	public void put(Integer promotionId, Promotion promotion) {
-		platformCachingManager.put(NamedCachesEnum.PROMOTION_CACHE, promotionId, promotion);
+	private static final String CACHE_KEY = "ActiveAutoPromotionIds";
+
+	public void put(List<Integer> ids) {
+		platformCachingManager.put(NamedCachesEnum.AUTO_PROMOTION_IDS_CACHE, CACHE_KEY, ids);
 	}
 
-	public Promotion get(Integer promotionId) {
-		return (Promotion) platformCachingManager.get(NamedCachesEnum.PROMOTION_CACHE, promotionId);
+	public List<Integer> get() {
+		return (List<Integer>) platformCachingManager.get(NamedCachesEnum.AUTO_PROMOTION_IDS_CACHE, CACHE_KEY);
 	}
 
-	public boolean clear(Integer promotionId) {
-		return platformCachingManager.remove(NamedCachesEnum.PROMOTION_CACHE, promotionId);
+	public void clear() {
+		platformCachingManager.remove(NamedCachesEnum.AUTO_PROMOTION_IDS_CACHE, CACHE_KEY);
 	}
 
-	public void lock(Integer promotionId) {
-        platformCachingManager.lock(NamedCachesEnum.PROMOTION_CACHE, promotionId);
-    }
-    
-    public void unlock(Integer promotionId) {
-        platformCachingManager.unlock(NamedCachesEnum.PROMOTION_CACHE, promotionId);
-    }
+	public void lock() {
+		platformCachingManager.lock(NamedCachesEnum.AUTO_PROMOTION_IDS_CACHE, CACHE_KEY);
+	}
+
+	public void unlock() {
+		platformCachingManager.unlock(NamedCachesEnum.AUTO_PROMOTION_IDS_CACHE, CACHE_KEY);
+	}
 
 }
