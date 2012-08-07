@@ -11,7 +11,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
@@ -116,11 +116,12 @@ public class PromotionConfigDaoJdbcImpl implements PromotionConfigDao {
 			ConfigModule configModule = new ConfigModule();
 
 			Conditions conditions = jdbcTemplate.query(GET_CONDITION_FOR_CONFIG_ID, new Object[] {configId}, new ConditionResultSetExtractor());
-			Results results = jdbcTemplate.query(GET_RESULT_FOR_CONFIG_ID, new Object[] {configId}, new PromotionResultSetExtractor());
-
-			configModule.setConditions(conditions);
-			configModule.setResults(results);
-			promotionConfig.getModules().add(configModule);
+			if(conditions != null) {
+				Results results = jdbcTemplate.query(GET_RESULT_FOR_CONFIG_ID, new Object[] {configId}, new PromotionResultSetExtractor());
+				configModule.setConditions(conditions);
+				configModule.setResults(results);
+				promotionConfig.getModules().add(configModule);
+			}
 		}
 		return promotionConfig;
 	}
@@ -131,26 +132,29 @@ public class PromotionConfigDaoJdbcImpl implements PromotionConfigDao {
 	private List<Integer> getPromotionConfigIds(int promotionId) {
 		try {
 			List<Integer> configModuleIds = jdbcTemplate.queryForList(GET_PROMOTION_CONFIG_IDS, Integer.class, new Object[] {promotionId});
+			if(configModuleIds.size() == 0) {
+				log.error("No promotion found by promotion id : " + promotionId);
+				throw new PromotionNotFoundException("No promotion found by promotion id : " + promotionId);
+			}
 			return configModuleIds;
-		} catch (EmptyResultDataAccessException e) {
+		} catch (DataAccessException e) {
 			log.error("No promotion found by promotion id : " + promotionId);
 			throw new PromotionNotFoundException("No promotion found by promotion id : " + promotionId);
 		}
-	}
-
-	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
 	}
 
 	public class ConditionResultSetExtractor implements ResultSetExtractor<Conditions> {
 		
 		@Override  
         public Conditions extractData(ResultSet rs) throws SQLException {  
-			Conditions promotionConditions = new Conditions();
+			Conditions promotionConditions = null;
 			String conditionType = null;
 			Condition condition = null;
 			ModuleJoin moduleJoin = null;
 			while(rs.next()) {
+				if(promotionConditions == null) {
+					promotionConditions = new Conditions();
+				}
 				conditionType = rs.getString("condition_type");
 				if(conditionType.equalsIgnoreCase("product")) {
 					ProductCondition productCondition = new ProductCondition();
@@ -162,12 +166,14 @@ public class PromotionConfigDaoJdbcImpl implements PromotionConfigDao {
 					CategoryCondition categoryCondition = new CategoryCondition();
 					categoryCondition.setQuantity(rs.getInt("quantity"));
 					categoryCondition.setCategoryIds(getIds(rs.getString("category_ids")));
+					categoryCondition.setInclude(rs.getBoolean("include"));
 					moduleJoin = getJoin(rs.getString("join_type"));
 					condition = categoryCondition;
 				} else if (conditionType.equalsIgnoreCase("brand")) {
 					BrandCondition brandCondition = new BrandCondition();
 					brandCondition.setQuantity(rs.getInt("quantity"));
 					brandCondition.setBrandIds(getIds(rs.getString("brand_ids")));
+					brandCondition.setInclude(rs.getBoolean("include"));
 					moduleJoin = getJoin(rs.getString("join_type"));
 					condition = brandCondition;
 				} else if (conditionType.equalsIgnoreCase("order")) {
@@ -196,9 +202,9 @@ public class PromotionConfigDaoJdbcImpl implements PromotionConfigDao {
 		
 		private ModuleJoin getJoin(String join) {
 			ModuleJoin moduleJoin = null;
-			if(join.equalsIgnoreCase(ModuleJoin.AND.toString())) {
+			if(join != null && join.equalsIgnoreCase(ModuleJoin.AND.toString())) {
 				moduleJoin = ModuleJoin.AND;
-			} else if(join.equalsIgnoreCase(ModuleJoin.OR.toString())) {
+			} else if(join != null && join.equalsIgnoreCase(ModuleJoin.OR.toString())) {
 				moduleJoin = ModuleJoin.OR;
 			}
 			return moduleJoin;
@@ -209,11 +215,14 @@ public class PromotionConfigDaoJdbcImpl implements PromotionConfigDao {
 		
 		@Override  
         public Results extractData(ResultSet rs) throws SQLException {  
-			Results promotionResults = new Results();
+			Results promotionResults = null;
 			String resultType = null;
 			Result result = null;
 			ModuleJoin moduleJoin = null;
 			while(rs.next()) {
+				if(promotionResults == null) {
+					promotionResults = new Results();
+				}
 				resultType = rs.getString("result_type");
 				if(resultType.equalsIgnoreCase("product")) {
 					ProductResult productResult = new ProductResult();
@@ -266,9 +275,9 @@ public class PromotionConfigDaoJdbcImpl implements PromotionConfigDao {
 		
 		private ModuleJoin getJoin(String join) {
 			ModuleJoin moduleJoin = null;
-			if(join.equalsIgnoreCase(ModuleJoin.AND.toString())) {
+			if(join != null && join.equalsIgnoreCase(ModuleJoin.AND.toString())) {
 				moduleJoin = ModuleJoin.AND;
-			} else if(join.equalsIgnoreCase(ModuleJoin.OR.toString())) {
+			} else if(join != null && join.equalsIgnoreCase(ModuleJoin.OR.toString())) {
 				moduleJoin = ModuleJoin.OR;
 			}
 			return moduleJoin;
@@ -286,4 +295,9 @@ public class PromotionConfigDaoJdbcImpl implements PromotionConfigDao {
 			return offerType;
 		}
 	}
+
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
+	
 }

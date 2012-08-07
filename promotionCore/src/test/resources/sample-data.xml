@@ -1881,7 +1881,7 @@
 		</row>
 		<row>
 			<value name="id">101</value>
-			<value name="promotion_id">100</value>
+			<value name="promotion_id">200</value>
 		</row>
 		<row>
 			<value name="id">102</value>
@@ -1919,7 +1919,7 @@
 			<value name="promotion_config_module_id">100</value>
 			<value name="condition_type">product</value>
 			<value name="quantity">1</value>
-			<value name="include">true</value>
+			<null/>
 			<value name="product_ids">1,2</value>
 			<null/>
 			<null/>
@@ -1932,7 +1932,7 @@
 			<value name="promotion_config_module_id">100</value>
 			<value name="condition_type">product</value>
 			<value name="quantity">1</value>
-			<value name="include">false</value>
+			<null/>
 			<value name="product_ids">9,8</value>
 			<null/>
 			<null/>

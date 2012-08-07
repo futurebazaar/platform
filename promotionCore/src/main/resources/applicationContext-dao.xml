@@ -46,6 +46,6 @@
 		<property name="jdbcTemplate" ref="jdbcTemplate"/>
 	</bean>
 
-    <!-- Add new DAOs here -->
+   <!-- Add new DAOs here -->
 
 </beans>
