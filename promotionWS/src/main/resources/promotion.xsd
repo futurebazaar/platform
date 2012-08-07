@@ -287,9 +287,11 @@
         <xs:element ref="promotion:orderRequest"/>
         <xs:element ref="promotion:sessionToken"/>
         <xs:element ref="promotion:orderBookingDate"/>
+        <xs:element ref="promotion:appliedPromotionsList"></xs:element>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="appliedPromotionsList" type="xs:string"/>
   <xs:element name="applyAutoPromotionResponse">
     <xs:complexType>
       <xs:sequence>

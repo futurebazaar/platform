@@ -15,7 +15,7 @@ import com.fb.platform.caching.NamedCachesEnum;
  *
  */
 @Component
-public class AutoPromotionIdsCache extends AbstractCacheAccess {
+public class AutoPromotionIdsCacheAccess extends AbstractCacheAccess {
 
 	private static final String CACHE_KEY = "ActiveAutoPromotionIds";
 

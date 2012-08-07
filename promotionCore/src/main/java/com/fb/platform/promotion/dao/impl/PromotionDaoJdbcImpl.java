@@ -246,7 +246,8 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		return isReleasedPromotionCreated && isUserPromotionUsesDeleted;
 	}
 	
-	public List<Integer> getAllLivePromotions() {
+	@Override
+	public List<Integer> loadLiveAutoPromotionIds() {
 		DateTime today = new DateTime();
 		List<Integer> livePromotionIds = jdbcTemplate.queryForList(GET_ALL_LIVE_PROMOTION_ID, Integer.class, new Object[] {today.toDate()});
 		return livePromotionIds;
@@ -538,4 +539,6 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 	public void setPromotionConfigDao(PromotionConfigDao promotionConfigDao) {
 		this.promotionConfigDao = promotionConfigDao;
 	}
+
+	
 }

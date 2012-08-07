@@ -10,7 +10,6 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -20,12 +19,13 @@ import com.fb.commons.to.Money;
 import com.fb.platform.promotion.admin.dao.CouponAdminDao;
 import com.fb.platform.promotion.cache.CouponCacheAccess;
 import com.fb.platform.promotion.cache.PromotionCacheAccess;
-import com.fb.platform.promotion.cache.auto.AutoPromotionIdsCache;
+import com.fb.platform.promotion.cache.auto.AutoPromotionIdsCacheAccess;
 import com.fb.platform.promotion.dao.CouponDao;
 import com.fb.platform.promotion.dao.PromotionDao;
 import com.fb.platform.promotion.dao.ScratchCardDao;
 import com.fb.platform.promotion.exception.CouponAlreadyAssignedToUserException;
 import com.fb.platform.promotion.exception.CouponNotFoundException;
+import com.fb.platform.promotion.exception.NoActiveAutoPromotionFoundException;
 import com.fb.platform.promotion.exception.PromotionNotFoundException;
 import com.fb.platform.promotion.model.GlobalPromotionUses;
 import com.fb.platform.promotion.model.Promotion;
@@ -63,7 +63,7 @@ public class PromotionServiceImpl implements PromotionService {
 	private PromotionCacheAccess promotionCacheAccess = null;
 	
 	@Autowired
-	private AutoPromotionIdsCache autoPromotionIdsCache = null;
+	private AutoPromotionIdsCacheAccess autoPromotionIdsCacheAccess = null;
 
 	@Autowired
 	private CouponDao couponDao = null;
@@ -395,8 +395,12 @@ public class PromotionServiceImpl implements PromotionService {
 
 	@Override
 	public RefreshAutoPromotionResponseStatusEnum refresh() {
-		List<Integer> promotionIds = autoPromotionIdsCache.get();
+		List<Integer> promotionIds = autoPromotionIdsCacheAccess.get();
+		//this will remove all the dead promotions from promotion cache
 		removeDeadPromotions(promotionIds);
+		//this will refresh the cache from the database
+		autoPromotionIdsCacheAccess.clear();
+		getActiveAutoPromotions();
 		return null;
 	}
 	
@@ -417,8 +421,36 @@ public class PromotionServiceImpl implements PromotionService {
 		return isExpired;
 	}
 
-	public void setAutoPromotionIdsCache(AutoPromotionIdsCache autoPromotionIdsCache) {
-		this.autoPromotionIdsCache = autoPromotionIdsCache;
+	public void setAutoPromotionIdsCache(AutoPromotionIdsCacheAccess autoPromotionIdsCacheAccess) {
+		this.autoPromotionIdsCacheAccess = autoPromotionIdsCacheAccess;
 	}
 	
+	public List<Integer> getActiveAutoPromotions() {
+		List<Integer> autoPromotionIds = autoPromotionIdsCacheAccess.get();
+		if (autoPromotionIds == null) {
+			try {
+				autoPromotionIds = promotionDao.loadLiveAutoPromotionIds();
+			} catch (DataAccessException e) {
+				throw new PlatformException("Error while loading the live auto promotion ids", e);
+			}
+			if (autoPromotionIds != null) {
+				cacheAutoPromotionIds(autoPromotionIds);
+			} else {
+				throw new NoActiveAutoPromotionFoundException("No Active Auto Promotions found.");
+			}
+		}
+		return autoPromotionIds;
+	}
+
+	private void cacheAutoPromotionIds(List<Integer> autoPromotionIds) {
+		// TODO Auto-generated method stub
+		try {
+			autoPromotionIdsCacheAccess.lock();
+			if (autoPromotionIdsCacheAccess.get() == null) {
+				autoPromotionIdsCacheAccess.put(autoPromotionIds);
+			}
+		} finally {
+			autoPromotionIdsCacheAccess.unlock();
+		}
+	}
 }
