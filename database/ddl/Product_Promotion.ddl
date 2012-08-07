@@ -5,7 +5,8 @@ DROP TABLE IF EXISTS promotion_config_module;
 CREATE TABLE promotion_config_module (
 	id INTEGER NOT NULL AUTO_INCREMENT,
 	promotion_id INTEGER NOT NULL,
-	PRIMARY KEY (id)
+	PRIMARY KEY (id),
+	CONSTRAINT promotion_config_module_fk1 FOREIGN KEY (promotion_id) REFERENCES platform_promotion(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE conditions_config (

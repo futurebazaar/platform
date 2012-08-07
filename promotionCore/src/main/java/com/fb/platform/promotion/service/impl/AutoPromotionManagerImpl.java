@@ -14,6 +14,9 @@ import com.fb.platform.promotion.product.to.ApplyAutoPromotionRequest;
 import com.fb.platform.promotion.product.to.ApplyAutoPromotionResponse;
 import com.fb.platform.promotion.product.to.GetApplicablePromotionsRequest;
 import com.fb.platform.promotion.product.to.GetApplicablePromotionsResponse;
+import com.fb.platform.promotion.product.to.RefreshAutoPromotionRequest;
+import com.fb.platform.promotion.product.to.RefreshAutoPromotionResponse;
+import com.fb.platform.promotion.product.to.RefreshAutoPromotionResponseStatusEnum;
 import com.fb.platform.promotion.service.AutoPromotionManager;
 import com.fb.platform.promotion.service.PromotionService;
 
@@ -54,4 +57,17 @@ public class AutoPromotionManagerImpl implements AutoPromotionManager {
 		this.promotionService = promotionService;
 	}
 
+	@Override
+	public RefreshAutoPromotionResponse refresh(RefreshAutoPromotionRequest request) {
+		RefreshAutoPromotionResponse response = new RefreshAutoPromotionResponse();
+		response.setSessionToken(request.getSessionToken());
+		try {
+			promotionService.refresh();
+			response.setRefreshAutoPromotionStatus(RefreshAutoPromotionResponseStatusEnum.SUCCESS);
+		} catch (Exception e) {
+			response.setRefreshAutoPromotionStatus(RefreshAutoPromotionResponseStatusEnum.INTERNAL_ERROR);
+			logger.error("Error in auto promotion cache refresh.", e);
+		}
+		return response;
+	}
 }

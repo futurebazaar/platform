@@ -21,4 +21,6 @@
     	overflowToDisk="true" diskSpoolBufferSizeMB="20" timeToIdleSeconds="3000" timeToLiveSeconds="6000" 
     	memoryStoreEvictionPolicy="LFU" transactionalMode="off"/>
     	
+    <cache name="autoPromotionIdsCache" overflowToDisk="true" maxElementsInMemory="2" eternal="true"/>
+    	
 </ehcache>

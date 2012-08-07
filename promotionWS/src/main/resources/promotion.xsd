@@ -323,5 +323,29 @@
   <xs:element name="promotionName" type="xs:string"/>
   <xs:element name="description" type="xs:string"/>
   <xs:element name="isActive" type="xs:boolean"/>
+  
+  <xs:element name="refreshAutoPromotionRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="refreshAutoPromotionResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:refreshAutoPromotionStatus"/>
+        <xs:element ref="promotion:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="refreshAutoPromotionStatus" type="promotion:refreshAutoPromotionStatus"/>
+  <xs:simpleType name="refreshAutoPromotionStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+    </xs:restriction>
+  </xs:simpleType>
 
 </xs:schema>

@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 
@@ -37,6 +38,7 @@ import com.fb.platform.promotion.model.coupon.GlobalCouponUses;
 import com.fb.platform.promotion.model.coupon.UserCouponUses;
 import com.fb.platform.promotion.model.coupon.UserCouponUsesEntry;
 import com.fb.platform.promotion.model.scratchCard.ScratchCard;
+import com.fb.platform.promotion.product.to.RefreshAutoPromotionResponseStatusEnum;
 import com.fb.platform.promotion.service.PromotionService;
 import com.fb.platform.promotion.to.ClearCacheEnum;
 import com.fb.platform.promotion.to.ClearCouponCacheRequest;
@@ -59,9 +61,9 @@ public class PromotionServiceImpl implements PromotionService {
 
 	@Autowired
 	private PromotionCacheAccess promotionCacheAccess = null;
-
+	
 	@Autowired
-	private AutoPromotionIdsCacheAccess autoPromotionIdsCacheAccess = null; 
+	private AutoPromotionIdsCacheAccess autoPromotionIdsCacheAccess = null;
 
 	@Autowired
 	private CouponDao couponDao = null;
@@ -74,7 +76,7 @@ public class PromotionServiceImpl implements PromotionService {
 	
 	@Autowired
 	private CouponAdminDao couponAdminDao = null;
-
+	
 	@Override
 	public PromotionStatusEnum isApplicable(int userId, OrderRequest orderRequest, Money discountAmount, Coupon coupon, Promotion promotion, boolean isCouponCommitted){
 		
@@ -392,6 +394,36 @@ public class PromotionServiceImpl implements PromotionService {
 	}
 
 	@Override
+	public void refresh() {
+		List<Integer> promotionIds = autoPromotionIdsCacheAccess.get();
+		//this will remove all the dead promotions from promotion cache
+		removeDeadPromotions(promotionIds);
+		//this will refresh the cache from the database
+		autoPromotionIdsCacheAccess.clear();
+		getActiveAutoPromotions();
+	}
+	
+	private void removeDeadPromotions(List<Integer> promotionIds) {
+		for(Integer promotionId : promotionIds) {
+			Promotion promotion = getPromotion(promotionId);
+			if(!promotion.isActive() || isExpired(promotion.getDates().getValidTill())) {
+				promotionCacheAccess.clear(promotionId);
+			}
+		}
+	}
+	private boolean isExpired(DateTime date) {
+		DateTime today = new DateTime();
+		boolean isExpired = true;
+		if(today.getYear() >= date.getYear() && today.getMonthOfYear() >= date.getMonthOfYear() && today.getDayOfMonth() >= date.getDayOfMonth()) {
+			isExpired = false;
+		}
+		return isExpired;
+	}
+
+	public void setAutoPromotionIdsCache(AutoPromotionIdsCacheAccess autoPromotionIdsCacheAccess) {
+		this.autoPromotionIdsCacheAccess = autoPromotionIdsCacheAccess;
+	}
+	
 	public List<Integer> getActiveAutoPromotions() {
 		List<Integer> autoPromotionIds = autoPromotionIdsCacheAccess.get();
 		if (autoPromotionIds == null) {
