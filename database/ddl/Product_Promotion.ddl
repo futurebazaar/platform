@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS promotion_config_module;
 DROP TABLE IF EXISTS condition_config;
 DROP TABLE IF EXISTS results_config;
+DROP TABLE IF EXISTS promotion_config_module;
 
 CREATE TABLE promotion_config_module (
 	id INTEGER NOT NULL AUTO_INCREMENT,

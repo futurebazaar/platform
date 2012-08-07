@@ -10,4 +10,9 @@ package com.fb.platform.promotion.product.model;
 public enum ModuleJoin {
 	AND,
 	OR;
+	
+	@Override
+	public String toString() {
+		return this.name();
+	}
 }

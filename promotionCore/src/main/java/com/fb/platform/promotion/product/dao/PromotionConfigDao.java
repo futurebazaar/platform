@@ -8,5 +8,7 @@ import com.fb.platform.promotion.product.model.PromotionConfig;
  *
  */
 public interface PromotionConfigDao {
+	
 	public PromotionConfig load(int promotionId);
+	
 }
