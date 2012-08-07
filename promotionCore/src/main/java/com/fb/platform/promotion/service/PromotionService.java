@@ -122,9 +122,8 @@ public interface PromotionService {
 	 * 
 	 * @return
 	 */
-	public RefreshAutoPromotionResponseStatusEnum refresh();
-	
-	
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void refresh();
 
 	@Transactional(propagation=Propagation.REQUIRED)
 	public List<Integer> getActiveAutoPromotions();

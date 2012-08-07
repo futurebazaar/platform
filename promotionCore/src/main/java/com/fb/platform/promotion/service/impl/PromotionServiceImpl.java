@@ -394,14 +394,13 @@ public class PromotionServiceImpl implements PromotionService {
 	}
 
 	@Override
-	public RefreshAutoPromotionResponseStatusEnum refresh() {
+	public void refresh() {
 		List<Integer> promotionIds = autoPromotionIdsCacheAccess.get();
 		//this will remove all the dead promotions from promotion cache
 		removeDeadPromotions(promotionIds);
 		//this will refresh the cache from the database
 		autoPromotionIdsCacheAccess.clear();
 		getActiveAutoPromotions();
-		return null;
 	}
 	
 	private void removeDeadPromotions(List<Integer> promotionIds) {
