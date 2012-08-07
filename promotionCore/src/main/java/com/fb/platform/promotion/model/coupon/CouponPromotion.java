@@ -1,12 +1,10 @@
 /**
  * 
  */
-package com.fb.platform.promotion.coupon.model;
+package com.fb.platform.promotion.model.coupon;
 
-import com.fb.platform.promotion.model.GlobalPromotionUses;
 import com.fb.platform.promotion.model.OrderDiscount;
 import com.fb.platform.promotion.model.Promotion;
-import com.fb.platform.promotion.model.UserPromotionUses;
 import com.fb.platform.promotion.rule.PromotionRule;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.PromotionStatusEnum;
