@@ -13,7 +13,7 @@ import com.fb.platform.promotion.to.OrderRequest;
  * @author vinayak
  *
  */
-public class ProductPromotion extends Promotion {
+public class AutoPromotion extends Promotion {
 
 	private PromotionConfig promotionConfig;
 	private Rule rule;

@@ -33,7 +33,9 @@ import com.fb.platform.promotion.model.PromotionLimitsConfig;
 import com.fb.platform.promotion.model.UserPromotionUses;
 import com.fb.platform.promotion.model.UserPromotionUsesEntry;
 import com.fb.platform.promotion.model.coupon.CouponPromotion;
-import com.fb.platform.promotion.product.model.promotion.ProductPromotion;
+import com.fb.platform.promotion.product.dao.PromotionConfigDao;
+import com.fb.platform.promotion.product.model.PromotionConfig;
+import com.fb.platform.promotion.product.model.promotion.AutoPromotion;
 import com.fb.platform.promotion.rule.PromotionRule;
 
 /**
@@ -47,6 +49,8 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 	private Log log = LogFactory.getLog(PromotionDaoJdbcImpl.class);
 
 	private RuleDao ruleDao = null;
+
+	private PromotionConfigDao promotionConfigDao = null;
 
 	private static final String GET_PROMOTION_QUERY = 
 			"SELECT " +
@@ -152,6 +156,9 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		if (promotion instanceof CouponPromotion) {
 			PromotionRule rule = ruleDao.load(promotionId, prcbh.ruleId);
 			((CouponPromotion)promotion).setRule(rule);
+		} else {
+			PromotionConfig promotionConfig = promotionConfigDao.load(promotionId);
+			((AutoPromotion)promotion).setPromotionConfig(promotionConfig);
 		}
 
 		return promotion;
@@ -376,7 +383,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			if (isCouponPromotion || isCouponNull) {
 				promotion = new CouponPromotion();
 			} else {
-				promotion = new ProductPromotion();
+				promotion = new AutoPromotion();
 			}
 			promotion.setDescription(rs.getString("description"));
 			promotion.setId(rs.getInt("id"));
@@ -504,5 +511,9 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 
 	public void setRuleDao(RuleDao ruleDao) {
 		this.ruleDao = ruleDao;
+	}
+
+	public void setPromotionConfigDao(PromotionConfigDao promotionConfigDao) {
+		this.promotionConfigDao = promotionConfigDao;
 	}
 }

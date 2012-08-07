@@ -138,6 +138,10 @@ public class PromotionConfigDaoJdbcImpl implements PromotionConfigDao {
 		}
 	}
 
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
+
 	public class ConditionResultSetExtractor implements ResultSetExtractor<Conditions> {
 		
 		@Override  
