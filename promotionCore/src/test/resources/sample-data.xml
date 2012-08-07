@@ -1867,6 +1867,178 @@
         	</row>
         </table>
         
+        
+	<table name="promotion_config_module">
+		<column>id</column>
+		<column>promotion_id</column>
+		<!-- <row>
+			<value name="id"></value>
+			<value name="promotion_id"></value>
+		</row> -->
+		<row>
+			<value name="id">100</value>
+			<value name="promotion_id">100</value>
+		</row>
+		<row>
+			<value name="id">101</value>
+			<value name="promotion_id">100</value>
+		</row>
+		<row>
+			<value name="id">102</value>
+			<value name="promotion_id">100</value>
+		</row>
+	</table>
        
+	<table name="condition_config">
+		<column>id</column>
+		<column>promotion_config_module_id</column>
+		<column>condition_type</column>
+		<column>quantity</column>
+		<column>include</column>
+		<column>product_ids</column>
+		<column>brand_ids</column>
+		<column>category_ids</column>
+		<column>min_order_value</column>
+		<column>max_order_value</column>
+		<column>join_type</column>
+		<!-- <row>
+			<value name="id"></value>
+			<value name="promotion_config_module_id"></value>
+			<value name="condition_type"></value>
+			<value name="quantity"></value>
+			<value name="include"></value>
+			<value name="product_ids"></value>
+			<value name="brand_ids"></value>
+			<value name="category_ids"></value>
+			<value name="min_order_value"></value>
+			<value name="max_order_value"></value>
+			<value name="join_type"></value>
+		</row> -->
+		<row>
+			<value name="id">100</value>
+			<value name="promotion_config_module_id">100</value>
+			<value name="condition_type">product</value>
+			<value name="quantity">1</value>
+			<value name="include">true</value>
+			<value name="product_ids">1,2</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<value name="join_type">AND</value>
+		</row>
+		<row>
+			<value name="id">101</value>
+			<value name="promotion_config_module_id">100</value>
+			<value name="condition_type">product</value>
+			<value name="quantity">1</value>
+			<value name="include">false</value>
+			<value name="product_ids">9,8</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+		</row>
+		<row>
+			<value name="id">102</value>
+			<value name="promotion_config_module_id">101</value>
+			<value name="condition_type">order</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<value name="min_order_value">1000</value>
+			<value name="max_order_value">5000</value>
+			<value name="join_type">OR</value>
+		</row>
+		<row>
+			<value name="id">103</value>
+			<value name="promotion_config_module_id">101</value>
+			<value name="condition_type">order</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<value name="min_order_value">500</value>
+			<value name="max_order_value">1000</value>
+			<null/>
+		</row>
+	</table>
+	
+	<table name="results_config">
+		<column>id</column>
+		<column>promotion_config_module_id</column>
+		<column>result_type</column>
+		<column>quantity</column>
+		<column>product_ids</column>
+		<column>brand_ids</column>
+		<column>category_ids</column>
+		<column>offer_type</column>
+		<column>offer_value</column>
+		<column>join_type</column>
+		<!-- <row>
+			<value name="id"></value>
+			<value name="promotion_config_module_id"></value>
+			<value name="result_type"></value>
+			<value name="quantity"></value>
+			<value name="product_ids"></value>
+			<value name="brand_ids"></value>
+			<value name="category_ids"></value>
+			<value name="offer_type"></value>
+			<value name="offer_value"></value>
+			<value name="join_type"></value>
+		</row> -->
+		<row>
+			<value name="id">100</value>
+			<value name="promotion_config_module_id">100</value>
+			<value name="result_type">product</value>
+			<value name="quantity">1</value>
+			<value name="product_ids">3</value>
+			<null/>
+			<null/>
+			<value name="offer_type">PERCENT_OFF</value>
+			<value name="offer_value">10</value>
+			<value name="join_type">AND</value>
+		</row>
+		<row>
+			<value name="id">101</value>
+			<value name="promotion_config_module_id">100</value>
+			<value name="result_type">product</value>
+			<value name="quantity">1</value>
+			<value name="product_ids">4</value>
+			<null/>
+			<null/>
+			<value name="offer_type">PERCENT_OFF</value>
+			<value name="offer_value">20</value>
+			<null/>
+		</row>
+		<row>
+			<value name="id">102</value>
+			<value name="promotion_config_module_id">101</value>
+			<value name="result_type">product</value>
+			<value name="quantity">1</value>
+			<value name="product_ids">5</value>
+			<null/>
+			<null/>
+			<value name="offer_type">FIXED_PRICE</value>
+			<value name="offer_value">50</value>
+			<value name="join_type">OR</value>
+		</row>
+		<row>
+			<value name="id">103</value>
+			<value name="promotion_config_module_id">101</value>
+			<value name="result_type">product</value>
+			<value name="quantity">1</value>
+			<value name="product_ids">6</value>
+			<null/>
+			<null/>
+			<value name="offer_type">FIXED_OFF</value>
+			<value name="offer_value">150</value>
+			<null/>
+		</row>
+	</table>
 
 </dataset>

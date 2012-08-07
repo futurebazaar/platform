@@ -3,6 +3,7 @@
  */
 package com.fb.platform.promotion.product.model.result;
 
+import com.fb.commons.to.Money;
 import com.fb.platform.promotion.product.model.Result;
 import com.fb.platform.promotion.product.model.OfferType;
 
@@ -13,13 +14,13 @@ import com.fb.platform.promotion.product.model.OfferType;
 public class AbstractResult implements Result {
 
 	private OfferType offerType = null;
-	private String offerValue = null;
+	private Money offerValue = null;
 	private int quantity = 0;
 
-	public String getOfferValue() {
+	public Money getOfferValue() {
 		return offerValue;
 	}
-	public void setOfferValue(String offerValue) {
+	public void setOfferValue(Money offerValue) {
 		this.offerValue = offerValue;
 	}
 	public OfferType getOfferType() {
