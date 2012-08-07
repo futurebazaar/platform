@@ -57,6 +57,12 @@ public class PromotionConfigDaoTest extends BaseTestCase {
 		assertTrue(ProductCondition.class.isInstance(condition1));
 		assertTrue(ProductCondition.class.isInstance(condition2));
 		
+		ProductCondition productCondition1 = (ProductCondition) condition1;
+		ProductCondition productCondition2 = (ProductCondition) condition2;
+		
+		assertEquals(2, productCondition1.getProductIds().size());
+		assertEquals(2, productCondition2.getProductIds().size());
+		
 		Results results = configModule.getResults();
 		
 		assertNotNull(results.getResults());
@@ -73,6 +79,11 @@ public class PromotionConfigDaoTest extends BaseTestCase {
 		assertTrue(ProductResult.class.isInstance(result1));
 		assertTrue(ProductResult.class.isInstance(result2));
 		
+		ProductResult productResult1 = (ProductResult) result1;
+		ProductResult productResult2 = (ProductResult) result2;
+		
+		assertEquals(1, productResult1.getProductIds().size());
+		assertEquals(1, productResult2.getProductIds().size());
 	}
 	
 	@Test(expected=PromotionNotFoundException.class)
