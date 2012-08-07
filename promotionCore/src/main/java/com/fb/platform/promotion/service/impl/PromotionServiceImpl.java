@@ -18,11 +18,13 @@ import com.fb.commons.to.Money;
 import com.fb.platform.promotion.admin.dao.CouponAdminDao;
 import com.fb.platform.promotion.cache.CouponCacheAccess;
 import com.fb.platform.promotion.cache.PromotionCacheAccess;
+import com.fb.platform.promotion.cache.auto.AutoPromotionIdsCacheAccess;
 import com.fb.platform.promotion.dao.CouponDao;
 import com.fb.platform.promotion.dao.PromotionDao;
 import com.fb.platform.promotion.dao.ScratchCardDao;
 import com.fb.platform.promotion.exception.CouponAlreadyAssignedToUserException;
 import com.fb.platform.promotion.exception.CouponNotFoundException;
+import com.fb.platform.promotion.exception.NoActiveAutoPromotionFoundException;
 import com.fb.platform.promotion.exception.PromotionNotFoundException;
 import com.fb.platform.promotion.model.GlobalPromotionUses;
 import com.fb.platform.promotion.model.Promotion;
@@ -57,6 +59,9 @@ public class PromotionServiceImpl implements PromotionService {
 
 	@Autowired
 	private PromotionCacheAccess promotionCacheAccess = null;
+
+	@Autowired
+	private AutoPromotionIdsCacheAccess autoPromotionIdsCacheAccess = null; 
 
 	@Autowired
 	private CouponDao couponDao = null;
@@ -384,5 +389,35 @@ public class PromotionServiceImpl implements PromotionService {
 			isUserEligible = false;
 		}
 		return isUserEligible;
+	}
+
+	@Override
+	public List<Integer> getActiveAutoPromotions() {
+		List<Integer> autoPromotionIds = autoPromotionIdsCacheAccess.get();
+		if (autoPromotionIds == null) {
+			try {
+				autoPromotionIds = promotionDao.loadLiveAutoPromotionIds();
+			} catch (DataAccessException e) {
+				throw new PlatformException("Error while loading the live auto promotion ids", e);
+			}
+			if (autoPromotionIds != null) {
+				cacheAutoPromotionIds(autoPromotionIds);
+			} else {
+				throw new NoActiveAutoPromotionFoundException("No Active Auto Promotions found.");
+			}
+		}
+		return autoPromotionIds;
+	}
+
+	private void cacheAutoPromotionIds(List<Integer> autoPromotionIds) {
+		// TODO Auto-generated method stub
+		try {
+			autoPromotionIdsCacheAccess.lock();
+			if (autoPromotionIdsCacheAccess.get() == null) {
+				autoPromotionIdsCacheAccess.put(autoPromotionIds);
+			}
+		} finally {
+			autoPromotionIdsCacheAccess.unlock();
+		}
 	}
 }

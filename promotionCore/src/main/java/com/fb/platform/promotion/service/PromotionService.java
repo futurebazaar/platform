@@ -4,6 +4,7 @@
 package com.fb.platform.promotion.service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -115,4 +116,7 @@ public interface PromotionService {
 	 * @return
 	 */
 	public PromotionStatusEnum isApplicable(int userId, int orderId, Money discountAmount, Coupon coupon, Promotion promotion, boolean isOrderCommitted);
+
+	@Transactional(propagation=Propagation.REQUIRED)
+	public List<Integer> getActiveAutoPromotions();
 }

@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -515,5 +516,11 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 
 	public void setPromotionConfigDao(PromotionConfigDao promotionConfigDao) {
 		this.promotionConfigDao = promotionConfigDao;
+	}
+
+	@Override
+	public List<Integer> loadLiveAutoPromotionIds() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

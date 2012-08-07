@@ -5,6 +5,8 @@ package com.fb.platform.promotion.cache.auto;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.fb.platform.caching.AbstractCacheAccess;
 import com.fb.platform.caching.NamedCachesEnum;
 
@@ -12,7 +14,8 @@ import com.fb.platform.caching.NamedCachesEnum;
  * @author vinayak
  *
  */
-public class AutoPromotionIdsCache extends AbstractCacheAccess {
+@Component
+public class AutoPromotionIdsCacheAccess extends AbstractCacheAccess {
 
 	private static final String CACHE_KEY = "ActiveAutoPromotionIds";
 
