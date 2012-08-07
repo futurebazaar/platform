@@ -297,6 +297,18 @@
                         <value name="is_active">1</value>
                         <value name="rule_id">-2</value>
         	</row>
+        	<row>
+                        <value name="id">100</value>
+                        <null/>
+                        <null/>
+                        <value name="valid_from">2011-12-29 00:00:00</value>
+                        <value name="valid_till">2014-03-01 00:00:00</value>
+                        <value name="name">product promotion</value>
+                        <value name="description">Test product promotion</value>
+                        <value name="is_coupon">0</value>
+                        <value name="is_active">1</value>
+                        <value name="rule_id">-2</value>
+        	</row>
         	
         </table>
         <table name="promotion_limits_config">

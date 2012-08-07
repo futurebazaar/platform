@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,6 +38,7 @@ import com.fb.platform.promotion.product.dao.PromotionConfigDao;
 import com.fb.platform.promotion.product.model.PromotionConfig;
 import com.fb.platform.promotion.product.model.promotion.AutoPromotion;
 import com.fb.platform.promotion.rule.PromotionRule;
+import com.sun.corba.se.impl.oa.toa.TOA;
 
 /**
  * @author vinayak
@@ -122,6 +124,20 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			"	order_id, " +
 			"	discount_amount " +
 			"FROM user_promotion_uses WHERE promotion_id = ? AND user_id = ? AND order_id = ?";
+	
+	/**
+	 * SELECT id FROM platform_promotion p WHERE is_active=1 and is_coupon=0 and valid_till >= "2012-07-07 00:00:00"
+	 */
+	
+	private static final String GET_ALL_LIVE_PROMOTION_ID =
+			"SELECT " +
+			"	id " +
+			"FROM " +
+			"	platform_promotion p " +
+			"WHERE " +
+			"	is_active=1 " +
+			"	AND is_coupon=0 " +
+			"	AND valid_till >= ?";
 	
 	/* (non-Javadoc)
 	 * @see com.fb.platform.promotion.dao.PromotionDao#load(int)
@@ -228,6 +244,12 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		boolean isUserPromotionUsesDeleted = cancelUserUses(promotionId, userId, orderId);
 		
 		return isReleasedPromotionCreated && isUserPromotionUsesDeleted;
+	}
+	
+	public List<Integer> getAllLivePromotions() {
+		DateTime today = new DateTime();
+		List<Integer> livePromotionIds = jdbcTemplate.queryForList(GET_ALL_LIVE_PROMOTION_ID, Integer.class, new Object[] {today.toDate()});
+		return livePromotionIds;
 	}
 
 	

@@ -16,6 +16,9 @@ import com.fb.platform.promotion.exception.PromotionNotFoundException;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.scratchCard.ScratchCard;
+import com.fb.platform.promotion.product.to.RefreshAutoPromotionRequest;
+import com.fb.platform.promotion.product.to.RefreshAutoPromotionResponse;
+import com.fb.platform.promotion.product.to.RefreshAutoPromotionResponseStatusEnum;
 import com.fb.platform.promotion.to.ClearCouponCacheRequest;
 import com.fb.platform.promotion.to.ClearCouponCacheResponse;
 import com.fb.platform.promotion.to.ClearPromotionCacheRequest;
@@ -115,4 +118,12 @@ public interface PromotionService {
 	 * @return
 	 */
 	public PromotionStatusEnum isApplicable(int userId, int orderId, Money discountAmount, Coupon coupon, Promotion promotion, boolean isOrderCommitted);
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public RefreshAutoPromotionResponseStatusEnum refresh();
+	
+	
 }
