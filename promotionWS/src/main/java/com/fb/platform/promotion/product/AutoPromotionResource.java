@@ -32,6 +32,12 @@ import com.fb.commons.PlatformException;
 import com.fb.platform.promotion._1_0.ApplyAutoPromotionRequest;
 import com.fb.platform.promotion._1_0.ApplyAutoPromotionResponse;
 import com.fb.platform.promotion._1_0.ApplyAutoPromotionStatus;
+import com.fb.platform.promotion._1_0.CommitAutoPromotionRequest;
+import com.fb.platform.promotion._1_0.CommitAutoPromotionResponse;
+import com.fb.platform.promotion._1_0.CommitAutoPromotionStatus;
+import com.fb.platform.promotion._1_0.GetAppliedAutoPromotionRequest;
+import com.fb.platform.promotion._1_0.GetAppliedAutoPromotionResponse;
+import com.fb.platform.promotion._1_0.GetAppliedAutoPromotionStatus;
 import com.fb.platform.promotion._1_0.OrderDiscount;
 import com.fb.platform.promotion._1_0.OrderItem;
 import com.fb.platform.promotion._1_0.OrderRequest;
@@ -143,6 +149,81 @@ public class AutoPromotionResource {
 			return xmlSendResponse;
 		} catch (JAXBException e) {
 			logger.error("Error in the applyAutoPromotion call.", e);
+			return "error"; //TODO return proper error response
+		}
+	}
+	
+	@POST
+	@Path("/commit")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String commitAutoPromotion(String commitAutoPromotionXml) {
+		logger.info("commitAutoPromotion request xml : \n" +  commitAutoPromotionXml);
+		try {
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			
+			CommitAutoPromotionRequest xmlRequest = (CommitAutoPromotionRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(commitAutoPromotionXml)));
+			com.fb.platform.promotion.product.to.CommitAutoPromotionRequest apiRequest = new com.fb.platform.promotion.product.to.CommitAutoPromotionRequest();
+			
+			apiRequest.setSessionToken(xmlRequest.getSessionToken());
+			apiRequest.setOrderId(xmlRequest.getOrderId());
+			apiRequest.setAppliedPromotionsList(getInts(xmlRequest.getAppliedPromotionsList()));
+			
+			com.fb.platform.promotion.product.to.CommitAutoPromotionResponse apiResponse = promotionManager.commit(apiRequest);
+			CommitAutoPromotionResponse xmlResponse = new CommitAutoPromotionResponse();
+			
+			xmlResponse.setSessionToken(apiResponse.getSessionToken());
+			xmlResponse.setStatusMessage(apiResponse.getStatusMessage());
+			xmlResponse.setCommitAutoPromotionStatus(CommitAutoPromotionStatus.valueOf(apiResponse.getCommitAutoPromotionStatus().toString()));
+			
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marsheller = context.createMarshaller();
+			marsheller.marshal(xmlResponse, outStringWriter);
+
+			String xmlSendResponse = outStringWriter.toString();
+			logger.info("commitAutoPromotion response :\n" + xmlSendResponse);
+			
+			return xmlSendResponse;
+		} catch (JAXBException e) {
+			logger.error("Error in the commitAutoPromotion call.", e);
+			return "error"; //TODO return proper error response
+		}
+	}
+	
+	@Path("/getApplied")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String getAppliedAutoPromotions(String getAppliedAutoPromotionXml) {
+		logger.info("getAppliedAutoPromotions request xml : \n" +  getAppliedAutoPromotionXml);
+		try {
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			
+			GetAppliedAutoPromotionRequest xmlRequest = (GetAppliedAutoPromotionRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(getAppliedAutoPromotionXml)));
+			com.fb.platform.promotion.product.to.GetAppliedAutoPromotionRequest apiRequest = new com.fb.platform.promotion.product.to.GetAppliedAutoPromotionRequest();
+
+			apiRequest.setOrderId(xmlRequest.getOrderId());
+			apiRequest.setSessionToken(xmlRequest.getSessionToken());
+			
+			com.fb.platform.promotion.product.to.GetAppliedAutoPromotionResponse apiResponse = promotionManager.getAppliedPromotions(apiRequest);
+			GetAppliedAutoPromotionResponse xmlResponse = new GetAppliedAutoPromotionResponse();
+			
+			xmlResponse.setSessionToken(apiResponse.getSessionToken());
+			xmlResponse.setGetAppliedAutoPromotionStatus(GetAppliedAutoPromotionStatus.valueOf(apiResponse.getGetAppliedAutoPromotionStatus().toString()));
+			
+			for(com.fb.platform.promotion.model.Promotion apiPromotion : apiResponse.getPromotionList()) {
+				xmlResponse.getPromotion().add(getXmlPromotion(apiPromotion));
+			}
+			
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marsheller = context.createMarshaller();
+			marsheller.marshal(xmlResponse, outStringWriter);
+
+			String xmlSendResponse = outStringWriter.toString();
+			logger.info("getAppliedAutoPromotions response :\n" + xmlSendResponse);
+			
+			return xmlSendResponse;
+		} catch (JAXBException e) {
+			logger.error("Error in the commitAutoPromotion call.", e);
 			return "error"; //TODO return proper error response
 		}
 	}
