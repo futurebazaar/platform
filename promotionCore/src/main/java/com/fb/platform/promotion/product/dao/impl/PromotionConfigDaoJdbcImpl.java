@@ -6,8 +6,6 @@ package com.fb.platform.promotion.product.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -36,9 +34,6 @@ import com.fb.platform.promotion.product.model.result.BrandResult;
 import com.fb.platform.promotion.product.model.result.CategoryResult;
 import com.fb.platform.promotion.product.model.result.ProductResult;
 import com.fb.platform.promotion.product.model.result.ValueChangeResult;
-import com.fb.platform.promotion.to.OrderItem;
-import com.fb.platform.promotion.to.OrderItemMRPComparator;
-import com.fb.platform.promotion.to.OrderItemOfferPriceComparator;
 
 /**
  * @author vinayak

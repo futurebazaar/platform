@@ -12,7 +12,7 @@ import com.fb.platform.promotion.product.model.Condition;
  * @author vinayak
  *
  */
-public class ProductCondition implements Condition {
+public class ProductCondition implements Condition,Comparable<ProductCondition> {
 
 	private List<Integer> productIds = new ArrayList<Integer>();
 	private int quantity = 0;
@@ -23,6 +23,8 @@ public class ProductCondition implements Condition {
 	public void setProductIds(List<Integer> productIds) {
 		this.productIds = productIds;
 	}
+	
+	@Override
 	public int getQuantity() {
 		return quantity;
 	}
@@ -42,5 +44,9 @@ public class ProductCondition implements Condition {
 			return true;
 		}
 		return false;
+	}
+	@Override
+	public int compareTo(ProductCondition o) {
+		return o.quantity - this.quantity;
 	}
 }
