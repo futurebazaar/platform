@@ -6,6 +6,10 @@ package com.fb.platform.promotion.product.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fb.platform.promotion.product.util.ConditionResultProcessor;
+import com.fb.platform.promotion.product.util.ConditionResultProcessorFactory;
+import com.fb.platform.promotion.to.OrderRequest;
+
 /**
  * The top level promotion config class.
  * Holds the Conditions and Results of the config relation.
@@ -34,6 +38,7 @@ public class PromotionConfig {
 
 	public void setModules(List<ConfigModule> modules) {
 		this.modules = sortModules(modules);
+		
 		//this.modules = modules;
 	}
 
@@ -44,7 +49,7 @@ public class PromotionConfig {
 		//a similar set of products, categories, brand conditions. the only variable will be 
 		//quantity or order max amount
 		
-		return null;
+		return dbModules;
 	}
 
 	public PriceApplicable getPriceApplicable() {
@@ -61,6 +66,18 @@ public class PromotionConfig {
 
 	public void setPromotionId(int promotionId) {
 		this.promotionId = promotionId;
+	}
+
+	public boolean apply(OrderRequest orderRequest) {
+		boolean processed = false;
+		for (ConfigModule configModule : modules) {
+			ConditionResultProcessor processor = ConditionResultProcessorFactory.get(configModule);
+			processed = processor.process(orderRequest);
+			if (processed) {
+				break;
+			}
+		}
+		return processed;
 	}
 
 }

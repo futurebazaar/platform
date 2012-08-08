@@ -32,7 +32,13 @@ public class AutoPromotion extends Promotion {
 		return false;
 	}
 
-	public boolean isApplicableOn(OrderItem orderItem, int userId) {
+	public boolean isApplicableOn(OrderRequest orderRequest, int userId) {
+		for (OrderItem orderItem : orderRequest.getOrderItems()) {
+			int productId = orderItem.getProduct().getProductId();
+			if (isApplicableOn(productId, userId)) {
+				return true;
+			}
+		}
 		return false;
 	}
 	/**
@@ -49,8 +55,12 @@ public class AutoPromotion extends Promotion {
 		return null;
 	}
 
-	public OrderDiscount apply(OrderRequest orderRequest) {
-		return null;
+	public boolean apply(OrderRequest orderRequest, OrderDiscount orderResponse) {
+		boolean applied = promotionConfig.apply(orderRequest);
+		if (applied) {
+			orderResponse.promotionApplied(super.id);
+		}
+		return applied;
 	}
 
 	public PromotionConfig getPromotionConfig() {

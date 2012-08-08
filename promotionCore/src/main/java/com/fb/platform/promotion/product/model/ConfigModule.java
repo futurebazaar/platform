@@ -3,6 +3,8 @@
  */
 package com.fb.platform.promotion.product.model;
 
+import com.fb.platform.promotion.to.OrderRequest;
+
 /**
  * @author vinayak
  *
@@ -27,5 +29,17 @@ public class ConfigModule {
 
 	public boolean isApplicableOn(int productId) {
 		return conditions.isApplicableOn(productId);
+	}
+
+	public boolean isOrderValueConditionMet(OrderRequest orderRequest) {
+		return conditions.isOrderValueConditionMet(orderRequest);
+	}
+
+	public boolean isProdCondtion() {
+		return conditions.isProdCondition();
+	}
+
+	public boolean isValueResult() {
+		return results.isValueResult();
 	}
 }

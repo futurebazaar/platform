@@ -10,9 +10,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fb.commons.PlatformException;
 import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
 import com.fb.platform.promotion.exception.NoActiveAutoPromotionFoundException;
+import com.fb.platform.promotion.model.OrderDiscount;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.product.model.promotion.AutoPromotion;
 import com.fb.platform.promotion.product.to.ApplyAutoPromotionRequest;
@@ -81,6 +83,7 @@ public class AutoPromotionManagerImpl implements AutoPromotionManager {
 
 		try {
 			List<Integer> activeAutoPromotions = promotionService.getActiveAutoPromotions();
+			OrderDiscount orderResponse = new OrderDiscount();
 
 			//loop through all the active auto promotions and see any of them is applicable on the order
 			for (Integer promotionId : activeAutoPromotions) {
@@ -93,10 +96,20 @@ public class AutoPromotionManagerImpl implements AutoPromotionManager {
 					continue;
 				}
 				AutoPromotion autoPromotion = (AutoPromotion)promotion;
+				if (!autoPromotion.isApplicableOn(request.getOrderReq(), userId)) {
+					continue;
+				}
+				boolean applied = autoPromotion.apply(request.getOrderReq(), orderResponse);
+				if (applied) {
+					response.getAppliedPromotions().add(promotion);
+				}
 			}
 		} catch (NoActiveAutoPromotionFoundException e) {
 			//this is ok.
 			response.setApplyAutoPromotionStatus(ApplyAutoPromotionResponseStatusEnum.SUCCESS);
+		} catch (PlatformException e) {
+			logger.error(e);
+			response.setApplyAutoPromotionStatus(ApplyAutoPromotionResponseStatusEnum.INTERNAL_ERROR);
 		}
 		return response;
 	}
