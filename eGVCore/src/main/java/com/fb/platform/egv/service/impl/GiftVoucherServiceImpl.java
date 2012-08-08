@@ -345,6 +345,8 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 		} catch (DataAccessException e) {
 			logger.error("Error while loading the GiftVoucher. GiftVoucherId  : " + giftVoucherNumber);
 			throw new PlatformException("Error while loading the GiftVoucher. GiftVoucherId  : " + giftVoucherNumber, e);
+		} catch (SmsException e) {
+			logger.error("Problem Sending SMS to " + mobile, e);
 		}
 
 	}
