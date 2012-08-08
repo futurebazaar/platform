@@ -87,6 +87,7 @@ public class AutoPromotionManagerImpl implements AutoPromotionManager {
 		try {
 			List<Integer> activeAutoPromotions = promotionService.getActiveAutoPromotions();
 			OrderDiscount orderResponse = new OrderDiscount();
+			orderResponse.setOrderRequest(request.getOrderReq());
 
 			//loop through all the active auto promotions and see any of them is applicable on the order
 			for (Integer promotionId : activeAutoPromotions) {
@@ -107,6 +108,7 @@ public class AutoPromotionManagerImpl implements AutoPromotionManager {
 					response.getAppliedPromotions().add(promotion);
 				}
 			}
+			response.setOrderDiscount(orderResponse);
 		} catch (NoActiveAutoPromotionFoundException e) {
 			//this is ok.
 			response.setApplyAutoPromotionStatus(ApplyAutoPromotionResponseStatusEnum.SUCCESS);
