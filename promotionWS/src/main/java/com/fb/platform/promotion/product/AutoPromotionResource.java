@@ -3,12 +3,17 @@
  */
 package com.fb.platform.promotion.product;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -227,6 +232,42 @@ public class AutoPromotionResource {
 			logger.error("Error in the commitAutoPromotion call.", e);
 			return "error"; //TODO return proper error response
 		}
+	}
+	
+	@GET
+	public String ping() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Future Platform Promotion Websevice.\n");
+		sb.append("To apply auto promotion post to : http://hostname:port/promotionWS/autoPromotion/apply\n");
+		sb.append("To commit auto promotion post to : http://hostname:port/promotionWS/autoPromotion/commit\n");
+		sb.append("To fetch applied auto promotion for a user post to : http://hostname:port/promotionWS/autoPromotion/getApplied\n");
+		sb.append("To refresh auto Promotion cache post to : http://hostname:port/promotionWS/autoPromotion/refresh\n");
+		return sb.toString();
+	}
+	
+	@GET
+	@Path("/xsd")
+	@Produces("application/xml")
+	public String getXsd() {	
+		InputStream userXsd = this.getClass().getClassLoader().getResourceAsStream("promotion.xsd");
+		String userXsdString = convertInputStreamToString(userXsd);
+		return userXsdString;
+	}
+	
+	private String convertInputStreamToString(InputStream inputStream) {
+		BufferedReader bufReader = new BufferedReader(new InputStreamReader(inputStream));
+		StringBuilder sb = new StringBuilder();
+		try {
+			String line = bufReader.readLine();
+			while( line != null ) {
+				sb.append( line + "\n" );
+				line = bufReader.readLine();
+			}
+			inputStream.close();
+		} catch(IOException exception) {
+			logger.error("promotion.xsd loading error : " + exception.getMessage() );
+		}
+		return sb.toString();
 	}
 	
 	private OrderDiscount getXmlOrderDiscountValue(com.fb.platform.promotion.model.OrderDiscount apiOrderDiscount) {
