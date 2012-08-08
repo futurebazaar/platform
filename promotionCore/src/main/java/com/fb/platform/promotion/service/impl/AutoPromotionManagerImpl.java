@@ -5,11 +5,13 @@ package com.fb.platform.promotion.service.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.platform.auth.AuthenticationService;
+import com.fb.platform.auth.AuthenticationTO;
 import com.fb.platform.promotion.product.to.ApplyAutoPromotionRequest;
 import com.fb.platform.promotion.product.to.ApplyAutoPromotionResponse;
 import com.fb.platform.promotion.product.to.GetApplicablePromotionsRequest;
@@ -60,6 +62,20 @@ public class AutoPromotionManagerImpl implements AutoPromotionManager {
 	@Override
 	public RefreshAutoPromotionResponse refresh(RefreshAutoPromotionRequest request) {
 		RefreshAutoPromotionResponse response = new RefreshAutoPromotionResponse();
+		
+		if (request == null || StringUtils.isBlank(request.getSessionToken())) {
+			response.setRefreshAutoPromotionStatus(RefreshAutoPromotionResponseStatusEnum.NO_SESSION);
+			return response;
+		}
+
+		//authenticate the session token and find out the userId
+		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
+		if (authentication == null) {
+			//invalid session token
+			response.setRefreshAutoPromotionStatus(RefreshAutoPromotionResponseStatusEnum.NO_SESSION);
+			return response;
+		}
+		
 		response.setSessionToken(request.getSessionToken());
 		try {
 			promotionService.refresh();
