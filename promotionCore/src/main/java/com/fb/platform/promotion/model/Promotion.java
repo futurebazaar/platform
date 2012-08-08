@@ -22,7 +22,7 @@ public abstract class Promotion implements Serializable {
 	protected PromotionDates dates;
 	protected PromotionLimitsConfig limitsConfig;
 
-	public abstract OrderDiscount apply(OrderRequest request);
+	//public abstract OrderDiscount apply(OrderRequest request);
 
 	public PromotionStatusEnum isWithinLimits(GlobalPromotionUses globalUses, UserPromotionUses userUses) {
 		return limitsConfig.isWithinLimit(globalUses, userUses);
