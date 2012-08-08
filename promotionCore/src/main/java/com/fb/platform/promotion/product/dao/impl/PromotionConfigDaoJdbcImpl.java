@@ -75,7 +75,7 @@ public class PromotionConfigDaoJdbcImpl implements PromotionConfigDao {
 			"	cc.max_order_value as max_order_value, " +
 			"	cc.join_type as join_type " +
 			"FROM " +
-			"	condition_config cc " +
+			"	conditions_config cc " +
 			"WHERE " +
 			"	cc.promotion_config_module_id=? " +
 			"ORDER BY " +
