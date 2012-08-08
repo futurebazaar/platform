@@ -345,6 +345,18 @@
                         <value name="is_active">1</value>
                         <value name="rule_id">-2</value>
         	</row>
+        	<row>
+                        <value name="id">8100</value>
+                        <null/>
+                        <null/>
+                        <value name="valid_from">2012-08-08 00:00:00</value>
+                        <value name="valid_till">2013-08-08 00:00:00</value>
+                        <value name="name">buy 1 and get 1 free</value>
+                        <value name="description">buy 1 and get 1 free, premum double bed sheet</value>
+                        <value name="is_coupon">0</value>
+                        <value name="is_active">1</value>
+                        <value name="rule_id">-2</value>
+        	</row>
         	
         </table>
         <table name="promotion_limits_config">
@@ -525,6 +537,14 @@
                 <row>
                         <value name="id">8000</value>
                         <value name="promotion_id">8000</value>
+                        <value name="max_uses">-1</value>
+                        <value name="max_amount">-1</value>
+                        <value name="max_uses_per_user">1</value>
+                        <value name="max_amount_per_user">-1</value>
+                </row>
+                <row>
+                        <value name="id">8100</value>
+                        <value name="promotion_id">8100</value>
                         <value name="max_uses">-1</value>
                         <value name="max_amount">-1</value>
                         <value name="max_uses_per_user">1</value>
@@ -1944,10 +1964,13 @@
 			<value name="id">102</value>
 			<value name="promotion_id">100</value>
 		</row>
-		
 		<row>
 			<value name="id">8000</value>
 			<value name="promotion_id">8000</value>
+		</row>
+		<row>
+			<value name="id">8100</value>
+			<value name="promotion_id">8100</value>
 		</row>
 	</table>
        
@@ -2041,6 +2064,19 @@
 			<null/>
 			<null/>
 		</row>
+		<row>
+			<value name="id">8100</value>
+			<value name="promotion_config_module_id">8100</value>
+			<value name="condition_type">PRODUCT</value>
+			<value name="quantity">1</value>
+			<null/>
+			<value name="product_ids">96184,133568,92631,92630</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+		</row>
 	</table>
 	
 	<table name="results_config">
@@ -2124,6 +2160,18 @@
 			<null/>
 			<value name="offer_type">FIXED_PRICE</value>
 			<value name="offer_value">1299</value>
+			<null/>
+		</row>
+		<row>
+			<value name="id">8100</value>
+			<value name="promotion_config_module_id">8100</value>
+			<value name="result_type">PRODUCT</value>
+			<value name="quantity">1</value>
+			<value name="product_ids">96184,133568,92631,92630</value>
+			<null/>
+			<null/>
+			<value name="offer_type">PERCENT_OFF</value>
+			<value name="offer_value">100</value>
 			<null/>
 		</row>
 	</table>
