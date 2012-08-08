@@ -33,6 +33,11 @@ public class OrderCondition implements Condition {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	@Override
+	public int getQuantity() {
+		return 0;
+	}
 
 	public boolean isOrderWithinLimits(OrderRequest orderRequest) {
 		Money orderValue = new Money(orderRequest.getOrderValue());

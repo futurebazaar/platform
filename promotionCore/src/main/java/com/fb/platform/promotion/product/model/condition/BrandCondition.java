@@ -30,6 +30,8 @@ public class BrandCondition implements Condition {
 	public void setInclude(boolean include) {
 		this.include = include;
 	}
+	
+	@Override
 	public int getQuantity() {
 		return quantity;
 	}

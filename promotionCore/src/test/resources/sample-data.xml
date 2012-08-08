@@ -357,6 +357,18 @@
                         <value name="is_active">1</value>
                         <value name="rule_id">-2</value>
         	</row>
+        	<row>
+                        <value name="id">8200</value>
+                        <null/>
+                        <null/>
+                        <value name="valid_from">2012-08-08 00:00:00</value>
+                        <value name="valid_till">2013-08-08 00:00:00</value>
+                        <value name="name">1 @5% Off,2 @10% Off.3 and more @20% Off</value>
+                        <value name="description">Avani, Regan, PM, Anjali (Buy 1 at 5% Off, Buy 2 @ 10% Off. Buy 3 and more @ 20% Off)</value>
+                        <value name="is_coupon">0</value>
+                        <value name="is_active">1</value>
+                        <value name="rule_id">-2</value>
+        	</row>
         	
         </table>
         <table name="promotion_limits_config">
@@ -545,6 +557,14 @@
                 <row>
                         <value name="id">8100</value>
                         <value name="promotion_id">8100</value>
+                        <value name="max_uses">-1</value>
+                        <value name="max_amount">-1</value>
+                        <value name="max_uses_per_user">1</value>
+                        <value name="max_amount_per_user">-1</value>
+                </row>
+                <row>
+                        <value name="id">8200</value>
+                        <value name="promotion_id">8200</value>
                         <value name="max_uses">-1</value>
                         <value name="max_amount">-1</value>
                         <value name="max_uses_per_user">1</value>
@@ -1972,6 +1992,18 @@
 			<value name="id">8100</value>
 			<value name="promotion_id">8100</value>
 		</row>
+		<row>
+			<value name="id">8200</value>
+			<value name="promotion_id">8200</value>
+		</row>
+		<row>
+			<value name="id">8300</value>
+			<value name="promotion_id">8200</value>
+		</row>
+		<row>
+			<value name="id">8400</value>
+			<value name="promotion_id">8200</value>
+		</row>
 	</table>
        
 	<table name="conditions_config">
@@ -2077,6 +2109,45 @@
 			<null/>
 			<null/>
 		</row>
+		<row>
+			<value name="id">8200</value>
+			<value name="promotion_config_module_id">8200</value>
+			<value name="condition_type">PRODUCT</value>
+			<value name="quantity">1</value>
+			<null/>
+			<value name="product_ids">85985,78214,80210</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+		</row>
+		<row>
+			<value name="id">8300</value>
+			<value name="promotion_config_module_id">8300</value>
+			<value name="condition_type">PRODUCT</value>
+			<value name="quantity">2</value>
+			<null/>
+			<value name="product_ids">85985,78214,80210</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+		</row>
+		<row>
+			<value name="id">8400</value>
+			<value name="promotion_config_module_id">8400</value>
+			<value name="condition_type">PRODUCT</value>
+			<value name="quantity">3</value>
+			<null/>
+			<value name="product_ids">85985,78214,80210</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+		</row>
 	</table>
 	
 	<table name="results_config">
@@ -2172,6 +2243,42 @@
 			<null/>
 			<value name="offer_type">PERCENT_OFF</value>
 			<value name="offer_value">100</value>
+			<null/>
+		</row>
+		<row>
+			<value name="id">8200</value>
+			<value name="promotion_config_module_id">8200</value>
+			<value name="result_type">VALUE</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<value name="offer_type">PERCENT_OFF</value>
+			<value name="offer_value">5</value>
+			<null/>
+		</row>
+		<row>
+			<value name="id">8300</value>
+			<value name="promotion_config_module_id">8300</value>
+			<value name="result_type">VALUE</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<value name="offer_type">PERCENT_OFF</value>
+			<value name="offer_value">10</value>
+			<null/>
+		</row>
+		<row>
+			<value name="id">8400</value>
+			<value name="promotion_config_module_id">8400</value>
+			<value name="result_type">VALUE</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<value name="offer_type">PERCENT_OFF</value>
+			<value name="offer_value">20</value>
 			<null/>
 		</row>
 	</table>

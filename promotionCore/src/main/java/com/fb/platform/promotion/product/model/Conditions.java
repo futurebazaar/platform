@@ -62,4 +62,14 @@ public class Conditions {
 	public boolean isProdCondition() {
 		return this.prodCondition;
 	}
+	
+	public int getMaxQuantity() {
+		int maxQuantity = 0;
+		for(Condition promotionCondition : conditions) {
+			if(promotionCondition.getQuantity() > maxQuantity) {
+				maxQuantity = promotionCondition.getQuantity();
+			}
+		}
+		return maxQuantity;
+	}
 }

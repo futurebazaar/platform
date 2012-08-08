@@ -9,4 +9,6 @@ package com.fb.platform.promotion.product.model;
  */
 public interface Condition {
 	public boolean isApplicableOn(int productId);
+	
+	public int getQuantity();
 }

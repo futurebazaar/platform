@@ -4,6 +4,7 @@
 package com.fb.platform.promotion.product.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.fb.platform.promotion.product.util.ConditionResultProcessor;
@@ -48,6 +49,8 @@ public class PromotionConfig {
 		//this also assumes that whenever there are multiple modules, they will only contain
 		//a similar set of products, categories, brand conditions. the only variable will be 
 		//quantity or order max amount
+		
+		Collections.sort(dbModules);
 		
 		return dbModules;
 	}

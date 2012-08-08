@@ -9,7 +9,7 @@ import com.fb.platform.promotion.to.OrderRequest;
  * @author vinayak
  *
  */
-public class ConfigModule {
+public class ConfigModule implements Comparable<ConfigModule>{
 
 	private Conditions conditions = null;
 	private Results results = null;
@@ -41,5 +41,10 @@ public class ConfigModule {
 
 	public boolean isValueResult() {
 		return results.isValueResult();
+	}
+	@Override
+	public int compareTo(ConfigModule o) {
+		int quantityDiff = o.getConditions().getMaxQuantity() - this.getConditions().getMaxQuantity();
+		return quantityDiff;
 	}
 }

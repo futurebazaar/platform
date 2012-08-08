@@ -43,8 +43,6 @@ import com.fb.platform.promotion.admin.to.SortOrder;
 import com.fb.platform.promotion.admin.to.UpdatePromotionEnum;
 import com.fb.platform.promotion.admin.to.UpdatePromotionRequest;
 import com.fb.platform.promotion.admin.to.UpdatePromotionResponse;
-import com.fb.platform.promotion.admin.to.ViewCouponRequest;
-import com.fb.platform.promotion.admin.to.ViewCouponResponse;
 import com.fb.platform.promotion.admin.to.ViewPromotionEnum;
 import com.fb.platform.promotion.admin.to.ViewPromotionRequest;
 import com.fb.platform.promotion.admin.to.ViewPromotionResponse;
@@ -897,7 +895,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		
 		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
-		assertEquals(16, searchPromotionResponse.getTotalCount());
+		assertEquals(17, searchPromotionResponse.getTotalCount());
 		assertEquals(2, searchPromotionResponse.getPromotionsList().size());
 		
 		int count = 0;
@@ -1042,7 +1040,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		
 		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
-		assertEquals(25, searchPromotionResponse.getTotalCount());
+		assertEquals(26, searchPromotionResponse.getTotalCount());
 		assertEquals(10, searchPromotionResponse.getPromotionsList().size());
 	}
 	
