@@ -304,7 +304,31 @@
                         <value name="valid_from">2011-12-29 00:00:00</value>
                         <value name="valid_till">2014-03-01 00:00:00</value>
                         <value name="name">product promotion</value>
-                        <value name="description">Test product promotion</value>
+                        <value name="description">Test product promotion 1</value>
+                        <value name="is_coupon">0</value>
+                        <value name="is_active">1</value>
+                        <value name="rule_id">-2</value>
+        	</row>
+        	<row>
+                        <value name="id">200</value>
+                        <null/>
+                        <null/>
+                        <value name="valid_from">2011-12-29 00:00:00</value>
+                        <value name="valid_till">2014-03-01 00:00:00</value>
+                        <value name="name">product promotion</value>
+                        <value name="description">Test product promotion 2</value>
+                        <value name="is_coupon">0</value>
+                        <value name="is_active">1</value>
+                        <value name="rule_id">-2</value>
+        	</row>
+        	<row>
+                        <value name="id">300</value>
+                        <null/>
+                        <null/>
+                        <value name="valid_from">2011-12-29 00:00:00</value>
+                        <value name="valid_till">2014-03-01 00:00:00</value>
+                        <value name="name">product promotion</value>
+                        <value name="description">Test product promotion 3</value>
                         <value name="is_coupon">0</value>
                         <value name="is_active">1</value>
                         <value name="rule_id">-2</value>
@@ -1901,7 +1925,7 @@
 		</row>
 	</table>
        
-	<table name="condition_config">
+	<table name="conditions_config">
 		<column>id</column>
 		<column>promotion_config_module_id</column>
 		<column>condition_type</column>

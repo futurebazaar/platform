@@ -1042,7 +1042,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		
 		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
-		assertEquals(21, searchPromotionResponse.getTotalCount());
+		assertEquals(23, searchPromotionResponse.getTotalCount());
 		assertEquals(10, searchPromotionResponse.getPromotionsList().size());
 	}
 	

@@ -38,7 +38,6 @@ import com.fb.platform.promotion.product.dao.PromotionConfigDao;
 import com.fb.platform.promotion.product.model.PromotionConfig;
 import com.fb.platform.promotion.product.model.promotion.AutoPromotion;
 import com.fb.platform.promotion.rule.PromotionRule;
-import com.sun.corba.se.impl.oa.toa.TOA;
 
 /**
  * @author vinayak
@@ -139,6 +138,18 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			"	AND is_coupon=0 " +
 			"	AND valid_till >= ?";
 	
+	/**
+	 * SELECT promotion_id FROM user_promotion_uses WHERE user_id = ? AND order_id = ?
+	 */
+	private static final String LOAD_USER_AUTO_PROMOTION_USAGE = 
+			"SELECT " +
+			"	promotion_id " +
+			"FROM " +
+			"	user_promotion_uses " +
+			"WHERE " +
+			"	user_id = ? " +
+			"	AND order_id = ?";
+	
 	/* (non-Javadoc)
 	 * @see com.fb.platform.promotion.dao.PromotionDao#load(int)
 	 */
@@ -226,6 +237,20 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		}
 		return userPromotionUses;
 	}
+	
+	/**
+	 * 
+	 * @param userId
+	 * @param orderId
+	 * @return
+	 */
+	@Override
+	public List<Integer> getUserAutoPromotionUses(int userId, int orderId) {
+		List<Integer> promotionList = jdbcTemplate.queryForList(LOAD_USER_AUTO_PROMOTION_USAGE, Integer.class, new Object[] {userId, orderId});
+		return promotionList;
+	}
+	
+	
 
 	@Override
 	public boolean updateUserUses(int promotionId, int userId, BigDecimal valueApplied, int orderId) {

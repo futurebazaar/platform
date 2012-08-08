@@ -4,10 +4,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.test.BaseTestCase;
+import com.fb.commons.to.Money;
 import com.fb.platform.promotion.exception.PromotionNotFoundException;
 import com.fb.platform.promotion.product.model.Condition;
 import com.fb.platform.promotion.product.model.Conditions;
@@ -18,6 +24,8 @@ import com.fb.platform.promotion.product.model.Result;
 import com.fb.platform.promotion.product.model.Results;
 import com.fb.platform.promotion.product.model.condition.ProductCondition;
 import com.fb.platform.promotion.product.model.result.ProductResult;
+import com.fb.platform.promotion.to.OrderItem;
+import com.fb.platform.promotion.to.Product;
 
 /**
  * @author nehaga
@@ -90,7 +98,6 @@ public class PromotionConfigDaoTest extends BaseTestCase {
 	public void promotionNotFound() {
 		promotionConfigDao.load(-100);
 	}
-	
 	
 	public void setPromotionConfigDao(PromotionConfigDao promotionConfigDao) {
 		this.promotionConfigDao = promotionConfigDao;
