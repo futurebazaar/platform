@@ -3,8 +3,6 @@
  */
 package com.fb.commons.sms;
 
-import java.util.Properties;
-
 import javax.ws.rs.core.MultivaluedMap;
 
 import com.fb.commons.communication.to.SmsTO;
@@ -12,6 +10,7 @@ import com.fb.commons.mail.exception.SmsException;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.client.urlconnection.URLConnectionClientHandler;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 /**
@@ -39,11 +38,11 @@ public class SmsSender {
 	public String send(final SmsTO smsTO) throws SmsException {
 		try {
 
-			Properties prop = System.getProperties();
-			System.setProperty(PROXY_HOST_STR, "10.202.18.154");
-			System.setProperty(PROXY_PORT_STR, "3128");
+			// Get Proxy Connection
+			URLConnectionClientHandler urlConnectionClientHandler = new URLConnectionClientHandler(
+					new ProxyHttpUrlConnection());
 
-			Client client = Client.create();
+			Client client = new Client(urlConnectionClientHandler);
 
 			WebResource webResource = client.resource(SMS_API_URL);
 
@@ -59,7 +58,6 @@ public class SmsSender {
 					.get(ClientResponse.class);
 
 			System.out.println(webResource.getURI().toURL().toString());
-			System.setProperties(prop);
 
 			if (response.getStatus() != 200) {
 				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
