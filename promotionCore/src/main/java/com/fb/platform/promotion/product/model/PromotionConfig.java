@@ -33,7 +33,18 @@ public class PromotionConfig {
 	}
 
 	public void setModules(List<ConfigModule> modules) {
-		this.modules = modules;
+		this.modules = sortModules(modules);
+		//this.modules = modules;
+	}
+
+	private List<ConfigModule> sortModules(List<ConfigModule> dbModules) {
+		//sort the modules based on the quantity and order max amount, the highest first.
+		//this is required since highest quantity and order amount results should be appllied first
+		//this also assumes that whenever there are multiple modules, they will only contain
+		//a similar set of products, categories, brand conditions. the only variable will be 
+		//quantity or order max amount
+		
+		return null;
 	}
 
 	public PriceApplicable getPriceApplicable() {

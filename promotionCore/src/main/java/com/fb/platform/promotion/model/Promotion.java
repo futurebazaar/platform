@@ -64,4 +64,7 @@ public abstract class Promotion implements Serializable {
 	public PromotionLimitsConfig getLimitsConfig() {
 		return limitsConfig;
 	}
+	public boolean isWithinDates() {
+		return dates.isWithinDates();
+	}
 }

@@ -36,4 +36,11 @@ public class ProductCondition implements Condition {
 		}
 		return false;
 	}
+
+	public boolean isApplicableOn(int productId, int orderItemQuantity) {
+		if (productIds.contains(productId) && orderItemQuantity >= quantity) {
+			return true;
+		}
+		return false;
+	}
 }

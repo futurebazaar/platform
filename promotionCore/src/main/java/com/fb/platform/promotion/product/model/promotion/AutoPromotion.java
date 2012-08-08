@@ -7,6 +7,7 @@ import com.fb.platform.promotion.model.OrderDiscount;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.product.model.PromotionConfig;
 import com.fb.platform.promotion.rule.product.Rule;
+import com.fb.platform.promotion.to.OrderItem;
 import com.fb.platform.promotion.to.OrderRequest;
 
 /**
@@ -31,6 +32,9 @@ public class AutoPromotion extends Promotion {
 		return false;
 	}
 
+	public boolean isApplicableOn(OrderItem orderItem, int userId) {
+		return false;
+	}
 	/**
 	 * Checks if this promotion is applicable on the given productId. 
 	 * If it is applicable, then returns the possible results.
