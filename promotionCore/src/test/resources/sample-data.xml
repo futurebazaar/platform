@@ -333,6 +333,18 @@
                         <value name="is_active">1</value>
                         <value name="rule_id">-2</value>
         	</row>
+        	<row>
+                        <value name="id">8000</value>
+                        <null/>
+                        <null/>
+                        <value name="valid_from">2012-08-08 00:00:00</value>
+                        <value name="valid_till">2013-08-08 00:00:00</value>
+                        <value name="name">bombay dyeing bedsheets</value>
+                        <value name="description">Buy any 2 bombay dyeing bedsheets for 1299 / Save 899</value>
+                        <value name="is_coupon">0</value>
+                        <value name="is_active">1</value>
+                        <value name="rule_id">-2</value>
+        	</row>
         	
         </table>
         <table name="promotion_limits_config">
@@ -510,6 +522,15 @@
                         <value name="max_uses_per_user">1</value>
                         <value name="max_amount_per_user">1000.00</value>
                 </row>
+                <row>
+                        <value name="id">8000</value>
+                        <value name="promotion_id">8000</value>
+                        <value name="max_uses">-1</value>
+                        <value name="max_amount">-1</value>
+                        <value name="max_uses_per_user">1</value>
+                        <value name="max_amount_per_user">-1</value>
+                </row>
+                
         </table>
         <table name="user_promotion_uses">
                 <column>id</column>
@@ -1923,6 +1944,11 @@
 			<value name="id">102</value>
 			<value name="promotion_id">100</value>
 		</row>
+		
+		<row>
+			<value name="id">8000</value>
+			<value name="promotion_id">8000</value>
+		</row>
 	</table>
        
 	<table name="conditions_config">
@@ -2002,6 +2028,19 @@
 			<value name="max_order_value">1000</value>
 			<null/>
 		</row>
+		<row>
+			<value name="id">8000</value>
+			<value name="promotion_config_module_id">8000</value>
+			<value name="condition_type">PRODUCT</value>
+			<value name="quantity">2</value>
+			<null/>
+			<value name="product_ids">300870746097,300870746057,300870746034,300870746090,300870746125,300870746005,300870746054,300870746022,300930379050,300930379081,300930379098,300930379105,300930379012,300930379027,300930379035,300930379092,300930379021,300930379030,300930379045,300930379102,300930379007,300930379064,300930379072,300930379079</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+		</row>
 	</table>
 	
 	<table name="results_config">
@@ -2073,6 +2112,18 @@
 			<null/>
 			<value name="offer_type">FIXED_OFF</value>
 			<value name="offer_value">150</value>
+			<null/>
+		</row>
+		<row>
+			<value name="id">8000</value>
+			<value name="promotion_config_module_id">8000</value>
+			<value name="result_type">VALUE</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<value name="offer_type">FIXED_PRICE</value>
+			<value name="offer_value">1299</value>
 			<null/>
 		</row>
 	</table>
