@@ -18,15 +18,17 @@ import com.fb.platform.promotion.product.model.promotion.AutoPromotion;
 import com.fb.platform.promotion.product.to.ApplyAutoPromotionRequest;
 import com.fb.platform.promotion.product.to.ApplyAutoPromotionResponse;
 import com.fb.platform.promotion.product.to.ApplyAutoPromotionResponseStatusEnum;
+import com.fb.platform.promotion.product.to.CommitAutoPromotionRequest;
+import com.fb.platform.promotion.product.to.CommitAutoPromotionResponse;
 import com.fb.platform.promotion.product.to.GetApplicablePromotionsRequest;
 import com.fb.platform.promotion.product.to.GetApplicablePromotionsResponse;
+import com.fb.platform.promotion.product.to.GetAppliedAutoPromotionRequest;
+import com.fb.platform.promotion.product.to.GetAppliedAutoPromotionResponse;
 import com.fb.platform.promotion.product.to.RefreshAutoPromotionRequest;
 import com.fb.platform.promotion.product.to.RefreshAutoPromotionResponse;
 import com.fb.platform.promotion.product.to.RefreshAutoPromotionResponseStatusEnum;
 import com.fb.platform.promotion.service.AutoPromotionManager;
 import com.fb.platform.promotion.service.PromotionService;
-import com.fb.platform.promotion.to.ApplyCouponResponse;
-import com.fb.platform.promotion.to.ApplyCouponResponseStatusEnum;
 
 /**
  * @author vinayak
@@ -110,6 +112,20 @@ public class AutoPromotionManagerImpl implements AutoPromotionManager {
 	@Override
 	public RefreshAutoPromotionResponse refresh(RefreshAutoPromotionRequest request) {
 		RefreshAutoPromotionResponse response = new RefreshAutoPromotionResponse();
+		
+		if (request == null || StringUtils.isBlank(request.getSessionToken())) {
+			response.setRefreshAutoPromotionStatus(RefreshAutoPromotionResponseStatusEnum.NO_SESSION);
+			return response;
+		}
+
+		//authenticate the session token and find out the userId
+		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
+		if (authentication == null) {
+			//invalid session token
+			response.setRefreshAutoPromotionStatus(RefreshAutoPromotionResponseStatusEnum.NO_SESSION);
+			return response;
+		}
+		
 		response.setSessionToken(request.getSessionToken());
 		try {
 			promotionService.refresh();
@@ -119,5 +135,18 @@ public class AutoPromotionManagerImpl implements AutoPromotionManager {
 			logger.error("Error in auto promotion cache refresh.", e);
 		}
 		return response;
+	}
+
+	@Override
+	public CommitAutoPromotionResponse commit(CommitAutoPromotionRequest request) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public GetAppliedAutoPromotionResponse getAppliedPromotions(
+			GetAppliedAutoPromotionRequest request) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

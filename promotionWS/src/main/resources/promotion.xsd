@@ -348,4 +348,61 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:element name="commitAutoPromotionRequest">
+  	<xs:complexType>
+  		<xs:sequence>
+  			<xs:element ref="promotion:orderId"/>
+  			<xs:element ref="promotion:appliedPromotionsList"></xs:element>
+  			<xs:element ref="promotion:sessionToken"/>
+  		</xs:sequence>
+  	</xs:complexType>
+  </xs:element>
+	
+	<xs:element name="commitAutoPromotionResponse">
+	    <xs:complexType>
+	        <xs:sequence>
+	            <xs:element ref="promotion:commitAutoPromotionStatus"/> 
+	            <xs:element ref="promotion:statusMessage"/>
+	            <xs:element ref="promotion:sessionToken"/>
+	        </xs:sequence>
+	    </xs:complexType>
+	</xs:element>
+	
+	<xs:element name="commitAutoPromotionStatus" type="promotion:commitAutoPromotionStatus"/>
+	<xs:simpleType name="commitAutoPromotionStatus">
+	    <xs:restriction base="xs:string">
+	        <xs:enumeration value="SUCCESS"/>
+	        <xs:enumeration value="NO_SESSION"/>
+	        <xs:enumeration value="INTERNAL_ERROR"/>
+	    </xs:restriction>
+	</xs:simpleType>
+	
+	<xs:element name="getAppliedAutoPromotionRequest">
+	    <xs:complexType>
+	        <xs:sequence>
+	            <xs:element ref="promotion:orderId"/> 
+	            <xs:element ref="promotion:sessionToken"/>
+	        </xs:sequence>
+	    </xs:complexType>
+	</xs:element>
+	
+	<xs:element name="getAppliedAutoPromotionResponse">
+	    <xs:complexType>
+	        <xs:sequence>
+	            <xs:element ref="promotion:getAppliedAutoPromotionStatus"/>
+	            <xs:element ref="promotion:sessionToken"/>
+	            <xs:element maxOccurs="unbounded" ref="promotion:promotion"/>
+	        </xs:sequence>
+	    </xs:complexType>
+	</xs:element>
+	
+	<xs:element name="getAppliedAutoPromotionStatus" type="promotion:getAppliedAutoPromotionStatus"/>
+	<xs:simpleType name="getAppliedAutoPromotionStatus">
+	    <xs:restriction base="xs:string">
+	        <xs:enumeration value="SUCCESS"/>
+	        <xs:enumeration value="NO_SESSION"/>
+	        <xs:enumeration value="INTERNAL_ERROR"/>
+	    </xs:restriction>
+	</xs:simpleType>
+
 </xs:schema>
