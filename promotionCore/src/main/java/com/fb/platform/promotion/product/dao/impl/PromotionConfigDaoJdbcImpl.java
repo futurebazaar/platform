@@ -188,7 +188,7 @@ public class PromotionConfigDaoJdbcImpl implements PromotionConfigDao {
 					moduleJoin = getJoin(rs.getString("join_type"));
 					condition = orderCondition;
 				}
-				promotionConditions.getConditions().add(condition);
+				promotionConditions.addCondition(condition);
 				if(moduleJoin  != null) {
 					promotionConditions.getJoins().add(moduleJoin);
 				}
@@ -260,7 +260,7 @@ public class PromotionConfigDaoJdbcImpl implements PromotionConfigDao {
 					moduleJoin = getJoin(rs.getString("join_type"));
 					result = valueChangeResult;
 				}
-				promotionResults.getResults().add(result);
+				promotionResults.addResult(result);
 				
 				if(moduleJoin  != null) {
 					promotionResults.getJoins().add(moduleJoin);

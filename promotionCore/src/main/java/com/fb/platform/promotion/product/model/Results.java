@@ -21,14 +21,20 @@ public class Results {
 	public List<Result> getResults() {
 		return results;
 	}
-	public void setResults(List<Result> results) {
+	public void addResult(Result result) {
+		results.add(result);
+		if (result instanceof ValueChangeResult) {
+			isValueResult = true;
+		}
+	}
+	/*public void setResults(List<Result> results) {
 		this.results = results;
 		for (Result result : results) {
 			if (result instanceof ValueChangeResult) {
 				isValueResult = true;
 			}
 		}
-	}
+	}*/
 	public List<ModuleJoin> getJoins() {
 		return joins;
 	}

@@ -109,6 +109,7 @@ public class AutoPromotionManagerImpl implements AutoPromotionManager {
 				}
 			}
 			response.setOrderDiscount(orderResponse);
+			response.setApplyAutoPromotionStatus(ApplyAutoPromotionResponseStatusEnum.SUCCESS);
 		} catch (NoActiveAutoPromotionFoundException e) {
 			//this is ok.
 			response.setApplyAutoPromotionStatus(ApplyAutoPromotionResponseStatusEnum.SUCCESS);

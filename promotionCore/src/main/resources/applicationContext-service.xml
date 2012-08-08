@@ -46,6 +46,11 @@
         <property name="promotionAdminService" ref="promotionAdminService"></property>
         <property name="authenticationService" ref="authenticationService"></property>
     </bean>
+
+    <bean id="autoPromotionManager" class="com.fb.platform.promotion.service.impl.AutoPromotionManagerImpl">
+        <property name="promotionService" ref="promotionService"></property>
+        <property name="authenticationService" ref="authenticationService"></property>
+    </bean>
     
     <!-- Add new Factory Beans here -->
     <bean id="promotionRuleFactory" class="com.fb.platform.promotion.util.PromotionRuleFactory">

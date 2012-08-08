@@ -369,10 +369,13 @@ public class AutoPromotionResource {
 	}
 	
 	private List<Integer> getInts(String commaSeparatedString) {
-		String[] ids = StringUtils.split(commaSeparatedString, ",");
 		List<Integer> intIds = new ArrayList<Integer>();
-		for(String id : ids) {
-			intIds.add(new Integer(StringUtils.trim(id)));
+		if (StringUtils.isNotBlank(commaSeparatedString)) {
+			String[] ids = StringUtils.split(commaSeparatedString, ",");
+			
+			for(String id : ids) {
+				intIds.add(new Integer(StringUtils.trim(id)));
+			}
 		}
 		return intIds;
 	}

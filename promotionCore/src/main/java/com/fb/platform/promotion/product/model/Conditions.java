@@ -24,7 +24,16 @@ public class Conditions {
 	public List<Condition> getConditions() {
 		return conditions;
 	}
-	public void setConditions(List<Condition> conditions) {
+	public void addCondition(Condition condition) {
+		conditions.add(condition);
+		if (condition instanceof OrderCondition) {
+			this.orderCondition = (OrderCondition) condition;
+		}
+		if (condition instanceof ProductCondition) {
+			prodCondition = true;
+		}
+	}
+	/*public void setConditions(List<Condition> conditions) {
 		this.conditions = conditions;
 		for (Condition condition : conditions) {
 			if (condition instanceof OrderCondition) {
@@ -34,7 +43,7 @@ public class Conditions {
 				prodCondition = true;
 			}
 		}
-	}
+	}*/
 
 	public List<ModuleJoin> getJoins() {
 		return joins;
