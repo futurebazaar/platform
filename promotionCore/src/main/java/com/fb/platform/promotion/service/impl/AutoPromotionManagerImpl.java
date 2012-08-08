@@ -10,9 +10,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fb.commons.PlatformException;
 import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
 import com.fb.platform.promotion.exception.NoActiveAutoPromotionFoundException;
+import com.fb.platform.promotion.exception.PromotionNotFoundException;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.product.model.promotion.AutoPromotion;
 import com.fb.platform.promotion.product.to.ApplyAutoPromotionRequest;
@@ -20,10 +22,12 @@ import com.fb.platform.promotion.product.to.ApplyAutoPromotionResponse;
 import com.fb.platform.promotion.product.to.ApplyAutoPromotionResponseStatusEnum;
 import com.fb.platform.promotion.product.to.CommitAutoPromotionRequest;
 import com.fb.platform.promotion.product.to.CommitAutoPromotionResponse;
+import com.fb.platform.promotion.product.to.CommitAutoPromotionResponseStatusEnum;
 import com.fb.platform.promotion.product.to.GetApplicablePromotionsRequest;
 import com.fb.platform.promotion.product.to.GetApplicablePromotionsResponse;
 import com.fb.platform.promotion.product.to.GetAppliedAutoPromotionRequest;
 import com.fb.platform.promotion.product.to.GetAppliedAutoPromotionResponse;
+import com.fb.platform.promotion.product.to.GetAppliedAutoPromotionResponseStatusEnum;
 import com.fb.platform.promotion.product.to.RefreshAutoPromotionRequest;
 import com.fb.platform.promotion.product.to.RefreshAutoPromotionResponse;
 import com.fb.platform.promotion.product.to.RefreshAutoPromotionResponseStatusEnum;
@@ -139,14 +143,68 @@ public class AutoPromotionManagerImpl implements AutoPromotionManager {
 
 	@Override
 	public CommitAutoPromotionResponse commit(CommitAutoPromotionRequest request) {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info("Commiting auto promotion usage.");
+		CommitAutoPromotionResponse response = new CommitAutoPromotionResponse();
+		
+		response.setSessionToken(request.getSessionToken());
+		if (request == null || StringUtils.isBlank(request.getSessionToken())) {
+			response.setCommitAutoPromotionStatus(CommitAutoPromotionResponseStatusEnum.NO_SESSION);
+			return response;
+		}
+		
+		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
+		if (authentication == null) {
+			//invalid session token
+			response.setCommitAutoPromotionStatus(CommitAutoPromotionResponseStatusEnum.NO_SESSION);
+			return response;
+		}
+		
+		int userId = authentication.getUserID();
+		
+		try {
+			for(Integer promotionId : request.getAppliedPromotionsList()) {
+				promotionService.updateUserPromotionUses(promotionId, userId, request.getOrderId());
+			}
+			response.setCommitAutoPromotionStatus(CommitAutoPromotionResponseStatusEnum.SUCCESS);
+		} catch (PromotionNotFoundException e) {
+			logger.error("No Promotion Found for promotion codes for order : " + request.getOrderId());
+			response.setCommitAutoPromotionStatus(CommitAutoPromotionResponseStatusEnum.INTERNAL_ERROR);
+		} catch (PlatformException e) {
+			logger.error("Error while committing the promotion usage for order: " + request.getOrderId(), e);
+			response.setCommitAutoPromotionStatus(CommitAutoPromotionResponseStatusEnum.INTERNAL_ERROR);
+		}
+		
+		return response;
 	}
 
 	@Override
-	public GetAppliedAutoPromotionResponse getAppliedPromotions(
-			GetAppliedAutoPromotionRequest request) {
-		// TODO Auto-generated method stub
-		return null;
+	public GetAppliedAutoPromotionResponse getAppliedPromotions(GetAppliedAutoPromotionRequest request) {
+		logger.info("Fetching auto promotion usage for order : " + request.getOrderId());
+		GetAppliedAutoPromotionResponse response = new GetAppliedAutoPromotionResponse();
+		
+		response.setSessionToken(request.getSessionToken());
+		if (request == null || StringUtils.isBlank(request.getSessionToken())) {
+			response.setGetAppliedAutoPromotionStatus(GetAppliedAutoPromotionResponseStatusEnum.NO_SESSION);
+			return response;
+		}
+		
+		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
+		if (authentication == null) {
+			//invalid session token
+			response.setGetAppliedAutoPromotionStatus(GetAppliedAutoPromotionResponseStatusEnum.NO_SESSION);
+			return response;
+		}
+		
+		int userId = authentication.getUserID();
+		
+		try {
+			promotionService.getUserAutoPromotionUses(userId, request.getOrderId());
+			response.setGetAppliedAutoPromotionStatus(GetAppliedAutoPromotionResponseStatusEnum.SUCCESS);
+		} catch (PlatformException e) {
+			logger.error("Error while fetching the auto promotion usage for user : " + userId + ", order: " + request.getOrderId(), e);
+			response.setGetAppliedAutoPromotionStatus(GetAppliedAutoPromotionResponseStatusEnum.INTERNAL_ERROR);
+		}
+		
+		return response;
 	}
 }

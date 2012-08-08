@@ -32,5 +32,7 @@ public interface PromotionDao {
 	public UserPromotionUsesEntry load(int promotionId, int userId, int orderId);
 
 	public List<Integer> loadLiveAutoPromotionIds();
+	
+	public List<Integer> getUserAutoPromotionUses(int userId, int orderId);
 
 }

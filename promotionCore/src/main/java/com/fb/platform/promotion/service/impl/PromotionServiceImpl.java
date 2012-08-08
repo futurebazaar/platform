@@ -38,7 +38,6 @@ import com.fb.platform.promotion.model.coupon.GlobalCouponUses;
 import com.fb.platform.promotion.model.coupon.UserCouponUses;
 import com.fb.platform.promotion.model.coupon.UserCouponUsesEntry;
 import com.fb.platform.promotion.model.scratchCard.ScratchCard;
-import com.fb.platform.promotion.product.to.RefreshAutoPromotionResponseStatusEnum;
 import com.fb.platform.promotion.service.PromotionService;
 import com.fb.platform.promotion.to.ClearCacheEnum;
 import com.fb.platform.promotion.to.ClearCouponCacheRequest;
@@ -289,6 +288,31 @@ public class PromotionServiceImpl implements PromotionService {
 							"userId : " + userId + ", " +
 							"orderId : " + orderId, e);
 		}
+	}
+	
+	@Override
+	public void updateUserPromotionUses(int promotionId, int userId, int orderId) {
+		try {
+			promotionDao.updateUserUses(promotionId, userId, new BigDecimal(0), orderId);
+		} catch (DataAccessException e) {
+			throw new PlatformException("Error while updating the uses for auto promotion. " +
+							"promotionId : " + promotionId + ", " +
+							"userId : " + userId + ", " +
+							"orderId : " + orderId, e);
+		}
+	}
+	
+	@Override
+	public List<Integer> getUserAutoPromotionUses(int userId, int orderId) {
+		try {
+			logger.info("Fetching auto promotion usage for user : " + userId + ", order : " + orderId);
+			List<Integer> promotionList = promotionDao.getUserAutoPromotionUses(userId, orderId);
+			return promotionList;
+		} catch (DataAccessException e) {
+			throw new PlatformException("Error while fetching the uses for auto promotion. " +
+					"userId : " + userId + ", " +
+					"orderId : " + orderId, e);
+}
 	}
 
 	public void setCouponDao(CouponDao couponDao) {

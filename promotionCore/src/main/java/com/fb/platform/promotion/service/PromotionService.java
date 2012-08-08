@@ -128,4 +128,22 @@ public interface PromotionService {
 	@Transactional(propagation=Propagation.REQUIRED)
 	public List<Integer> getActiveAutoPromotions();
 	
+	/**
+	 * Called when committing the coupon. Records the users user of the promotion and coupon.
+	 * @param promotionId
+	 * @param userId
+	 * @param orderId
+	 */
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void updateUserPromotionUses(int promotionId, int userId, int orderId);
+	
+	/**
+	 * 
+	 * @param userId
+	 * @param orderId
+	 * @return
+	 */
+	@Transactional(propagation=Propagation.REQUIRED)
+	public List<Integer> getUserAutoPromotionUses(int userId, int orderId);
+	
 }
