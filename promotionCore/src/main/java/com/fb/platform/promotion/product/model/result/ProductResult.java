@@ -4,6 +4,7 @@
 package com.fb.platform.promotion.product.model.result;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -19,5 +20,13 @@ public class ProductResult extends AbstractResult {
 	}
 	public void setProductIds(List<Integer> productIds) {
 		this.productIds = productIds;
+		Collections.sort(productIds);
+	}
+
+	public boolean isApplicableOn(int productId) {
+		if (productIds.contains(productId)) {
+			return true;
+		}
+		return false;
 	}
 }

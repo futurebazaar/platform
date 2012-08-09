@@ -42,6 +42,11 @@ public class ConfigModule implements Comparable<ConfigModule>{
 	public boolean isValueResult() {
 		return results.isValueResult();
 	}
+
+	public boolean isProdResult() {
+		return results.isProductResult();
+	}
+
 	@Override
 	public int compareTo(ConfigModule o) {
 		int quantityDiff = o.getConditions().getMaxQuantity() - this.getConditions().getMaxQuantity();

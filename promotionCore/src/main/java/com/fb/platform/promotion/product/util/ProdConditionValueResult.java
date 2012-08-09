@@ -69,24 +69,24 @@ public class ProdConditionValueResult implements ConditionResultProcessor {
 	private Money getTotalPrice(List<OrderItem> matchingItems, int matchingQuantity) {
 		Money finalOrderItemPrice = new Money(BigDecimal.ZERO);
 
-		int reminder = matchingQuantity % productCondition.getQuantity();
+		int remainder = matchingQuantity % productCondition.getQuantity();
 		int multiples = matchingQuantity / productCondition.getQuantity();
 
 		OfferType offerType = valueChangeResult.getOfferType();
 		if (offerType == OfferType.FIXED_PRICE) {
 			finalOrderItemPrice = valueChangeResult.getOfferValue().times(multiples);
-			if (reminder > 0) {
-				List<Money> highetOfferPrices = findHighestOfferPricesForReminder(matchingItems, reminder);
+			if (remainder > 0) {
+				List<Money> highetOfferPrices = findHighestOfferPricesForReminder(matchingItems, remainder);
 				for (Money offerPrice : highetOfferPrices) {
 					finalOrderItemPrice = finalOrderItemPrice.plus(offerPrice);
 				}
 			}
 		} else if (offerType == OfferType.FIXED_OFF) {
-			for (int i = 0; i < matchingQuantity - reminder; i++) {
+			for (int i = 0; i < matchingQuantity - remainder; i++) {
 				finalOrderItemPrice = finalOrderItemPrice.plus(new Money(matchingItems.get(i).getProduct().getMrpPrice()));
 			}
-			if (reminder > 0) {
-				List<Money> highetOfferPrices = findHighestOfferPricesForReminder(matchingItems, reminder);
+			if (remainder > 0) {
+				List<Money> highetOfferPrices = findHighestOfferPricesForReminder(matchingItems, remainder);
 				for (Money offerPrice : highetOfferPrices) {
 					finalOrderItemPrice = finalOrderItemPrice.plus(offerPrice);
 				}
@@ -94,15 +94,15 @@ public class ProdConditionValueResult implements ConditionResultProcessor {
 			Money totalOffMoney = valueChangeResult.getOfferValue().times(multiples);
 			finalOrderItemPrice = finalOrderItemPrice.minus(totalOffMoney);
 		} else if (offerType == OfferType.PERCENT_OFF) {
-			for (int i = 0; i < matchingQuantity - reminder; i++) {
+			for (int i = 0; i < matchingQuantity - remainder; i++) {
 				Money itemPrice = new Money((matchingItems.get(i).getProduct().getMrpPrice()));
 				BigDecimal percentOff = valueChangeResult.getOfferValue().getAmount();
 				Money priceOff = itemPrice.times(percentOff.doubleValue()).div(100);
 
 				finalOrderItemPrice = finalOrderItemPrice.plus(itemPrice).minus(priceOff);
 			}
-			if (reminder > 0) {
-				List<Money> highetOfferPrices = findHighestOfferPricesForReminder(matchingItems, reminder);
+			if (remainder > 0) {
+				List<Money> highetOfferPrices = findHighestOfferPricesForReminder(matchingItems, remainder);
 				for (Money offerPrice : highetOfferPrices) {
 					finalOrderItemPrice = finalOrderItemPrice.plus(offerPrice);
 				}

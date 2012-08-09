@@ -67,7 +67,8 @@ public class AutoPromotionManagerImpl implements AutoPromotionManager {
 		}
 		ApplyAutoPromotionResponse response = new ApplyAutoPromotionResponse();
 
-		if (request == null || StringUtils.isBlank(request.getSessionToken())) {
+		/* no session check for apply auto promotion
+		 * if (request == null || StringUtils.isBlank(request.getSessionToken())) {
 			response.setApplyAutoPromotionStatus(ApplyAutoPromotionResponseStatusEnum.NO_SESSION);
 			return response;
 		}
@@ -82,7 +83,7 @@ public class AutoPromotionManagerImpl implements AutoPromotionManager {
 
 		response.setSessionToken(request.getSessionToken());
 
-		int userId = authentication.getUserID();
+		int userId = authentication.getUserID();*/
 
 		try {
 			List<Integer> activeAutoPromotions = promotionService.getActiveAutoPromotions();
@@ -100,7 +101,7 @@ public class AutoPromotionManagerImpl implements AutoPromotionManager {
 					continue;
 				}
 				AutoPromotion autoPromotion = (AutoPromotion)promotion;
-				if (!autoPromotion.isApplicableOn(request.getOrderReq(), userId)) {
+				if (!autoPromotion.isApplicableOn(request.getOrderReq(), 0)) {
 					continue;
 				}
 				boolean applied = autoPromotion.apply(request.getOrderReq(), orderResponse);
