@@ -183,7 +183,7 @@ public class PromotionDaoTest extends BaseTestCase {
 	
 	@Test
 	public void updateUserUsesCreateNew() {
-		boolean isCreatededSuccessfully = promotionDao.updateUserUses(-3, 3, new BigDecimal(222),42);
+		boolean isCreatededSuccessfully = promotionDao.updateUserUses(-3, 3, new BigDecimal(222),42, false);
 
 		UserPromotionUses userPromotionUses = promotionDao.loadUserUses(-3, 3);
 		
@@ -195,7 +195,7 @@ public class PromotionDaoTest extends BaseTestCase {
 	
 	@Test(expected=PlatformException.class)
 	public void updateUserUsesFailed() {
-		boolean isUpdatedSuccessfully = promotionDao.updateUserUses(-3, 3, new BigDecimal(100), 40);
+		boolean isUpdatedSuccessfully = promotionDao.updateUserUses(-3, 3, new BigDecimal(100), 40, false);
 
 		UserPromotionUses userPromotionUses = promotionDao.loadUserUses(-3, 3);
 		

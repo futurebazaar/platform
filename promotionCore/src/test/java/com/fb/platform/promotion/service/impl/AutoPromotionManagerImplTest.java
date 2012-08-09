@@ -21,6 +21,9 @@ import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.product.to.ApplyAutoPromotionRequest;
 import com.fb.platform.promotion.product.to.ApplyAutoPromotionResponse;
 import com.fb.platform.promotion.product.to.ApplyAutoPromotionResponseStatusEnum;
+import com.fb.platform.promotion.product.to.CommitAutoPromotionRequest;
+import com.fb.platform.promotion.product.to.CommitAutoPromotionResponse;
+import com.fb.platform.promotion.product.to.CommitAutoPromotionResponseStatusEnum;
 import com.fb.platform.promotion.service.AutoPromotionManager;
 import com.fb.platform.promotion.service.PromotionManager;
 import com.fb.platform.promotion.service.PromotionService;
@@ -153,5 +156,26 @@ public class AutoPromotionManagerImplTest extends BaseTestCase {
 		assertEquals(1, appliedPromotions.size());
 		assertEquals(8100, appliedPromotions.get(0).getId());
 		assertNotNull(response.getOrderDiscount());
+	}
+	
+	@Test
+	public void commit() {
+		CommitAutoPromotionRequest request  = new CommitAutoPromotionRequest(); 
+		request.setSessionToken(responseUser1.getSessionToken());
+		request.setOrderId(123);
+		List<Integer> promotionList = new ArrayList<Integer>();
+		promotionList.add(100);
+		request.setAppliedPromotionsList(promotionList);
+		CommitAutoPromotionResponse response = autoPromotionManager.commit(request);
+		assertNotNull(response);
+		assertEquals(response.getCommitAutoPromotionStatus(), CommitAutoPromotionResponseStatusEnum.SUCCESS);
+		
+		promotionList = new ArrayList<Integer>();
+		promotionList.add(200);
+		request.setAppliedPromotionsList(promotionList);
+		response = autoPromotionManager.commit(request);
+		assertNotNull(response);
+		assertEquals(response.getCommitAutoPromotionStatus(), CommitAutoPromotionResponseStatusEnum.SUCCESS);
+		
 	}
 }

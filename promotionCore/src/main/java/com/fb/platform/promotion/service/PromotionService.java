@@ -146,4 +146,13 @@ public interface PromotionService {
 	@Transactional(propagation=Propagation.REQUIRED)
 	public List<Integer> getUserAutoPromotionUses(int userId, int orderId);
 	
+	/**
+	 * 
+	 * @param userId
+	 * @param orderId
+	 * @return
+	 */
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void deleteUserAutoPromotionUses(int userId, int orderId);
+	
 }

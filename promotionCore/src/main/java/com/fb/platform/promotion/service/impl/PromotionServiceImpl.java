@@ -280,7 +280,7 @@ public class PromotionServiceImpl implements PromotionService {
 	public void updateUserUses(int couponId, int promotionId, int userId, BigDecimal valueApplied, int orderId) {
 		try {
 			couponDao.updateUserUses(couponId, userId, valueApplied, orderId);
-			promotionDao.updateUserUses(promotionId, userId, valueApplied, orderId);
+			promotionDao.updateUserUses(promotionId, userId, valueApplied, orderId, false);
 		} catch (DataAccessException e) {
 			throw new PlatformException("Error while updating the uses for coupon and promotion. " +
 							"couponId : " + couponId + ", " +
@@ -293,10 +293,21 @@ public class PromotionServiceImpl implements PromotionService {
 	@Override
 	public void updateUserPromotionUses(int promotionId, int userId, int orderId) {
 		try {
-			promotionDao.updateUserUses(promotionId, userId, new BigDecimal(0), orderId);
+			promotionDao.updateUserUses(promotionId, userId, new BigDecimal(0), orderId, true);
 		} catch (DataAccessException e) {
 			throw new PlatformException("Error while updating the uses for auto promotion. " +
 							"promotionId : " + promotionId + ", " +
+							"userId : " + userId + ", " +
+							"orderId : " + orderId, e);
+		}
+	}
+	
+	@Override
+	public void deleteUserAutoPromotionUses(int userId, int orderId) {
+		try {
+			promotionDao.deleteUserAutoPromotionUses(userId, orderId, true);
+		} catch (DataAccessException e) {
+			throw new PlatformException("Error while deleting the uses for auto promotion. " +
 							"userId : " + userId + ", " +
 							"orderId : " + orderId, e);
 		}

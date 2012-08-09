@@ -283,6 +283,7 @@ CREATE TABLE user_promotion_uses (
 	promotion_id INTEGER,
 	user_id INTEGER,
 	order_id INTEGER,
+	is_auto_promotion BOOLEAN DEFAULT FALSE,
 	discount_amount DECIMAL(18,2),
         created_on datetime NOT NULL,
         last_modified_on datetime NOT NULL,

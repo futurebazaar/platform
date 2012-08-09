@@ -39,11 +39,16 @@ import com.fb.platform.promotion._1_0.ClearCouponCacheRequest;
 import com.fb.platform.promotion._1_0.ClearCouponCacheResponse;
 import com.fb.platform.promotion._1_0.ClearPromotionCacheRequest;
 import com.fb.platform.promotion._1_0.ClearPromotionCacheResponse;
+import com.fb.platform.promotion._1_0.CommitAutoPromotionRequest;
+import com.fb.platform.promotion._1_0.CommitAutoPromotionResponse;
 import com.fb.platform.promotion._1_0.CommitCouponRequest;
 import com.fb.platform.promotion._1_0.CommitCouponResponse;
+import com.fb.platform.promotion._1_0.GetAppliedAutoPromotionRequest;
+import com.fb.platform.promotion._1_0.GetAppliedAutoPromotionResponse;
 import com.fb.platform.promotion._1_0.OrderItem;
 import com.fb.platform.promotion._1_0.OrderRequest;
 import com.fb.platform.promotion._1_0.Product;
+import com.fb.platform.promotion._1_0.Promotion;
 import com.fb.platform.promotion._1_0.ReleaseCouponRequest;
 import com.fb.platform.promotion._1_0.ReleaseCouponResponse;
 import com.fb.platform.promotion.admin._1_0.AlphaNumericType;
@@ -56,7 +61,6 @@ import com.fb.platform.promotion.admin._1_0.CouponType;
 import com.fb.platform.promotion.admin._1_0.CreateCouponRequest;
 import com.fb.platform.promotion.admin._1_0.CreateCouponResponse;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionRequest;
-import com.fb.platform.promotion.admin._1_0.*;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionResponse;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionTO;
 import com.fb.platform.promotion.admin._1_0.FetchRuleRequest;
@@ -918,8 +922,7 @@ public class RestClient {
         System.out.println(response.getSearchScratchCardStatusEnum());
 
  }
-
-
+	
 	private static void applyAutoPromotion(String sessionToken) throws Exception {
 		HttpClient httpClient = new HttpClient();
 		//PostMethod logoutMethod = new PostMethod("http://10.0.102.12:8082/promotionWS/coupon/clear/coupon");
@@ -978,6 +981,92 @@ public class RestClient {
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		ApplyAutoPromotionResponse xmlResponse = (ApplyAutoPromotionResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(xmlStr)));
 		System.out.println(xmlResponse.getApplyAutoPromotionStatus().toString());
+		
+		String appliedPromotionsList = "";
+
+         for (Promotion promotion : xmlResponse.getPromotion()) {
+        	 if(StringUtils.isNotBlank(appliedPromotionsList)) {
+        		 appliedPromotionsList += ",";
+        	 }
+        	 appliedPromotionsList += promotion.getPromotionId();
+         }
+         
+         CommitAutoPromotionRequest commitRequest = new CommitAutoPromotionRequest();
+         commitRequest.setSessionToken(sessionToken);
+         commitRequest.setOrderId(1);
+         commitRequest.setAppliedPromotionsList(appliedPromotionsList);
+         commitPromotion(commitRequest);
+
 	}
+	
+	private static void commitPromotion(CommitAutoPromotionRequest request)  throws Exception {
+		HttpClient httpClient = new HttpClient();
+		PostMethod postMethod = new PostMethod(url + "promotionWS/autoPromotion/commit");
+		
+		
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion._1_0");
+
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(request, sw);
+		
+		System.out.println("\n url + promotionWS/autoPromotion/commit");
+		System.out.println("\n apply commit : \n" + sw.toString());
+		
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		postMethod.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(postMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the commitPromotion method : " + statusCode);
+			System.exit(1);
+		}
+		String xmlStr = postMethod.getResponseBodyAsString();
+		System.out.println("Got the commitPromotion Response : \n\n" + xmlStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		CommitAutoPromotionResponse xmlResponse = (CommitAutoPromotionResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(xmlStr)));
+		System.out.println(xmlResponse.getCommitAutoPromotionStatus().toString());
+		
+		GetAppliedAutoPromotionRequest getRequest = new GetAppliedAutoPromotionRequest();
+		getRequest.setOrderId(1);
+		getRequest.setSessionToken(request.getSessionToken());
+		
+		getPromotions(getRequest);
+	}
+
+	private static void getPromotions(GetAppliedAutoPromotionRequest getRequest) throws Exception{
+		HttpClient httpClient = new HttpClient();
+		PostMethod postMethod = new PostMethod(url + "promotionWS/autoPromotion/getApplied");
+		
+		
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion._1_0");
+
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(getRequest, sw);
+		
+		System.out.println("\n url + promotionWS/autoPromotion/getApplied");
+		System.out.println("\n apply commit : \n" + sw.toString());
+		
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		postMethod.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(postMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the getPromotions method : " + statusCode);
+			System.exit(1);
+		}
+		String xmlStr = postMethod.getResponseBodyAsString();
+		System.out.println("Got the commitPromotion Response : \n\n" + xmlStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		GetAppliedAutoPromotionResponse xmlResponse = (GetAppliedAutoPromotionResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(xmlStr)));
+		System.out.println(xmlResponse.getGetAppliedAutoPromotionStatus().toString());
+		
+		for(Promotion promo : xmlResponse.getPromotion()) {
+			System.out.println("promo id : " + promo.getPromotionId());
+		}
+	}
+	
+	
 
 }

@@ -3,6 +3,7 @@
  */
 package com.fb.platform.promotion.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -179,6 +180,7 @@ public class AutoPromotionManagerImpl implements AutoPromotionManager {
 		
 		try {
 			for(Integer promotionId : request.getAppliedPromotionsList()) {
+				promotionService.deleteUserAutoPromotionUses(userId, request.getOrderId());
 				promotionService.updateUserPromotionUses(promotionId, userId, request.getOrderId());
 			}
 			response.setCommitAutoPromotionStatus(CommitAutoPromotionResponseStatusEnum.SUCCESS);
@@ -214,7 +216,12 @@ public class AutoPromotionManagerImpl implements AutoPromotionManager {
 		int userId = authentication.getUserID();
 		
 		try {
-			promotionService.getUserAutoPromotionUses(userId, request.getOrderId());
+			List<Integer> promoList = promotionService.getUserAutoPromotionUses(userId, request.getOrderId());
+			List<Promotion> promotionsList  = new ArrayList<Promotion>();
+			for(int promoId : promoList) {
+				promotionsList.add(promotionService.getPromotion(promoId));
+			}
+			response.setPromotionList(promotionsList);
 			response.setGetAppliedAutoPromotionStatus(GetAppliedAutoPromotionResponseStatusEnum.SUCCESS);
 		} catch (PlatformException e) {
 			logger.error("Error while fetching the auto promotion usage for user : " + userId + ", order: " + request.getOrderId(), e);

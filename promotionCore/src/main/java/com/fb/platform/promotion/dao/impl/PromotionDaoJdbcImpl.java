@@ -99,8 +99,9 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			"	order_id, " +
 			"	discount_amount, " +
 			"	created_on, " +
-			"	last_modified_on) " +
-			"VALUES (?, ?, ?, ?, ?, ?)";
+			"	last_modified_on," +
+			"	is_auto_promotion) " +
+			"VALUES (?, ?, ?, ?, ?, ?, ?)";
 	
 	private static final String DELETE_USER_USES = 
 			"DELETE from user_promotion_uses " +
@@ -145,7 +146,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			"	AND valid_till >= ?";
 	
 	/**
-	 * SELECT promotion_id FROM user_promotion_uses WHERE user_id = ? AND order_id = ?
+	 * SELECT promotion_id FROM user_promotion_uses WHERE user_id = ? AND order_id = ? AND is_auto_promotion = ?
 	 */
 	private static final String LOAD_USER_AUTO_PROMOTION_USAGE = 
 			"SELECT " +
@@ -154,7 +155,12 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			"	user_promotion_uses " +
 			"WHERE " +
 			"	user_id = ? " +
-			"	AND order_id = ?";
+			"	AND order_id = ? " +
+			"	AND is_auto_promotion = ? ";
+	
+	private static final String DELETE_AUTO_PROMOTION_USER_USES = 
+			"DELETE from user_promotion_uses " +
+			"where user_id = ? AND order_id = ? AND is_auto_promotion = ?";
 	
 	/* (non-Javadoc)
 	 * @see com.fb.platform.promotion.dao.PromotionDao#load(int)
@@ -252,17 +258,17 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 	 */
 	@Override
 	public List<Integer> getUserAutoPromotionUses(int userId, int orderId) {
-		List<Integer> promotionList = jdbcTemplate.queryForList(LOAD_USER_AUTO_PROMOTION_USAGE, Integer.class, new Object[] {userId, orderId});
+		List<Integer> promotionList = jdbcTemplate.queryForList(LOAD_USER_AUTO_PROMOTION_USAGE, Integer.class, new Object[] {userId, orderId, true});
 		return promotionList;
 	}
 	
 	
 
 	@Override
-	public boolean updateUserUses(int promotionId, int userId, BigDecimal valueApplied, int orderId) {
+	public boolean updateUserUses(int promotionId, int userId, BigDecimal valueApplied, int orderId, final boolean isAutoPromotion) {
 		
 		//for every use of the coupon, create a new object
-		return createUserUses(promotionId, userId, valueApplied, orderId);
+		return createUserUses(promotionId, userId, valueApplied, orderId, isAutoPromotion);
 	}
 
 	@Override
@@ -367,7 +373,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		return discountValue;
 	}
 	
-	private boolean createUserUses(final int promotionId, final int userId, final BigDecimal valueApplied, final int orderId) {
+	private boolean createUserUses(final int promotionId, final int userId, final BigDecimal valueApplied, final int orderId, final boolean isAutoPromotion) {
 		
 		if(log.isDebugEnabled()) {
 			log.debug("Insert in the user_promotion_uses table record for user : " + userId + " , applied promotion id : " + promotionId + " , on order id : " + orderId + " , discount value applied : " + valueApplied );
@@ -388,6 +394,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 					Timestamp timestamp = new java.sql.Timestamp(System.currentTimeMillis());
 					ps.setTimestamp(5, timestamp);
 					ps.setTimestamp(6, timestamp);
+					ps.setBoolean(7, isAutoPromotion);
 					return ps;
 				}
 			}, userUsesKeyHolder);
@@ -607,5 +614,10 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 	
 	public void setPromotionConfigDao(PromotionConfigDao promotionConfigDao) {
 		this.promotionConfigDao = promotionConfigDao;
+	}
+
+	@Override
+	public void deleteUserAutoPromotionUses(int userId, int orderId, boolean isAutoPromotion) {
+		jdbcTemplate.update(DELETE_AUTO_PROMOTION_USER_USES, new Object[] {userId, orderId, isAutoPromotion});
 	}
 }

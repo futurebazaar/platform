@@ -23,7 +23,7 @@ public interface PromotionDao {
 
 	public UserPromotionUses loadUserUses(int promotionId, int userId);
 	
-	public boolean updateUserUses(int promotionId, int userId, BigDecimal valueApplied, int orderId);
+	public boolean updateUserUses(int promotionId, int userId, BigDecimal valueApplied, int orderId, boolean isAutoPromotion);
 	
 	public boolean releasePromotion(int promotionId, int userId, int orderId);
 	
@@ -36,4 +36,6 @@ public interface PromotionDao {
 	public List<Integer> loadLiveAutoPromotionIds();
 	
 	public List<Integer> getUserAutoPromotionUses(int userId, int orderId);
+	
+	public void deleteUserAutoPromotionUses(int userId, int orderId, boolean isAutoPromotion);
 }
