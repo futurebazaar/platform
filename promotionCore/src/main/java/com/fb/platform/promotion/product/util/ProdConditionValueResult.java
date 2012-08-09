@@ -59,11 +59,12 @@ public class ProdConditionValueResult implements ConditionResultProcessor {
 	}
 
 	private void distributeTotalPriceAccrossOrderItems(List<OrderItem> matchingItems, Money totalPrice, int matchingQuantity) {
-		Money productPrice = totalPrice.div(matchingQuantity);
+		/*Money productPrice = totalPrice.div(matchingQuantity);
 		for (OrderItem orderItem : matchingItems) {
 			orderItem.getProduct().setDiscountedPrice(productPrice.getAmount());
 			orderItem.setPromotionProcessed(true);
-		}
+		}*/
+		OrderItemPriceDistributor.distributeOnMrp(matchingItems, totalPrice);
 	}
 
 	private Money getTotalPrice(List<OrderItem> matchingItems, int matchingQuantity) {

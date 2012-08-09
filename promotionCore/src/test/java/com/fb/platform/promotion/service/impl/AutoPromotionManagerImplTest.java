@@ -82,8 +82,8 @@ public class AutoPromotionManagerImplTest extends BaseTestCase {
 		oItem1.setProduct(p1);
 
 		Product p2 = new Product();
-		p2.setPrice(new BigDecimal(700));
-		p2.setMrpPrice(new BigDecimal(1200));
+		p2.setPrice(new BigDecimal(600));
+		p2.setMrpPrice(new BigDecimal(1100));
 		p2.setProductId(200);
 
 		//Create OrderItems
