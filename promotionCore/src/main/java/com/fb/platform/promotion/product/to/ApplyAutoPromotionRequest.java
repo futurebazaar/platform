@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
+import com.fb.platform.promotion.to.OrderItem;
 import com.fb.platform.promotion.to.OrderRequest;
 
 /**
@@ -46,5 +47,9 @@ public class ApplyAutoPromotionRequest implements Serializable {
 	}
 	public void setAppliedPromotions(List<Integer> appliedPromotions) {
 		this.appliedPromotions = appliedPromotions;
+	}
+
+	public void resetDiscountedPrice() {
+		
 	}
 }

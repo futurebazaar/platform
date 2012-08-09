@@ -67,34 +67,33 @@ public class AutoPromotionManagerImpl implements AutoPromotionManager {
 		}
 		ApplyAutoPromotionResponse response = new ApplyAutoPromotionResponse();
 
-		/* no session check for apply auto promotion
-		 * if (request == null || StringUtils.isBlank(request.getSessionToken())) {
-			response.setApplyAutoPromotionStatus(ApplyAutoPromotionResponseStatusEnum.NO_SESSION);
-			return response;
-		}
-
-		//authenticate the session token and find out the userId
-		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
-		if (authentication == null) {
-			//invalid session token
-			response.setApplyAutoPromotionStatus(ApplyAutoPromotionResponseStatusEnum.NO_SESSION);
-			return response;
-		}
-
-		response.setSessionToken(request.getSessionToken());
-
-		int userId = authentication.getUserID();*/
-
 		try {
-			List<Integer> activeAutoPromotions = promotionService.getActiveAutoPromotions();
+			List<Integer> autoPromotionsToApply = null;
+			boolean modification = false;
+			//List<Integer> alreadyAppliedPromotions = request.getAppliedPromotions();
+			if (request.getAppliedPromotions() != null && request.getAppliedPromotions().size() > 0) {
+				//this is a modification order
+				modification = true;
+				autoPromotionsToApply = request.getAppliedPromotions();
+			} else {
+				//get the list of all active auto promotion ids
+				autoPromotionsToApply = promotionService.getActiveAutoPromotions();
+			}
+
+			//reset any discounted price coming in
+			request.resetDiscountedPrice();
+
 			OrderDiscount orderResponse = new OrderDiscount();
 			orderResponse.setOrderRequest(request.getOrderReq());
 
-			//loop through all the active auto promotions and see any of them is applicable on the order
-			for (Integer promotionId : activeAutoPromotions) {
+			//loop through all the auto promotions and see any of them is applicable on the order
+			for (Integer promotionId : autoPromotionsToApply) {
 				Promotion promotion = promotionService.getPromotion(promotionId);
-				if (!promotion.isActive() || !promotion.isWithinDates()) {
-					continue;
+
+				if (!modification) {
+					if (!promotion.isActive() || !promotion.isWithinDates()) {
+						continue;
+					}
 				}
 				if (!(promotion instanceof AutoPromotion)) {
 					//wrong promotion type, should not happen but check just in case.
