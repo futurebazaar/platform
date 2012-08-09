@@ -94,18 +94,17 @@ public class ProdConditionValueResult implements ConditionResultProcessor {
 			Money totalOffMoney = valueChangeResult.getOfferValue().times(multiples);
 			finalOrderItemPrice = finalOrderItemPrice.minus(totalOffMoney);
 		} else if (offerType == OfferType.PERCENT_OFF) {
-			for (int i = 0; i < matchingQuantity - remainder; i++) {
-				Money itemPrice = new Money((matchingItems.get(i).getProduct().getMrpPrice()));
+			//we apply percent off to all the matching items, there is no remainder concept here.
+			//used in promotions such as buy 1 for 5% off, buy 2 for 10% off etc, buy 3 or more for 15% off
+			for (OrderItem matchingItem : matchingItems) {
+				Money productPrice = new Money(matchingItem.getProduct().getMrpPrice());
+				//Money itemPrice = new Money((matchingItems.get(i).getProduct().getMrpPrice()));
 				BigDecimal percentOff = valueChangeResult.getOfferValue().getAmount();
-				Money priceOff = itemPrice.times(percentOff.doubleValue()).div(100);
+				Money priceOff = productPrice.times(percentOff.doubleValue()).div(100);
 
-				finalOrderItemPrice = finalOrderItemPrice.plus(itemPrice).minus(priceOff);
-			}
-			if (remainder > 0) {
-				List<Money> highetOfferPrices = findHighestOfferPricesForReminder(matchingItems, remainder);
-				for (Money offerPrice : highetOfferPrices) {
-					finalOrderItemPrice = finalOrderItemPrice.plus(offerPrice);
-				}
+				Money discountedProductPrice = productPrice.minus(priceOff);
+				Money orderItemDiscountedPrice = discountedProductPrice.times(matchingItem.getQuantity());
+				finalOrderItemPrice = finalOrderItemPrice.plus(orderItemDiscountedPrice);
 			}
 		}
 		return finalOrderItemPrice;

@@ -50,6 +50,7 @@ public class ConfigModule implements Comparable<ConfigModule>{
 	@Override
 	public int compareTo(ConfigModule o) {
 		int quantityDiff = o.getConditions().getMaxQuantity() - this.getConditions().getMaxQuantity();
+		//int quantityDiff = this.getConditions().getMaxQuantity() - o.getConditions().getMaxQuantity();
 		return quantityDiff;
 	}
 }
