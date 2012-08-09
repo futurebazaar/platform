@@ -109,6 +109,7 @@ public class PromotionConfigDaoJdbcImpl implements PromotionConfigDao {
 		promotionConfig.setPromotionId(promotionId);
 
 		List<Integer> configModuleIds = getPromotionConfigIds(promotionId);
+		List<ConfigModule> configModules = new ArrayList<ConfigModule>();
 
 		for(Integer configId : configModuleIds) {
 			log.info("Get conditions and results for promotion config id : " + configId);
@@ -120,9 +121,11 @@ public class PromotionConfigDaoJdbcImpl implements PromotionConfigDao {
 				Results results = jdbcTemplate.query(GET_RESULT_FOR_CONFIG_ID, new Object[] {configId}, new PromotionResultSetExtractor());
 				configModule.setConditions(conditions);
 				configModule.setResults(results);
-				promotionConfig.getModules().add(configModule);
+				configModules.add(configModule);
+				//promotionConfig.getModules().add(configModule);
 			}
 		}
+		promotionConfig.setModules(configModules);
 		return promotionConfig;
 	}
 	
