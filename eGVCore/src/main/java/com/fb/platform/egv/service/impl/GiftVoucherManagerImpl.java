@@ -340,6 +340,9 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 		}
 		ActivateResponse response = new ActivateResponse();
 
+		System.out.println("Session Token is " + request.getSessionToken());
+		logger.debug("Session Token is " + request.getSessionToken());
+
 		if (request == null || StringUtils.isBlank(request.getSessionToken())) {
 			response.setResponseStatus(ActivateResponseStatusEnum.NO_SESSION);
 			return response;
@@ -373,11 +376,10 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 		return response;
 
 	}
-
 	@Override
 	public SendPinResponse sendPin(SendPinRequest request) {
 		if (logger.isDebugEnabled()) {
-			logger.debug("Getting Gift Voucher  : " + request.getGiftVoucherNumber());
+			logger.debug("SendPin of Gift Voucher  : " + request.getGiftVoucherNumber());
 		}
 		SendPinResponse response = new SendPinResponse();
 
@@ -400,7 +402,8 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 		try {
 			// Find the gift voucher
 			giftVoucherService.sendGiftVoucherPin(request.getGiftVoucherNumber(), request.getEmail(),
-					request.getMobile(), request.getSenderName(), request.getReceiverName());
+					request.getMobile(), request.getSenderName(), request.getReceiverName(), request.getGiftMessage());
+			response.setNumber(request.getGiftVoucherNumber());
 			response.setResponseStatus(SendPinResponseStatusEnum.SUCCESS);
 
 		} catch (GiftVoucherNotFoundException e) {
