@@ -51,6 +51,7 @@ import com.fb.platform.promotion._1_0.Promotion;
 import com.fb.platform.promotion._1_0.RefreshAutoPromotionRequest;
 import com.fb.platform.promotion._1_0.RefreshAutoPromotionResponse;
 import com.fb.platform.promotion._1_0.RefreshAutoPromotionStatus;
+import com.fb.platform.promotion.product.to.ApplyAutoPromotionResponseStatusEnum;
 import com.fb.platform.promotion.service.AutoPromotionManager;
 
 /**
@@ -138,10 +139,12 @@ public class AutoPromotionResource {
 			
 			xmlResponse.setSessionToken(apiResponse.getSessionToken());
 			xmlResponse.setApplyAutoPromotionStatus(ApplyAutoPromotionStatus.valueOf(apiResponse.getApplyAutoPromotionStatus().toString()));
-			xmlResponse.setOrderDiscount(getXmlOrderDiscountValue(apiResponse.getOrderDiscount()));
-			
-			for(com.fb.platform.promotion.model.Promotion apiPromotion : apiResponse.getAppliedPromotions()) {
-				xmlResponse.getPromotion().add(getXmlPromotion(apiPromotion));
+			if(apiResponse.getApplyAutoPromotionStatus() == ApplyAutoPromotionResponseStatusEnum.SUCCESS) {
+				xmlResponse.setOrderDiscount(getXmlOrderDiscountValue(apiResponse.getOrderDiscount()));
+				
+				for(com.fb.platform.promotion.model.Promotion apiPromotion : apiResponse.getAppliedPromotions()) {
+					xmlResponse.getPromotion().add(getXmlPromotion(apiPromotion));
+				}
 			}
 			
 			StringWriter outStringWriter = new StringWriter();
@@ -272,9 +275,10 @@ public class AutoPromotionResource {
 	
 	private OrderDiscount getXmlOrderDiscountValue(com.fb.platform.promotion.model.OrderDiscount apiOrderDiscount) {
 		OrderDiscount xmlOrderDiscount = new OrderDiscount();
-		
-		xmlOrderDiscount.setDiscountValue(apiOrderDiscount.getOrderDiscountValue());
-		xmlOrderDiscount.setOrderRequest(getXmlOrderRequest(apiOrderDiscount.getOrderRequest()));
+		if (apiOrderDiscount != null) {
+			xmlOrderDiscount.setDiscountValue(apiOrderDiscount.getOrderDiscountValue());
+			xmlOrderDiscount.setOrderRequest(getXmlOrderRequest(apiOrderDiscount.getOrderRequest()));
+		}
 		
 		return xmlOrderDiscount;
 	}
@@ -293,12 +297,13 @@ public class AutoPromotionResource {
 	private OrderRequest getXmlOrderRequest(com.fb.platform.promotion.to.OrderRequest apiOrderRequest) {
 		
 		OrderRequest xmlOrderRequest = new OrderRequest();
-		
-		xmlOrderRequest.setClientId(apiOrderRequest.getClientId());
-		xmlOrderRequest.setOrderId(apiOrderRequest.getOrderId());
-		
-		for(com.fb.platform.promotion.to.OrderItem apiOrderItem : apiOrderRequest.getOrderItems()) {
-			xmlOrderRequest.getOrderItem().add(getXmlOrderItem(apiOrderItem));
+		if (apiOrderRequest != null) {
+			xmlOrderRequest.setClientId(apiOrderRequest.getClientId());
+			xmlOrderRequest.setOrderId(apiOrderRequest.getOrderId());
+			
+			for(com.fb.platform.promotion.to.OrderItem apiOrderItem : apiOrderRequest.getOrderItems()) {
+				xmlOrderRequest.getOrderItem().add(getXmlOrderItem(apiOrderItem));
+			}
 		}
 		
 		return xmlOrderRequest;
@@ -307,11 +312,13 @@ public class AutoPromotionResource {
 	private OrderItem getXmlOrderItem(com.fb.platform.promotion.to.OrderItem apiOrderItem) {
 		OrderItem xmlOrderItem = new OrderItem();
 		
-		xmlOrderItem.setItemId(apiOrderItem.getItemId());
-		xmlOrderItem.setQuantity(apiOrderItem.getQuantity());
-		xmlOrderItem.setDiscountValue(apiOrderItem.getTotalDiscount());
-		xmlOrderItem.setIsLocked(apiOrderItem.isLocked());
-		xmlOrderItem.setProduct(getXmlProduct(apiOrderItem.getProduct()));
+		if (apiOrderItem != null) {
+			xmlOrderItem.setItemId(apiOrderItem.getItemId());
+			xmlOrderItem.setQuantity(apiOrderItem.getQuantity());
+			xmlOrderItem.setDiscountValue(apiOrderItem.getTotalDiscount());
+			xmlOrderItem.setIsLocked(apiOrderItem.isLocked());
+			xmlOrderItem.setProduct(getXmlProduct(apiOrderItem.getProduct()));
+		}
 		
 		return xmlOrderItem;
 	}

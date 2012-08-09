@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.auth.AuthenticationService;
+import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.product.to.ApplyAutoPromotionRequest;
 import com.fb.platform.promotion.product.to.ApplyAutoPromotionResponse;
 import com.fb.platform.promotion.product.to.ApplyAutoPromotionResponseStatusEnum;
@@ -107,6 +108,50 @@ public class AutoPromotionManagerImplTest extends BaseTestCase {
 		assertNotNull(response);
 		assertEquals(ApplyAutoPromotionResponseStatusEnum.SUCCESS, response.getApplyAutoPromotionStatus());
 		assertNotNull(response.getAppliedPromotions());
+		assertNotNull(response.getOrderDiscount());
+	}
+
+	@Test
+	public void applyBuyXGetYFree() {
+		Product p1 = new Product();
+		p1.setPrice(new BigDecimal(700));
+		p1.setMrpPrice(new BigDecimal(1200));
+		p1.setProductId(133568);
+
+		//Create OrderItems
+		OrderItem oItem1 = new OrderItem();
+		oItem1.setQuantity(1);
+		oItem1.setProduct(p1);
+
+		Product p2 = new Product();
+		p2.setPrice(new BigDecimal(600));
+		p2.setMrpPrice(new BigDecimal(1100));
+		p2.setProductId(92631);
+
+		//Create OrderItems
+		OrderItem oItem2 = new OrderItem();
+		oItem2.setQuantity(2);
+		oItem2.setProduct(p2);
+
+		//Create OrderReq
+		OrderRequest orderReq1 = new OrderRequest();
+		orderReq1.setOrderId(1);
+		List<OrderItem> oList1 = new ArrayList<OrderItem>();
+		oList1.add(oItem1);
+		oList1.add(oItem2);
+		orderReq1.setOrderItems(oList1);
+
+		ApplyAutoPromotionRequest request = new ApplyAutoPromotionRequest();
+		request.setOrderReq(orderReq1);
+
+		ApplyAutoPromotionResponse response = autoPromotionManager.apply(request);
+
+		assertNotNull(response);
+		assertEquals(ApplyAutoPromotionResponseStatusEnum.SUCCESS, response.getApplyAutoPromotionStatus());
+		assertNotNull(response.getAppliedPromotions());
+		List<Promotion> appliedPromotions = response.getAppliedPromotions();
+		assertEquals(1, appliedPromotions.size());
+		assertEquals(8100, appliedPromotions.get(0).getId());
 		assertNotNull(response.getOrderDiscount());
 	}
 }

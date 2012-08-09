@@ -4,6 +4,7 @@
 package com.fb.platform.promotion.product.model.condition;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.fb.platform.promotion.product.model.Condition;
@@ -22,6 +23,8 @@ public class ProductCondition implements Condition,Comparable<ProductCondition> 
 	}
 	public void setProductIds(List<Integer> productIds) {
 		this.productIds = productIds;
+		//sort the product ids in asc order
+		Collections.sort(productIds);
 	}
 	
 	@Override
