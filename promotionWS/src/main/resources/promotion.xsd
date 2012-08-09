@@ -319,13 +319,15 @@
         <xs:element ref="promotion:promotionName"/>
         <xs:element ref="promotion:description"/>
         <xs:element ref="promotion:isActive"/>
+        <xs:element ref="promotion:isApplied"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="promotionName" type="xs:string"/>
   <xs:element name="description" type="xs:string"/>
   <xs:element name="isActive" type="xs:boolean"/>
-  
+  <xs:element name="isApplied" type="xs:boolean"/>
+
   <xs:element name="refreshAutoPromotionRequest">
     <xs:complexType>
       <xs:sequence>

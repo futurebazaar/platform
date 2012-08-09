@@ -6,9 +6,10 @@ package com.fb.platform.promotion.product.to;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.fb.platform.promotion.model.OrderDiscount;
-import com.fb.platform.promotion.model.Promotion;
+import com.fb.platform.promotion.product.model.promotion.AutoPromotion;
 
 /**
  * @author vinayak
@@ -17,9 +18,10 @@ import com.fb.platform.promotion.model.Promotion;
 public class ApplyAutoPromotionResponse implements Serializable {
 
 	private OrderDiscount orderDiscount;
-	private List<Promotion> appliedPromotions = new ArrayList<Promotion>();
+	private List<AutoPromotion> appliedPromotions = new ArrayList<AutoPromotion>();
 	private ApplyAutoPromotionResponseStatusEnum applyAutoPromotionStatus;
 	private String sessionToken;
+	private Map<Integer, Boolean> appliedPromotionStatuses = null; 
 
 	public OrderDiscount getOrderDiscount() {
 		return orderDiscount;
@@ -27,10 +29,10 @@ public class ApplyAutoPromotionResponse implements Serializable {
 	public void setOrderDiscount(OrderDiscount orderDiscount) {
 		this.orderDiscount = orderDiscount;
 	}
-	public List<Promotion> getAppliedPromotions() {
+	public List<AutoPromotion> getAppliedPromotions() {
 		return appliedPromotions;
 	}
-	public void setAppliedPromotions(List<Promotion> appliedPromotions) {
+	public void setAppliedPromotions(List<AutoPromotion> appliedPromotions) {
 		this.appliedPromotions = appliedPromotions;
 	}
 	public String getSessionToken() {
@@ -45,6 +47,13 @@ public class ApplyAutoPromotionResponse implements Serializable {
 	public void setApplyAutoPromotionStatus(
 			ApplyAutoPromotionResponseStatusEnum applyAutoPromotionStatus) {
 		this.applyAutoPromotionStatus = applyAutoPromotionStatus;
+	}
+	public Map<Integer, Boolean> getAppliedPromotionStatuses() {
+		return appliedPromotionStatuses;
+	}
+	public void setAppliedPromotionStatuses(
+			Map<Integer, Boolean> appliedPromotionStatuses) {
+		this.appliedPromotionStatuses = appliedPromotionStatuses;
 	}
 
 }
