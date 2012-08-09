@@ -463,7 +463,7 @@
         <jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
         <jdbc.url><![CDATA[jdbc:mysql://localhost/platform?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf-8]]></jdbc.url>
         <jdbc.username>root</jdbc.username>
-        <jdbc.password>ROOT123</jdbc.password>
+        <jdbc.password>root</jdbc.password>
     </properties>
 </project>
 
