@@ -91,22 +91,22 @@ public class RestClient {
 		//test login
 		String sessionToken = login();
 		//String username = getUser(sessionToken);
-//		int orderId = RandomUtils.nextInt();
-//		BigDecimal discountValue = applyCoupon(sessionToken, orderId, "GlobalCoupon1000Off");
-//		commitCouupon(sessionToken, orderId, discountValue);
-//		releaseCoupon(sessionToken, orderId);
-//		clearCoupon(sessionToken);
-//		clearPromotion(sessionToken);
-//		getAllPromotionRuleList(sessionToken);
-//		createPromotion(sessionToken);
-//		searchPromotion(sessionToken);
-//		viewPromotion(sessionToken);
-//		updatePromotion(sessionToken);
-//		assignCouponToUser(sessionToken);
-//		//applyCoupon(sessionToken, orderId, "preIssuedNoCouponUserEntry");
-//		searchCoupon(sessionToken);
-//		viewCoupon(sessionToken);
-//		createCoupon(sessionToken);
+		int orderId = RandomUtils.nextInt();
+		BigDecimal discountValue = applyCoupon(sessionToken, orderId, "GlobalCoupon1000Off");
+		commitCouupon(sessionToken, orderId, discountValue);
+		releaseCoupon(sessionToken, orderId);
+		clearCoupon(sessionToken);
+		clearPromotion(sessionToken);
+		getAllPromotionRuleList(sessionToken);
+		createPromotion(sessionToken);
+		searchPromotion(sessionToken);
+		viewPromotion(sessionToken);
+		updatePromotion(sessionToken);
+		assignCouponToUser(sessionToken);
+		//applyCoupon(sessionToken, orderId, "preIssuedNoCouponUserEntry");
+		searchCoupon(sessionToken);
+		viewCoupon(sessionToken);
+		createCoupon(sessionToken);
 		searchScratchCard(sessionToken,"BB000UGDC");
 		logout(sessionToken);
 	}
@@ -119,10 +119,10 @@ public class RestClient {
 		LoginRequest loginRequest = new LoginRequest();
 		//loginRequest.setUsername("9920694762");
 		//loginRequest.setPassword("test");
-//		loginRequest.setUsername("neha.garani@gmail.com");
-//		loginRequest.setPassword("testpass");
-		loginRequest.setUsername("1010101010");
-		loginRequest.setPassword("shagun");
+		loginRequest.setUsername("neha.garani@gmail.com");
+		loginRequest.setPassword("testpass");
+//		loginRequest.setUsername("1010101010");
+		//loginRequest.setPassword("shagun");
 
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.auth._1_0");
 		Marshaller marshaller = context.createMarshaller();
@@ -850,7 +850,7 @@ public class RestClient {
 
 
 
-        PostMethod postMethod = new PostMethod(url + "promotionAdminWS/promotionAdmin/scratchcardsearch");
+        PostMethod postMethod = new PostMethod(url + "promotionAdminWS/promotionAdmin/scratchCard/search");
 
 
 
