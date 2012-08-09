@@ -35,3 +35,6 @@ CREATE TABLE results_config (
 	PRIMARY KEY (id),
 	CONSTRAINT results_config_fk1 FOREIGN KEY (promotion_config_module_id) REFERENCES promotion_config_module(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE user_promotion_uses ADD COLUMN is_auto_promotion BOOLEAN DEFAULT false;
+
