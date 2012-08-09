@@ -4,7 +4,9 @@
 package com.fb.platform.promotion.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -70,6 +72,8 @@ public class AutoPromotionManagerImpl implements AutoPromotionManager {
 
 		try {
 			List<Integer> autoPromotionsToApply = null;
+			Map<Integer, Boolean> appliedPromotionStatuses = new HashMap<Integer, Boolean>();
+
 			boolean modification = false;
 			//List<Integer> alreadyAppliedPromotions = request.getAppliedPromotions();
 			if (request.getAppliedPromotions() != null && request.getAppliedPromotions().size() > 0) {
@@ -102,14 +106,24 @@ public class AutoPromotionManagerImpl implements AutoPromotionManager {
 				}
 				AutoPromotion autoPromotion = (AutoPromotion)promotion;
 				if (!autoPromotion.isApplicableOn(request.getOrderReq(), 0)) {
+					if (modification) {
+						appliedPromotionStatuses.put(promotionId, false);
+						//autoPromotion.setApplied(false);
+						response.getAppliedPromotions().add(autoPromotion);
+					}
 					continue;
 				}
 				boolean applied = autoPromotion.apply(request.getOrderReq(), orderResponse);
 				if (applied) {
-					response.getAppliedPromotions().add(promotion);
+					appliedPromotionStatuses.put(promotionId, true);
+					response.getAppliedPromotions().add(autoPromotion);
+				} else if (modification) {
+					appliedPromotionStatuses.put(promotionId, false);
+					response.getAppliedPromotions().add(autoPromotion);
 				}
 			}
 			response.setOrderDiscount(orderResponse);
+			response.setAppliedPromotionStatuses(appliedPromotionStatuses);
 			response.setApplyAutoPromotionStatus(ApplyAutoPromotionResponseStatusEnum.SUCCESS);
 		} catch (NoActiveAutoPromotionFoundException e) {
 			//this is ok.

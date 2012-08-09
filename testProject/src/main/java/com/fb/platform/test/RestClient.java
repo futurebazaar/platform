@@ -105,7 +105,7 @@ public class RestClient {
 		releaseCoupon(sessionToken, orderId);
 		clearCoupon(sessionToken);
 		clearPromotion(sessionToken);
-		getAllPromotionRuleList(sessionToken);
+		//getAllPromotionRuleList(sessionToken);
 		createPromotion(sessionToken);
 		searchPromotion(sessionToken);
 		viewPromotion(sessionToken);
@@ -930,17 +930,17 @@ public class RestClient {
 		ApplyAutoPromotionRequest xmlRequest = new ApplyAutoPromotionRequest();
 		xmlRequest.setSessionToken(sessionToken);
 		
-		/*Product p1 = new Product();
+		Product p1 = new Product();
 		p1.setPrice(new BigDecimal(700));
 		p1.setMrpPrice(new BigDecimal(1200));
 		p1.setProductId(100);
 
 		//Create OrderItems
 		OrderItem oItem1 = new OrderItem();
-		oItem1.setQuantity(3);
+		oItem1.setQuantity(1);
 		oItem1.setProduct(p1);
 
-		Product p2 = new Product();
+		/*Product p2 = new Product();
 		p2.setPrice(new BigDecimal(700));
 		p2.setMrpPrice(new BigDecimal(1200));
 		p2.setProductId(200);
@@ -948,29 +948,29 @@ public class RestClient {
 		//Create OrderItems
 		OrderItem oItem2 = new OrderItem();
 		oItem2.setQuantity(2);
-		oItem2.setProduct(p2);
+		oItem2.setProduct(p2);*/
 
 		//Create OrderReq
 		OrderRequest orderReq1 = new OrderRequest();
 		orderReq1.setOrderId(1);
 		List<OrderItem> oList1 = new ArrayList<OrderItem>();
 		oList1.add(oItem1);
-		oList1.add(oItem2);
-		orderReq1.getOrderItem().addAll(oList1);*/
-		Product p1 = new Product();
-		p1.setPrice(new BigDecimal(700));
-		p1.setMrpPrice(new BigDecimal(1200));
-		p1.setProductId(133568);
+		//oList1.add(oItem2);
+		orderReq1.getOrderItem().addAll(oList1);
+		/*Product p1 = new Product();
+		p1.setPrice(new BigDecimal(300));
+		p1.setMrpPrice(new BigDecimal(400));
+		p1.setProductId(78190);
 
 		//Create OrderItems
 		OrderItem oItem1 = new OrderItem();
-		oItem1.setQuantity(1);
+		oItem1.setQuantity(10);
 		oItem1.setProduct(p1);
 
-		Product p2 = new Product();
+		/*Product p2 = new Product();
 		p2.setPrice(new BigDecimal(600));
 		p2.setMrpPrice(new BigDecimal(1100));
-		p2.setProductId(92631);
+		p2.setProductId(134740);
 
 		//Create OrderItems
 		OrderItem oItem2 = new OrderItem();
@@ -982,10 +982,11 @@ public class RestClient {
 		orderReq1.setOrderId(1);
 		List<OrderItem> oList1 = new ArrayList<OrderItem>();
 		oList1.add(oItem1);
-		oList1.add(oItem2);
-		orderReq1.getOrderItem().addAll(oList1);
+		//oList1.add(oItem2);
+		orderReq1.getOrderItem().addAll(oList1);*/
 
 		xmlRequest.setOrderRequest(orderReq1);
+		xmlRequest.setAppliedPromotionsList("8000");
 		
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion._1_0");
 

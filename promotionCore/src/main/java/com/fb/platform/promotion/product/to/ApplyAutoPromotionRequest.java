@@ -50,6 +50,6 @@ public class ApplyAutoPromotionRequest implements Serializable {
 	}
 
 	public void resetDiscountedPrice() {
-		
+		orderReq.resetDiscountedPrice();
 	}
 }

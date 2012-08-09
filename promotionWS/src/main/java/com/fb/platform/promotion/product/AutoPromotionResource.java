@@ -10,7 +10,9 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -51,6 +53,7 @@ import com.fb.platform.promotion._1_0.Promotion;
 import com.fb.platform.promotion._1_0.RefreshAutoPromotionRequest;
 import com.fb.platform.promotion._1_0.RefreshAutoPromotionResponse;
 import com.fb.platform.promotion._1_0.RefreshAutoPromotionStatus;
+import com.fb.platform.promotion.product.model.promotion.AutoPromotion;
 import com.fb.platform.promotion.product.to.ApplyAutoPromotionResponseStatusEnum;
 import com.fb.platform.promotion.service.AutoPromotionManager;
 
@@ -143,7 +146,7 @@ public class AutoPromotionResource {
 				xmlResponse.setOrderDiscount(getXmlOrderDiscountValue(apiResponse.getOrderDiscount()));
 				
 				for(com.fb.platform.promotion.model.Promotion apiPromotion : apiResponse.getAppliedPromotions()) {
-					xmlResponse.getPromotion().add(getXmlPromotion(apiPromotion));
+					xmlResponse.getPromotion().add(getXmlPromotion(apiPromotion, apiResponse.getAppliedPromotionStatuses()));
 				}
 			}
 			
@@ -220,7 +223,7 @@ public class AutoPromotionResource {
 			xmlResponse.setGetAppliedAutoPromotionStatus(GetAppliedAutoPromotionStatus.valueOf(apiResponse.getGetAppliedAutoPromotionStatus().toString()));
 			
 			for(com.fb.platform.promotion.model.Promotion apiPromotion : apiResponse.getPromotionList()) {
-				xmlResponse.getPromotion().add(getXmlPromotion(apiPromotion));
+				xmlResponse.getPromotion().add(getXmlPromotion(apiPromotion, new HashMap<Integer, Boolean>()));
 			}
 			
 			StringWriter outStringWriter = new StringWriter();
@@ -283,13 +286,20 @@ public class AutoPromotionResource {
 		return xmlOrderDiscount;
 	}
 	
-	private Promotion getXmlPromotion(com.fb.platform.promotion.model.Promotion apiPromotion) {
+	private Promotion getXmlPromotion(com.fb.platform.promotion.model.Promotion apiPromotion, Map<Integer, Boolean> appliedPromostionStatuses) {
 		Promotion xmlPromotion = new Promotion();
 		
 		xmlPromotion.setDescription(apiPromotion.getDescription());
 		xmlPromotion.setIsActive(apiPromotion.isActive());
 		xmlPromotion.setPromotionId(apiPromotion.getId());
 		xmlPromotion.setPromotionName(apiPromotion.getName());
+
+		boolean isApplied = true;
+
+		if (appliedPromostionStatuses.containsKey(apiPromotion.getId())) {
+			isApplied = appliedPromostionStatuses.get(apiPromotion.getId());
+		}
+		xmlPromotion.setIsApplied(isApplied);
 		
 		return xmlPromotion;
 	}
