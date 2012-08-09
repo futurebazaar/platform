@@ -20,16 +20,14 @@ import com.fb.platform.promotion.rule.metadata.RuleConfigMetadata;
 public class BuyXBrandGetYRsOffOnZProductRuleDataConvertor implements
 RuleDataConvertor {
 
-/* (non-Javadoc)
-* @see com.fb.platform.promotion.rule.config.data.convertor.DBConfigToRuleDataConvertor#convert(com.fb.platform.promotion.rule.config.RuleConfiguration)
-*/
-@Override
-public RuleData convert(RuleConfiguration ruleConfig, RuleConfigMetadata metadata) throws MandatoryDataMissingException{
-
-	return null;
-
-}
-
-
+	/* (non-Javadoc)
+	* @see com.fb.platform.promotion.rule.config.data.convertor.DBConfigToRuleDataConvertor#convert(com.fb.platform.promotion.rule.config.RuleConfiguration)
+	*/
+	@Override
+	public RuleData convert(RuleConfiguration ruleConfig, RuleConfigMetadata metadata) throws MandatoryDataMissingException {
 	
+		return null;
+	
+	}
+
 }

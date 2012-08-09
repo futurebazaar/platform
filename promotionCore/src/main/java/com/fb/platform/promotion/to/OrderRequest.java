@@ -172,5 +172,10 @@ public class OrderRequest implements Serializable {
 	public void setNoOfTimesInMonth(int noOfTimesInMonth) {
 		this.noOfTimesInMonth = noOfTimesInMonth;
 	}
-	
+
+	public void resetDiscountedPrice() {
+		for (OrderItem orderItem : orderItems) {
+			orderItem.getProduct().setDiscountedPrice(null);
+		}
+	}
 }

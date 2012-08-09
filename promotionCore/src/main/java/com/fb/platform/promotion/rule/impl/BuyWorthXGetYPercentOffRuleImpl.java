@@ -3,7 +3,6 @@
  */
 package com.fb.platform.promotion.rule.impl;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +27,7 @@ import com.fb.platform.promotion.util.ListUtil;
  * @author keith
  *
  */
-public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule, Serializable {
+public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule {
 
 	private static transient Log log = LogFactory.getLog(BuyWorthXGetYPercentOffRuleImpl.class);
 
@@ -52,14 +51,14 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule, Serializa
 		if (ListUtil.isValidList(data.getIncludeCategoryList()) && !request.isAnyProductInCategory(data.getIncludeCategoryList())) {
 			return PromotionStatusEnum.CATEGORY_MISMATCH;
 		}
-		if (ListUtil.isValidList(data.getExcludeCategoryList()) && request.isAnyProductInCategory(data.getExcludeCategoryList())){
+		if (ListUtil.isValidList(data.getExcludeCategoryList()) && request.isAnyProductInCategory(data.getExcludeCategoryList())) {
 			return PromotionStatusEnum.CATEGORY_MISMATCH;
 		}
-		if (ListUtil.isValidList(data.getBrands()) && !request.isAnyProductInBrand(data.getBrands())){
+		if (ListUtil.isValidList(data.getBrands()) && !request.isAnyProductInBrand(data.getBrands())) {
 			return PromotionStatusEnum.BRAND_MISMATCH;
 		}
 		Money orderValue = request.getOrderValueForRelevantProducts(data.getBrands(), data.getIncludeCategoryList(), data.getExcludeCategoryList());
-		if(data.getMinOrderValue() !=null && orderValue.lt(data.getMinOrderValue())){
+		if(data.getMinOrderValue() !=null && orderValue.lt(data.getMinOrderValue())) {
 			return PromotionStatusEnum.LESS_ORDER_AMOUNT;
 		}
 		return PromotionStatusEnum.SUCCESS;
@@ -74,11 +73,11 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule, Serializa
 		Money orderVal = request.getOrderValueForRelevantProducts(data.getBrands(), data.getIncludeCategoryList(), data.getExcludeCategoryList());
 		Money discountCalculated = (orderVal.times(data.getDiscountPercentage().doubleValue())).div(100);
 		Money finalDiscountAmount = new Money(new BigDecimal(0));
-		if(data.getMaxDiscountPerUse() != null && discountCalculated.gt(data.getMaxDiscountPerUse())){
+		if(data.getMaxDiscountPerUse() != null && discountCalculated.gt(data.getMaxDiscountPerUse())) {
 			log.info("Maximum discount is less than the calculated discount on this order. Max Discount = "+data.getMaxDiscountPerUse() +" and Discount calculated = "+discountCalculated);
 			finalDiscountAmount = finalDiscountAmount.plus(data.getMaxDiscountPerUse());
 		}
-		else{
+		else {
 			log.info("Discount amount calculated is = "+discountCalculated);
 			finalDiscountAmount = finalDiscountAmount.plus(discountCalculated);
 		}

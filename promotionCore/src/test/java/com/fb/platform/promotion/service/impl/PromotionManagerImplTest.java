@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
+import com.fb.platform.promotion.product.to.CommitAutoPromotionRequest;
 import com.fb.platform.promotion.service.PromotionManager;
 import com.fb.platform.promotion.service.PromotionService;
 import com.fb.platform.promotion.to.ApplyCouponRequest;
@@ -306,10 +307,8 @@ public class PromotionManagerImplTest extends BaseTestCase{
 		//The user already has a scratch card issued of a different store.
 		//The user is eligible for the scratch card.
 		assertEquals(ApplyScratchCardStatus.INVALID_SCRATCH_CARD, applyScratchCardResponse.getApplyScratchCardStatus());
-		
-		
 	}
-
+	
 	private CommitCouponResponse placeOrder(String sessionToken) {
 		ApplyCouponRequest couponRequest = new ApplyCouponRequest();
 		couponRequest.setOrderReq(getSampleOrderRequest(639));

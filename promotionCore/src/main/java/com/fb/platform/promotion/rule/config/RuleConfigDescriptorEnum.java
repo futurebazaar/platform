@@ -1,6 +1,5 @@
 package com.fb.platform.promotion.rule.config;
 
-import com.fb.commons.PlatformException;
 import com.fb.platform.promotion.exception.MandatoryDataMissingException;
 import com.fb.platform.promotion.rule.config.type.RuleConfigDescriptorTypeEnum;
 import com.fb.platform.promotion.rule.metadata.RuleConfigMetadata;
@@ -52,11 +51,11 @@ public enum RuleConfigDescriptorEnum {
 		return false;
 	}
 	
-	public Object parse(RuleConfiguration ruleConfig, RuleConfigMetadata metadata) throws MandatoryDataMissingException{
+	public Object parse(RuleConfiguration ruleConfig, RuleConfigMetadata metadata) throws MandatoryDataMissingException {
 		return parse(ruleConfig,metadata,null);
 	}
 	
-	public Object parse(RuleConfiguration ruleConfig, RuleConfigMetadata metadata, String newConfigName) throws MandatoryDataMissingException{
+	public Object parse(RuleConfiguration ruleConfig, RuleConfigMetadata metadata, String newConfigName) throws MandatoryDataMissingException {
 		String configItemName = new String((newConfigName == null)?this.name():newConfigName); 
 		if (ruleConfig.isConfigItemPresent(configItemName)) {
 			return this.type.convert(ruleConfig.getConfigItemValue(configItemName));
@@ -69,7 +68,7 @@ public enum RuleConfigDescriptorEnum {
 	
 	// Given the number of the configName to be fetched. Example (DISCOUNT_PERCENT, 1 ) will try to get DISCOUNT_PERCENT_1
 	// Used incase of repeatable config items
-	public Object parse(RuleConfiguration ruleConfig, RuleConfigMetadata metadata, int num) throws MandatoryDataMissingException{
+	public Object parse(RuleConfiguration ruleConfig, RuleConfigMetadata metadata, int num) throws MandatoryDataMissingException {
 		return parse(ruleConfig,metadata,new String(this.name()+"_"+num));
 	}
 }

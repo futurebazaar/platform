@@ -19,6 +19,7 @@ public class OrderItem {
 	private boolean isLocked = false;
 	private BigDecimal totalDiscount = new BigDecimal(0);
 	private int itemId = 0;
+	private boolean promotionProcessed = false;
 	
 	public Product getProduct() {
 		return product;
@@ -78,5 +79,11 @@ public class OrderItem {
 		}
 		return false;
 	}
-	
+	public boolean isPromotionProcessed() {
+		return promotionProcessed;
+	}
+	public void setPromotionProcessed(boolean promotionProcessed) {
+		this.promotionProcessed = promotionProcessed;
+	}
+
 }
