@@ -111,11 +111,8 @@ public class RestClient {
 		searchCoupon(sessionToken);
 		viewCoupon(sessionToken);
 		createCoupon(sessionToken);
-<<<<<<< HEAD
 		searchScratchCard(sessionToken,"BB000UGDC");
-=======
 		applyAutoPromotion(sessionToken);
->>>>>>> productPromotion
 		logout(sessionToken);
 	}
 
@@ -851,7 +848,6 @@ public class RestClient {
 		CreateCouponResponse response = (CreateCouponResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(responseStr)));
 		System.out.println(response.getCreateCouponStatus());
 	}
-<<<<<<< HEAD
 	
 	private static void searchScratchCard(String sessionToken, String cardNumber) throws Exception {
 
@@ -923,7 +919,6 @@ public class RestClient {
 
  }
 
-=======
 
 	private static void applyAutoPromotion(String sessionToken) throws Exception {
 		HttpClient httpClient = new HttpClient();
@@ -984,6 +979,5 @@ public class RestClient {
 		ApplyAutoPromotionResponse xmlResponse = (ApplyAutoPromotionResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(xmlStr)));
 		System.out.println(xmlResponse.getApplyAutoPromotionStatus().toString());
 	}
->>>>>>> productPromotion
 
 }
