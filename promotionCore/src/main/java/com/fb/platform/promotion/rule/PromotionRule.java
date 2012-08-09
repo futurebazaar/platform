@@ -3,6 +3,7 @@
  */
 package com.fb.platform.promotion.rule;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.fb.platform.promotion.model.OrderDiscount;
@@ -17,7 +18,7 @@ import com.fb.platform.promotion.to.PromotionStatusEnum;
  * @author vinayak
  *
  */
-public interface PromotionRule {
+public interface PromotionRule extends Serializable {
 
 	/**
 	 * Called at the time of rule objects creation.

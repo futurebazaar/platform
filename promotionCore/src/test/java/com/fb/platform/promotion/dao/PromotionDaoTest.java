@@ -23,6 +23,7 @@ import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.PromotionLimitsConfig;
 import com.fb.platform.promotion.model.UserPromotionUses;
 import com.fb.platform.promotion.model.scratchCard.ScratchCard;
+import com.fb.platform.promotion.product.model.promotion.AutoPromotion;
 
 /**
  * @author vinayak
@@ -57,6 +58,16 @@ public class PromotionDaoTest extends BaseTestCase {
 		assertEquals(20, limitsConfig.getMaxUsesPerUser());
 		assertTrue(limitsConfig.getMaxAmount().eq(new Money(new BigDecimal(10000))));
 		assertTrue(limitsConfig.getMaxAmountPerUser().eq(new Money(new BigDecimal(1000))));
+	}
+
+	@Test
+	public void loadAutoPromotion() {
+		Promotion promotion = promotionDao.load(8000);
+
+		assertNotNull(promotion);
+		assertTrue(promotion instanceof AutoPromotion);
+		AutoPromotion autoPromotion = (AutoPromotion)promotion;
+		assertNotNull(autoPromotion.getPromotionConfig());
 	}
 
 	@Test

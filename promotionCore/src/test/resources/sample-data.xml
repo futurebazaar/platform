@@ -57,7 +57,7 @@
 			<value name="valid_till">2013-05-31 00:00:00</value>
 			<value name="name">Test Promotion 1</value>
 			<value name="description">try1_desc</value>
-			<value name="is_coupon">0</value>
+			<value name="is_coupon">1</value>
 			<value name="is_active">1</value>
 			<value name="rule_id">-2</value>
 		</row>
@@ -69,7 +69,7 @@
 			<value name="valid_till">2013-06-11 00:00:00</value>
 			<value name="name">Not yet Valid</value>
 			<value name="promotion_description">This promotion is valid in future</value>
-			<value name="is_coupon">0</value>
+			<value name="is_coupon">1</value>
 			<value name="is_active">1</value>
 			<value name="rule_id">-2</value>
 		</row>
@@ -81,7 +81,7 @@
 			<value name="valid_till">2012-01-31 00:00:00</value>
 			<value name="name">Expired Promotion</value>
 			<value name="description">This promotion is expired</value>
-			<value name="is_coupon">0</value>
+			<value name="is_coupon">1</value>
 			<value name="is_active">1</value>
 			<value name="rule_id">-1</value>
 		</row>
@@ -93,7 +93,7 @@
 			<value name="valid_till">2012-06-30 00:00:00</value>
 			<value name="name">No Valid From Promotion</value>
 			<value name="description">This promotion has no valid from date</value>
-			<value name="is_coupon">0</value>
+			<value name="is_coupon">1</value>
 			<value name="is_active">1</value>
 			<value name="rule_id">-1</value>
 		</row>
@@ -105,7 +105,7 @@
 			<null />
 			<value name="name">No Valid Till Promotion</value>
 			<value name="promotion_description">This promotion has no valid till date</value>
-			<value name="is_coupon">0</value>
+			<value name="is_coupon">1</value>
 			<value name="is_active">1</value>
 			<value name="rule_id">-1</value>
 		</row>
@@ -117,7 +117,7 @@
 			<value name="valid_till">2013-05-31 00:00:00</value>
 			<value name="name">Inactive Promotion</value>
 			<value name="description">This promotion is not active</value>
-			<value name="is_coupon">0</value>
+			<value name="is_coupon">1</value>
 			<value name="is_active">0</value>
 			<value name="rule_id">-1</value>
 		</row>
@@ -129,7 +129,7 @@
 			<value name="valid_till">2013-05-31 00:00:00</value>
 			<value name="name">Rule 2 Test Promotion 1</value>
 			<value name="description">try1_desc</value>
-			<value name="is_coupon">0</value>
+			<value name="is_coupon">1</value>
 			<value name="is_active">1</value>
 			<value name="rule_id">-2</value>
 		</row>
@@ -141,7 +141,7 @@
 			<value name="valid_till">2013-05-31 00:00:00</value>
 			<value name="name">Rule 3 Test Promotion 1</value>
 			<value name="description">try1_desc</value>
-			<value name="is_coupon">0</value>
+			<value name="is_coupon">1</value>
 			<value name="is_active">1</value>
 			<value name="rule_id">-3</value>
 		</row>
@@ -153,7 +153,7 @@
 			<value name="valid_till">2013-05-31 00:00:00</value>
 			<value name="name">Rule 4 Test Promotion 1</value>
 			<value name="description">try1_desc</value>
-			<value name="is_coupon">0</value>
+			<value name="is_coupon">1</value>
 			<value name="is_active">1</value>
 			<value name="rule_id">-2</value>
 		</row>
@@ -165,7 +165,7 @@
 			<value name="valid_till">2013-05-23 00:00:00</value>
 			<value name="name">End to End Test Promotion 1</value>
 			<value name="description">end to end promo 1</value>
-			<value name="is_coupon">0</value>
+			<value name="is_coupon">1</value>
 			<value name="is_active">1</value>
 			<value name="rule_id">-2</value>
 		</row>
@@ -177,7 +177,7 @@
 			<value name="valid_till">2013-05-21 00:00:00</value>
 			<value name="name">End to End Test Promotion 2</value>
 			<value name="description">end to end promo 2</value>
-			<value name="is_coupon">0</value>
+			<value name="is_coupon">1</value>
 			<value name="is_active">1</value>
 			<value name="rule_id">-3</value>
 		</row>
@@ -189,7 +189,7 @@
 			<value name="valid_till">2013-05-20 00:00:00</value>
 			<value name="name">End to End Test Promotion 3</value>
 			<value name="description">end to end promo 3</value>
-			<value name="is_coupon">0</value>
+			<value name="is_coupon">1</value>
 			<value name="is_active">1</value>
 			<value name="rule_id">-2</value>
 		</row>
@@ -201,7 +201,7 @@
 			<value name="valid_till">2012-06-30 00:00:00</value>
 			<value name="name">Brand Based promotion Testing</value>
 			<value name="description">end to end promo 4</value>
-			<value name="is_coupon">0</value>
+			<value name="is_coupon">1</value>
 			<value name="is_active">1</value>
 			<value name="rule_id">-5</value>
 		</row>
@@ -214,7 +214,7 @@
 			<value name="name">Category Based Percent Off promotion Testing
 			</value>
 			<value name="description">end to end promo 5</value>
-			<value name="is_coupon">0</value>
+			<value name="is_coupon">1</value>
 			<value name="is_active">1</value>
 			<value name="rule_id">-3</value>
 		</row>
@@ -329,7 +329,66 @@
 			<value name="is_active">1</value>
 			<value name="rule_id">-2</value>
 		</row>
-
+        	<row>
+                        <value name="id">100</value>
+                        <null/>
+                        <null/>
+                        <value name="valid_from">2011-12-29 00:00:00</value>
+                        <value name="valid_till">2014-03-01 00:00:00</value>
+                        <value name="name">product promotion</value>
+                        <value name="description">Test product promotion 1</value>
+                        <value name="is_coupon">0</value>
+                        <value name="is_active">1</value>
+                        <value name="rule_id">-2</value>
+        	</row>
+        	<row>
+                        <value name="id">200</value>
+                        <null/>
+                        <null/>
+                        <value name="valid_from">2011-12-29 00:00:00</value>
+                        <value name="valid_till">2014-03-01 00:00:00</value>
+                        <value name="name">product promotion</value>
+                        <value name="description">Test product promotion 2</value>
+                        <value name="is_coupon">0</value>
+                        <value name="is_active">1</value>
+                        <value name="rule_id">-2</value>
+        	</row>
+        	<row>
+                        <value name="id">8000</value>
+                        <null/>
+                        <null/>
+                        <value name="valid_from">2012-08-08 00:00:00</value>
+                        <value name="valid_till">2013-08-08 00:00:00</value>
+                        <value name="name">bombay dyeing bedsheets</value>
+                        <value name="description">Buy any 2 bombay dyeing bedsheets for 1299 / Save 899</value>
+                        <value name="is_coupon">0</value>
+                        <value name="is_active">1</value>
+                        <value name="rule_id">-2</value>
+        	</row>
+        	<row>
+                        <value name="id">8100</value>
+                        <null/>
+                        <null/>
+                        <value name="valid_from">2012-08-08 00:00:00</value>
+                        <value name="valid_till">2013-08-08 00:00:00</value>
+                        <value name="name">buy 1 and get 1 free</value>
+                        <value name="description">buy 1 and get 1 free, premum double bed sheet</value>
+                        <value name="is_coupon">0</value>
+                        <value name="is_active">1</value>
+                        <value name="rule_id">-2</value>
+        	</row>
+        	<row>
+                        <value name="id">8200</value>
+                        <null/>
+                        <null/>
+                        <value name="valid_from">2012-08-08 00:00:00</value>
+                        <value name="valid_till">2013-08-08 00:00:00</value>
+                        <value name="name">1 @5% Off,2 @10% Off.3 and more @20% Off</value>
+                        <value name="description">Avani, Regan, PM, Anjali (Buy 1 at 5% Off, Buy 2 @ 10% Off. Buy 3 and more @ 20% Off)</value>
+                        <value name="is_coupon">0</value>
+                        <value name="is_active">1</value>
+                        <value name="rule_id">-2</value>
+        	</row>
 	</table>
 	<table name="promotion_limits_config">
 		<column>id</column>
@@ -522,6 +581,46 @@
 			<value name="max_uses_per_user">1</value>
 			<value name="max_amount_per_user">1000.00</value>
 		</row>
+                <row>
+                        <value name="id">100</value>
+                        <value name="promotion_id">100</value>
+                        <value name="max_uses">-1</value>
+                        <value name="max_amount">-1</value>
+                        <value name="max_uses_per_user">1</value>
+                        <value name="max_amount_per_user">-1</value>
+                </row>
+                <row>
+                        <value name="id">200</value>
+                        <value name="promotion_id">200</value>
+                        <value name="max_uses">-1</value>
+                        <value name="max_amount">-1</value>
+                        <value name="max_uses_per_user">1</value>
+                        <value name="max_amount_per_user">-1</value>
+                </row>
+                <row>
+                        <value name="id">8000</value>
+                        <value name="promotion_id">8000</value>
+                        <value name="max_uses">-1</value>
+                        <value name="max_amount">-1</value>
+                        <value name="max_uses_per_user">1</value>
+                        <value name="max_amount_per_user">-1</value>
+                </row>
+                <row>
+                        <value name="id">8100</value>
+                        <value name="promotion_id">8100</value>
+                        <value name="max_uses">-1</value>
+                        <value name="max_amount">-1</value>
+                        <value name="max_uses_per_user">1</value>
+                        <value name="max_amount_per_user">-1</value>
+                </row>
+                <row>
+                        <value name="id">8200</value>
+                        <value name="promotion_id">8200</value>
+                        <value name="max_uses">-1</value>
+                        <value name="max_amount">-1</value>
+                        <value name="max_uses_per_user">1</value>
+                        <value name="max_amount_per_user">-1</value>
+                </row>
 	</table>
 	<table name="user_promotion_uses">
 		<column>id</column>
@@ -2057,5 +2156,322 @@
 			<value name="is_channel">1</value>
 		</row>
 	</table>
-
+        
+	<table name="promotion_config_module">
+		<column>id</column>
+		<column>promotion_id</column>
+		<!-- <row>
+			<value name="id"></value>
+			<value name="promotion_id"></value>
+		</row> -->
+		<row>
+			<value name="id">100</value>
+			<value name="promotion_id">100</value>
+		</row>
+		<row>
+			<value name="id">101</value>
+			<value name="promotion_id">200</value>
+		</row>
+		<row>
+			<value name="id">102</value>
+			<value name="promotion_id">100</value>
+		</row>
+		<row>
+			<value name="id">8000</value>
+			<value name="promotion_id">8000</value>
+		</row>
+		<row>
+			<value name="id">8100</value>
+			<value name="promotion_id">8100</value>
+		</row>
+		<row>
+			<value name="id">8200</value>
+			<value name="promotion_id">8200</value>
+		</row>
+		<row>
+			<value name="id">8300</value>
+			<value name="promotion_id">8200</value>
+		</row>
+		<row>
+			<value name="id">8400</value>
+			<value name="promotion_id">8200</value>
+		</row>
+	</table>
+       
+	<table name="conditions_config">
+		<column>id</column>
+		<column>promotion_config_module_id</column>
+		<column>condition_type</column>
+		<column>quantity</column>
+		<column>include</column>
+		<column>product_ids</column>
+		<column>brand_ids</column>
+		<column>category_ids</column>
+		<column>min_order_value</column>
+		<column>max_order_value</column>
+		<column>join_type</column>
+		<!-- <row>
+			<value name="id"></value>
+			<value name="promotion_config_module_id"></value>
+			<value name="condition_type"></value>
+			<value name="quantity"></value>
+			<value name="include"></value>
+			<value name="product_ids"></value>
+			<value name="brand_ids"></value>
+			<value name="category_ids"></value>
+			<value name="min_order_value"></value>
+			<value name="max_order_value"></value>
+			<value name="join_type"></value>
+		</row> -->
+		<row>
+			<value name="id">100</value>
+			<value name="promotion_config_module_id">100</value>
+			<value name="condition_type">product</value>
+			<value name="quantity">1</value>
+			<null/>
+			<value name="product_ids">1,2</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<value name="join_type">AND</value>
+		</row>
+		<row>
+			<value name="id">101</value>
+			<value name="promotion_config_module_id">100</value>
+			<value name="condition_type">product</value>
+			<value name="quantity">1</value>
+			<null/>
+			<value name="product_ids">9,8</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+		</row>
+		<row>
+			<value name="id">102</value>
+			<value name="promotion_config_module_id">101</value>
+			<value name="condition_type">order</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<value name="min_order_value">1000</value>
+			<value name="max_order_value">5000</value>
+			<value name="join_type">OR</value>
+		</row>
+		<row>
+			<value name="id">103</value>
+			<value name="promotion_config_module_id">101</value>
+			<value name="condition_type">order</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<value name="min_order_value">500</value>
+			<value name="max_order_value">1000</value>
+			<null/>
+		</row>
+		<row>
+			<value name="id">8000</value>
+			<value name="promotion_config_module_id">8000</value>
+			<value name="condition_type">PRODUCT</value>
+			<value name="quantity">2</value>
+			<null/>
+			<value name="product_ids">100,200,300,400,500</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+		</row>
+		<row>
+			<value name="id">8100</value>
+			<value name="promotion_config_module_id">8100</value>
+			<value name="condition_type">PRODUCT</value>
+			<value name="quantity">1</value>
+			<null/>
+			<value name="product_ids">96184,133568,92631,92630</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+		</row>
+		<row>
+			<value name="id">8200</value>
+			<value name="promotion_config_module_id">8200</value>
+			<value name="condition_type">PRODUCT</value>
+			<value name="quantity">1</value>
+			<null/>
+			<value name="product_ids">85985,78214,80210</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+		</row>
+		<row>
+			<value name="id">8300</value>
+			<value name="promotion_config_module_id">8300</value>
+			<value name="condition_type">PRODUCT</value>
+			<value name="quantity">2</value>
+			<null/>
+			<value name="product_ids">85985,78214,80210</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+		</row>
+		<row>
+			<value name="id">8400</value>
+			<value name="promotion_config_module_id">8400</value>
+			<value name="condition_type">PRODUCT</value>
+			<value name="quantity">3</value>
+			<null/>
+			<value name="product_ids">85985,78214,80210</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+		</row>
+	</table>
+	
+	<table name="results_config">
+		<column>id</column>
+		<column>promotion_config_module_id</column>
+		<column>result_type</column>
+		<column>quantity</column>
+		<column>product_ids</column>
+		<column>brand_ids</column>
+		<column>category_ids</column>
+		<column>offer_type</column>
+		<column>offer_value</column>
+		<column>join_type</column>
+		<!-- <row>
+			<value name="id"></value>
+			<value name="promotion_config_module_id"></value>
+			<value name="result_type"></value>
+			<value name="quantity"></value>
+			<value name="product_ids"></value>
+			<value name="brand_ids"></value>
+			<value name="category_ids"></value>
+			<value name="offer_type"></value>
+			<value name="offer_value"></value>
+			<value name="join_type"></value>
+		</row> -->
+		<row>
+			<value name="id">100</value>
+			<value name="promotion_config_module_id">100</value>
+			<value name="result_type">product</value>
+			<value name="quantity">1</value>
+			<value name="product_ids">3</value>
+			<null/>
+			<null/>
+			<value name="offer_type">PERCENT_OFF</value>
+			<value name="offer_value">10</value>
+			<value name="join_type">AND</value>
+		</row>
+		<row>
+			<value name="id">101</value>
+			<value name="promotion_config_module_id">100</value>
+			<value name="result_type">product</value>
+			<value name="quantity">1</value>
+			<value name="product_ids">4</value>
+			<null/>
+			<null/>
+			<value name="offer_type">PERCENT_OFF</value>
+			<value name="offer_value">20</value>
+			<null/>
+		</row>
+		<row>
+			<value name="id">102</value>
+			<value name="promotion_config_module_id">101</value>
+			<value name="result_type">product</value>
+			<value name="quantity">1</value>
+			<value name="product_ids">5</value>
+			<null/>
+			<null/>
+			<value name="offer_type">FIXED_PRICE</value>
+			<value name="offer_value">50</value>
+			<value name="join_type">OR</value>
+		</row>
+		<row>
+			<value name="id">103</value>
+			<value name="promotion_config_module_id">101</value>
+			<value name="result_type">product</value>
+			<value name="quantity">1</value>
+			<value name="product_ids">6</value>
+			<null/>
+			<null/>
+			<value name="offer_type">FIXED_OFF</value>
+			<value name="offer_value">150</value>
+			<null/>
+		</row>
+		<row>
+			<value name="id">8000</value>
+			<value name="promotion_config_module_id">8000</value>
+			<value name="result_type">VALUE</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<value name="offer_type">FIXED_PRICE</value>
+			<value name="offer_value">1299</value>
+			<null/>
+		</row>
+		<row>
+			<value name="id">8100</value>
+			<value name="promotion_config_module_id">8100</value>
+			<value name="result_type">PRODUCT</value>
+			<value name="quantity">1</value>
+			<value name="product_ids">96184,133568,92631,92630</value>
+			<null/>
+			<null/>
+			<value name="offer_type">PERCENT_OFF</value>
+			<value name="offer_value">100</value>
+			<null/>
+		</row>
+		<row>
+			<value name="id">8200</value>
+			<value name="promotion_config_module_id">8200</value>
+			<value name="result_type">VALUE</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<value name="offer_type">PERCENT_OFF</value>
+			<value name="offer_value">5</value>
+			<null/>
+		</row>
+		<row>
+			<value name="id">8300</value>
+			<value name="promotion_config_module_id">8300</value>
+			<value name="result_type">VALUE</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<value name="offer_type">PERCENT_OFF</value>
+			<value name="offer_value">10</value>
+			<null/>
+		</row>
+		<row>
+			<value name="id">8400</value>
+			<value name="promotion_config_module_id">8400</value>
+			<value name="result_type">VALUE</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<value name="offer_type">PERCENT_OFF</value>
+			<value name="offer_value">20</value>
+			<null/>
+		</row>
+	</table>
 </dataset>

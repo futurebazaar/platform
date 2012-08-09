@@ -6,8 +6,6 @@ package com.fb.platform.promotion.model;
 
 import java.io.Serializable;
 
-import com.fb.commons.to.Money;
-import com.fb.platform.promotion.rule.PromotionRule;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.PromotionStatusEnum;
 
@@ -15,41 +13,19 @@ import com.fb.platform.promotion.to.PromotionStatusEnum;
  * @author vinayak
  *
  */
-public class Promotion implements Serializable {
+public abstract class Promotion implements Serializable {
 
-	private int id;
-	private String name;
-	private String description;
-	private boolean isActive;
-	private PromotionDates dates;
-	private PromotionLimitsConfig limitsConfig;
+	protected int id;
+	protected String name;
+	protected String description;
+	protected boolean isActive;
+	protected PromotionDates dates;
+	protected PromotionLimitsConfig limitsConfig;
 
-	private PromotionRule rule;
-
-	public PromotionStatusEnum isApplicable(OrderRequest request,int userId,boolean isCouponCommitted) {
-		if (!isActive) {
-			return PromotionStatusEnum.INACTIVE_COUPON;
-		}
-		boolean withinDates = dates.isWithinDates();
-		if (!withinDates) {
-			return PromotionStatusEnum.COUPON_CODE_EXPIRED;
-		}
-		
-		if(null!=request)
-			return rule.isApplicable(request,userId,isCouponCommitted);
-		
-		return PromotionStatusEnum.SUCCESS;
-	}
+	//public abstract OrderDiscount apply(OrderRequest request);
 
 	public PromotionStatusEnum isWithinLimits(GlobalPromotionUses globalUses, UserPromotionUses userUses) {
 		return limitsConfig.isWithinLimit(globalUses, userUses);
-	}
-
-	public OrderDiscount apply(OrderRequest request) {
-		OrderDiscount orderDiscount = new OrderDiscount();
-		orderDiscount.setOrderRequest(request);
-		
-		return rule.execute(orderDiscount);
 	}
 
 	public void setId(int id) {
@@ -88,7 +64,7 @@ public class Promotion implements Serializable {
 	public PromotionLimitsConfig getLimitsConfig() {
 		return limitsConfig;
 	}
-	public void setRule(PromotionRule rule) {
-		this.rule = rule;
+	public boolean isWithinDates() {
+		return dates.isWithinDates();
 	}
 }

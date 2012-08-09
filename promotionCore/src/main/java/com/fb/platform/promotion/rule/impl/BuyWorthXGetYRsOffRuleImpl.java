@@ -28,7 +28,7 @@ import com.fb.platform.promotion.util.ListUtil;
  * @author keith
  *
  */
-public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule, Serializable {
+public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule {
 
 	private static transient Log log = LogFactory.getLog(BuyWorthXGetYRsOffRuleImpl.class);
 	BuyWorthXGetYRsOffRuleData data = new BuyWorthXGetYRsOffRuleData();
@@ -51,15 +51,15 @@ public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule, Serializable {
 		if (ListUtil.isValidList(data.getIncludeCategoryList()) && !request.isAnyProductInCategory(data.getIncludeCategoryList())) {
 			return PromotionStatusEnum.CATEGORY_MISMATCH;
 		}
-		if (ListUtil.isValidList(data.getExcludeCategoryList()) && request.isAnyProductInCategory(data.getExcludeCategoryList())){
+		if (ListUtil.isValidList(data.getExcludeCategoryList()) && request.isAnyProductInCategory(data.getExcludeCategoryList())) {
 			return PromotionStatusEnum.CATEGORY_MISMATCH;
 		}
-		if (ListUtil.isValidList(data.getBrands()) && !request.isAnyProductInBrand(data.getBrands())){
+		if (ListUtil.isValidList(data.getBrands()) && !request.isAnyProductInBrand(data.getBrands())) {
 			return PromotionStatusEnum.BRAND_MISMATCH;
 		}
 		
 		Money orderValue = request.getOrderValueForRelevantProducts(data.getBrands(), data.getIncludeCategoryList(), data.getExcludeCategoryList());
-		if(data.getMinOrderValue() !=null && orderValue.lt(data.getMinOrderValue())){
+		if(data.getMinOrderValue() !=null && orderValue.lt(data.getMinOrderValue())) {
 			return PromotionStatusEnum.LESS_ORDER_AMOUNT;
 		}
 		

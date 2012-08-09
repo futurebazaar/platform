@@ -4,6 +4,7 @@
 package com.fb.platform.promotion.dao;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.fb.platform.promotion.model.GlobalPromotionUses;
 import com.fb.platform.promotion.model.Promotion;
@@ -31,4 +32,8 @@ public interface PromotionDao {
 	public UserPromotionUsesEntry load(int promotionId, int userId, int orderId);
 
 	public boolean isValidNoOfTimesInMonth(int userId, int noOfTimesAllowed, int promotionId);
+	
+	public List<Integer> loadLiveAutoPromotionIds();
+	
+	public List<Integer> getUserAutoPromotionUses(int userId, int orderId);
 }

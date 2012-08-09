@@ -6,7 +6,9 @@ package com.fb.platform.test;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -29,6 +31,8 @@ import com.fb.platform.auth._1_0.LoginRequest;
 import com.fb.platform.auth._1_0.LoginResponse;
 import com.fb.platform.auth._1_0.LogoutRequest;
 import com.fb.platform.auth._1_0.LogoutResponse;
+import com.fb.platform.promotion._1_0.ApplyAutoPromotionRequest;
+import com.fb.platform.promotion._1_0.ApplyAutoPromotionResponse;
 import com.fb.platform.promotion._1_0.ApplyCouponRequest;
 import com.fb.platform.promotion._1_0.ApplyCouponResponse;
 import com.fb.platform.promotion._1_0.ClearCouponCacheRequest;
@@ -107,7 +111,11 @@ public class RestClient {
 		searchCoupon(sessionToken);
 		viewCoupon(sessionToken);
 		createCoupon(sessionToken);
+<<<<<<< HEAD
 		searchScratchCard(sessionToken,"BB000UGDC");
+=======
+		applyAutoPromotion(sessionToken);
+>>>>>>> productPromotion
 		logout(sessionToken);
 	}
 
@@ -843,6 +851,7 @@ public class RestClient {
 		CreateCouponResponse response = (CreateCouponResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(responseStr)));
 		System.out.println(response.getCreateCouponStatus());
 	}
+<<<<<<< HEAD
 	
 	private static void searchScratchCard(String sessionToken, String cardNumber) throws Exception {
 
@@ -914,5 +923,67 @@ public class RestClient {
 
  }
 
+=======
+
+	private static void applyAutoPromotion(String sessionToken) throws Exception {
+		HttpClient httpClient = new HttpClient();
+		//PostMethod logoutMethod = new PostMethod("http://10.0.102.12:8082/promotionWS/coupon/clear/coupon");
+		PostMethod postMethod = new PostMethod(url + "promotionWS/autoPromotion/apply");
+		ApplyAutoPromotionRequest xmlRequest = new ApplyAutoPromotionRequest();
+		xmlRequest.setSessionToken(sessionToken);
+		
+		Product p1 = new Product();
+		p1.setPrice(new BigDecimal(700));
+		p1.setMrpPrice(new BigDecimal(1200));
+		p1.setProductId(100);
+
+		//Create OrderItems
+		OrderItem oItem1 = new OrderItem();
+		oItem1.setQuantity(3);
+		oItem1.setProduct(p1);
+
+		Product p2 = new Product();
+		p2.setPrice(new BigDecimal(700));
+		p2.setMrpPrice(new BigDecimal(1200));
+		p2.setProductId(200);
+
+		//Create OrderItems
+		OrderItem oItem2 = new OrderItem();
+		oItem2.setQuantity(2);
+		oItem2.setProduct(p2);
+
+		//Create OrderReq
+		OrderRequest orderReq1 = new OrderRequest();
+		orderReq1.setOrderId(1);
+		List<OrderItem> oList1 = new ArrayList<OrderItem>();
+		oList1.add(oItem1);
+		oList1.add(oItem2);
+		orderReq1.getOrderItem().addAll(oList1);
+		xmlRequest.setOrderRequest(orderReq1);
+		
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion._1_0");
+
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(xmlRequest, sw);
+		
+		System.out.println("\n url + promotionWS/autoPromotion/apply");
+		System.out.println("\n apply AutoPromotion : \n" + sw.toString());
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		postMethod.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(postMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the applyAutoPromotion method : " + statusCode);
+			System.exit(1);
+		}
+		String xmlStr = postMethod.getResponseBodyAsString();
+		System.out.println("Got the applyAutoPromotion Response : \n\n" + xmlStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		ApplyAutoPromotionResponse xmlResponse = (ApplyAutoPromotionResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(xmlStr)));
+		System.out.println(xmlResponse.getApplyAutoPromotionStatus().toString());
+	}
+>>>>>>> productPromotion
 
 }

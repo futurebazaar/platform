@@ -28,26 +28,26 @@ public class RuleConfiguration {
 		this.configItems = configItems;
 	}
 	
-	public RuleConfigItem getConfigItem(int index){
+	public RuleConfigItem getConfigItem(int index) {
 		return configItems.get(index);
 	}
 	
-	public RuleConfigItem getConfigItem(String key){
-		for(RuleConfigItem rci : configItems){
-			if(rci.getKey().equalsIgnoreCase(key)){
+	public RuleConfigItem getConfigItem(String key) {
+		for(RuleConfigItem rci : configItems) {
+			if(rci.getKey().equalsIgnoreCase(key)) {
 				return rci;
 			}
 		}
 		return null;
 	}
 	
-	public String getConfigItemValue(int index){
+	public String getConfigItemValue(int index) {
 		return configItems.get(index).getValue();
 	}
 	
-	public String getConfigItemValue(String key){
-		for(RuleConfigItem rci : configItems){
-			if(rci.getKey().equalsIgnoreCase(key)){
+	public String getConfigItemValue(String key) {
+		for(RuleConfigItem rci : configItems) {
+			if(rci.getKey().equalsIgnoreCase(key)) {
 				return rci.getValue();
 			}
 		}
@@ -62,7 +62,7 @@ public class RuleConfiguration {
 		return isConfigItemPresent(ruleEnum.name());
 	}
 
-	public boolean isConfigItemPresent(String key){
+	public boolean isConfigItemPresent(String key) {
 		return (getConfigItem(key) !=null);
 	}
 

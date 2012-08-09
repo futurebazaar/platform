@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,6 +33,10 @@ import com.fb.platform.promotion.model.PromotionDates;
 import com.fb.platform.promotion.model.PromotionLimitsConfig;
 import com.fb.platform.promotion.model.UserPromotionUses;
 import com.fb.platform.promotion.model.UserPromotionUsesEntry;
+import com.fb.platform.promotion.model.coupon.CouponPromotion;
+import com.fb.platform.promotion.product.dao.PromotionConfigDao;
+import com.fb.platform.promotion.product.model.PromotionConfig;
+import com.fb.platform.promotion.product.model.promotion.AutoPromotion;
 import com.fb.platform.promotion.rule.PromotionRule;
 
 /**
@@ -45,6 +50,8 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 	private Log log = LogFactory.getLog(PromotionDaoJdbcImpl.class);
 
 	private RuleDao ruleDao = null;
+
+	private PromotionConfigDao promotionConfigDao = null;
 
 	private static final String GET_PROMOTION_QUERY = 
 			"SELECT " +
@@ -123,6 +130,32 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			"FROM user_promotion_uses upu WHERE user_id = ? and promotion_id = ? and month(date(created_on)) =  month(now()) " ;
 
 	
+	/**
+	 * SELECT id FROM platform_promotion p WHERE is_active=1 and is_coupon=0 and valid_till >= "2012-07-07 00:00:00"
+	 */
+	
+	private static final String GET_ALL_LIVE_PROMOTION_ID =
+			"SELECT " +
+			"	id " +
+			"FROM " +
+			"	platform_promotion p " +
+			"WHERE " +
+			"	is_active=1 " +
+			"	AND is_coupon=0 " +
+			"	AND valid_till >= ?";
+	
+	/**
+	 * SELECT promotion_id FROM user_promotion_uses WHERE user_id = ? AND order_id = ?
+	 */
+	private static final String LOAD_USER_AUTO_PROMOTION_USAGE = 
+			"SELECT " +
+			"	promotion_id " +
+			"FROM " +
+			"	user_promotion_uses " +
+			"WHERE " +
+			"	user_id = ? " +
+			"	AND order_id = ?";
+	
 	/* (non-Javadoc)
 	 * @see com.fb.platform.promotion.dao.PromotionDao#load(int)
 	 */
@@ -153,9 +186,13 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		}
 		promotion.setLimitsConfig(limits);
 
-		PromotionRule rule = ruleDao.load(promotionId, prcbh.ruleId);
-
-		promotion.setRule(rule);
+		if (promotion instanceof CouponPromotion) {
+			PromotionRule rule = ruleDao.load(promotionId, prcbh.ruleId);
+			((CouponPromotion)promotion).setRule(rule);
+		} else {
+			PromotionConfig promotionConfig = promotionConfigDao.load(promotionId);
+			((AutoPromotion)promotion).setPromotionConfig(promotionConfig);
+		}
 
 		return promotion;
 	}
@@ -206,6 +243,20 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		}
 		return userPromotionUses;
 	}
+	
+	/**
+	 * 
+	 * @param userId
+	 * @param orderId
+	 * @return
+	 */
+	@Override
+	public List<Integer> getUserAutoPromotionUses(int userId, int orderId) {
+		List<Integer> promotionList = jdbcTemplate.queryForList(LOAD_USER_AUTO_PROMOTION_USAGE, Integer.class, new Object[] {userId, orderId});
+		return promotionList;
+	}
+	
+	
 
 	@Override
 	public boolean updateUserUses(int promotionId, int userId, BigDecimal valueApplied, int orderId) {
@@ -224,6 +275,13 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		boolean isUserPromotionUsesDeleted = cancelUserUses(promotionId, userId, orderId);
 		
 		return isReleasedPromotionCreated && isUserPromotionUsesDeleted;
+	}
+	
+	@Override
+	public List<Integer> loadLiveAutoPromotionIds() {
+		DateTime today = new DateTime();
+		List<Integer> livePromotionIds = jdbcTemplate.queryForList(GET_ALL_LIVE_PROMOTION_ID, Integer.class, new Object[] {today.toDate()});
+		return livePromotionIds;
 	}
 
 	
@@ -370,10 +428,17 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 
 		private int ruleId;
 		private Promotion promotion;
+		private boolean isCouponPromotion = false;
 
 		@Override
 		public void processRow(ResultSet rs) throws SQLException {
-			promotion = new Promotion();
+			isCouponPromotion = rs.getBoolean("is_coupon");
+			boolean isCouponNull = rs.wasNull(); //existing promotions were all coupon promotions but isCoupon was null which is mapped to false in jdbc
+			if (isCouponPromotion || isCouponNull) {
+				promotion = new CouponPromotion();
+			} else {
+				promotion = new AutoPromotion();
+			}
 			promotion.setDescription(rs.getString("description"));
 			promotion.setId(rs.getInt("id"));
 			promotion.setName(rs.getString("name"));
@@ -538,5 +603,9 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 		}
 		
 		return false;
+	}
+	
+	public void setPromotionConfigDao(PromotionConfigDao promotionConfigDao) {
+		this.promotionConfigDao = promotionConfigDao;
 	}
 }

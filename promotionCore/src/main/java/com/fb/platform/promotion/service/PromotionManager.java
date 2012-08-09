@@ -33,4 +33,5 @@ public interface PromotionManager {
 	public ApplyScratchCardResponse applyScratchCard(ApplyScratchCardRequest request);
 
 	public ClearCouponCacheResponse clearCache(ClearCouponCacheRequest clearCouponCacheRequest);
+
 }

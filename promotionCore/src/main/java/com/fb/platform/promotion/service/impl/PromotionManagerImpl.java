@@ -25,6 +25,7 @@ import com.fb.platform.promotion.model.OrderDiscount;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.PromotionDates;
 import com.fb.platform.promotion.model.coupon.Coupon;
+import com.fb.platform.promotion.model.coupon.CouponPromotion;
 import com.fb.platform.promotion.model.scratchCard.ScratchCard;
 import com.fb.platform.promotion.service.PromotionManager;
 import com.fb.platform.promotion.service.PromotionService;
@@ -113,7 +114,7 @@ public class PromotionManagerImpl implements PromotionManager {
 				return response;
 			}
 			
-			OrderDiscount orderDiscount = promotion.apply(request.getOrderReq());
+			OrderDiscount orderDiscount = ((CouponPromotion)promotion).apply(request.getOrderReq());
 			if(orderDiscount!=null){
 				Money discount = orderDiscount.getOrderDiscountValue()==null ? null : new Money(orderDiscount.getOrderDiscountValue());
 				response.setOrderDiscount(orderDiscount);
