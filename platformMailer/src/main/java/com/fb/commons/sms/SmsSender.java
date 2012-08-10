@@ -35,6 +35,7 @@ public class SmsSender {
 	 * @throws SmsException
 	 */
 	public String send(final SmsTO smsTO) throws SmsException {
+		String output = null;
 		try {
 
 			// Get Proxy Connection
@@ -42,6 +43,7 @@ public class SmsSender {
 			// URLConnectionClientHandler(
 			// new ProxyHttpUrlConnection());
 
+			// Client client = new Client(urlConnectionClientHandler);
 			Client client = Client.create();
 
 			WebResource webResource = client.resource(SMS_API_URL);
@@ -61,19 +63,18 @@ public class SmsSender {
 				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
 			}
 
-			String output = response.getEntity(String.class);
+			output = response.getEntity(String.class);
 
 			System.out.println(output);
+			if (output.indexOf("<ERROR>") != -1) {
+				throw new SmsException("Error While Sending SMS bulksms ");
+			}
 			return output;
-			//
-			// if(output.indexOf("<ERROR") != -1) {
-			// throw new SmsException("Error While Sending SMS" +
-			// output.toString());
-			// }
+
 		} catch (SmsException e) {
-			throw new SmsException("Error While Sending SMS", e);
+			throw new SmsException("Error While Sending SMS " + output, e);
 		} catch (Exception e) {
-			throw new SmsException("Error sending sms", e);
+			throw new SmsException("Unknown Error while sending sms", e);
 		}
 	}
 

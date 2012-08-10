@@ -49,6 +49,10 @@ public class eGVRestClient {
 
 	private static final String LOCALHOST = "http://localhost:8082/";
 
+	private static final String PP_URL = "http://10.0.101.13:8082/";
+
+	private static final String PROD_URL = "http://10.0.101.28:8080/";
+
 	private static String URL = QA_URL;
 
 	private static final String EGV_URL = URL + "eGVWS/egv";
@@ -77,10 +81,10 @@ public class eGVRestClient {
 		// xsdDisplayGV();
 		long newGVNum = createGV(sessionToken, mail, amount, orderItemId, senderName, receiverName, giftMessage,
 				isDefer, mobile, validFrom, validTill);
-		// getInfoGV(sessionToken, gvNumber);
-		// applyGV(sessionToken, gvNumber, gvPin);
-		// useGV(sessionToken, gvNumber, amount, orderId);
-		// cancelGV(sessionToken, gvNumber);
+		// getInfoGV(sessionToken, newGVNum);
+		// applyGV(sessionToken, newGVNum, gvPin);
+		// useGV(sessionToken, newGVNum, amount, orderId);
+		// cancelGV(sessionToken, newGVNum);
 		activateGV(sessionToken, Long.toString(newGVNum), amount, validFrom, validTill);
 		sendPineGV(sessionToken, Long.toString(newGVNum), mail, mobile, senderName, receiverName, giftMessage);
 		logout(sessionToken);
