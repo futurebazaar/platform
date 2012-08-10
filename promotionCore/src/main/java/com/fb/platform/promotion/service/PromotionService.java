@@ -135,7 +135,7 @@ public interface PromotionService {
 	 * @param orderId
 	 */
 	@Transactional(propagation=Propagation.REQUIRED)
-	public void updateUserPromotionUses(int promotionId, int userId, int orderId);
+	public void updateUserAutoPromotionUses(int promotionId, int userId, int orderId);
 	
 	/**
 	 * 
@@ -144,7 +144,7 @@ public interface PromotionService {
 	 * @return
 	 */
 	@Transactional(propagation=Propagation.REQUIRED)
-	public List<Integer> getUserAutoPromotionUses(int userId, int orderId);
+	public List<Integer> getAutoPromotionUses(int orderId);
 	
 	/**
 	 * 

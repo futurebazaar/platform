@@ -127,6 +127,7 @@ public class AutoPromotionManagerImpl implements AutoPromotionManager {
 			response.setApplyAutoPromotionStatus(ApplyAutoPromotionResponseStatusEnum.SUCCESS);
 		} catch (NoActiveAutoPromotionFoundException e) {
 			//this is ok.
+			logger.info("No Active Auto promotions found.");
 			response.setApplyAutoPromotionStatus(ApplyAutoPromotionResponseStatusEnum.SUCCESS);
 		} catch (PlatformException e) {
 			logger.error(e);
@@ -190,15 +191,17 @@ public class AutoPromotionManagerImpl implements AutoPromotionManager {
 		}
 		
 		int userId = authentication.getUserID();
-		
+
 		try {
-			for(Integer promotionId : request.getAppliedPromotionsList()) {
-				promotionService.deleteUserAutoPromotionUses(userId, request.getOrderId());
-				promotionService.updateUserPromotionUses(promotionId, userId, request.getOrderId());
+			promotionService.deleteUserAutoPromotionUses(userId, request.getOrderId());
+			if (request.getAppliedPromotionsList() != null) {
+				for(Integer promotionId : request.getAppliedPromotionsList()) {
+					promotionService.updateUserAutoPromotionUses(promotionId, userId, request.getOrderId());
+				}
 			}
 			response.setCommitAutoPromotionStatus(CommitAutoPromotionResponseStatusEnum.SUCCESS);
 		} catch (PromotionNotFoundException e) {
-			logger.error("No Promotion Found for promotion codes for order : " + request.getOrderId());
+			logger.error("No Promotion Found for promotion codes for order : " + request.getOrderId(), e);
 			response.setCommitAutoPromotionStatus(CommitAutoPromotionResponseStatusEnum.INTERNAL_ERROR);
 		} catch (PlatformException e) {
 			logger.error("Error while committing the promotion usage for order: " + request.getOrderId(), e);
@@ -226,10 +229,8 @@ public class AutoPromotionManagerImpl implements AutoPromotionManager {
 			return response;
 		}
 		
-		int userId = authentication.getUserID();
-		
 		try {
-			List<Integer> promoList = promotionService.getUserAutoPromotionUses(userId, request.getOrderId());
+			List<Integer> promoList = promotionService.getAutoPromotionUses(request.getOrderId());
 			List<Promotion> promotionsList  = new ArrayList<Promotion>();
 			for(int promoId : promoList) {
 				promotionsList.add(promotionService.getPromotion(promoId));
@@ -237,7 +238,7 @@ public class AutoPromotionManagerImpl implements AutoPromotionManager {
 			response.setPromotionList(promotionsList);
 			response.setGetAppliedAutoPromotionStatus(GetAppliedAutoPromotionResponseStatusEnum.SUCCESS);
 		} catch (PlatformException e) {
-			logger.error("Error while fetching the auto promotion usage for user : " + userId + ", order: " + request.getOrderId(), e);
+			logger.error("Error while fetching the auto promotion usage for order: " + request.getOrderId(), e);
 			response.setGetAppliedAutoPromotionStatus(GetAppliedAutoPromotionResponseStatusEnum.INTERNAL_ERROR);
 		}
 		

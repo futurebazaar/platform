@@ -146,7 +146,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			"	AND valid_till >= ?";
 	
 	/**
-	 * SELECT promotion_id FROM user_promotion_uses WHERE user_id = ? AND order_id = ? AND is_auto_promotion = ?
+	 * SELECT promotion_id FROM user_promotion_uses WHERE order_id = ? AND is_auto_promotion = ?
 	 */
 	private static final String LOAD_USER_AUTO_PROMOTION_USAGE = 
 			"SELECT " +
@@ -154,8 +154,7 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 			"FROM " +
 			"	user_promotion_uses " +
 			"WHERE " +
-			"	user_id = ? " +
-			"	AND order_id = ? " +
+			"	order_id = ? " +
 			"	AND is_auto_promotion = ? ";
 	
 	private static final String DELETE_AUTO_PROMOTION_USER_USES = 
@@ -257,12 +256,10 @@ public class PromotionDaoJdbcImpl implements PromotionDao {
 	 * @return
 	 */
 	@Override
-	public List<Integer> getUserAutoPromotionUses(int userId, int orderId) {
-		List<Integer> promotionList = jdbcTemplate.queryForList(LOAD_USER_AUTO_PROMOTION_USAGE, Integer.class, new Object[] {userId, orderId, true});
+	public List<Integer> getAutoPromotionUses(int orderId) {
+		List<Integer> promotionList = jdbcTemplate.queryForList(LOAD_USER_AUTO_PROMOTION_USAGE, Integer.class, new Object[] {orderId, true});
 		return promotionList;
 	}
-	
-	
 
 	@Override
 	public boolean updateUserUses(int promotionId, int userId, BigDecimal valueApplied, int orderId, final boolean isAutoPromotion) {

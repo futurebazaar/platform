@@ -35,7 +35,7 @@ public interface PromotionDao {
 	
 	public List<Integer> loadLiveAutoPromotionIds();
 	
-	public List<Integer> getUserAutoPromotionUses(int userId, int orderId);
+	public List<Integer> getAutoPromotionUses(int orderId);
 	
 	public void deleteUserAutoPromotionUses(int userId, int orderId, boolean isAutoPromotion);
 }
