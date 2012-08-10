@@ -72,9 +72,9 @@ public class SmsSender {
 			return output;
 
 		} catch (SmsException e) {
-			throw new SmsException("Error While Sending SMS + " + output, e);
+			throw new SmsException("Error While Sending SMS " + output, e);
 		} catch (Exception e) {
-			throw new SmsException("Error sending sms", e);
+			throw new SmsException("Unknown Error while sending sms", e);
 		}
 	}
 

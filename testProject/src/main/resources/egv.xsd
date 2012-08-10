@@ -320,6 +320,8 @@
       <xs:enumeration value="NO_SESSION"/>
       <xs:enumeration value="INVALID_GIFT_VOUCHER_NUMBER"/>
       <xs:enumeration value="USER_NOT_AUTHORIZED"/>
+      <xs:enumeration value="SMS_SEND_FAILURE"/>
+      <xs:enumeration value="EMAIL_SEND_FAILURE"/>
       <xs:enumeration value="INTERNAL_ERROR"/>
     </xs:restriction>
   </xs:simpleType>

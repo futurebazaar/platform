@@ -285,8 +285,6 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 
 		GiftVoucher eGV;
 
-		String giftMessage = "";
-
 		try {
 			eGV = giftVoucherDao.load(giftVoucherNumber);
 			String gvPin = RandomGenerator.integerRandomGenerator(GV_PIN_LENGTH);
@@ -347,6 +345,10 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 			throw new PlatformException("Error while loading the GiftVoucher. GiftVoucherId  : " + giftVoucherNumber, e);
 		} catch (SmsException e) {
 			logger.error("Problem Sending SMS to " + mobile, e);
+			throw new SmsException("Error While Sending SMS", e);
+		} catch (MailException e) {
+			logger.error("Problem Sending Email to " + email, e);
+			throw new MailerException("Error sending mail to " + email, e);
 		}
 
 	}
