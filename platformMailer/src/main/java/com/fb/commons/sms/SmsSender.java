@@ -10,7 +10,6 @@ import com.fb.commons.mail.exception.SmsException;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.client.urlconnection.URLConnectionClientHandler;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 /**
@@ -39,10 +38,11 @@ public class SmsSender {
 		try {
 
 			// Get Proxy Connection
-			URLConnectionClientHandler urlConnectionClientHandler = new URLConnectionClientHandler(
-					new ProxyHttpUrlConnection());
+			// URLConnectionClientHandler urlConnectionClientHandler = new
+			// URLConnectionClientHandler(
+			// new ProxyHttpUrlConnection());
 
-			Client client = new Client(urlConnectionClientHandler);
+			Client client = Client.create();
 
 			WebResource webResource = client.resource(SMS_API_URL);
 
@@ -57,14 +57,13 @@ public class SmsSender {
 			ClientResponse response = webResource.queryParams(queryParams).accept("application/xml")
 					.get(ClientResponse.class);
 
-			System.out.println(webResource.getURI().toURL().toString());
-
 			if (response.getStatus() != 200) {
 				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
 			}
 
 			String output = response.getEntity(String.class);
 
+			System.out.println(output);
 			return output;
 			//
 			// if(output.indexOf("<ERROR") != -1) {
