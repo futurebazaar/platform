@@ -291,19 +291,25 @@ public class PromotionServiceImpl implements PromotionService {
 	}
 	
 	@Override
-	public void updateUserAutoPromotionUses(int promotionId, int userId, int orderId) {
+	public void updateUserAutoPromotionUses(List<Integer> promotionIds, int userId, int orderId) {
 		try {
-			promotionDao.updateUserUses(promotionId, userId, new BigDecimal(0), orderId, true);
+			//delete existing uses of the promotion for this order
+			deleteUserAutoPromotionUses(userId, orderId);
+			if (promotionIds != null) {
+				//record new promotion uses
+				for(Integer promotionId : promotionIds) {
+					promotionDao.updateUserUses(promotionId, userId, new BigDecimal(0), orderId, true);
+				}
+			}
 		} catch (DataAccessException e) {
 			throw new PlatformException("Error while updating the uses for auto promotion. " +
-							"promotionId : " + promotionId + ", " +
+							"promotionIds : " + promotionIds + ", " +
 							"userId : " + userId + ", " +
 							"orderId : " + orderId, e);
 		}
 	}
 	
-	@Override
-	public void deleteUserAutoPromotionUses(int userId, int orderId) {
+	private void deleteUserAutoPromotionUses(int userId, int orderId) {
 		try {
 			promotionDao.deleteUserAutoPromotionUses(userId, orderId, true);
 		} catch (DataAccessException e) {

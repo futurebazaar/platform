@@ -129,13 +129,14 @@ public interface PromotionService {
 	public List<Integer> getActiveAutoPromotions();
 	
 	/**
-	 * Called when committing the coupon. Records the users user of the promotion and coupon.
-	 * @param promotionId
+	 * Called when committing the autoPromotion. Records the users user of all the promotions.
+	 * Delete existing uses of any promotions already applied on the order.
+	 * @param promotionIds
 	 * @param userId
 	 * @param orderId
 	 */
 	@Transactional(propagation=Propagation.REQUIRED)
-	public void updateUserAutoPromotionUses(int promotionId, int userId, int orderId);
+	public void updateUserAutoPromotionUses(List<Integer> promotionIds, int userId, int orderId);
 	
 	/**
 	 * 
@@ -152,7 +153,7 @@ public interface PromotionService {
 	 * @param orderId
 	 * @return
 	 */
-	@Transactional(propagation=Propagation.REQUIRED)
-	public void deleteUserAutoPromotionUses(int userId, int orderId);
+	//@Transactional(propagation=Propagation.REQUIRED)
+	//public void deleteUserAutoPromotionUses(int userId, int orderId);
 	
 }

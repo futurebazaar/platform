@@ -193,12 +193,7 @@ public class AutoPromotionManagerImpl implements AutoPromotionManager {
 		int userId = authentication.getUserID();
 
 		try {
-			promotionService.deleteUserAutoPromotionUses(userId, request.getOrderId());
-			if (request.getAppliedPromotionsList() != null) {
-				for(Integer promotionId : request.getAppliedPromotionsList()) {
-					promotionService.updateUserAutoPromotionUses(promotionId, userId, request.getOrderId());
-				}
-			}
+			promotionService.updateUserAutoPromotionUses(request.getAppliedPromotionsList(), userId, request.getOrderId());
 			response.setCommitAutoPromotionStatus(CommitAutoPromotionResponseStatusEnum.SUCCESS);
 		} catch (PromotionNotFoundException e) {
 			logger.error("No Promotion Found for promotion codes for order : " + request.getOrderId(), e);
