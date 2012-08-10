@@ -291,19 +291,25 @@ public class PromotionServiceImpl implements PromotionService {
 	}
 	
 	@Override
-	public void updateUserPromotionUses(int promotionId, int userId, int orderId) {
+	public void updateUserAutoPromotionUses(List<Integer> promotionIds, int userId, int orderId) {
 		try {
-			promotionDao.updateUserUses(promotionId, userId, new BigDecimal(0), orderId, true);
+			//delete existing uses of the promotion for this order
+			deleteUserAutoPromotionUses(userId, orderId);
+			if (promotionIds != null) {
+				//record new promotion uses
+				for(Integer promotionId : promotionIds) {
+					promotionDao.updateUserUses(promotionId, userId, new BigDecimal(0), orderId, true);
+				}
+			}
 		} catch (DataAccessException e) {
 			throw new PlatformException("Error while updating the uses for auto promotion. " +
-							"promotionId : " + promotionId + ", " +
+							"promotionIds : " + promotionIds + ", " +
 							"userId : " + userId + ", " +
 							"orderId : " + orderId, e);
 		}
 	}
 	
-	@Override
-	public void deleteUserAutoPromotionUses(int userId, int orderId) {
+	private void deleteUserAutoPromotionUses(int userId, int orderId) {
 		try {
 			promotionDao.deleteUserAutoPromotionUses(userId, orderId, true);
 		} catch (DataAccessException e) {
@@ -314,16 +320,14 @@ public class PromotionServiceImpl implements PromotionService {
 	}
 	
 	@Override
-	public List<Integer> getUserAutoPromotionUses(int userId, int orderId) {
+	public List<Integer> getAutoPromotionUses(int orderId) {
 		try {
-			logger.info("Fetching auto promotion usage for user : " + userId + ", order : " + orderId);
-			List<Integer> promotionList = promotionDao.getUserAutoPromotionUses(userId, orderId);
+			logger.info("Fetching auto promotion usage for orderId : " + orderId);
+			List<Integer> promotionList = promotionDao.getAutoPromotionUses(orderId);
 			return promotionList;
 		} catch (DataAccessException e) {
-			throw new PlatformException("Error while fetching the uses for auto promotion. " +
-					"userId : " + userId + ", " +
-					"orderId : " + orderId, e);
-}
+			throw new PlatformException("Error while fetching the uses for auto promotion. orderId : " + orderId, e);
+		}
 	}
 
 	public void setCouponDao(CouponDao couponDao) {
@@ -439,6 +443,9 @@ public class PromotionServiceImpl implements PromotionService {
 	}
 	
 	private void removeDeadPromotions(List<Integer> promotionIds) {
+		if (promotionIds == null) {
+			return;
+		}
 		for(Integer promotionId : promotionIds) {
 			Promotion promotion = getPromotion(promotionId);
 			if(!promotion.isActive() || isExpired(promotion.getDates().getValidTill())) {
@@ -477,7 +484,6 @@ public class PromotionServiceImpl implements PromotionService {
 	}
 
 	private void cacheAutoPromotionIds(List<Integer> autoPromotionIds) {
-		// TODO Auto-generated method stub
 		try {
 			autoPromotionIdsCacheAccess.lock();
 			if (autoPromotionIdsCacheAccess.get() == null) {
