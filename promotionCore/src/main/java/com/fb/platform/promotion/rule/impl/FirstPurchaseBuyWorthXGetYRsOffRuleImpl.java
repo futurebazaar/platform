@@ -3,38 +3,36 @@
  */
 package com.fb.platform.promotion.rule.impl;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.text.StrTokenizer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.fb.platform.promotion.dao.OrderDao;
-import com.fb.platform.promotion.dao.PromotionDao;
-
 
 import com.fb.commons.to.Money;
+import com.fb.platform.promotion.dao.OrderDao;
+import com.fb.platform.promotion.model.OrderDiscount;
 import com.fb.platform.promotion.rule.PromotionRule;
-import com.fb.platform.promotion.rule.RuleConfigConstants;
-import com.fb.platform.promotion.rule.RuleConfiguration;
+import com.fb.platform.promotion.rule.RulesEnum;
+import com.fb.platform.promotion.rule.config.RuleConfigDescriptorEnum;
+import com.fb.platform.promotion.rule.config.RuleConfigItemDescriptor;
+import com.fb.platform.promotion.rule.config.RuleConfiguration;
+import com.fb.platform.promotion.rule.config.data.FirstPurchaseBuyWorthXGetYRsOffRuleData;
+import com.fb.platform.promotion.rule.metadata.FirstPurchaseBuyWorthXGetYRsOffRuleMetadata;
+import com.fb.platform.promotion.rule.metadata.RuleConfigMetadata;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.PromotionStatusEnum;
-import com.fb.platform.promotion.util.StringToIntegerList;
+import com.fb.platform.promotion.util.ListUtil;
 
 /**
  * @author keith
  *
  */
-public class FirstPurchaseBuyWorthXGetYRsOffRuleImpl  implements PromotionRule, Serializable {
+public class FirstPurchaseBuyWorthXGetYRsOffRuleImpl  implements PromotionRule{
 
 	private static transient Log log = LogFactory.getLog(FirstPurchaseBuyWorthXGetYRsOffRuleImpl.class);
-	private Money minOrderValue;
-	private Money fixedRsOff;
-	private List<Integer> clientList;
-	private List<Integer> categories;
+	
+	FirstPurchaseBuyWorthXGetYRsOffRuleData data = new FirstPurchaseBuyWorthXGetYRsOffRuleData();
 	
 	private OrderDao orderDao = null;
 	
@@ -44,13 +42,9 @@ public class FirstPurchaseBuyWorthXGetYRsOffRuleImpl  implements PromotionRule, 
 
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
-		minOrderValue = new Money(BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigConstants.MIN_ORDER_VALUE))));
-		fixedRsOff = new Money (BigDecimal.valueOf(Double.valueOf(ruleConfig.getConfigItemValue(RuleConfigConstants.FIXED_DISCOUNT_RS_OFF))));
-		StrTokenizer strTokCategories = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigConstants.CATEGORY_LIST),",");
-		categories = StringToIntegerList.convert((List<String>)strTokCategories.getTokenList());
-		StrTokenizer strTokClients = new StrTokenizer(ruleConfig.getConfigItemValue(RuleConfigConstants.CLIENT_LIST),",");
-		clientList = StringToIntegerList.convert((List<String>)strTokClients.getTokenList());
-		log.info("minOrderValue : " + minOrderValue.toString() + ", fixedRsOff : " + fixedRsOff.toString());
+
+		data = (FirstPurchaseBuyWorthXGetYRsOffRuleData) RulesEnum.FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF.getRuleData(ruleConfig);
+
 	}
 
 	@Override
@@ -58,19 +52,25 @@ public class FirstPurchaseBuyWorthXGetYRsOffRuleImpl  implements PromotionRule, 
 		if(log.isDebugEnabled()) {
 			log.debug("Checking if FirstPurchaseBuyWorthXGetYRsOffRuleImpl applies on order : " + request.getOrderId());
 		}
-		ApplicableResponse ar = new ApplicableResponse();
-		Money orderValue = new Money(request.getOrderValue());
-		if(!request.isValidClient(clientList)){
+		if (ListUtil.isValidList(data.getClientList()) && !request.isValidClient(data.getClientList())) {
 			return PromotionStatusEnum.INVALID_CLIENT;
 		}
-		if(!request.isAllProductsInCategory(categories)){
+		if (ListUtil.isValidList(data.getIncludeCategoryList()) && !request.isAnyProductInCategory(data.getIncludeCategoryList())) {
 			return PromotionStatusEnum.CATEGORY_MISMATCH;
 		}
-		if(orderValue.lt(minOrderValue)){
+		if (ListUtil.isValidList(data.getExcludeCategoryList()) && request.isAnyProductInCategory(data.getExcludeCategoryList())) {
+			return PromotionStatusEnum.CATEGORY_MISMATCH;
+		}
+		if (ListUtil.isValidList(data.getBrands()) && !request.isAnyProductInBrand(data.getBrands())) {
+			return PromotionStatusEnum.BRAND_MISMATCH;
+		}
+		
+		Money orderValue = request.getOrderValueForRelevantProducts(data.getBrands(), data.getIncludeCategoryList(), data.getExcludeCategoryList());
+		if(data.getMinOrderValue() !=null && orderValue.lt(data.getMinOrderValue())) {
 			return PromotionStatusEnum.LESS_ORDER_AMOUNT;
 		}
-		if(!isCouponCommitted){
-			if(!orderDao.isUserFirstOrder(userId)){
+		if(!isCouponCommitted) {
+			if(!orderDao.isUserFirstOrder(userId)) {
 				return PromotionStatusEnum.NOT_FIRST_PURCHASE;
 			}
 		}
@@ -78,12 +78,32 @@ public class FirstPurchaseBuyWorthXGetYRsOffRuleImpl  implements PromotionRule, 
 	}
 	
 	@Override
-	public Money execute(OrderRequest request) {
+	public OrderDiscount execute(OrderDiscount orderDiscount) {
+		OrderRequest request = orderDiscount.getOrderRequest();
 		if(log.isDebugEnabled()) {
 			log.debug("Executing FirstPurchaseBuyWorthXGetYRsOffRuleImpl on order : " + request.getOrderId());
 		}
-		return fixedRsOff;
+		orderDiscount.setOrderDiscountValue(data.getFixedRsOff().getAmount());
+		
+		return orderDiscount.distributeDiscountOnOrder(orderDiscount,data.getBrands(),data.getIncludeCategoryList(),data.getExcludeCategoryList());
+		
+	}
+		
+	@Override
+	public RuleConfigMetadata getRuleConfigMetadata() {
+		return new FirstPurchaseBuyWorthXGetYRsOffRuleMetadata();
 	}
 	
+	@Override
+	public List<RuleConfigItemDescriptor> getRuleConfigs() {
+		List<RuleConfigItemDescriptor> ruleConfigs = new ArrayList<RuleConfigItemDescriptor>();
+		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.CLIENT_LIST, false));
+		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.CATEGORY_INCLUDE_LIST, false));
+		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.CATEGORY_EXCLUDE_LIST, false));
+		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.BRAND_LIST, false));
+		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.MIN_ORDER_VALUE, false));
+		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.FIXED_DISCOUNT_RS_OFF, true));
+		return ruleConfigs;
+	}
 	
 }

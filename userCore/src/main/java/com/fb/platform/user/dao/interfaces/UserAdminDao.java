@@ -1,7 +1,5 @@
 package com.fb.platform.user.dao.interfaces;
 
-import java.util.Collection;
-
 import com.fb.platform.user.domain.UserBo;
 import com.fb.platform.user.domain.UserEmailBo;
 import com.fb.platform.user.domain.UserPhoneBo;

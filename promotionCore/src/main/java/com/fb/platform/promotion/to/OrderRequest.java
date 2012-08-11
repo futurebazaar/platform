@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fb.commons.to.Money;
+import com.fb.platform.promotion.util.ListUtil;
 
 /**
  * @author vinayak
@@ -19,7 +20,8 @@ public class OrderRequest implements Serializable {
 	private int orderId = 0;
 	private List<OrderItem> orderItems = new ArrayList<OrderItem>();
 	private int clientId = 0;
-
+	private int noOfTimesInMonth = 0;
+	
 	public int getOrderId() {
 		return orderId;
 	}
@@ -95,10 +97,10 @@ public class OrderRequest implements Serializable {
 		return false;
 	}
 
-	public Money getOrderValueForCategory(List<Integer> clientList){
+	public Money getOrderValueForCategory(List<Integer> catList){
 		Money orderValueForCategoryProducts = new Money(new BigDecimal(0)); 
 		for(OrderItem o:orderItems){
-			if(o.isOrderItemInCategory(clientList)){
+			if(o.isOrderItemInCategory(catList)){
 				orderValueForCategoryProducts = orderValueForCategoryProducts.plus(new Money(o.getPrice()));
 			}
 		}
@@ -125,4 +127,55 @@ public class OrderRequest implements Serializable {
 		return new Money(new BigDecimal(0));
 	}
 	
+	public Money getOrderValueForRelevantProducts(List<Integer> brandList,List<Integer> catIncludeList,List<Integer> catExcludeList){
+		Money orderValueForBrandProducts = new Money(new BigDecimal(0)); 
+		for(OrderItem o:orderItems){
+			if( (!ListUtil.isValidList(brandList)|| o.isOrderItemInBrand(brandList))
+					&& (!ListUtil.isValidList(catIncludeList) || o.isOrderItemInCategory(catIncludeList))
+					&&  (!ListUtil.isValidList(catExcludeList) || !o.isOrderItemInCategory(catExcludeList))){
+				orderValueForBrandProducts = orderValueForBrandProducts.plus(new Money(o.getPrice()));
+			}
+		}
+		return orderValueForBrandProducts;
+	}
+	
+	public int getOrderQuantityForBrand(List<Integer> brandList){
+		int count = 0; 
+		for(OrderItem o:orderItems){
+			if(o.isOrderItemInBrand(brandList)){
+				count++;
+			}
+		}
+		return count;
+	}
+	
+	public int getOrderQuantityForRelevantProducts(List<Integer> brandList, List<Integer> catIncludeList, List<Integer> catExcludeList) {
+		int count = 0; 
+		for(OrderItem o: orderItems) {
+			if( (!ListUtil.isValidList(brandList)|| o.isOrderItemInBrand(brandList))
+					&& (!ListUtil.isValidList(catIncludeList) || o.isOrderItemInCategory(catIncludeList))
+					&&  (!ListUtil.isValidList(catExcludeList) || !o.isOrderItemInCategory(catExcludeList))){
+				count=count+o.getQuantity();
+			}
+		}
+		return count;
+	}
+	
+	public int getNoOfTimesInMonth() {
+		
+		
+		
+		return noOfTimesInMonth;
+	}
+	
+	
+	public void setNoOfTimesInMonth(int noOfTimesInMonth) {
+		this.noOfTimesInMonth = noOfTimesInMonth;
+	}
+
+	public void resetDiscountedPrice() {
+		for (OrderItem orderItem : orderItems) {
+			orderItem.getProduct().setDiscountedPrice(null);
+		}
+	}
 }

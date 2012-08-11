@@ -143,16 +143,22 @@ public class UserAdminDaoTest extends BaseTestCase {
 	@Test
 	public void testDeleteUserEmail(){
 		UserBo usettest = userAdminDao.load(key);
+		
+		UserEmailBo userEmail = new UserEmailBo();
+		userEmail.setEmail("tetsaddingemail1@tets.com");
+		userEmail.setType("primary");
+		assertEquals(true, userAdminDao.addUserEmail(usettest.getUserid(), userEmail));
+		
 		assertNotNull(usettest);
 		int userid = usettest.getUserid();
-		assertTrue(userAdminDao.deleteUserEmail(userid, "tetsaddingemail@tets.com"));
-		assertFalse(userAdminDao.deleteUserEmail(userid, "tetsaddingemail@tets.com"));
+		assertTrue(userAdminDao.deleteUserEmail(userid, "tetsaddingemail1@tets.com"));
+		assertFalse(userAdminDao.deleteUserEmail(userid, "tetsaddingemail1@tets.com"));
 		UserBo usettest1 = userAdminDao.load(key);
 		assertNotNull(usettest1);
 		List<UserEmailBo> usEmailBos = usettest1.getUserEmail();
 		boolean found = false;
 		for(UserEmailBo userEmailBo :usEmailBos){
-			if(userEmailBo.getEmail().equals("tetsaddingemail@tets.com")){
+			if(userEmailBo.getEmail().equals("tetsaddingemail1@tets.com")){
 				found = true;
 			}
 		}
@@ -163,14 +169,20 @@ public class UserAdminDaoTest extends BaseTestCase {
 		UserBo usettest = userAdminDao.load(key);
 		assertNotNull(usettest);
 		int userid = usettest.getUserid();
-		assertTrue( userAdminDao.deleteUserPhone(userid, "09876654546"));
-		assertFalse( userAdminDao.deleteUserEmail(userid, "09876654546"));
+		
+		UserPhoneBo userPhone = new UserPhoneBo();
+		userPhone.setPhoneno("09876654453");
+		userPhone.setType("secondary");
+		assertEquals(true, userAdminDao.addUserPhone(userid, userPhone));
+		
+		assertTrue( userAdminDao.deleteUserPhone(userid, "09876654453"));
+		assertFalse( userAdminDao.deleteUserEmail(userid, "09876654453"));
 		UserBo usettest1 = userAdminDao.load(key);
 		assertNotNull(usettest1);
 		boolean found = false;
 		List<UserPhoneBo> usPhoneBos = usettest1.getUserPhone();
 		for(UserPhoneBo userPhoneBo : usPhoneBos){
-			if(userPhoneBo.getPhoneno().equals("09876654546")){
+			if(userPhoneBo.getPhoneno().equals("09876654453")){
 				found = true;
 			}
 		}

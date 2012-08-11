@@ -17,9 +17,14 @@
 		<property name="jdbcTemplate" ref="jdbcTemplate"/>
 	</bean>
 
+	<bean id="promotionConfigDao" class="com.fb.platform.promotion.product.dao.impl.PromotionConfigDaoJdbcImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+
 	<bean id="promotionDao" class="com.fb.platform.promotion.dao.impl.PromotionDaoJdbcImpl">
 		<property name="jdbcTemplate" ref="jdbcTemplate"/>
 		<property name="ruleDao" ref="ruleDao"></property>
+		<property name="promotionConfigDao" ref="promotionConfigDao"></property>
 	</bean>
 
 	<bean id="couponDao" class="com.fb.platform.promotion.dao.impl.CouponDaoJdbcImpl">
@@ -36,6 +41,11 @@
 	<bean id="orderDao" class="com.fb.platform.promotion.dao.impl.OrderDaoJdbcImpl">
 		<property name="jdbcTemplate" ref="jdbcTemplate"/>
 	</bean>
-    <!-- Add new DAOs here -->
+	
+	<bean id="promotionAdminDao" class="com.fb.platform.promotion.admin.dao.impl.PromotionAdminDaoJdbcImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+
+   <!-- Add new DAOs here -->
 
 </beans>

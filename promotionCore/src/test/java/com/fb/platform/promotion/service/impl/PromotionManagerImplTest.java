@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
+import com.fb.platform.promotion.product.to.CommitAutoPromotionRequest;
 import com.fb.platform.promotion.service.PromotionManager;
 import com.fb.platform.promotion.service.PromotionService;
 import com.fb.platform.promotion.to.ApplyCouponRequest;
@@ -35,9 +36,6 @@ import com.fb.platform.promotion.to.CommitCouponStatusEnum;
 import com.fb.platform.promotion.to.OrderItem;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.Product;
-import com.fb.platform.promotion.to.ReleaseCouponRequest;
-import com.fb.platform.promotion.to.ReleaseCouponResponse;
-import com.fb.platform.promotion.to.ReleaseCouponStatusEnum;
 import com.fb.platform.user.manager.interfaces.UserManager;
 import com.fb.platform.user.manager.model.auth.LoginRequest;
 import com.fb.platform.user.manager.model.auth.LoginResponse;
@@ -96,7 +94,7 @@ public class PromotionManagerImplTest extends BaseTestCase{
 		assertNotNull(couponResponse);
 		assertEquals(couponResponse.getCouponStatus(), ApplyCouponResponseStatusEnum.TOTAL_MAX_AMOUNT_PER_USER_EXCEEDED);
 		assertNotNull(couponResponse.getSessionToken());
-		assertEquals(0, new BigDecimal(120).compareTo(couponResponse.getDiscountValue()));
+		assertEquals(0, new BigDecimal(120).compareTo(couponResponse.getOrderDiscount().getOrderDiscountValue()));
 		assertTrue((couponResponse.getPromoName()).equals("End to End Test Promotion 1"));
 		assertTrue(couponResponse.getPromoDescription().equals("end to end promo 1"));
 		assertTrue(couponResponse.getStatusMessage().equals(ApplyCouponResponseStatusEnum.TOTAL_MAX_AMOUNT_PER_USER_EXCEEDED.getMesage()));
@@ -131,7 +129,7 @@ public class PromotionManagerImplTest extends BaseTestCase{
 		assertNotNull(couponResponse);
 		assertEquals(couponResponse.getCouponStatus(), ApplyCouponResponseStatusEnum.SUCCESS);
 		assertNotNull(couponResponse.getSessionToken());
-		assertEquals(0, new BigDecimal(150).compareTo(couponResponse.getDiscountValue()));
+		assertEquals(0, new BigDecimal(150).compareTo(couponResponse.getOrderDiscount().getOrderDiscountValue()));
 		
 		CommitCouponRequest commitCouponRequest = new CommitCouponRequest();
 		commitCouponRequest.setCouponCode("GLOBAL_COUPON_4444");
@@ -154,7 +152,7 @@ public class PromotionManagerImplTest extends BaseTestCase{
 		ApplyCouponResponse reCouponResponse = promotionManager.applyCoupon(reCouponRequest);
 		assertNotNull(reCouponResponse);
 		assertEquals(reCouponResponse.getCouponStatus(), ApplyCouponResponseStatusEnum.SUCCESS);
-		assertEquals(0, new BigDecimal(22.5).compareTo(reCouponResponse.getDiscountValue()));
+		assertEquals(0, new BigDecimal(22.5).compareTo(reCouponResponse.getOrderDiscount().getOrderDiscountValue()));
 	}	
 	
 	/*@Test
@@ -309,10 +307,8 @@ public class PromotionManagerImplTest extends BaseTestCase{
 		//The user already has a scratch card issued of a different store.
 		//The user is eligible for the scratch card.
 		assertEquals(ApplyScratchCardStatus.INVALID_SCRATCH_CARD, applyScratchCardResponse.getApplyScratchCardStatus());
-		
-		
 	}
-
+	
 	private CommitCouponResponse placeOrder(String sessionToken) {
 		ApplyCouponRequest couponRequest = new ApplyCouponRequest();
 		couponRequest.setOrderReq(getSampleOrderRequest(639));
@@ -325,7 +321,7 @@ public class PromotionManagerImplTest extends BaseTestCase{
 		assertNotNull(couponResponse);
 		assertEquals(couponResponse.getCouponStatus(), ApplyCouponResponseStatusEnum.SUCCESS);
 		assertNotNull(couponResponse.getSessionToken());
-		assertEquals(0, new BigDecimal(50).compareTo(couponResponse.getDiscountValue()));
+		assertEquals(0, new BigDecimal(50).compareTo(couponResponse.getOrderDiscount().getOrderDiscountValue()));
 		
 		CommitCouponRequest commitCouponRequest = new CommitCouponRequest();
 		commitCouponRequest.setCouponCode("END2END_POST_ISSUE");

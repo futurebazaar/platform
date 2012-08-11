@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assignCouponToUserRequest xmlns="http://www.fb.com/platform/promotion/1.0.0">
+	<sessionToken>xxxx1111yyyy-ee-02==</sessionToken>
+	<couponCode>xxxxx1228HH</couponCode>
+	<userId>100</userId>
+	<overrideCouponUserLimit>22</overrideCouponUserLimit>
+</assignCouponToUserRequest>

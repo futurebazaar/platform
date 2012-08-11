@@ -3,6 +3,8 @@ package com.fb.platform.promotion.to;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import com.fb.platform.promotion.model.OrderDiscount;
+
 /**
  * 
  * @author keith
@@ -11,7 +13,7 @@ import java.math.BigDecimal;
 public class ApplyCouponResponse implements Serializable{
 
 	private String couponCode;
-	private BigDecimal discountValue;
+	private OrderDiscount orderDiscount;
 	private ApplyCouponResponseStatusEnum couponStatus;
 	private String statusMessage;
 	private String promoName;
@@ -31,16 +33,16 @@ public class ApplyCouponResponse implements Serializable{
 		this.couponCode = couponCode;
 	}
 	/**
-	 * @return the discountValue
+	 * @return the orderDiscount
 	 */
-	public BigDecimal getDiscountValue() {
-		return discountValue;
+	public OrderDiscount getOrderDiscount() {
+		return orderDiscount;
 	}
 	/**
-	 * @param discountValue the discountValue to set
+	 * @param orderDiscount the orderDiscount to set
 	 */
-	public void setDiscountValue(BigDecimal discountValue) {
-		this.discountValue = discountValue;
+	public void setOrderDiscount(OrderDiscount orderDiscount) {
+		this.orderDiscount = orderDiscount;
 	}
 	/**
 	 * @return the statusMessage

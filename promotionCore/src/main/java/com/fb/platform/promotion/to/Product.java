@@ -15,7 +15,11 @@ public class Product {
 	private int productId = 0;
 	private List<Integer> categories = null;
 	private List<Integer> brands = null;
+	//price is offer price
 	private BigDecimal price = null;
+	private BigDecimal mrpPrice = null;
+	//this is the price that will be offered to the customer after calculating auto promotion discounts
+	private BigDecimal discountedPrice = null;
 
 	public int getProductId() {
 		return productId;
@@ -47,7 +51,20 @@ public class Product {
 	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
-	
+
+	public BigDecimal getMrpPrice() {
+		return mrpPrice;
+	}
+	public void setMrpPrice(BigDecimal mrpPrice) {
+		this.mrpPrice = mrpPrice;
+	}
+
+	public BigDecimal getDiscountedPrice() {
+		return discountedPrice;
+	}
+	public void setDiscountedPrice(BigDecimal discountedPrice) {
+		this.discountedPrice = discountedPrice;
+	}
 	public boolean isProductOfCategory(List<Integer> catList){
 		return catList.containsAll(this.categories);
 	}

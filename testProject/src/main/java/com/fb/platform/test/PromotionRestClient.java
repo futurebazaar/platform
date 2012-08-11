@@ -125,7 +125,7 @@ public class PromotionRestClient {
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		ApplyCouponResponse couponResponse = (ApplyCouponResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(couponResponseStr)));
 		System.out.println(couponResponse);
-		return couponResponse.getDiscountValue();
+		return couponResponse.getOrderDiscount().getDiscountValue();
 	}
 	
 }

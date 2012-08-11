@@ -19,7 +19,7 @@ public enum PromotionStatusEnum implements Serializable {
 	COUPON_CODE_EXPIRED("COUPON_CODE_EXPIRED", "You are too late in using this coupon. It has already expired."),
 	USER_NOT_AUTHORIZED("USER_NOT_AUTHORIZED", "Are you sure this coupon belongs to you? Our system says you cannot use this coupon. "),
 	NUMBER_OF_USES_EXCEEDED("NUMBER_OF_USES_EXCEEDED", "NUMBER_OF_USES_EXCEEDED"),
-	NOT_APPLICABLE("NOT_APPLICABLE", "Oops, there seems to be a problem with our systems. Can you please try again?"),
+	NOT_APPLICABLE("NOT_APPLICABLE", "This coupon is not applicable on this Order."),
 	LESS_ORDER_AMOUNT("LESS_ORDER_AMOUNT", "This coupon is not applicable on this Order Amount."),
 	INVALID_CLIENT("INVALID_CLIENT", "This is not a valid coupon. Try another one."),
 	CATEGORY_MISMATCH("CATEGORY_MISMATCH", "This coupon is not valid on purchase of the products you selected."),
@@ -28,7 +28,8 @@ public enum PromotionStatusEnum implements Serializable {
 	PRODUCT_NOT_PRESENT("PRODUCT_NOT_PRESENT","REQUIRED PRODUCT IS NOT PRESENT IN ORDER"),
 	LESS_ORDER_AMOUNT_OF_BRAND_PRODUCTS("LESS_ORDER_AMOUNT_OF_BRAND_PRODUCTS", "This coupon is not applicable on this Order Amount."),
 	LESS_ORDER_AMOUNT_OF_CATEGORY_PRODUCTS("LESS_ORDER_AMOUNT_OF_CATEGORY_PRODUCTS", "This coupon is not applicable on this Order Amount."),
-	NOT_FIRST_PURCHASE("NOT_FIRST_PURCHASE","This coupon is applicable on your first purchase");
+	NOT_FIRST_PURCHASE("NOT_FIRST_PURCHASE","This coupon is applicable on your first purchase"),
+	NUMBER_OF_MONTHLY_USE_EXCEEDED("NUMBER_OF_MONTHLY_USE_EXCEEDED","This coupon has already been used and cannot be applied on this order.");
 
 
 	private String status = null;

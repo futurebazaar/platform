@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.fb.com/platform/promotion/1.0.0" xmlns:promotion="http://www.fb.com/platform/promotion/1.0.0">
+  <xs:element name="assignCouponToUserRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:sessionToken"/>
+        <xs:element ref="promotion:couponCode"/>
+        <xs:element ref="promotion:userId"/>
+        <xs:element ref="promotion:overrideCouponUserLimit"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="sessionToken" type="xs:string"/>
+  <xs:element name="couponCode" type="xs:NCName"/>
+  <xs:element name="userId" type="xs:integer"/>
+  <xs:element name="overrideCouponUserLimit" type="xs:integer"/>
+</xs:schema>

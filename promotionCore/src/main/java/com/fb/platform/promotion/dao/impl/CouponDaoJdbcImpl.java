@@ -24,13 +24,13 @@ import org.springframework.jdbc.support.KeyHolder;
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.dao.CouponDao;
+import com.fb.platform.promotion.exception.CouponNotCommitedException;
 import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
 import com.fb.platform.promotion.model.coupon.CouponType;
 import com.fb.platform.promotion.model.coupon.GlobalCouponUses;
 import com.fb.platform.promotion.model.coupon.UserCouponUses;
 import com.fb.platform.promotion.model.coupon.UserCouponUsesEntry;
-import com.fb.platform.promotion.service.CouponNotCommitedException;
 
 /**
  * @author vinayak
@@ -126,9 +126,42 @@ public class CouponDaoJdbcImpl implements CouponDao {
 			" SELECT coupon_code" +
 			"	FROM coupon " +
 			"	WHERE promotion_id = ? AND coupon_type = ? ";
-	
+
 	@Override
 	public Coupon load(String couponCode, int userId) {
+		
+		Coupon coupon = load(couponCode);
+
+		if(coupon==null){
+			log.info("Loading coupon by coupon code ="+ couponCode + " returned null");
+			return null;
+		}
+		if (coupon.getType() == CouponType.PRE_ISSUE) {
+			//PRE_ISSUE coupons are issued to a particular user.
+			//find out the user associated with this coupon
+			if(log.isDebugEnabled()) {
+				log.debug("Getting the coupon details for the coupon code : " + couponCode + " ,issued to the user : " + userId);
+			}
+			CouponUserRowCallbackHandler curch = new CouponUserRowCallbackHandler();
+			jdbcTemplate.query(LOAD_COUPON_USER_QUERY, curch, coupon.getId(), userId);
+
+			if (curch.getColumnCount() == 0) {
+				//this coupon does not belong to this user. sorry bye
+				//TODO return a proper error or throw correct exectption. for the time being return null coupon which will map to no coupon found message.
+				log.error("Coupon code : " + couponCode + " does not belong to userId : " + userId);
+				return null;
+			}
+			//see if the user uses limit is overridden for this user. if so update our limits objects
+			if (curch.userUsesLimitOverride != 0) {
+				coupon.getLimitsConfig().setMaxUsesPerUser(curch.userUsesLimitOverride);
+			}
+		}
+
+		return coupon;
+	}
+
+	@Override
+	public Coupon load(String couponCode) {
 		Coupon coupon = null;
 		if(log.isDebugEnabled()) {
 			log.debug("Getting the coupon details for the coupon code : " + couponCode);
@@ -153,30 +186,9 @@ public class CouponDaoJdbcImpl implements CouponDao {
 		}
 		coupon.setLimitsConfig(limitsConfig);
 
-		if (coupon.getType() == CouponType.PRE_ISSUE) {
-			//PRE_ISSUE coupons are issued to a particular user.
-			//find out the user associated with this coupon
-			if(log.isDebugEnabled()) {
-				log.debug("Getting the coupon details for the coupon code : " + couponCode + " ,issued to the user : " + userId);
-			}
-			CouponUserRowCallbackHandler curch = new CouponUserRowCallbackHandler();
-			jdbcTemplate.query(LOAD_COUPON_USER_QUERY, curch, coupon.getId(), userId);
-
-			if (curch.getColumnCount() == 0) {
-				//this coupon does not belong to this user. sorry bye
-				//TODO return a proper error or throw correct exectption. for the time being return null coupon which will map to no coupon found message.
-				log.error("Coupon code : " + couponCode + " does not belong to userId : " + userId);
-				return null;
-			}
-			//see if the user uses limit is overridden for this user. if so update our limits objects
-			if (curch.userUsesLimitOverride != 0) {
-				limitsConfig.setMaxUsesPerUser(curch.userUsesLimitOverride);
-			}
-		}
-
 		return coupon;
 	}
-
+	
 	@Override
 	public GlobalCouponUses loadGlobalUses(int couponId) {
 		if(log.isDebugEnabled()) {
@@ -262,7 +274,7 @@ public class CouponDaoJdbcImpl implements CouponDao {
 		Collection<Coupon> couponsList = jdbcTemplate.query(GET_COUPON_FOR_PROMOTION_AND_TYPE_QUERY, new Object[]{promotionId, couponType}, new CouponPromotionMapper());
 		return couponsList;
 	}
-	
+
 	@Override
 	public UserCouponUsesEntry load(int couponId, int userId, int orderId){
 		if(log.isDebugEnabled()) {
@@ -280,7 +292,7 @@ public class CouponDaoJdbcImpl implements CouponDao {
 		
 		return userCouponUsesEntry;
 	}
-	
+
 	private BigDecimal getDiscountValue(int couponId, int userId, int orderId) throws CouponNotCommitedException {
 		if (log.isDebugEnabled()) {
 			log.debug("Get from the user coupon uses table record for user : " + userId + " , applied coupon id : " + couponId + " , on order id : " + orderId);

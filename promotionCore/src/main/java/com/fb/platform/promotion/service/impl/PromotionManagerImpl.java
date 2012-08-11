@@ -9,25 +9,26 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
+import com.fb.platform.promotion.exception.CouponAlreadyAssignedToUserException;
+import com.fb.platform.promotion.exception.CouponNotCommitedException;
+import com.fb.platform.promotion.exception.CouponNotFoundException;
+import com.fb.platform.promotion.exception.PromotionNotFoundException;
+import com.fb.platform.promotion.exception.ScratchCardNotFoundException;
+import com.fb.platform.promotion.exception.UserNotElligibleException;
+import com.fb.platform.promotion.model.OrderDiscount;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.PromotionDates;
 import com.fb.platform.promotion.model.coupon.Coupon;
+import com.fb.platform.promotion.model.coupon.CouponPromotion;
 import com.fb.platform.promotion.model.scratchCard.ScratchCard;
-import com.fb.platform.promotion.service.CouponAlreadyAssignedToUserException;
-import com.fb.platform.promotion.service.CouponNotCommitedException;
-import com.fb.platform.promotion.service.CouponNotFoundException;
 import com.fb.platform.promotion.service.PromotionManager;
-import com.fb.platform.promotion.service.PromotionNotFoundException;
 import com.fb.platform.promotion.service.PromotionService;
-import com.fb.platform.promotion.service.ScratchCardNotFoundException;
-import com.fb.platform.promotion.service.UserNotElligibleException;
 import com.fb.platform.promotion.to.ApplyCouponRequest;
 import com.fb.platform.promotion.to.ApplyCouponResponse;
 import com.fb.platform.promotion.to.ApplyCouponResponseStatusEnum;
@@ -35,6 +36,7 @@ import com.fb.platform.promotion.to.ApplyScratchCardRequest;
 import com.fb.platform.promotion.to.ApplyScratchCardResponse;
 import com.fb.platform.promotion.to.ApplyScratchCardStatus;
 import com.fb.platform.promotion.to.ClearCacheEnum;
+import com.fb.platform.promotion.to.ClearCouponCacheRequest;
 import com.fb.platform.promotion.to.ClearCouponCacheResponse;
 import com.fb.platform.promotion.to.ClearPromotionCacheRequest;
 import com.fb.platform.promotion.to.ClearPromotionCacheResponse;
@@ -112,10 +114,10 @@ public class PromotionManagerImpl implements PromotionManager {
 				return response;
 			}
 			
-			Money discount = promotion.apply(request.getOrderReq());
-			
-			if(discount!=null){
-				response.setDiscountValue(discount.getAmount());
+			OrderDiscount orderDiscount = ((CouponPromotion)promotion).apply(request.getOrderReq());
+			if(orderDiscount!=null){
+				Money discount = orderDiscount.getOrderDiscountValue()==null ? null : new Money(orderDiscount.getOrderDiscountValue());
+				response.setOrderDiscount(orderDiscount);
 				PromotionStatusEnum postDiscountCheckStatus = promotionService.isApplicable(userId, request.getOrderReq(), discount, coupon, promotion, request.getIsOrderCommitted());
 				if(PromotionStatusEnum.SUCCESS.compareTo(postDiscountCheckStatus)!=0){
 					response.setCouponStatus(postDiscountCheckStatus);
@@ -180,6 +182,10 @@ public class PromotionManagerImpl implements PromotionManager {
 		try {
 			coupon = promotionService.getCoupon(request.getCouponCode(), userId);
 			promotion = promotionService.getPromotion(coupon.getPromotionId());
+
+			// check if the order booking date is one which is before today
+			//if yes, then don't check the promotion valid till date by setting the validTill date as todays
+			orderIdCheck(request.getOrderBookingDate(), promotion);
 
 			PromotionStatusEnum isApplicableStatus = promotionService.isApplicable(userId, request.getOrderId(), new Money(request.getDiscountValue()), coupon, promotion, false);
 			if(PromotionStatusEnum.SUCCESS.compareTo(isApplicableStatus)!=0){
@@ -354,7 +360,7 @@ public class PromotionManagerImpl implements PromotionManager {
 	}
 
 	@Override
-	public ClearCouponCacheResponse clearCache(com.fb.platform.promotion.to.ClearCouponCacheRequest clearCouponCacheRequest) {
+	public ClearCouponCacheResponse clearCache(ClearCouponCacheRequest clearCouponCacheRequest) {
 		ClearCouponCacheResponse clearCouponCacheResponse = new ClearCouponCacheResponse();
 		if (clearCouponCacheRequest == null || StringUtils.isBlank(clearCouponCacheRequest.getSessionToken())) {
 			clearCouponCacheResponse.setClearCacheEnum(ClearCacheEnum.NO_SESSION);
@@ -385,9 +391,7 @@ public class PromotionManagerImpl implements PromotionManager {
 		// check if the order is one among those which had issue after promotion migration
 		logger.info("The orderBookingDate receieved is orderBookingDate = "+orderBookingDate);
 		PromotionDates promotionDates = promotion.getDates();
-		DateTime promotionValidTillDate = promotionDates.getValidTill();
-		DateTimeComparator dateComparator = DateTimeComparator.getDateOnlyInstance();
-		if(dateComparator.compare(null, orderBookingDate) > 1){
+		if(orderBookingDate.isBeforeNow()){
 			logger.info("Order Booking Date is an old date, before today so allow the promotion date check to pass");
 			promotionDates.setValidTill(DateTime.now());
 		}

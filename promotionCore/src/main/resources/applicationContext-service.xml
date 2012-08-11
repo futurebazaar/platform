@@ -9,17 +9,30 @@
             http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-    
     <!-- Enable @Transactional support -->
     <tx:annotation-driven/>
     
     <!-- This is to scan and load the CacheAccess classes -->
     <context:component-scan base-package="com.fb.platform.promotion.cache"></context:component-scan>
+    <context:component-scan base-package="com.fb.platform.promotion.cache.auto"></context:component-scan>
 
     <!-- Add new services here -->
     <bean id="promotionService" class="com.fb.platform.promotion.service.impl.PromotionServiceImpl">
         <property name="couponDao" ref="couponDao"/>
         <property name="promotionDao" ref="promotionDao"></property>
+    </bean>
+    
+    <bean id="messageTranslatorUtility" class="com.fb.platform.promotion.util.MessageTranslatorUtility">
+        <property name="messageSource" ref="messageSource"/>
+    </bean>
+
+    <bean id="promotionAdminService" class="com.fb.platform.promotion.admin.service.impl.PromotionAdminServiceImpl">
+        <property name="ruleDao" ref="ruleDao"/>
+        <property name="couponAdminDao" ref="couponAdminDao"/>
+        <property name="userAdminDao" ref="userAdminDao"/>
+        <property name="scratchCardDao" ref="scratchCardDao"/>
+        <property name="promotionAdminDao" ref="promotionAdminDao"/>
+        <property name="promotionService" ref="promotionService"/>
     </bean>
 
     <!-- Add new Managers here -->
@@ -30,9 +43,26 @@
         <property name="authenticationService" ref="authenticationService"></property>
     </bean>
     
+    <bean id="promotionAdminManager" class="com.fb.platform.promotion.admin.service.impl.PromotionAdminManagerImpl">
+        <property name="promotionAdminService" ref="promotionAdminService"></property>
+        <property name="authenticationService" ref="authenticationService"></property>
+    </bean>
+
+    <bean id="autoPromotionManager" class="com.fb.platform.promotion.service.impl.AutoPromotionManagerImpl">
+        <property name="promotionService" ref="promotionService"></property>
+        <property name="authenticationService" ref="authenticationService"></property>
+    </bean>
+    
     <!-- Add new Factory Beans here -->
     <bean id="promotionRuleFactory" class="com.fb.platform.promotion.util.PromotionRuleFactory">
     	<property name="orderDao" ref="orderDao"/>
+    	<property name="promotionDao" ref="promotionDao"/>
     </bean>
-        
+    
+    <bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="classpath:pa_messages"/>
+		<property name="cacheSeconds" value="43200" />
+	</bean>
+    
 </beans>
