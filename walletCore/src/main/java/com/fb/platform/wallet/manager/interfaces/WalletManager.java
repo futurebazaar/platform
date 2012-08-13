@@ -1,5 +1,7 @@
 package com.fb.platform.wallet.manager.interfaces;
 
+import com.fb.platform.wallet.manager.model.access.VerifyWalletRequest;
+import com.fb.platform.wallet.manager.model.access.VerifyWalletResponse;
 import com.fb.platform.wallet.manager.model.access.WalletSummaryRequest;
 import com.fb.platform.wallet.manager.model.access.WalletSummaryResponse;
 import com.fb.platform.wallet.manager.model.access.WalletHistoryRequest;
@@ -33,4 +35,6 @@ public interface WalletManager {
 	public RefundResponse refundFromWallet(RefundRequest refundRequest);
 	
 	public RevertResponse revertWalletTransaction(RevertRequest revertRequest);
+
+	public VerifyWalletResponse verifyWallet(VerifyWalletRequest apiVerifyReq);
 }

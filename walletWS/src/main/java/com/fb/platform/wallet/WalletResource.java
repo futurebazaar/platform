@@ -56,6 +56,10 @@ import com.fb.platform.wallet._1_0.RevertRequest;
 import com.fb.platform.wallet._1_0.RevertResponse;
 import com.fb.platform.wallet._1_0.RevertStatus;
 
+import com.fb.platform.wallet._1_0.VerifyWalletRequest;
+import com.fb.platform.wallet._1_0.VerifyWalletResponse;
+import com.fb.platform.wallet._1_0.VerifyWalletStatus;
+
 import com.fb.platform.wallet.manager.interfaces.WalletManager;
 import com.fb.platform.wallet.manager.model.access.SubWalletEnum;
 
@@ -423,6 +427,45 @@ public class WalletResource {
 			logger.error("User.xsd loading error : " + exception.getMessage() );
 		}
 		return sb.toString();
+	}
+	
+	@POST
+	@Path("/verify")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String verifyWallet (String verifyWalletXml) {
+		
+		logger.info("VERIFY WALLET XML request: \n" + verifyWalletXml);
+		try {
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			VerifyWalletRequest xmlVerifyReq = (VerifyWalletRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(verifyWalletXml)));
+
+			com.fb.platform.wallet.manager.model.access.VerifyWalletRequest apiVerifyReq = new com.fb.platform.wallet.manager.model.access.VerifyWalletRequest();
+			apiVerifyReq.setSessionToken(xmlVerifyReq.getSessionToken());
+			apiVerifyReq.setUserId(xmlVerifyReq.getUserId());
+			apiVerifyReq.setClientId(xmlVerifyReq.getClientId());
+			apiVerifyReq.setAmount(xmlVerifyReq.getAmount());
+			apiVerifyReq.setPassword(xmlVerifyReq.getPassword());
+
+			com.fb.platform.wallet.manager.model.access.VerifyWalletResponse apiVerifyResponse = walletManager.verifyWallet(apiVerifyReq);
+
+			VerifyWalletResponse xmlVerifyResponse = new VerifyWalletResponse();
+			xmlVerifyResponse.setSessionToken(apiVerifyResponse.getSessionToken());
+			xmlVerifyResponse.setVerifyWalletStatus(VerifyWalletStatus.fromValue(apiVerifyResponse.getStatus().name() ));
+			
+			
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marsheller = context.createMarshaller();
+			marsheller.marshal(xmlVerifyResponse, outStringWriter);
+
+			String xmlResponse = outStringWriter.toString();
+			logger.info("VerifyWalletXml response :\n" + xmlResponse);
+			return xmlResponse;
+
+		} catch (JAXBException e) {
+			logger.error("Error in verifying the Wallet:", e);
+			return "error"; //TODO return proper error response
+		}
 	}
 
 }

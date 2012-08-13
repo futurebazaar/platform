@@ -113,5 +113,19 @@ public interface WalletService {
 	 * @return WalletTransaction 
 	**/
 	public WalletTransaction reverseTransaction(long userId, long clientId,String transactionId,Money amount) throws WalletNotFoundException,InvalidTransactionIdException ,PlatformException;
+
+	
+	/**
+	 * Verify the wallet for given amount and password.
+	 * @param userId : User Id of the for whom to debit the wallet.
+	 * @param clientId : Client Id though which the payment request is initiated.
+	 * @param amount : The amount to be debited to the wallet.
+	 * @param password : The wallet password is required to debit the wallet
+	 * @throws WalletNotFoundException When no wallet is found matching the wallet.
+	 * @throws InSufficientFundsException When  wallet not having enough funds.
+	 * @throws WrongWalletPassword when the password to debit the wallet is invalid.
+	 * @throws PlatformException When an unrecoverable error happens.
+	**/
+	public void verifyWallet(long userId, long clientId, Money amount,String password)throws WalletNotFoundException,InSufficientFundsException,WrongWalletPassword ,PlatformException;
 	
 }

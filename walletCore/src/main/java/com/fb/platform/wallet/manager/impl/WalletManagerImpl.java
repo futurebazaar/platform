@@ -19,6 +19,9 @@ import com.fb.platform.wallet.service.exception.RefundExpiredException;
 import com.fb.platform.wallet.service.exception.InvalidTransactionIdException;
 import com.fb.platform.wallet.service.exception.WrongWalletPassword;
 import com.fb.platform.wallet.manager.interfaces.WalletManager;
+import com.fb.platform.wallet.manager.model.access.VerifyWalletRequest;
+import com.fb.platform.wallet.manager.model.access.VerifyWalletResponse;
+import com.fb.platform.wallet.manager.model.access.VerifyWalletStatusEnum;
 import com.fb.platform.wallet.manager.model.access.WalletDetails;
 import com.fb.platform.wallet.manager.model.access.WalletSummaryRequest;
 import com.fb.platform.wallet.manager.model.access.WalletSummaryResponse;
@@ -320,6 +323,47 @@ public class WalletManagerImpl implements WalletManager {
 		}
 
 		response.setSessionToken(revertRequest.getSessionToken());
+
+		return response;
+	}
+
+	@Override
+	public VerifyWalletResponse verifyWallet(VerifyWalletRequest apiVerifyReq) {
+		logger.info("verifyWallet: Trying to verify the wallet for amount and password  :: " + apiVerifyReq.getUserId());
+		
+		VerifyWalletResponse response = new VerifyWalletResponse();
+		
+		try {
+			// authenticate the session token and find out the userId
+			AuthenticationTO authentication = authenticationService.authenticate(apiVerifyReq.getSessionToken());
+			if (authentication == null) {
+				// invalid session token
+				response.setStatus(VerifyWalletStatusEnum.NO_SESSION);
+				return response;
+			}
+			response.setSessionToken(authentication.getToken());
+		
+			//Wallet wallet = walletService.load(fillWalletRequest.getWalletId());
+			
+			Money amount = new Money(apiVerifyReq.getAmount());
+			
+			walletService.verifyWallet(apiVerifyReq.getUserId(), apiVerifyReq.getClientId(), amount,apiVerifyReq.getPassword());
+			
+			response.setStatus(VerifyWalletStatusEnum.SUCCESS);
+			
+		} catch (WrongWalletPassword e) {
+			logger.info("payFromWallet: Worng password wa provided to debit the wallet " + apiVerifyReq.getUserId());
+			response.setStatus(VerifyWalletStatusEnum.WRONG_PASSWORD);
+		} catch (WalletNotFoundException e) {
+			logger.info("payFromWallet: No wallet for user id " + apiVerifyReq.getUserId());
+			response.setStatus(VerifyWalletStatusEnum.INVALID_WALLET);
+		} catch (InSufficientFundsException e) {
+			logger.info("payFromWallet: Balance unavailable in wallet for user id " + apiVerifyReq.getUserId());
+			response.setStatus(VerifyWalletStatusEnum.BALANCE_UNAVAILABLE);
+		} catch (PlatformException pe) {
+			logger.error("payFromWallet: Exception in pay from wallet for user id " + apiVerifyReq.getUserId(), pe);
+			response.setStatus(VerifyWalletStatusEnum.FAILED_TRANSACTION);
+		}
 
 		return response;
 	}

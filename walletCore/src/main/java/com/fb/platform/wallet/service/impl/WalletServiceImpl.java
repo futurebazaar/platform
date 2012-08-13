@@ -263,4 +263,32 @@ public class WalletServiceImpl implements WalletService {
 		}
 		return wallet;
 	}
+
+	@Override
+	public void verifyWallet(long userId, long clientId, Money amount,
+			String password) throws WalletNotFoundException,
+			InSufficientFundsException, WrongWalletPassword, PlatformException {
+		try{
+			Wallet wallet = load(userId,clientId,false);
+			if(wallet.verifyPassword(password)){
+				if(! wallet.isSufficientFund(amount)){					
+					throw new InSufficientFundsException("Insufficient fund in wallet");
+				}
+			}else {
+				throw new WrongWalletPassword("Insufficient fund in wallet");
+			}
+		} catch (WrongWalletPassword e){
+			throw new WrongWalletPassword("The password provided por the wallet is incorrect");
+		}  
+		catch (InSufficientFundsException e){
+			throw new InSufficientFundsException("Not enough fund in the wallet");
+		} 
+		catch (WalletNotFoundException e){
+			throw new WalletNotFoundException("No wallet with this wallet id");
+		}
+		catch (PlatformException e) {
+			throw new PlatformException("No wallet with this wallet id");
+		}
+		
+	}
 }
