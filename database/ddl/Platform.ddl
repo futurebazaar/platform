@@ -212,6 +212,9 @@ CREATE TABLE users_email (
   type varchar(15) NOT NULL,
   user_id int(11) NOT NULL,
   cleaned_email varchar(100) DEFAULT NULL,
+  is_verified tinyint(1) NOT NULL DEFAULT '0',
+  verified_on datetime DEFAULT NULL,
+  verification_code varchar(50) DEFAULT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY users_email_email_uniq (email)
 ) DEFAULT CHARSET=utf8;
@@ -698,6 +701,7 @@ CREATE TABLE wallets_wallet
 	refund_amount decimal(18,2) NOT NULL DEFAULT '0',
 	created_on DATETIME NOT NULL,
 	modified_on DATETIME NULL,
+	wallet_password varchar(50) NOT NULL,
 	PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

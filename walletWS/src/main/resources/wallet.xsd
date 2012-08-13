@@ -12,10 +12,10 @@
   <xs:element name="giftAmount" type="xs:decimal"/>
   <xs:element name="totalAmount" type="xs:decimal"/>
   <xs:element name="refundableAmount" type="xs:decimal"/>
-  <xs:element name="giftExpiryAmt1" type="xs:decimal"/>
-  <xs:element name="giftExpiryAmt2" type="xs:decimal"/>
-  <xs:element name="giftExpiryDt1" type="xs:dateTime"/>
-  <xs:element name="giftExpiryDt2" type="xs:dateTime"/>  
+  <xs:element name="giftExpiryAmt1" type="xs:decimal" nillable="true"/>
+  <xs:element name="giftExpiryAmt2" type="xs:decimal" nillable="true"/>
+  <xs:element name="giftExpiryDt1" type="xs:dateTime" nillable="true"/>
+  <xs:element name="giftExpiryDt2" type="xs:dateTime" nillable="true"/>  
   <xs:element name="walletSummaryRequest">
     <xs:complexType>
       <xs:sequence>
@@ -220,6 +220,7 @@
     <xs:restriction base="xs:string">
       <xs:enumeration value="SUCCESS"/>
       <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="WRONG_PASSWORD"/>
       <xs:enumeration value="INVALID_WALLET"/>
       <xs:enumeration value="BALANCE_UNAVAILABLE"/>
       <xs:enumeration value="FAILED_TRANSACTION"/>

@@ -17,6 +17,7 @@ import com.fb.platform.wallet.service.exception.InSufficientFundsException;
 import com.fb.platform.wallet.service.exception.AlreadyRefundedException;
 import com.fb.platform.wallet.service.exception.RefundExpiredException;
 import com.fb.platform.wallet.service.exception.InvalidTransactionIdException;
+import com.fb.platform.wallet.service.exception.WrongWalletPassword;
 import com.fb.platform.wallet.manager.interfaces.WalletManager;
 import com.fb.platform.wallet.manager.model.access.WalletDetails;
 import com.fb.platform.wallet.manager.model.access.WalletSummaryRequest;
@@ -211,11 +212,14 @@ public class WalletManagerImpl implements WalletManager {
 			
 			Money amount = new Money(payRequest.getAmount());
 			
-			WalletTransaction transaction = walletService.debit(payRequest.getUserId(), payRequest.getClientId(), amount, payRequest.getOrderId());
+			WalletTransaction transaction = walletService.debit(payRequest.getUserId(), payRequest.getClientId(), amount, payRequest.getOrderId(),payRequest.getWalletPassord());
 			
 			response.setTransactionId(transaction.getTransactionId());
 			response.setStatus(PayStatusEnum.SUCCESS);
 			
+		} catch (WrongWalletPassword e) {
+			logger.info("payFromWallet: Worng password wa provided to debit the wallet " + payRequest.getUserId());
+			response.setStatus(PayStatusEnum.WRONG_PASSWORD);
 		} catch (WalletNotFoundException e) {
 			logger.info("payFromWallet: No wallet for user id " + payRequest.getUserId());
 			response.setStatus(PayStatusEnum.INVALID_WALLET);

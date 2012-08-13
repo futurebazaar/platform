@@ -62,14 +62,14 @@ CREATE TABLE wallets_sub_transaction
 	gift_id bigint NULL ,
 	transaction_reversal_id bigint NULL,
 	transaction_description longtext NULL,
-	CONSTRAINT wallets_sub_transaction_fk1 FOREIGN KEY (tran_id) REFERENCES wallets_transaction(id),
-	CONSTRAINT wallets_sub_transaction_fk2 FOREIGN KEY (order_id) REFERENCES orders_order(id),
-	CONSTRAINT wallets_sub_transaction_fk3 FOREIGN KEY (refund_id) REFERENCES payments_refund(id),
-	CONSTRAINT wallets_sub_transaction_fk4 FOREIGN KEY (payment_id) REFERENCES payments_paymentattempt(id),
-    CONSTRAINT wallets_sub_transaction_fk5 FOREIGN KEY (gift_id) REFERENCES wallets_gifts(id),
+	CONSTRAINT wallets_sub_transaction_fk5 FOREIGN KEY (gift_id) REFERENCES wallets_gifts(id),
 	CONSTRAINT wallets_sub_transaction_fk6 FOREIGN KEY (transaction_reversal_id) REFERENCES wallets_transaction(id),
 	PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ -- CONSTRAINT wallets_sub_transaction_fk1 FOREIGN KEY (tran_id) REFERENCES wallets_transaction(id),
+ -- CONSTRAINT wallets_sub_transaction_fk2 FOREIGN KEY (order_id) REFERENCES orders_order(id),
+ -- CONSTRAINT wallets_sub_transaction_fk3 FOREIGN KEY (refund_id) REFERENCES payments_refund(id),
+ -- CONSTRAINT wallets_sub_transaction_fk4 FOREIGN KEY (payment_id) REFERENCES payments_paymentattempt(id),
 
 CREATE TABLE wallets_gifts_transaction_history
 (

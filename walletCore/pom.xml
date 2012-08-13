@@ -34,6 +34,11 @@
 			<artifactId>userCore</artifactId>
 			<version>${platform.version}</version>
 	  	</dependency>
+	  	<dependency>
+        	<groupId>com.fb</groupId>
+        	<artifactId>platformMailer</artifactId>
+        	<version>${platform.version}</version>
+        </dependency>
 	</dependencies>
 	
 	<build>

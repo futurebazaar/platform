@@ -116,10 +116,14 @@ public class WalletResource {
 				walletDetails.setGiftAmount(apiWalletDetails.getGiftAmount());
 				walletDetails.setTotalAmount(apiWalletDetails.getTotalAmount());
 				walletDetails.setRefundableAmount(apiWalletDetails.getRefundableAmount().getAmount());
-				walletDetails.setGiftExpiryAmt1(apiWalletDetails.getGiftExpiryAmt1().getAmount());
-				walletDetails.setGiftExpiryAmt2(apiWalletDetails.getGiftExpiryAmt2().getAmount());
-				walletDetails.setGiftExpiryDt1(apiWalletDetails.getGiftExpiryDt1());
-				walletDetails.setGiftExpiryDt2(apiWalletDetails.getGiftExpiryDt2());
+				if(apiWalletDetails.getGiftExpiryAmt1()!= null && apiWalletDetails.getGiftExpiryDt1() != null){
+					walletDetails.setGiftExpiryAmt1(apiWalletDetails.getGiftExpiryAmt1().getAmount());
+					walletDetails.setGiftExpiryDt1(apiWalletDetails.getGiftExpiryDt1());
+				}
+				if(apiWalletDetails.getGiftExpiryAmt2()!= null && apiWalletDetails.getGiftExpiryDt2() != null){
+					walletDetails.setGiftExpiryAmt2(apiWalletDetails.getGiftExpiryAmt2().getAmount());
+					walletDetails.setGiftExpiryDt2(apiWalletDetails.getGiftExpiryDt2());
+				}
 			}
 			xmlWalletSummaryResponse.setWalletDetails(walletDetails);
 			
@@ -276,6 +280,7 @@ public class WalletResource {
 			apiPayReq.setClientId(xmlPayReq.getClientId());
 			apiPayReq.setOrderId(xmlPayReq.getOrderId());
 			apiPayReq.setAmount(xmlPayReq.getAmount());
+			apiPayReq.setWalletPassord(xmlPayReq.getPassword());
 
 			com.fb.platform.wallet.manager.model.access.PayResponse apiPayResponse = walletManager.payFromWallet(apiPayReq);
 

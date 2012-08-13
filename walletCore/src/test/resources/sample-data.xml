@@ -80,6 +80,7 @@
 		<column>refund_amount</column>
 		<column>created_on</column>
 		<column>modified_on</column>
+		<column>wallet_password</column>
 		<row>
 			<value>1</value>
 			<value>100.00</value>
@@ -88,6 +89,7 @@
 			<value>0</value>
 			<value>2011-04-18 20:42:57</value>
 			<value>2011-04-18 20:42:57</value>
+			<value>bJ+9T+EIt+Gf66QCh6PnnQ==</value>
 		</row>
 		<row>
 			<value>2</value>
@@ -97,6 +99,7 @@
 			<value>0</value>
 			<value>2011-04-18 20:42:57</value>
 			<value>2011-04-18 20:42:57</value>
+			<value>bJ+9T+EIt+Gf66QCh6PnnQ==</value>
 		</row>
 		<row>
 			<value>3</value>
@@ -106,6 +109,7 @@
 			<value>100.00</value>
 			<value>2011-04-18 20:42:57</value>
 			<value>2011-04-18 20:42:57</value>
+			<value>bJ+9T+EIt+Gf66QCh6PnnQ==</value>
 		</row>
 		<row>
 			<value>4</value>
@@ -115,6 +119,7 @@
 			<value>0</value>
 			<value>2011-04-18 20:42:57</value>
 			<value>2011-04-18 20:42:57</value>
+			<value>bJ+9T+EIt+Gf66QCh6PnnQ==</value>
 		</row>
 		<row>
 			<value>5</value>
@@ -124,6 +129,7 @@
 			<value>100.00</value>
 			<value>2011-04-18 20:42:57</value>
 			<value>2011-04-18 20:42:57</value>
+			<value>bJ+9T+EIt+Gf66QCh6PnnQ==</value>
 		</row>
 		<row>
 			<value>6</value>
@@ -133,6 +139,7 @@
 			<value>100.00</value>
 			<value>2011-04-18 20:42:57</value>
 			<value>2011-04-18 20:42:57</value>
+			<value>bJ+9T+EIt+Gf66QCh6PnnQ==</value>
 		</row>
 		<row>
 			<value>7</value>
@@ -142,6 +149,7 @@
 			<value>0</value>
 			<value>2011-04-18 20:42:57</value>
 			<value>2011-04-18 20:42:57</value>
+			<value>bJ+9T+EIt+Gf66QCh6PnnQ==</value>
 		</row>
 		<row>
 			<value>8</value>
@@ -151,6 +159,7 @@
 			<value>100.00</value>
 			<value>2011-04-18 20:42:57</value>
 			<value>2011-04-18 20:42:57</value>
+			<value>bJ+9T+EIt+Gf66QCh6PnnQ==</value>
 		</row>
 		
 	</table>

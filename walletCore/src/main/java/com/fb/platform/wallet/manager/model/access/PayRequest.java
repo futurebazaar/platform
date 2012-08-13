@@ -7,6 +7,7 @@ public class PayRequest {
 	private long userId;
 	private long clientId;
 	private String sessionToken;
+	private String walletPassord;
 	private long orderId;
 	private BigDecimal amount;
 
@@ -49,5 +50,20 @@ public class PayRequest {
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
+
+	/**
+	 * @return the walletPassord
+	 */
+	public String getWalletPassord() {
+		return walletPassord;
+	}
+
+	/**
+	 * @param walletPassord the walletPassord to set
+	 */
+	public void setWalletPassord(String walletPassord) {
+		this.walletPassord = walletPassord;
+	}
+	
 
 }

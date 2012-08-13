@@ -55,6 +55,7 @@ public class WalletManagerTest extends BaseTestCase{
 	private UserManager userManager = null;
 
 	private String sessionToken = null;
+	private static String testWalletPassword = "c0mP|e*P@$$w)rD";
 	private int userId;
 	
 	@Before
@@ -229,6 +230,7 @@ public class WalletManagerTest extends BaseTestCase{
 		request.setUserId(userId);
 		request.setClientId(-5);
 		request.setOrderId(1);
+		request.setWalletPassord(testWalletPassword);
 		request.setSessionToken(sessionToken + "abcd");
 
 		PayResponse response = walletManager.payFromWallet(request);
@@ -266,6 +268,7 @@ public class WalletManagerTest extends BaseTestCase{
 		request.setUserId(userId);
 		request.setClientId(-5);
 		request.setOrderId(1);
+		request.setWalletPassord(testWalletPassword);
 		request.setSessionToken(sessionToken);
 
 		PayResponse response = walletManager.payFromWallet(request);
@@ -296,6 +299,7 @@ public class WalletManagerTest extends BaseTestCase{
 		request.setUserId(userId);
 		request.setClientId(-5);
 		request.setOrderId(1);
+		request.setWalletPassord(testWalletPassword);
 		request.setSessionToken(sessionToken);
 
 		PayResponse response = walletManager.payFromWallet(request);
@@ -326,6 +330,7 @@ public class WalletManagerTest extends BaseTestCase{
 		request.setUserId(userId);
 		request.setClientId(-5);
 		request.setOrderId(1);
+		request.setWalletPassord(testWalletPassword);
 		request.setSessionToken(sessionToken);
 
 		PayResponse response = walletManager.payFromWallet(request);
@@ -356,6 +361,7 @@ public class WalletManagerTest extends BaseTestCase{
 		request.setUserId(userId);
 		request.setClientId(-5);
 		request.setOrderId(1);
+		request.setWalletPassord(testWalletPassword);
 		request.setSessionToken(sessionToken);
 
 		PayResponse response = walletManager.payFromWallet(request);
@@ -371,6 +377,7 @@ public class WalletManagerTest extends BaseTestCase{
 		request.setUserId(userId);
 		request.setClientId(-155);
 		request.setOrderId(1);
+		request.setWalletPassord(testWalletPassword);
 		request.setSessionToken(sessionToken);
 
 		PayResponse response = walletManager.payFromWallet(request);
@@ -556,6 +563,7 @@ public class WalletManagerTest extends BaseTestCase{
 		request.setUserId(userId);
 		request.setClientId(-5);
 		request.setOrderId(1);
+		request.setWalletPassord(testWalletPassword);
 		request.setSessionToken(sessionToken);
 
 		PayResponse response = walletManager.payFromWallet(request);
@@ -611,6 +619,7 @@ public class WalletManagerTest extends BaseTestCase{
 		request.setUserId(userId);
 		request.setClientId(-5);
 		request.setOrderId(1);
+		request.setWalletPassord(testWalletPassword);
 		request.setSessionToken(sessionToken);
 
 		PayResponse response = walletManager.payFromWallet(request);
@@ -666,6 +675,7 @@ public class WalletManagerTest extends BaseTestCase{
 		request.setUserId(userId);
 		request.setClientId(-5);
 		request.setOrderId(1);
+		request.setWalletPassord(testWalletPassword);
 		request.setSessionToken(sessionToken);
 
 		PayResponse response = walletManager.payFromWallet(request);
@@ -750,6 +760,7 @@ public class WalletManagerTest extends BaseTestCase{
 		request.setUserId(userId);
 		request.setClientId(-5);
 		request.setOrderId(1);
+		request.setWalletPassord(testWalletPassword);
 		request.setSessionToken(sessionToken);
 
 		PayResponse response = walletManager.payFromWallet(request);

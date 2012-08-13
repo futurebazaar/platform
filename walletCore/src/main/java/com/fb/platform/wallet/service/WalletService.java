@@ -16,6 +16,7 @@ import com.fb.platform.wallet.service.exception.InSufficientFundsException;
 import com.fb.platform.wallet.service.exception.InvalidTransactionIdException;
 import com.fb.platform.wallet.service.exception.RefundExpiredException;
 import com.fb.platform.wallet.service.exception.WalletNotFoundException;
+import com.fb.platform.wallet.service.exception.WrongWalletPassword;
 
 @Transactional
 public interface WalletService {
@@ -73,13 +74,15 @@ public interface WalletService {
 	 * @param clientId : Client Id though which the payment request is initiated.
 	 * @param amount : The amount to be debited to the wallet.
 	 * @param orderId : The order Id for which the wallet has to be credited.
+	 * @param walletPassword : The wallet password is required to debit the wallet
 	 * @throws WalletNotFoundException When no wallet is found matching the wallet.
 	 * @throws InSufficientFundsException When  wallet not having enough funds.
+	 * @throws WrongWalletPassword when the password to debit the wallet is invalid.
 	 * @throws PlatformException When an unrecoverable error happens.
 	 * @return WalletTransaction 
 	**/
 	@Transactional (propagation = Propagation.REQUIRED)
-	public WalletTransaction debit (long userId, long clientId , Money amount , long orderId) throws WalletNotFoundException,InSufficientFundsException ,PlatformException;
+	public WalletTransaction debit (long userId, long clientId , Money amount , long orderId,String walletPassword) throws WalletNotFoundException,InSufficientFundsException,WrongWalletPassword ,PlatformException;
 	
 	/**
 	 * Refund requested from the wallet.

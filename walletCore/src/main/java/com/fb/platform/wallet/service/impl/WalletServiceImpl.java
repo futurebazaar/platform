@@ -22,6 +22,7 @@ import com.fb.platform.wallet.service.exception.InSufficientFundsException;
 import com.fb.platform.wallet.service.exception.InvalidTransactionIdException;
 import com.fb.platform.wallet.service.exception.RefundExpiredException;
 import com.fb.platform.wallet.service.exception.WalletNotFoundException;
+import com.fb.platform.wallet.service.exception.WrongWalletPassword;
 
 public class WalletServiceImpl implements WalletService {
 
@@ -107,22 +108,29 @@ public class WalletServiceImpl implements WalletService {
 
 	@Override
 	public WalletTransaction debit(long userId,
-			long clientId, Money amount, long orderId)
-			throws WalletNotFoundException, InSufficientFundsException,
+			long clientId, Money amount, long orderId,String walletPassword)
+			throws WalletNotFoundException, InSufficientFundsException,WrongWalletPassword,
 			PlatformException {
 		try{
 			WalletTransaction walletTransactionRes = new WalletTransaction();
 			Wallet wallet = load(userId,clientId,false);
-			if(wallet.isSufficientFund(amount)){
-				com.fb.platform.wallet.model.WalletTransaction walletTransaction = wallet
-						.debit(amount, orderId);
-				walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(walletTransaction));
-				walletTransactionRes.setWallet(walletReturnOperations(walletDao.update(wallet)));
-				return walletTransactionRes;
-			}else{
-				throw new InSufficientFundsException("Insufficient fund in wallet");
-			} 			
-		} catch (InSufficientFundsException e){
+			if(wallet.verifyPassword(walletPassword)){
+				if(wallet.isSufficientFund(amount)){
+					com.fb.platform.wallet.model.WalletTransaction walletTransaction = wallet
+							.debit(amount, orderId);
+					walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(walletTransaction));
+					walletTransactionRes.setWallet(walletReturnOperations(walletDao.update(wallet)));
+					return walletTransactionRes;
+				}else{
+					throw new InSufficientFundsException("Insufficient fund in wallet");
+				}
+			}else {
+				throw new WrongWalletPassword("Insufficient fund in wallet");
+			}
+		} catch (WrongWalletPassword e){
+			throw new WrongWalletPassword("The password provided por the wallet is incorrect");
+		}  
+		catch (InSufficientFundsException e){
 			throw new InSufficientFundsException("Not enough fund in the wallet");
 		} 
 		catch (WalletNotFoundException e){
