@@ -347,19 +347,20 @@ public class WalletManagerImpl implements WalletManager {
 			
 			Money amount = new Money(apiVerifyReq.getAmount());
 			
-			walletService.verifyWallet(apiVerifyReq.getUserId(), apiVerifyReq.getClientId(), amount,apiVerifyReq.getPassword());
-			
-			response.setStatus(VerifyWalletStatusEnum.SUCCESS);
-			
+			Wallet wallet = walletService.verifyWallet(apiVerifyReq.getUserId(), apiVerifyReq.getClientId(), amount,apiVerifyReq.getPassword());
+			if(wallet.isSufficientFund(amount)){
+				response.setStatus(VerifyWalletStatusEnum.SUCCESS);
+				response.setAmount(wallet.getTotalAmount().getAmount());
+			}else{
+				response.setStatus(VerifyWalletStatusEnum.BALANCE_UNAVAILABLE);
+				response.setAmount(wallet.getTotalAmount().getAmount());
+			}		
 		} catch (WrongWalletPassword e) {
 			logger.info("payFromWallet: Worng password wa provided to debit the wallet " + apiVerifyReq.getUserId());
 			response.setStatus(VerifyWalletStatusEnum.WRONG_PASSWORD);
 		} catch (WalletNotFoundException e) {
 			logger.info("payFromWallet: No wallet for user id " + apiVerifyReq.getUserId());
 			response.setStatus(VerifyWalletStatusEnum.INVALID_WALLET);
-		} catch (InSufficientFundsException e) {
-			logger.info("payFromWallet: Balance unavailable in wallet for user id " + apiVerifyReq.getUserId());
-			response.setStatus(VerifyWalletStatusEnum.BALANCE_UNAVAILABLE);
 		} catch (PlatformException pe) {
 			logger.error("payFromWallet: Exception in pay from wallet for user id " + apiVerifyReq.getUserId(), pe);
 			response.setStatus(VerifyWalletStatusEnum.FAILED_TRANSACTION);

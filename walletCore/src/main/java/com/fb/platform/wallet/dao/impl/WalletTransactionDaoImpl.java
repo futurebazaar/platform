@@ -184,6 +184,8 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 	
 	private final String UPDATE_WALLET_GIFT_REMAINING_EXPIRE = "update wallets_gifts set amount_remaining = ? ,is_expired = 1 where id = ?";
 	
+	private final String UPDATE_PAYMENT_REFUNDS = "update payments_refund set amount = ? ,modified_on = CURDATE() , status =? where id = ?";
+	
 	@Override
 	public String insertTransaction(final WalletTransaction walletTransaction) {
 		try{
@@ -507,13 +509,15 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 		Money amountToDebit = walletSubTransaction.getAmount();
 		List<WalletRefundCredit> walletRefundCredits = jdbcTemplate.query(GET_WALLET_REFUND_CREDIT_WALLET_ID, new Object[] {walletId},new WalletRefundCreditMapper());
 		for(WalletRefundCredit walletRefundCredit : walletRefundCredits){
-			if(walletRefundCredit.getAmountRemaining().gteq(amountToDebit)){
+			if(walletRefundCredit.getAmountRemaining().gt(amountToDebit)){
 				insertWalletRefundDebit(walletId,walletSubTransaction,amountToDebit,walletRefundCredit.getId());
 				updateWalletRefundCredit(walletRefundCredit.getId(), walletRefundCredit.getAmountRemaining().minus(amountToDebit));
+				updatePaymetRefund(walletSubTransaction.getRefundId(), walletRefundCredit.getAmountRemaining().minus(amountToDebit) ,"wallet");
 				amountToDebit = amountToDebit.minus(amountToDebit);
 			}else{
 				insertWalletRefundDebit(walletId,walletSubTransaction,walletRefundCredit.getAmountRemaining(),walletRefundCredit.getId());
 				updateWalletRefundCredit(walletRefundCredit.getId(),new Money(new BigDecimal("0.00")));
+				updatePaymetRefund(walletSubTransaction.getRefundId(), new Money(new BigDecimal("0.00")) ,"closed");
 				amountToDebit = amountToDebit.minus(walletRefundCredit.getAmountRemaining());
 			}
 			if(amountToDebit.lteq(new Money(new BigDecimal("0.00")))){
@@ -529,6 +533,10 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 	}
 	private void updateWalletRefundCredit(long walletRefundCreditId,Money amount) {
 		jdbcTemplate.update(UPDATE_WALLET_REFUND_CREDIT,new Object[] {amount.getAmount(),walletRefundCreditId});		
+	}
+	
+	private void updatePaymetRefund(long refundId, Money amount , String status) {
+		jdbcTemplate.update(UPDATE_PAYMENT_REFUNDS,new Object[] {amount.getAmount(),status,refundId});		
 	}
 	@Override
 	public List<WalletGifts> getWalletGifts(long walletId){

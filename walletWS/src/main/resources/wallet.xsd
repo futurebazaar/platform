@@ -197,7 +197,6 @@
         <xs:element ref="tns:sessionToken"/>
         <xs:element ref="tns:userId"/>
         <xs:element ref="tns:clientId"/>
-        <xs:element ref="tns:password"/>
         <xs:element ref="tns:orderId"/>
         <xs:element ref="tns:amount"/>
       </xs:sequence>
@@ -220,7 +219,6 @@
     <xs:restriction base="xs:string">
       <xs:enumeration value="SUCCESS"/>
       <xs:enumeration value="NO_SESSION"/>
-      <xs:enumeration value="WRONG_PASSWORD"/>
       <xs:enumeration value="INVALID_WALLET"/>
       <xs:enumeration value="BALANCE_UNAVAILABLE"/>
       <xs:enumeration value="FAILED_TRANSACTION"/>
@@ -319,6 +317,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="tns:sessionToken"/>
+        <xs:element ref="tns:amount"/>
         <xs:element ref="tns:verifyWalletStatus"/>        
       </xs:sequence>
     </xs:complexType>

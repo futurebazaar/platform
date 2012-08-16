@@ -1,9 +1,12 @@
 package com.fb.platform.wallet.manager.model.access;
 
+import java.math.BigDecimal;
+
 public class VerifyWalletResponse {
 	
 	String sessionToken;
 	VerifyWalletStatusEnum status;
+	private BigDecimal amount;
 	/**
 	 * @return the sessionToken
 	 */
@@ -28,6 +31,19 @@ public class VerifyWalletResponse {
 	public void setStatus(VerifyWalletStatusEnum status) {
 		this.status = status;
 	}
+	/**
+	 * @return the amount
+	 */
+	public BigDecimal getAmount() {
+		return amount;
+	}
+	/**
+	 * @param amount the amount to set
+	 */
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+	}
+	
 	
 	
 }

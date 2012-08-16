@@ -8,6 +8,7 @@ CREATE TABLE wallets_wallet
 	refund_amount decimal(18,2) NOT NULL DEFAULT '0',
 	created_on DATETIME NOT NULL,
 	modified_on DATETIME NULL,
+	wallet_password varchar(50) NOT NULL,
 	PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

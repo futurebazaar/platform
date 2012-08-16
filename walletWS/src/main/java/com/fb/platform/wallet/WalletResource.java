@@ -284,7 +284,6 @@ public class WalletResource {
 			apiPayReq.setClientId(xmlPayReq.getClientId());
 			apiPayReq.setOrderId(xmlPayReq.getOrderId());
 			apiPayReq.setAmount(xmlPayReq.getAmount());
-			apiPayReq.setWalletPassord(xmlPayReq.getPassword());
 
 			com.fb.platform.wallet.manager.model.access.PayResponse apiPayResponse = walletManager.payFromWallet(apiPayReq);
 
@@ -451,6 +450,7 @@ public class WalletResource {
 
 			VerifyWalletResponse xmlVerifyResponse = new VerifyWalletResponse();
 			xmlVerifyResponse.setSessionToken(apiVerifyResponse.getSessionToken());
+			xmlVerifyResponse.setAmount(apiVerifyResponse.getAmount());
 			xmlVerifyResponse.setVerifyWalletStatus(VerifyWalletStatus.fromValue(apiVerifyResponse.getStatus().name() ));
 			
 			

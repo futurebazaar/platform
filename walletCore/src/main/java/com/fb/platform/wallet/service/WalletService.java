@@ -121,11 +121,11 @@ public interface WalletService {
 	 * @param clientId : Client Id though which the payment request is initiated.
 	 * @param amount : The amount to be debited to the wallet.
 	 * @param password : The wallet password is required to debit the wallet
+	 * @return Wallet
 	 * @throws WalletNotFoundException When no wallet is found matching the wallet.
-	 * @throws InSufficientFundsException When  wallet not having enough funds.
 	 * @throws WrongWalletPassword when the password to debit the wallet is invalid.
 	 * @throws PlatformException When an unrecoverable error happens.
 	**/
-	public void verifyWallet(long userId, long clientId, Money amount,String password)throws WalletNotFoundException,InSufficientFundsException,WrongWalletPassword ,PlatformException;
+	public Wallet verifyWallet(long userId, long clientId, Money amount,String password)throws WalletNotFoundException,InSufficientFundsException,WrongWalletPassword ,PlatformException;
 	
 }
