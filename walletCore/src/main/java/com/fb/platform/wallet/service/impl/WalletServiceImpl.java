@@ -208,7 +208,11 @@ public class WalletServiceImpl implements WalletService {
 		
 		log.info("]wallet transaction reversal::: " ) ;
 		log.info("userIDId:" + userId);
-		log.info("Amount::" + amount.getAmount());
+		if (amount != null){
+			log.info("Amount::" + amount.getAmount());
+		}else{
+			log.info("Reversing total Amount for transaction" );
+		}
 		log.info("orderId::" + transactionId);
 		
 		try{
