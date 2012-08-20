@@ -739,7 +739,7 @@ CREATE TABLE wallets_sub_transaction
 	tran_id bigint NOT NULL,
 	transaction_subwallet VARCHAR(50) NOT NULL,
 	amount decimal(18,2) NOT NULL,
-	order_id integer NULL,
+	order_id bigint NULL,
 	refund_id integer NULL,
 	payment_id integer NULL,
 	gift_id bigint NULL ,

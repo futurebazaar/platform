@@ -450,7 +450,7 @@ public class WalletResource {
 
 			VerifyWalletResponse xmlVerifyResponse = new VerifyWalletResponse();
 			xmlVerifyResponse.setSessionToken(apiVerifyResponse.getSessionToken());
-			xmlVerifyResponse.setAmount(apiVerifyResponse.getAmount());
+			xmlVerifyResponse.setWalletBalance(apiVerifyResponse.getAmount());
 			xmlVerifyResponse.setVerifyWalletStatus(VerifyWalletStatus.fromValue(apiVerifyResponse.getStatus().name() ));
 			
 			

@@ -68,6 +68,7 @@
   <xs:element name="transactionId" type="xs:string" nillable="true"/>
   <xs:element name="notes" type="xs:string"/>
   <xs:element name="amount" type="xs:decimal"/>
+  <xs:element name="walletBalance" type="xs:decimal"/>
   <xs:element name="toDate" type="xs:dateTime" nillable="true"/>
   <xs:element name="fromDate" type="xs:dateTime" nillable="true"/>
   <xs:element name="timestamp" type="xs:dateTime"/>
@@ -317,7 +318,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="tns:sessionToken"/>
-        <xs:element ref="tns:amount"/>
+        <xs:element ref="tns:walletBalance"/>
         <xs:element ref="tns:verifyWalletStatus"/>        
       </xs:sequence>
     </xs:complexType>

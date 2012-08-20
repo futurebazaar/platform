@@ -141,7 +141,8 @@ public class WalletDaoImpl implements WalletDao {
 				}
 			} catch (Exception e){}
 			final String passwordEncrypted = encrypt(randomPassword);
-			log.info("Wallet password getnerated for userId: " + userId + " clentId :" + clientId + " :::::" + randomPassword);
+			log.info("Wallet password generated for userId: " + userId + " clentId :" + clientId + " :::::" + randomPassword);
+			System.out.println("Wallet password generated for userId: " + userId + " clentId :" + clientId + " :::::" + randomPassword);
 			jdbcTemplate.update(new PreparedStatementCreator() {
 				@Override
 				public PreparedStatement createPreparedStatement(Connection con)
