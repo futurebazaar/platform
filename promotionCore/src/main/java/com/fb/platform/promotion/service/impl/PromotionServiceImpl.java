@@ -4,6 +4,7 @@
 package com.fb.platform.promotion.service.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -20,11 +21,13 @@ import com.fb.platform.promotion.cache.CouponCacheAccess;
 import com.fb.platform.promotion.cache.PromotionCacheAccess;
 import com.fb.platform.promotion.dao.CouponDao;
 import com.fb.platform.promotion.dao.PromotionDao;
+import com.fb.platform.promotion.dao.RuleDao;
 import com.fb.platform.promotion.dao.ScratchCardDao;
 import com.fb.platform.promotion.exception.CouponAlreadyAssignedToUserException;
 import com.fb.platform.promotion.exception.CouponNotFoundException;
 import com.fb.platform.promotion.exception.PromotionNotFoundException;
 import com.fb.platform.promotion.model.GlobalPromotionUses;
+import com.fb.platform.promotion.model.PaymentOption;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.UserPromotionUses;
 import com.fb.platform.promotion.model.UserPromotionUsesEntry;
@@ -34,6 +37,7 @@ import com.fb.platform.promotion.model.coupon.GlobalCouponUses;
 import com.fb.platform.promotion.model.coupon.UserCouponUses;
 import com.fb.platform.promotion.model.coupon.UserCouponUsesEntry;
 import com.fb.platform.promotion.model.scratchCard.ScratchCard;
+import com.fb.platform.promotion.rule.config.RuleConfigDescriptorEnum;
 import com.fb.platform.promotion.service.PromotionService;
 import com.fb.platform.promotion.to.ClearCacheEnum;
 import com.fb.platform.promotion.to.ClearCouponCacheRequest;
@@ -45,12 +49,12 @@ import com.fb.platform.promotion.to.PromotionStatusEnum;
 
 /**
  * @author vinayak
- *
+ * 
  */
 public class PromotionServiceImpl implements PromotionService {
 
 	private static Log logger = LogFactory.getLog(PromotionServiceImpl.class);
-	
+
 	@Autowired
 	private CouponCacheAccess couponCacheAccess = null;
 
@@ -61,160 +65,180 @@ public class PromotionServiceImpl implements PromotionService {
 	private CouponDao couponDao = null;
 
 	@Autowired
+	private RuleDao ruleDao = null;
+
+	@Autowired
 	private PromotionDao promotionDao = null;
 
 	@Autowired
 	private ScratchCardDao scratchCardDao = null;
-	
+
 	@Autowired
 	private CouponAdminDao couponAdminDao = null;
 
 	@Override
-	public PromotionStatusEnum isApplicable(int userId, OrderRequest orderRequest, Money discountAmount, Coupon coupon, Promotion promotion, boolean isCouponCommitted){
-		
-		PromotionStatusEnum checkBasicConstraints = isApplicable(userId, orderRequest.getOrderId(), orderRequest, discountAmount, coupon, promotion, isCouponCommitted);
-		if(PromotionStatusEnum.SUCCESS.compareTo(checkBasicConstraints) !=0){
-			logger.warn("Basic checks failed for couponCode - " + coupon.getCode()+" userId= "+userId+" orderId= "+orderRequest.getOrderId());
+	public PromotionStatusEnum isApplicable(int userId, OrderRequest orderRequest, Money discountAmount, Coupon coupon,
+		Promotion promotion, boolean isCouponCommitted) {
+
+		PromotionStatusEnum checkBasicConstraints = isApplicable(userId, orderRequest.getOrderId(), orderRequest,
+			discountAmount, coupon, promotion, isCouponCommitted);
+		if (PromotionStatusEnum.SUCCESS.compareTo(checkBasicConstraints) != 0) {
+			logger.warn("Basic checks failed for couponCode - " + coupon.getCode() + " userId= " + userId
+				+ " orderId= " + orderRequest.getOrderId());
 			return checkBasicConstraints;
 		}
 
 		return PromotionStatusEnum.SUCCESS;
 	}
-	
+
 	@Override
-	public PromotionStatusEnum isApplicable(int userId, int orderId, Money discountAmount, Coupon coupon, Promotion promotion, boolean isCouponCommitted){
-		
-		PromotionStatusEnum checkBasicConstraints = isApplicable(userId, orderId, null, discountAmount, coupon, promotion, isCouponCommitted);
-		if(PromotionStatusEnum.SUCCESS.compareTo(checkBasicConstraints) !=0){
-			logger.warn("Basic checks failed for couponCode - " + coupon.getCode()+" userId= "+userId+" orderId= "+orderId);
+	public PromotionStatusEnum isApplicable(int userId, int orderId, Money discountAmount, Coupon coupon,
+		Promotion promotion, boolean isCouponCommitted) {
+
+		PromotionStatusEnum checkBasicConstraints = isApplicable(userId, orderId, null, discountAmount, coupon,
+			promotion, isCouponCommitted);
+		if (PromotionStatusEnum.SUCCESS.compareTo(checkBasicConstraints) != 0) {
+			logger.warn("Basic checks failed for couponCode - " + coupon.getCode() + " userId= " + userId
+				+ " orderId= " + orderId);
 			return checkBasicConstraints;
 		}
 
-		
 		return PromotionStatusEnum.SUCCESS;
 	}
-	
-	private PromotionStatusEnum isApplicable(int userId, int orderId, OrderRequest orderRequest, Money discountAmount, Coupon coupon, Promotion promotion, boolean isCouponCommitted){
+
+	private PromotionStatusEnum isApplicable(int userId, int orderId, OrderRequest orderRequest, Money discountAmount,
+		Coupon coupon, Promotion promotion, boolean isCouponCommitted) {
 
 		GlobalCouponUses globalCouponUses = couponDao.loadGlobalUses(coupon.getId());
 		UserCouponUses userCouponUses = couponDao.loadUserUses(coupon.getId(), userId);
-		
+
 		GlobalPromotionUses globalPromotionUses = promotionDao.loadGlobalUses(promotion.getId());
 		UserPromotionUses userPromotionUses = promotionDao.loadUserUses(promotion.getId(), userId);
-		
-		if(isCouponCommitted){
-			// load the coupon and promotion uses as it is a already committed coupon
+
+		if (isCouponCommitted) {
+			// load the coupon and promotion uses as it is a already committed
+			// coupon
 			UserCouponUsesEntry userCouponUsesEntry = couponDao.load(coupon.getId(), userId, orderId);
 			UserPromotionUsesEntry userPromotionUsesEntry = promotionDao.load(promotion.getId(), userId, orderId);
-			
-			if(userCouponUsesEntry==null || userPromotionUsesEntry==null){
-				logger.error("No entry present for thecommitted coupon for user ="+ userId + " having couponId =" + coupon.getId() + " on the orderId = "+ orderId);
+
+			if (userCouponUsesEntry == null || userPromotionUsesEntry == null) {
+				logger.error("No entry present for thecommitted coupon for user =" + userId + " having couponId ="
+					+ coupon.getId() + " on the orderId = " + orderId);
 				return PromotionStatusEnum.NO_APPLIED_COUPON_ON_ORDER;
 			}
-			
-			//decrement the uses from both coupon and promotion
+
+			// decrement the uses from both coupon and promotion
 			globalCouponUses.decrement(userCouponUsesEntry.getDiscountAmount());
 			userCouponUses.decrement(userCouponUsesEntry.getDiscountAmount());
-			
+
 			globalPromotionUses.decrement(userPromotionUsesEntry.getDiscountAmount());
 			userPromotionUses.decrement(userPromotionUsesEntry.getDiscountAmount());
 		}
-		
-		//check if the couponId is already applied on the same orderId for the same user
-		//If yes, then return error
-		if(!isCouponCommitted){
+
+		// check if the couponId is already applied on the same orderId for the
+		// same user
+		// If yes, then return error
+		if (!isCouponCommitted) {
 			boolean isCouponApplicable = couponDao.isCouponApplicable(coupon.getId(), userId, orderId);
-			if(!isCouponApplicable){
-				logger.error("Already an entry present for the user ="+ userId + " having couponId =" + coupon.getId() + " on the orderId = "+ orderId);
+			if (!isCouponApplicable) {
+				logger.error("Already an entry present for the user =" + userId + " having couponId =" + coupon.getId()
+					+ " on the orderId = " + orderId);
 				return PromotionStatusEnum.ALREADY_APPLIED_COUPON_ON_ORDER;
 			}
-			
-			//check if the promotionId is already applied on the same orderId for the same user
-			//If yes, then return error
+
+			// check if the promotionId is already applied on the same orderId
+			// for the same user
+			// If yes, then return error
 			boolean isPromotionApplicable = promotionDao.isPromotionApplicable(promotion.getId(), userId, orderId);
-			if(!isPromotionApplicable){
-				logger.error("Already an entry present for the user ="+ userId + " having promotionId =" + promotion.getId() + " on the orderId = "+ orderId);
+			if (!isPromotionApplicable) {
+				logger.error("Already an entry present for the user =" + userId + " having promotionId ="
+					+ promotion.getId() + " on the orderId = " + orderId);
 				return PromotionStatusEnum.ALREADY_APPLIED_PROMOTION_ON_ORDER;
 			}
 		}
-		
+
 		PromotionStatusEnum withinCouponUsesLimitsStatus = validateCouponUses(coupon, globalCouponUses, userCouponUses);
-		if (withinCouponUsesLimitsStatus.compareTo(PromotionStatusEnum.LIMIT_SUCCESS)!=0) {
+		if (withinCouponUsesLimitsStatus.compareTo(PromotionStatusEnum.LIMIT_SUCCESS) != 0) {
 			logger.warn("Coupon exceeded limit. Coupon code : " + coupon.getCode());
 			return withinCouponUsesLimitsStatus;
 		}
-		
-		PromotionStatusEnum withinPromotionUsesLimitsStatus = validatePromotionUses(promotion, globalPromotionUses, userPromotionUses);
+
+		PromotionStatusEnum withinPromotionUsesLimitsStatus = validatePromotionUses(promotion, globalPromotionUses,
+			userPromotionUses);
 		if (withinPromotionUsesLimitsStatus.compareTo(PromotionStatusEnum.LIMIT_SUCCESS) != 0) {
 			logger.warn("Coupon exceeded Promotions limit. Coupon code : " + coupon.getCode());
 			return withinPromotionUsesLimitsStatus;
 		}
-		
-		//check if the promotion is applicable on this request.
-		PromotionStatusEnum promotionStatusEnum = promotion.isApplicable(orderRequest,userId,isCouponCommitted);
-		if (PromotionStatusEnum.SUCCESS.compareTo(promotionStatusEnum) !=0) {
+
+		// check if the promotion is applicable on this request.
+		PromotionStatusEnum promotionStatusEnum = promotion.isApplicable(orderRequest, userId, isCouponCommitted);
+		if (PromotionStatusEnum.SUCCESS.compareTo(promotionStatusEnum) != 0) {
 			logger.warn("Coupon code used when not applicable. Coupon code : " + coupon.getCode());
 			return promotionStatusEnum;
 		}
-		
-		//if the discount amount is not null, then validate the limits taking
+
+		// if the discount amount is not null, then validate the limits taking
 		// into account the discount amount
-		if(null!=discountAmount){
-			
+		if (null != discountAmount) {
+
 			logger.info("Incrementing the Discount Amount and recheck");
-			
+
 			globalCouponUses.increment(discountAmount);
 			userCouponUses.increment(discountAmount);
-			PromotionStatusEnum withinCouponUsesLimitsStatusAfterApplying = validateCouponUses(coupon, globalCouponUses, userCouponUses);
-			if (withinCouponUsesLimitsStatusAfterApplying.compareTo(PromotionStatusEnum.LIMIT_SUCCESS)!=0) {
+			PromotionStatusEnum withinCouponUsesLimitsStatusAfterApplying = validateCouponUses(coupon,
+				globalCouponUses, userCouponUses);
+			if (withinCouponUsesLimitsStatusAfterApplying.compareTo(PromotionStatusEnum.LIMIT_SUCCESS) != 0) {
 				logger.warn("Coupon exceeded limit. Coupon code : " + coupon.getCode());
 				return withinCouponUsesLimitsStatusAfterApplying;
 			}
-			
+
 			globalPromotionUses.increment(discountAmount);
 			userPromotionUses.increment(discountAmount);
-			PromotionStatusEnum withinPromotionUsesLimitsStatusAfterApplying = validatePromotionUses(promotion, globalPromotionUses, userPromotionUses);
+			PromotionStatusEnum withinPromotionUsesLimitsStatusAfterApplying = validatePromotionUses(promotion,
+				globalPromotionUses, userPromotionUses);
 			if (withinPromotionUsesLimitsStatusAfterApplying.compareTo(PromotionStatusEnum.LIMIT_SUCCESS) != 0) {
 				logger.warn("Coupon exceeded Promotions limit. Coupon code : " + coupon.getCode());
 				return withinPromotionUsesLimitsStatusAfterApplying;
 			}
 		}
-		
+
 		return PromotionStatusEnum.SUCCESS;
 	}
 
-	
-	private PromotionStatusEnum validatePromotionUses(Promotion promotion, GlobalPromotionUses globalPromotionUses, UserPromotionUses userPromotionUses) {
+	private PromotionStatusEnum validatePromotionUses(Promotion promotion, GlobalPromotionUses globalPromotionUses,
+		UserPromotionUses userPromotionUses) {
 		return promotion.isWithinLimits(globalPromotionUses, userPromotionUses);
 	}
 
 	private PromotionStatusEnum validateCouponUses(Coupon coupon, GlobalCouponUses globalUses, UserCouponUses userUses) {
 		return coupon.isWithinLimits(globalUses, userUses);
 	}
-	
+
 	@Override
 	public Coupon getCoupon(String couponCode, int userId) throws CouponNotFoundException, PlatformException {
-		//check if we have coupon cached.
+		// check if we have coupon cached.
 		Coupon coupon = couponCacheAccess.get(couponCode);
 		if (coupon == null) {
-			//load it using dao
+			// load it using dao
 			try {
 				coupon = couponDao.load(couponCode, userId);
 			} catch (DataAccessException e) {
-				throw new PlatformException("Error while loading the coupon. Coupon code : " + couponCode + ". User Id : " + userId, e);
+				throw new PlatformException("Error while loading the coupon. Coupon code : " + couponCode
+					+ ". User Id : " + userId, e);
 			}
 
 			if (coupon != null) {
 				cacheCoupon(couponCode, coupon);
 			} else {
-				throw new CouponNotFoundException("Coupon not found. Coupon code : " + couponCode + ". User Id : " + userId);
+				throw new CouponNotFoundException("Coupon not found. Coupon code : " + couponCode + ". User Id : "
+					+ userId);
 			}
 		}
 		return coupon;
 	}
 
 	private void cacheCoupon(String couponCode, Coupon coupon) {
-		//cache the global coupon
+		// cache the global coupon
 		if (coupon.getType() == CouponType.GLOBAL) {
 			try {
 				couponCacheAccess.lock(couponCode);
@@ -231,7 +255,7 @@ public class PromotionServiceImpl implements PromotionService {
 	public Promotion getPromotion(int promotionId) throws PromotionNotFoundException, PlatformException {
 		Promotion promotion = promotionCacheAccess.get(promotionId);
 		if (promotion == null) {
-			//its not cached, load it
+			// its not cached, load it
 			try {
 				promotion = promotionDao.load(promotionId);
 			} catch (DataAccessException e) {
@@ -248,7 +272,6 @@ public class PromotionServiceImpl implements PromotionService {
 	}
 
 	private void cachePromotion(Integer promotionId, Promotion promotion) {
-		//TODO need to figure out which promotions to cache
 		try {
 			promotionCacheAccess.lock(promotionId);
 			if (promotionCacheAccess.get(promotionId) == null) {
@@ -265,7 +288,8 @@ public class PromotionServiceImpl implements PromotionService {
 			couponDao.releaseCoupon(couponId, userId, orderId);
 			promotionDao.releasePromotion(promotionId, userId, orderId);
 		} catch (DataAccessException e) {
-			throw new PlatformException("Error while releasing the coupon and promotion. couponId : " + couponId + ", promotionId : " + promotionId, e);
+			throw new PlatformException("Error while releasing the coupon and promotion. couponId : " + couponId
+				+ ", promotionId : " + promotionId, e);
 		}
 	}
 
@@ -275,16 +299,18 @@ public class PromotionServiceImpl implements PromotionService {
 			couponDao.updateUserUses(couponId, userId, valueApplied, orderId);
 			promotionDao.updateUserUses(promotionId, userId, valueApplied, orderId);
 		} catch (DataAccessException e) {
-			throw new PlatformException("Error while updating the uses for coupon and promotion. " +
-							"couponId : " + couponId + ", " +
-							"promotionId : " + promotionId + ", " +
-							"userId : " + userId + ", " +
-							"orderId : " + orderId, e);
+			throw new PlatformException("Error while updating the uses for coupon and promotion. " + "couponId : "
+				+ couponId + ", " + "promotionId : " + promotionId + ", " + "userId : " + userId + ", " + "orderId : "
+				+ orderId, e);
 		}
 	}
 
 	public void setCouponDao(CouponDao couponDao) {
 		this.couponDao = couponDao;
+	}
+
+	public void setRuleDao(RuleDao ruleDao) {
+		this.ruleDao = ruleDao;
 	}
 
 	public void setPromotionDao(PromotionDao promotionDao) {
@@ -298,7 +324,7 @@ public class PromotionServiceImpl implements PromotionService {
 		if (promotion != null) {
 			clearPromotionCacheResponse.setPromotionId(clearPromotionCacheRequest.getPromotionId());
 			boolean isClear = promotionCacheAccess.clear(clearPromotionCacheRequest.getPromotionId());
-			if(isClear == true) {
+			if (isClear == true) {
 				clearPromotionCacheResponse.setClearCacheEnum(ClearCacheEnum.SUCCESS);
 			} else {
 				clearPromotionCacheResponse.setClearCacheEnum(ClearCacheEnum.INTERNAL_ERROR);
@@ -306,10 +332,11 @@ public class PromotionServiceImpl implements PromotionService {
 		} else {
 			clearPromotionCacheResponse.setClearCacheEnum(ClearCacheEnum.CACHE_NOT_FOUND);
 		}
-		//get all the coupons cached corresponding to this promotion and then clear them from cache
+		// get all the coupons cached corresponding to this promotion and then
+		// clear them from cache
 		Collection<Coupon> couponsList = couponDao.getCouponsForPromotion(clearPromotionCacheRequest.getPromotionId());
 		Iterator<Coupon> iterator = couponsList.iterator();
-		while(iterator.hasNext()) {
+		while (iterator.hasNext()) {
 			Coupon coupon = iterator.next();
 			ClearCouponCacheRequest clearCouponCacheRequest = new ClearCouponCacheRequest();
 			clearCouponCacheRequest.setCouponCode(coupon.getCode());
@@ -327,7 +354,7 @@ public class PromotionServiceImpl implements PromotionService {
 		clearCouponCacheResponse.setSessionToken(clearCouponCacheRequest.getSessionToken());
 		if (coupon != null) {
 			boolean isClear = couponCacheAccess.clear(clearCouponCacheRequest.getCouponCode());
-			if(isClear == true) {
+			if (isClear == true) {
 				clearCouponCacheResponse.setClearCacheEnum(ClearCacheEnum.SUCCESS);
 			} else {
 				clearCouponCacheResponse.setClearCacheEnum(ClearCacheEnum.INTERNAL_ERROR);
@@ -336,7 +363,7 @@ public class PromotionServiceImpl implements PromotionService {
 			clearCouponCacheResponse.setClearCacheEnum(ClearCacheEnum.CACHE_NOT_FOUND);
 		}
 		return clearCouponCacheResponse;
-		
+
 	}
 
 	@Override
@@ -353,7 +380,8 @@ public class PromotionServiceImpl implements PromotionService {
 	@Override
 	public String getCouponCode(String store, int userId) {
 		List<String> couponCodesForStore = scratchCardDao.getCouponCodesForStore(store);
-		//TODO in future, if there are multiple couponCodes per store, assign the one already not assigned to user.
+		// TODO in future, if there are multiple couponCodes per store, assign
+		// the one already not assigned to user.
 		return couponCodesForStore.get(0);
 	}
 
@@ -363,25 +391,58 @@ public class PromotionServiceImpl implements PromotionService {
 			assignCouponToUser(userId, couponCode, 0);
 			scratchCardDao.commitUse(scratchCardId, userId, couponCode);
 		} catch (DataAccessException e) {
-			throw new PlatformException("Error while committing the scratchCard. scratchCardId : " + scratchCardId + ", userId : " + userId + ", couponCode : " + couponCode, e);
+			throw new PlatformException("Error while committing the scratchCard. scratchCardId : " + scratchCardId
+				+ ", userId : " + userId + ", couponCode : " + couponCode, e);
 		}
 	}
-	
-	private void assignCouponToUser(int userId, String couponCode, int overriddenUserLimit) throws CouponAlreadyAssignedToUserException {
+
+	private void assignCouponToUser(int userId, String couponCode, int overriddenUserLimit)
+		throws CouponAlreadyAssignedToUserException {
 		try {
 			couponAdminDao.assignToUser(userId, couponCode, overriddenUserLimit);
 		} catch (DataAccessException e) {
-			throw new PlatformException("Error while assigning couponCode : " + couponCode + " to userId : " + userId, e);
+			throw new PlatformException("Error while assigning couponCode : " + couponCode + " to userId : " + userId,
+				e);
 		}
 	}
-	
+
 	@Override
 	public boolean isUserFirstOrder(int userId) {
 		int orderCount = scratchCardDao.getUserOrderCount(userId);
 		boolean isUserEligible = true;
-		if(orderCount > 0) {
+		if (orderCount > 0) {
 			isUserEligible = false;
 		}
 		return isUserEligible;
+	}
+
+	@Override
+	public void getPaymentOptions(String couponCode, int userId) throws CouponNotFoundException, PlatformException {
+
+		Coupon coupon = null;
+		Promotion promotion = null;
+
+		coupon = getCoupon(couponCode, userId);
+		promotion = getPromotion(coupon.getPromotionId());
+
+		String inclPaymentOptionsString = ruleDao.getPaymentOptionsString(promotion.getId(),
+			RuleConfigDescriptorEnum.PAYMENT_OPTION_INCLUDE_LIST);
+
+		String exclPaymentOptionsString = ruleDao.getPaymentOptionsString(promotion.getId(),
+			RuleConfigDescriptorEnum.PAYMENT_OPTION_EXCLUDE_LIST);
+
+		List<PaymentOption> includePaymentOption = getPaymentOptionFromString(inclPaymentOptionsString);
+
+		List<PaymentOption> excludePaymentOption = getPaymentOptionFromString(exclPaymentOptionsString);
+
+	}
+
+	/*
+	 * Code to Parse String and convert into Payment Option
+	 */
+	private List<PaymentOption> getPaymentOptionFromString(String inclPaymentOptionsString) {
+		List<PaymentOption> paymentOptions = new ArrayList<PaymentOption>();
+
+		return null;
 	}
 }

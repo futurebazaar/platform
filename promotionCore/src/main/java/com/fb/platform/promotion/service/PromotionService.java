@@ -25,85 +25,101 @@ import com.fb.platform.promotion.to.PromotionStatusEnum;
 
 /**
  * @author vinayak
- *
+ * 
  */
 @Transactional
 public interface PromotionService {
 
 	/**
-	 * Returns the Coupon associated with the coupon code. Tries to read it from cache.
-	 * If not found in cache then loads it using DAO. Caches the global coupons.
+	 * Returns the Coupon associated with the coupon code. Tries to read it from
+	 * cache. If not found in cache then loads it using DAO. Caches the global
+	 * coupons.
+	 * 
 	 * @param couponCode
 	 * @param userId
-	 * @throws CouponNotFoundException When no coupon is found matching the couponCode.
-	 * @throws PlatformException When an unrecovarable error happens.
+	 * @throws CouponNotFoundException
+	 *             When no coupon is found matching the couponCode.
+	 * @throws PlatformException
+	 *             When an unrecovarable error happens.
 	 * @return
 	 */
-	@Transactional(propagation=Propagation.REQUIRED)
+	@Transactional(propagation = Propagation.REQUIRED)
 	public Coupon getCoupon(String couponCode, int userId) throws CouponNotFoundException, PlatformException;
 
 	/**
-	 * Returns the Promotion identified by the promotionId. 
+	 * Returns the Promotion identified by the promotionId.
+	 * 
 	 * @param promotionId
 	 * @return
-	 * @throws PromotionNotFoundException When no promotion is found matching the promotionId.
-	 * @throws PlatformException When an unrecovarable error happens.
+	 * @throws PromotionNotFoundException
+	 *             When no promotion is found matching the promotionId.
+	 * @throws PlatformException
+	 *             When an unrecovarable error happens.
 	 */
-	@Transactional(propagation=Propagation.REQUIRED)
+	@Transactional(propagation = Propagation.REQUIRED)
 	public Promotion getPromotion(int promotionId) throws PromotionNotFoundException, PlatformException;
 
 	/**
-	 * Releases the coupon and promotion. This resets the previous commit of the coupon and promotion.
+	 * Releases the coupon and promotion. This resets the previous commit of the
+	 * coupon and promotion.
+	 * 
 	 * @param couponId
 	 * @param promotionId
 	 * @param userId
 	 * @param orderId
 	 */
-	@Transactional(propagation=Propagation.REQUIRED)
+	@Transactional(propagation = Propagation.REQUIRED)
 	public void release(int couponId, int promotionId, int userId, int orderId) throws CouponNotCommitedException;
 
 	/**
-	 * Called when committing the coupon. Records the users user of the promotion and coupon.
+	 * Called when committing the coupon. Records the users user of the
+	 * promotion and coupon.
+	 * 
 	 * @param couponId
 	 * @param promotionId
 	 * @param userId
 	 * @param valueApplied
 	 * @param orderId
 	 */
-	@Transactional(propagation=Propagation.REQUIRED)
+	@Transactional(propagation = Propagation.REQUIRED)
 	public void updateUserUses(int couponId, int promotionId, int userId, BigDecimal valueApplied, int orderId);
 
 	/**
-	 * Clears the cached promotion, if it is cached. Also clears any cached coupon belonging to this promotion.
+	 * Clears the cached promotion, if it is cached. Also clears any cached
+	 * coupon belonging to this promotion.
+	 * 
 	 * @param clearPromotionCacheRequest
 	 */
-	@Transactional(propagation=Propagation.REQUIRED)
+	@Transactional(propagation = Propagation.REQUIRED)
 	public ClearPromotionCacheResponse clearCache(ClearPromotionCacheRequest clearPromotionCacheRequest);
 
 	/**
-	 * Clears the cached coupon associated with this coupon code, if it is cached.
+	 * Clears the cached coupon associated with this coupon code, if it is
+	 * cached.
+	 * 
 	 * @param clearCouponCacheRequest
 	 */
-	@Transactional(propagation=Propagation.REQUIRED)
+	@Transactional(propagation = Propagation.REQUIRED)
 	public ClearCouponCacheResponse clearCache(ClearCouponCacheRequest clearCouponCacheRequest);
 
-	@Transactional(propagation=Propagation.REQUIRED)
+	@Transactional(propagation = Propagation.REQUIRED)
 	public ScratchCard loadScratchCard(String cardNumber);
 
-	@Transactional(propagation=Propagation.REQUIRED)
+	@Transactional(propagation = Propagation.REQUIRED)
 	public String getCouponCode(String store, int userId);
 
-	@Transactional(propagation=Propagation.REQUIRED)
+	@Transactional(propagation = Propagation.REQUIRED)
 	public void commitScratchCard(int scratchCardId, int userId, String couponCode);
-	
-	@Transactional(propagation=Propagation.REQUIRED)
+
+	@Transactional(propagation = Propagation.REQUIRED)
 	public boolean isUserFirstOrder(int userId);
 
 	/**
 	 * 
 	 */
-	public PromotionStatusEnum isApplicable(int userId, OrderRequest orderRequest, Money discountAmount, Coupon coupon, Promotion promotion, boolean isOrderCommitted);
-	
+	public PromotionStatusEnum isApplicable(int userId, OrderRequest orderRequest, Money discountAmount, Coupon coupon,
+		Promotion promotion, boolean isOrderCommitted);
+
 	/**
 	 * 
 	 * @param userId
@@ -114,5 +130,17 @@ public interface PromotionService {
 	 * @param isOrderCommitted
 	 * @return
 	 */
-	public PromotionStatusEnum isApplicable(int userId, int orderId, Money discountAmount, Coupon coupon, Promotion promotion, boolean isOrderCommitted);
+	public PromotionStatusEnum isApplicable(int userId, int orderId, Money discountAmount, Coupon coupon,
+		Promotion promotion, boolean isOrderCommitted);
+
+	/**
+	 * Gets The Payment Options applicable to that Coupon
+	 * 
+	 * @param couponId
+	 * @param promotionId
+	 * @throws CouponNotFoundException
+	 * @throws PlatformException
+	 */
+	public void getPaymentOptions(String couponCode, int userId) throws CouponNotFoundException, PlatformException;
+
 }

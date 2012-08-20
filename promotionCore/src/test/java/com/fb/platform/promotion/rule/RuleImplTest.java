@@ -640,7 +640,7 @@ public class RuleImplTest extends BaseTestCase {
 	//
 	// }
 
-	public void buyXBrandGetYRsOffOnZProductRuleTest() {
+	public void testBuyXBrandGetYRsOffOnZProductRuleTest() {
 
 		int userId = 1;
 		boolean isCouponCommitted = false;

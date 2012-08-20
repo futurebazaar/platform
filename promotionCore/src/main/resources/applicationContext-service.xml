@@ -18,6 +18,7 @@
     <!-- Add new services here -->
     <bean id="promotionService" class="com.fb.platform.promotion.service.impl.PromotionServiceImpl">
         <property name="couponDao" ref="couponDao"/>
+        <property name="ruleDao" ref="ruleDao"/>
         <property name="promotionDao" ref="promotionDao"></property>
     </bean>
     

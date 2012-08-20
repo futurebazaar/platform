@@ -28,6 +28,9 @@ import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.scratchCard.ScratchCard;
 import com.fb.platform.promotion.service.PromotionManager;
 import com.fb.platform.promotion.service.PromotionService;
+import com.fb.platform.promotion.to.ApplicablePaymentRequest;
+import com.fb.platform.promotion.to.ApplicablePaymentResponse;
+import com.fb.platform.promotion.to.ApplicablePaymentResponseStatusEnum;
 import com.fb.platform.promotion.to.ApplyCouponRequest;
 import com.fb.platform.promotion.to.ApplyCouponResponse;
 import com.fb.platform.promotion.to.ApplyCouponResponseStatusEnum;
@@ -49,7 +52,7 @@ import com.fb.platform.promotion.to.ReleaseCouponStatusEnum;
 
 /**
  * @author vinayak
- *
+ * 
  */
 public class PromotionManagerImpl implements PromotionManager {
 
@@ -63,7 +66,7 @@ public class PromotionManagerImpl implements PromotionManager {
 
 	@Override
 	public ApplyCouponResponse applyCoupon(ApplyCouponRequest request) {
-		if(logger.isDebugEnabled()) {
+		if (logger.isDebugEnabled()) {
 			logger.debug("Applying coupon : " + request.getCouponCode());
 		}
 		ApplyCouponResponse response = new ApplyCouponResponse();
@@ -73,61 +76,64 @@ public class PromotionManagerImpl implements PromotionManager {
 			return response;
 		}
 
-		//authenticate the session token and find out the userId
+		// authenticate the session token and find out the userId
 		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
 		if (authentication == null) {
-			//invalid session token
+			// invalid session token
 			response.setCouponStatus(ApplyCouponResponseStatusEnum.NO_SESSION);
 			return response;
 		}
-		
-		if(request.getIsOrderCommitted()==null){
+
+		if (request.getIsOrderCommitted() == null) {
 			request.setIsOrderCommitted(false);
 		}
-		
+
 		response.setSessionToken(request.getSessionToken());
 		response.setCouponCode(request.getCouponCode());
-		
+
 		int userId = authentication.getUserID();
 
 		Coupon coupon = null;
 		Promotion promotion = null;
 
 		try {
-			//find the coupon.
+			// find the coupon.
 			coupon = promotionService.getCoupon(request.getCouponCode(), userId);
-			//find the associated promotion
+			// find the associated promotion
 			promotion = promotionService.getPromotion(coupon.getPromotionId());
-			
+
 			// check if the order booking date is one which is before today
-			//if yes, then don't check the promotion valid till date by setting the validTill date as todays
+			// if yes, then don't check the promotion valid till date by setting
+			// the validTill date as todays
 			orderIdCheck(request.getOrderBookingDate(), promotion);
-			
+
 			response.setPromoName(promotion.getName());
 			response.setPromoDescription(promotion.getDescription());
 
-
-			PromotionStatusEnum isApplicableStatus = promotionService.isApplicable(userId, request.getOrderReq(), null, coupon, promotion, request.getIsOrderCommitted());
-			if(PromotionStatusEnum.SUCCESS.compareTo(isApplicableStatus)!=0){
+			PromotionStatusEnum isApplicableStatus = promotionService.isApplicable(userId, request.getOrderReq(), null,
+				coupon, promotion, request.getIsOrderCommitted());
+			if (PromotionStatusEnum.SUCCESS.compareTo(isApplicableStatus) != 0) {
 				response.setCouponStatus(isApplicableStatus);
 				return response;
 			}
-			
+
 			OrderDiscount orderDiscount = promotion.apply(request.getOrderReq());
-			if(orderDiscount!=null){
-				Money discount = orderDiscount.getOrderDiscountValue()==null ? null : new Money(orderDiscount.getOrderDiscountValue());
+			if (orderDiscount != null) {
+				Money discount = orderDiscount.getOrderDiscountValue() == null ? null : new Money(
+					orderDiscount.getOrderDiscountValue());
 				response.setOrderDiscount(orderDiscount);
-				PromotionStatusEnum postDiscountCheckStatus = promotionService.isApplicable(userId, request.getOrderReq(), discount, coupon, promotion, request.getIsOrderCommitted());
-				if(PromotionStatusEnum.SUCCESS.compareTo(postDiscountCheckStatus)!=0){
+				PromotionStatusEnum postDiscountCheckStatus = promotionService.isApplicable(userId,
+					request.getOrderReq(), discount, coupon, promotion, request.getIsOrderCommitted());
+				if (PromotionStatusEnum.SUCCESS.compareTo(postDiscountCheckStatus) != 0) {
 					response.setCouponStatus(postDiscountCheckStatus);
 					return response;
 				}
 			}
-			
+
 			response.setCouponStatus(ApplyCouponResponseStatusEnum.SUCCESS);
 
 		} catch (CouponNotFoundException e) {
-			//we dont recognise this coupon code, bye bye
+			// we dont recognise this coupon code, bye bye
 			response.setCouponStatus(ApplyCouponResponseStatusEnum.INVALID_COUPON_CODE);
 		} catch (PromotionNotFoundException e) {
 			logger.error("No Promotion Found for Coupon code : " + request.getCouponCode());
@@ -142,12 +148,12 @@ public class PromotionManagerImpl implements PromotionManager {
 
 	@Override
 	public CommitCouponResponse commitCouponUse(CommitCouponRequest request) {
-		if(logger.isDebugEnabled()) {
+		if (logger.isDebugEnabled()) {
 			logger.debug("Commiting coupon usage : " + request.getCouponCode());
 		}
 		CommitCouponResponse response = new CommitCouponResponse();
 		response.setSessionToken(request.getSessionToken());
-		
+
 		if (request == null || StringUtils.isBlank(request.getSessionToken())) {
 			response.setCommitCouponStatus(CommitCouponStatusEnum.NO_SESSION);
 			return response;
@@ -158,21 +164,21 @@ public class PromotionManagerImpl implements PromotionManager {
 			return response;
 		}
 
-		if(request.getDiscountValue().compareTo(BigDecimal.ZERO) <= 0){
-			//discount cannot be negative or zero
+		if (request.getDiscountValue().compareTo(BigDecimal.ZERO) <= 0) {
+			// discount cannot be negative or zero
 			logger.error("Discount amount for commit is invalid : " + request.getDiscountValue());
 			response.setCommitCouponStatus(CommitCouponStatusEnum.INVALID_DISCOUNT_AMOUNT);
 			return response;
 		}
 
-		//authenticate the session token and find out the userId
+		// authenticate the session token and find out the userId
 		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
 		if (authentication == null) {
-			//invalid session token
+			// invalid session token
 			response.setCommitCouponStatus(CommitCouponStatusEnum.NO_SESSION);
 			return response;
 		}
-		
+
 		int userId = authentication.getUserID();
 
 		Coupon coupon = null;
@@ -183,22 +189,25 @@ public class PromotionManagerImpl implements PromotionManager {
 			promotion = promotionService.getPromotion(coupon.getPromotionId());
 
 			// check if the order booking date is one which is before today
-			//if yes, then don't check the promotion valid till date by setting the validTill date as todays
+			// if yes, then don't check the promotion valid till date by setting
+			// the validTill date as todays
 			orderIdCheck(request.getOrderBookingDate(), promotion);
 
-			PromotionStatusEnum isApplicableStatus = promotionService.isApplicable(userId, request.getOrderId(), new Money(request.getDiscountValue()), coupon, promotion, false);
-			if(PromotionStatusEnum.SUCCESS.compareTo(isApplicableStatus)!=0){
+			PromotionStatusEnum isApplicableStatus = promotionService.isApplicable(userId, request.getOrderId(),
+				new Money(request.getDiscountValue()), coupon, promotion, false);
+			if (PromotionStatusEnum.SUCCESS.compareTo(isApplicableStatus) != 0) {
 				response.setCommitCouponStatus(isApplicableStatus);
 				return response;
 			}
-			
-			//update the user uses for coupon and promotion
-			promotionService.updateUserUses(coupon.getId(), promotion.getId(), userId, request.getDiscountValue(), request.getOrderId());
+
+			// update the user uses for coupon and promotion
+			promotionService.updateUserUses(coupon.getId(), promotion.getId(), userId, request.getDiscountValue(),
+				request.getOrderId());
 
 			response.setCommitCouponStatus(CommitCouponStatusEnum.SUCCESS);
 
 		} catch (CouponNotFoundException e) {
-			//we dont recognise this coupon code, bye bye
+			// we dont recognise this coupon code, bye bye
 			response.setCommitCouponStatus(CommitCouponStatusEnum.INVALID_COUPON_CODE);
 		} catch (PromotionNotFoundException e) {
 			logger.error("No Promotion Found for Coupon code : " + request.getCouponCode());
@@ -210,10 +219,10 @@ public class PromotionManagerImpl implements PromotionManager {
 
 		return response;
 	}
-	
+
 	@Override
-	public ReleaseCouponResponse releaseCoupon(ReleaseCouponRequest request){
-		if(logger.isDebugEnabled()) {
+	public ReleaseCouponResponse releaseCoupon(ReleaseCouponRequest request) {
+		if (logger.isDebugEnabled()) {
 			logger.debug("Release coupon : " + request.getCouponCode());
 		}
 		ReleaseCouponResponse response = new ReleaseCouponResponse();
@@ -228,10 +237,10 @@ public class PromotionManagerImpl implements PromotionManager {
 			return response;
 		}
 
-		//authenticate the session token and find out the userId
+		// authenticate the session token and find out the userId
 		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
 		if (authentication == null) {
-			//invalid session token
+			// invalid session token
 			response.setReleaseCouponStatus(ReleaseCouponStatusEnum.NO_SESSION);
 			return response;
 		}
@@ -245,14 +254,14 @@ public class PromotionManagerImpl implements PromotionManager {
 			coupon = promotionService.getCoupon(request.getCouponCode(), userId);
 			promotion = promotionService.getPromotion(coupon.getPromotionId());
 
-			//release the coupon and promotion
+			// release the coupon and promotion
 			promotionService.release(coupon.getId(), promotion.getId(), userId, request.getOrderId());
 
 			response.setReleaseCouponStatus(ReleaseCouponStatusEnum.SUCCESS);
 			response.setSessionToken(request.getSessionToken());
 
 		} catch (CouponNotFoundException e) {
-			//we dont recognise this coupon code, bye bye
+			// we dont recognise this coupon code, bye bye
 			response.setReleaseCouponStatus(ReleaseCouponStatusEnum.INVALID_COUPON_CODE);
 		} catch (PromotionNotFoundException e) {
 			logger.error("No Promotion Found for Coupon code : " + request.getCouponCode());
@@ -269,7 +278,7 @@ public class PromotionManagerImpl implements PromotionManager {
 
 	@Override
 	public ApplyScratchCardResponse applyScratchCard(ApplyScratchCardRequest request) {
-		if(logger.isDebugEnabled()) {
+		if (logger.isDebugEnabled()) {
 			logger.debug("applyScratchCard : " + request.getCardNumber());
 		}
 		ApplyScratchCardResponse response = new ApplyScratchCardResponse();
@@ -285,10 +294,10 @@ public class PromotionManagerImpl implements PromotionManager {
 			return response;
 		}
 
-		//authenticate the session token and find out the userId
+		// authenticate the session token and find out the userId
 		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
 		if (authentication == null) {
-			//invalid session token
+			// invalid session token
 			response.setApplyScratchCardStatus(ApplyScratchCardStatus.NO_SESSION);
 			return response;
 		}
@@ -296,23 +305,23 @@ public class PromotionManagerImpl implements PromotionManager {
 		int userId = authentication.getUserID();
 
 		try {
-			//load the scratch card
+			// load the scratch card
 			ScratchCard scratchCard = promotionService.loadScratchCard(request.getCardNumber());
 			if (!scratchCard.isActive()) {
 				logger.warn("Inactive scratch card used : " + request.getCardNumber());
 				response.setApplyScratchCardStatus(ApplyScratchCardStatus.INVALID_SCRATCH_CARD);
 				return response;
 			}
-			
+
 			boolean isUserEligible = promotionService.isUserFirstOrder(userId);
-			
-			if(isUserEligible) {
-				//get a coupon for the store associated with the scratch card.
+
+			if (isUserEligible) {
+				// get a coupon for the store associated with the scratch card.
 				String couponCode = promotionService.getCouponCode(scratchCard.getStore(), userId);
-	
-				//commit the scratch card use by this user
+
+				// commit the scratch card use by this user
 				promotionService.commitScratchCard(scratchCard.getId(), userId, couponCode);
-	
+
 				response.setCouponCode(couponCode);
 				response.setApplyScratchCardStatus(ApplyScratchCardStatus.SUCCESS);
 			} else {
@@ -338,22 +347,23 @@ public class PromotionManagerImpl implements PromotionManager {
 
 	@Override
 	public ClearPromotionCacheResponse clearCache(ClearPromotionCacheRequest clearPromotionCacheRequest) {
-		
+
 		ClearPromotionCacheResponse clearPromotionCacheResponse = new ClearPromotionCacheResponse();
-		
+
 		if (clearPromotionCacheRequest == null || StringUtils.isBlank(clearPromotionCacheRequest.getSessionToken())) {
 			clearPromotionCacheResponse.setClearCacheEnum(ClearCacheEnum.NO_SESSION);
 			return clearPromotionCacheResponse;
 		}
 
-		//authenticate the session token and find out the userId
-		AuthenticationTO authentication = authenticationService.authenticate(clearPromotionCacheRequest.getSessionToken());
+		// authenticate the session token and find out the userId
+		AuthenticationTO authentication = authenticationService.authenticate(clearPromotionCacheRequest
+			.getSessionToken());
 		if (authentication == null) {
-			//invalid session token
+			// invalid session token
 			clearPromotionCacheResponse.setClearCacheEnum(ClearCacheEnum.NO_SESSION);
 			return clearPromotionCacheResponse;
 		}
-		
+
 		clearPromotionCacheResponse = promotionService.clearCache(clearPromotionCacheRequest);
 		return clearPromotionCacheResponse;
 	}
@@ -366,36 +376,86 @@ public class PromotionManagerImpl implements PromotionManager {
 			return clearCouponCacheResponse;
 		}
 
-		//authenticate the session token and find out the userId
+		// authenticate the session token and find out the userId
 		AuthenticationTO authentication = authenticationService.authenticate(clearCouponCacheRequest.getSessionToken());
 		if (authentication == null) {
-			//invalid session token
+			// invalid session token
 			clearCouponCacheResponse.setClearCacheEnum(ClearCacheEnum.NO_SESSION);
 			return clearCouponCacheResponse;
 		}
-		
+
 		clearCouponCacheResponse = promotionService.clearCache(clearCouponCacheRequest);
 		return clearCouponCacheResponse;
 	}
 
+	@Override
+	public ApplicablePaymentResponse getApplicablePaymentOptions(ApplicablePaymentRequest request) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("ApplicablePaymentOptions for coupon : " + request.getCouponCode());
+		}
+		ApplicablePaymentResponse response = new ApplicablePaymentResponse();
+
+		if (request == null || StringUtils.isBlank(request.getSessionToken())) {
+			response.setStatus(ApplicablePaymentResponseStatusEnum.NO_SESSION);
+			return response;
+		}
+
+		if (StringUtils.isBlank(request.getCouponCode())) {
+			response.setStatus(ApplicablePaymentResponseStatusEnum.INVALID_COUPON_CODE);
+			return response;
+		}
+
+		// authenticate the session token and find out the userId
+		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
+		if (authentication == null) {
+			// invalid session token
+			response.setStatus(ApplicablePaymentResponseStatusEnum.NO_SESSION);
+			return response;
+		}
+
+		int userId = authentication.getUserID();
+
+		try {
+
+			// Get the Payment Options for the coupon
+			promotionService.getPaymentOptions(request.getCouponCode(), userId);
+
+			response.setStatus(ApplicablePaymentResponseStatusEnum.SUCCESS);
+			response.setSessionToken(request.getSessionToken());
+
+		} catch (CouponNotFoundException e) {
+			// we dont recognise this coupon code, bye bye
+			response.setStatus(ApplicablePaymentResponseStatusEnum.INVALID_COUPON_CODE);
+		} catch (PromotionNotFoundException e) {
+			logger.error("No Promotion Found for Coupon code : " + request.getCouponCode());
+			response.setStatus(ApplicablePaymentResponseStatusEnum.INTERNAL_ERROR);
+		} catch (PlatformException e) {
+			logger.error(
+				"Error while getting ApplicablePaymentOptions for the Coupon code : " + request.getCouponCode(), e);
+			response.setStatus(ApplicablePaymentResponseStatusEnum.INTERNAL_ERROR);
+		}
+		return response;
+	}
+
 	/*
-	 * If orderId is a legacy order which had issue after Promotion migration, then
-	 * update the promotion valid till date to current date
+	 * If orderId is a legacy order which had issue after Promotion migration,
+	 * then update the promotion valid till date to current date
 	 */
 	private void orderIdCheck(DateTime orderBookingDate, Promotion promotion) {
-		if(orderBookingDate==null){
+		if (orderBookingDate == null) {
 			logger.info("The orderBookingDate receieved is null so not modifying the promotion valid till date");
 			return;
 		}
-		// check if the order is one among those which had issue after promotion migration
-		logger.info("The orderBookingDate receieved is orderBookingDate = "+orderBookingDate);
+		// check if the order is one among those which had issue after promotion
+		// migration
+		logger.info("The orderBookingDate receieved is orderBookingDate = " + orderBookingDate);
 		PromotionDates promotionDates = promotion.getDates();
-		if(orderBookingDate.isBeforeNow()){
+		if (orderBookingDate.isBeforeNow()) {
 			logger.info("Order Booking Date is an old date, before today so allow the promotion date check to pass");
 			promotionDates.setValidTill(DateTime.now());
 		}
 	}
-	
+
 	public void setAuthenticationService(AuthenticationService authenticationService) {
 		this.authenticationService = authenticationService;
 	}

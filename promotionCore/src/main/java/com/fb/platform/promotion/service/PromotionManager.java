@@ -3,6 +3,8 @@
  */
 package com.fb.platform.promotion.service;
 
+import com.fb.platform.promotion.to.ApplicablePaymentRequest;
+import com.fb.platform.promotion.to.ApplicablePaymentResponse;
 import com.fb.platform.promotion.to.ApplyCouponRequest;
 import com.fb.platform.promotion.to.ApplyCouponResponse;
 import com.fb.platform.promotion.to.ApplyScratchCardRequest;
@@ -18,14 +20,14 @@ import com.fb.platform.promotion.to.ReleaseCouponResponse;
 
 /**
  * @author vinayak
- *
+ * 
  */
 public interface PromotionManager {
 
 	public ApplyCouponResponse applyCoupon(ApplyCouponRequest request);
 
 	public CommitCouponResponse commitCouponUse(CommitCouponRequest request);
-	
+
 	public ReleaseCouponResponse releaseCoupon(ReleaseCouponRequest request);
 
 	public ClearPromotionCacheResponse clearCache(ClearPromotionCacheRequest clearPromotionCacheRequest);
@@ -33,4 +35,7 @@ public interface PromotionManager {
 	public ApplyScratchCardResponse applyScratchCard(ApplyScratchCardRequest request);
 
 	public ClearCouponCacheResponse clearCache(ClearCouponCacheRequest clearCouponCacheRequest);
+
+	public ApplicablePaymentResponse getApplicablePaymentOptions(ApplicablePaymentRequest request);
+
 }

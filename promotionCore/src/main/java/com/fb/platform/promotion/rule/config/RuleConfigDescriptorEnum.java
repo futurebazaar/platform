@@ -23,7 +23,9 @@ public enum RuleConfigDescriptorEnum {
 	PRODUCT_DISCOUNT_RS_OFF("Product discount", RuleConfigDescriptorTypeEnum.MONEY),
 	PRODUCT_DISCOUNTED_VALUE("Product discounted value", RuleConfigDescriptorTypeEnum.MONEY),
 	VARIABLE_DISCOUNT_PERCENTAGE("Variable Discount percentage", RuleConfigDescriptorTypeEnum.CSKV),
-	SELLER_LIST("Seller List", RuleConfigDescriptorTypeEnum.CSI);
+	SELLER_LIST("Seller List", RuleConfigDescriptorTypeEnum.CSI),
+	PAYMENT_OPTION_INCLUDE_LIST("PAYMENT_OPTION_INCLUDE_LIST",RuleConfigDescriptorTypeEnum.CSI),
+	PAYMENT_OPTION_EXCLUDE_LIST("PAYMENT_OPTION_EXCLUDE_LIST",RuleConfigDescriptorTypeEnum.CSI);
 	
 	private String description = null;
 	

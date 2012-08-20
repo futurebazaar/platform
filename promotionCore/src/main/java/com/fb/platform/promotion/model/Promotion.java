@@ -6,14 +6,13 @@ package com.fb.platform.promotion.model;
 
 import java.io.Serializable;
 
-import com.fb.commons.to.Money;
 import com.fb.platform.promotion.rule.PromotionRule;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.PromotionStatusEnum;
 
 /**
  * @author vinayak
- *
+ * 
  */
 public class Promotion implements Serializable {
 
@@ -26,7 +25,7 @@ public class Promotion implements Serializable {
 
 	private PromotionRule rule;
 
-	public PromotionStatusEnum isApplicable(OrderRequest request,int userId,boolean isCouponCommitted) {
+	public PromotionStatusEnum isApplicable(OrderRequest request, int userId, boolean isCouponCommitted) {
 		if (!isActive) {
 			return PromotionStatusEnum.INACTIVE_COUPON;
 		}
@@ -34,10 +33,10 @@ public class Promotion implements Serializable {
 		if (!withinDates) {
 			return PromotionStatusEnum.COUPON_CODE_EXPIRED;
 		}
-		
-		if(null!=request)
-			return rule.isApplicable(request,userId,isCouponCommitted);
-		
+
+		if (null != request)
+			return rule.isApplicable(request, userId, isCouponCommitted);
+
 		return PromotionStatusEnum.SUCCESS;
 	}
 
@@ -48,46 +47,58 @@ public class Promotion implements Serializable {
 	public OrderDiscount apply(OrderRequest request) {
 		OrderDiscount orderDiscount = new OrderDiscount();
 		orderDiscount.setOrderRequest(request);
-		
+
 		return rule.execute(orderDiscount);
 	}
 
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
 	public void setDates(PromotionDates dates) {
 		this.dates = dates;
 	}
+
 	public void setLimitsConfig(PromotionLimitsConfig limitsConfig) {
 		this.limitsConfig = limitsConfig;
 	}
+
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
 	}
+
 	public int getId() {
 		return id;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public String getDescription() {
 		return description;
 	}
+
 	public boolean isActive() {
 		return isActive;
 	}
+
 	public PromotionDates getDates() {
 		return dates;
 	}
+
 	public PromotionLimitsConfig getLimitsConfig() {
 		return limitsConfig;
 	}
+
 	public void setRule(PromotionRule rule) {
 		this.rule = rule;
 	}
