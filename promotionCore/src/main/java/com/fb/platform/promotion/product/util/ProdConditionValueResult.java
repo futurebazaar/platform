@@ -110,7 +110,7 @@ public class ProdConditionValueResult implements ConditionResultProcessor {
 			}
 		}
 		
-		BigDecimal amount = finalOrderItemPrice.getAmount().setScale(0,  RoundingMode.UP);	//Rounding off to the next highest integer
+		BigDecimal amount = finalOrderItemPrice.getAmount().setScale(0,  RoundingMode.FLOOR);	//Rounding off to the maximize discount
 		finalOrderItemPrice = new Money(amount);
 		return finalOrderItemPrice;
 	}
