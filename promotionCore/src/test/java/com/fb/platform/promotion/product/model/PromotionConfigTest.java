@@ -118,6 +118,38 @@ public class PromotionConfigTest extends BaseTestCase {
 				assertEquals(new BigDecimal("295"), orderItem.getTotalDiscount());
 		}
 	}
+	
+	@Test
+	public void applyPercentOffResult() {
+		Product p1 = new Product();
+		p1.setPrice(new BigDecimal(225));
+		p1.setMrpPrice(new BigDecimal(225));
+		p1.setProductId(85985);
+
+		//Create OrderItems
+		OrderItem oItem1 = new OrderItem();
+		oItem1.setQuantity(1);
+		oItem1.setProduct(p1);
+
+		//Create OrderReq
+		OrderRequest orderReq1 = new OrderRequest();
+		orderReq1.setOrderId(1);
+		List<OrderItem> oList1 = new ArrayList<OrderItem>();
+		oList1.add(oItem1);
+		orderReq1.setOrderItems(oList1);
+
+		AutoPromotion autoPromotion = (AutoPromotion) promotionDao.load(8200);
+
+		assertNotNull(autoPromotion.getPromotionConfig());
+
+		PromotionConfig config = autoPromotion.getPromotionConfig();
+
+		boolean applied = config.apply(orderReq1);
+		assertTrue(applied);
+		for (OrderItem orderItem : orderReq1.getOrderItems()) { 
+			assertEquals(new BigDecimal("12"), orderItem.getTotalDiscount());
+		}
+	}
 
 	@Test
 	public void apply() {

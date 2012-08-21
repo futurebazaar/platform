@@ -122,7 +122,7 @@ public class SameProdConditionProdResult implements ConditionResultProcessor {
 			finalPrice = finalPrice.plus(new Money(offerPriceItem.getProduct().getPrice()));
 		}
 		
-		BigDecimal amount = finalPrice.getAmount().setScale(0,  RoundingMode.UP);	//Rounding off to the next highest integer
+		BigDecimal amount = finalPrice.getAmount().setScale(0,  RoundingMode.FLOOR);	//Rounding down to maximize discount
 		finalPrice = new Money(amount);
 		return finalPrice;
 	}
