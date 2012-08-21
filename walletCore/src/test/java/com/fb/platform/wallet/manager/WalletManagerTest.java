@@ -16,6 +16,8 @@ import com.fb.platform.user.manager.model.auth.LoginResponse;
 import com.fb.platform.user.manager.model.auth.LoginStatusEnum;
 import com.fb.platform.wallet.manager.interfaces.WalletManager;
 import com.fb.platform.wallet.manager.model.access.SubWalletEnum;
+import com.fb.platform.wallet.manager.model.access.VerifyWalletRequest;
+import com.fb.platform.wallet.manager.model.access.VerifyWalletResponse;
 import com.fb.platform.wallet.manager.model.access.WalletSummaryRequest;
 import com.fb.platform.wallet.manager.model.access.WalletSummaryResponse;
 
@@ -148,6 +150,22 @@ public class WalletManagerTest extends BaseTestCase{
 		request.setSessionToken(sessionToken);
 
 		WalletHistoryResponse response = walletManager.getWalletHistory(request);
+		
+		assertNotNull(response);
+		assertEquals("SUCCESS", response.getWalletHistoryStatus().toString());
+		assertEquals(4,response.getTransactionList().size());
+	}
+	
+	@Test
+	public void testWalletHistory3() {
+		WalletHistoryRequest request = new WalletHistoryRequest();
+		request.setUserId(1);
+		request.setClientId(-5);
+		request.setPageNumber(1);
+		request.setResultsPerPage(5);
+		request.setSessionToken(sessionToken);
+
+		WalletHistoryResponse response = walletManager.getWalletHistoryPaged(request);
 		
 		assertNotNull(response);
 		assertEquals("SUCCESS", response.getWalletHistoryStatus().toString());
@@ -809,6 +827,72 @@ public class WalletManagerTest extends BaseTestCase{
 		assertEquals(new BigDecimal("0.00"), summaryResponse.getWalletDetails().getCashAmount());
 		assertEquals(new BigDecimal("0.00"), summaryResponse.getWalletDetails().getGiftAmount());
 		assertEquals(new BigDecimal("100.00"), summaryResponse.getWalletDetails().getRefundAmount());
+
+	}
+	
+	
+
+	@Test
+	public void testWalletVerify1() {
+		VerifyWalletRequest request = new VerifyWalletRequest();
+		request.setAmount(new BigDecimal("0.01"));
+		request.setUserId(userId);
+		request.setClientId(-5);
+		request.setPassword(testWalletPassword);
+		request.setSessionToken(sessionToken);
+
+		VerifyWalletResponse response = walletManager.verifyWallet(request);
+		
+		assertNotNull(response);
+		assertEquals("SUCCESS", response.getStatus().toString());
+
+	}
+	
+	@Test
+	public void testWalletVerify2() {
+		VerifyWalletRequest request = new VerifyWalletRequest();
+		request.setAmount(new BigDecimal("10000.00"));
+		request.setUserId(userId);
+		request.setClientId(-5);
+		request.setPassword(testWalletPassword);
+		request.setSessionToken(sessionToken);
+
+		VerifyWalletResponse response = walletManager.verifyWallet(request);
+		
+		assertNotNull(response);
+		assertEquals("BALANCE UNAVAILABLE", response.getStatus().toString());
+
+	}
+	
+	@Test
+	public void testWalletVerify3() {
+		VerifyWalletRequest request = new VerifyWalletRequest();
+		request.setAmount(new BigDecimal("10000.00"));
+		request.setUserId(userId);
+		request.setClientId(-5);
+		request.setPassword("adfdassa");
+		request.setSessionToken(sessionToken);
+
+		VerifyWalletResponse response = walletManager.verifyWallet(request);
+		
+		assertNotNull(response);
+		assertEquals("WRONG PASSWORD", response.getStatus().toString());
+
+	}
+	
+	@Test
+	public void testWalletVerify4() {
+		VerifyWalletRequest request = new VerifyWalletRequest();
+		request.setAmount(new BigDecimal("10000.00"));
+		request.setUserId(1000);
+		request.setClientId(-50);
+		request.setPassword("adfdassa");
+		request.setSessionToken(sessionToken);
+
+		VerifyWalletResponse response = walletManager.verifyWallet(request);
+		
+		assertNotNull(response);
+		assertEquals("INVALID WALLET", response.getStatus().toString());
 
 	}
 }

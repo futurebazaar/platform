@@ -100,6 +100,30 @@ public class WalletTransactionDaoTest extends BaseTestCase {
 			}
 		}
 		
+		List<WalletTransaction> walletTransactionspage = walletTransactionDao.walletHistory(walletRes, 1, 3);
+		for (WalletTransaction wallTransaction : walletTransactionspage){
+			assertNotNull(wallTransaction);
+			assertNotNull(wallTransaction.getAmount());
+			for (WalletSubTransaction walletSubTransaction : wallTransaction.getWalletSubTransaction()){
+				assertNotNull(walletSubTransaction);
+				assertNotNull(walletSubTransaction.getAmount());
+				assertNotNull(walletSubTransaction.toString());
+				assertEquals(true, walletSubTransaction.equals(walletSubTransaction));
+			}
+		}
+		
+		List<WalletTransaction> walletTransactionspage1 = walletTransactionDao.walletHistory(walletRes, 1, 20);
+		for (WalletTransaction wallTransaction : walletTransactionspage1){
+			assertNotNull(wallTransaction);
+			assertNotNull(wallTransaction.getAmount());
+			for (WalletSubTransaction walletSubTransaction : wallTransaction.getWalletSubTransaction()){
+				assertNotNull(walletSubTransaction);
+				assertNotNull(walletSubTransaction.getAmount());
+				assertNotNull(walletSubTransaction.toString());
+				assertEquals(true, walletSubTransaction.equals(walletSubTransaction));
+			}
+		}
+		
 	}
 	
 	@Test

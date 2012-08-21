@@ -15,6 +15,8 @@ public interface WalletTransactionDao {
 	
 	public List<WalletTransaction> walletHistory(Wallet wallet,DateTime fromDate,DateTime toDate);
 	
+	public List<WalletTransaction> walletHistory(Wallet wallet,int pageNumber,int resultPerPage);
+	
 	public WalletTransaction transactionById(long walletId,String transactionId);
 
 	public WalletTransaction refundTransactionByRefundId(long walletId, long refundId);

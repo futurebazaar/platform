@@ -34,6 +34,7 @@ import com.fb.platform.wallet._1_0.WalletSummaryStatus;
 import com.fb.platform.wallet._1_0.WalletDetails;
 
 import com.fb.platform.wallet._1_0.WalletHistoryRequest;
+import com.fb.platform.wallet._1_0.WalletHistoryRequestPaginated;
 import com.fb.platform.wallet._1_0.WalletHistoryResponse;
 import com.fb.platform.wallet._1_0.WalletHistoryStatus;
 import com.fb.platform.wallet._1_0.SubWallet;
@@ -141,7 +142,7 @@ public class WalletResource {
 
 		} catch (JAXBException e) {
 			logger.error("Error in the Wallet Summary request.", e);
-			return "error"; //TODO return proper error response
+			return "error";
 		}
 	}
 
@@ -170,41 +171,8 @@ public class WalletResource {
 			}
 
 			com.fb.platform.wallet.manager.model.access.WalletHistoryResponse apiWalletHistoryResp = walletManager.getWalletHistory(apiWalletHistoryReq);
-
-			WalletHistoryResponse xmlWalletHistoryResponse = new WalletHistoryResponse();
-			xmlWalletHistoryResponse.setSessionToken(apiWalletHistoryResp.getSessionToken());
-			xmlWalletHistoryResponse.setWalletHistoryStatus(WalletHistoryStatus.fromValue(apiWalletHistoryResp.getWalletHistoryStatus().name() ));
-			
-			
-			List<Transaction> transactionList = new ArrayList<Transaction>();
-			if(apiWalletHistoryResp.getTransactionList() != null){
-				for (com.fb.platform.wallet.to.WalletTransaction apiTransaction : apiWalletHistoryResp.getTransactionList()){
-					Transaction transaction = new Transaction();
-					transaction.setTransactionId(apiTransaction.getTransactionId());
-					transaction.setType(apiTransaction.getTransactionType().name());
-					transaction.setAmount(apiTransaction.getAmount().getAmount());
-					transaction.setTimestamp(apiTransaction.getTimeStamp());
-					List<SubTransaction> subTransactionList = new ArrayList<SubTransaction>();
-					if (apiTransaction.getWalletSubTransaction() != null){
-						for (com.fb.platform.wallet.to.WalletSubTransaction apiSubTransaction : apiTransaction.getWalletSubTransaction()){
-							SubTransaction subTransaction = new SubTransaction();
-							subTransaction.setSubWallet(SubWallet.fromValue(apiSubTransaction.getSubWalletType().toString()));
-							subTransaction.setAmount(apiSubTransaction.getAmount().getAmount());
-							subTransaction.setOrderId(apiSubTransaction.getOrderId());
-							subTransaction.setPaymentId(apiSubTransaction.getPaymentId());
-							subTransaction.setRefundId(apiSubTransaction.getRefundId());
-							subTransaction.setPaymentReversalId(apiSubTransaction.getPaymentReversalId());
-							subTransaction.setGiftCode(apiSubTransaction.getGiftCode());
-							
-							subTransactionList.add(subTransaction);
-						}
-						transaction.getSubTransaction().addAll(subTransactionList);
-					}
-					transactionList.add(transaction);
-				}
+			WalletHistoryResponse xmlWalletHistoryResponse = makeWalletHistoryResponse(apiWalletHistoryResp);
 				
-			}
-			xmlWalletHistoryResponse.getTransaction().addAll(transactionList);	
 			
 			StringWriter outStringWriter = new StringWriter();
 			Marshaller marsheller = context.createMarshaller();
@@ -216,7 +184,42 @@ public class WalletResource {
 
 		} catch (JAXBException e) {
 			logger.error("Error in the Wallet History request.", e);
-			return "error"; //TODO return proper error response
+			return "error";
+		}
+	}
+	
+	@POST
+	@Path("/pagedhistory")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String pagedHistoryRequest(String walletHistoryXml) {
+		
+		logger.info("WALLET HISTORY XML request: \n" + walletHistoryXml);
+		try {
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			WalletHistoryRequestPaginated xmlWalletHistoryReq = (WalletHistoryRequestPaginated) unmarshaller.unmarshal(new StreamSource(new StringReader(walletHistoryXml)));
+
+			com.fb.platform.wallet.manager.model.access.WalletHistoryRequest apiWalletHistoryReq = new com.fb.platform.wallet.manager.model.access.WalletHistoryRequest();
+			apiWalletHistoryReq.setUserId(xmlWalletHistoryReq.getUserId());
+			apiWalletHistoryReq.setClientId(xmlWalletHistoryReq.getClientId());
+			apiWalletHistoryReq.setSessionToken(xmlWalletHistoryReq.getSessionToken());
+			if(xmlWalletHistoryReq.getSubWallet() != null){
+				apiWalletHistoryReq.setSubWallet(SubWalletEnum.valueOf(xmlWalletHistoryReq.getSubWallet().value()));
+			}
+			com.fb.platform.wallet.manager.model.access.WalletHistoryResponse apiWalletHistoryResp = walletManager.getWalletHistoryPaged(apiWalletHistoryReq);
+			WalletHistoryResponse xmlWalletHistoryResponse = makeWalletHistoryResponse(apiWalletHistoryResp);
+			
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marsheller = context.createMarshaller();
+			marsheller.marshal(xmlWalletHistoryResponse, outStringWriter);
+
+			String xmlResponse = outStringWriter.toString();
+			logger.info("walletHistoryXml response :\n" + xmlResponse);
+			return xmlResponse;
+
+		} catch (JAXBException e) {
+			logger.error("Error in the Wallet History request.", e);
+			return "error";
 		}
 	}
 
@@ -263,7 +266,7 @@ public class WalletResource {
 
 		} catch (JAXBException e) {
 			logger.error("Error in filling the Wallet:", e);
-			return "error"; //TODO return proper error response
+			return "error";
 		}
 	}
 	
@@ -303,7 +306,7 @@ public class WalletResource {
 
 		} catch (JAXBException e) {
 			logger.error("Error in paying from the Wallet:", e);
-			return "error"; //TODO return proper error response
+			return "error";
 		}
 	}
 	
@@ -345,7 +348,7 @@ public class WalletResource {
 
 		} catch (JAXBException e) {
 			logger.error("Error in refunding from the Wallet:", e);
-			return "error"; //TODO return proper error response
+			return "error";
 		}
 	}
 
@@ -385,7 +388,7 @@ public class WalletResource {
 
 		} catch (JAXBException e) {
 			logger.error("Error in reverting wallet transaction:", e);
-			return "error"; //TODO return proper error response
+			return "error";
 		}
 	}
 
@@ -464,8 +467,46 @@ public class WalletResource {
 
 		} catch (JAXBException e) {
 			logger.error("Error in verifying the Wallet:", e);
-			return "error"; //TODO return proper error response
+			return "error";
 		}
+	}
+	
+	private WalletHistoryResponse makeWalletHistoryResponse(com.fb.platform.wallet.manager.model.access.WalletHistoryResponse apiWalletHistoryResp){
+		WalletHistoryResponse xmlWalletHistoryResponse = new WalletHistoryResponse();
+		xmlWalletHistoryResponse.setSessionToken(apiWalletHistoryResp.getSessionToken());
+		xmlWalletHistoryResponse.setWalletHistoryStatus(WalletHistoryStatus.fromValue(apiWalletHistoryResp.getWalletHistoryStatus().name() ));
+		xmlWalletHistoryResponse.setTotalNumberOfTransaction(apiWalletHistoryResp.getTransactionList().size());
+		
+		List<Transaction> transactionList = new ArrayList<Transaction>();
+		if(apiWalletHistoryResp.getTransactionList() != null){
+			for (com.fb.platform.wallet.to.WalletTransaction apiTransaction : apiWalletHistoryResp.getTransactionList()){
+				Transaction transaction = new Transaction();
+				transaction.setTransactionId(apiTransaction.getTransactionId());
+				transaction.setType(apiTransaction.getTransactionType().name());
+				transaction.setAmount(apiTransaction.getAmount().getAmount());
+				transaction.setTimestamp(apiTransaction.getTimeStamp());
+				List<SubTransaction> subTransactionList = new ArrayList<SubTransaction>();
+				if (apiTransaction.getWalletSubTransaction() != null){
+					for (com.fb.platform.wallet.to.WalletSubTransaction apiSubTransaction : apiTransaction.getWalletSubTransaction()){
+						SubTransaction subTransaction = new SubTransaction();
+						subTransaction.setSubWallet(SubWallet.fromValue(apiSubTransaction.getSubWalletType().toString()));
+						subTransaction.setAmount(apiSubTransaction.getAmount().getAmount());
+						subTransaction.setOrderId(apiSubTransaction.getOrderId());
+						subTransaction.setPaymentId(apiSubTransaction.getPaymentId());
+						subTransaction.setRefundId(apiSubTransaction.getRefundId());
+						subTransaction.setPaymentReversalId(apiSubTransaction.getPaymentReversalId());
+						subTransaction.setGiftCode(apiSubTransaction.getGiftCode());
+						
+						subTransactionList.add(subTransaction);
+					}
+					transaction.getSubTransaction().addAll(subTransactionList);
+				}
+				transactionList.add(transaction);
+			}
+			
+		}
+		xmlWalletHistoryResponse.getTransaction().addAll(transactionList);
+		return xmlWalletHistoryResponse;
 	}
 
 }

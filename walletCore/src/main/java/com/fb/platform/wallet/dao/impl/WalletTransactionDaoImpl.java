@@ -108,6 +108,16 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			+ "transaction_note "
 			+ "from wallets_transaction where wallet_id= ? and transaction_date between ? and ?" ;
 	
+	private final String GET_TRANSACTION_HISTORY_PAGINATED = "Select "
+			+ "id, "
+			+ "transaction_id, "
+			+ "wallet_id, "
+			+ "amount, "
+			+ "transaction_type, "
+			+ "transaction_date, "
+			+ "transaction_note "
+			+ "from wallets_transaction where wallet_id= ? LIMIT ?,?" ;
+	
 	private final String GET_SUB_TRANSACTIONS_BY_REFUNDID = "Select "
 			+ "id, "
 			+ "tran_id, "
@@ -242,6 +252,31 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			Timestamp todate = toDate != null ? new Timestamp(toDate.getMillis()) : new Timestamp(DateTime.now().getMillis());
 			List<WalletTransaction> walletTransactions = jdbcTemplate.query(GET_TRANSACTION_HISTORY,
 					new Object[]{wallet.getId(),fromdate,todate},
+					new WalletTransactionMapper());
+			
+			for(WalletTransaction walletTransaction : walletTransactions){
+				List<WalletSubTransaction> walletSubTransactions = jdbcTemplate.query(GET_SUB_TRANSACTIONS_BY_TRANID,
+						new Object[] {walletTransaction.getId()},
+						new WalletSubTransactionMapper());
+				walletTransaction.getWalletSubTransaction().addAll(walletSubTransactions);
+			}
+			return walletTransactions;
+		} catch (Exception e) {
+			log.error("An exception while fetching the wallet history" + e);
+			throw new PlatformException("An exception while fetching wallet history "+e);
+		}
+	}
+	
+
+	@Override
+	public List<WalletTransaction> walletHistory(Wallet wallet, int pageNumber,
+			int resultPerPage) {
+		try {
+			if(pageNumber <= 0){
+				pageNumber = 1;
+			}
+			List<WalletTransaction> walletTransactions = jdbcTemplate.query(GET_TRANSACTION_HISTORY_PAGINATED,
+					new Object[]{wallet.getId(),((pageNumber-1)*resultPerPage),resultPerPage},
 					new WalletTransactionMapper());
 			
 			for(WalletTransaction walletTransaction : walletTransactions){
@@ -582,4 +617,5 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 		}
 		
 	}
+
 }

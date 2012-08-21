@@ -53,6 +53,19 @@ public interface WalletService {
 	public List<WalletTransaction> walletHistory (long walletId,DateTime fromDate , DateTime toDate,SubWalletType subWalletType);
 	
 	/**
+	 * Returns the Wallet Transactions associated with a wallet.
+	 * @param userId
+	 * @param clientId
+	 * @param pageNumber
+	 * @param resultPerPage
+	 * @throws WalletNotFoundException When no wallet is found matching the walletId.
+	 * @throws PlatformException When an unrecoverable error happens.
+	 * @return List of Wallet Transactions
+	**/
+	@Transactional (propagation = Propagation.REQUIRED)
+	public List<WalletTransaction> walletHistory (long userId,long clientId,int pageNumber , int resultPerPage,SubWalletType subWalletType);
+	
+	/**
 	 * Credit the wallet with the given amount.
 	 * @param walletId : Wallet Id of the wallet to be credited.
 	 * @param amount : The amount to be credited to the wallet.

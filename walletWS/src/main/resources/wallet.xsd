@@ -78,6 +78,9 @@
   <xs:element name="refundId" type="xs:long"/>
   <xs:element name="paymentReversalId" type="xs:long"/>
   <xs:element name="subWallet" type="tns:subWallet" nillable="true"/>
+  <xs:element name="pageNumber" type="xs:int"/>
+  <xs:element name="resultsPerPage" type="xs:int"/>
+  <xs:element name="totalNumberOfTransaction" type="xs:int"/>
     
   <xs:element name="walletHistoryRequest">
     <xs:complexType>
@@ -90,7 +93,18 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-
+<xs:element name="walletHistoryRequestPaginated">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:userId"/>
+        <xs:element ref="tns:clientId"/>
+        <xs:element ref="tns:subWallet"/>
+        <xs:element ref="tns:sessionToken"/>
+        <xs:element ref="tns:pageNumber"/>
+        <xs:element ref="tns:resultsPerPage"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
   <xs:simpleType name="subWallet">
     <xs:restriction base="xs:string">
       <xs:enumeration value="CASH"/>
@@ -105,6 +119,7 @@
         <xs:element ref="tns:sessionToken"/>
         <xs:element ref="tns:walletHistoryStatus"/>
         <xs:element maxOccurs="unbounded" ref="tns:transaction"/>
+        <xs:element ref="tns:totalNumberOfTransaction"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>

@@ -46,6 +46,7 @@ import com.fb.platform.wallet.manager.model.access.RefundStatusEnum;
 import com.fb.platform.wallet.manager.model.access.RevertRequest;
 import com.fb.platform.wallet.manager.model.access.RevertResponse;
 import com.fb.platform.wallet.manager.model.access.RevertStatusEnum;
+import com.fb.platform.wallet.model.SubWalletType;
 import com.fb.platform.wallet.model.Wallet;
 
 import com.fb.platform.wallet.service.WalletService;
@@ -137,10 +138,44 @@ public class WalletManagerImpl implements WalletManager {
 			response.setSessionToken(authentication.getToken());
 			
 			long walletId = walletHistoryRequest.getWalletId();
+			
 
 			//Wallet wallet = walletService.load(walletId);
 			
 			List<WalletTransaction> walletTransactionList = walletService.walletHistory(walletId, walletHistoryRequest.getFromDate(), walletHistoryRequest.getToDate(), null);
+			response.setTransactionList(walletTransactionList);
+			response.setWalletHistoryStatus(WalletHistoryStatusEnum.SUCCESS);
+
+		} catch (WalletNotFoundException e) {
+			logger.info("getWalletHistory: invalid wallet id " + walletHistoryRequest.getWalletId());
+			response.setWalletHistoryStatus(WalletHistoryStatusEnum.INVALID_WALLET);
+		} catch (PlatformException pe) {
+			logger.error("getWalletHistory: Error while getting history for wallet Id " + walletHistoryRequest.getWalletId(), pe);
+			response.setWalletHistoryStatus(WalletHistoryStatusEnum.ERROR_RETRIVING_WALLET_HISTORY);
+		}
+
+		return response;
+	}
+	
+	@Override
+	public WalletHistoryResponse getWalletHistoryPaged(
+			WalletHistoryRequest walletHistoryRequest) {
+		
+		logger.info("getWalletHistory: retrieving wallet history for user id " + walletHistoryRequest.getUserId());			
+		WalletHistoryResponse response = new WalletHistoryResponse();
+		
+		try {
+			// authenticate the session token and find out the userId
+			AuthenticationTO authentication = authenticationService.authenticate(walletHistoryRequest.getSessionToken());
+			if (authentication == null) {
+				// invalid session token
+				response.setWalletHistoryStatus(WalletHistoryStatusEnum.NO_SESSION);
+				return response;
+			}
+			response.setSessionToken(authentication.getToken());
+			
+			List<WalletTransaction> walletTransactionList = walletService.walletHistory(walletHistoryRequest.getUserId(),walletHistoryRequest.getClientId(),walletHistoryRequest.getPageNumber(), walletHistoryRequest.getResultsPerPage(), null);
+			
 			response.setTransactionList(walletTransactionList);
 			response.setWalletHistoryStatus(WalletHistoryStatusEnum.SUCCESS);
 
@@ -220,9 +255,6 @@ public class WalletManagerImpl implements WalletManager {
 			response.setTransactionId(transaction.getTransactionId());
 			response.setStatus(PayStatusEnum.SUCCESS);
 			
-		} catch (WrongWalletPassword e) {
-			logger.info("payFromWallet: Worng password wa provided to debit the wallet " + payRequest.getUserId());
-			response.setStatus(PayStatusEnum.WRONG_PASSWORD);
 		} catch (WalletNotFoundException e) {
 			logger.info("payFromWallet: No wallet for user id " + payRequest.getUserId());
 			response.setStatus(PayStatusEnum.INVALID_WALLET);
