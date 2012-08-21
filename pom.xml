@@ -370,7 +370,7 @@
     
     <modules>
     	<module>platformCommons</module>
-	<module>platformMailer</module>
+	    <module>platformMailer</module>
     	<module>platformCaching</module>
     	<module>catalogCommons</module>
         <module>catalogCore</module>
@@ -381,11 +381,11 @@
         <module>authenticationCore</module>
         <module>promotionCore</module>
 		<module>promotionAdminWS</module>
+		<module>promotionWS</module>
         <module>paybackCore</module>
         <module>paybackWS</module>
 		<module>eGVCore</module>
 		<module>eGVWS</module>
-		<module>promotionWS</module>
     </modules>
 
     <reporting>

@@ -77,7 +77,7 @@ public class PromotionConfigTest extends BaseTestCase {
 	public void applySameProdCondProdResult() {
 		Product p1 = new Product();
 		p1.setPrice(new BigDecimal(700));
-		p1.setMrpPrice(new BigDecimal(1200));
+		p1.setMrpPrice(new BigDecimal(700));
 		p1.setProductId(133568);
 
 		//Create OrderItems
@@ -86,8 +86,8 @@ public class PromotionConfigTest extends BaseTestCase {
 		oItem1.setProduct(p1);
 
 		Product p2 = new Product();
-		p2.setPrice(new BigDecimal(700));
-		p2.setMrpPrice(new BigDecimal(1100));
+		p2.setPrice(new BigDecimal(500));
+		p2.setMrpPrice(new BigDecimal(500));
 		p2.setProductId(92631);
 
 		//Create OrderItems
@@ -111,6 +111,12 @@ public class PromotionConfigTest extends BaseTestCase {
 
 		boolean applied = config.apply(orderReq1);
 		assertTrue(applied);
+		for (OrderItem orderItem : orderReq1.getOrderItems()) {
+			if (orderItem.getProduct().getProductId() == oItem1.getProduct().getProductId()) 
+				assertEquals(new BigDecimal("205"), orderItem.getTotalDiscount());
+			else if (orderItem.getProduct().getProductId() == oItem2.getProduct().getProductId())
+				assertEquals(new BigDecimal("295"), orderItem.getTotalDiscount());
+		}
 	}
 
 	@Test
@@ -154,7 +160,7 @@ public class PromotionConfigTest extends BaseTestCase {
 		boolean applied = config.apply(orderReq1);
 		assertTrue(applied);
 		for (OrderItem orderItem : orderReq1.getOrderItems()) {
-			assertEquals(new BigDecimal("666.33"), orderItem.getProduct().getDiscountedPrice());
+			assertEquals(new BigDecimal("101"), orderItem.getTotalDiscount());
 		}
 	}
 
