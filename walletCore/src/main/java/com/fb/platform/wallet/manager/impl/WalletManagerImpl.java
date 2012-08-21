@@ -31,6 +31,7 @@ import com.fb.platform.wallet.manager.model.access.WalletHistoryRequest;
 import com.fb.platform.wallet.manager.model.access.WalletHistoryResponse;
 import com.fb.platform.wallet.manager.model.access.WalletHistoryStatusEnum;
 import com.fb.platform.wallet.to.WalletTransaction;
+import com.fb.platform.wallet.to.WalletTransactionResultSet;
 import com.fb.platform.wallet.manager.model.access.FillWalletRequest;
 import com.fb.platform.wallet.manager.model.access.FillWalletResponse;
 import com.fb.platform.wallet.manager.model.access.FillWalletStatusEnum;
@@ -139,11 +140,9 @@ public class WalletManagerImpl implements WalletManager {
 			
 			long walletId = walletHistoryRequest.getWalletId();
 			
-
-			//Wallet wallet = walletService.load(walletId);
-			
-			List<WalletTransaction> walletTransactionList = walletService.walletHistory(walletId, walletHistoryRequest.getFromDate(), walletHistoryRequest.getToDate(), null);
-			response.setTransactionList(walletTransactionList);
+			WalletTransactionResultSet resultSet = walletService.walletHistory(walletId, walletHistoryRequest.getFromDate(), walletHistoryRequest.getToDate(), null);
+			response.setTransactionList(resultSet.getWalletTransactions());
+			response.setTotalTransactionSize(resultSet.getTotalTransactionSize());
 			response.setWalletHistoryStatus(WalletHistoryStatusEnum.SUCCESS);
 
 		} catch (WalletNotFoundException e) {
@@ -174,9 +173,10 @@ public class WalletManagerImpl implements WalletManager {
 			}
 			response.setSessionToken(authentication.getToken());
 			
-			List<WalletTransaction> walletTransactionList = walletService.walletHistory(walletHistoryRequest.getUserId(),walletHistoryRequest.getClientId(),walletHistoryRequest.getPageNumber(), walletHistoryRequest.getResultsPerPage(), null);
+			WalletTransactionResultSet resultSet = walletService.walletHistory(walletHistoryRequest.getUserId(),walletHistoryRequest.getClientId(),walletHistoryRequest.getPageNumber(), walletHistoryRequest.getResultsPerPage(), null);
 			
-			response.setTransactionList(walletTransactionList);
+			response.setTransactionList(resultSet.getWalletTransactions());
+			response.setTotalTransactionSize(resultSet.getTotalTransactionSize());
 			response.setWalletHistoryStatus(WalletHistoryStatusEnum.SUCCESS);
 
 		} catch (WalletNotFoundException e) {
