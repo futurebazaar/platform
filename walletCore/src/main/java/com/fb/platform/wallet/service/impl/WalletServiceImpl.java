@@ -1,6 +1,7 @@
 package com.fb.platform.wallet.service.impl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -18,6 +19,7 @@ import com.fb.platform.wallet.model.Wallet;
 import com.fb.platform.wallet.model.WalletGifts;
 import com.fb.platform.wallet.model.WalletSubTransaction;
 import com.fb.platform.wallet.to.WalletTransaction;
+import com.fb.platform.wallet.to.WalletTransactionResultSet;
 import com.fb.platform.wallet.service.WalletService;
 import com.fb.platform.wallet.service.exception.AlreadyRefundedException;
 import com.fb.platform.wallet.service.exception.InSufficientFundsException;
@@ -71,16 +73,20 @@ public class WalletServiceImpl implements WalletService {
 	}
 
 	@Override
-	public List<WalletTransaction> walletHistory(long walletId,
+	public WalletTransactionResultSet walletHistory(long walletId,
 			DateTime fromDate, DateTime toDate, SubWalletType subWalletType) {
 		log.info("getting wallet history for walletId  ::" + walletId ) ;
 		try{
+			WalletTransactionResultSet walletTransactionResultSet = new WalletTransactionResultSet();
 			Wallet wallet = load(walletId);
 			List<WalletTransaction> walletTransactions = new ArrayList<WalletTransaction>();
-			for (com.fb.platform.wallet.model.WalletTransaction walletTransaction : walletTransactionDao.walletHistory(wallet, fromDate, toDate)){
+			com.fb.platform.wallet.model.WalletTransactionResultSet walletTranResult = walletTransactionDao.walletHistory(wallet, fromDate, toDate);
+			for (com.fb.platform.wallet.model.WalletTransaction walletTransaction : walletTranResult.getWalletTransactions()){
 				walletTransactions.add(walletTransactionModeltoTO(walletTransaction));
 			}
-			return walletTransactions;
+			walletTransactionResultSet.setWalletTransactions(walletTransactions);
+			walletTransactionResultSet.setTotalTransactionSize(walletTranResult.getTotalNumberTransations());
+			return walletTransactionResultSet;
 		}catch (WalletNotFoundException e){
 			throw new WalletNotFoundException("Exception no wallet for this wallet id");
 		}catch (PlatformException e) {
@@ -89,16 +95,20 @@ public class WalletServiceImpl implements WalletService {
 	}
 	
 	@Override
-	public List<WalletTransaction> walletHistory(long userId, long clientId,
+	public WalletTransactionResultSet walletHistory(long userId, long clientId,
 			int pageNumber, int resultPerPage, SubWalletType subWalletType) {
 		log.info("getting wallet history for userId  ::" + userId ) ;
 		try{
+			WalletTransactionResultSet walletTransactionResultSet = new WalletTransactionResultSet();
 			Wallet wallet = load(userId,clientId,false);
 			List<WalletTransaction> walletTransactions = new ArrayList<WalletTransaction>();
-			for (com.fb.platform.wallet.model.WalletTransaction walletTransaction : walletTransactionDao.walletHistory(wallet, pageNumber, resultPerPage)){
+			com.fb.platform.wallet.model.WalletTransactionResultSet walletTranResult = walletTransactionDao.walletHistory(wallet, pageNumber, resultPerPage);
+			for (com.fb.platform.wallet.model.WalletTransaction walletTransaction : walletTranResult.getWalletTransactions()){
 				walletTransactions.add(walletTransactionModeltoTO(walletTransaction));
 			}
-			return walletTransactions;
+			walletTransactionResultSet.setWalletTransactions(walletTransactions);
+			walletTransactionResultSet.setTotalTransactionSize(walletTranResult.getTotalNumberTransations());
+			return walletTransactionResultSet;
 		}catch (WalletNotFoundException e){
 			throw new WalletNotFoundException("Exception no wallet for this wallet id");
 		}catch (PlatformException e) {

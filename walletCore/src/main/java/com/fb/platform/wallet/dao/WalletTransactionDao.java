@@ -1,6 +1,7 @@
 package com.fb.platform.wallet.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.joda.time.DateTime;
 
@@ -8,14 +9,15 @@ import com.fb.commons.to.Money;
 import com.fb.platform.wallet.model.Wallet;
 import com.fb.platform.wallet.model.WalletGifts;
 import com.fb.platform.wallet.model.WalletTransaction;
+import com.fb.platform.wallet.model.WalletTransactionResultSet;
 
 public interface WalletTransactionDao {
 	
 	public String insertTransaction(WalletTransaction walletTransaction);
 	
-	public List<WalletTransaction> walletHistory(Wallet wallet,DateTime fromDate,DateTime toDate);
+	public WalletTransactionResultSet walletHistory(Wallet wallet,DateTime fromDate,DateTime toDate);
 	
-	public List<WalletTransaction> walletHistory(Wallet wallet,int pageNumber,int resultPerPage);
+	public WalletTransactionResultSet walletHistory(Wallet wallet,int pageNumber,int resultPerPage);
 	
 	public WalletTransaction transactionById(long walletId,String transactionId);
 

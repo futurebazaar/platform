@@ -11,6 +11,7 @@ import com.fb.commons.to.Money;
 import com.fb.platform.wallet.model.SubWalletType;
 import com.fb.platform.wallet.model.Wallet;
 import com.fb.platform.wallet.to.WalletTransaction;
+import com.fb.platform.wallet.to.WalletTransactionResultSet;
 import com.fb.platform.wallet.service.exception.AlreadyRefundedException;
 import com.fb.platform.wallet.service.exception.InSufficientFundsException;
 import com.fb.platform.wallet.service.exception.InvalidTransactionIdException;
@@ -50,7 +51,7 @@ public interface WalletService {
 	 * @return List of Wallet Transactions
 	**/
 	@Transactional (propagation = Propagation.REQUIRED)
-	public List<WalletTransaction> walletHistory (long walletId,DateTime fromDate , DateTime toDate,SubWalletType subWalletType);
+	public WalletTransactionResultSet walletHistory (long walletId,DateTime fromDate , DateTime toDate,SubWalletType subWalletType);
 	
 	/**
 	 * Returns the Wallet Transactions associated with a wallet.
@@ -63,7 +64,7 @@ public interface WalletService {
 	 * @return List of Wallet Transactions
 	**/
 	@Transactional (propagation = Propagation.REQUIRED)
-	public List<WalletTransaction> walletHistory (long userId,long clientId,int pageNumber , int resultPerPage,SubWalletType subWalletType);
+	public WalletTransactionResultSet walletHistory (long userId,long clientId,int pageNumber , int resultPerPage,SubWalletType subWalletType);
 	
 	/**
 	 * Credit the wallet with the given amount.

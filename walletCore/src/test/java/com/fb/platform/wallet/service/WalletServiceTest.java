@@ -208,13 +208,14 @@ public class WalletServiceTest extends BaseTestCase {
 		assertNotNull(walletTransactionDebit1);
 		assertNotNull(walletTransactionDebit2);
 		
-		List<WalletTransaction> walletTransactions = walletService.walletHistory(wallet.getId(), null, null, null);
+		List<WalletTransaction> walletTransactions = walletService.walletHistory(wallet.getId(), null, null, null).getWalletTransactions();
 		assertNotNull(walletTransactions);
 		for (WalletTransaction walletTransaction : walletTransactions){
 			assertNotNull(walletTransaction);
 		}
-		List<WalletTransaction> walletTransactionsPage = walletService.walletHistory(6,-5,1,5,null);
+		List<WalletTransaction> walletTransactionsPage = walletService.walletHistory(6,-5,1,5,null).getWalletTransactions();
 		assertNotNull(walletTransactionsPage);
+		assertEquals(5, walletService.walletHistory(6,-5,1,5,null).getTotalTransactionSize());
 		for (WalletTransaction walletTransaction : walletTransactionsPage){
 			assertNotNull(walletTransaction);
 		}

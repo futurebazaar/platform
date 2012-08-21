@@ -475,7 +475,7 @@ public class WalletResource {
 		WalletHistoryResponse xmlWalletHistoryResponse = new WalletHistoryResponse();
 		xmlWalletHistoryResponse.setSessionToken(apiWalletHistoryResp.getSessionToken());
 		xmlWalletHistoryResponse.setWalletHistoryStatus(WalletHistoryStatus.fromValue(apiWalletHistoryResp.getWalletHistoryStatus().name() ));
-		xmlWalletHistoryResponse.setTotalNumberOfTransaction(apiWalletHistoryResp.getTransactionList().size());
+		xmlWalletHistoryResponse.setTotalNumberOfTransaction(apiWalletHistoryResp.getTotalTransactionSize());
 		
 		List<Transaction> transactionList = new ArrayList<Transaction>();
 		if(apiWalletHistoryResp.getTransactionList() != null){
