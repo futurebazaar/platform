@@ -174,7 +174,6 @@ public class WalletManagerImpl implements WalletManager {
 			response.setSessionToken(authentication.getToken());
 			
 			WalletTransactionResultSet resultSet = walletService.walletHistory(walletHistoryRequest.getUserId(),walletHistoryRequest.getClientId(),walletHistoryRequest.getPageNumber(), walletHistoryRequest.getResultsPerPage(), null);
-			
 			response.setTransactionList(resultSet.getWalletTransactions());
 			response.setTotalTransactionSize(resultSet.getTotalTransactionSize());
 			response.setWalletHistoryStatus(WalletHistoryStatusEnum.SUCCESS);

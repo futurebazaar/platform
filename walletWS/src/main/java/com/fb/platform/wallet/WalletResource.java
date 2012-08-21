@@ -203,6 +203,8 @@ public class WalletResource {
 			apiWalletHistoryReq.setUserId(xmlWalletHistoryReq.getUserId());
 			apiWalletHistoryReq.setClientId(xmlWalletHistoryReq.getClientId());
 			apiWalletHistoryReq.setSessionToken(xmlWalletHistoryReq.getSessionToken());
+			apiWalletHistoryReq.setPageNumber(xmlWalletHistoryReq.getPageNumber());
+			apiWalletHistoryReq.setResultsPerPage(xmlWalletHistoryReq.getResultsPerPage());
 			if(xmlWalletHistoryReq.getSubWallet() != null){
 				apiWalletHistoryReq.setSubWallet(SubWalletEnum.valueOf(xmlWalletHistoryReq.getSubWallet().value()));
 			}
@@ -476,7 +478,6 @@ public class WalletResource {
 		xmlWalletHistoryResponse.setSessionToken(apiWalletHistoryResp.getSessionToken());
 		xmlWalletHistoryResponse.setWalletHistoryStatus(WalletHistoryStatus.fromValue(apiWalletHistoryResp.getWalletHistoryStatus().name() ));
 		xmlWalletHistoryResponse.setTotalNumberOfTransaction(apiWalletHistoryResp.getTotalTransactionSize());
-		
 		List<Transaction> transactionList = new ArrayList<Transaction>();
 		if(apiWalletHistoryResp.getTransactionList() != null){
 			for (com.fb.platform.wallet.to.WalletTransaction apiTransaction : apiWalletHistoryResp.getTransactionList()){

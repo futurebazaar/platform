@@ -289,7 +289,6 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			List<WalletTransaction> walletTransactions = jdbcTemplate.query(GET_TRANSACTION_HISTORY_PAGINATED,
 					new Object[]{wallet.getId(),((pageNumber-1)*resultPerPage),resultPerPage},
 					new WalletTransactionMapper());
-			
 			for(WalletTransaction walletTransaction : walletTransactions){
 				List<WalletSubTransaction> walletSubTransactions = jdbcTemplate.query(GET_SUB_TRANSACTIONS_BY_TRANID,
 						new Object[] {walletTransaction.getId()},

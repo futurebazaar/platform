@@ -169,6 +169,10 @@ public class WalletManagerTest extends BaseTestCase{
 		
 		assertNotNull(response);
 		assertEquals("SUCCESS", response.getWalletHistoryStatus().toString());
+		assertEquals(4,response.getTotalTransactionSize());
+		assertNotNull(response.getTransactionList());
+		System.out.println("*********Getting wallet history :::::");
+		System.out.println("*********Getting wallet history TranID :::::" + response.getTransactionList().get(0).getTransactionId());
 		assertEquals(4,response.getTransactionList().size());
 	}
 

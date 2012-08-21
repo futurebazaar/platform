@@ -12,6 +12,7 @@ import com.fb.commons.to.Money;
 import com.fb.platform.wallet.model.SubWalletType;
 import com.fb.platform.wallet.model.Wallet;
 import com.fb.platform.wallet.to.WalletTransaction;
+import com.fb.platform.wallet.to.WalletTransactionResultSet;
 
 @SuppressWarnings("unused")
 public class WalletServiceTest extends BaseTestCase {
@@ -202,6 +203,8 @@ public class WalletServiceTest extends BaseTestCase {
 		WalletTransaction walletTransactionCr3 = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.REFUND.toString(), 0, 3, null,null);
 		WalletTransaction walletTransactionDebit1 = walletService.debit(6,-5,new Money(new BigDecimal("100.00")),30,testWalletPassword);
 		WalletTransaction walletTransactionDebit2 = walletService.debit(6,-5,new Money(new BigDecimal("100.00")),36,testWalletPassword);
+		WalletTransaction walletTransactionDebit3 = walletService.debit(6,-5,new Money(new BigDecimal("100.00")),36,testWalletPassword);
+		WalletTransaction walletTransactionDebit4 = walletService.debit(6,-5,new Money(new BigDecimal("100.00")),36,testWalletPassword);
 		assertNotNull(walletTransactionCr1);
 		assertNotNull(walletTransactionCr2);
 		assertNotNull(walletTransactionCr3);
@@ -213,9 +216,11 @@ public class WalletServiceTest extends BaseTestCase {
 		for (WalletTransaction walletTransaction : walletTransactions){
 			assertNotNull(walletTransaction);
 		}
-		List<WalletTransaction> walletTransactionsPage = walletService.walletHistory(6,-5,1,5,null).getWalletTransactions();
+		WalletTransactionResultSet walletTransactionResultSet = walletService.walletHistory(6,-5,1,5,null);
+		List<WalletTransaction> walletTransactionsPage = walletTransactionResultSet.getWalletTransactions();
 		assertNotNull(walletTransactionsPage);
-		assertEquals(5, walletService.walletHistory(6,-5,1,5,null).getTotalTransactionSize());
+		assertEquals(5,walletTransactionsPage.size());
+		assertEquals(7, walletTransactionResultSet.getTotalTransactionSize());
 		for (WalletTransaction walletTransaction : walletTransactionsPage){
 			assertNotNull(walletTransaction);
 		}
