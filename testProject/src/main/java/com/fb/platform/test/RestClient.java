@@ -458,7 +458,7 @@ public class RestClient {
 		nameSearchPromotionRequest.setIsActive(true);
 		nameSearchPromotionRequest.setSortOrder(SortOrder.ASCENDING);
 		
-		nameSearchPromotionRequest.setValidFrom(new DateTime(2012, 00, 02, 0, 0, 0));
+		nameSearchPromotionRequest.setValidFrom(new DateTime(2012, 01, 02, 0, 0, 0));
 		
 		nameSearchPromotionRequest.setValidTill(new DateTime(2012, 05, 30, 0, 0, 0));
 		
