@@ -7,13 +7,13 @@ import java.math.BigDecimal;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.datatype.DatatypeFactory;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.joda.time.DateTime;
 
 import com.fb.platform.auth._1_0.LoginRequest;
 import com.fb.platform.auth._1_0.LoginResponse;
@@ -139,7 +139,7 @@ public class PointsRestClient {
 	private static DisplayPointsRequest setDisplayPointsRequest() throws Exception {
 		DisplayPointsRequest request = new DisplayPointsRequest();
 		request.setActionCode(ActionCode.BURN_REVERSAL);
-		request.setTimestamp(DatatypeFactory.newInstance().newXMLGregorianCalendar(2012, 05, 27, 0, 0, 0, 0, 0));
+		request.setTimestamp(new DateTime(2012, 05, 27, 0, 0, 0));
 		request.setOrderAmount(new BigDecimal(500));
 		OrderItemRequest itemRequest = new OrderItemRequest();
 		itemRequest.setAmount(new BigDecimal(500));
@@ -206,7 +206,7 @@ public class PointsRestClient {
 		orderRequest.setAmount(new BigDecimal(500));
 		orderRequest.setReason("REST CLIENT");
 		orderRequest.setReferenceId("5052");
-		orderRequest.setTimestamp(DatatypeFactory.newInstance().newXMLGregorianCalendar(2012, 05, 27, 0, 0, 0, 0, 0));
+		orderRequest.setTimestamp(new DateTime(2012, 05, 27, 0, 0, 0));
 		
 		OrderItemRequest itemRequest = new OrderItemRequest();
 		itemRequest.setAmount(new BigDecimal(500));

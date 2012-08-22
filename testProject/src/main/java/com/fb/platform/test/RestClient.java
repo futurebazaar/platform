@@ -7,13 +7,11 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.datatype.DatatypeFactory;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -22,6 +20,7 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
+import org.joda.time.DateTime;
 
 import com.fb.platform.auth._1_0.AddUserRequest;
 import com.fb.platform.auth._1_0.AddUserResponse;
@@ -395,11 +394,8 @@ public class RestClient {
 		
 		promotionTO.setPromotionName("New Promotion");
 		
-		GregorianCalendar gregCal = new GregorianCalendar();
-		gregCal.set(2012, 01, 29, 00, 00, 00);
-		promotionTO.setValidFrom(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
-		gregCal.set(2013, 01, 29, 00, 00, 00);
-		promotionTO.setValidTill(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+		promotionTO.setValidFrom(new DateTime(2012, 01, 29, 00, 00, 00));
+		promotionTO.setValidTill(new DateTime(2013, 01, 29, 00, 00, 00));
 		promotionTO.setDescription("Test new promotion 2");
 		promotionTO.setIsActive(true);
 		promotionTO.setMaxUses(20);
@@ -462,14 +458,9 @@ public class RestClient {
 		nameSearchPromotionRequest.setIsActive(true);
 		nameSearchPromotionRequest.setSortOrder(SortOrder.ASCENDING);
 		
-		GregorianCalendar gregCal = new GregorianCalendar();
-		gregCal.clear();
-		gregCal.set(2012, 00, 02);
-		nameSearchPromotionRequest.setValidFrom(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+		nameSearchPromotionRequest.setValidFrom(new DateTime(2012, 00, 02, 0, 0, 0));
 		
-		gregCal.clear();
-		gregCal.set(2012, 05, 30);
-		nameSearchPromotionRequest.setValidTill(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+		nameSearchPromotionRequest.setValidTill(new DateTime(2012, 05, 30, 0, 0, 0));
 		
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
 
@@ -546,11 +537,8 @@ public class RestClient {
 		
 		updatePromotion.setPromotionName("End to End Test Promoti");
 		
-		GregorianCalendar gregCal = new GregorianCalendar();
-		gregCal.set(2012, 01, 22);
-		updatePromotion.setValidFrom(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
-		gregCal.set(2013, 01, 22);
-		updatePromotion.setValidTill(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+		updatePromotion.setValidFrom(new DateTime(2012, 01, 22, 0, 0, 0));
+		updatePromotion.setValidTill(new DateTime(2013, 01, 22, 0, 0, 0));
 		updatePromotion.setDescription("Test new promotion NEHA");
 		updatePromotion.setIsActive(false);
 		updatePromotion.setMaxUses(22);
