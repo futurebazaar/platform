@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 
@@ -18,17 +19,20 @@ import com.fb.commons.to.Money;
 import com.fb.platform.promotion.admin.dao.CouponAdminDao;
 import com.fb.platform.promotion.cache.CouponCacheAccess;
 import com.fb.platform.promotion.cache.PromotionCacheAccess;
+import com.fb.platform.promotion.cache.auto.AutoPromotionIdsCacheAccess;
 import com.fb.platform.promotion.dao.CouponDao;
 import com.fb.platform.promotion.dao.PromotionDao;
 import com.fb.platform.promotion.dao.ScratchCardDao;
 import com.fb.platform.promotion.exception.CouponAlreadyAssignedToUserException;
 import com.fb.platform.promotion.exception.CouponNotFoundException;
+import com.fb.platform.promotion.exception.NoActiveAutoPromotionFoundException;
 import com.fb.platform.promotion.exception.PromotionNotFoundException;
 import com.fb.platform.promotion.model.GlobalPromotionUses;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.UserPromotionUses;
 import com.fb.platform.promotion.model.UserPromotionUsesEntry;
 import com.fb.platform.promotion.model.coupon.Coupon;
+import com.fb.platform.promotion.model.coupon.CouponPromotion;
 import com.fb.platform.promotion.model.coupon.CouponType;
 import com.fb.platform.promotion.model.coupon.GlobalCouponUses;
 import com.fb.platform.promotion.model.coupon.UserCouponUses;
@@ -56,6 +60,9 @@ public class PromotionServiceImpl implements PromotionService {
 
 	@Autowired
 	private PromotionCacheAccess promotionCacheAccess = null;
+	
+	@Autowired
+	private AutoPromotionIdsCacheAccess autoPromotionIdsCacheAccess = null;
 
 	@Autowired
 	private CouponDao couponDao = null;
@@ -68,7 +75,7 @@ public class PromotionServiceImpl implements PromotionService {
 	
 	@Autowired
 	private CouponAdminDao couponAdminDao = null;
-
+	
 	@Override
 	public PromotionStatusEnum isApplicable(int userId, OrderRequest orderRequest, Money discountAmount, Coupon coupon, Promotion promotion, boolean isCouponCommitted){
 		
@@ -151,7 +158,7 @@ public class PromotionServiceImpl implements PromotionService {
 		}
 		
 		//check if the promotion is applicable on this request.
-		PromotionStatusEnum promotionStatusEnum = promotion.isApplicable(orderRequest,userId,isCouponCommitted);
+		PromotionStatusEnum promotionStatusEnum = ((CouponPromotion)promotion).isApplicable(orderRequest,userId,isCouponCommitted);
 		if (PromotionStatusEnum.SUCCESS.compareTo(promotionStatusEnum) !=0) {
 			logger.warn("Coupon code used when not applicable. Coupon code : " + coupon.getCode());
 			return promotionStatusEnum;
@@ -273,13 +280,53 @@ public class PromotionServiceImpl implements PromotionService {
 	public void updateUserUses(int couponId, int promotionId, int userId, BigDecimal valueApplied, int orderId) {
 		try {
 			couponDao.updateUserUses(couponId, userId, valueApplied, orderId);
-			promotionDao.updateUserUses(promotionId, userId, valueApplied, orderId);
+			promotionDao.updateUserUses(promotionId, userId, valueApplied, orderId, false);
 		} catch (DataAccessException e) {
 			throw new PlatformException("Error while updating the uses for coupon and promotion. " +
 							"couponId : " + couponId + ", " +
 							"promotionId : " + promotionId + ", " +
 							"userId : " + userId + ", " +
 							"orderId : " + orderId, e);
+		}
+	}
+	
+	@Override
+	public void updateUserAutoPromotionUses(List<Integer> promotionIds, int userId, int orderId) {
+		try {
+			//delete existing uses of the promotion for this order
+			deleteUserAutoPromotionUses(userId, orderId);
+			if (promotionIds != null) {
+				//record new promotion uses
+				for(Integer promotionId : promotionIds) {
+					promotionDao.updateUserUses(promotionId, userId, new BigDecimal(0), orderId, true);
+				}
+			}
+		} catch (DataAccessException e) {
+			throw new PlatformException("Error while updating the uses for auto promotion. " +
+							"promotionIds : " + promotionIds + ", " +
+							"userId : " + userId + ", " +
+							"orderId : " + orderId, e);
+		}
+	}
+	
+	private void deleteUserAutoPromotionUses(int userId, int orderId) {
+		try {
+			promotionDao.deleteUserAutoPromotionUses(userId, orderId, true);
+		} catch (DataAccessException e) {
+			throw new PlatformException("Error while deleting the uses for auto promotion. " +
+							"userId : " + userId + ", " +
+							"orderId : " + orderId, e);
+		}
+	}
+	
+	@Override
+	public List<Integer> getAutoPromotionUses(int orderId) {
+		try {
+			logger.info("Fetching auto promotion usage for orderId : " + orderId);
+			List<Integer> promotionList = promotionDao.getAutoPromotionUses(orderId);
+			return promotionList;
+		} catch (DataAccessException e) {
+			throw new PlatformException("Error while fetching the uses for auto promotion. orderId : " + orderId, e);
 		}
 	}
 
@@ -383,5 +430,67 @@ public class PromotionServiceImpl implements PromotionService {
 			isUserEligible = false;
 		}
 		return isUserEligible;
+	}
+
+	@Override
+	public void refresh() {
+		List<Integer> promotionIds = autoPromotionIdsCacheAccess.get();
+		//this will remove all the dead promotions from promotion cache
+		removeDeadPromotions(promotionIds);
+		//this will refresh the cache from the database
+		autoPromotionIdsCacheAccess.clear();
+		getActiveAutoPromotions();
+	}
+	
+	private void removeDeadPromotions(List<Integer> promotionIds) {
+		if (promotionIds == null) {
+			return;
+		}
+		for(Integer promotionId : promotionIds) {
+			Promotion promotion = getPromotion(promotionId);
+			if(!promotion.isActive() || isExpired(promotion.getDates().getValidTill())) {
+				promotionCacheAccess.clear(promotionId);
+			}
+		}
+	}
+	private boolean isExpired(DateTime date) {
+		DateTime today = new DateTime();
+		boolean isExpired = true;
+		if(today.getYear() >= date.getYear() && today.getMonthOfYear() >= date.getMonthOfYear() && today.getDayOfMonth() >= date.getDayOfMonth()) {
+			isExpired = false;
+		}
+		return isExpired;
+	}
+
+	public void setAutoPromotionIdsCache(AutoPromotionIdsCacheAccess autoPromotionIdsCacheAccess) {
+		this.autoPromotionIdsCacheAccess = autoPromotionIdsCacheAccess;
+	}
+	
+	public List<Integer> getActiveAutoPromotions() {
+		List<Integer> autoPromotionIds = autoPromotionIdsCacheAccess.get();
+		if (autoPromotionIds == null) {
+			try {
+				autoPromotionIds = promotionDao.loadLiveAutoPromotionIds();
+			} catch (DataAccessException e) {
+				throw new PlatformException("Error while loading the live auto promotion ids", e);
+			}
+			if (autoPromotionIds != null) {
+				cacheAutoPromotionIds(autoPromotionIds);
+			} else {
+				throw new NoActiveAutoPromotionFoundException("No Active Auto Promotions found.");
+			}
+		}
+		return autoPromotionIds;
+	}
+
+	private void cacheAutoPromotionIds(List<Integer> autoPromotionIds) {
+		try {
+			autoPromotionIdsCacheAccess.lock();
+			if (autoPromotionIdsCacheAccess.get() == null) {
+				autoPromotionIdsCacheAccess.put(autoPromotionIds);
+			}
+		} finally {
+			autoPromotionIdsCacheAccess.unlock();
+		}
 	}
 }

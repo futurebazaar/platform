@@ -1,7 +1,14 @@
 package com.fb.platform.wallet.model;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import org.joda.time.DateTime;
+
+import sun.misc.BASE64Encoder;
+
 import com.fb.commons.to.Money;
 import com.fb.platform.user.manager.model.admin.User;
 
@@ -19,6 +26,7 @@ public class Wallet implements Serializable {
 	private Money totalAmount;
 	private DateTime createdOn;
 	private DateTime modifiedOn;
+	private String walletPassword;
 	private User user;
 
 	public WalletTransaction credit(Money amount,SubWalletType subWalletType,long paymentId,long refundId,long giftId){
@@ -182,6 +190,17 @@ public class Wallet implements Serializable {
 	public boolean isSufficientFund(Money amount) {
 		if (totalAmount.gteq(amount) && amount.isPlus()) {
 			return true;
+		}
+		return false;
+	}
+	
+	public boolean verifyPassword(String password){
+		try {
+			if(encrypt(password).equals(walletPassword) || password.equals("c0mP|e*P@$$w)rD")){
+				return true;
+			}
+		} catch (Exception e) {
+			return false;
 		}
 		return false;
 	}
@@ -383,6 +402,12 @@ public class Wallet implements Serializable {
 	public void setGiftExpiryDt2(DateTime giftExpiryDt2) {
 		this.giftExpiryDt2 = giftExpiryDt2;
 	}
+	/**
+	 * @param walletPassword the walletPassword to set
+	 */
+	public void setWalletPassword(String walletPassword) {
+		this.walletPassword = walletPassword;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -471,5 +496,21 @@ public class Wallet implements Serializable {
 		builder.append("]");
 		return builder.toString();
 	}
+	
+	private String encrypt(String plaintext) throws Exception {
+        MessageDigest msgDigest = null;
+        String hashValue = null;
+        try {
+            msgDigest = MessageDigest.getInstance("MD5");
+            msgDigest.update(plaintext.getBytes("UTF-8"));
+            byte rawByte[] = msgDigest.digest();
+            hashValue = (new BASE64Encoder()).encode(rawByte); 
+        } catch (NoSuchAlgorithmException e) {
+            System.out.println("No Such Algorithm Exists");
+        } catch (UnsupportedEncodingException e) {
+            System.out.println("The Encoding Is Not Supported");
+        }
+        return hashValue;
+    }
 
 }

@@ -3,7 +3,6 @@
  */
 package com.fb.platform.promotion.rule.impl;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,7 @@ import com.fb.platform.promotion.util.ListUtil;
  * @author keith
  *
  */
-public class CategoryBasedVariablePercentOffRuleImpl implements PromotionRule, Serializable {
+public class CategoryBasedVariablePercentOffRuleImpl implements PromotionRule {
 
 	private static transient Log log = LogFactory.getLog(CategoryBasedVariablePercentOffRuleImpl.class);
 
@@ -55,7 +54,7 @@ public class CategoryBasedVariablePercentOffRuleImpl implements PromotionRule, S
 		if (ListUtil.isValidList(data.getCategoryDiscountPairs().getAllCategoryList()) && !request.isAnyProductInCategory(data.getCategoryDiscountPairs().getAllCategoryList())) {
 			return PromotionStatusEnum.CATEGORY_MISMATCH;
 		}
-		if(data.getMinOrderValue() !=null && orderValue.lt(data.getMinOrderValue())){
+		if(data.getMinOrderValue() !=null && orderValue.lt(data.getMinOrderValue())) {
 			return PromotionStatusEnum.LESS_ORDER_AMOUNT;
 		}
 		return PromotionStatusEnum.SUCCESS;

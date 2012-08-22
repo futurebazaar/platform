@@ -8,7 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.logging.Log;
@@ -32,6 +34,7 @@ import com.fb.platform.wallet.model.WalletGifts;
 import com.fb.platform.wallet.model.WalletGiftsHistory;
 import com.fb.platform.wallet.model.WalletSubTransaction;
 import com.fb.platform.wallet.model.WalletTransaction;
+import com.fb.platform.wallet.model.WalletTransactionResultSet;
 import com.fb.platform.wallet.service.exception.InvalidTransactionIdException;
 import com.fb.platform.wallet.service.exception.WalletRefundMismatchException;
 import com.fb.platform.wallet.service.exception.WorngRefundIdException;
@@ -107,6 +110,19 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			+ "transaction_date, "
 			+ "transaction_note "
 			+ "from wallets_transaction where wallet_id= ? and transaction_date between ? and ?" ;
+	
+	private final String GET_TRANSACTION_HISTORY_PAGINATED = "Select "
+			+ "id, "
+			+ "transaction_id, "
+			+ "wallet_id, "
+			+ "amount, "
+			+ "transaction_type, "
+			+ "transaction_date, "
+			+ "transaction_note "
+			+ "from wallets_transaction where wallet_id= ? LIMIT ?,?" ;
+	
+	private final String GET_TOTAL_TRANSACTION_WALLETID = "Select count(*) "
+			+ "from wallets_transaction where wallet_id= ?" ;
 	
 	private final String GET_SUB_TRANSACTIONS_BY_REFUNDID = "Select "
 			+ "id, "
@@ -184,6 +200,8 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 	
 	private final String UPDATE_WALLET_GIFT_REMAINING_EXPIRE = "update wallets_gifts set amount_remaining = ? ,is_expired = 1 where id = ?";
 	
+	private final String UPDATE_PAYMENT_REFUNDS = "update payments_refund set amount = ? ,modified_on = CURDATE() , status =? where id = ?";
+	
 	@Override
 	public String insertTransaction(final WalletTransaction walletTransaction) {
 		try{
@@ -234,8 +252,9 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 		}
 	}
 	@Override
-	public List<WalletTransaction> walletHistory(Wallet wallet,DateTime fromDateTime, DateTime toDate) {
+	public WalletTransactionResultSet walletHistory(Wallet wallet,DateTime fromDateTime, DateTime toDate) {
 		try {
+			WalletTransactionResultSet walletTransactionResultSet = new WalletTransactionResultSet();
 			Timestamp fromdate = (fromDateTime != null) ? new Timestamp(fromDateTime.getMillis()) : new Timestamp(DateTime.now().minusYears(1).getMillis());
 			Timestamp todate = toDate != null ? new Timestamp(toDate.getMillis()) : new Timestamp(DateTime.now().getMillis());
 			List<WalletTransaction> walletTransactions = jdbcTemplate.query(GET_TRANSACTION_HISTORY,
@@ -248,7 +267,39 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 						new WalletSubTransactionMapper());
 				walletTransaction.getWalletSubTransaction().addAll(walletSubTransactions);
 			}
-			return walletTransactions;
+			int resultSize = jdbcTemplate.queryForInt(GET_TOTAL_TRANSACTION_WALLETID,new Object[] {wallet.getId()}); 
+			walletTransactionResultSet.setTotalNumberTransations(resultSize);
+			walletTransactionResultSet.setWalletTransactions(walletTransactions);
+			return walletTransactionResultSet;
+		} catch (Exception e) {
+			log.error("An exception while fetching the wallet history" + e);
+			throw new PlatformException("An exception while fetching wallet history "+e);
+		}
+	}
+	
+
+	@Override
+	public WalletTransactionResultSet walletHistory(Wallet wallet, int pageNumber,
+			int resultPerPage) {
+		try {
+			WalletTransactionResultSet walletTransactionResultSet = new WalletTransactionResultSet();
+			if(pageNumber <= 0){
+				pageNumber = 1;
+			}
+			List<WalletTransaction> walletTransactions = jdbcTemplate.query(GET_TRANSACTION_HISTORY_PAGINATED,
+					new Object[]{wallet.getId(),((pageNumber-1)*resultPerPage),resultPerPage},
+					new WalletTransactionMapper());
+			
+			for(WalletTransaction walletTransaction : walletTransactions){
+				List<WalletSubTransaction> walletSubTransactions = jdbcTemplate.query(GET_SUB_TRANSACTIONS_BY_TRANID,
+						new Object[] {walletTransaction.getId()},
+						new WalletSubTransactionMapper());
+				walletTransaction.getWalletSubTransaction().addAll(walletSubTransactions);
+			}
+			int resultSize = jdbcTemplate.queryForInt(GET_TOTAL_TRANSACTION_WALLETID,new Object[] {wallet.getId()}); 
+			walletTransactionResultSet.setTotalNumberTransations(resultSize);
+			walletTransactionResultSet.setWalletTransactions(walletTransactions);
+			return walletTransactionResultSet;
 		} catch (Exception e) {
 			log.error("An exception while fetching the wallet history" + e);
 			throw new PlatformException("An exception while fetching wallet history "+e);
@@ -507,13 +558,15 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 		Money amountToDebit = walletSubTransaction.getAmount();
 		List<WalletRefundCredit> walletRefundCredits = jdbcTemplate.query(GET_WALLET_REFUND_CREDIT_WALLET_ID, new Object[] {walletId},new WalletRefundCreditMapper());
 		for(WalletRefundCredit walletRefundCredit : walletRefundCredits){
-			if(walletRefundCredit.getAmountRemaining().gteq(amountToDebit)){
+			if(walletRefundCredit.getAmountRemaining().gt(amountToDebit)){
 				insertWalletRefundDebit(walletId,walletSubTransaction,amountToDebit,walletRefundCredit.getId());
 				updateWalletRefundCredit(walletRefundCredit.getId(), walletRefundCredit.getAmountRemaining().minus(amountToDebit));
+				updatePaymetRefund(walletSubTransaction.getRefundId(), walletRefundCredit.getAmountRemaining().minus(amountToDebit) ,"wallet");
 				amountToDebit = amountToDebit.minus(amountToDebit);
 			}else{
 				insertWalletRefundDebit(walletId,walletSubTransaction,walletRefundCredit.getAmountRemaining(),walletRefundCredit.getId());
 				updateWalletRefundCredit(walletRefundCredit.getId(),new Money(new BigDecimal("0.00")));
+				updatePaymetRefund(walletSubTransaction.getRefundId(), new Money(new BigDecimal("0.00")) ,"closed");
 				amountToDebit = amountToDebit.minus(walletRefundCredit.getAmountRemaining());
 			}
 			if(amountToDebit.lteq(new Money(new BigDecimal("0.00")))){
@@ -529,6 +582,10 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 	}
 	private void updateWalletRefundCredit(long walletRefundCreditId,Money amount) {
 		jdbcTemplate.update(UPDATE_WALLET_REFUND_CREDIT,new Object[] {amount.getAmount(),walletRefundCreditId});		
+	}
+	
+	private void updatePaymetRefund(long refundId, Money amount , String status) {
+		jdbcTemplate.update(UPDATE_PAYMENT_REFUNDS,new Object[] {amount.getAmount(),status,refundId});		
 	}
 	@Override
 	public List<WalletGifts> getWalletGifts(long walletId){
@@ -574,4 +631,5 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 		}
 		
 	}
+
 }

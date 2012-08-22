@@ -24,4 +24,5 @@
     <bean id="walletManager" class="com.fb.platform.wallet.manager.impl.WalletManagerImpl">
     	<property name="authenticationService" ref="authenticationService"></property>
     </bean>
+    
 </beans>

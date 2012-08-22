@@ -461,18 +461,18 @@
     <properties>
     	<platform.version>1.0-SNAPSHOT</platform.version>
         <dao.framework>jdbc</dao.framework>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<junit.version>4.8.2</junit.version>
-		<spring.version>3.0.5.RELEASE</spring.version>
-		<spring.security.version>3.0.5.RELEASE</spring.security.version>
-		<jersey.version>1.11-b04</jersey.version>
-		<google.gson.version>1.7.1</google.gson.version>
-		<servlet.version>2.5</servlet.version>
-		<log4j.version>1.2.16</log4j.version>
-		<commons.dbcp.version>1.2.2</commons.dbcp.version>
-		<commons.lang.version>2.6</commons.lang.version>
-		<commons.io.version>2.3</commons.io.version>
-		<cglib.version>2.2.2</cglib.version>
+	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<junit.version>4.8.2</junit.version>
+	<spring.version>3.0.5.RELEASE</spring.version>
+	<spring.security.version>3.0.5.RELEASE</spring.security.version>
+	<jersey.version>1.11-b04</jersey.version>
+	<google.gson.version>1.7.1</google.gson.version>
+	<servlet.version>2.5</servlet.version>
+	<log4j.version>1.2.16</log4j.version>
+	<commons.dbcp.version>1.2.2</commons.dbcp.version>
+	<commons.lang.version>2.6</commons.lang.version>
+	<commons.io.version>2.3</commons.io.version>
+	<cglib.version>2.2.2</cglib.version>
 
         <!-- Testing dependency versions -->
         <jmock.version>1.1.0</jmock.version>

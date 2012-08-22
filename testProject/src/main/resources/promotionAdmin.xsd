@@ -47,6 +47,9 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
       	<xs:enumeration value="BUY_X_BRAND_GET_Y_RS_OFF_ON_Z_PRODUCT"/>
       	<xs:enumeration value="BUY_WORTH_X_GET_Y_PERCENT_OFF_ON_Z_CATEGORY"/>
       	<xs:enumeration value="FIRST_PURCHASE_BUY_WORTH_X_GET_Y_RS_OFF"/>
+      	<xs:enumeration value="BUY_X_QUANTITY_GET_VARIABLE_PERCENT_OFF"/>
+      	<xs:enumeration value="CATEGORY_BASED_VARIABLE_PERCENT_OFF"/>
+      	<xs:enumeration value="MONTHLY_DISCOUNT_RS_OFF"/>
 	</xs:restriction>
   </xs:simpleType>
   
@@ -79,6 +82,8 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
       	<xs:enumeration value="PRODUCT_DISCOUNTED_VALUE"/>
       	<xs:enumeration value="CATEGORY_INCLUDE_LIST"/>
       	<xs:enumeration value="CATEGORY_EXCLUDE_LIST"/>
+      	<xs:enumeration value="VARIABLE_DISCOUNT_PERCENTAGE"/>
+      	<xs:enumeration value="NUMBER_OF_TIMES_IN_MONTH"/>
 	</xs:restriction>
   </xs:simpleType>
  
@@ -420,6 +425,7 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
       	<xs:enumeration value="NO_SESSION"/>
       	<xs:enumeration value="NO_DATA_FOUND"/>
       	<xs:enumeration value="INTERNAL_ERROR"/>
+      	<xs:enumeration value="INVALID_USER"/>
       	<xs:enumeration value="INSUFFICIENT_DATA"/>
 	</xs:restriction>
   </xs:simpleType>
@@ -551,4 +557,54 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
 	</xs:restriction>
   </xs:simpleType>
   
+	<xs:element name="searchScratchCardRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="promotionAdmin:scratchCardNumber" />
+				<xs:element ref="promotionAdmin:sessionToken" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="scratchCardNumber" type="xs:string" />
+
+	<xs:element name="searchScratchCardResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="promotionAdmin:scratchCardNumber" />
+				<xs:element ref="promotionAdmin:sessionToken" />
+				<xs:element ref="promotionAdmin:claimStatus" />
+				<xs:element ref="promotionAdmin:email" />
+				<xs:element ref="promotionAdmin:mobile" />
+				<xs:element ref="promotionAdmin:name" />
+				<xs:element ref="promotionAdmin:couponCode" />
+				<xs:element ref="promotionAdmin:store" />
+				<xs:element ref="promotionAdmin:usedDate" />
+				<xs:element ref="promotionAdmin:timeStamp" />
+				<xs:element ref="promotionAdmin:userId" />
+				<xs:element ref="promotionAdmin:searchScratchCardStatusEnum" />
+				<xs:element ref="promotionAdmin:errorCause" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="claimStatus" type="xs:string" />
+	<xs:element name="email" type="xs:string" />
+	<xs:element name="mobile" type="xs:string" />
+	<xs:element name="name" type="xs:string" />
+	<xs:element name="store" type="xs:string" />
+	<xs:element name="usedDate" type="xs:dateTime" />
+	<xs:element name="timeStamp" type="xs:dateTime" />
+	
+
+	<xs:element name="searchScratchCardStatusEnum"
+		type="promotionAdmin:searchScratchCardStatusEnum" />
+	<xs:simpleType name="searchScratchCardStatusEnum">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="SUCCESS" />
+			<xs:enumeration value="NO_SESSION" />
+			<xs:enumeration value="INTERNAL_ERROR" />
+			<xs:enumeration value="INVALID_USER" />
+			<xs:enumeration value="NO_SCRATCH_CARD_FOUND" />
+		</xs:restriction>
+	</xs:simpleType>
 </xs:schema>

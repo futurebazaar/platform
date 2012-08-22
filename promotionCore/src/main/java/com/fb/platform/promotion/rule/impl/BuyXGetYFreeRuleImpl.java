@@ -3,7 +3,6 @@
  */
 package com.fb.platform.promotion.rule.impl;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +15,6 @@ import com.fb.platform.promotion.rule.config.RuleConfigDescriptorEnum;
 import com.fb.platform.promotion.rule.config.RuleConfigItemDescriptor;
 import com.fb.platform.promotion.rule.config.RuleConfiguration;
 import com.fb.platform.promotion.rule.metadata.BuyXGetYFreeRuleMetadata;
-import com.fb.platform.promotion.rule.metadata.RuleConfigItemMetadata;
 import com.fb.platform.promotion.rule.metadata.RuleConfigMetadata;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.Product;
@@ -26,7 +24,7 @@ import com.fb.platform.promotion.to.PromotionStatusEnum;
  * @author vinayak
  *
  */
-public class BuyXGetYFreeRuleImpl implements PromotionRule, Serializable{
+public class BuyXGetYFreeRuleImpl implements PromotionRule {
 
 	private static transient Log log = LogFactory.getLog(BuyWorthXGetYRsOffRuleImpl.class);
 	private Product xProduct;

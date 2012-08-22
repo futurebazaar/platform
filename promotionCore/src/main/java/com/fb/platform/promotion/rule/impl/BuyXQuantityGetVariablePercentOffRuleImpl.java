@@ -3,7 +3,6 @@
  */
 package com.fb.platform.promotion.rule.impl;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +17,8 @@ import com.fb.platform.promotion.rule.RulesEnum;
 import com.fb.platform.promotion.rule.config.RuleConfigDescriptorEnum;
 import com.fb.platform.promotion.rule.config.RuleConfigItemDescriptor;
 import com.fb.platform.promotion.rule.config.RuleConfiguration;
-import com.fb.platform.promotion.rule.config.data.BuyWorthXGetYPercentOffRuleData;
 import com.fb.platform.promotion.rule.config.data.BuyXQuantityGetVariablePercentOffRuleData;
-import com.fb.platform.promotion.rule.config.type.QuantityDiscountMap;
 import com.fb.platform.promotion.rule.metadata.BuyXQuantityGetVariablePercentOffRuleMetadata;
-import com.fb.platform.promotion.rule.metadata.RuleConfigItemMetadata;
 import com.fb.platform.promotion.rule.metadata.RuleConfigMetadata;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.PromotionStatusEnum;
@@ -32,7 +28,7 @@ import com.fb.platform.promotion.util.ListUtil;
  * @author keith
  *
  */
-public class BuyXQuantityGetVariablePercentOffRuleImpl implements PromotionRule, Serializable {
+public class BuyXQuantityGetVariablePercentOffRuleImpl implements PromotionRule {
 
 	private static transient Log log = LogFactory.getLog(BuyXQuantityGetVariablePercentOffRuleImpl.class);
 
@@ -56,10 +52,10 @@ public class BuyXQuantityGetVariablePercentOffRuleImpl implements PromotionRule,
 		if (ListUtil.isValidList(data.getIncludeCategoryList()) && !request.isAnyProductInCategory(data.getIncludeCategoryList())) {
 			return PromotionStatusEnum.CATEGORY_MISMATCH;
 		}
-		if (ListUtil.isValidList(data.getExcludeCategoryList()) && request.isAnyProductInCategory(data.getExcludeCategoryList())){
+		if (ListUtil.isValidList(data.getExcludeCategoryList()) && request.isAnyProductInCategory(data.getExcludeCategoryList())) {
 			return PromotionStatusEnum.CATEGORY_MISMATCH;
 		}
-		if (ListUtil.isValidList(data.getBrands()) && !request.isAnyProductInBrand(data.getBrands())){
+		if (ListUtil.isValidList(data.getBrands()) && !request.isAnyProductInBrand(data.getBrands())) {
 			return PromotionStatusEnum.BRAND_MISMATCH;
 		}
 		Money orderValue = request.getOrderValueForRelevantProducts(data.getBrands(), data.getIncludeCategoryList(), data.getExcludeCategoryList());
@@ -88,11 +84,11 @@ public class BuyXQuantityGetVariablePercentOffRuleImpl implements PromotionRule,
 		Money discountCalculated = (orderVal.times(discountPercentage.doubleValue())).div(100);
 		log.info("Calculated Discount on Order Value = " + discountCalculated.toString());
 		Money finalDiscountAmount = new Money(BigDecimal.ZERO);
-		if(data.getMaxDiscountPerUse() != null && discountCalculated.gt(data.getMaxDiscountPerUse())){
+		if(data.getMaxDiscountPerUse() != null && discountCalculated.gt(data.getMaxDiscountPerUse())) {
 			log.info("Maximum discount is less than the calculated discount on this order. Max Discount = "+ data.getMaxDiscountPerUse() +" and Discount calculated = "+discountCalculated);
 			finalDiscountAmount = finalDiscountAmount.plus(data.getMaxDiscountPerUse());
 		}
-		else{
+		else {
 			log.info("Discount amount calculated is the final discount on order. Discount calculated = "+discountCalculated);
 			finalDiscountAmount = finalDiscountAmount.plus(discountCalculated);
 		}

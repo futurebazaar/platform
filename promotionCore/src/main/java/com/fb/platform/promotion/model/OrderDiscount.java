@@ -13,6 +13,7 @@ public class OrderDiscount implements Serializable {
 
 	private OrderRequest orderRequest = null;
 	private BigDecimal orderDiscountValue = BigDecimal.ZERO;
+	private List<Integer> promotions = new ArrayList<Integer>();
 	
 	public OrderRequest getOrderRequest() {
 		return orderRequest;
@@ -75,4 +76,11 @@ public class OrderDiscount implements Serializable {
 		return orderDiscount;
 	}
 
+	public void promotionApplied(int promotionId) {
+		this.promotions.add(promotionId);
+	}
+
+	public List<Integer> getAppliedPromotions() {
+		return this.promotions;
+	}
 }

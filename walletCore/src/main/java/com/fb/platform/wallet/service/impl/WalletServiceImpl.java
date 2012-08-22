@@ -1,8 +1,11 @@
 package com.fb.platform.wallet.service.impl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,12 +19,14 @@ import com.fb.platform.wallet.model.Wallet;
 import com.fb.platform.wallet.model.WalletGifts;
 import com.fb.platform.wallet.model.WalletSubTransaction;
 import com.fb.platform.wallet.to.WalletTransaction;
+import com.fb.platform.wallet.to.WalletTransactionResultSet;
 import com.fb.platform.wallet.service.WalletService;
 import com.fb.platform.wallet.service.exception.AlreadyRefundedException;
 import com.fb.platform.wallet.service.exception.InSufficientFundsException;
 import com.fb.platform.wallet.service.exception.InvalidTransactionIdException;
 import com.fb.platform.wallet.service.exception.RefundExpiredException;
 import com.fb.platform.wallet.service.exception.WalletNotFoundException;
+import com.fb.platform.wallet.service.exception.WrongWalletPassword;
 
 public class WalletServiceImpl implements WalletService {
 
@@ -32,8 +37,11 @@ public class WalletServiceImpl implements WalletService {
 	
 	private int refundExpiryDays;
 	
+	private Log log = LogFactory.getLog(WalletServiceImpl.class);
+	
 	@Override
 	public Wallet load(long walletId) throws WalletNotFoundException,PlatformException {
+		log.info("load walletid ::" + walletId);
 		try{
 			Wallet wallet = walletDao.load(walletId);
 			return walletReturnOperations(wallet);
@@ -49,6 +57,7 @@ public class WalletServiceImpl implements WalletService {
 	
 	private Wallet load(long userId,long clientId,boolean createNew) 
 			throws WalletNotFoundException,PlatformException {
+		log.info("load wallet for userId,clientId  ::" + userId +"," + clientId ) ;
 		try{
 			Wallet wallet = walletDao.load(userId,clientId,createNew);
 			if(wallet != null){
@@ -64,15 +73,42 @@ public class WalletServiceImpl implements WalletService {
 	}
 
 	@Override
-	public List<WalletTransaction> walletHistory(long walletId,
+	public WalletTransactionResultSet walletHistory(long walletId,
 			DateTime fromDate, DateTime toDate, SubWalletType subWalletType) {
+		log.info("getting wallet history for walletId  ::" + walletId ) ;
 		try{
+			WalletTransactionResultSet walletTransactionResultSet = new WalletTransactionResultSet();
 			Wallet wallet = load(walletId);
 			List<WalletTransaction> walletTransactions = new ArrayList<WalletTransaction>();
-			for (com.fb.platform.wallet.model.WalletTransaction walletTransaction : walletTransactionDao.walletHistory(wallet, fromDate, toDate)){
+			com.fb.platform.wallet.model.WalletTransactionResultSet walletTranResult = walletTransactionDao.walletHistory(wallet, fromDate, toDate);
+			for (com.fb.platform.wallet.model.WalletTransaction walletTransaction : walletTranResult.getWalletTransactions()){
 				walletTransactions.add(walletTransactionModeltoTO(walletTransaction));
 			}
-			return walletTransactions;
+			walletTransactionResultSet.setWalletTransactions(walletTransactions);
+			walletTransactionResultSet.setTotalTransactionSize(walletTranResult.getTotalNumberTransations());
+			return walletTransactionResultSet;
+		}catch (WalletNotFoundException e){
+			throw new WalletNotFoundException("Exception no wallet for this wallet id");
+		}catch (PlatformException e) {
+			throw new PlatformException("Exception while loading wallet transactions");
+		}
+	}
+	
+	@Override
+	public WalletTransactionResultSet walletHistory(long userId, long clientId,
+			int pageNumber, int resultPerPage, SubWalletType subWalletType) {
+		log.info("getting wallet history for userId  ::" + userId ) ;
+		try{
+			WalletTransactionResultSet walletTransactionResultSet = new WalletTransactionResultSet();
+			Wallet wallet = load(userId,clientId,false);
+			List<WalletTransaction> walletTransactions = new ArrayList<WalletTransaction>();
+			com.fb.platform.wallet.model.WalletTransactionResultSet walletTranResult = walletTransactionDao.walletHistory(wallet, pageNumber, resultPerPage);
+			for (com.fb.platform.wallet.model.WalletTransaction walletTransaction : walletTranResult.getWalletTransactions()){
+				walletTransactions.add(walletTransactionModeltoTO(walletTransaction));
+			}
+			walletTransactionResultSet.setWalletTransactions(walletTransactions);
+			walletTransactionResultSet.setTotalTransactionSize(walletTranResult.getTotalNumberTransations());
+			return walletTransactionResultSet;
 		}catch (WalletNotFoundException e){
 			throw new WalletNotFoundException("Exception no wallet for this wallet id");
 		}catch (PlatformException e) {
@@ -85,6 +121,10 @@ public class WalletServiceImpl implements WalletService {
 			String subWalletType, long paymentId, long refundId,
 			String gitfCoupon,DateTime giftExpiry) throws WalletNotFoundException,
 			PlatformException {
+		log.info("credit to wallet ::: " ) ;
+		log.info("walletId:" +walletId);
+		log.info("Amount::" + amount.getAmount());
+		log.info("subWalletType::" + subWalletType);
 		try {
 			WalletTransaction walletTransactionRes = new WalletTransaction();
 			Wallet wallet = load(walletId);
@@ -107,28 +147,34 @@ public class WalletServiceImpl implements WalletService {
 
 	@Override
 	public WalletTransaction debit(long userId,
-			long clientId, Money amount, long orderId)
-			throws WalletNotFoundException, InSufficientFundsException,
+			long clientId, Money amount, long orderId,String walletPassword)
+			throws WalletNotFoundException, InSufficientFundsException,WrongWalletPassword,
 			PlatformException {
+		log.info("debit from wallet ::: " ) ;
+		log.info("userIDId:" + userId);
+		log.info("Amount::" + amount.getAmount());
+		log.info("orderId::" + orderId);
 		try{
 			WalletTransaction walletTransactionRes = new WalletTransaction();
 			Wallet wallet = load(userId,clientId,false);
-			if(wallet.isSufficientFund(amount)){
-				com.fb.platform.wallet.model.WalletTransaction walletTransaction = wallet
-						.debit(amount, orderId);
-				walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(walletTransaction));
-				walletTransactionRes.setWallet(walletReturnOperations(walletDao.update(wallet)));
-				return walletTransactionRes;
-			}else{
-				throw new InSufficientFundsException("Insufficient fund in wallet");
-			} 			
+			//if(wallet.verifyPassword(walletPassword)){
+				if(wallet.isSufficientFund(amount)){
+					com.fb.platform.wallet.model.WalletTransaction walletTransaction = wallet
+							.debit(amount, orderId);
+					walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(walletTransaction));
+					walletTransactionRes.setWallet(walletReturnOperations(walletDao.update(wallet)));
+					return walletTransactionRes;
+				}else{
+					throw new InSufficientFundsException("Insufficient fund in wallet");
+				}
+			/*}else {
+				throw new WrongWalletPassword("Insufficient fund in wallet");
+			}*/
 		} catch (InSufficientFundsException e){
 			throw new InSufficientFundsException("Not enough fund in the wallet");
-		} 
-		catch (WalletNotFoundException e){
+		} catch (WalletNotFoundException e){
 			throw new WalletNotFoundException("No wallet with this wallet id");
-		}
-		catch (PlatformException e) {
+		} catch (PlatformException e) {
 			throw new PlatformException("No wallet with this wallet id");
 		}
 		
@@ -139,6 +185,11 @@ public class WalletServiceImpl implements WalletService {
 			long clientId, Money amount, long refundId, boolean ignoreExpiry)
 			throws WalletNotFoundException, AlreadyRefundedException,RefundExpiredException,InSufficientFundsException,
 			PlatformException {
+		log.info("refund from wallet ::: " ) ;
+		log.info("userID:" + userId);
+		log.info("Amount::" + amount.getAmount());
+		log.info("refundId::" + refundId);
+		
 		try {
 			WalletTransaction walletTransactionRes =  new WalletTransaction();
 			Wallet wallet = load(userId,clientId,false);
@@ -177,6 +228,16 @@ public class WalletServiceImpl implements WalletService {
 			long userId, long clientId, String transactionId,Money amount)
 			throws WalletNotFoundException, InvalidTransactionIdException,
 			PlatformException {
+		
+		log.info("]wallet transaction reversal::: " ) ;
+		log.info("userIDId:" + userId);
+		if (amount != null){
+			log.info("Amount::" + amount.getAmount());
+		}else{
+			log.info("Reversing total Amount for transaction" );
+		}
+		log.info("orderId::" + transactionId);
+		
 		try{
 			WalletTransaction walletTransactionRes = new WalletTransaction();
 			Wallet wallet = load(userId,clientId,false);
@@ -254,5 +315,27 @@ public class WalletServiceImpl implements WalletService {
 			}
 		}
 		return wallet;
+	}
+
+	@Override
+	public Wallet verifyWallet(long userId, long clientId, Money amount,
+			String password) throws WalletNotFoundException,
+			InSufficientFundsException, WrongWalletPassword, PlatformException {
+		try{
+			Wallet wallet = load(userId,clientId,false);
+			if(!wallet.verifyPassword(password)){
+				throw new WrongWalletPassword("Insufficient fund in wallet");
+			}
+			return wallet;
+		} catch (WrongWalletPassword e){
+			throw new WrongWalletPassword("The password provided por the wallet is incorrect");
+		}  
+		catch (WalletNotFoundException e){
+			throw new WalletNotFoundException("No wallet with this wallet id");
+		}
+		catch (PlatformException e) {
+			throw new PlatformException("No wallet with this wallet id");
+		}
+		
 	}
 }

@@ -12,10 +12,10 @@
   <xs:element name="giftAmount" type="xs:decimal"/>
   <xs:element name="totalAmount" type="xs:decimal"/>
   <xs:element name="refundableAmount" type="xs:decimal"/>
-  <xs:element name="giftExpiryAmt1" type="xs:decimal"/>
-  <xs:element name="giftExpiryAmt2" type="xs:decimal"/>
-  <xs:element name="giftExpiryDt1" type="xs:dateTime"/>
-  <xs:element name="giftExpiryDt2" type="xs:dateTime"/>  
+  <xs:element name="giftExpiryAmt1" type="xs:decimal" nillable="true"/>
+  <xs:element name="giftExpiryAmt2" type="xs:decimal" nillable="true"/>
+  <xs:element name="giftExpiryDt1" type="xs:dateTime" nillable="true"/>
+  <xs:element name="giftExpiryDt2" type="xs:dateTime" nillable="true"/>  
   <xs:element name="walletSummaryRequest">
     <xs:complexType>
       <xs:sequence>
@@ -68,6 +68,7 @@
   <xs:element name="transactionId" type="xs:string" nillable="true"/>
   <xs:element name="notes" type="xs:string"/>
   <xs:element name="amount" type="xs:decimal"/>
+  <xs:element name="walletBalance" type="xs:decimal"/>
   <xs:element name="toDate" type="xs:dateTime" nillable="true"/>
   <xs:element name="fromDate" type="xs:dateTime" nillable="true"/>
   <xs:element name="timestamp" type="xs:dateTime"/>
@@ -77,6 +78,9 @@
   <xs:element name="refundId" type="xs:long"/>
   <xs:element name="paymentReversalId" type="xs:long"/>
   <xs:element name="subWallet" type="tns:subWallet" nillable="true"/>
+  <xs:element name="pageNumber" type="xs:int"/>
+  <xs:element name="resultsPerPage" type="xs:int"/>
+  <xs:element name="totalNumberOfTransaction" type="xs:int"/>
     
   <xs:element name="walletHistoryRequest">
     <xs:complexType>
@@ -89,7 +93,18 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-
+<xs:element name="walletHistoryRequestPaginated">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:userId"/>
+        <xs:element ref="tns:clientId"/>
+        <xs:element ref="tns:subWallet"/>
+        <xs:element ref="tns:sessionToken"/>
+        <xs:element ref="tns:pageNumber"/>
+        <xs:element ref="tns:resultsPerPage"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
   <xs:simpleType name="subWallet">
     <xs:restriction base="xs:string">
       <xs:enumeration value="CASH"/>
@@ -104,6 +119,7 @@
         <xs:element ref="tns:sessionToken"/>
         <xs:element ref="tns:walletHistoryStatus"/>
         <xs:element maxOccurs="unbounded" ref="tns:transaction"/>
+        <xs:element ref="tns:totalNumberOfTransaction"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -197,7 +213,6 @@
         <xs:element ref="tns:sessionToken"/>
         <xs:element ref="tns:userId"/>
         <xs:element ref="tns:clientId"/>
-        <xs:element ref="tns:password"/>
         <xs:element ref="tns:orderId"/>
         <xs:element ref="tns:amount"/>
       </xs:sequence>
@@ -299,6 +314,41 @@
       <xs:enumeration value="BALANCE_UNAVAILABLE"/>
       <xs:enumeration value="INVALID_TRANSACTION_ID"/>
       <xs:enumeration value="FAILED_TRANSACTION"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:element name="verifyWalletRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:sessionToken"/>
+        <xs:element ref="tns:userId"/>
+        <xs:element ref="tns:clientId"/>
+        <xs:element ref="tns:amount"/>
+        <xs:element ref="tns:password"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+     
+  <xs:element name="verifyWalletResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:sessionToken"/>
+        <xs:element ref="tns:walletBalance"/>
+        <xs:element ref="tns:verifyWalletStatus"/>        
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="verifyWalletStatus" type="tns:verifyWalletStatus"/>
+  
+  <xs:simpleType name="verifyWalletStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INVALID_WALLET"/>
+      <xs:enumeration value="BALANCE_UNAVAILABLE"/>
+      <xs:enumeration value="WRONG_PASSWORD"/>
+      <xs:enumeration value="FAILED_TRANSACTION"/>      
     </xs:restriction>
   </xs:simpleType>
      

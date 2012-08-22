@@ -14,10 +14,10 @@ public class WalletDetails {
 	private BigDecimal giftAmount;
 	private BigDecimal totalAmount;
 	private Money refundableAmount;
-	private Money giftExpiryAmt1;
-	private DateTime giftExpiryDt1;
-	private Money giftExpiryAmt2;
-	private DateTime giftExpiryDt2;
+	private Money giftExpiryAmt1 = new Money(new BigDecimal("0.00"));
+	private DateTime giftExpiryDt1 = DateTime.now();
+	private Money giftExpiryAmt2 = new Money(new BigDecimal("0.00"));
+	private DateTime giftExpiryDt2 = DateTime.now();
 	
 
 	public long getWalletId(){

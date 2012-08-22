@@ -11,6 +11,7 @@ import org.springframework.mail.MailException;
 
 import com.fb.commons.PlatformException;
 import com.fb.commons.mail.exception.MailerException;
+import com.fb.commons.mail.exception.SmsException;
 import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
 import com.fb.platform.egv.exception.GiftVoucherAlreadyUsedException;
@@ -408,6 +409,12 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 
 		} catch (GiftVoucherNotFoundException e) {
 			response.setResponseStatus(SendPinResponseStatusEnum.INVALID_GIFT_VOUCHER_NUMBER);
+		} catch (SmsException e) {
+			logger.error("Problem Sending SMS ", e);
+			response.setResponseStatus(SendPinResponseStatusEnum.SMS_SEND_FAILURE);
+		} catch (MailException e) {
+			logger.error("Problem Sending Email", e);
+			response.setResponseStatus(SendPinResponseStatusEnum.EMAIL_SEND_FAILURE);
 		} catch (PlatformException e) {
 			response.setResponseStatus(SendPinResponseStatusEnum.INTERNAL_ERROR);
 		}

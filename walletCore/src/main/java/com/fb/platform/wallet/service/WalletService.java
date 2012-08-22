@@ -11,11 +11,13 @@ import com.fb.commons.to.Money;
 import com.fb.platform.wallet.model.SubWalletType;
 import com.fb.platform.wallet.model.Wallet;
 import com.fb.platform.wallet.to.WalletTransaction;
+import com.fb.platform.wallet.to.WalletTransactionResultSet;
 import com.fb.platform.wallet.service.exception.AlreadyRefundedException;
 import com.fb.platform.wallet.service.exception.InSufficientFundsException;
 import com.fb.platform.wallet.service.exception.InvalidTransactionIdException;
 import com.fb.platform.wallet.service.exception.RefundExpiredException;
 import com.fb.platform.wallet.service.exception.WalletNotFoundException;
+import com.fb.platform.wallet.service.exception.WrongWalletPassword;
 
 @Transactional
 public interface WalletService {
@@ -49,7 +51,20 @@ public interface WalletService {
 	 * @return List of Wallet Transactions
 	**/
 	@Transactional (propagation = Propagation.REQUIRED)
-	public List<WalletTransaction> walletHistory (long walletId,DateTime fromDate , DateTime toDate,SubWalletType subWalletType);
+	public WalletTransactionResultSet walletHistory (long walletId,DateTime fromDate , DateTime toDate,SubWalletType subWalletType);
+	
+	/**
+	 * Returns the Wallet Transactions associated with a wallet.
+	 * @param userId
+	 * @param clientId
+	 * @param pageNumber
+	 * @param resultPerPage
+	 * @throws WalletNotFoundException When no wallet is found matching the walletId.
+	 * @throws PlatformException When an unrecoverable error happens.
+	 * @return List of Wallet Transactions
+	**/
+	@Transactional (propagation = Propagation.REQUIRED)
+	public WalletTransactionResultSet walletHistory (long userId,long clientId,int pageNumber , int resultPerPage,SubWalletType subWalletType);
 	
 	/**
 	 * Credit the wallet with the given amount.
@@ -73,13 +88,15 @@ public interface WalletService {
 	 * @param clientId : Client Id though which the payment request is initiated.
 	 * @param amount : The amount to be debited to the wallet.
 	 * @param orderId : The order Id for which the wallet has to be credited.
+	 * @param walletPassword : The wallet password is required to debit the wallet
 	 * @throws WalletNotFoundException When no wallet is found matching the wallet.
 	 * @throws InSufficientFundsException When  wallet not having enough funds.
+	 * @throws WrongWalletPassword when the password to debit the wallet is invalid.
 	 * @throws PlatformException When an unrecoverable error happens.
 	 * @return WalletTransaction 
 	**/
 	@Transactional (propagation = Propagation.REQUIRED)
-	public WalletTransaction debit (long userId, long clientId , Money amount , long orderId) throws WalletNotFoundException,InSufficientFundsException ,PlatformException;
+	public WalletTransaction debit (long userId, long clientId , Money amount , long orderId,String walletPassword) throws WalletNotFoundException,InSufficientFundsException,WrongWalletPassword ,PlatformException;
 	
 	/**
 	 * Refund requested from the wallet.
@@ -110,5 +127,19 @@ public interface WalletService {
 	 * @return WalletTransaction 
 	**/
 	public WalletTransaction reverseTransaction(long userId, long clientId,String transactionId,Money amount) throws WalletNotFoundException,InvalidTransactionIdException ,PlatformException;
+
+	
+	/**
+	 * Verify the wallet for given amount and password.
+	 * @param userId : User Id of the for whom to debit the wallet.
+	 * @param clientId : Client Id though which the payment request is initiated.
+	 * @param amount : The amount to be debited to the wallet.
+	 * @param password : The wallet password is required to debit the wallet
+	 * @return Wallet
+	 * @throws WalletNotFoundException When no wallet is found matching the wallet.
+	 * @throws WrongWalletPassword when the password to debit the wallet is invalid.
+	 * @throws PlatformException When an unrecoverable error happens.
+	**/
+	public Wallet verifyWallet(long userId, long clientId, Money amount,String password)throws WalletNotFoundException,InSufficientFundsException,WrongWalletPassword ,PlatformException;
 	
 }

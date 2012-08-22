@@ -4,6 +4,7 @@
 package com.fb.platform.promotion.service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import com.fb.platform.promotion.exception.PromotionNotFoundException;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.scratchCard.ScratchCard;
+import com.fb.platform.promotion.product.to.RefreshAutoPromotionResponseStatusEnum;
 import com.fb.platform.promotion.to.ClearCouponCacheRequest;
 import com.fb.platform.promotion.to.ClearCouponCacheResponse;
 import com.fb.platform.promotion.to.ClearPromotionCacheRequest;
@@ -115,4 +117,43 @@ public interface PromotionService {
 	 * @return
 	 */
 	public PromotionStatusEnum isApplicable(int userId, int orderId, Money discountAmount, Coupon coupon, Promotion promotion, boolean isOrderCommitted);
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void refresh();
+
+	@Transactional(propagation=Propagation.REQUIRED)
+	public List<Integer> getActiveAutoPromotions();
+	
+	/**
+	 * Called when committing the autoPromotion. Records the users user of all the promotions.
+	 * Delete existing uses of any promotions already applied on the order.
+	 * @param promotionIds
+	 * @param userId
+	 * @param orderId
+	 */
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void updateUserAutoPromotionUses(List<Integer> promotionIds, int userId, int orderId);
+	
+	/**
+	 * 
+	 * @param userId
+	 * @param orderId
+	 * @return
+	 */
+	@Transactional(propagation=Propagation.REQUIRED)
+	public List<Integer> getAutoPromotionUses(int orderId);
+	
+	/**
+	 * 
+	 * @param userId
+	 * @param orderId
+	 * @return
+	 */
+	//@Transactional(propagation=Propagation.REQUIRED)
+	//public void deleteUserAutoPromotionUses(int userId, int orderId);
+	
 }

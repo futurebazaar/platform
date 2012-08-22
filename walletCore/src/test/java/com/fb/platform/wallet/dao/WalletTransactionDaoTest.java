@@ -88,8 +88,32 @@ public class WalletTransactionDaoTest extends BaseTestCase {
 		assertNotNull(walletRes);
 		assertEquals(new BigDecimal("50.00"), walletRes.getTotalAmount().getAmount());
 		
-		List<WalletTransaction> walletTransactions = walletTransactionDao.walletHistory(walletRes, DateTime.now().minusDays(20), DateTime.now());
+		List<WalletTransaction> walletTransactions = walletTransactionDao.walletHistory(walletRes, DateTime.now().minusDays(20), DateTime.now()).getWalletTransactions();
 		for (WalletTransaction wallTransaction : walletTransactions){
+			assertNotNull(wallTransaction);
+			assertNotNull(wallTransaction.getAmount());
+			for (WalletSubTransaction walletSubTransaction : wallTransaction.getWalletSubTransaction()){
+				assertNotNull(walletSubTransaction);
+				assertNotNull(walletSubTransaction.getAmount());
+				assertNotNull(walletSubTransaction.toString());
+				assertEquals(true, walletSubTransaction.equals(walletSubTransaction));
+			}
+		}
+		
+		List<WalletTransaction> walletTransactionspage = walletTransactionDao.walletHistory(walletRes, 1, 3).getWalletTransactions();
+		for (WalletTransaction wallTransaction : walletTransactionspage){
+			assertNotNull(wallTransaction);
+			assertNotNull(wallTransaction.getAmount());
+			for (WalletSubTransaction walletSubTransaction : wallTransaction.getWalletSubTransaction()){
+				assertNotNull(walletSubTransaction);
+				assertNotNull(walletSubTransaction.getAmount());
+				assertNotNull(walletSubTransaction.toString());
+				assertEquals(true, walletSubTransaction.equals(walletSubTransaction));
+			}
+		}
+		
+		List<WalletTransaction> walletTransactionspage1 = walletTransactionDao.walletHistory(walletRes, 1, 20).getWalletTransactions();
+		for (WalletTransaction wallTransaction : walletTransactionspage1){
 			assertNotNull(wallTransaction);
 			assertNotNull(wallTransaction.getAmount());
 			for (WalletSubTransaction walletSubTransaction : wallTransaction.getWalletSubTransaction()){
@@ -154,7 +178,7 @@ public class WalletTransactionDaoTest extends BaseTestCase {
 		assertNotNull(wallet2);
 		assertNotNull(wallet2.getId());
 		
-		List<WalletTransaction> walletTransactions = walletTransactionDao.walletHistory(wallet2, null, null);
+		List<WalletTransaction> walletTransactions = walletTransactionDao.walletHistory(wallet2, null, null).getWalletTransactions();
 		WalletTransaction wallTransaction = walletTransactionDao.transactionById(wallet2.getId(), transactionId);
 		assertNotNull(wallTransaction);
 		assertNotNull(walletTransactions);
