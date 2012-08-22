@@ -62,7 +62,8 @@ import javax.xml.bind.annotation.XmlType;
     "bwart",
     "meins",
     "trnsfrquan",
-    "matdoc"
+    "matdoc",
+    "segnum"
 })
 @XmlRootElement(name = "ZTINLA_DLVRY")
 public class ZTINLADLVRY {
@@ -87,6 +88,8 @@ public class ZTINLADLVRY {
     protected String trnsfrquan;
     @XmlElement(name = "MAT_DOC", required = true)
     protected String matdoc;
+    @XmlElement(name = "SEG_NUM", required = true)
+    protected int segnum;
     @XmlAttribute(name = "SEGMENT", required = true)
     protected int segment;
 
@@ -316,6 +319,30 @@ public class ZTINLADLVRY {
      */
     public String getMATDOC() {
         return matdoc;
+    }
+
+    /**
+     * Sets the value of the segnum property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setSEGNUM(int value) {
+        this.segnum = value;
+    }
+    
+    /**
+     * Gets the value of the segnum property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public int getSEGNUM() {
+        return segnum;
     }
 
     /**

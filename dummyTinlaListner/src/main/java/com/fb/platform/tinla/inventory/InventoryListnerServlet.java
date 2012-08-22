@@ -21,6 +21,7 @@ import org.apache.commons.logging.LogFactory;
 public class InventoryListnerServlet extends HttpServlet {
 
 	private static Log log = LogFactory.getLog(InventoryListnerServlet.class);
+	private static int postCounter = 0;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -30,6 +31,7 @@ public class InventoryListnerServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		log.info("Received Tinla message.");
+		postCounter++;
 		resp.setContentType("text/html");
 	    PrintWriter out = resp.getWriter();
 
@@ -86,6 +88,7 @@ public class InventoryListnerServlet extends HttpServlet {
 	    log.info("returnQuantity : " + req.getParameter("returnQuantity"));
 	    log.info("returnStorageLocation : " + req.getParameter("returnStorageLocation"));
 	    log.info("returnCategory : " + req.getParameter("returnCategory"));
+	    log.info("********************** COUNTER : " + postCounter);
 
 	    out.close();
 	    log.info("Sent success response to MoM module.");

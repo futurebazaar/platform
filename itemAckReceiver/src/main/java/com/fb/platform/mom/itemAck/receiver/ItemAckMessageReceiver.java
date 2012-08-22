@@ -84,7 +84,7 @@ public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 				}
 				log.info("Item ack delivered to tinla. Status code : " + statusCode);
 			} else {
-				log.info("Request not sent to tinla because plant id is blank : " + itemAck.toString());
+				log.info("Request not sent to tinla because order state is C : " + itemAck.toString());
 			}
 		} catch (UnsupportedEncodingException e) {
 			log.error("Error communicating with tinla on url : " + orderURL, e);

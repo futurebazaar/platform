@@ -81,6 +81,9 @@ public class InventoryMessageReceiver implements PlatformMessageReceiver {
 		if(inventoryTO.getSapIdoc() != null) {
 			parameters.add(new BasicNameValuePair("idocnumber", inventoryTO.getSapIdoc().getIdocNumber()));
 			parameters.add(new BasicNameValuePair("idocrefuid", inventoryTO.getSapIdoc().getRefUID()));
+			parameters.add(new BasicNameValuePair("segment", String.valueOf(inventoryTO.getSapIdoc().getSegmentNumber())));
+			parameters.add(new BasicNameValuePair("ponumber", inventoryTO.getSapIdoc().getPoNumber()));
+			parameters.add(new BasicNameValuePair("cangr", inventoryTO.getSapIdoc().getCanGr()));
 		}
 		parameters.add(new BasicNameValuePair("sender", "MOM"));
 

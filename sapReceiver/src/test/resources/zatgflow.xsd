@@ -57,12 +57,15 @@
   <xs:element name="RCVPRN" type="xs:string"/>
   <xs:element name="CREDAT" type="xs:int"/>
   <xs:element name="CRETIM" type="xs:int"/>
-  <xs:element name="LSP_NAME" type="xs:string"/>
   <xs:element name="SERIAL" type="xs:int"/>
   <xs:element name="ZATGFLOW">
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="MANDT"/>
+        <xs:element ref="LSP_NAME"/>
+        <xs:element ref="LSP_NOR"/>
+        <xs:element ref="LSP_UPD_DESCR"/>
+        <xs:element ref="ORD_STAT"/>
         <xs:element ref="SO_VBELN"/>
         <xs:element ref="SO_POSNR"/>
         <xs:element minOccurs="0" ref="VBELV"/>
@@ -174,4 +177,8 @@
   <xs:element name="ERDAT_DEL" type="xs:int"/>
   <xs:element name="ERNAM_DEL" type="xs:string"/>
   <xs:element name="MANDT" type="xs:int"/>
+  <xs:element name="LSP_NAME" type="xs:string"/>
+  <xs:element name="LSP_NOR" type="xs:string"/>
+  <xs:element name="LSP_UPD_DESCR" type="xs:string"/>
+  <xs:element name="ORD_STAT" type="xs:string"/>
 </xs:schema>

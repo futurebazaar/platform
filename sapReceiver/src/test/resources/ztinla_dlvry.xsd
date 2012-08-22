@@ -78,6 +78,7 @@
         <xs:element ref="MEINS"/>
         <xs:element ref="TRNSFR_QUAN"/>
         <xs:element ref="MAT_DOC"/>
+        <xs:element ref="SEG_NUM"/>
       </xs:sequence>
       <xs:attribute name="SEGMENT" use="required" type="xs:int"/>
     </xs:complexType>
@@ -92,4 +93,5 @@
   <xs:element name="MEINS" type="xs:string"/>
   <xs:element name="TRNSFR_QUAN" type="xs:string"/>
   <xs:element name="MAT_DOC" type="xs:string"/>
+  <xs:element name="SEG_NUM" type="xs:int"/>
 </xs:schema>

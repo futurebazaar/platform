@@ -13,7 +13,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.fb.commons.mom.to.SapMomTO;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandlerFactory;
 import com.fb.platform.sap.client.idoc.platform.impl.DeliveryDeleteIDocHandler;

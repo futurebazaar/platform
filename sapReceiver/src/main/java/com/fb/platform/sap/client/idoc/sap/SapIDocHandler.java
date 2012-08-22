@@ -18,7 +18,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.PlatformException;
-import com.fb.commons.mom.to.SapMomTO;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandlerFactory;
 import com.sap.conn.idoc.IDocDocument;

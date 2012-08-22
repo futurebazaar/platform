@@ -90,6 +90,7 @@ public class DeliveryInventoryIDocHandler implements PlatformIDocHandler {
 				InventoryTO inventoryTo = new InventoryTO();
 				
 				sapIdoc.setRefUID(sapInventoryAck.getMATDOC());
+				sapIdoc.setSegmentNumber(sapInventoryAck.getSEGNUM());
 				
 				inventoryTo.setSapIdoc(sapIdoc);
 				inventoryTo.setArticleId(sapInventoryAck.getMATNR());
