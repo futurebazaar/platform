@@ -357,7 +357,7 @@ public class WalletServiceImpl implements WalletService {
 		try{
 			Wallet wallet = load(userId,clientId,false);
 			if(!wallet.verifyPassword(oldPassword)){
-				throw new WrongWalletPassword("Wrong Password");
+				throw new WrongWalletPassword();
 			}else{
 				wallet.setWalletPassword(Encrypt.encrypt(newPassword));
 				walletDao.update(wallet);

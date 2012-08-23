@@ -15,10 +15,17 @@ import com.fb.platform.user.manager.model.auth.LoginRequest;
 import com.fb.platform.user.manager.model.auth.LoginResponse;
 import com.fb.platform.user.manager.model.auth.LoginStatusEnum;
 import com.fb.platform.wallet.manager.interfaces.WalletManager;
+import com.fb.platform.wallet.manager.model.access.ChangeWalletPasswordRequest;
+import com.fb.platform.wallet.manager.model.access.ChangeWalletPasswordResponse;
+import com.fb.platform.wallet.manager.model.access.ChangeWalletPasswordStatusEnum;
 import com.fb.platform.wallet.manager.model.access.FillWalletStatusEnum;
+import com.fb.platform.wallet.manager.model.access.ResetWalletPasswordRequest;
+import com.fb.platform.wallet.manager.model.access.ResetWalletPasswordResponse;
+import com.fb.platform.wallet.manager.model.access.ResetWalletPasswordStatusEnum;
 import com.fb.platform.wallet.manager.model.access.SubWalletEnum;
 import com.fb.platform.wallet.manager.model.access.VerifyWalletRequest;
 import com.fb.platform.wallet.manager.model.access.VerifyWalletResponse;
+import com.fb.platform.wallet.manager.model.access.VerifyWalletStatusEnum;
 import com.fb.platform.wallet.manager.model.access.WalletSummaryRequest;
 import com.fb.platform.wallet.manager.model.access.WalletSummaryResponse;
 import com.fb.platform.wallet.manager.model.access.WalletSummaryStatusEnum;
@@ -163,7 +170,7 @@ public class WalletManagerTest extends BaseTestCase{
 	@Test
 	public void testWalletHistory3() {
 		WalletHistoryRequest request = new WalletHistoryRequest();
-		request.setUserId(1);
+		request.setUserId(userId);
 		request.setClientId(-5);
 		request.setPageNumber(1);
 		request.setResultsPerPage(5);
@@ -176,6 +183,16 @@ public class WalletManagerTest extends BaseTestCase{
 		assertEquals(4,response.getTotalTransactionSize());
 		assertNotNull(response.getTransactionList());
 		assertEquals(4,response.getTransactionList().size());
+		
+		request.setSessionToken(sessionToken+"asd");
+		response = walletManager.getWalletHistoryPaged(request);
+		assertEquals(true, response.getWalletHistoryStatus().equals(WalletHistoryStatusEnum.NO_SESSION));
+		
+		request.setClientId(-3000);
+		request.setSessionToken(sessionToken);
+		response = walletManager.getWalletHistoryPaged(request);
+		assertEquals(true, response.getWalletHistoryStatus().equals(WalletHistoryStatusEnum.INVALID_WALLET));
+		
 	}
 
 	@Test
@@ -196,7 +213,6 @@ public class WalletManagerTest extends BaseTestCase{
 		request.setSessionToken(sessionToken);
 		
 		response = walletManager.fillWallet(request);
-		
 		assertNotNull(response);
 		assertEquals("SUCCESS", response.getStatus().toString());
 		
@@ -855,6 +871,22 @@ public class WalletManagerTest extends BaseTestCase{
 	}
 	
 	@Test
+	public void testWalletVerifyNoSession() {
+		VerifyWalletRequest request = new VerifyWalletRequest();
+		request.setAmount(new BigDecimal("0.01"));
+		request.setUserId(userId);
+		request.setClientId(-5);
+		request.setPassword(testWalletPassword);
+		request.setSessionToken(sessionToken+ "asd");
+
+		VerifyWalletResponse response = walletManager.verifyWallet(request);
+		
+		assertNotNull(response);
+		assertEquals("NO SESSION", response.getStatus().toString());
+
+	}
+	
+	@Test
 	public void testWalletVerify2() {
 		VerifyWalletRequest request = new VerifyWalletRequest();
 		request.setAmount(new BigDecimal("10000.00"));
@@ -1011,5 +1043,154 @@ public class WalletManagerTest extends BaseTestCase{
 		}
 		
 
+	}
+	
+	@Test
+	public void ChangePasswordtest(){
+		ChangeWalletPasswordRequest changeWalletPasswordRequest = new ChangeWalletPasswordRequest();
+		changeWalletPasswordRequest.setClientId(-5);
+		changeWalletPasswordRequest.setNewPassword("newPassword");
+		changeWalletPasswordRequest.setOldPassword(testWalletPassword);
+		changeWalletPasswordRequest.setSessionToken(sessionToken);
+		changeWalletPasswordRequest.setUserId(userId);
+		
+		ChangeWalletPasswordResponse changeWalletPasswordResponse = walletManager.changeWalletPassword(changeWalletPasswordRequest);
+		assertEquals(true, changeWalletPasswordResponse.getStatus().equals(ChangeWalletPasswordStatusEnum.SUCCESS));
+		
+		VerifyWalletRequest verifyWalletRequest = new VerifyWalletRequest();
+		verifyWalletRequest.setAmount(new BigDecimal("0.01"));
+		verifyWalletRequest.setClientId(-5);
+		verifyWalletRequest.setPassword("newPassword");
+		verifyWalletRequest.setSessionToken(sessionToken);
+		verifyWalletRequest.setUserId(userId);
+		
+		VerifyWalletResponse verifyWalletResponse =  walletManager.verifyWallet(verifyWalletRequest);
+		
+		assertEquals(true, verifyWalletResponse.getStatus().equals(VerifyWalletStatusEnum.SUCCESS));
+		
+		
+	}
+	
+	@Test
+	public void ChangePasswordtestWrongPassord(){
+		ChangeWalletPasswordRequest changeWalletPasswordRequest = new ChangeWalletPasswordRequest();
+		changeWalletPasswordRequest.setClientId(-5);
+		changeWalletPasswordRequest.setNewPassword("newPassword");
+		changeWalletPasswordRequest.setOldPassword(testWalletPassword);
+		changeWalletPasswordRequest.setSessionToken(sessionToken);
+		changeWalletPasswordRequest.setUserId(userId);
+		
+		ChangeWalletPasswordResponse changeWalletPasswordResponse = walletManager.changeWalletPassword(changeWalletPasswordRequest);
+		assertEquals(true, changeWalletPasswordResponse.getStatus().equals(ChangeWalletPasswordStatusEnum.SUCCESS));
+		
+		ChangeWalletPasswordRequest changeWalletPasswordRequest1 = new ChangeWalletPasswordRequest();
+		changeWalletPasswordRequest1.setClientId(-5);
+		changeWalletPasswordRequest1.setNewPassword("newPassword");
+		changeWalletPasswordRequest1.setOldPassword("oldPassword");
+		changeWalletPasswordRequest1.setSessionToken(sessionToken);
+		changeWalletPasswordRequest1.setUserId(userId);
+		
+		ChangeWalletPasswordResponse changeWalletPasswordResponse1 = walletManager.changeWalletPassword(changeWalletPasswordRequest1);
+		assertEquals(true, changeWalletPasswordResponse1.getStatus().equals(ChangeWalletPasswordStatusEnum.WRONG_PASSWORD));
+		
+	}
+	
+	@Test
+	public void ChangePasswordtestNoWallet(){
+		ChangeWalletPasswordRequest changeWalletPasswordRequest = new ChangeWalletPasswordRequest();
+		changeWalletPasswordRequest.setClientId(-100);
+		changeWalletPasswordRequest.setNewPassword("newPassword");
+		changeWalletPasswordRequest.setOldPassword(testWalletPassword);
+		changeWalletPasswordRequest.setSessionToken(sessionToken);
+		changeWalletPasswordRequest.setUserId(100);
+		
+		ChangeWalletPasswordResponse changeWalletPasswordResponse = walletManager.changeWalletPassword(changeWalletPasswordRequest);
+		assertEquals(true, changeWalletPasswordResponse.getStatus().equals(ChangeWalletPasswordStatusEnum.INVALID_WALLET));
+		
+	}
+	
+	@Test
+	public void ChangePasswordtestNoSession(){
+		ChangeWalletPasswordRequest changeWalletPasswordRequest = new ChangeWalletPasswordRequest();
+		changeWalletPasswordRequest.setClientId(-100);
+		changeWalletPasswordRequest.setNewPassword("newPassword");
+		changeWalletPasswordRequest.setOldPassword(testWalletPassword);
+		changeWalletPasswordRequest.setSessionToken(sessionToken+"sad");
+		changeWalletPasswordRequest.setUserId(100);
+		
+		ChangeWalletPasswordResponse changeWalletPasswordResponse = walletManager.changeWalletPassword(changeWalletPasswordRequest);
+		assertEquals(true, changeWalletPasswordResponse.getStatus().equals(ChangeWalletPasswordStatusEnum.NO_SESSION));
+		
+	}
+	
+	@Test
+	public void ResetPasswordtest(){
+		
+		ChangeWalletPasswordRequest changeWalletPasswordRequest = new ChangeWalletPasswordRequest();
+		changeWalletPasswordRequest.setClientId(-5);
+		changeWalletPasswordRequest.setNewPassword("newPassword");
+		changeWalletPasswordRequest.setOldPassword(testWalletPassword);
+		changeWalletPasswordRequest.setSessionToken(sessionToken);
+		changeWalletPasswordRequest.setUserId(userId);
+		
+		ChangeWalletPasswordResponse changeWalletPasswordResponse = walletManager.changeWalletPassword(changeWalletPasswordRequest);
+		assertEquals(true, changeWalletPasswordResponse.getStatus().equals(ChangeWalletPasswordStatusEnum.SUCCESS));
+		
+		VerifyWalletRequest verifyWalletRequest = new VerifyWalletRequest();
+		verifyWalletRequest.setAmount(new BigDecimal("0.01"));
+		verifyWalletRequest.setClientId(-5);
+		verifyWalletRequest.setPassword("newPassword");
+		verifyWalletRequest.setSessionToken(sessionToken);
+		verifyWalletRequest.setUserId(userId);
+		
+		VerifyWalletResponse verifyWalletResponse =  walletManager.verifyWallet(verifyWalletRequest);
+		
+		assertEquals(true, verifyWalletResponse.getStatus().equals(VerifyWalletStatusEnum.SUCCESS));
+		
+		
+		
+		ResetWalletPasswordRequest resetWalletPasswordRequest = new ResetWalletPasswordRequest();
+		resetWalletPasswordRequest.setClientId(-5);
+		resetWalletPasswordRequest.setSessionToken(sessionToken);
+		resetWalletPasswordRequest.setUserId(userId);
+		
+		ResetWalletPasswordResponse resetWalletPasswordResponse = walletManager.resetWalletPassword(resetWalletPasswordRequest);
+		assertEquals(true, resetWalletPasswordResponse.getStatus().equals(ResetWalletPasswordStatusEnum.SUCCESS));
+		
+		VerifyWalletRequest verifyWalletRequest1 = new VerifyWalletRequest();
+		verifyWalletRequest1.setAmount(new BigDecimal("0.01"));
+		verifyWalletRequest1.setClientId(-5);
+		verifyWalletRequest1.setPassword("newPassword");
+		verifyWalletRequest1.setSessionToken(sessionToken);
+		verifyWalletRequest1.setUserId(userId);
+		
+		VerifyWalletResponse verifyWalletResponse1 =  walletManager.verifyWallet(verifyWalletRequest1);
+		
+		assertEquals(true, verifyWalletResponse1.getStatus().equals(VerifyWalletStatusEnum.WRONG_PASSWORD));
+		
+		
+	}
+	@Test
+	public void ResetPasswordtestNoWallet(){
+		ResetWalletPasswordRequest resetWalletPasswordRequest = new ResetWalletPasswordRequest();
+		resetWalletPasswordRequest.setClientId(-100);
+		resetWalletPasswordRequest.setSessionToken(sessionToken);
+		resetWalletPasswordRequest.setUserId(100);
+		
+		ResetWalletPasswordResponse resetWalletPasswordResponse = walletManager.resetWalletPassword(resetWalletPasswordRequest);
+		assertEquals(true, resetWalletPasswordResponse.getStatus().equals(ResetWalletPasswordStatusEnum.INVALID_WALLET));
+		
+	}
+	
+	@Test
+	public void ResetPasswordtestNoSession(){
+		ResetWalletPasswordRequest resetWalletPasswordRequest = new ResetWalletPasswordRequest();
+		resetWalletPasswordRequest.setClientId(-100);
+		resetWalletPasswordRequest.setSessionToken(sessionToken+"sad");
+		resetWalletPasswordRequest.setUserId(100);
+		
+		ResetWalletPasswordResponse resetWalletPasswordResponse = walletManager.resetWalletPassword(resetWalletPasswordRequest);
+		assertEquals(true, resetWalletPasswordResponse.getStatus().equals(ResetWalletPasswordStatusEnum.NO_SESSION));
+		
 	}
 }

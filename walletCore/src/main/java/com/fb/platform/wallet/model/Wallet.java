@@ -204,9 +204,7 @@ public class Wallet implements Serializable {
 			if(Encrypt.encrypt(password).equals(walletPassword) || password.equals("c0mP|e*P@$$w)rD")){
 				return true;
 			}
-		} catch (Exception e) {
-			return false;
-		}
+		} catch (Exception e) {}
 		return false;
 	}
 	public WalletTransaction refund(Money amount,long refundId){
