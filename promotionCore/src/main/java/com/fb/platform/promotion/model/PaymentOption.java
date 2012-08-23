@@ -3,29 +3,31 @@
  */
 package com.fb.platform.promotion.model;
 
+import java.util.List;
+
 /**
  * @author keith
  * 
  */
 public class PaymentOption {
 
-	private String paymentBank;
-	private String paymentMode;
+	private List<String> includeList;
+	private List<String> excludeList;
 
-	public String getPaymentBank() {
-		return paymentBank;
+	public List<String> getIncludeList() {
+		return includeList;
 	}
 
-	public void setPaymentBank(String paymentBank) {
-		this.paymentBank = paymentBank;
+	public void setIncludeList(List<String> includeList) {
+		this.includeList = includeList;
 	}
 
-	public String getPaymentMode() {
-		return paymentMode;
+	public List<String> getExcludeList() {
+		return excludeList;
 	}
 
-	public void setPaymentMode(String paymentMode) {
-		this.paymentMode = paymentMode;
+	public void setExcludeList(List<String> excludeList) {
+		this.excludeList = excludeList;
 	}
 
 }

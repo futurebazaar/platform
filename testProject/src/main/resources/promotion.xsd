@@ -275,4 +275,47 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:element name="applicablePaymentRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:couponCode"/>
+        <xs:element ref="promotion:sessionToken"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="applicablePaymentResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="promotion:couponCode"/>
+        <xs:element ref="promotion:sessionToken"/>
+        <xs:element ref="promotion:PaymentOption"/>
+        <xs:element ref="promotion:applicablePaymentStatus"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="PaymentOption">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="promotion:includePaymentOption"/>
+        <xs:element maxOccurs="unbounded" ref="promotion:excludePaymentOption"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="includePaymentOption" type="xs:string"/>
+  <xs:element name="excludePaymentOption" type="xs:string"/>
+  
+  <xs:element name="applicablePaymentStatus" type="promotion:applicablePaymentStatus"/>
+  <xs:simpleType name="applicablePaymentStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="INVALID_COUPON"/>
+      <xs:enumeration value="NO_PAYMENT_OPTION_FOUND"/>
+      <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+    </xs:restriction>
+  </xs:simpleType>
+
 </xs:schema>

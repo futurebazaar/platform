@@ -1,7 +1,6 @@
 package com.fb.platform.promotion.to;
 
 import java.io.Serializable;
-import java.util.List;
 
 import com.fb.platform.promotion.model.PaymentOption;
 
@@ -14,8 +13,7 @@ public class ApplicablePaymentResponse implements Serializable {
 
 	private String couponCode;
 	private ApplicablePaymentResponseStatusEnum status;
-	private List<PaymentOption> includePaymentList;
-	private List<PaymentOption> excludePaymentList;
+	private PaymentOption paymentOption;
 	private String sessionToken;
 
 	public String getCouponCode() {
@@ -34,28 +32,20 @@ public class ApplicablePaymentResponse implements Serializable {
 		this.status = status;
 	}
 
-	public List<PaymentOption> getIncludePaymentList() {
-		return includePaymentList;
-	}
-
-	public void setIncludePaymentList(List<PaymentOption> includePaymentList) {
-		this.includePaymentList = includePaymentList;
-	}
-
-	public List<PaymentOption> getExcludePaymentList() {
-		return excludePaymentList;
-	}
-
-	public void setExcludePaymentList(List<PaymentOption> excludePaymentList) {
-		this.excludePaymentList = excludePaymentList;
-	}
-
 	public String getSessionToken() {
 		return sessionToken;
 	}
 
 	public void setSessionToken(String sessionToken) {
 		this.sessionToken = sessionToken;
+	}
+
+	public PaymentOption getPaymentOption() {
+		return paymentOption;
+	}
+
+	public void setPaymentOption(PaymentOption paymentOption) {
+		this.paymentOption = paymentOption;
 	}
 
 }

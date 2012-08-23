@@ -22,6 +22,7 @@ import com.fb.platform.promotion.exception.PromotionNotFoundException;
 import com.fb.platform.promotion.exception.ScratchCardNotFoundException;
 import com.fb.platform.promotion.exception.UserNotElligibleException;
 import com.fb.platform.promotion.model.OrderDiscount;
+import com.fb.platform.promotion.model.PaymentOption;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.PromotionDates;
 import com.fb.platform.promotion.model.coupon.Coupon;
@@ -418,10 +419,11 @@ public class PromotionManagerImpl implements PromotionManager {
 		try {
 
 			// Get the Payment Options for the coupon
-			promotionService.getPaymentOptions(request.getCouponCode(), userId);
+			PaymentOption po = promotionService.getPaymentOptions(request.getCouponCode(), userId);
 
 			response.setStatus(ApplicablePaymentResponseStatusEnum.SUCCESS);
 			response.setSessionToken(request.getSessionToken());
+			response.setPaymentOption(po);
 
 		} catch (CouponNotFoundException e) {
 			// we dont recognise this coupon code, bye bye

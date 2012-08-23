@@ -13,6 +13,7 @@ import com.fb.commons.to.Money;
 import com.fb.platform.promotion.exception.CouponNotCommitedException;
 import com.fb.platform.promotion.exception.CouponNotFoundException;
 import com.fb.platform.promotion.exception.PromotionNotFoundException;
+import com.fb.platform.promotion.model.PaymentOption;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.scratchCard.ScratchCard;
@@ -141,6 +142,7 @@ public interface PromotionService {
 	 * @throws CouponNotFoundException
 	 * @throws PlatformException
 	 */
-	public void getPaymentOptions(String couponCode, int userId) throws CouponNotFoundException, PlatformException;
+	public PaymentOption getPaymentOptions(String couponCode, int userId) throws CouponNotFoundException,
+		PlatformException;
 
 }

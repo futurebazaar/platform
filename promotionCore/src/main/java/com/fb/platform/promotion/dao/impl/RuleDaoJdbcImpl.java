@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
@@ -86,10 +87,15 @@ public class RuleDaoJdbcImpl implements RuleDao {
 
 	@Override
 	public String getPaymentOptionsString(int promotionId, RuleConfigDescriptorEnum configDesc) {
-		String paymentOptionsString = jdbcTemplate.queryForObject(LOAD_PAYMENT_OPTIONS_RULE_CONFIG_ITEMS_QUERY,
-			String.class, new Object[] { promotionId, configDesc.toString() });
-		System.out.println(configDesc.toString());
-		return paymentOptionsString;
+		try {
+			String paymentOptionsString = jdbcTemplate.queryForObject(LOAD_PAYMENT_OPTIONS_RULE_CONFIG_ITEMS_QUERY,
+				String.class, new Object[] { promotionId, configDesc.toString() });
+			System.out.println(configDesc.toString() + " : " + paymentOptionsString);
+			return paymentOptionsString;
+		} catch (EmptyResultDataAccessException e) {
+			// No Result found
+			return null;
+		}
 	}
 
 	@Override

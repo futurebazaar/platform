@@ -4,11 +4,11 @@
 package com.fb.platform.promotion.service.impl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.text.StrTokenizer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -417,7 +417,8 @@ public class PromotionServiceImpl implements PromotionService {
 	}
 
 	@Override
-	public void getPaymentOptions(String couponCode, int userId) throws CouponNotFoundException, PlatformException {
+	public PaymentOption getPaymentOptions(String couponCode, int userId) throws CouponNotFoundException,
+		PlatformException {
 
 		Coupon coupon = null;
 		Promotion promotion = null;
@@ -431,18 +432,20 @@ public class PromotionServiceImpl implements PromotionService {
 		String exclPaymentOptionsString = ruleDao.getPaymentOptionsString(promotion.getId(),
 			RuleConfigDescriptorEnum.PAYMENT_OPTION_EXCLUDE_LIST);
 
-		List<PaymentOption> includePaymentOption = getPaymentOptionFromString(inclPaymentOptionsString);
+		PaymentOption po = new PaymentOption();
 
-		List<PaymentOption> excludePaymentOption = getPaymentOptionFromString(exclPaymentOptionsString);
+		po.setIncludeList(getPaymentOptionFromString(inclPaymentOptionsString));
 
+		po.setExcludeList(getPaymentOptionFromString(exclPaymentOptionsString));
+
+		return po;
 	}
 
 	/*
 	 * Code to Parse String and convert into Payment Option
 	 */
-	private List<PaymentOption> getPaymentOptionFromString(String inclPaymentOptionsString) {
-		List<PaymentOption> paymentOptions = new ArrayList<PaymentOption>();
-
-		return null;
+	private List<String> getPaymentOptionFromString(String inclPaymentOptionsString) {
+		StrTokenizer strTokCategories = new StrTokenizer(inclPaymentOptionsString, ",");
+		return strTokCategories.getTokenList();
 	}
 }

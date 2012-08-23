@@ -296,37 +296,23 @@
       <xs:sequence>
         <xs:element ref="promotion:couponCode"/>
         <xs:element ref="promotion:sessionToken"/>
-        <xs:element ref="promotion:includePaymentOptions"/>
-        <xs:element ref="promotion:excludePaymentOptions"/>
+        <xs:element ref="promotion:PaymentOption"/>
         <xs:element ref="promotion:applicablePaymentStatus"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   
-  <xs:element name="includePaymentOptions">
+  <xs:element name="PaymentOption">
     <xs:complexType>
       <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="promotion:paymentOption"/>
+        <xs:element maxOccurs="unbounded" ref="promotion:includePaymentOption"/>
+        <xs:element maxOccurs="unbounded" ref="promotion:excludePaymentOption"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   
-  <xs:element name="excludePaymentOptions">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="promotion:paymentOption"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  
-  <xs:element name="paymentOption">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="promotion:paymentBank"/>
-        <xs:element ref="promotion:paymentMode"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
+  <xs:element name="includePaymentOption" type="xs:string"/>
+  <xs:element name="excludePaymentOption" type="xs:string"/>
   
   <xs:element name="applicablePaymentStatus" type="promotion:applicablePaymentStatus"/>
   <xs:simpleType name="applicablePaymentStatus">
@@ -338,8 +324,5 @@
       <xs:enumeration value="INTERNAL_ERROR"/>
     </xs:restriction>
   </xs:simpleType>
-
-  <xs:element name="paymentBank" type="xs:string"/>
-  <xs:element name="paymentMode" type="xs:string"/>  
 
 </xs:schema>

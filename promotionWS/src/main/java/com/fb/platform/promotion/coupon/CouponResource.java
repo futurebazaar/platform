@@ -9,8 +9,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -364,12 +362,10 @@ public class CouponResource {
 			xmlApplicablePaymentResponse.setCouponCode(apiApplicablePaymentResponse.getCouponCode());
 			// xmlApplicablePaymentResponse.setIncludePaymentOptions(value)
 
-			List<PaymentOption> inclPaymentOption = xmlApplicablePaymentResponse.getIncludePaymentOptions()
-				.getPaymentOption();
-			inclPaymentOption.addAll(xmlApplicablePaymentResponse.getIncludePaymentOptions().getPaymentOption());
-			List<PaymentOption> exclPaymentOption = xmlApplicablePaymentResponse.getExcludePaymentOptions()
-				.getPaymentOption();
-			exclPaymentOption.addAll(xmlApplicablePaymentResponse.getExcludePaymentOptions().getPaymentOption());
+			PaymentOption po = new PaymentOption();
+			po.getIncludePaymentOption().addAll(apiApplicablePaymentResponse.getPaymentOption().getIncludeList());
+			po.getIncludePaymentOption().addAll(apiApplicablePaymentResponse.getPaymentOption().getExcludeList());
+			xmlApplicablePaymentResponse.setPaymentOption(po);
 			xmlApplicablePaymentResponse.setApplicablePaymentStatus(ApplicablePaymentStatus
 				.fromValue(apiApplicablePaymentResponse.getStatus().toString()));
 
@@ -514,15 +510,4 @@ public class CouponResource {
 		return convertedDateTime;
 	}
 
-	List<PaymentOption> convertApiToWebPaymentOptions(
-		List<com.fb.platform.promotion.model.PaymentOption> apiPaymentOptions) {
-		List<PaymentOption> webPaymentOptions = new ArrayList<PaymentOption>();
-		for (com.fb.platform.promotion.model.PaymentOption po : apiPaymentOptions) {
-			PaymentOption newPO = new PaymentOption();
-			newPO.setPaymentBank(po.getPaymentBank());
-			newPO.setPaymentMode(po.getPaymentMode());
-			webPaymentOptions.add(newPO);
-		}
-		return webPaymentOptions;
-	}
 }
