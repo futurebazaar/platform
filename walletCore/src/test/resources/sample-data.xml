@@ -226,6 +226,7 @@
 		<column>transaction_type</column>
 		<column>transaction_date</column>
 		<column>transaction_note</column>
+		<column>wallet_balance</column>
 		<row>
 			<value>1</value>
 			<value>ABSCDFADF12312SASzcv</value>
@@ -234,6 +235,7 @@
 			<value>DEBIT</value>
 			<value>2011-04-18 20:42:57</value>
 			<value>A debit trnasaction</value>
+			<value>0.00</value>
 		</row>
 		<row>
 			<value>2</value>
@@ -243,6 +245,7 @@
 			<value>CREDIT</value>
 			<value>2011-04-18 20:42:57</value>
 			<value>A credit trnasaction</value>
+			<value>99</value>
 		</row>
 		<row>
 			<value>3</value>
@@ -252,6 +255,7 @@
 			<value>DEBIT</value>
 			<value>2011-04-18 20:42:57</value>
 			<value>A debit trnasaction</value>
+			<value>-199.00</value>
 		</row>
 		<row>
 			<value>4</value>
@@ -261,6 +265,7 @@
 			<value>CREDIT</value>
 			<value>2011-04-18 20:42:57</value>
 			<value>A credit trnasaction</value>
+			<value>100.00</value>
 		</row>
 		<row>
 			<value>5</value>
@@ -269,6 +274,8 @@
 			<value>99</value>
 			<value>DEBIT</value>
 			<value>2011-04-18 20:42:57</value>
+			<value>A debit trnasaction</value>
+			<value>-99.00</value>
 		</row>
 		<row>
 			<value>6</value>
@@ -278,6 +285,7 @@
 			<value>CREDIT</value>
 			<value>2012-04-18 20:42:57</value>
 			<value>A credit trnasaction</value>
+			<value>100.00</value>
 		</row>
 		<row>
 			<value>7</value>
@@ -287,6 +295,7 @@
 			<value>CREDIT</value>
 			<value>2012-04-18 20:42:57</value>
 			<value>A credit trnasaction</value>
+			<value>200.00</value>
 		</row>
 		<row>
 			<value>8</value>
@@ -296,6 +305,7 @@
 			<value>CREDIT</value>
 			<value>2012-04-18 20:42:57</value>
 			<value>A credit transaction</value>
+			<value>300.00</value>
 		</row>
 		
 	</table>

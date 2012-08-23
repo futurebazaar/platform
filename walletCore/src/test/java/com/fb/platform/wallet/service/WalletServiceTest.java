@@ -82,7 +82,7 @@ public class WalletServiceTest extends BaseTestCase {
 		assertEquals(wallet.getId(), walletTransaction.getWallet().getId());
 		assertEquals(new BigDecimal("200.00"), walletTransaction.getWallet().getTotalAmount().getAmount());
 		try{	
-			Wallet wallet1 = walletService.verifyWallet(6,-5,new Money(new BigDecimal("500.00")),"asdasdas");
+			Wallet wallet1 = walletService.verifyWallet(6,-5,"asdasdas");
 		}catch (Exception e) {
 			assertEquals("com.fb.platform.wallet.service.exception.WrongWalletPassword",e.getClass().getCanonicalName());
 		}	
@@ -98,7 +98,7 @@ public class WalletServiceTest extends BaseTestCase {
 		assertNotNull(walletTransaction.getWallet());
 		assertEquals(wallet.getId(), walletTransaction.getWallet().getId());
 		assertEquals(new BigDecimal("200.00"), walletTransaction.getWallet().getTotalAmount().getAmount());
-		Wallet wallet1 = walletService.verifyWallet(6,-5,new Money(new BigDecimal("200.00")),testWalletPassword);
+		Wallet wallet1 = walletService.verifyWallet(6,-5,testWalletPassword);
 		assertEquals(walletTransaction.getWallet(), wallet1);
 	}
 	@Test
@@ -113,7 +113,7 @@ public class WalletServiceTest extends BaseTestCase {
 		assertEquals(wallet.getId(), walletTransaction.getWallet().getId());
 		assertEquals(new BigDecimal("200.00"), walletTransaction.getWallet().getTotalAmount().getAmount());
 		try{
-			Wallet wallet1 = walletService.verifyWallet(100,-10,new Money(new BigDecimal("200.00")),testWalletPassword);
+			Wallet wallet1 = walletService.verifyWallet(100,-10,testWalletPassword);
 		}catch (Exception e) {
 			assertEquals("com.fb.platform.wallet.service.exception.WalletNotFoundException",e.getClass().getCanonicalName());
 		}	
@@ -424,5 +424,54 @@ public class WalletServiceTest extends BaseTestCase {
 		} catch (Exception e) {
 			assertEquals("com.fb.platform.wallet.service.exception.WalletNotFoundException",e.getClass().getCanonicalName());
 		}			
+	}
+	
+	@Test
+	public void ChangeWalletPassword(){
+		Wallet wallet = walletService.load(6, -5);
+		assertNotNull(wallet);
+		assertEquals(new BigDecimal("0.00"), wallet.getTotalAmount().getAmount());		
+		walletService.changeWalletPassword(6, -5, testWalletPassword, "testpass");
+		Wallet wallet1 = walletService.verifyWallet(6,-5,"testpass");
+		assertEquals(wallet,wallet1);		
+	}
+	@Test
+	public void ChangeWalletPasswordWrongPassword(){
+		try{
+			Wallet wallet = walletService.load(6, -5);
+			assertNotNull(wallet);
+			assertEquals(new BigDecimal("0.00"), wallet.getTotalAmount().getAmount());		
+			walletService.changeWalletPassword(6, -5, "asdf", "testpass");
+		} catch (Exception e) {
+			assertEquals("com.fb.platform.wallet.service.exception.WrongWalletPassword",e.getClass().getCanonicalName());
+		}				
+	}
+	@Test
+	public void ChangeWalletPasswordNoWallet(){
+		try{
+			walletService.changeWalletPassword(1000, -50, "asdf", "testpass");
+		} catch (Exception e) {
+			assertEquals("com.fb.platform.wallet.service.exception.WalletNotFoundException",e.getClass().getCanonicalName());
+		}				
+	}
+	
+	@Test
+	public void ResetWalletPassword(){
+		Wallet wallet = walletService.load(6, -5);
+		assertNotNull(wallet);
+		assertEquals(new BigDecimal("0.00"), wallet.getTotalAmount().getAmount());
+		String password1 = wallet.getWalletPassword();
+		walletService.resetWalletPassword(6, -5);
+		Wallet wallet1 = walletService.verifyWallet(6,-5,testWalletPassword);
+		String password2 = wallet1.getWalletPassword();
+		assertEquals(false,password1.equals(password2));		
+	}
+	@Test
+	public void ResetWalletPasswordNoWallet(){
+		try{
+			walletService.resetWalletPassword(1000, -50);
+		} catch (Exception e) {
+			assertEquals("com.fb.platform.wallet.service.exception.WalletNotFoundException",e.getClass().getCanonicalName());
+		}				
 	}
 }

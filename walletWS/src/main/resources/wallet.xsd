@@ -143,6 +143,7 @@
   	  	<xs:element ref="tns:notes"/>
   		<xs:element ref="tns:amount"/>
         <xs:element ref="tns:timestamp"/>
+        <xs:element ref="tns:walletBalance"/>
         <xs:element maxOccurs="unbounded" ref="tns:subTransaction"/>
   	  </xs:sequence>
   	</xs:complexType>
@@ -206,6 +207,8 @@
   </xs:simpleType>
   
   <xs:element name="password" type="xs:string"/>
+  <xs:element name="oldPassword" type="xs:string"/>
+  <xs:element name="newPassword" type="xs:string"/>
   
   <xs:element name="payRequest">
     <xs:complexType>
@@ -348,6 +351,69 @@
       <xs:enumeration value="INVALID_WALLET"/>
       <xs:enumeration value="BALANCE_UNAVAILABLE"/>
       <xs:enumeration value="WRONG_PASSWORD"/>
+      <xs:enumeration value="FAILED_TRANSACTION"/>      
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:element name="changeWalletPasswordRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:sessionToken"/>
+        <xs:element ref="tns:userId"/>
+        <xs:element ref="tns:clientId"/>
+        <xs:element ref="tns:oldPassword"/>
+        <xs:element ref="tns:newPassword"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+     
+  <xs:element name="changeWalletPasswordResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:sessionToken"/>
+        <xs:element ref="tns:changeWalletPasswordStatus"/>        
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="changeWalletPasswordStatus" type="tns:changeWalletPasswordStatus"/>
+  
+  <xs:simpleType name="changeWalletPasswordStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INVALID_WALLET"/>
+      <xs:enumeration value="WRONG_PASSWORD"/>
+      <xs:enumeration value="FAILED_TRANSACTION"/>      
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:element name="resetWalletPasswordRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:sessionToken"/>
+        <xs:element ref="tns:userId"/>
+        <xs:element ref="tns:clientId"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+     
+  <xs:element name="resetWalletPasswordResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tns:sessionToken"/>
+        <xs:element ref="tns:resetWalletPasswordStatus"/>        
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="resetWalletPasswordStatus" type="tns:resetWalletPasswordStatus"/>
+  
+  <xs:simpleType name="resetWalletPasswordStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INVALID_WALLET"/>
       <xs:enumeration value="FAILED_TRANSACTION"/>      
     </xs:restriction>
   </xs:simpleType>

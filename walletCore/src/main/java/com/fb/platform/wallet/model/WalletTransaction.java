@@ -16,6 +16,7 @@ public class WalletTransaction {
 	private Money amount;
 	private DateTime timeStamp;
 	private String transactionNote = null;
+	private Money walletBalance;
 
 	WalletTransaction(Wallet wallet,
 			TransactionType transactionType, Money amount ,DateTime datetime) {
@@ -24,6 +25,7 @@ public class WalletTransaction {
 		this.transactionType = transactionType;
 		this.amount = amount;
 		this.timeStamp = datetime;
+		this.walletBalance = wallet.getTotalAmount();
 	}
 	
 	public WalletTransaction() {
@@ -133,6 +135,22 @@ public class WalletTransaction {
 	 */
 	public void setTransactionNote(String transactionNote) {
 		this.transactionNote = transactionNote;
+	}
+	
+	
+
+	/**
+	 * @return the walletBalance
+	 */
+	public Money getWalletBalance() {
+		return walletBalance;
+	}
+
+	/**
+	 * @param walletBalance the walletBalance to set
+	 */
+	public void setWalletBalance(Money walletBalance) {
+		this.walletBalance = walletBalance;
 	}
 
 	public boolean isSubTransactionBySubWallet(SubWalletType subWalletType){
