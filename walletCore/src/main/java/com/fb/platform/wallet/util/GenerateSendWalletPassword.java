@@ -60,17 +60,17 @@ public class GenerateSendWalletPassword {
 			for(UserEmailBo userEmailBo : user.getUserEmail()){
 				if(userEmailBo.isVerified()){
 					MailTO message = MailHelper.createMailTO(userEmailBo.getEmail(), randomPassword, user.getName());
-					mailSender.send(message);
+					//mailSender.send(message);
 				}
 			}
 			for(UserPhoneBo userPhoneBo : user.getUserPhone()){
 				if(userPhoneBo.isVerified()){
 					SmsTO sms = SmsHelper.createSmsTO(userPhoneBo.getPhoneno(), randomPassword, user.getName());
-					smsSender.send(sms);
+					//smsSender.send(sms);
 				}
 			}
 		} catch (Exception e){
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 		return randomPassword;
 	}

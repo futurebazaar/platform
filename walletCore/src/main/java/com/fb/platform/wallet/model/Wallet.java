@@ -28,8 +28,7 @@ public class Wallet implements Serializable {
 	private DateTime createdOn;
 	private DateTime modifiedOn;
 	private String walletPassword;
-	private User user;
-
+	
 	public WalletTransaction credit(Money amount,SubWalletType subWalletType,long paymentId,long refundId,long giftId){
 		if (subWalletType.equals(SubWalletType.CASH)) {
 				cashSubWallet = cashSubWallet.plus(amount);
@@ -275,22 +274,6 @@ public class Wallet implements Serializable {
 	public void setRefundSubWallet(Money refundSubWallet) {
 		this.refundSubWallet = refundSubWallet;
 	}
-
-	/**
-	 * @return the user
-	 */
-	public User getUser() {
-		return user;
-	}
-
-	/**
-	 * @param user
-	 *            the user to set
-	 */
-	public void setUser(User user) {
-		this.user = user;
-	}
-
 	/**
 	 * @return the createdOn
 	 */
