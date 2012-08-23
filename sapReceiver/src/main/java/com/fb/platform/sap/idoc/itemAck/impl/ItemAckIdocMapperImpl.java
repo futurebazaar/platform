@@ -32,7 +32,7 @@ public class ItemAckIdocMapperImpl {
 		itemAck.setLspName(sapItemAck.getLSPNAME());
 		itemAck.setAwbNumber(sapItemAck.getLSPNOR());
 		itemAck.setCreatedBy(sapItemAck.getERNAMDEL());
-		if(sapItemAck.getERDATDEL() != null && sapItemAck.getERDATDEL().length() == 8) {
+		if(sapItemAck.getERDATDEL() != null && sapItemAck.getERDAT() != null && sapItemAck.getERDATDEL().length() == 8) {
 			year = Integer.parseInt(sapItemAck.getERDATDEL().substring(0, 4));
 			month = Integer.parseInt(sapItemAck.getERDATDEL().substring(4, 6));
 			day = Integer.parseInt(sapItemAck.getERDATDEL().substring(6));
@@ -44,7 +44,7 @@ public class ItemAckIdocMapperImpl {
 		itemAck.setItemState(sapItemAck.getORDSTAT());
 		itemAck.setQuantity(sapItemAck.getRFMNG());
 		itemAck.setOrderState(sapItemAck.getVBTYPN());
-		if(sapItemAck.getERDAT() != null && sapItemAck.getERDAT().length() == 8) {
+		if(sapItemAck.getERDAT() != null && sapItemAck.getERDAT() != null && sapItemAck.getERDAT().length() == 8) {
 			year = Integer.parseInt(sapItemAck.getERDAT().substring(0, 4));
 			month = Integer.parseInt(sapItemAck.getERDAT().substring(4, 6));
 			day = Integer.parseInt(sapItemAck.getERDAT().substring(6));

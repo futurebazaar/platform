@@ -22,7 +22,7 @@ public class PgiCreationIdocMapperImpl implements ItemAckIdocMapper {
 	@Override
 	public ItemTO getItemAck(ZATGFLOW sapItemAck) {
 		PgiCreationItemTO pgiCreationAck = (PgiCreationItemTO)new ItemAckIdocMapperImpl().getItemAck(sapItemAck, new PgiCreationItemTO());
-		if(sapItemAck.getERDATDEL() != null && sapItemAck.getWADATPGI().length() == 8) {
+		if(sapItemAck.getERDATDEL() != null && sapItemAck.getWADATPGI() != null && sapItemAck.getWADATPGI().length() == 8) {
 			int year = Integer.valueOf(sapItemAck.getWADATPGI().substring(0, 4));
 			int month = Integer.valueOf(sapItemAck.getWADATPGI().substring(4, 6));
 			int day = Integer.valueOf(sapItemAck.getWADATPGI().substring(6));
