@@ -11,6 +11,7 @@ import sun.misc.BASE64Encoder;
 
 import com.fb.commons.to.Money;
 import com.fb.platform.user.manager.model.admin.User;
+import com.fb.platform.wallet.util.Encrypt;
 
 public class Wallet implements Serializable {
 	
@@ -98,6 +99,7 @@ public class Wallet implements Serializable {
 			}
 		}
 		totalAmount = totalAmount.plus(amount);
+		walletTransactionRes.setWalletBalance(totalAmount);
 		return walletTransactionRes;
 	}
 	
@@ -137,6 +139,7 @@ public class Wallet implements Serializable {
 			}
 		}
 		totalAmount = totalAmount.minus(amount);
+		walletTransactionRes.setWalletBalance(totalAmount);
 		return walletTransactionRes;
 	}
 	
@@ -145,6 +148,7 @@ public class Wallet implements Serializable {
 		totalAmount = totalAmount.minus(amount);
 		giftSubWallet =giftSubWallet.minus(amount);
 		walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(amount,giftId,notes));
+		walletTransaction.setWalletBalance(totalAmount);
 		return walletTransaction;
 	}
 
@@ -185,6 +189,7 @@ public class Wallet implements Serializable {
 				amountLeftToBeDebited = amountLeftToBeDebited.minus(amountLeftToBeDebited);
 			}
 		}
+		walletTransaction.setWalletBalance(totalAmount);
 		return walletTransaction;
 	}
 	public boolean isSufficientFund(Money amount) {
@@ -196,7 +201,7 @@ public class Wallet implements Serializable {
 	
 	public boolean verifyPassword(String password){
 		try {
-			if(encrypt(password).equals(walletPassword) || password.equals("c0mP|e*P@$$w)rD")){
+			if(Encrypt.encrypt(password).equals(walletPassword) || password.equals("c0mP|e*P@$$w)rD")){
 				return true;
 			}
 		} catch (Exception e) {
@@ -209,6 +214,7 @@ public class Wallet implements Serializable {
 		totalAmount = totalAmount.minus(amount);
 		refundSubWallet = refundSubWallet.minus(amount);
 		walletTransaction.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,amount,0,refundId,0,0,0));
+		walletTransaction.setWalletBalance(totalAmount);
 		return walletTransaction;
 	}
 
@@ -408,6 +414,10 @@ public class Wallet implements Serializable {
 	public void setWalletPassword(String walletPassword) {
 		this.walletPassword = walletPassword;
 	}
+	
+	public String getWalletPassword() {
+		return walletPassword;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -496,21 +506,5 @@ public class Wallet implements Serializable {
 		builder.append("]");
 		return builder.toString();
 	}
-	
-	private String encrypt(String plaintext) throws Exception {
-        MessageDigest msgDigest = null;
-        String hashValue = null;
-        try {
-            msgDigest = MessageDigest.getInstance("MD5");
-            msgDigest.update(plaintext.getBytes("UTF-8"));
-            byte rawByte[] = msgDigest.digest();
-            hashValue = (new BASE64Encoder()).encode(rawByte); 
-        } catch (NoSuchAlgorithmException e) {
-            System.out.println("No Such Algorithm Exists");
-        } catch (UnsupportedEncodingException e) {
-            System.out.println("The Encoding Is Not Supported");
-        }
-        return hashValue;
-    }
 
 }

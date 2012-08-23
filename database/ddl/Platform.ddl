@@ -900,6 +900,7 @@ CREATE TABLE wallets_transaction
 	transaction_type VARCHAR(10) NOT NULL,
 	transaction_date DATETIME NOT NULL,
 	transaction_note longtext NULL,
+	wallet_balance DECIMAL(18,2) NOT NULL,
 	CONSTRAINT wallets_transaction_fk1 FOREIGN KEY (wallet_id) REFERENCES wallets_wallet(id),
 	PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;

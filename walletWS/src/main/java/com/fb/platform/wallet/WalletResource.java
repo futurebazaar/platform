@@ -61,6 +61,15 @@ import com.fb.platform.wallet._1_0.VerifyWalletRequest;
 import com.fb.platform.wallet._1_0.VerifyWalletResponse;
 import com.fb.platform.wallet._1_0.VerifyWalletStatus;
 
+import com.fb.platform.wallet._1_0.ChangeWalletPasswordRequest;
+import com.fb.platform.wallet._1_0.ChangeWalletPasswordResponse;
+import com.fb.platform.wallet._1_0.ChangeWalletPasswordStatus;
+
+
+import com.fb.platform.wallet._1_0.ResetWalletPasswordRequest;
+import com.fb.platform.wallet._1_0.ResetWalletPasswordResponse;
+import com.fb.platform.wallet._1_0.ResetWalletPasswordStatus;
+
 import com.fb.platform.wallet.manager.interfaces.WalletManager;
 import com.fb.platform.wallet.manager.model.access.SubWalletEnum;
 
@@ -203,6 +212,8 @@ public class WalletResource {
 			apiWalletHistoryReq.setUserId(xmlWalletHistoryReq.getUserId());
 			apiWalletHistoryReq.setClientId(xmlWalletHistoryReq.getClientId());
 			apiWalletHistoryReq.setSessionToken(xmlWalletHistoryReq.getSessionToken());
+			apiWalletHistoryReq.setPageNumber(xmlWalletHistoryReq.getPageNumber());
+			apiWalletHistoryReq.setResultsPerPage(xmlWalletHistoryReq.getResultsPerPage());
 			if(xmlWalletHistoryReq.getSubWallet() != null){
 				apiWalletHistoryReq.setSubWallet(SubWalletEnum.valueOf(xmlWalletHistoryReq.getSubWallet().value()));
 			}
@@ -403,6 +414,9 @@ public class WalletResource {
 		sb.append("To pay from wallet post to : http://hostname:port/walletWS/wallet/pay\n");
 		sb.append("To get refund from wallet post to : http://hostname:port/walletWS/wallet/refund\n");
 		sb.append("To revert wallet transaction post to : http://hostname:port/walletWS/wallet/revert\n");
+		sb.append("To verify wallet : http://hostname:port/walletWS/wallet/verify\n");
+		sb.append("To change wallet password: http://hostname:port/walletWS/wallet/changepassword\n");
+		sb.append("To reset wallet password: http://hostname:port/walletWS/wallet/resetpassword\n");
 		return sb.toString();
 	}
 	
@@ -476,7 +490,6 @@ public class WalletResource {
 		xmlWalletHistoryResponse.setSessionToken(apiWalletHistoryResp.getSessionToken());
 		xmlWalletHistoryResponse.setWalletHistoryStatus(WalletHistoryStatus.fromValue(apiWalletHistoryResp.getWalletHistoryStatus().name() ));
 		xmlWalletHistoryResponse.setTotalNumberOfTransaction(apiWalletHistoryResp.getTotalTransactionSize());
-		
 		List<Transaction> transactionList = new ArrayList<Transaction>();
 		if(apiWalletHistoryResp.getTransactionList() != null){
 			for (com.fb.platform.wallet.to.WalletTransaction apiTransaction : apiWalletHistoryResp.getTransactionList()){
@@ -485,6 +498,7 @@ public class WalletResource {
 				transaction.setType(apiTransaction.getTransactionType().name());
 				transaction.setAmount(apiTransaction.getAmount().getAmount());
 				transaction.setTimestamp(apiTransaction.getTimeStamp());
+				transaction.setWalletBalance(apiTransaction.getWalletBalance().getAmount());
 				List<SubTransaction> subTransactionList = new ArrayList<SubTransaction>();
 				if (apiTransaction.getWalletSubTransaction() != null){
 					for (com.fb.platform.wallet.to.WalletSubTransaction apiSubTransaction : apiTransaction.getWalletSubTransaction()){
@@ -507,6 +521,84 @@ public class WalletResource {
 		}
 		xmlWalletHistoryResponse.getTransaction().addAll(transactionList);
 		return xmlWalletHistoryResponse;
+	}
+	
+	
+	@POST
+	@Path("/changepassword")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String changeWalletPassword (String changeWalletPasswordXml) {
+		
+		logger.info("CHANGE WALLET PASSWORD XML request: \n" + changeWalletPasswordXml);
+		try {
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			ChangeWalletPasswordRequest xmlchangeWalletPasswordReq = (ChangeWalletPasswordRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(changeWalletPasswordXml)));
+
+			com.fb.platform.wallet.manager.model.access.ChangeWalletPasswordRequest apichangeWalletPasswordReq = new com.fb.platform.wallet.manager.model.access.ChangeWalletPasswordRequest();
+			apichangeWalletPasswordReq.setSessionToken(xmlchangeWalletPasswordReq.getSessionToken());
+			apichangeWalletPasswordReq.setUserId(xmlchangeWalletPasswordReq.getUserId());
+			apichangeWalletPasswordReq.setClientId(xmlchangeWalletPasswordReq.getClientId());
+			apichangeWalletPasswordReq.setOldPassword(xmlchangeWalletPasswordReq.getOldPassword());
+			apichangeWalletPasswordReq.setNewPassword(xmlchangeWalletPasswordReq.getNewPassword());
+
+			com.fb.platform.wallet.manager.model.access.ChangeWalletPasswordResponse apichangeWalletPasswordResponse = walletManager.changeWalletPassword(apichangeWalletPasswordReq);
+
+			ChangeWalletPasswordResponse xmlchangeWalletPasswordResponse = new ChangeWalletPasswordResponse();
+			xmlchangeWalletPasswordResponse.setSessionToken(apichangeWalletPasswordResponse.getSessionToken());
+			xmlchangeWalletPasswordResponse.setChangeWalletPasswordStatus(ChangeWalletPasswordStatus.fromValue(apichangeWalletPasswordResponse.getStatus().name() ));
+			
+			
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marsheller = context.createMarshaller();
+			marsheller.marshal(xmlchangeWalletPasswordResponse, outStringWriter);
+
+			String xmlResponse = outStringWriter.toString();
+			logger.info("VerifyWalletXml response :\n" + xmlResponse);
+			return xmlResponse;
+
+		} catch (JAXBException e) {
+			logger.error("Error in verifying the Wallet:", e);
+			return "error";
+		}
+	}
+	
+	
+	@POST
+	@Path("/resetpassword")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String resetWalletPassword (String resetWalletPasswordXml) {
+		
+		logger.info("RESET WALLET PASSWORD XML request: \n" + resetWalletPasswordXml);
+		try {
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			ResetWalletPasswordRequest xmlresetWalletPasswordReq = (ResetWalletPasswordRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(resetWalletPasswordXml)));
+
+			com.fb.platform.wallet.manager.model.access.ResetWalletPasswordRequest apiresetWalletPasswordReq = new com.fb.platform.wallet.manager.model.access.ResetWalletPasswordRequest();
+			apiresetWalletPasswordReq.setSessionToken(xmlresetWalletPasswordReq.getSessionToken());
+			apiresetWalletPasswordReq.setUserId(xmlresetWalletPasswordReq.getUserId());
+			apiresetWalletPasswordReq.setClientId(xmlresetWalletPasswordReq.getClientId());
+			
+			com.fb.platform.wallet.manager.model.access.ResetWalletPasswordResponse apiresetWalletPasswordResponse = walletManager.resetWalletPassword(apiresetWalletPasswordReq);
+
+			ResetWalletPasswordResponse xmlresetWalletPasswordResponse = new ResetWalletPasswordResponse();
+			xmlresetWalletPasswordResponse.setSessionToken(apiresetWalletPasswordResponse.getSessionToken());
+			xmlresetWalletPasswordResponse.setResetWalletPasswordStatus(ResetWalletPasswordStatus.fromValue(apiresetWalletPasswordResponse.getStatus().name() ));
+			
+			
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marsheller = context.createMarshaller();
+			marsheller.marshal(xmlresetWalletPasswordResponse, outStringWriter);
+
+			String xmlResponse = outStringWriter.toString();
+			logger.info("VerifyWalletXml response :\n" + xmlResponse);
+			return xmlResponse;
+
+		} catch (JAXBException e) {
+			logger.error("Error in verifying the Wallet:", e);
+			return "error";
+		}
 	}
 
 }

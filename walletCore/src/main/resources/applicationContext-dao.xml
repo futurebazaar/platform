@@ -21,9 +21,7 @@
     </bean>
     <bean id="walletDao" class="com.fb.platform.wallet.dao.impl.WalletDaoImpl">
 		<property name="jdbcTemplate" ref="jdbcTemplate"/>	
-		<property name="userAdminService" ref="userAdminService"/>	
-		<property name="mailSender" ref="mailSender"></property>
-        <property name="smsSender" ref="smsSender"></property>	
+		<property name="walletPasswordSender" ref="walletPasswordSender"></property>
 	</bean>
 	<bean id="walletTransactionDao" class="com.fb.platform.wallet.dao.impl.WalletTransactionDaoImpl">
 		<property name="walletDao" ref="walletDao"/>
@@ -31,21 +29,5 @@
 		<property name="refundExpiryDays">
         	<value>${refund.expiry.days}</value>
         </property>		
-	</bean>
-	
-	<bean id="springMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-  		<property name="host" value="MUMOPBL01.fb.dc"/>
-        <property name="port" value="25"/>  
-        <property name="javaMailProperties">
-            <props>
-                <prop key="mail.smtp.localhost">mail.pantaloon.com</prop>
-            </props>
-         </property>
-	</bean>
-	
-    <bean id="mailSender" class="com.fb.commons.mail.impl.MailSenderImpl">
-	  	<property name="springMailSender" ref="springMailSender"/>
-	</bean>
-	
-	<bean id="smsSender" class="com.fb.commons.sms.SmsSender" />	
+	</bean>	
 </beans>

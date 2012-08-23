@@ -52,8 +52,9 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			+ "amount, " 
 			+ "transaction_type, " 
 			+ "transaction_date, "
-			+ "transaction_note ) "
-			+ "values (?,?,?,?,?,?)";
+			+ "transaction_note, "
+			+ "wallet_balance) "
+			+ "values (?,?,?,?,?,?,?)";
 	
 	private final String INSERT_NEW_SUBTRANSACTION = "Insert into wallets_sub_transaction "
 			+ "(tran_id, "
@@ -74,7 +75,8 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			+ "amount, "
 			+ "transaction_type, "
 			+ "transaction_date, "
-			+ "transaction_note "
+			+ "transaction_note, "
+			+ "wallet_balance "
 			+ "from wallets_transaction where transaction_id= ? and wallet_id=?" ;
 	
 	private final String GET_TRANSACTION_BY_ID = "Select "
@@ -84,7 +86,8 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			+ "amount, "
 			+ "transaction_type, "
 			+ "transaction_date, "
-			+ "transaction_note "
+			+ "transaction_note, "
+			+ "wallet_balance "
 			+ "from wallets_transaction where id= ? and wallet_id=?" ;
 	
 	private final String GET_SUB_TRANSACTIONS_BY_TRANID = "Select "
@@ -108,7 +111,8 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			+ "amount, "
 			+ "transaction_type, "
 			+ "transaction_date, "
-			+ "transaction_note "
+			+ "transaction_note, "
+			+ "wallet_balance "
 			+ "from wallets_transaction where wallet_id= ? and transaction_date between ? and ?" ;
 	
 	private final String GET_TRANSACTION_HISTORY_PAGINATED = "Select "
@@ -118,8 +122,9 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			+ "amount, "
 			+ "transaction_type, "
 			+ "transaction_date, "
-			+ "transaction_note "
-			+ "from wallets_transaction where wallet_id= ? LIMIT ?,?" ;
+			+ "transaction_note, "
+			+ "wallet_balance "
+			+ "from wallets_transaction where wallet_id= ? order by transaction_date desc LIMIT ?,?" ;
 	
 	private final String GET_TOTAL_TRANSACTION_WALLETID = "Select count(*) "
 			+ "from wallets_transaction where wallet_id= ?" ;
@@ -218,6 +223,7 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 					ps.setString(4, walletTransaction.getTransactionType().toString());
 					ps.setTimestamp(5, new Timestamp(walletTransaction.getTimeStamp().getMillis()));
 					ps.setString(6, walletTransaction.getTransactionNote());
+					ps.setBigDecimal(7, walletTransaction.getWalletBalance().getAmount());
 					return ps;
 				}
 			}, generatedKeyHolder);
@@ -289,7 +295,6 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			List<WalletTransaction> walletTransactions = jdbcTemplate.query(GET_TRANSACTION_HISTORY_PAGINATED,
 					new Object[]{wallet.getId(),((pageNumber-1)*resultPerPage),resultPerPage},
 					new WalletTransactionMapper());
-			
 			for(WalletTransaction walletTransaction : walletTransactions){
 				List<WalletSubTransaction> walletSubTransactions = jdbcTemplate.query(GET_SUB_TRANSACTIONS_BY_TRANID,
 						new Object[] {walletTransaction.getId()},
@@ -334,6 +339,7 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			walletTransaction.setTransactionId(rs.getString("transaction_id"));
 			walletTransaction.setTransactionType(TransactionType.valueOf(rs.getString("transaction_type")));
 			walletTransaction.setTransactionNote(rs.getString("transaction_note"));
+			walletTransaction.setWalletBalance(new Money(rs.getBigDecimal("wallet_balance")));
 			return walletTransaction;
 		}		
 	}

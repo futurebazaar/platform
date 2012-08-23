@@ -19,6 +19,7 @@ public class WalletTransaction {
 	private List<WalletSubTransaction> walletSubTransaction;
 	private Money amount;
 	private DateTime timeStamp;
+	private Money walletBalance;
 	
 	/**
     * @return the wallet
@@ -120,5 +121,18 @@ public class WalletTransaction {
 	 public void setWalletSubTransaction(List<WalletSubTransaction> walletSubTransaction) {
 	        this.walletSubTransaction = walletSubTransaction;
 	}
-
+	/**
+	 * @return the walletBalance
+	 */
+	public Money getWalletBalance() {
+		return walletBalance;
+	}
+	/**
+	 * @param walletBalance the walletBalance to set
+	 */
+	public void setWalletBalance(Money walletBalance) {
+		this.walletBalance = walletBalance;
+	}
+	 
+	
 }

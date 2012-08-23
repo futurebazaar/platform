@@ -19,6 +19,12 @@ import com.fb.platform.wallet.service.exception.RefundExpiredException;
 import com.fb.platform.wallet.service.exception.InvalidTransactionIdException;
 import com.fb.platform.wallet.service.exception.WrongWalletPassword;
 import com.fb.platform.wallet.manager.interfaces.WalletManager;
+import com.fb.platform.wallet.manager.model.access.ChangeWalletPasswordRequest;
+import com.fb.platform.wallet.manager.model.access.ChangeWalletPasswordResponse;
+import com.fb.platform.wallet.manager.model.access.ChangeWalletPasswordStatusEnum;
+import com.fb.platform.wallet.manager.model.access.ResetWalletPasswordRequest;
+import com.fb.platform.wallet.manager.model.access.ResetWalletPasswordResponse;
+import com.fb.platform.wallet.manager.model.access.ResetWalletPasswordStatusEnum;
 import com.fb.platform.wallet.manager.model.access.VerifyWalletRequest;
 import com.fb.platform.wallet.manager.model.access.VerifyWalletResponse;
 import com.fb.platform.wallet.manager.model.access.VerifyWalletStatusEnum;
@@ -174,7 +180,6 @@ public class WalletManagerImpl implements WalletManager {
 			response.setSessionToken(authentication.getToken());
 			
 			WalletTransactionResultSet resultSet = walletService.walletHistory(walletHistoryRequest.getUserId(),walletHistoryRequest.getClientId(),walletHistoryRequest.getPageNumber(), walletHistoryRequest.getResultsPerPage(), null);
-			
 			response.setTransactionList(resultSet.getWalletTransactions());
 			response.setTotalTransactionSize(resultSet.getTotalTransactionSize());
 			response.setWalletHistoryStatus(WalletHistoryStatusEnum.SUCCESS);
@@ -379,7 +384,7 @@ public class WalletManagerImpl implements WalletManager {
 			
 			Money amount = new Money(apiVerifyReq.getAmount());
 			
-			Wallet wallet = walletService.verifyWallet(apiVerifyReq.getUserId(), apiVerifyReq.getClientId(), amount,apiVerifyReq.getPassword());
+			Wallet wallet = walletService.verifyWallet(apiVerifyReq.getUserId(), apiVerifyReq.getClientId(),apiVerifyReq.getPassword());
 			if(wallet.isSufficientFund(amount)){
 				response.setStatus(VerifyWalletStatusEnum.SUCCESS);
 				response.setAmount(wallet.getTotalAmount().getAmount());
@@ -388,16 +393,69 @@ public class WalletManagerImpl implements WalletManager {
 				response.setAmount(wallet.getTotalAmount().getAmount());
 			}		
 		} catch (WrongWalletPassword e) {
-			logger.info("payFromWallet: Worng password wa provided to debit the wallet " + apiVerifyReq.getUserId());
+			logger.info("verifyWallet: Worng password wa provided to verify the wallet " + apiVerifyReq.getUserId());
 			response.setStatus(VerifyWalletStatusEnum.WRONG_PASSWORD);
 		} catch (WalletNotFoundException e) {
-			logger.info("payFromWallet: No wallet for user id " + apiVerifyReq.getUserId());
+			logger.info("verifyWallet: No wallet for user id " + apiVerifyReq.getUserId());
 			response.setStatus(VerifyWalletStatusEnum.INVALID_WALLET);
 		} catch (PlatformException pe) {
-			logger.error("payFromWallet: Exception in pay from wallet for user id " + apiVerifyReq.getUserId(), pe);
+			logger.error("verifyWallet: Exception in verify wallet for user id " + apiVerifyReq.getUserId(), pe);
 			response.setStatus(VerifyWalletStatusEnum.FAILED_TRANSACTION);
 		}
 
+		return response;
+	}
+
+	@Override
+	public ChangeWalletPasswordResponse changeWalletPassword(
+			ChangeWalletPasswordRequest apichangeWalletPasswordReq) {
+		ChangeWalletPasswordResponse response = new ChangeWalletPasswordResponse();
+		try{
+			// authenticate the session token and find out the userId
+			AuthenticationTO authentication = authenticationService.authenticate(apichangeWalletPasswordReq.getSessionToken());
+			if (authentication == null) {
+				// invalid session token
+				response.setStatus(ChangeWalletPasswordStatusEnum.NO_SESSION);
+				return response;
+			}
+			response.setSessionToken(authentication.getToken());
+			walletService.changeWalletPassword(apichangeWalletPasswordReq.getUserId(), apichangeWalletPasswordReq.getClientId(), apichangeWalletPasswordReq.getOldPassword(),apichangeWalletPasswordReq.getNewPassword());
+			response.setStatus(ChangeWalletPasswordStatusEnum.SUCCESS);			
+		} catch (WrongWalletPassword e) {
+			logger.info("changeWalletPassword: Worng password wa provided to change the wallet password" + apichangeWalletPasswordReq.getUserId());
+			response.setStatus(ChangeWalletPasswordStatusEnum.WRONG_PASSWORD);
+		} catch (WalletNotFoundException e) {
+			logger.info("changeWalletPassword: No wallet for user id " + apichangeWalletPasswordReq.getUserId());
+			response.setStatus(ChangeWalletPasswordStatusEnum.INVALID_WALLET);
+		} catch (PlatformException e) {
+			logger.error("changeWalletPassword: Exception in changing wallet password for user id " + apichangeWalletPasswordReq.getUserId(), e);
+			response.setStatus(ChangeWalletPasswordStatusEnum.FAILED_TRANSACTION);
+		}
+		return response;
+	}
+
+	@Override
+	public ResetWalletPasswordResponse resetWalletPassword(
+			ResetWalletPasswordRequest apiresetWalletPasswordReq) {
+		ResetWalletPasswordResponse response = new ResetWalletPasswordResponse();
+		try{
+			// authenticate the session token and find out the userId
+			AuthenticationTO authentication = authenticationService.authenticate(apiresetWalletPasswordReq.getSessionToken());
+			if (authentication == null) {
+				// invalid session token
+				response.setStatus(ResetWalletPasswordStatusEnum.NO_SESSION);
+				return response;
+			}
+			response.setSessionToken(authentication.getToken());
+			walletService.resetWalletPassword(apiresetWalletPasswordReq.getUserId(), apiresetWalletPasswordReq.getClientId());
+			response.setStatus(ResetWalletPasswordStatusEnum.SUCCESS);		
+		} catch (WalletNotFoundException e) {
+			logger.info("resetWalletPassword: No wallet for user id " + apiresetWalletPasswordReq.getUserId());
+			response.setStatus(ResetWalletPasswordStatusEnum.INVALID_WALLET);
+		} catch (PlatformException e) {
+			logger.error("resetWalletPassword: Exception in reset wallet password for user id " + apiresetWalletPasswordReq.getUserId(), e);
+			response.setStatus(ResetWalletPasswordStatusEnum.FAILED_TRANSACTION);
+		}
 		return response;
 	}
 

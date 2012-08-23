@@ -5,6 +5,4 @@
 		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 	<context:component-scan base-package="com.fb.platform.wallet"/>
-	<!-- <bean id="walletws" class="com.fb.platform.wallet.WalletResource" />
-	<bean id="walletManager" class ="com.fb.platform.wallet.manager.impl.WalletManagerImpl" />-->
 </beans>

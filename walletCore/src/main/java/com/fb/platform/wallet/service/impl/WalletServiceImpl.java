@@ -20,6 +20,8 @@ import com.fb.platform.wallet.model.WalletGifts;
 import com.fb.platform.wallet.model.WalletSubTransaction;
 import com.fb.platform.wallet.to.WalletTransaction;
 import com.fb.platform.wallet.to.WalletTransactionResultSet;
+import com.fb.platform.wallet.util.Encrypt;
+import com.fb.platform.wallet.util.GenerateSendWalletPassword;
 import com.fb.platform.wallet.service.WalletService;
 import com.fb.platform.wallet.service.exception.AlreadyRefundedException;
 import com.fb.platform.wallet.service.exception.InSufficientFundsException;
@@ -36,6 +38,8 @@ public class WalletServiceImpl implements WalletService {
 	private WalletTransactionDao walletTransactionDao;
 	
 	private int refundExpiryDays;
+	
+	private GenerateSendWalletPassword generateSendWalletPassword = null;
 	
 	private Log log = LogFactory.getLog(WalletServiceImpl.class);
 	
@@ -263,6 +267,11 @@ public class WalletServiceImpl implements WalletService {
 			throw new PlatformException("an unhandeled exception has occured while trnasaction reversal");
 		}
 	}
+	
+	public void setWalletPasswordSender(GenerateSendWalletPassword generateSendWalletPassword){
+		this.generateSendWalletPassword = generateSendWalletPassword;
+	}
+	
 	public void setWalletDao(WalletDao walletDao) {
 		this.walletDao = walletDao;
 	}
@@ -280,6 +289,7 @@ public class WalletServiceImpl implements WalletService {
 		walletTransactionRes.setAmount(walletTransaction.getAmount());
 		walletTransactionRes.setTimeStamp(walletTransaction.getTimeStamp());
 		walletTransactionRes.setTransactionType(walletTransaction.getTransactionType());
+		walletTransactionRes.setWalletBalance(walletTransaction.getWalletBalance());
 		List<com.fb.platform.wallet.to.WalletSubTransaction> subTransactionList = new ArrayList<com.fb.platform.wallet.to.WalletSubTransaction>();
 		for(com.fb.platform.wallet.model.WalletSubTransaction subTransaction: walletTransaction.getWalletSubTransaction()){
 			com.fb.platform.wallet.to.WalletSubTransaction sTransaction = new com.fb.platform.wallet.to.WalletSubTransaction();
@@ -318,17 +328,17 @@ public class WalletServiceImpl implements WalletService {
 	}
 
 	@Override
-	public Wallet verifyWallet(long userId, long clientId, Money amount,
-			String password) throws WalletNotFoundException,
-			InSufficientFundsException, WrongWalletPassword, PlatformException {
+	public Wallet verifyWallet(long userId, long clientId,String password) 
+			throws WalletNotFoundException, WrongWalletPassword, 
+			PlatformException {
 		try{
 			Wallet wallet = load(userId,clientId,false);
 			if(!wallet.verifyPassword(password)){
-				throw new WrongWalletPassword("Insufficient fund in wallet");
+				throw new WrongWalletPassword("Wrong wallet password");
 			}
 			return wallet;
 		} catch (WrongWalletPassword e){
-			throw new WrongWalletPassword("The password provided por the wallet is incorrect");
+			throw new WrongWalletPassword("The password provided for the wallet is incorrect");
 		}  
 		catch (WalletNotFoundException e){
 			throw new WalletNotFoundException("No wallet with this wallet id");
@@ -337,5 +347,41 @@ public class WalletServiceImpl implements WalletService {
 			throw new PlatformException("No wallet with this wallet id");
 		}
 		
+	}
+
+	@Override
+	public void changeWalletPassword(long userId, long clientId,
+			String oldPassword, String newPassword)
+			throws WalletNotFoundException, WrongWalletPassword,
+			PlatformException {
+		try{
+			Wallet wallet = load(userId,clientId,false);
+			if(!wallet.verifyPassword(oldPassword)){
+				throw new WrongWalletPassword("Wrong Password");
+			}else{
+				wallet.setWalletPassword(Encrypt.encrypt(newPassword));
+				walletDao.update(wallet);
+			}
+		} catch (WrongWalletPassword e){
+			throw new WrongWalletPassword("The password provided for the wallet is incorrect");
+		} catch (WalletNotFoundException e){
+			throw new WalletNotFoundException("No wallet with this user id");
+		} catch (PlatformException e) {
+			throw new PlatformException("The password could not be changed at this time");
+		}		
+	}
+
+	@Override
+	public void resetWalletPassword(long userId, long clientId)
+			throws WalletNotFoundException, PlatformException {
+		try{
+			Wallet wallet = load(userId,clientId,false);
+			wallet.setWalletPassword(Encrypt.encrypt(generateSendWalletPassword.generateSendWalletPassword(userId)));
+			walletDao.update(wallet);
+		} catch (WalletNotFoundException e){
+			throw new WalletNotFoundException("No wallet with this userId");
+		} catch (PlatformException e) {
+			throw new PlatformException("The password could not be reset at this time");
+		}		
 	}
 }
