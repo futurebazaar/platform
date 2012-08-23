@@ -34,7 +34,7 @@ public class WalletTransactionDaoTest extends BaseTestCase {
 		
 		WalletTransaction walletTransaction = wallet.credit(new Money(new BigDecimal("100.00")), SubWalletType.GIFT, 0, 0, 1);
 		assertNotNull(walletTransaction);
-		
+		assertEquals(new BigDecimal("100.00"), walletTransaction.getWalletBalance().getAmount());
 		String transactionId = walletTransactionDao.insertTransaction(walletTransaction);
 		assertNotNull(transactionId);
 		Wallet wallet2 = walletDao.update(wallet);
@@ -49,13 +49,16 @@ public class WalletTransactionDaoTest extends BaseTestCase {
 		assertNotNull(wallet.getId());
 		WalletTransaction walletTransaction = wallet.credit(new Money(new BigDecimal("100.00")), SubWalletType.GIFT, 0, 0,1);
 		assertNotNull(walletTransaction);
+		assertEquals(new BigDecimal("100.00"), walletTransaction.getWalletBalance().getAmount());
 		String transactionId = walletTransactionDao.insertTransaction(walletTransaction);
 		assertNotNull(transactionId);
 		Wallet wallet2 = walletDao.update(wallet);
 		assertNotNull(wallet2);
 		assertNotNull(wallet2.getId());
 		WalletTransaction walletTransaction2 = wallet2.credit(new Money(new BigDecimal("200.00")), SubWalletType.CASH, 1, 0, 0);
+		assertEquals(new BigDecimal("300.00"), walletTransaction2.getWalletBalance().getAmount());
 		WalletTransaction walletTransaction3 = wallet2.credit(new Money(new BigDecimal("200.00")), SubWalletType.REFUND, 0, 1, 0);
+		assertEquals(new BigDecimal("500.00"), walletTransaction3.getWalletBalance().getAmount());
 		assertNotNull(walletTransaction2);
 		assertNotNull(walletTransaction3);
 		assertEquals(new Money(new BigDecimal("500.00")) , wallet2.getTotalAmount());
@@ -66,6 +69,7 @@ public class WalletTransactionDaoTest extends BaseTestCase {
 		assertNotNull(tranString2);
 		
 		WalletTransaction debitWalletTransaction = wallet3.debit(new Money(new BigDecimal("250.00")), 123444);
+		assertEquals(new BigDecimal("250.00"), debitWalletTransaction.getWalletBalance().getAmount());
 		assertEquals(new Money(new BigDecimal("250.00")) , wallet3.getTotalAmount());
 		assertEquals(new Money(new BigDecimal("0.00")) , wallet3.getGiftSubWallet());
 		assertEquals(new Money(new BigDecimal("50.00")) , wallet3.getCashSubWallet());

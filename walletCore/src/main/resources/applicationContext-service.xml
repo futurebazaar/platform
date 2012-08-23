@@ -15,6 +15,7 @@
     <bean id="walletService" class="com.fb.platform.wallet.service.impl.WalletServiceImpl">
         <property name="walletDao" ref="walletDao"/>
         <property name="walletTransactionDao" ref="walletTransactionDao"></property>
+        <property name="walletPasswordSender" ref="walletPasswordSender"></property>
         <property name="refundExpiryDays">
         	<value>${refund.expiry.days}</value>
         </property>
@@ -24,5 +25,29 @@
     <bean id="walletManager" class="com.fb.platform.wallet.manager.impl.WalletManagerImpl">
     	<property name="authenticationService" ref="authenticationService"></property>
     </bean>
+    
+    
+    <!-- Add new utility bean here -->
+    <bean id="walletPasswordSender" class="com.fb.platform.wallet.util.GenerateSendWalletPassword">
+    	<property name="userAdminService" ref="userAdminService"></property>
+		<property name="mailSender" ref="mailSender"></property>
+        <property name="smsSender" ref="smsSender"></property>
+    </bean>
+    
+    <bean id="springMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+  		<property name="host" value="MUMOPBL01.fb.dc"/>
+        <property name="port" value="25"/>  
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.localhost">mail.pantaloon.com</prop>
+            </props>
+         </property>
+	</bean>
+	
+    <bean id="mailSender" class="com.fb.commons.mail.impl.MailSenderImpl">
+	  	<property name="springMailSender" ref="springMailSender"/>
+	</bean>
+	
+	<bean id="smsSender" class="com.fb.commons.sms.SmsSender" />
     
 </beans>

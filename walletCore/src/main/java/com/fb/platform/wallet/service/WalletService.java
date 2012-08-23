@@ -133,13 +133,33 @@ public interface WalletService {
 	 * Verify the wallet for given amount and password.
 	 * @param userId : User Id of the for whom to debit the wallet.
 	 * @param clientId : Client Id though which the payment request is initiated.
-	 * @param amount : The amount to be debited to the wallet.
 	 * @param password : The wallet password is required to debit the wallet
 	 * @return Wallet
 	 * @throws WalletNotFoundException When no wallet is found matching the wallet.
 	 * @throws WrongWalletPassword when the password to debit the wallet is invalid.
 	 * @throws PlatformException When an unrecoverable error happens.
 	**/
-	public Wallet verifyWallet(long userId, long clientId, Money amount,String password)throws WalletNotFoundException,InSufficientFundsException,WrongWalletPassword ,PlatformException;
+	public Wallet verifyWallet(long userId, long clientId,String password)throws WalletNotFoundException,WrongWalletPassword ,PlatformException;
+
+	/**
+	 * Change the wallet password
+	 * @param userId : User Id of the for whom to debit the wallet.
+	 * @param clientId : Client Id though which the payment request is initiated.
+	 * @param oldPassword : The wallet old password is required to change password
+	 * @param newPassword : The wallet new password is required to change password
+	 * @throws WalletNotFoundException When no wallet is found matching the wallet.
+	 * @throws WrongWalletPassword when the old password for the wallet is invalid.
+	 * @throws PlatformException When an unrecoverable error happens.
+	**/
+	public void changeWalletPassword(long userId, long clientId,String oldPassword, String newPassword) throws WalletNotFoundException,WrongWalletPassword ,PlatformException;;
+
+	/**
+	 * Reset the wallet password if wallet exists
+	 * @param userId : User Id of the for whom to debit the wallet.
+	 * @param clientId : Client Id though which the payment request is initiated.
+	 * @throws WalletNotFoundException When no wallet is found matching the wallet.
+	 * @throws PlatformException When an unrecoverable error happens.
+	**/
+	public void resetWalletPassword(long userId, long clientId) throws WalletNotFoundException ,PlatformException;;
 	
 }

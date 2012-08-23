@@ -1,18 +1,13 @@
 package com.fb.platform.wallet.dao.impl;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -20,23 +15,13 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-import sun.misc.BASE64Encoder;
-
-import com.fb.commons.communication.to.SmsTO;
-import com.fb.commons.mail.MailSender;
-import com.fb.commons.mom.to.MailTO;
-import com.fb.commons.sms.SmsSender;
 import com.fb.commons.to.Money;
-import com.fb.platform.user.domain.UserBo;
-import com.fb.platform.user.domain.UserEmailBo;
-import com.fb.platform.user.domain.UserPhoneBo;
-import com.fb.platform.user.manager.interfaces.UserAdminService;
 import com.fb.platform.wallet.dao.WalletDao;
 import com.fb.platform.wallet.model.Wallet;
 import com.fb.platform.wallet.service.exception.WalletCreationError;
 import com.fb.platform.wallet.service.exception.WalletNotFoundException;
-import com.fb.platform.wallet.util.MailHelper;
-import com.fb.platform.wallet.util.SmsHelper;
+import com.fb.platform.wallet.util.Encrypt;
+import com.fb.platform.wallet.util.GenerateSendWalletPassword;
 
 public class WalletDaoImpl implements WalletDao {
 	
@@ -55,6 +40,7 @@ public class WalletDaoImpl implements WalletDao {
 			+ "cash_amount = ?, "
 			+ "gift_amount =?, "
 			+ "refund_amount=?, "
+			+ "wallet_password=?, "
 			+ "modified_on = CURDATE() "
 			+ "where id = ?";
 	private final String GET_WALLET_ID_USER_CLIENT = "Select "
@@ -70,25 +56,9 @@ public class WalletDaoImpl implements WalletDao {
 			+ "(user_id,client_id,wallet_id) "
 			+ "values (?,?,?)";
 	private JdbcTemplate jdbcTemplate;
+	private GenerateSendWalletPassword walletPasswordSender;
+	
 	private Log log = LogFactory.getLog(WalletDaoImpl.class);
-	
-	@Autowired
-	private UserAdminService userAdminService;
-	
-	@Autowired
-	private MailSender mailSender = null;
-
-	@Autowired
-	private SmsSender smsSender = null;
-
-	public void setMailSender(MailSender mailSender) {
-		this.mailSender = mailSender;
-	}
-
-	public void setSmsSender(SmsSender smsSender) {
-		this.smsSender = smsSender;
-	}
-	
 	
 	@Override
 	public Wallet load(long walletId) {
@@ -124,25 +94,7 @@ public class WalletDaoImpl implements WalletDao {
 	private Wallet create(long userId, long clientId) {
 		try{
 			final KeyHolder keyHolder = new GeneratedKeyHolder();
-			String randomPassword = RandomStringUtils.random(6, true, true).toUpperCase();
-			try {
-				UserBo user = userAdminService.getUserByUserId(safeLongToInt(userId));
-				for(UserEmailBo userEmailBo : user.getUserEmail()){
-					if(userEmailBo.isVerified()){
-						MailTO message = MailHelper.createMailTO(userEmailBo.getEmail(), randomPassword, user.getName());
-						mailSender.send(message);
-					}
-				}
-				for(UserPhoneBo userPhoneBo : user.getUserPhone()){
-					if(userPhoneBo.isVerified()){
-						SmsTO sms = SmsHelper.createSmsTO(userPhoneBo.getPhoneno(), randomPassword, user.getName());
-						smsSender.send(sms);
-					}
-				}
-			} catch (Exception e){}
-			final String passwordEncrypted = encrypt(randomPassword);
-			log.info("Wallet password generated for userId: " + userId + " clentId :" + clientId + " :::::" + randomPassword);
-			System.out.println("Wallet password generated for userId: " + userId + " clentId :" + clientId + " :::::" + randomPassword);
+			final String passwordEncrypted = Encrypt.encrypt(walletPasswordSender.generateSendWalletPassword(userId));
 			jdbcTemplate.update(new PreparedStatementCreator() {
 				@Override
 				public PreparedStatement createPreparedStatement(Connection con)
@@ -161,10 +113,6 @@ public class WalletDaoImpl implements WalletDao {
 		}
 	}
 	
-	public void setUserAdminService(UserAdminService userAdminService) {
-		this.userAdminService = userAdminService;
-	}
-
 	@Override
 	public Wallet update(Wallet wallet) {
 		try {
@@ -172,6 +120,7 @@ public class WalletDaoImpl implements WalletDao {
 					wallet.getCashSubWallet().getAmount(),
 					wallet.getGiftSubWallet().getAmount(),
 					wallet.getRefundSubWallet().getAmount(),
+					wallet.getWalletPassword(),
 					wallet.getId()});
 			return load(wallet.getId());
 		}catch (WalletNotFoundException e) {
@@ -183,9 +132,11 @@ public class WalletDaoImpl implements WalletDao {
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 			this.jdbcTemplate = jdbcTemplate;
 	}
-	 
+	public void setWalletPasswordSender(GenerateSendWalletPassword generateSendWalletPassword){
+		this.walletPasswordSender = generateSendWalletPassword;
+	}
+	
 	private static class WalletMapper implements RowMapper<Wallet> {
-
     	@Override
     	public Wallet mapRow(ResultSet rs, int rowNum) throws SQLException {
 
@@ -200,29 +151,4 @@ public class WalletDaoImpl implements WalletDao {
 			return wallet;
     	}
     }
-	
-	private int safeLongToInt(long l) {
-	    if (l < Integer.MIN_VALUE || l > Integer.MAX_VALUE) {
-	        throw new IllegalArgumentException
-	            (l + " cannot be cast to int without changing its value.");
-	    }
-	    return (int) l;
-	}
-	
-	private String encrypt(String plaintext) throws Exception {
-        MessageDigest msgDigest = null;
-        String hashValue = null;
-        try {
-            msgDigest = MessageDigest.getInstance("MD5");
-            msgDigest.update(plaintext.getBytes("UTF-8"));
-            byte rawByte[] = msgDigest.digest();
-            hashValue = (new BASE64Encoder()).encode(rawByte); 
-        } catch (NoSuchAlgorithmException e) {
-            System.out.println("No Such Algorithm Exists");
-        } catch (UnsupportedEncodingException e) {
-            System.out.println("The Encoding Is Not Supported");
-        }
-        return hashValue;
-    }
-
 }

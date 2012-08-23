@@ -1,5 +1,9 @@
 package com.fb.platform.wallet.manager.interfaces;
 
+import com.fb.platform.wallet.manager.model.access.ChangeWalletPasswordRequest;
+import com.fb.platform.wallet.manager.model.access.ChangeWalletPasswordResponse;
+import com.fb.platform.wallet.manager.model.access.ResetWalletPasswordRequest;
+import com.fb.platform.wallet.manager.model.access.ResetWalletPasswordResponse;
 import com.fb.platform.wallet.manager.model.access.VerifyWalletRequest;
 import com.fb.platform.wallet.manager.model.access.VerifyWalletResponse;
 import com.fb.platform.wallet.manager.model.access.WalletSummaryRequest;
@@ -37,4 +41,8 @@ public interface WalletManager {
 	public VerifyWalletResponse verifyWallet(VerifyWalletRequest apiVerifyReq);
 
 	public WalletHistoryResponse getWalletHistoryPaged(WalletHistoryRequest walletHistoryRequest);
+
+	public ChangeWalletPasswordResponse changeWalletPassword(ChangeWalletPasswordRequest apichangeWalletPasswordReq);
+
+	public ResetWalletPasswordResponse resetWalletPassword(ResetWalletPasswordRequest apiresetWalletPasswordReq);
 }
