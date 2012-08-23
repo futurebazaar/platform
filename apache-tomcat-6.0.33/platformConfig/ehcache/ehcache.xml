@@ -48,6 +48,14 @@
     	overflowToDisk="true" diskSpoolBufferSizeMB="20" timeToIdleSeconds="3000" timeToLiveSeconds="6000" 
     	memoryStoreEvictionPolicy="LFU" transactionalMode="off"/>
 
+	 <cache name="walletCache" maxElementsInMemory="10" maxElementsOnDisk="1000" eternal="false" 
+        overflowToDisk="true" diskSpoolBufferSizeMB="20" timeToIdleSeconds="3000" timeToLiveSeconds="6000" 
+        memoryStoreEvictionPolicy="LFU" transactionalMode="off"/>
+
+        <cache name="userCache" maxElementsInMemory="10" maxElementsOnDisk="1000" eternal="false" 
+        overflowToDisk="true" diskSpoolBufferSizeMB="20" timeToIdleSeconds="3000" timeToLiveSeconds="6000" 
+        memoryStoreEvictionPolicy="LFU" transactionalMode="off"/>
+
     <!--
     Default Cache configuration. These settings will be applied to caches
     created programmatically using CacheManager.add(String cacheName).
