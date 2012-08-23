@@ -22,7 +22,7 @@ public class InvoiceIdocMapperImpl implements ItemAckIdocMapper {
 	@Override
 	public ItemTO getItemAck(ZATGFLOW sapItemAck) {
 		ItemInvoiceTO itemInvoice = (ItemInvoiceTO) new ItemAckIdocMapperImpl().getItemAck(sapItemAck, new ItemInvoiceTO());
-		if(sapItemAck.getERDATDEL() != null && sapItemAck.getFKDAT().length() == 8) {
+		if(sapItemAck.getERDATDEL() != null && sapItemAck.getFKDAT() != null && sapItemAck.getFKDAT().length() == 8) {
 			int year = Integer.valueOf(sapItemAck.getFKDAT().substring(0, 4));
 			int month = Integer.valueOf(sapItemAck.getFKDAT().substring(4, 6));
 			int day = Integer.valueOf(sapItemAck.getFKDAT().substring(6));

@@ -22,7 +22,7 @@ public class PgrCreationIdocMapperImpl implements ItemAckIdocMapper {
 	@Override
 	public ItemTO getItemAck(ZATGFLOW sapItemAck) {
 		PgrCreationItemTO pgrCreationAck = (PgrCreationItemTO) new ItemAckIdocMapperImpl().getItemAck(sapItemAck, new PgrCreationItemTO());
-		if(sapItemAck.getERDATDEL() != null && sapItemAck.getWADATPGR().length() == 8) {
+		if(sapItemAck.getERDATDEL() != null && sapItemAck.getWADATPGR() != null && sapItemAck.getWADATPGR().length() == 8) {
 			int year = Integer.valueOf(sapItemAck.getWADATPGR().substring(0, 4));
 			int month = Integer.valueOf(sapItemAck.getWADATPGR().substring(4, 6));
 			int day = Integer.valueOf(sapItemAck.getWADATPGR().substring(6));

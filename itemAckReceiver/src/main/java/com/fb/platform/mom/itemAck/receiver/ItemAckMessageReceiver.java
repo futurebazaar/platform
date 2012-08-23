@@ -23,6 +23,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import com.fb.commons.PlatformException;
 import com.fb.commons.mom.to.ItemTO;
+import com.fb.commons.mom.to.OrderStateEnum;
 import com.fb.platform.mom.itemAck.sender.ItemAckParameterFactory;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
 
@@ -68,12 +69,15 @@ public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 		HttpPost httpPost = new HttpPost(orderURL);
 
 		List<NameValuePair> parameters = new ItemAckParameterFactory().getParameters(itemAck);
+		OrderStateEnum orderState = OrderStateEnum.valueOf(itemAck.getOrderState());
 		
 		parameters.add(new BasicNameValuePair("sender", "MOM"));
 
 		UrlEncodedFormEntity entity;
 		try {
-			if(!itemAck.getOrderState().equalsIgnoreCase("C")) {
+			//TINLA is not processing these states as the plant id is null for these states
+			//plant id are null because sap is sending the site as null.
+			if(orderState != OrderStateEnum.C && orderState != OrderStateEnum.R) {
 				entity = new UrlEncodedFormEntity(parameters, "UTF-8");
 				httpPost.setEntity(entity);
 				HttpResponse response = httpClient.execute(httpPost);
@@ -84,7 +88,7 @@ public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 				}
 				log.info("Item ack delivered to tinla. Status code : " + statusCode);
 			} else {
-				log.info("Request not sent to tinla because order state is C : " + itemAck.toString());
+				log.info("Request not sent to tinla because order state is C / R : " + itemAck.toString());
 			}
 		} catch (UnsupportedEncodingException e) {
 			log.error("Error communicating with tinla on url : " + orderURL, e);

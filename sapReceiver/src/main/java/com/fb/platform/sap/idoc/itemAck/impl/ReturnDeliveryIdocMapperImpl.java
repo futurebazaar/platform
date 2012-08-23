@@ -22,7 +22,7 @@ public class ReturnDeliveryIdocMapperImpl implements ItemAckIdocMapper {
 	@Override
 	public ItemTO getItemAck(ZATGFLOW sapItemAck) {
 		ReturnDeliveryTO returnDelivery = (ReturnDeliveryTO) new ItemAckIdocMapperImpl().getItemAck(sapItemAck, new ReturnDeliveryTO());
-		if(sapItemAck.getERDATDEL() != null && sapItemAck.getWADATPGR().length() == 8) {
+		if(sapItemAck.getERDATDEL() != null && sapItemAck.getERDATDEL().length() == 8) {
 			int year = Integer.valueOf(sapItemAck.getERDATDEL().substring(0, 4));
 			int month = Integer.valueOf(sapItemAck.getERDATDEL().substring(4, 6));
 			int day = Integer.valueOf(sapItemAck.getERDATDEL().substring(6));

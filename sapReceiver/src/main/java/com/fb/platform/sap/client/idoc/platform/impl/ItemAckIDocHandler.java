@@ -78,7 +78,7 @@ public class ItemAckIDocHandler implements PlatformIDocHandler {
 			ItemAckIdocMapperFactory mapperFactory = new ItemAckIdocMapperFactory();
 			for (ZATGFLOW sapItemAck : ackList) {
 				ItemTO itemAck = mapperFactory.getItemAck(sapItemAck);
-				logger.debug("Sending ItemTO to item ack destination : " + itemAck.toString());
+				logger.info("Sending ItemTO to item ack destination : " + itemAck.toString());
 				momManager.send(PlatformDestinationEnum.ITEM_ACK, itemAck);
 			}
 		} catch (JAXBException e) {
