@@ -22,13 +22,16 @@ public class InvoiceIdocMapperImpl implements ItemAckIdocMapper {
 	@Override
 	public ItemTO getItemAck(ZATGFLOW sapItemAck) {
 		ItemInvoiceTO itemInvoice = (ItemInvoiceTO) new ItemAckIdocMapperImpl().getItemAck(sapItemAck, new ItemInvoiceTO());
-		if(sapItemAck.getERDATDEL() != null && sapItemAck.getFKDAT() != null && sapItemAck.getFKDAT().length() == 8) {
-			int year = Integer.valueOf(sapItemAck.getFKDAT().substring(0, 4));
-			int month = Integer.valueOf(sapItemAck.getFKDAT().substring(4, 6));
-			int day = Integer.valueOf(sapItemAck.getFKDAT().substring(6));
+		if(sapItemAck.getERDAT()!= null && sapItemAck.getERDAT().length() == 8) {
+			int year = Integer.valueOf(sapItemAck.getERDAT().substring(0, 4));
+			int month = Integer.valueOf(sapItemAck.getERDAT().substring(4, 6));
+			int day = Integer.valueOf(sapItemAck.getERDAT().substring(6));
 			itemInvoice.setInvoiceDate(new DateTime(year, month, day, 0, 0));
 		}
 		itemInvoice.setInvoiceNumber(sapItemAck.getVBELN());
+		if(sapItemAck.getFKDAT() != null) {
+			itemInvoice.setBillingType(sapItemAck.getFKART());
+		}
 		return itemInvoice;
 	}
 

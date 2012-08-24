@@ -12,6 +12,7 @@ import org.joda.time.DateTime;
 public class ItemInvoiceTO extends ItemTO {
 	private String invoiceNumber;
 	private DateTime invoiceDate;
+	private String billingType;
 	
 	public String getInvoiceNumber() {
 		return invoiceNumber;
@@ -25,11 +26,18 @@ public class ItemInvoiceTO extends ItemTO {
 	public void setInvoiceDate(DateTime invoiceDate) {
 		this.invoiceDate = invoiceDate;
 	}
+	public String getBillingType() {
+		return billingType;
+	}
+	public void setBillingType(String billingType) {
+		this.billingType = billingType;
+	}
 	@Override
 	public String toString(){
 		String itemInvoice = super.toString()
 				+ "\ninvoice number : " + invoiceNumber
-				+ "\ninvoice date : " + invoiceDate;
+				+ "\ninvoice date : " + invoiceDate
+				+ "\nbilling type : " + billingType;
 		return itemInvoice;
 	}
 	

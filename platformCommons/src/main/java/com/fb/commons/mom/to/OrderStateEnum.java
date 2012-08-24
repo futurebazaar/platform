@@ -12,6 +12,8 @@ public enum OrderStateEnum {
 	O,
 	T,
 	J,
-	H;
+	Q,
+	H,
+	X;
 	
 }

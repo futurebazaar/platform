@@ -9,6 +9,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -60,6 +61,19 @@ public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 		ItemTO itemAck = (ItemTO) message;
 		sendAck(itemAck);
 	}
+	
+	private boolean isOrderStateValid(ItemTO itemAck) {
+		boolean isOrderStateValid = true;
+		OrderStateEnum orderState = OrderStateEnum.valueOf(itemAck.getOrderState());
+		if(orderState == OrderStateEnum.R) {
+			isOrderStateValid = false;
+		} else if (orderState == OrderStateEnum.C && itemAck.getSapDocumentId() <= 0) {
+			isOrderStateValid = false;
+		} else if (StringUtils.isBlank(itemAck.getPlantId())) {
+			isOrderStateValid = false;
+		}
+		return isOrderStateValid;
+	}
 
 	private void sendAck(ItemTO itemAck) {
 
@@ -69,7 +83,6 @@ public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 		HttpPost httpPost = new HttpPost(orderURL);
 
 		List<NameValuePair> parameters = new ItemAckParameterFactory().getParameters(itemAck);
-		OrderStateEnum orderState = OrderStateEnum.valueOf(itemAck.getOrderState());
 		
 		parameters.add(new BasicNameValuePair("sender", "MOM"));
 
@@ -77,7 +90,7 @@ public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 		try {
 			//TINLA is not processing these states as the plant id is null for these states
 			//plant id are null because sap is sending the site as null.
-			if(orderState != OrderStateEnum.C && orderState != OrderStateEnum.R) {
+			if(isOrderStateValid(itemAck)) {
 				entity = new UrlEncodedFormEntity(parameters, "UTF-8");
 				httpPost.setEntity(entity);
 				HttpResponse response = httpClient.execute(httpPost);

@@ -3,6 +3,10 @@
  */
 package com.fb.platform.sap.idoc.itemAck.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 
 import com.fb.commons.mom.to.ItemTO;
@@ -24,6 +28,23 @@ public class ItemAckIdocMapperImpl {
 		itemAck.setSapDocumentId(sapItemAck.getSOPOSNR());
 		itemAck.setUnitOfMeasurement(sapItemAck.getMEINS());
 		itemAck.setOrderType(sapItemAck.getAUART());
+		List<String> shipComments = new ArrayList<String>();
+		if(StringUtils.isNotBlank(sapItemAck.getGBSTK())) {
+			shipComments.add(sapItemAck.getGBSTK());
+		}
+		if(StringUtils.isNotBlank(sapItemAck.getABSTK())) {
+			shipComments.add(sapItemAck.getABSTK());
+		}
+		if(StringUtils.isNotBlank(sapItemAck.getLFGSK())) {
+			shipComments.add(sapItemAck.getLFGSK());
+		}
+		if(StringUtils.isNotBlank(sapItemAck.getWBSTK())) {
+			shipComments.add(sapItemAck.getWBSTK());
+		}
+		if(StringUtils.isNotBlank(sapItemAck.getFKSTK())) {
+			shipComments.add(sapItemAck.getFKSTK());
+		}
+		itemAck.setShipmentComments(StringUtils.join(shipComments , ","));
 		itemAck.setHeader("ITEM_ACK");
 		itemAck.setDeliveryNumber(sapItemAck.getVBELN());
 		itemAck.setItemCategory(sapItemAck.getPSTYV());

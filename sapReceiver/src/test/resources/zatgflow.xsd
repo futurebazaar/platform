@@ -105,6 +105,7 @@
         </xs:sequence>
         <xs:element minOccurs="0" ref="CMGST"/>
         <xs:element minOccurs="0" ref="WBSTK"/>
+        <xs:element ref="FKART"/>
         <xs:sequence minOccurs="0">
           <xs:element ref="FKSTK"/>
           <xs:element ref="KOSTK"/>
@@ -163,6 +164,7 @@
   <xs:element name="CMGST" type="xs:string"/>
   <xs:element name="WBSTK" type="xs:string"/>
   <xs:element name="FKSTK" type="xs:string"/>
+  <xs:element name="FKART" type="xs:string"/>
   <xs:element name="KOSTK" type="xs:string"/>
   <xs:element name="PKSTK" type="xs:string"/>
   <xs:element name="FKSAK" type="xs:string"/>
