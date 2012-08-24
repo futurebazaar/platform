@@ -129,6 +129,7 @@ import javax.xml.bind.annotation.XmlType;
     "cmgst",
     "wbstk",
     "fkstk",
+    "fkart",
     "kostk",
     "pkstk",
     "fksak",
@@ -224,6 +225,8 @@ public class ZATGFLOW {
     protected String wbstk;
     @XmlElement(name = "FKSTK")
     protected String fkstk;
+    @XmlElement(name = "FKART")
+    protected String fkart;
     @XmlElement(name = "KOSTK")
     protected String kostk;
     @XmlElement(name = "PKSTK")
@@ -970,6 +973,30 @@ public class ZATGFLOW {
      */
     public void setFKSTK(String value) {
         this.fkstk = value;
+    }
+
+    /**
+     * Gets the value of the fkart property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getFKART() {
+        return fkart;
+    }
+
+    /**
+     * Sets the value of the fkart property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setFKART(String value) {
+        this.fkart = value;
     }
 
     /**

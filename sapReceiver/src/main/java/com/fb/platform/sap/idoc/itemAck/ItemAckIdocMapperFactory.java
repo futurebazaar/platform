@@ -21,6 +21,8 @@ import com.fb.platform.sap.idoc.itemAck.impl.ReturnOrderIdocMapperImpl;
 
 /**
  * @author nehaga
+ * J
+ * Q
  *
  */
 public class ItemAckIdocMapperFactory {
@@ -28,7 +30,7 @@ public class ItemAckIdocMapperFactory {
 	public ItemTO getItemAck(ZATGFLOW sapItemAck) {
 		ItemTO itemAck = null;
 		OrderStateEnum orderState = null;
-		if(StringUtils.isNotBlank(sapItemAck.getVBTYPN())) {
+		if(StringUtils.isNotBlank(sapItemAck.getVBTYPN()) && !sapItemAck.getVBTYPN().trim().equals("+")) {
 			orderState = OrderStateEnum.valueOf(sapItemAck.getVBTYPN());
 		}
 		
@@ -51,7 +53,9 @@ public class ItemAckIdocMapperFactory {
 			case R:
 				if(precedingOrderState == PrecedingOrderStateEnum.J) {
 					itemAck = new PgiCreationIdocMapperImpl().getItemAck(sapItemAck);
-				}
+				} else if(precedingOrderState == PrecedingOrderStateEnum.T) {
+					itemAck = new PgrCreationIdocMapperImpl().getItemAck(sapItemAck);
+				} 
 				break;
 			case M:
 				itemAck = new InvoiceIdocMapperImpl().getItemAck(sapItemAck);
