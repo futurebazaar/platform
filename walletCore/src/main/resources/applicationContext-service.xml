@@ -44,7 +44,7 @@
          </property>
 	</bean>
 	
-    <bean id="mailSender" class="com.fb.commons.mail.impl.MailSenderImpl">
+    <bean id="mailSender" class="com.fb.commons.mail.MailSender">
 	  	<property name="springMailSender" ref="springMailSender"/>
 	</bean>
 	

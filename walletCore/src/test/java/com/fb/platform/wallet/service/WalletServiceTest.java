@@ -248,7 +248,7 @@ public class WalletServiceTest extends BaseTestCase {
 		WalletTransaction walletTransactionCr3 = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.REFUND.toString(), 0, 3, null,null);
 		assertNotNull(walletTransactionCr3);
 		
-		WalletTransaction walletTransactionrefund = walletService.refund(6, -5, new Money(new BigDecimal("200.00")), 3, false);
+		WalletTransaction walletTransactionrefund = walletService.refund(6, -5, new Money(new BigDecimal("200.00")), 3, true);
 		assertNotNull(walletTransactionrefund);
 		
 		assertNotNull(walletTransactionrefund);
@@ -266,7 +266,7 @@ public class WalletServiceTest extends BaseTestCase {
 		WalletTransaction walletTransactionCr3 = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.REFUND.toString(), 0, 3, null,null);
 		assertNotNull(walletTransactionCr3);
 		
-		WalletTransaction walletTransactionrefund = walletService.refund(6, -5, new Money(new BigDecimal("200.00")), 3, false);
+		WalletTransaction walletTransactionrefund = walletService.refund(6, -5, new Money(new BigDecimal("200.00")), 3, true);
 		assertNotNull(walletTransactionrefund);
 		
 		assertNotNull(walletTransactionrefund);
@@ -277,7 +277,7 @@ public class WalletServiceTest extends BaseTestCase {
 		try{
 			WalletTransaction walletTransactionrefundAlready = walletService.refund(6, -5, new Money(new BigDecimal("200.00")), 3, false);
 		}catch (Exception e) {
-			assertEquals("com.fb.platform.wallet.service.exception.AlreadyRefundedException",e.getClass().getCanonicalName());
+			assertEquals("com.fb.platform.wallet.service.exception.InSufficientFundsException",e.getClass().getCanonicalName());
 		}
 		
 	}
@@ -290,7 +290,7 @@ public class WalletServiceTest extends BaseTestCase {
 		WalletTransaction walletTransactionCr3 = walletService.credit(wallet.getId(), new Money(new BigDecimal("200.00")), SubWalletType.REFUND.toString(), 0, 3, null,null);
 		assertNotNull(walletTransactionCr3);
 		try{
-			WalletTransaction walletTransactionrefund = walletService.refund(6, -5, new Money(new BigDecimal("100.00")), 3, false);
+			WalletTransaction walletTransactionrefund = walletService.refund(6, -5, new Money(new BigDecimal("300.00")), 3, true);
 		}catch (Exception e) {
 			assertEquals("com.fb.platform.wallet.service.exception.InSufficientFundsException",e.getClass().getCanonicalName());
 		}		

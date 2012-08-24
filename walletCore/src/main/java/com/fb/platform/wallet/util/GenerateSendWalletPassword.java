@@ -53,7 +53,7 @@ public class GenerateSendWalletPassword {
 	private Log log = LogFactory.getLog(GenerateSendWalletPassword.class);
 	
 	public String generateSendWalletPassword(long userId){
-		String randomPassword = RandomStringUtils.random(6, true, true).toUpperCase();
+		String randomPassword = RandomStringUtils.random(4, false, true);
 		log.info("Wallet password generated for userId: " + userId + " :::::" + randomPassword);
 		try {
 			UserBo user = userAdminService.getUserByUserId(safeLongToInt(userId));
@@ -70,7 +70,7 @@ public class GenerateSendWalletPassword {
 				}
 			}
 		} catch (Exception e){
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 		return randomPassword;
 	}

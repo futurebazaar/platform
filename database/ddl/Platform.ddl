@@ -956,6 +956,7 @@ CREATE TABLE wallets_refunds_credit_history
 	id bigint NOT NULL AUTO_INCREMENT,
 	wallet_id bigint NOT NULL,
 	sub_transaction_id BIGINT NOT NULL,
+	refund_id integer NOT NULL, 
 	amount decimal(18,2) NOT NULL,
 	credit_date DATETIME NOT NULL,
 	amount_remaining decimal(18,2) NOT NULL,
