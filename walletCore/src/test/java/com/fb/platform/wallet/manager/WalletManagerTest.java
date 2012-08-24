@@ -458,7 +458,7 @@ public class WalletManagerTest extends BaseTestCase{
 		response = walletManager.refundFromWallet(request);
 		
 		assertNotNull(response);
-		assertEquals("DUPLICATE REFUND REQUEST", response.getStatus().toString());
+		assertEquals("BALANCE UNAVAILABLE", response.getStatus().toString());
 
 		WalletSummaryRequest summaryRequest = new WalletSummaryRequest();
 		summaryRequest.setUserId(userId);
@@ -479,24 +479,13 @@ public class WalletManagerTest extends BaseTestCase{
 	@Test
 	public void testRefundFromWallet2() {
 		RefundRequest request = new RefundRequest();
-		request.setAmount(new BigDecimal("100.00"));
-		request.setUserId(userId);
-		request.setClientId(-5);
-		request.setRefundId(1);
-		request.setSessionToken(sessionToken);
-
-		RefundResponse response = walletManager.refundFromWallet(request);
-		
-		assertNotNull(response);
-		assertEquals("ALREADY REFUNDED", response.getStatus().toString());
-
 		request.setAmount(new BigDecimal("200.00"));
 		request.setUserId(userId);
 		request.setClientId(-5);
 		request.setRefundId(1);
 		request.setSessionToken(sessionToken);
 
-		response = walletManager.refundFromWallet(request);
+		RefundResponse response = walletManager.refundFromWallet(request);
 		
 		assertNotNull(response);
 		assertEquals("BALANCE UNAVAILABLE", response.getStatus().toString());
@@ -509,7 +498,7 @@ public class WalletManagerTest extends BaseTestCase{
 		request.setAmount(new BigDecimal("100.00"));
 		request.setUserId(userId);
 		request.setClientId(-5);
-		request.setRefundId(2);		// Invalid refund id
+		request.setRefundId(100);		// Invalid refund id
 		request.setIgnoreExpiry(true);
 		request.setSessionToken(sessionToken);
 

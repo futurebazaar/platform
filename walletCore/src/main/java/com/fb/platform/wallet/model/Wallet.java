@@ -62,11 +62,11 @@ public class Wallet implements Serializable {
 			if(walletSubTransactionRefund.getAmount().gt(alreadyReversed)){
 				if(amountTobeReversed.lteq(walletSubTransactionRefund.getAmount().minus(alreadyReversed))){
 					refundSubWallet = refundSubWallet.plus(amountTobeReversed);
-					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,amountTobeReversed,0,0,0,walletTransaction.getId(),0));
+					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,amountTobeReversed,0,walletSubTransactionRefund.getRefundId(),0,walletTransaction.getId(),0));
 					amountTobeReversed = amountTobeReversed.minus(amountTobeReversed);
 				}else{
 					refundSubWallet = refundSubWallet.plus(walletSubTransactionRefund.getAmount().minus(alreadyReversed));
-					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,walletSubTransactionRefund.getAmount().minus(alreadyReversed),0,0,0,walletTransaction.getId(),0));
+					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,walletSubTransactionRefund.getAmount().minus(alreadyReversed),0,walletSubTransactionRefund.getRefundId(),0,walletTransaction.getId(),0));
 					amountTobeReversed = amountTobeReversed.minus(walletSubTransactionRefund.getAmount().minus(alreadyReversed));
 				}
 				alreadyReversed = alreadyReversed.minus(alreadyReversed);

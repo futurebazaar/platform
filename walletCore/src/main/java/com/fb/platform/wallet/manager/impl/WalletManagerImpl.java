@@ -222,9 +222,6 @@ public class WalletManagerImpl implements WalletManager {
 			response.setTransactionId(transaction.getTransactionId());
 			response.setStatus(FillWalletStatusEnum.SUCCESS);
 			
-		} catch (WalletNotFoundException e) {
-			logger.info("fillWallet: No wallet found for user Id " + fillWalletRequest.getUserId());
-			response.setStatus(FillWalletStatusEnum.INVALID_WALLET);
 		} catch (PlatformException pe) {
 			logger.error("fillWallet: Exception for user id " + fillWalletRequest.getUserId(), pe);
 			response.setStatus(FillWalletStatusEnum.FAILED_TRANSACTION);
@@ -295,6 +292,8 @@ public class WalletManagerImpl implements WalletManager {
 			//Wallet wallet = walletService.load(fillWalletRequest.getWalletId());
 			
 			Money amount = new Money(refundRequest.getAmount());
+			//setting ignore expiry to always true as in present spec the refund amount never expires
+			refundRequest.setIgnoreExpiry(true);
 			WalletTransaction transaction = walletService.refund(refundRequest.getUserId(), refundRequest.getClientId(), amount, refundRequest.getRefundId(), refundRequest.getIgnoreExpiry());
 			response.setTransactionId(transaction.getTransactionId());
 			response.setStatus(RefundStatusEnum.SUCCESS);
@@ -302,13 +301,21 @@ public class WalletManagerImpl implements WalletManager {
 		} catch (WalletNotFoundException e) {
 			logger.info("refundFromWallet: No wallet exists for user Id " + refundRequest.getUserId());
 			response.setStatus(RefundStatusEnum.INVALID_WALLET);
-		} catch (AlreadyRefundedException e) {
+		} 
+		/******
+		//All the Refunded items returned as insufficient fund exception
+		catch (AlreadyRefundedException e) {
 			logger.info("refundFromWallet: Duplicate refund request for refund id " + refundRequest.getRefundId());
 			response.setStatus(RefundStatusEnum.DUPLICATE_REFUND_REQUEST);
-		} catch (RefundExpiredException e) {
+		}
+		
+		//Refunds Never Expiring so no refund expired error 
+		catch (RefundExpiredException e) {
 			logger.info("refundFromWallet: Expired refund for refunded Id " + refundRequest.getRefundId());
 			response.setStatus(RefundStatusEnum.ALREADY_REFUNDED);
-		} catch (InSufficientFundsException e) {
+		}
+		********/
+		catch (InSufficientFundsException e) {
 			logger.info("refundFromWallet: Balance unavailable in wallet for user id : " + refundRequest.getUserId());
 			response.setStatus(RefundStatusEnum.BALANCE_UNAVAILABLE);
 		} catch (PlatformException pe) {
