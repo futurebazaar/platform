@@ -28,6 +28,7 @@ import com.fb.platform.wallet.service.exception.InSufficientFundsException;
 import com.fb.platform.wallet.service.exception.InvalidTransactionIdException;
 import com.fb.platform.wallet.service.exception.RefundExpiredException;
 import com.fb.platform.wallet.service.exception.WalletNotFoundException;
+import com.fb.platform.wallet.service.exception.WorngRefundIdException;
 import com.fb.platform.wallet.service.exception.WrongWalletPassword;
 
 public class WalletServiceImpl implements WalletService {
@@ -197,29 +198,23 @@ public class WalletServiceImpl implements WalletService {
 		try {
 			WalletTransaction walletTransactionRes =  new WalletTransaction();
 			Wallet wallet = load(userId,clientId,false);
-			com.fb.platform.wallet.model.WalletTransaction walletTransaction = walletTransactionDao.refundTransactionByRefundId(wallet.getId(),refundId);
-			if(walletTransaction.getTransactionType().equals(TransactionType.CREDIT)){
-				WalletSubTransaction walletSubTransaction = walletTransaction.getWalletSubTransaction().get(0);
-				if(walletSubTransaction.getAmount().eq(amount)){
-					if(ignoreExpiry || walletTransaction.getTimeStamp().plusDays(refundExpiryDays).isAfterNow()){
-						walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(wallet.refund(amount,refundId)));
-						walletTransactionRes.setWallet(walletReturnOperations(walletDao.update(wallet)));							
-					}else {
-						throw new RefundExpiredException();
-					}
-				}else{
-					throw new InSufficientFundsException();
-				}
-			}else{
-				throw new AlreadyRefundedException(); 
+			if(walletTransactionDao.isRefundable(wallet,refundId,amount)){
+				/***
+				 * Removing the Expiry date cade as the expiry tome is getting ignored.
+				 *  || walletTransaction.getTimeStamp().plusDays(refundExpiryDays).isAfterNow()
+				 */
+				if(ignoreExpiry){
+					walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(wallet.refund(amount,refundId)));
+					walletTransactionRes.setWallet(walletReturnOperations(walletDao.update(wallet)));							
+				}/***else {
+					throw new RefundExpiredException();
+				}*/
 			}
 			return walletTransactionRes;
-		} catch (AlreadyRefundedException e){
-			throw new AlreadyRefundedException("This Refund has already been refunded");
-		} catch (RefundExpiredException e){
-			throw new RefundExpiredException("Refund Period has expired");
 		} catch (InSufficientFundsException e){
 			throw new InSufficientFundsException("Not enough fund in the wallet");
+		} catch (WorngRefundIdException e){
+			throw new WorngRefundIdException("This refund id does not belog to this wallet");
 		} catch (WalletNotFoundException e){
 			throw new WalletNotFoundException("No wallet with this wallet id");
 		} catch (PlatformException e) {
@@ -357,7 +352,7 @@ public class WalletServiceImpl implements WalletService {
 		try{
 			Wallet wallet = load(userId,clientId,false);
 			if(!wallet.verifyPassword(oldPassword)){
-				throw new WrongWalletPassword("Wrong Password");
+				throw new WrongWalletPassword();
 			}else{
 				wallet.setWalletPassword(Encrypt.encrypt(newPassword));
 				walletDao.update(wallet);

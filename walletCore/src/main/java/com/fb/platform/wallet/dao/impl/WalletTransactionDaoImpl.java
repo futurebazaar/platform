@@ -8,14 +8,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -35,6 +34,7 @@ import com.fb.platform.wallet.model.WalletGiftsHistory;
 import com.fb.platform.wallet.model.WalletSubTransaction;
 import com.fb.platform.wallet.model.WalletTransaction;
 import com.fb.platform.wallet.model.WalletTransactionResultSet;
+import com.fb.platform.wallet.service.exception.InSufficientFundsException;
 import com.fb.platform.wallet.service.exception.InvalidTransactionIdException;
 import com.fb.platform.wallet.service.exception.WalletRefundMismatchException;
 import com.fb.platform.wallet.service.exception.WorngRefundIdException;
@@ -171,8 +171,8 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			+ "(?,?,?)";
 	
 	private final String INSERT_WALLET_REFUND_CREDIT = "Insert into wallets_refunds_credit_history "
-			+ "(wallet_id,sub_transaction_id,amount,credit_date,amount_remaining,is_used) values "
-			+ "(?,?,?,?,?,?)";
+			+ "(wallet_id,sub_transaction_id,refund_id,amount,credit_date,amount_remaining,is_used) values "
+			+ "(?,?,?,?,?,?,?)";
 	
 	private final String INSERT_WALLET_REFUND_DEBIT = "Insert into wallets_refunds_debit_history "
 			+ "(wallet_id,sub_transaction_id,amount,debit_date,refund_credit_id) values "
@@ -188,9 +188,14 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			+ "where wallet_id = ? and is_expired = 0 and amount_remaining > 0 "
 			+ "order by gift_expiry";
 	
-	private final String GET_WALLET_REFUND_CREDIT_WALLET_ID = "select id,wallet_id,sub_transaction_id ,amount,credit_date ,amount_remaining,is_used "
+	private final String GET_WALLET_REFUND_CREDIT_WALLET_ID = "select id,wallet_id,sub_transaction_id,refund_id ,amount,credit_date ,amount_remaining,is_used "
 			+ "from wallets_refunds_credit_history "
 			+ "where wallet_id = ? and amount_remaining > 0 "
+			+ "order by credit_date";
+	
+	private final String GET_WALLETREFUNDCREDIT_BY_WALLETID_REFUNDID = "select id,wallet_id,sub_transaction_id,refund_id ,amount,credit_date ,amount_remaining,is_used "
+			+ "from wallets_refunds_credit_history "
+			+ "where wallet_id = ? and refund_id = ? "
 			+ "order by credit_date";
 	
 	private final String GET_REFUND_AMOUNT_WALLET_ID = "select sum(amount) "
@@ -413,6 +418,7 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 					rs.getLong("id"),
 					rs.getLong("wallet_id"),
 					rs.getLong("sub_transaction_id"),
+					rs.getInt("refund_id"),
 					new Money(rs.getBigDecimal("amount")),
 					new DateTime(rs.getTimestamp("credit_date")),
 					rs.getBoolean("is_used"),
@@ -562,7 +568,12 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 	}
 	private void debitWalletRefund(long walletId,WalletSubTransaction walletSubTransaction) {
 		Money amountToDebit = walletSubTransaction.getAmount();
-		List<WalletRefundCredit> walletRefundCredits = jdbcTemplate.query(GET_WALLET_REFUND_CREDIT_WALLET_ID, new Object[] {walletId},new WalletRefundCreditMapper());
+		List<WalletRefundCredit> walletRefundCredits = null;
+		if(walletSubTransaction.getRefundId() > 0){
+			walletRefundCredits = jdbcTemplate.query(GET_WALLETREFUNDCREDIT_BY_WALLETID_REFUNDID, new Object[] {walletId,walletSubTransaction.getRefundId()},new WalletRefundCreditMapper());
+		}else{
+			walletRefundCredits = jdbcTemplate.query(GET_WALLET_REFUND_CREDIT_WALLET_ID, new Object[] {walletId},new WalletRefundCreditMapper());
+		}
 		for(WalletRefundCredit walletRefundCredit : walletRefundCredits){
 			if(walletRefundCredit.getAmountRemaining().gt(amountToDebit)){
 				insertWalletRefundDebit(walletId,walletSubTransaction,amountToDebit,walletRefundCredit.getId());
@@ -581,7 +592,7 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 		}
 	}
 	private void insertWalletRefundCredit(long walletId,WalletSubTransaction walletSubTransaction) {
-		jdbcTemplate.update(INSERT_WALLET_REFUND_CREDIT,new Object[] {walletId,walletSubTransaction.getId(),walletSubTransaction.getAmount().getAmount(),new Timestamp(System.currentTimeMillis()),walletSubTransaction.getAmount().getAmount(),0});		
+		jdbcTemplate.update(INSERT_WALLET_REFUND_CREDIT,new Object[] {walletId,walletSubTransaction.getId(),walletSubTransaction.getRefundId(),walletSubTransaction.getAmount().getAmount(),new Timestamp(System.currentTimeMillis()),walletSubTransaction.getAmount().getAmount(),0});
 	}
 	private void insertWalletRefundDebit(long walletId,WalletSubTransaction walletSubTransaction,Money amount,long walletRefundCreditId) {
 		jdbcTemplate.update(INSERT_WALLET_REFUND_DEBIT,new Object[] {walletId,walletSubTransaction.getId(),amount.getAmount(),new Date(System.currentTimeMillis()),walletRefundCreditId});		
@@ -612,17 +623,19 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 		long Id;
 		long walletId;
 		long subTransactionid;
+		int refundId;
 		Money amount;
 		DateTime creditDate;
 		boolean isUsed = false;
 		Money amountRemaining ;
 		
 		public WalletRefundCredit(long id, long walletId , 
-				long subTransactionid,Money amount,DateTime creditDate,
+				long subTransactionid,int refundId ,Money amount,DateTime creditDate,
 				boolean isUsed , Money amountRemaining){
 			this.Id = id;
 			this.walletId = walletId;
 			this.subTransactionid = subTransactionid;
+			this.refundId = refundId;
 			this.amount = amount;
 			this.creditDate = creditDate;
 			this.isUsed = isUsed;
@@ -634,6 +647,31 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 		}
 		public Money getAmountRemaining() {
 			return amountRemaining;
+		}
+		
+	}
+
+	@Override
+	public boolean isRefundable(Wallet wallet, long refundId, Money amount) {
+		try{
+			List<WalletRefundCredit> walletRefundCredits = jdbcTemplate.query(GET_WALLETREFUNDCREDIT_BY_WALLETID_REFUNDID, new Object[] {wallet.getId(),refundId},new WalletRefundCreditMapper());
+			if(walletRefundCredits.size() > 0){
+				Money moneyTobeRefunded = amount;
+				for (WalletRefundCredit walletRefundCredit : walletRefundCredits){
+					if (moneyTobeRefunded.isPlus() && walletRefundCredit.getAmountRemaining().isPlus()){
+						moneyTobeRefunded = moneyTobeRefunded.minus(walletRefundCredit.getAmountRemaining());
+					}
+				}
+				if(moneyTobeRefunded.isPlus()){
+					throw new InSufficientFundsException();
+				}else {
+					return true;
+				}
+			} else{
+				throw new WorngRefundIdException();
+			}
+		}catch (WorngRefundIdException e) {
+			throw new WorngRefundIdException("No available refund with this id for this wallet"); 
 		}
 		
 	}

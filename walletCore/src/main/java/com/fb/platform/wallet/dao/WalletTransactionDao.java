@@ -34,4 +34,6 @@ public interface WalletTransactionDao {
 
 	Money getWalletRefundAmount(long walletId);
 
+	public boolean isRefundable(Wallet wallet, long refundId, Money amount);
+
 }

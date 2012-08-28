@@ -153,20 +153,6 @@ public class WalletTransaction {
 		this.walletBalance = walletBalance;
 	}
 
-	public boolean isSubTransactionBySubWallet(SubWalletType subWalletType){
-		if(this.walletSubTransaction.isEmpty()){
-			return false;
-		}else{
-			for (Iterator<WalletSubTransaction> iterator = walletSubTransaction.iterator(); iterator.hasNext(); ) {
-				WalletSubTransaction walletSubTransactionItr = (WalletSubTransaction) iterator.next();
-				if(walletSubTransactionItr.getSubWalletType().equals(subWalletType)){
-					return true;
-				}
-			}
-			return false;
-		}
-	}
-	
 	public WalletSubTransaction subTransactionBySubWallet(SubWalletType subWalletType){
 		if(this.walletSubTransaction.isEmpty()){
 			return null;

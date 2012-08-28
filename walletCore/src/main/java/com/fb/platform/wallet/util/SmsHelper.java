@@ -15,7 +15,7 @@ import com.fb.commons.communication.to.SmsTO;
 public class SmsHelper {
 	
 	//Used to load the template in this
-	public static String SMS_TEMPLATE_STR = "Hi! ewallet.reciever,your electronic wallet has been created at Futurebazaar.com." +
+	public static String SMS_TEMPLATE_STR = "Hi! ewallet.receiver,your electronic wallet has been created at Futurebazaar.com." +
 "Use ewallet.password as password to pay using wallet. For help," +
 "call 09222221947";
 	
@@ -40,7 +40,6 @@ public class SmsHelper {
 		String message = SMS_TEMPLATE_STR.replaceAll(EWALLET_PASSWORD_SMS_TEMPLATE_STR, eWalletPassword)
 				.replaceAll(EWALLET_RECEIVER_SMS_TEMPLATE_STR, receiverName);
 		smsTo.setMessage(message);
-		System.out.println(message);
 		return smsTo;
 	}
 	
