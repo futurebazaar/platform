@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
  *
  */
 public class ItemInvoiceTO extends ItemTO {
+	
 	private String invoiceNumber;
 	private DateTime invoiceDate;
 	private String billingType;

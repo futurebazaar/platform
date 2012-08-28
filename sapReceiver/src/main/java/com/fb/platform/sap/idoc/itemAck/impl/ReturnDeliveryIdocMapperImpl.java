@@ -20,8 +20,9 @@ public class ReturnDeliveryIdocMapperImpl implements ItemAckIdocMapper {
 	 * @see com.fb.platform.sap.idoc.itemAck.ItemAckIdocMapper#getItemAck(com.fb.platform.sap.idoc.generated.zatgflow.ZATGFLOW)
 	 */
 	@Override
-	public ItemTO getItemAck(ZATGFLOW sapItemAck) {
-		ReturnDeliveryTO returnDelivery = (ReturnDeliveryTO) new ItemAckIdocMapperImpl().getItemAck(sapItemAck, new ReturnDeliveryTO());
+	public ItemTO updateItemAck(ZATGFLOW sapItemAck, ItemTO itemAck) {
+		ReturnDeliveryTO returnDelivery = new ReturnDeliveryTO();
+		returnDelivery.setItemTO(itemAck);
 		if(sapItemAck.getERDATDEL() != null && sapItemAck.getERDATDEL().length() == 8) {
 			int year = Integer.valueOf(sapItemAck.getERDATDEL().substring(0, 4));
 			int month = Integer.valueOf(sapItemAck.getERDATDEL().substring(4, 6));

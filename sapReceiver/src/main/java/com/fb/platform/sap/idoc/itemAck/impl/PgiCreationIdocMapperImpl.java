@@ -20,8 +20,9 @@ public class PgiCreationIdocMapperImpl implements ItemAckIdocMapper {
 	 * @see com.fb.platform.sap.idoc.itemAck.ItemAckIdocMapper#getItemAck(com.fb.platform.sap.idoc.generated.zatgflow.ZATGFLOW)
 	 */
 	@Override
-	public ItemTO getItemAck(ZATGFLOW sapItemAck) {
-		PgiCreationItemTO pgiCreationAck = (PgiCreationItemTO)new ItemAckIdocMapperImpl().getItemAck(sapItemAck, new PgiCreationItemTO());
+	public ItemTO updateItemAck(ZATGFLOW sapItemAck, ItemTO itemAck) {
+		PgiCreationItemTO pgiCreationAck = new PgiCreationItemTO();
+		pgiCreationAck.setItemTO(itemAck);
 		if(sapItemAck.getERDATDEL() != null && sapItemAck.getWADATPGI() != null && sapItemAck.getWADATPGI().length() == 8) {
 			int year = Integer.valueOf(sapItemAck.getWADATPGI().substring(0, 4));
 			int month = Integer.valueOf(sapItemAck.getWADATPGI().substring(4, 6));

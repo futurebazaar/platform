@@ -16,7 +16,7 @@ public class PgiCreationParameterImpl implements ItemAckParameters {
 	public List<NameValuePair> getParameters(List<NameValuePair> parameters, ItemTO itemAck) {
 		PgiCreationItemTO pgiCreationItemTO  = (PgiCreationItemTO) itemAck;
 		if(pgiCreationItemTO.getPgiCreationDate() != null) {
-			parameters.add(new BasicNameValuePair("pgiCreationDate", new SimpleDateFormat("dd-MM-yyyy").format(pgiCreationItemTO.getPgiCreationDate())));
+			parameters.add(new BasicNameValuePair("pgiCreationDate", new SimpleDateFormat("dd-MM-yyyy").format(pgiCreationItemTO.getPgiCreationDate().toDate())));
 		}
 		return parameters;
 	}

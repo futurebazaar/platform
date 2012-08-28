@@ -7,5 +7,7 @@ package com.fb.commons.mom.to;
 public enum PrecedingOrderStateEnum {
 	T,
 	J,
-	C;
+	C,
+	M,
+	N;
 }

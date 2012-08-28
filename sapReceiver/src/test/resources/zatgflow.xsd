@@ -136,7 +136,7 @@
   <xs:element name="SO_POSNR" type="xs:int"/>
   <xs:element name="VBELV" type="xs:string"/>
   <xs:element name="POSNV" type="xs:int"/>
-  <xs:element name="VBELN" type="xs:int"/>
+  <xs:element name="VBELN" type="xs:string"/>
   <xs:element name="POSNN" type="xs:int"/>
   <xs:element name="VBTYP_N" type="xs:string"/>
   <xs:element name="WADAT_PGI" type="xs:string"/>

@@ -8,5 +8,5 @@ import com.fb.platform.sap.idoc.generated.zatgflow.ZATGFLOW;
  *
  */
 public interface ItemAckIdocMapper {
-	public ItemTO getItemAck(ZATGFLOW sapItemAck);
+	public ItemTO updateItemAck(ZATGFLOW sapItemAck, ItemTO itemAck);
 }

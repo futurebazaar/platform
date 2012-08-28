@@ -15,6 +15,7 @@ public class ItemAckParameterImpl implements ItemAckParameters {
 	public List<NameValuePair> getParameters(List<NameValuePair> parameters, ItemTO itemAck) {
 		SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
 		parameters.add(new BasicNameValuePair("sapDocumentId", String.valueOf(itemAck.getSapDocumentId())));
+		parameters.add(new BasicNameValuePair("atgDocumentId", String.valueOf(itemAck.getAtgDocumentId())));
 		parameters.add(new BasicNameValuePair("orderHeaderDelBlock", itemAck.getOrderHeaderDelBlock()));
 		parameters.add(new BasicNameValuePair("header", itemAck.getHeader()));
 		if(itemAck.getDeliveryDate() != null) {
@@ -41,7 +42,9 @@ public class ItemAckParameterImpl implements ItemAckParameters {
 		if(itemAck.getOrderDate() != null) {
 			parameters.add(new BasicNameValuePair("orderDate",dateFormatter.format(itemAck.getOrderDate().toDate())));
 		}
-		parameters.add(new BasicNameValuePair("quantity", String.valueOf(itemAck.getQuantity().intValue())));
+		if(itemAck.getQuantity() != null) {
+			parameters.add(new BasicNameValuePair("quantity", String.valueOf(itemAck.getQuantity().intValue())));
+		}
 		if(itemAck.getSapIdoc() != null) {
 			parameters.add(new BasicNameValuePair("idocnumber", itemAck.getSapIdoc().getIdocNumber()));
 		}

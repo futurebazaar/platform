@@ -78,12 +78,12 @@ public class SapIDocHandler implements JCoIDocHandler {
 				PlatformIDocHandler platformIDocHandler = platformIDocHandlerFactory.getHandler(idocType);
 				try {
 					logger.info("Sending to idoc handler : " + idocXml);
-					
-					boolean isDuplicate = checkDuplicate(idocXml);
+					platformIDocHandler.handle(idocXml);
+					/*boolean isDuplicate = checkDuplicate(idocXml);
 					if(!isDuplicate) {
 						logger.info("Not a duplicate idoc sending it to :" + platformIDocHandler);
 						platformIDocHandler.handle(idocXml);
-					}
+					}*/
 				} catch (Exception e) {
 					saveIdoc(idocNumber, idocXml, "xml");
 					logger.error("Could not insert idoc into hornet Q : " + idocNumber, e);

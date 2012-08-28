@@ -20,8 +20,9 @@ public class ReturnInvoiceIdocMapperImpl implements ItemAckIdocMapper {
 	 * @see com.fb.platform.sap.idoc.itemAck.ItemAckIdocMapper#getItemAck(com.fb.platform.sap.idoc.generated.zatgflow.ZATGFLOW)
 	 */
 	@Override
-	public ItemTO getItemAck(ZATGFLOW sapItemAck) {
-		ReturnInvoiceTO returnInvoice = (ReturnInvoiceTO) new ItemAckIdocMapperImpl().getItemAck(sapItemAck, new ReturnInvoiceTO());
+	public ItemTO updateItemAck(ZATGFLOW sapItemAck, ItemTO itemAck) {
+		ReturnInvoiceTO returnInvoice = new ReturnInvoiceTO();
+		returnInvoice.setItemTO(itemAck);
 		if(sapItemAck.getERDATDEL() != null && sapItemAck.getFKDAT() != null && sapItemAck.getFKDAT().length() == 8) {
 			int year = Integer.valueOf(sapItemAck.getFKDAT().substring(0, 4));
 			int month = Integer.valueOf(sapItemAck.getFKDAT().substring(4, 6));
