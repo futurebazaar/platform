@@ -343,7 +343,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testGetUserEmailNoMails() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("testonlyusername");
+		request.setUsername("-5");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -623,7 +623,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testGetUserPhoneNoPhone() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("testonlyusername");
+		request.setUsername("-5");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
