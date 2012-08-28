@@ -120,7 +120,7 @@ public class UserAddressManagerTest extends BaseTestCase {
 	@Test
 	public void testGetAddressNOAddress() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("testonlyusername");
+		request.setUsername("-5");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
