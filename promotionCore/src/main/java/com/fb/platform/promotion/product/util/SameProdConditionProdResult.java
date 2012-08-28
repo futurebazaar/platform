@@ -4,6 +4,7 @@
 package com.fb.platform.promotion.product.util;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -120,7 +121,9 @@ public class SameProdConditionProdResult implements ConditionResultProcessor {
 		for (ProductItem offerPriceItem : offerPriceProdItems) {
 			finalPrice = finalPrice.plus(new Money(offerPriceItem.getProduct().getPrice()));
 		}
-
+		
+		BigDecimal amount = finalPrice.getAmount().setScale(0,  RoundingMode.FLOOR);	//Rounding down to maximize discount
+		finalPrice = new Money(amount);
 		return finalPrice;
 	}
 
