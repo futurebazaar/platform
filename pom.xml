@@ -378,7 +378,9 @@
         <module>userCore</module>
         <module>userWS</module>
         <module>authenticationCore</module>
-        <module>promotionCore</module>
+		<module>fulfilmentCore</module>
+		<module>fulfilmentWS</module>
+		<module>promotionCore</module>
 		<module>promotionAdminWS</module>
 		<module>promotionWS</module>
         <module>paybackCore</module>
