@@ -5,7 +5,8 @@ public enum TinlaAckType {
 	ORDER_ACK,
 	MOD_ACK,
 	CAN_ACK,
-	ITEM_ACK;
+	ITEM_ACK,
+	RET_ACK;
 	
 	@Override
 	public String toString() {

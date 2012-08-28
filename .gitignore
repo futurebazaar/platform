@@ -146,3 +146,5 @@ execution/launcher.tar.gz
 execution/sapReceiver.tar.gz
 fulfilmentWS/.settings/org.eclipse.wst.common.component
 fulfilmentCore/.settings/org.eclipse.wst.common.component
+sapBapiConnector/.classpath
+sapBapiConnector/.settings

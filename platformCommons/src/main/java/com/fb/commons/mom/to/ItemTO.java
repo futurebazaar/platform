@@ -38,6 +38,7 @@ public class ItemTO implements Serializable {
 	private DateTime orderDate;
 	private BigDecimal quantity;
 	private String orderState;
+	private String lspCode;
 	
 	public SapMomTO getSapIdoc() {
 		return sapIdoc;
@@ -214,6 +215,12 @@ public class ItemTO implements Serializable {
 		}
 		return order;
 		
+	}
+	public String getLspCode() {
+		return lspCode;
+	}
+	public void setLspCode(String lspCode) {
+		this.lspCode = lspCode;
 	}
 		   
 		   

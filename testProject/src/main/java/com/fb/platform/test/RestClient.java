@@ -197,7 +197,7 @@ public class RestClient {
 		orderRequest.setClientId(5);
 		OrderItem orderItem = new OrderItem();
 		orderItem.setQuantity(2);
-		orderItem.setDiscountValue(BigDecimal.ZERO);
+		//orderItem.setDiscountValue(BigDecimal.ZERO);
 		
 		Product product = new Product();
 		product.setPrice(new BigDecimal("2000"));

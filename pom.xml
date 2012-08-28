@@ -417,12 +417,13 @@
     	<module>platformMom</module>
     	<module>sapReceiver</module>
     	<module>mailReceiver</module>
-	<module>inventoryReceiver</module>
-	<module>deliveryDeleteReceiver</module>
-	<module>itemAckReceiver</module>
-	<module>launcher</module>
-	<module>walletCore</module>
-	<module>walletWS</module>
+        <module>inventoryReceiver</module>
+        <module>deliveryDeleteReceiver</module>
+        <module>itemAckReceiver</module>
+        <module>launcher</module>
+        <module>sapBapiConnector</module>
+        <module>walletCore</module>
+        <module>walletWS</module>
     	<module>promotionWS</module>
     </modules>
 
