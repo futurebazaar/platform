@@ -10,6 +10,7 @@ import java.math.BigDecimal;
  *
  */
 public class ReturnOrderTO extends ItemTO {
+	
 	private String returnOrderId;
 	private BigDecimal returnQuantity;
 	private String storageLocation;

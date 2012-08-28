@@ -18,7 +18,7 @@ public class ReturnDeliveryParameterImpl implements ItemAckParameters {
 		parameters.add(new BasicNameValuePair("returndeliveryno", returnDeliveryTO.getNumber()));
 		parameters.add(new BasicNameValuePair("returndeliveryType", returnDeliveryTO.getType()));
 		if(returnDeliveryTO.getReturnCreatedDate() != null) {
-			parameters.add(new BasicNameValuePair("returnCreatedDate", new SimpleDateFormat("dd-MM-yyyy").format(returnDeliveryTO.getReturnCreatedDate())));
+			parameters.add(new BasicNameValuePair("returnCreatedDate", new SimpleDateFormat("dd-MM-yyyy").format(returnDeliveryTO.getReturnCreatedDate().toDate())));
 		}
 		parameters.add(new BasicNameValuePair("returnCreatedBy", returnDeliveryTO.getReturnCreatedBy()));
 		return parameters;

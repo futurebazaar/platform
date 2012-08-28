@@ -18,8 +18,9 @@ public class ReturnOrderIdocMapperImpl implements ItemAckIdocMapper {
 	 * @see com.fb.platform.sap.idoc.itemAck.ItemAckIdocMapper#getItemAck(com.fb.platform.sap.idoc.generated.zatgflow.ZATGFLOW)
 	 */
 	@Override
-	public ItemTO getItemAck(ZATGFLOW sapItemAck) {
-		ReturnOrderTO returnOrder = (ReturnOrderTO) new ItemAckIdocMapperImpl().getItemAck(sapItemAck, new ReturnOrderTO());
+	public ItemTO updateItemAck(ZATGFLOW sapItemAck, ItemTO itemAck) {
+		ReturnOrderTO returnOrder = new ReturnOrderTO();
+		returnOrder.setItemTO(itemAck);
 		returnOrder.setReturnOrderId(sapItemAck.getVBELN());
 		returnOrder.setReturnQuantity(sapItemAck.getRFMNG());
 		returnOrder.setStorageLocation(sapItemAck.getLGORT());

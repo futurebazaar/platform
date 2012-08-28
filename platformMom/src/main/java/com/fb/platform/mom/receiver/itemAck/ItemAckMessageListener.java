@@ -33,7 +33,6 @@ public class ItemAckMessageListener extends AbstractPlatformListener implements 
 			ItemTO itemAck = (ItemTO) objectMessage.getObject();
 
 			logger.info("Received the item ack Message from SAP. \n" + itemAck.toString());
-			System.out.println("Received the item ack Message from SAP. \n" + itemAck.toString());
 
 			super.notify(itemAck);
 		} catch (JMSException e) {

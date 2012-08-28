@@ -17,7 +17,7 @@ public class InvoiceParameterImpl implements ItemAckParameters {
 		ItemInvoiceTO itemInvoiceTO = (ItemInvoiceTO) itemAck;
 		parameters.add(new BasicNameValuePair("invoiceNumber", itemInvoiceTO.getInvoiceNumber()));
 		if(itemInvoiceTO.getInvoiceDate() != null) {
-			parameters.add(new BasicNameValuePair("invoiceDate", new SimpleDateFormat("dd-MM-yyyy").format(itemInvoiceTO.getInvoiceDate())));
+			parameters.add(new BasicNameValuePair("invoiceDate", new SimpleDateFormat("dd-MM-yyyy").format(itemInvoiceTO.getInvoiceDate().toDate())));
 		}
 		return parameters;
 	}

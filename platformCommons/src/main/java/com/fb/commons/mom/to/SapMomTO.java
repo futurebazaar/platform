@@ -60,7 +60,7 @@ public class SapMomTO implements Serializable {
 		return "idoc number : " + idocNumber
 			+ "\nreference UID : " + refUID
 			+ "\nsegment number : " + segmentNumber
-			+ "\nidoc : " + idoc
+			//+ "\nidoc : " + idoc
 			+ "\npo number : " + poNumber
 			+ "\ncan gr : " + canGr;
 	}

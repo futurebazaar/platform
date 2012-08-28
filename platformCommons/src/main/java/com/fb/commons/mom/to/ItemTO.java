@@ -14,6 +14,39 @@ import org.joda.time.DateTime;
 })
  */
 public class ItemTO implements Serializable {
+	
+	public ItemTO() {
+		super();
+	}
+	
+	public void setItemTO(ItemTO itemTO) {
+		this.setSapIdoc(itemTO.getSapIdoc());
+		this.setHeader(itemTO.getHeader());
+		this.setSapDocumentId(itemTO.getSapDocumentId());
+		this.setOrderHeaderDelBlock(itemTO.getOrderHeaderDelBlock());
+		this.setDeliveryDate(itemTO.getDeliveryDate());
+		this.setUnitOfMeasurement(itemTO.getUnitOfMeasurement());
+		this.setShipmentComments(itemTO.getShipmentComments());
+		this.setOrderType(itemTO.getOrderType());
+		this.setDeliveryNumber(itemTO.getDeliveryNumber());
+		this.setBlockMsg(itemTO.getBlockMsg());
+		this.setItemCategory(itemTO.getItemCategory());
+		this.setOrderId(itemTO.getOrderId());
+		this.setDeliveryType(itemTO.getDeliveryType());
+		this.setLspName(itemTO.getLspName());
+		this.setAwbNumber(itemTO.getAwbNumber());
+		this.setCreatedBy(itemTO.getCreatedBy());
+		this.setCreatedDate(itemTO.getCreatedDate());
+		this.setSkuID(itemTO.getSkuID());
+		this.setLspUpdateDesc(itemTO.getLspUpdateDesc());
+		this.setPlantId(itemTO.getPlantId());
+		this.setItemState(itemTO.getItemState());
+		this.setOrderDate(itemTO.getOrderDate());
+		this.setQuantity(itemTO.getQuantity());
+		this.setOrderState(itemTO.getOrderState());
+		this.setAtgDocumentId(itemTO.getAtgDocumentId());
+	}
+	
 	private SapMomTO sapIdoc;
 	private String header;
 	private int sapDocumentId;
@@ -38,6 +71,15 @@ public class ItemTO implements Serializable {
 	private DateTime orderDate;
 	private BigDecimal quantity;
 	private String orderState;
+	private int atgDocumentId;
+
+	public int getAtgDocumentId() {
+		return atgDocumentId;
+	}
+
+	public void setAtgDocumentId(int atgDocumentId) {
+		this.atgDocumentId = atgDocumentId;
+	}
 	
 	public SapMomTO getSapIdoc() {
 		return sapIdoc;
@@ -187,6 +229,7 @@ public class ItemTO implements Serializable {
 	@Override
 	public String toString() {
 		String order = "sap Document Id: " + sapDocumentId
+				+ "\nATG Document Id : " + atgDocumentId
 				+ "\norder state : " + orderState
 				+ "\nheader : " + header
 				+ "\norder header del block : " + orderHeaderDelBlock

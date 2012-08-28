@@ -21,11 +21,11 @@ import com.fb.commons.mom.to.ItemTO;
 import com.fb.commons.mom.to.SapMomTO;
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
+import com.fb.platform.sap.client.idoc.platform.ItemAckOrderItemProcessor;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler;
+import com.fb.platform.sap.idoc.generated.zatgflow.ObjectFactory;
 import com.fb.platform.sap.idoc.generated.zatgflow.ZATGFLOW;
 import com.fb.platform.sap.idoc.generated.zatgflow.ZATGFLOWTOP;
-import com.fb.platform.sap.idoc.generated.zatgflow.ObjectFactory;
-import com.fb.platform.sap.idoc.itemAck.ItemAckIdocMapperFactory;
 
 /**
  * @author nehaga
@@ -38,7 +38,7 @@ public class ItemAckIDocHandler implements PlatformIDocHandler {
 	public static final String ITEM_ACK_IDOC_TYPE = "ZATGFLOW";
 
 	private MomManager momManager = null;
-
+	
 	//JAXBContext class is thread safe and can be shared
 	private static final JAXBContext context = initContext();
 
@@ -56,6 +56,7 @@ public class ItemAckIDocHandler implements PlatformIDocHandler {
 	public void handle(String idocXml) {
 		logger.info("Begin handling order idoc message.");
 		SapMomTO sapIdoc = new SapMomTO();
+		ItemAckOrderItemProcessor orderItemProcessor = new ItemAckOrderItemProcessorImpl();
 		//convert the message xml into jaxb bean
 		try {
 			//the xml received from Sap is flawed. It contains ZATGFLOW as parent and child level item. We will replace the top level ZATGFLOW with ZATGFLOW_TOP
@@ -68,6 +69,8 @@ public class ItemAckIDocHandler implements PlatformIDocHandler {
 			idocXml = sb.toString();
 			
 			Unmarshaller unmarshaller = context.createUnmarshaller();
+			
+			logger.info("received idoc : " + idocXml);
 
 			ZATGFLOWTOP orderIdoc = (ZATGFLOWTOP)unmarshaller.unmarshal(new StreamSource(new StringReader(idocXml)));
 			
@@ -75,11 +78,10 @@ public class ItemAckIDocHandler implements PlatformIDocHandler {
 			sapIdoc.setIdocNumber(orderIdoc.getIDOC().getEDIDC40().getDOCNUM());
 
 			List<ZATGFLOW> ackList = orderIdoc.getIDOC().getZATGFLOW();
-			ItemAckIdocMapperFactory mapperFactory = new ItemAckIdocMapperFactory();
-			for (ZATGFLOW sapItemAck : ackList) {
-				ItemTO itemAck = mapperFactory.getItemAck(sapItemAck);
-				logger.info("Sending ItemTO to item ack destination : " + itemAck.toString());
-				momManager.send(PlatformDestinationEnum.ITEM_ACK, itemAck);
+			List<ItemTO> orderItems = orderItemProcessor.getOrderItems(ackList);
+			for (ItemTO orderItem : orderItems) {
+				logger.info("Sending ItemTO to item ack destination : " + orderItem.toString());
+				momManager.send(PlatformDestinationEnum.ITEM_ACK, orderItem);
 			}
 		} catch (JAXBException e) {
 			CorruptMessageTO corruptMessage = new CorruptMessageTO();
@@ -92,7 +94,7 @@ public class ItemAckIDocHandler implements PlatformIDocHandler {
 			//throw new PlatformException("Exception while unmarshalling the inventory idoc xml", e);
 		}
 	}
-
+	
 	@Override
 	public void init(MomManager momManager) {
 		this.momManager = momManager;

@@ -9,6 +9,7 @@ package com.fb.commons.mom.to;
  *
  */
 public class CancelItemTO extends ItemTO {
+	
 	private String cancelInvoiceNumber;
 
 	public String getCancelInvoiceNumber() {

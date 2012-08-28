@@ -16,7 +16,7 @@ public class PgrCreationParameterImpl implements ItemAckParameters {
 	public List<NameValuePair> getParameters(List<NameValuePair> parameters, ItemTO itemAck) {
 		PgrCreationItemTO pgrCreationTO = (PgrCreationItemTO) itemAck;
 		if(pgrCreationTO.getPgrCreationDate() != null) {
-			parameters.add(new BasicNameValuePair("pgrCreationDate", new SimpleDateFormat("dd-MM-yyyy").format(pgrCreationTO.getPgrCreationDate())));
+			parameters.add(new BasicNameValuePair("pgrCreationDate", new SimpleDateFormat("dd-MM-yyyy").format(pgrCreationTO.getPgrCreationDate().toDate())));
 		}
 		return parameters;
 	}

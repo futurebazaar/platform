@@ -18,8 +18,9 @@ public class CancelInvoiceIdocMapperImpl implements ItemAckIdocMapper {
 	 * @see com.fb.platform.sap.idoc.itemAck.ItemAckIdocMapper#getItemAck(com.fb.platform.sap.idoc.generated.zatgflow.ZATGFLOW)
 	 */
 	@Override
-	public ItemTO getItemAck(ZATGFLOW sapItemAck) {
-		CancelItemTO cancelItem = (CancelItemTO) new ItemAckIdocMapperImpl().getItemAck(sapItemAck, new CancelItemTO());
+	public ItemTO updateItemAck(ZATGFLOW sapItemAck, ItemTO itemAck) {
+		CancelItemTO cancelItem = new CancelItemTO();
+		cancelItem.setItemTO(itemAck);
 		cancelItem.setCancelInvoiceNumber(sapItemAck.getVBELN());
 		return cancelItem;
 	}

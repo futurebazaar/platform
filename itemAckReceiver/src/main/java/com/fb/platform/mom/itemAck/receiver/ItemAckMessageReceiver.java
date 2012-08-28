@@ -58,17 +58,19 @@ public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 	public void handleMessage(Object message) {
 		log.info("Received the message : " + message);
 
-		ItemTO itemAck = (ItemTO) message;
-		sendAck(itemAck);
+		sendAck((ItemTO) message);
 	}
 	
 	private boolean isOrderStateValid(ItemTO itemAck) {
 		boolean isOrderStateValid = true;
-		OrderStateEnum orderState = OrderStateEnum.valueOf(itemAck.getOrderState());
+		OrderStateEnum orderState = OrderStateEnum.getInstance(itemAck.getOrderState());
 		if(orderState == OrderStateEnum.R) {
 			isOrderStateValid = false;
-		} else if (orderState == OrderStateEnum.C && itemAck.getSapDocumentId() <= 0) {
-			isOrderStateValid = false;
+		} else if (orderState == OrderStateEnum.C) {
+			//AtgDocumentItemTO atgDoc = (AtgDocumentItemTO) itemAck;
+			//if(itemAck.getSapDocumentId() <= 0 || atgDoc.getAtgDocumentId() <= 0) {
+				isOrderStateValid = false;
+			//}
 		} else if (StringUtils.isBlank(itemAck.getPlantId())) {
 			isOrderStateValid = false;
 		}
@@ -83,6 +85,10 @@ public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 		HttpPost httpPost = new HttpPost(orderURL);
 
 		List<NameValuePair> parameters = new ItemAckParameterFactory().getParameters(itemAck);
+		
+		for (NameValuePair param : parameters) {
+			log.info(param.getName() + "********" + param.getValue());
+		}
 		
 		parameters.add(new BasicNameValuePair("sender", "MOM"));
 
