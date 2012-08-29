@@ -201,7 +201,7 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 	private final String GET_REFUND_AMOUNT_WALLET_ID = "select sum(amount) "
 			+ "from wallets_refunds_credit_history "
 			+ "where wallet_id = ? and amount_remaining > 0 and is_used = 0 "
-			+ "and DATE_SUB(curdate(), INTERVAL ? DAY) <= credit_date";	
+			+ "and DATE_SUB(NOW(), INTERVAL ? DAY) <= credit_date";	
 	
 	private final String GET_WALLET_GIFT_BY_ID = "select  id,wallet_id,gift_code ,gift_expiry ,is_expired ,amount_remaining from wallets_gifts "
 			+ "where id= ? ";
@@ -210,7 +210,7 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 	
 	private final String UPDATE_WALLET_GIFT_REMAINING_EXPIRE = "update wallets_gifts set amount_remaining = ? ,is_expired = 1 where id = ?";
 	
-	private final String UPDATE_PAYMENT_REFUNDS = "update payments_refund set amount = ? ,modified_on = CURDATE() , status =? where id = ?";
+	private final String UPDATE_PAYMENT_REFUNDS = "update payments_refund set amount = ? ,modified_on = NOW() , status =? where id = ?";
 	
 	@Override
 	public String insertTransaction(final WalletTransaction walletTransaction) {
