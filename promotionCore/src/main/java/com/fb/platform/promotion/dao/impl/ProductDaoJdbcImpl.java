@@ -56,7 +56,7 @@ public class ProductDaoJdbcImpl implements ProductDao {
 		List<Integer> clearanceProductIds = jdbcTemplate.queryForList(query, Integer.class);
 
 		Set<Integer> cleranceProductIdsSet = new HashSet<Integer>();
-		clearanceProductIds.addAll(clearanceProductIds);
+		cleranceProductIdsSet.addAll(clearanceProductIds);
 
 		return cleranceProductIdsSet;
 	}
