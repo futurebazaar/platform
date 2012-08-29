@@ -9,5 +9,6 @@ public enum PrecedingOrderStateEnum {
 	J,
 	C,
 	M,
-	N;
+	N,
+	H;
 }

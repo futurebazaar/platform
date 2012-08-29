@@ -73,6 +73,8 @@ public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 			//}
 		} else if (StringUtils.isBlank(itemAck.getPlantId())) {
 			isOrderStateValid = false;
+		} else if (itemAck.getOrderId().equalsIgnoreCase(itemAck.getDeliveryNumber())) {
+			isOrderStateValid = false;
 		}
 		return isOrderStateValid;
 	}

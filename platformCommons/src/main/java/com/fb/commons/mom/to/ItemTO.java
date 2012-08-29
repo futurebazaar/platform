@@ -11,7 +11,6 @@ import org.joda.time.DateTime;
 /**
  * @author nehaga
  *
-})
  */
 public class ItemTO implements Serializable {
 	
