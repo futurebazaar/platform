@@ -10,6 +10,11 @@ import java.io.Serializable;
  *
  */
 public class CorruptMessageTO implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5166601589528181406L;
+	
 	private SapMomTO sapIdoc;
 	private Object message ;
 	private CorruptMessageCause cause;

@@ -38,7 +38,6 @@ public class ItemAckSenderImpl implements ItemAckSender {
 			@Override
 			public Message createMessage(Session session) throws JMSException {
 				logger.info("Creating the Item Ack Message for sending.");
-				System.out.println("Creating the Item Ack Message for sending.");
 				ObjectMessage jmsMessage = session.createObjectMessage();
 				jmsMessage.setObject(message);
 				return jmsMessage;

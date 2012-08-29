@@ -10,6 +10,11 @@ import java.io.Serializable;
  *
  */
 public class SapMomTO implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1094796082185921675L;
+	
 	private String idocNumber;
 	private String refUID;
 	private String idoc;

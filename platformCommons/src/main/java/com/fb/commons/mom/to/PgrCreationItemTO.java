@@ -12,6 +12,11 @@ import org.joda.time.DateTime;
  */
 public class PgrCreationItemTO extends ItemTO {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6847576851593088364L;
+	
 	private DateTime pgrCreationDate;
 
 	public DateTime getPgrCreationDate() {

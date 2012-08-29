@@ -11,6 +11,12 @@ import org.joda.time.DateTime;
  *
  */
 public class PgiCreationItemTO extends ItemTO {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4863184489294614520L;
+	
 	private DateTime pgiCreationDate;
 
 	public DateTime getPgiCreationDate() {

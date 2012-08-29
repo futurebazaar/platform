@@ -14,6 +14,11 @@ import org.joda.time.DateTime;
  */
 public class ItemTO implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6790272798325591466L;
+
 	public ItemTO() {
 		super();
 	}

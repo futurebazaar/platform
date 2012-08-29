@@ -11,6 +11,11 @@ import java.math.BigDecimal;
  */
 public class ReturnOrderTO extends ItemTO {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1416820810593424096L;
+	
 	private String returnOrderId;
 	private BigDecimal returnQuantity;
 	private String storageLocation;

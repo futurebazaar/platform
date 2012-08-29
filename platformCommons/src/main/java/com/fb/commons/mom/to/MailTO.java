@@ -9,6 +9,11 @@ import java.util.List;
  *
  */
 public class MailTO implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8082027411633952722L;
+	
 	private String from;
 	private String[] to;
 	private String[] cc;

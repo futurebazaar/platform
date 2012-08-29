@@ -10,6 +10,13 @@ import java.io.Serializable;
  *
  */
 public class InventoryTO implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3989991060720328001L;
+	
+	
 	private SapMomTO sapIdoc;
 	private String transactionCode;
 	private String articleId;

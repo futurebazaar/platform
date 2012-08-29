@@ -10,6 +10,11 @@ package com.fb.commons.mom.to;
  */
 public class CancelItemTO extends ItemTO {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3906880439792526563L;
+	
 	private String cancelInvoiceNumber;
 
 	public String getCancelInvoiceNumber() {

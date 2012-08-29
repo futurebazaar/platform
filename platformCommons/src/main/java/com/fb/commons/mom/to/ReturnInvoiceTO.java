@@ -10,6 +10,11 @@ import org.joda.time.DateTime;
  *
  */
 public class ReturnInvoiceTO extends ItemTO {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1373091425879467564L;
+	
 	private String number;
 	private DateTime invoiceDate;
 	private String type;

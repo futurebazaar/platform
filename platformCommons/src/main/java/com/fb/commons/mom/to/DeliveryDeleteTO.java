@@ -10,6 +10,12 @@ import java.io.Serializable;
  *
  */
 public class DeliveryDeleteTO implements Serializable{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6393503632153591125L;
+	
 	private SapMomTO sapIdoc;
 	private String orderNo;
 	private String deliveryNo;
