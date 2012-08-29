@@ -222,9 +222,14 @@ public class UserAdminDaoImpl implements UserAdminDao {
     		return getUserByUserId(Integer.parseInt(key));
     	}
     	
-    	boolean isUserNameAuth = isUsernameAuth(key);
+    	/*** 
+    	 * By Kislay
+    	 * Not to check for username in auth user as the same changes have been commited on the django side
+    	 */
+    	//boolean isUserNameAuth = isUsernameAuth(key);
+    	boolean isUserNameAuth = false;
     	if (isUserNameAuth) {
-    		return getUserByAuthUserName(key);
+    		return getUserByAuthUserName(key); 
     	}
     	return null;
 	}

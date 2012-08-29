@@ -48,8 +48,8 @@ public class UserManagerTest extends BaseTestCase {
 		assertNotNull(response.getSessionToken());
 		assertEquals(1, response.getUserId().intValue());
 	}
-
-	@Test
+	//Commented as auth user diaabled
+	/*@Test
 	public void testLoginWithOnlyAtuthUsername() {
 		LoginRequest request = new LoginRequest();
 		request.setUsername("testonlyusername");
@@ -61,7 +61,7 @@ public class UserManagerTest extends BaseTestCase {
 		assertEquals(LoginStatusEnum.LOGIN_SUCCESS, response.getLoginStatus());
 		assertNotNull(response.getSessionToken());
 		assertEquals(-5, response.getUserId().intValue());
-	}
+	}*/
 	@Test
 	public void testLoginInvalidPassword() {
 		LoginRequest request = new LoginRequest();
