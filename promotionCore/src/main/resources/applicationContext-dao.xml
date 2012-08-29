@@ -46,6 +46,10 @@
 		<property name="jdbcTemplate" ref="jdbcTemplate"/>
 	</bean>
 
+	<bean id="productDao" class="com.fb.platform.promotion.dao.impl.ProductDaoJdbcImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+
    <!-- Add new DAOs here -->
 
 </beans>

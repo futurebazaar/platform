@@ -36,6 +36,10 @@
 			<value name="id">-10</value>
 			<value name="name">CATEGORY_BASED_VARIABLE_PERCENT_OFF</value>
 		</row>
+		<row>
+			<value name="id">-11</value>
+			<value name="name">DISCOUNT_ON_CLEARANCE_PRODUCT</value>
+		</row>
 	</table>
 
 	<table name="platform_promotion">

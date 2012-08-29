@@ -103,6 +103,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		add(RulesEnum.BUY_X_QUANTITY_GET_VARIABLE_PERCENT_OFF);
 		add(RulesEnum.MONTHLY_DISCOUNT_RS_OFF);
 		add(RulesEnum.CATEGORY_BASED_VARIABLE_PERCENT_OFF);
+		add(RulesEnum.DISCOUNT_ON_CLEARANCE_PRODUCT);
 	}};
 	
 	@Before
@@ -149,7 +150,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 				fetchRuleResponse.getFetchRulesEnum());
 		assertNotNull(fetchRuleResponse.getSessionToken());
 		assertNotNull(fetchRuleResponse.getRulesList());
-		assertEquals(8, fetchRuleResponse.getRulesList().size());
+		assertEquals(9, fetchRuleResponse.getRulesList().size());
 		assertNotNull(fetchRuleResponse.getSessionToken());
 		for (RuleConfigDescriptor ruleConfig : fetchRuleResponse.getRulesList()) {
 			assertTrue(ruleList.contains(ruleConfig.getRulesEnum()));
