@@ -198,10 +198,10 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			+ "where wallet_id = ? and refund_id = ? "
 			+ "order by credit_date";
 	
-	private final String GET_REFUND_AMOUNT_WALLET_ID = "select sum(amount) "
+	private final String GET_REFUND_AMOUNT_WALLET_ID = "select sum(amount_remaining) "
 			+ "from wallets_refunds_credit_history "
-			+ "where wallet_id = ? and amount_remaining > 0 and is_used = 0 "
-			+ "and DATE_SUB(NOW(), INTERVAL ? DAY) <= credit_date";	
+			+ "where wallet_id = ? and amount_remaining > 0 " ;// and is_used = 0 clause removed as this can be refunded now 
+			//+ "and DATE_SUB(NOW(), INTERVAL ? DAY) <= credit_date";	this clause removed as no expiry for refunds now
 	
 	private final String GET_WALLET_GIFT_BY_ID = "select  id,wallet_id,gift_code ,gift_expiry ,is_expired ,amount_remaining from wallets_gifts "
 			+ "where id= ? ";
@@ -612,7 +612,7 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 	@Override
 	public Money getWalletRefundAmount(long walletId){
 		try{
-			return(new Money(jdbcTemplate.queryForObject(GET_REFUND_AMOUNT_WALLET_ID, new Object[]{walletId,refundExpiryDays}, BigDecimal.class)));
+			return(new Money(jdbcTemplate.queryForObject(GET_REFUND_AMOUNT_WALLET_ID, new Object[]{walletId}, BigDecimal.class)));
 		}catch (Exception e) {
 			return(new Money(new BigDecimal("0.00")));
 		}					
