@@ -403,7 +403,7 @@
                         <value name="description">Rs 250 Off on 500 Rs order of clearance products</value>
                         <value name="is_coupon">1</value>
                         <value name="is_active">1</value>
-                        <value name="rule_id">-10</value>
+                        <value name="rule_id">-11</value>
         	</row>
 	</table>
 	<table name="promotion_limits_config">
@@ -1940,14 +1940,14 @@
 			<value name="name">MIN_ORDER_VALUE</value>
 			<value name="value">500</value>
 			<value name="promotion_id">9200</value>
-			<value name="rule_id">-10</value>
+			<value name="rule_id">-11</value>
 		</row>
 		<row>
 			<value name="id">-9201</value>
 			<value name="name">FIXED_DISCOUNT_RS_OFF</value>
 			<value name="value">250</value>
 			<value name="promotion_id">9200</value>
-			<value name="rule_id">-10</value>
+			<value name="rule_id">-11</value>
 		</row>
 
 		<!--  end -->
