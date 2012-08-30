@@ -18,7 +18,7 @@ public class TestBapiTO {
 	
 	public BapiTO getBapiTO() {
 		BapiTO bapiTO = new BapiTO();
-		bapiTO.setOrderType(TinlaOrderType.NEW_ORDER);
+		bapiTO.setOrderType(TinlaOrderType.RET_ORDER);
 		bapiTO.setOrderHeaderTO(getOrderTO());
 		bapiTO.setLineItemTO(getLineItemTO());
 		bapiTO.setAddressTO(getAddressTO());
@@ -55,9 +55,10 @@ public class TestBapiTO {
 		orderHeaderTO.setSalesChannel("true");
 		orderHeaderTO.setSubmittedOn(DateTime.now());
 		//orderHeaderTO.set
-		//orderHeaderTO.setType("NEW_ORDER");
 		orderHeaderTO.setSalesDocType("ZATG");
-		orderHeaderTO.setReferenceID("5049999921");
+		orderHeaderTO.setReferenceID("5049999916");
+		orderHeaderTO.setReturnOrderID("6070000000");
+		orderHeaderTO.setLoyaltyCardNumber("1234123412341234");
 		orderHeaderTO.setPricingTO(getPricingTO());
 		
 		return orderHeaderTO;
@@ -66,9 +67,11 @@ public class TestBapiTO {
 	private PricingTO getPricingTO() {
 		PricingTO pricingTO = new PricingTO();
 		pricingTO.setCurrency("INR");
-		pricingTO.setListPrice(new BigDecimal("1100.00"));
-		pricingTO.setOfferPrice(new BigDecimal("1000.00"));
-		pricingTO.setPayableAmount(new BigDecimal("1000.00"));
+		pricingTO.setListPrice(new BigDecimal("1200.00"));
+		pricingTO.setOfferPrice(new BigDecimal("1100.00"));
+		pricingTO.setPayableAmount(new BigDecimal("1100.00"));
+		pricingTO.setPointsEarn(new BigDecimal("40"));
+		pricingTO.setPointsEarnValue(new BigDecimal("10"));
 		return pricingTO;
 	}
 
@@ -78,11 +81,13 @@ public class TestBapiTO {
 		lineItemTO1.setPricingTO(getPricingTO());
 		lineItemTO1.setArticleID("000000000300000560");
 		lineItemTO1.setSapDocumentId(10);
-		lineItemTO1.setQuantity(new BigDecimal("1.00"));
+		lineItemTO1.setQuantity(new BigDecimal("2.00"));
 		lineItemTO1.setDescription("TEST ARTICLE");
 		lineItemTO1.setPlantId("2786");
 		lineItemTOList.add(lineItemTO1);
 		lineItemTO1.setSalesUnit("EA");
+		lineItemTO1.setStorageLocation("10");
+		lineItemTO1.setReasonCode("103");
 		return lineItemTOList;
 	}
 	

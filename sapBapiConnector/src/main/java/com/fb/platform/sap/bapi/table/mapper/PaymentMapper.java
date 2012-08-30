@@ -37,7 +37,7 @@ public class PaymentMapper {
 		String paymentTime = paymentTO.getPaymentTime().getHourOfDay() + "" + paymentTO.getPaymentTime().getMinuteOfHour() + "" + paymentTO.getPaymentTime().getSecondOfMinute();  
 				
 		orderCreditCard.setValue(SapConstants.INSTRUMENT_NO, paymentTO.getInstrumentNumber());
-		orderCreditCard.setValue(validTill, SapConstants.VALID_TILL);
+		orderCreditCard.setValue(SapConstants.VALID_TILL, validTill);
 		orderCreditCard.setValue(SapConstants.PAYMENT_DATE, paymentDate);
 		orderCreditCard.setValue(SapConstants.PAYMENT_TIME, paymentTime);
 		

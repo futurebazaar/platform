@@ -83,6 +83,7 @@ public class BapiConnector
          
         JCoDestination destination = JCoDestinationManager.getDestination(bapiProperties.getProperty(DestinationDataProvider.JCO_DEST));
         setBapiDestination(destination);
+        System.out.println(destination.getAttributes());
         JCoFunctionTemplate jCoFunctionTemplate = destination.getRepository().getFunctionTemplate(template.toString());
         setBapiFunction(jCoFunctionTemplate.getFunction());
         

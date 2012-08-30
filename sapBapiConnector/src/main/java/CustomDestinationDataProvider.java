@@ -4,6 +4,7 @@ import java.util.Properties;
 import com.sap.conn.jco.JCoDestination;
 import com.sap.conn.jco.JCoDestinationManager;
 import com.sap.conn.jco.JCoException;
+import com.sap.conn.jco.JCoFunctionTemplate;
 import com.sap.conn.jco.ext.DataProviderException;
 import com.sap.conn.jco.ext.DestinationDataEventListener;
 import com.sap.conn.jco.ext.DestinationDataProvider;
@@ -101,6 +102,8 @@ public class CustomDestinationDataProvider
             dest = JCoDestinationManager.getDestination(destName);
             dest.ping();
             System.out.println(dest.getAttributes());
+            JCoFunctionTemplate jCoFunctionTemplate = dest.getRepository().getFunctionTemplate("ZATG_BAPI_SO_FB_FECIL_CHNG_NEW");
+            System.out.println(jCoFunctionTemplate);
         }
         catch(JCoException e)
         {

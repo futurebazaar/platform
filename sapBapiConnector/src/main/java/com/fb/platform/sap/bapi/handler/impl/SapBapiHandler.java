@@ -1,8 +1,5 @@
 package com.fb.platform.sap.bapi.handler.impl;
 
-import java.awt.image.RescaleOp;
-
-import com.fb.commons.mom.to.OrderHeaderTO;
 import com.fb.platform.sap.bapi.BapiConnector;
 import com.fb.platform.sap.bapi.BapiTemplate;
 import com.fb.platform.sap.bapi.handler.PlatformBapiHandler;
@@ -32,6 +29,9 @@ public class SapBapiHandler implements PlatformBapiHandler {
     
 	@Override
     public synchronized ResponseTO execute(String environment, BapiTO bapiTO) {
+		ResponseTO responseTO = new ResponseTO();
+		responseTO.setOrderID(bapiTO.getOrderHeaderTO().getReferenceID());
+		responseTO.setType(bapiTO.getOrderType().toString());
     	try {
     		TinlaOrderType orderType = bapiTO.getOrderType();
     		
@@ -41,63 +41,59 @@ public class SapBapiHandler implements PlatformBapiHandler {
 			bapiConnector.connect(environment, template);
 			JCoFunction bapiFunction = bapiConnector.getBapiFunction();
 			
-			if (!orderType.equals(TinlaOrderType.RET_ORDER)) {
+			if (orderType.equals(TinlaOrderType.RET_ORDER)) {
+				HeaderMapper.setReturnDetails(bapiFunction,  bapiTO.getOrderHeaderTO(), bapiTO.getLineItemTO(), orderType);
+				ItemMapper.setReturnItemDetails(bapiFunction, bapiTO.getOrderHeaderTO(), bapiTO.getLineItemTO(), orderType);
+			} else {
 				HeaderMapper.setDetails(bapiFunction, bapiTO.getOrderHeaderTO(), orderType);
 				HeaderConditionsMapper.setDetails(bapiFunction, bapiTO.getOrderHeaderTO(), orderType);
-				HeaderPartnerMapper.setDetails(bapiFunction, bapiTO.getOrderHeaderTO(), bapiTO.getAddressTO(), orderType);
 				ItemMapper.setDetails(bapiFunction, bapiTO.getOrderHeaderTO(), bapiTO.getLineItemTO(), orderType);
-				ItemPartnerMapper.setDetails(bapiFunction, bapiTO.getOrderHeaderTO(), bapiTO.getAddressTO(), bapiTO.getLineItemTO());
 				ItemScheduleMapper.setDetails(bapiFunction, bapiTO.getOrderHeaderTO(), bapiTO.getLineItemTO(), orderType);
 				
 				if (orderType.equals(TinlaOrderType.NEW_ORDER)) {
+					HeaderPartnerMapper.setDetails(bapiFunction, bapiTO.getOrderHeaderTO(), bapiTO.getAddressTO(), orderType);
 					PaymentMapper.setDetails(bapiFunction, bapiTO.getOrderHeaderTO(), bapiTO.getPaymentTO());
+					ItemPartnerMapper.setDetails(bapiFunction, bapiTO.getOrderHeaderTO(), bapiTO.getAddressTO(), bapiTO.getLineItemTO());
 				}
-				
-			} else {
-				HeaderMapper.setReturnDetails(bapiFunction,  bapiTO.getOrderHeaderTO(), bapiTO.getLineItemTO(), orderType);
-				ItemMapper.setReturnItemDetails(bapiFunction, bapiTO.getOrderHeaderTO(), bapiTO.getLineItemTO(), orderType);
 			}
+			
 			PointsMapper.setDetails(bapiFunction, bapiTO.getPricingTO(), bapiTO.getOrderHeaderTO().getLoyaltyCardNumber());
 			ItemConditionsMapper.setDetails(bapiFunction, bapiTO.getOrderHeaderTO(), bapiTO.getLineItemTO(), orderType);
 			
 			// call commit and return the SAP response
-			return commit(bapiConnector, bapiTO.getOrderHeaderTO(), orderType);
+			responseTO = commit(bapiConnector, responseTO);
 			
 		} catch (JCoException e) {
 			e.printStackTrace();
+			responseTO.setSapMessage(e.getMessage());
+			responseTO.setOrderID(bapiTO.getOrderHeaderTO().getReferenceID());
+			
 		}
+    	return responseTO;
     }
 
-	private ResponseTO commit(BapiConnector bapiConnector, OrderHeaderTO orderHeaderTO, TinlaOrderType orderType) throws JCoException {
+	private ResponseTO commit(BapiConnector bapiConnector, ResponseTO responseTO) throws JCoException {
 		JCoFunction bapiFunction = bapiConnector.getBapiFunction();
 		bapiFunction.execute(bapiConnector.getBapiDestination());
 		JCoTable jcoResponse = bapiFunction.getTableParameterList().getTable(BapiTable.RETURN.toString());
-		ResponseTO responseTO = new ResponseTO();
 		String message = "";
 		for (int i = 0; i < jcoResponse.getNumRows(); i++) {
 			jcoResponse.setRow(i);
 			String type = jcoResponse.getValue("TYPE").toString();
-			if (type.equals(SapConstants.SUCCESS_FLAG)) {
-				message += jcoResponse.getValue("MESSAGE");
+			String typeMessage =  jcoResponse.getValue("MESSAGE").toString();
+			if (!(type.equals(SapConstants.SUCCESS_FLAG) && typeMessage.startsWith("SALES"))) {
+				message += "ID: " + jcoResponse.getValue("ID").toString() + " || ";
+				message += "TYPE: " + type + " || ";
+				message += "MESSAGE: " + typeMessage + "\n";
 			}
 		}
 		
 		responseTO.setSapMessage(message);
-		responseTO.setOrderID(orderHeaderTO.getReferenceID());
-		System.out.println(responseTO.toString());
 		return responseTO;
 	}
 
 	public void setBapiConnector(BapiConnector bapiConnector) {
 		this.bapiConnector = bapiConnector;
 	}
-    
-	public static void main(String[] args) {
-		BapiTO bapiTO = new TestBapiTO().getBapiTO();
-		
-		BapiConnector bapiConnector = new BapiConnector();
-		SapBapiHandler bh = new SapBapiHandler();
-		bh.setBapiConnector(bapiConnector);
-		System.out.println(bh.execute("", bapiTO));;
-	}
+	
 }

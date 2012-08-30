@@ -39,7 +39,7 @@ public class SapConstants {
 	public static final String DEFAULT_ITEM_NUMER = "000000";
 	public static final String ITEM_NUMBER = "ITM_NUMBER";
 	public static final String ARTICLE_ID = "MATERIAL";
-		public static final String ITEM_CATEGORY = "ITEM_CATEG";
+	public static final String ITEM_CATEGORY = "ITEM_CATEG";
 	public static final String DEFAULT_ITEM_CATEGORY = "ZATX";
 	public static final String WARRANTY_ITEM_CATEGORY = "ZFBE";
 	public static final String GV_ITEM_CATEGORY = "ZFBS";
@@ -134,6 +134,20 @@ public class SapConstants {
 	public static final String SALES_PRICE_CONDITION_TYPE = "YR00";
 	public static final String GV_CONDITION_TYPE = "YFGV";
 	public static final String NLC_CONDITION_TYPE = "YF05";
+	public static final String CONDITION_STEP_NUMBER = "COND_ST_NO";
+	public static final String CONDITION_COUNTER = "COND_COUNT";
+	public static final String DEFAULT_CONDITION_COUNTER = "01";
+	
+	//Condition Counter
+	public static final String MRP_STEP_NUMBER = "620";
+	public static final String LIST_STEP_NUMBER = "20";
+	public static final String SALES_STEP_NUMBER = "30";
+	public static final String ITZ_STEP_NUMBER = "750";
+	public static final String SHIPPING_STEP_NUMBER = "133";
+	public static final String COUPON_STEP_NUMBER = "770";
+	public static final String ITEM_DISCOUNT_STEP_NUMBER = "140";
+	public static final String NLC_STEP_NUMBER = "";
+	public static final String WARRANTY_STEP_NUMBER = "";
 	
 	//Sap Document Types
 	public static final String DOCUMENT_TYPE = "DOC_TYPE"; 
@@ -144,7 +158,7 @@ public class SapConstants {
 	public static final String FULL_NAME = "NAME";
 	public static final String LAST_NAME = "NAME_2";
 	public static final String CITY = "CITY";
-	public static final String STATE = "REGION";
+	public static final String STATE = "REGION";"");
 	public static final String PINCODE = "POSTL_CODE";
 	public static final String COUNTRY = "COUNTRY";
 	public static final String PRIMARY_PHONE = "TELEPHONE";

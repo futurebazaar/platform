@@ -4,7 +4,6 @@ public class ResponseTO {
 	
 	private String sapMessage;
 	private String orderID;
-	private String sapID;
 	private String type;
 	
 	public String getSapMessage() {
@@ -19,12 +18,6 @@ public class ResponseTO {
 	public void setOrderID(String orderID) {
 		this.orderID = orderID;
 	}
-	public String getSapID() {
-		return sapID;
-	}
-	public void setSapID(String sapID) {
-		this.sapID = sapID;
-	}
 	public String getType() {
 		return type;
 	}
@@ -35,9 +28,8 @@ public class ResponseTO {
 	@Override
 	public String toString() {
 		String response = "\nOrder ID: " + orderID
-				+ "\nSap ID: " + sapID
 				+ "\nType: " + type
-				+ "\nMessage: : " + sapMessage;
+				+ "\nMessage:  " + sapMessage;
 		return response;
 	}
 	

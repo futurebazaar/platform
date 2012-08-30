@@ -12,7 +12,6 @@ public class PointsMapper {
 		orderText.appendRow();
 		orderText.setValue(SapConstants.ITEM_NUMBER, SapConstants.DEFAULT_ITEM_NUMER);
 		orderText.setValue(SapConstants.TEXT_ID, SapConstants.DEFAULT_TEXT_ID);
-		//orderText.setValue(FBConstants.EN, "TEXT_LINE");
 		String pointsLine = cardNumber + "||" + 
 											pricingTO.getPointsEarn() + "||" + pricingTO.getPointsEarnValue() + "||" + 
 											pricingTO.getPointsBurn() + "||" + pricingTO.getPointsBurnValue(); 

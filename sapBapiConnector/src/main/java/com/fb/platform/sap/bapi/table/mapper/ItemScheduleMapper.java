@@ -54,7 +54,11 @@ public class ItemScheduleMapper {
 			orderScheduleIN.setValue(SapConstants.SCHEDULE_LINE, SapConstants.DEFAULT_SCHEDULE_LINE);
 			orderScheduleINX.setValue(SapConstants.SCHEDULE_LINE, SapConstants.DEFAULT_SCHEDULE_LINE);
 
-			orderScheduleINX.setValue(SapConstants.OPERATION_FLAG, SapConstants.INSERT_FLAG);
+			if (orderType.equals(TinlaOrderType.NEW_ORDER)) {
+				orderScheduleINX.setValue(SapConstants.OPERATION_FLAG, SapConstants.INSERT_FLAG);
+			} else {
+				orderScheduleINX.setValue(SapConstants.OPERATION_FLAG, SapConstants.UPDATE_FLAG);
+			}
 		}
 	}
 }
