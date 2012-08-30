@@ -50,6 +50,7 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
       	<xs:enumeration value="BUY_X_QUANTITY_GET_VARIABLE_PERCENT_OFF"/>
       	<xs:enumeration value="CATEGORY_BASED_VARIABLE_PERCENT_OFF"/>
       	<xs:enumeration value="MONTHLY_DISCOUNT_RS_OFF"/>
+      	<xs:enumeration value="DISCOUNT_ON_CLEARANCE_PRODUCT"></xs:enumeration>
 	</xs:restriction>
   </xs:simpleType>
   

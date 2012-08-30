@@ -89,7 +89,7 @@ public class RestClient {
 	
 	private static String localhost = "http://localhost:8080/";
 	
-	private static String url = localhost;
+	public static String url = localhost;
 
 	/**
 	 * @param args

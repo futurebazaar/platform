@@ -24,6 +24,7 @@ import com.fb.platform.promotion.rule.impl.BuyWorthXGetYRsOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyXBrandGetYRsOffOnZProductRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyXQuantityGetVariablePercentOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.CategoryBasedVariablePercentOffRuleImpl;
+import com.fb.platform.promotion.rule.impl.DiscountOnClearanceProductsRuleImpl;
 import com.fb.platform.promotion.rule.impl.FirstPurchaseBuyWorthXGetYRsOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.MonthlyDiscountRsOffRuleImpl;
 import com.fb.platform.promotion.to.OrderItem;
@@ -841,6 +842,85 @@ public class RuleImplTest extends BaseTestCase {
 	
 	}
 
-	
+	@Test
+	public void discountOnClearanceProductsRule() {
+		PromotionRule rule = ruleDao.load(9200, -11);
+
+		assertNotNull(rule);
+		assertTrue(rule instanceof DiscountOnClearanceProductsRuleImpl);
+	}
+
+	@Test
+	public void validateIsApplicableDiscountOnClearanceProducts() {
+		Product p1 = new Product();
+		p1.setPrice(new BigDecimal(700));
+		p1.setProductId(100);
+
+		//Create OrderItems
+		OrderItem oItem1 = new OrderItem();
+		oItem1.setQuantity(3);
+		oItem1.setProduct(p1);
+
+		Product p2 = new Product();
+		p2.setPrice(new BigDecimal(600));
+		p2.setProductId(200);
+
+		//Create OrderItems
+		OrderItem oItem2 = new OrderItem();
+		oItem2.setQuantity(2);
+		oItem2.setProduct(p2);
+
+		//Create OrderReq
+		OrderRequest orderReq1 = new OrderRequest();
+		orderReq1.setOrderId(1);
+		List<OrderItem> oList1 = new ArrayList<OrderItem>();
+		oList1.add(oItem1);
+		oList1.add(oItem2);
+		orderReq1.setOrderItems(oList1);
+
+		DiscountOnClearanceProductsRuleImpl rule = (DiscountOnClearanceProductsRuleImpl) ruleDao.load(9200, -11);
+
+		PromotionStatusEnum statusEnum = rule.isApplicable(orderReq1, -1, false);
+
+		assertNotNull(statusEnum);
+		assertEquals(PromotionStatusEnum.SUCCESS, statusEnum);
+	}
+
+	@Test
+	public void applyDiscountOnClearanceProducts() {
+		Product p1 = new Product();
+		p1.setPrice(new BigDecimal(700));
+		p1.setProductId(100);
+
+		//Create OrderItems
+		OrderItem oItem1 = new OrderItem();
+		oItem1.setQuantity(3);
+		oItem1.setProduct(p1);
+
+		Product p2 = new Product();
+		p2.setPrice(new BigDecimal(600));
+		p2.setProductId(200);
+
+		//Create OrderItems
+		OrderItem oItem2 = new OrderItem();
+		oItem2.setQuantity(2);
+		oItem2.setProduct(p2);
+
+		//Create OrderReq
+		OrderRequest orderReq1 = new OrderRequest();
+		orderReq1.setOrderId(1);
+		List<OrderItem> oList1 = new ArrayList<OrderItem>();
+		oList1.add(oItem1);
+		oList1.add(oItem2);
+		orderReq1.setOrderItems(oList1);
+
+		DiscountOnClearanceProductsRuleImpl rule = (DiscountOnClearanceProductsRuleImpl) ruleDao.load(9200, -11);
+
+		OrderDiscount orderDiscount = new OrderDiscount();
+		orderDiscount.setOrderRequest(orderReq1);
+		orderDiscount = rule.execute(orderDiscount);
+
+		assertNotNull(orderDiscount);
+	}
 }
 

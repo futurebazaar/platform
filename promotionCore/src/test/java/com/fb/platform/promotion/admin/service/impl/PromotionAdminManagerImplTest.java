@@ -103,6 +103,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		add(RulesEnum.BUY_X_QUANTITY_GET_VARIABLE_PERCENT_OFF);
 		add(RulesEnum.MONTHLY_DISCOUNT_RS_OFF);
 		add(RulesEnum.CATEGORY_BASED_VARIABLE_PERCENT_OFF);
+		add(RulesEnum.DISCOUNT_ON_CLEARANCE_PRODUCT);
 	}};
 	
 	@Before
@@ -149,7 +150,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 				fetchRuleResponse.getFetchRulesEnum());
 		assertNotNull(fetchRuleResponse.getSessionToken());
 		assertNotNull(fetchRuleResponse.getRulesList());
-		assertEquals(8, fetchRuleResponse.getRulesList().size());
+		assertEquals(9, fetchRuleResponse.getRulesList().size());
 		assertNotNull(fetchRuleResponse.getSessionToken());
 		for (RuleConfigDescriptor ruleConfig : fetchRuleResponse.getRulesList()) {
 			assertTrue(ruleList.contains(ruleConfig.getRulesEnum()));
@@ -1020,8 +1021,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		
 		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
-
-		assertEquals(19, searchPromotionResponse.getTotalCount());
+		assertEquals(20, searchPromotionResponse.getTotalCount());
 		assertEquals(2, searchPromotionResponse.getPromotionsList().size());
 
 		int count = 0;
@@ -1186,7 +1186,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
 		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
-		assertEquals(27, searchPromotionResponse.getTotalCount());
+		assertEquals(28, searchPromotionResponse.getTotalCount());
 		assertEquals(10, searchPromotionResponse.getPromotionsList().size());
 	}
 
@@ -1691,4 +1691,76 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 
 	}
 
+	@Test
+	public void createClearanceDiscountPromotion() {
+		CreatePromotionRequest createPromotionRequest = new CreatePromotionRequest();
+		PromotionTO promotionTO = new PromotionTO();
+
+		promotionTO.setPromotionName("Test discount on clearance products promotion");
+		promotionTO.setValidFrom(new DateTime(2012, 02, 29, 0, 0));
+		promotionTO.setValidTill(new DateTime(2015, 02, 22, 0, 0));
+		promotionTO.setDescription("Test discount on clearance products promotion description");
+		promotionTO.setActive(true);
+		promotionTO.setMaxUses(-1);
+		promotionTO.setMaxUsesPerUser(-1);
+		promotionTO.setMaxAmount(new Money(new BigDecimal(20000.00)));
+		promotionTO.setMaxAmountPerUser(new Money(new BigDecimal(1000.00)));
+		promotionTO.setRuleName("DISCOUNT_ON_CLEARANCE_PRODUCT");
+
+		List<RuleConfigItemTO> ruleConfigList = new ArrayList<RuleConfigItemTO>();
+
+		RuleConfigItemTO fixedDiscountOffConfig = new RuleConfigItemTO();
+		fixedDiscountOffConfig.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
+		fixedDiscountOffConfig.setRuleConfigValue("500");
+		ruleConfigList.add(fixedDiscountOffConfig);
+
+		//MIN_ORDER_VALUE
+		RuleConfigItemTO minOrderValueConfig = new RuleConfigItemTO();
+		minOrderValueConfig.setRuleConfigName("MIN_ORDER_VALUE");
+		minOrderValueConfig.setRuleConfigValue("2000");
+		ruleConfigList.add(minOrderValueConfig);
+
+		promotionTO.setConfigItems(ruleConfigList);
+
+		createPromotionRequest.setPromotion(promotionTO);
+
+		createPromotionRequest.setSessionToken(responseUser.getSessionToken());
+
+		CreatePromotionResponse createPromotionResponse = promotionAdminManager.createPromotion(createPromotionRequest);
+		assertEquals(CreatePromotionEnum.SUCCESS, createPromotionResponse.getCreatePromotionEnum());
+		assertTrue(createPromotionResponse.getPromotionId() > 0);
+		assertNotNull(createPromotionResponse.getSessionToken());
+
+		//see if the promotion is created in the db
+		ViewPromotionRequest viewPromotionRequest = new ViewPromotionRequest();
+		viewPromotionRequest.setSessionToken(responseUser.getSessionToken());
+		viewPromotionRequest.setPromotionId(createPromotionResponse.getPromotionId());
+
+		ViewPromotionResponse viewPromotionResponse = promotionAdminManager.viewPromotion(viewPromotionRequest);
+
+		assertNotNull(viewPromotionResponse);
+		assertNotNull(viewPromotionResponse.getPromotionCompleteView());
+
+		PromotionTO promotion = viewPromotionResponse.getPromotionCompleteView();
+		assertEquals("Test discount on clearance products promotion", promotion.getPromotionName());
+
+		//create a coupon
+		CreateCouponRequest createCouponRequest = new CreateCouponRequest();
+		createCouponRequest.setSessionToken(responseUser.getSessionToken());
+		createCouponRequest.setPromotionId(promotion.getId());
+		createCouponRequest.setCount(1);
+		createCouponRequest.setLength(9);
+		createCouponRequest.setAlphabetCase(AlphabetCase.UPPER);
+		createCouponRequest.setAlphaNumericType(AlphaNumericType.ALPHABETS);
+		createCouponRequest.setStartsWith("CLEARANCE");
+		createCouponRequest.setType(CouponType.GLOBAL);
+		createCouponRequest.setMaxAmount(new BigDecimal(10000));
+		createCouponRequest.setMaxAmountPerUser(new BigDecimal(1000));
+		createCouponRequest.setMaxUses(-1);
+		createCouponRequest.setMaxUsesPerUser(-1);
+
+		CreateCouponResponse createCouponResponse = promotionAdminManager.createCoupons(createCouponRequest);
+		assertNotNull(createCouponResponse);
+		assertEquals(CreateCouponStatusEnum.SUCCESS, createCouponResponse.getStatus());
+	}
 }
