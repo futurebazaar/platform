@@ -130,6 +130,7 @@
       <!--default for catch all-->
       <address-setting match="#">
          <dead-letter-address>jms.queue.DLQ</dead-letter-address>
+         <max-delivery-attempts>2</max-delivery-attempts>
          <expiry-address>jms.queue.ExpiryQueue</expiry-address>
          <redelivery-delay>5000</redelivery-delay>
          <max-size-bytes>10485760</max-size-bytes>       
@@ -140,6 +141,17 @@
       </address-setting>
       <address-setting match="jms.queue.platformMail">
          <dead-letter-address>jms.queue.mailDLQ</dead-letter-address>
+         <max-delivery-attempts>2</max-delivery-attempts>
+         <expiry-address>jms.queue.ExpiryQueue</expiry-address>
+         <redelivery-delay>5000</redelivery-delay>
+         <max-size-bytes>10485760</max-size-bytes>       
+         <message-counter-history-day-limit>10</message-counter-history-day-limit>
+         <address-full-policy>BLOCK</address-full-policy>
+         <redistribution-delay>0</redistribution-delay>
+      </address-setting>
+	<address-setting match="jms.queue.preDLQ">
+         <dead-letter-address>jms.queue.DLQ</dead-letter-address>
+         <max-delivery-attempts>2</max-delivery-attempts>
          <expiry-address>jms.queue.ExpiryQueue</expiry-address>
          <redelivery-delay>5000</redelivery-delay>
          <max-size-bytes>10485760</max-size-bytes>       
@@ -149,6 +161,7 @@
       </address-setting>
       <address-setting match="jms.queue.#">
          <dead-letter-address>jms.queue.preDLQ</dead-letter-address>
+         <max-delivery-attempts>2</max-delivery-attempts>
          <expiry-address>jms.queue.ExpiryQueue</expiry-address>
          <redelivery-delay>5000</redelivery-delay>
          <max-size-bytes>10485760</max-size-bytes>       
@@ -157,7 +170,4 @@
          <redistribution-delay>0</redistribution-delay>
       </address-setting>
    </address-settings>
-
-   
-
 </configuration>
