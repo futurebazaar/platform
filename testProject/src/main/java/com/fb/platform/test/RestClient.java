@@ -22,6 +22,7 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
+import org.joda.time.DateTime;
 
 import com.fb.platform.auth._1_0.AddUserRequest;
 import com.fb.platform.auth._1_0.AddUserResponse;
@@ -65,6 +66,8 @@ import com.fb.platform.promotion.admin._1_0.CreatePromotionResponse;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionTO;
 import com.fb.platform.promotion.admin._1_0.FetchRuleRequest;
 import com.fb.platform.promotion.admin._1_0.FetchRuleResponse;
+import com.fb.platform.promotion.admin._1_0.GetPromotionUsageRequest;
+import com.fb.platform.promotion.admin._1_0.GetPromotionUsageResponse;
 import com.fb.platform.promotion.admin._1_0.PromotionTO;
 import com.fb.platform.promotion.admin._1_0.RuleConfigItemTO;
 import com.fb.platform.promotion.admin._1_0.SearchCouponOrderBy;
@@ -88,7 +91,7 @@ public class RestClient {
 	
 	private static String QAURL = "http://10.0.102.21:8082/";
 	
-	private static String localhost = "http://localhost:8080/";
+	private static String localhost = "http://localhost:9082/";
 	
 	private static String url = localhost;
 
@@ -117,6 +120,7 @@ public class RestClient {
 		createCoupon(sessionToken);
 		searchScratchCard(sessionToken,"BB000UGDC");
 		applyAutoPromotion(sessionToken);
+		getPromotionPerformance(sessionToken);
 		logout(sessionToken);
 	}
 
@@ -395,11 +399,8 @@ public class RestClient {
 		
 		promotionTO.setPromotionName("New Promotion");
 		
-		GregorianCalendar gregCal = new GregorianCalendar();
-		gregCal.set(2012, 01, 29, 00, 00, 00);
-		promotionTO.setValidFrom(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
-		gregCal.set(2013, 01, 29, 00, 00, 00);
-		promotionTO.setValidTill(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+		promotionTO.setValidFrom(new DateTime(2012, 02, 29, 0, 0));
+		promotionTO.setValidTill(new DateTime(2013, 02, 28, 0, 0));
 		promotionTO.setDescription("Test new promotion 2");
 		promotionTO.setIsActive(true);
 		promotionTO.setMaxUses(20);
@@ -464,12 +465,10 @@ public class RestClient {
 		
 		GregorianCalendar gregCal = new GregorianCalendar();
 		gregCal.clear();
-		gregCal.set(2012, 00, 02);
-		nameSearchPromotionRequest.setValidFrom(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+		nameSearchPromotionRequest.setValidFrom(new DateTime(2012, 02, 29, 0, 0));
 		
 		gregCal.clear();
-		gregCal.set(2012, 05, 30);
-		nameSearchPromotionRequest.setValidTill(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+		nameSearchPromotionRequest.setValidTill(new DateTime(2013, 02, 28, 0, 0));
 		
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
 
@@ -547,10 +546,8 @@ public class RestClient {
 		updatePromotion.setPromotionName("End to End Test Promoti");
 		
 		GregorianCalendar gregCal = new GregorianCalendar();
-		gregCal.set(2012, 01, 22);
-		updatePromotion.setValidFrom(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
-		gregCal.set(2013, 01, 22);
-		updatePromotion.setValidTill(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+		updatePromotion.setValidFrom(new DateTime(2012, 02, 29, 0, 0));
+		updatePromotion.setValidTill(new DateTime(2013, 02, 28, 0, 0));
 		updatePromotion.setDescription("Test new promotion NEHA");
 		updatePromotion.setIsActive(false);
 		updatePromotion.setMaxUses(22);
@@ -1094,5 +1091,36 @@ public class RestClient {
 		for(Promotion promo : xmlResponse.getPromotion()) {
 			System.out.println("promo id : " + promo.getPromotionId());
 		}
+	}
+	
+	private static void getPromotionPerformance(String sessionToken) throws Exception {
+		HttpClient httpClient = new HttpClient();
+		PostMethod PromotionPerformanceMethod = new PostMethod(url + "promotionAdminWS/promotionAdmin/performance");
+		GetPromotionUsageRequest PromotionUsageRequest = new GetPromotionUsageRequest();
+		PromotionUsageRequest.setSessionToken(sessionToken);
+		PromotionUsageRequest.setPromotionId(-5002);
+		
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
+		
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(PromotionUsageRequest, sw);
+		
+		System.out.println("\n" + url + "promotionAdminWS/promotionAdmin/performance");
+		System.out.println("\n\nPromotionUsageRequest : \n" + sw.toString());
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		PromotionPerformanceMethod.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(PromotionPerformanceMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the  promotion performance : " + statusCode);
+			return;
+		}
+		String PromotionPerformamceResponseStr = PromotionPerformanceMethod.getResponseBodyAsString();
+		System.out.println("Got the promotion performance Response : \n\n" + PromotionPerformamceResponseStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		GetPromotionUsageResponse PromotionPerformanceResponse = (GetPromotionUsageResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(PromotionPerformamceResponseStr)));
+		System.out.println(PromotionPerformanceResponse.getGetPromotionUsageEnum().toString());
 	}
 }

@@ -11,11 +11,13 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
+import com.fb.platform.promotion.admin.dao.PromotionAdminDao;
 import com.fb.platform.promotion.admin.service.NoDataFoundException;
 import com.fb.platform.promotion.admin.service.PromotionAdminManager;
 import com.fb.platform.promotion.admin.service.PromotionAdminService;
@@ -34,6 +36,9 @@ import com.fb.platform.promotion.admin.to.CreatePromotionResponse;
 import com.fb.platform.promotion.admin.to.FetchRuleRequest;
 import com.fb.platform.promotion.admin.to.FetchRuleResponse;
 import com.fb.platform.promotion.admin.to.FetchRulesEnum;
+import com.fb.platform.promotion.admin.to.GetPromotionUsageEnum;
+import com.fb.platform.promotion.admin.to.GetPromotionUsageRequest;
+import com.fb.platform.promotion.admin.to.GetPromotionUsageResponse;
 import com.fb.platform.promotion.admin.to.PromotionTO;
 import com.fb.platform.promotion.admin.to.RuleConfigItemTO;
 import com.fb.platform.promotion.admin.to.SearchCouponRequest;
@@ -55,6 +60,7 @@ import com.fb.platform.promotion.admin.to.ViewCouponStatusEnum;
 import com.fb.platform.promotion.admin.to.ViewPromotionEnum;
 import com.fb.platform.promotion.admin.to.ViewPromotionRequest;
 import com.fb.platform.promotion.admin.to.ViewPromotionResponse;
+import com.fb.platform.promotion.dao.PromotionDao;
 import com.fb.platform.promotion.exception.CouponAlreadyAssignedToUserException;
 import com.fb.platform.promotion.exception.CouponCodeGenerationException;
 import com.fb.platform.promotion.exception.CouponNotFoundException;
@@ -62,6 +68,7 @@ import com.fb.platform.promotion.exception.InvalidAlphaNumericTypeException;
 import com.fb.platform.promotion.exception.InvalidCouponTypeException;
 import com.fb.platform.promotion.exception.PromotionNotFoundException;
 import com.fb.platform.promotion.exception.ScratchCardNotFoundException;
+import com.fb.platform.promotion.model.GlobalPromotionUses;
 import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
 import com.fb.platform.promotion.model.scratchCard.ScratchCard;
 import com.fb.platform.promotion.rule.RulesEnum;
@@ -81,7 +88,7 @@ import com.fb.platform.user.manager.model.admin.User;
 public class PromotionAdminManagerImpl implements PromotionAdminManager {
 	
 	private Log log = LogFactory.getLog(PromotionAdminManagerImpl.class);
-	
+		
 	@Autowired
 	private AuthenticationService authenticationService;
 	
@@ -493,7 +500,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		
 		return response;
 	}
-	
+		
 	@Override
 	public SearchCouponResponse searchCoupons(SearchCouponRequest request){
 		SearchCouponResponse response = new SearchCouponResponse();
@@ -666,4 +673,42 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		return response;
 	} 
 
+	@Override
+	public GetPromotionUsageResponse  getPromotionUsage(GetPromotionUsageRequest request) {
+		GetPromotionUsageResponse response = null;
+
+		if (request == null) {
+			response = new GetPromotionUsageResponse();
+			response.setStatus(GetPromotionUsageEnum.NO_SESSION);
+			return response;
+		}
+
+		response = request.validate();
+		if (response != null) {
+			return response;
+		}
+
+		response = new GetPromotionUsageResponse();
+		response.setSessionToken(request.getSessionToken());
+
+		//authenticate the session token and find out the userId
+		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
+		if (authentication == null) {
+			//invalid session token
+			response.setStatus(GetPromotionUsageEnum.NO_SESSION);
+			return response;
+		}
+
+		try {
+			GlobalPromotionUses globalPromotionUses = promotionAdminService.getPromotionPerformance(request.getpromotionId());
+			response.setdiscount(globalPromotionUses.getCurrentAmount());
+			response.settotalOrders(globalPromotionUses.getCurrentCount());
+			response.setStatus(GetPromotionUsageEnum.SUCCESS);
+		} catch(Exception e) {
+			log.error("Error while getting the promotion performance for promotionId : " + request.getpromotionId(), e);
+			response.setStatus(GetPromotionUsageEnum.INTERNAL_ERROR);
+			return response;
+		}
+		return response;
+	}
 }

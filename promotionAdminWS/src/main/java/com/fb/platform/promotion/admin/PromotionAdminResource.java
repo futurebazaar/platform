@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.math.BigDecimal;
 import java.util.GregorianCalendar;
 
 import javax.ws.rs.Consumes;
@@ -48,6 +49,7 @@ import com.fb.platform.promotion.admin._1_0.CreatePromotionTO;
 import com.fb.platform.promotion.admin._1_0.FetchRuleRequest;
 import com.fb.platform.promotion.admin._1_0.FetchRuleResponse;
 import com.fb.platform.promotion.admin._1_0.FetchRulesEnum;
+import com.fb.platform.promotion.admin._1_0.GetPromotionUsageEnum;
 import com.fb.platform.promotion.admin._1_0.PromotionTO;
 import com.fb.platform.promotion.admin._1_0.PromotionViewTO;
 import com.fb.platform.promotion.admin._1_0.RuleConfigDescriptor;
@@ -74,6 +76,8 @@ import com.fb.platform.promotion.admin._1_0.ViewPromotionEnum;
 import com.fb.platform.promotion.admin._1_0.ViewPromotionRequest;
 import com.fb.platform.promotion.admin._1_0.ViewPromotionResponse;
 import com.fb.platform.promotion.admin.service.PromotionAdminManager;
+import com.fb.platform.promotion.admin.to.GetPromotionUsageRequest;
+import com.fb.platform.promotion.admin.to.GetPromotionUsageResponse;
 import com.fb.platform.promotion.admin.to.SearchCouponOrderBy;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
 import com.fb.platform.promotion.admin.to.SortOrder;
@@ -834,7 +838,48 @@ public class PromotionAdminResource {
 			logger.error("Error in the searchCoupon call.", e);
 			return "searchCoupon error"; //TODO return proper error response
 		}  
-	} 
+	}
+	
+
+	@POST
+	@Path("/performance")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String getPromotionPerformance(String fetchPerformanceXML) {
+		logger.info("getPromotionPerformanceXML : " + fetchPerformanceXML);
+		try{
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			com.fb.platform.promotion.admin._1_0.GetPromotionUsageRequest promotionUsageRequest = (com.fb.platform.promotion.admin._1_0.GetPromotionUsageRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(fetchPerformanceXML)));
+			com.fb.platform.promotion.admin.to.GetPromotionUsageRequest apiPromotionUsageRequest = new com.fb.platform.promotion.admin.to.GetPromotionUsageRequest();
+			
+			apiPromotionUsageRequest.setSessionToken(promotionUsageRequest.getSessionToken());
+			apiPromotionUsageRequest.setpromotionId(promotionUsageRequest.getPromotionId());
+			
+			com.fb.platform.promotion.admin._1_0.GetPromotionUsageResponse promotionUsageResponse = new com.fb.platform.promotion.admin._1_0.GetPromotionUsageResponse();
+			com.fb.platform.promotion.admin.to.GetPromotionUsageResponse apiPromotionUsageResponse = promotionAdminManager.getPromotionUsage(apiPromotionUsageRequest);
+			
+			promotionUsageResponse.setSessionToken(apiPromotionUsageRequest.getSessionToken());
+
+			if (apiPromotionUsageResponse.getdiscount() != null && apiPromotionUsageResponse.getdiscount().getAmount() != null) {
+				promotionUsageResponse.setDiscount(apiPromotionUsageResponse.getdiscount().getAmount());
+			} else {
+				promotionUsageResponse.setDiscount(new BigDecimal(0.0));
+			}
+			promotionUsageResponse.setTotalOrders(apiPromotionUsageResponse.gettotalOrders());
+			promotionUsageResponse.setGetPromotionUsageEnum(GetPromotionUsageEnum.valueOf(apiPromotionUsageResponse.getStatus().toString()));
+			
+			StringWriter outStringWriter = new StringWriter();
+			Marshaller marshaller = context.createMarshaller();
+			marshaller.marshal(promotionUsageResponse, outStringWriter);
+
+			String xmlResponse = outStringWriter.toString();
+			logger.info("getPromotionPerformanceXML response :\n" + xmlResponse);
+			return xmlResponse;
+		} catch (JAXBException e) {
+			logger.error("Error in the getPromotionPerformance call.", e);
+			return "error"; //TODO return proper error response
+		}
+	}
 	
 	
 
