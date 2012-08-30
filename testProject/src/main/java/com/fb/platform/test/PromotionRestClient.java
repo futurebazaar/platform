@@ -25,6 +25,8 @@ import com.fb.platform.promotion._1_0.Product;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionRequest;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionResponse;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionTO;
+import com.fb.platform.promotion.admin._1_0.FetchRuleRequest;
+import com.fb.platform.promotion.admin._1_0.FetchRuleResponse;
 import com.fb.platform.promotion.admin._1_0.RuleConfigItemTO;
 
 public class PromotionRestClient {
@@ -35,6 +37,7 @@ public class PromotionRestClient {
 		String sessionToken = RestClient.login();
 
 		createClearanceDiscountPromotion(sessionToken);
+		getAllPromotionRuleList(sessionToken);
 		//BigDecimal discValue = applyCoupon(sessionToken);
 		//System.out.println(discValue);
 	}
@@ -91,7 +94,36 @@ public class PromotionRestClient {
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		CreatePromotionResponse xmlResponse = (CreatePromotionResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(xmlStr)));
 		System.out.println(xmlResponse.getCreatePromotionEnum().toString());
+	}
+
+	private static void getAllPromotionRuleList(String sessionToken) throws Exception {
+		HttpClient httpClient = new HttpClient();
+		PostMethod getAllPromotionRuleList = new PostMethod(RestClient.url + "promotionAdminWS/promotionAdmin/rules");
+		FetchRuleRequest fetchRuleRequest = new FetchRuleRequest();
+		fetchRuleRequest.setSessionToken(sessionToken);
 		
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
+
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(fetchRuleRequest, sw);
+
+		System.out.println("\n" + RestClient.url + "promotionAdminWS/promotionAdmin/rules");
+		System.out.println("\n\ngetAllPromotionRuleList : \n" + sw.toString());
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		getAllPromotionRuleList.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(getAllPromotionRuleList);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the getAllPromotionRuleList method : " + statusCode);
+			System.exit(1);
+		}
+		String getAllPromotionRuleListResponseStr = getAllPromotionRuleList.getResponseBodyAsString();
+		System.out.println("Got the getAllPromotionRuleList Response : \n\n" + getAllPromotionRuleListResponseStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		FetchRuleResponse fetchRuleResponse = (FetchRuleResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(getAllPromotionRuleListResponseStr)));
+		System.out.println(fetchRuleResponse.getFetchRulesEnum().toString());
 	}
 
 	public static BigDecimal applyCoupon(String sessionToken) throws Exception{
