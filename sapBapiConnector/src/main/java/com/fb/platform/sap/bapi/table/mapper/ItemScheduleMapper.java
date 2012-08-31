@@ -10,6 +10,7 @@ import com.fb.platform.sap.bapi.table.BapiTable;
 import com.fb.platform.sap.bapi.table.TableType;
 import com.fb.platform.sap.bapi.table.TinlaOrderType;
 import com.fb.platform.sap.bapi.utils.SapConstants;
+import com.fb.platform.sap.bapi.utils.SapUtils;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoTable;
 
@@ -24,10 +25,10 @@ public class ItemScheduleMapper {
 			orderScheduleIN.appendRow();
 			orderScheduleINX.appendRow();
 			
-			String commonDate = orderHeaderTO.getCreatedOn().getYear() + "-" + orderHeaderTO.getCreatedOn().getMonthOfYear() + "-" + orderHeaderTO.getCreatedOn().getDayOfMonth();
+			String commonDate = SapUtils.convertDateToFormat(orderHeaderTO.getCreatedOn(), "yyyMMdd");
 
 			if (itemTO.getRequiredDeliveryDate() != null) {
-				commonDate =itemTO.getRequiredDeliveryDate().getYear() + "-" +itemTO.getRequiredDeliveryDate().getMonthOfYear() + "-" + itemTO.getRequiredDeliveryDate().getDayOfMonth();
+				commonDate = SapUtils.convertDateToFormat(itemTO.getRequiredDeliveryDate(), "yyyMMdd");
 			}
 			
 			orderScheduleIN.setValue(SapConstants.ITEM_NUMBER, itemTO.getSapDocumentId());

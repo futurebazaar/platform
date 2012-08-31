@@ -58,32 +58,32 @@ public class ItemConditionsMapper {
 
 	private static void setItemCondition(JCoFunction bapiFunction, ItemConditionsType conditionType, BigDecimal conditionValue, LineItemTO itemTO, TinlaOrderType orderType) {
 		
-		String operationFlag = SapConstants.INSERT_FLAG;
-		if (!orderType.equals(TinlaOrderType.NEW_ORDER)) {
-			operationFlag = SapConstants.UPDATE_FLAG;
-		}
-		
 		Map<TableType, BapiTable> conditionTables = PlatformBapiHandlerFactory.getConditionTables(orderType);
 		Map<String, String> conditionKeyValueMap = PlatformBapiHandlerFactory.conditionValueMap(conditionType);
 		JCoTable orderConditionIN= bapiFunction.getTableParameterList().getTable(conditionTables.get(TableType.VALUE_TABLE).toString());
 		orderConditionIN.appendRow();
 		orderConditionIN.setValue(SapConstants.ITEM_NUMBER, itemTO.getSapDocumentId());
-		orderConditionIN.setValue(SapConstants.CONDITION_TYPE, conditionType.toString());
+		orderConditionIN.setValue(SapConstants.CONDITION_TYPE, conditionKeyValueMap.get(SapConstants.CONDITION_TYPE));
 		orderConditionIN.setValue(SapConstants.CONDITION_VALUE, conditionValue.toString());
-		orderConditionIN.setValue(SapConstants.CONDITION_STEP_NUMBER, conditionKeyValueMap.get(SapConstants.CONDITION_STEP_NUMBER));
-		orderConditionIN.setValue(SapConstants.CONDITION_COUNTER, conditionKeyValueMap.get(SapConstants.CONDITION_COUNTER));
 		
+		if (!orderType.equals(TinlaOrderType.NEW_ORDER)) {
+			orderConditionIN.setValue(SapConstants.CONDITION_STEP_NUMBER, conditionKeyValueMap.get(SapConstants.CONDITION_STEP_NUMBER));
+			orderConditionIN.setValue(SapConstants.CONDITION_COUNTER, conditionKeyValueMap.get(SapConstants.CONDITION_COUNTER));
+		}
+	
 		if (!orderType.equals(TinlaOrderType.RET_ORDER)) {
 			JCoTable orderConditionINX = bapiFunction.getTableParameterList().getTable(conditionTables.get(TableType.COMMIT_TABLE).toString());
 			orderConditionINX.appendRow();
 			orderConditionINX.setValue(SapConstants.ITEM_NUMBER, itemTO.getSapDocumentId());
-			orderConditionINX.setValue(SapConstants.CONDITION_TYPE, conditionType);
+			orderConditionINX.setValue(SapConstants.CONDITION_TYPE, conditionKeyValueMap.get(SapConstants.CONDITION_TYPE));
 			orderConditionINX.setValue(SapConstants.CONDITION_VALUE, SapConstants.COMMIT_FLAG);
-			orderConditionINX.setValue(SapConstants.OPERATION_FLAG, operationFlag);
-			orderConditionINX.setValue(SapConstants.CONDITION_STEP_NUMBER, conditionKeyValueMap.get(SapConstants.CONDITION_STEP_NUMBER));
-			orderConditionINX.setValue(SapConstants.CONDITION_COUNTER, conditionKeyValueMap.get(SapConstants.CONDITION_COUNTER));
+			orderConditionINX.setValue(SapConstants.OPERATION_FLAG, SapConstants.INSERT_FLAG);
 			
+			if (orderType.equals(TinlaOrderType.MOD_ORDER)) {
+				orderConditionINX.setValue(SapConstants.CONDITION_STEP_NUMBER, conditionKeyValueMap.get(SapConstants.CONDITION_STEP_NUMBER));
+				orderConditionINX.setValue(SapConstants.CONDITION_COUNTER, conditionKeyValueMap.get(SapConstants.CONDITION_COUNTER));
+				orderConditionINX.setValue(SapConstants.OPERATION_FLAG, SapConstants.UPDATE_FLAG);
+			}
 		}
-		
 	}
 }

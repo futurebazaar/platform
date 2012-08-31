@@ -80,38 +80,47 @@ public class PlatformBapiHandlerFactory {
 		if (conditionType.equals(ItemConditionsType.COUPON_CONDITION_TYPE)) {
 			conditionValueMap.put(SapConstants.CONDITION_STEP_NUMBER, SapConstants.COUPON_STEP_NUMBER);
 			conditionValueMap.put(SapConstants.CONDITION_COUNTER, SapConstants.DEFAULT_CONDITION_COUNTER);
+			conditionValueMap.put(SapConstants.CONDITION_TYPE, SapConstants.COUPON_CONDITION_TYPE);
 		}
 		if (conditionType.equals(ItemConditionsType.ITEM_DISCOUNT_CONDITION_TYPE)) {
 			conditionValueMap.put(SapConstants.CONDITION_STEP_NUMBER, SapConstants.ITEM_DISCOUNT_STEP_NUMBER);
 			conditionValueMap.put(SapConstants.CONDITION_COUNTER, SapConstants.DEFAULT_CONDITION_COUNTER);
+			conditionValueMap.put(SapConstants.CONDITION_TYPE, SapConstants.ITEM_DISCOUNT_CONDITION_TYPE);
 		}
 		if (conditionType.equals(ItemConditionsType.ITZ_CONDITION_TYPE)) {
 			conditionValueMap.put(SapConstants.CONDITION_STEP_NUMBER, SapConstants.ITZ_STEP_NUMBER);
 			conditionValueMap.put(SapConstants.CONDITION_COUNTER, SapConstants.DEFAULT_CONDITION_COUNTER);
+			conditionValueMap.put(SapConstants.CONDITION_TYPE, SapConstants.ITZ_CONDITION_TYPE);
 		}
 		if (conditionType.equals(ItemConditionsType.SHIPPING_CONDITION_TYPE)) {
 			conditionValueMap.put(SapConstants.CONDITION_STEP_NUMBER, SapConstants.SHIPPING_STEP_NUMBER);
 			conditionValueMap.put(SapConstants.CONDITION_COUNTER, SapConstants.DEFAULT_CONDITION_COUNTER);
+			conditionValueMap.put(SapConstants.CONDITION_TYPE, SapConstants.SHIPPING_CONDITION_TYPE);
 		}
 		if (conditionType.equals(ItemConditionsType.MRP_CONDITION_TYPE)) {
 			conditionValueMap.put(SapConstants.CONDITION_STEP_NUMBER, SapConstants.MRP_STEP_NUMBER);
 			conditionValueMap.put(SapConstants.CONDITION_COUNTER, SapConstants.DEFAULT_CONDITION_COUNTER);
+			conditionValueMap.put(SapConstants.CONDITION_TYPE, SapConstants.MRP_CONDITION_TYPE);
 		}
 		if (conditionType.equals(ItemConditionsType.LIST_CONDITION_TYPE)) {
 			conditionValueMap.put(SapConstants.CONDITION_STEP_NUMBER, SapConstants.LIST_STEP_NUMBER);
 			conditionValueMap.put(SapConstants.CONDITION_COUNTER, SapConstants.DEFAULT_CONDITION_COUNTER);
+			conditionValueMap.put(SapConstants.CONDITION_TYPE, SapConstants.OFFER_PRICE_CONDITION_TYPE);
 		}
 		if (conditionType.equals(ItemConditionsType.SALES_CONDITION_TYPE)) {
 			conditionValueMap.put(SapConstants.CONDITION_STEP_NUMBER, SapConstants.SALES_STEP_NUMBER);
 			conditionValueMap.put(SapConstants.CONDITION_COUNTER, SapConstants.DEFAULT_CONDITION_COUNTER);
+			conditionValueMap.put(SapConstants.CONDITION_TYPE, SapConstants.SALES_PRICE_CONDITION_TYPE);
 		}
 		if (conditionType.equals(ItemConditionsType.WARRANTY_CONDITION_TYPE)) {
 			conditionValueMap.put(SapConstants.CONDITION_STEP_NUMBER, SapConstants.WARRANTY_STEP_NUMBER);
 			conditionValueMap.put(SapConstants.CONDITION_COUNTER, SapConstants.DEFAULT_CONDITION_COUNTER);
+			conditionValueMap.put(SapConstants.CONDITION_TYPE, SapConstants.WARRANTY_CONDITION_TYPE);
 		}
 		if (conditionType.equals(ItemConditionsType.NLC_CONDITION_TYPE)) {
 			conditionValueMap.put(SapConstants.CONDITION_STEP_NUMBER, SapConstants.NLC_STEP_NUMBER);
 			conditionValueMap.put(SapConstants.CONDITION_COUNTER, SapConstants.DEFAULT_CONDITION_COUNTER);
+			conditionValueMap.put(SapConstants.CONDITION_TYPE, SapConstants.NLC_CONDITION_TYPE);
 		}
 
 		return conditionValueMap;

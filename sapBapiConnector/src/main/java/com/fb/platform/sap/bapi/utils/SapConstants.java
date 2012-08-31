@@ -109,7 +109,7 @@ public class SapConstants {
 	//Header Constants
 	public static final String INPUT_SALES_DOCUMENT = "SALESDOCUMENTIN";	
 	public static final String SALES_DOCUMENT = "SALESDOCUMENT";
-	public static final String CHANNEL_TYPE = "";
+	public static final String CHANNEL_TYPE = "NAME";
 	public static final String CLIENT_NAME = "NAME";
 	public static final String THIRD_PARTY_ORDER = "PURCH_NO_C";
 	public static final String DOCUMENT_DATE = "DOC_DATE";
@@ -146,8 +146,8 @@ public class SapConstants {
 	public static final String SHIPPING_STEP_NUMBER = "133";
 	public static final String COUPON_STEP_NUMBER = "770";
 	public static final String ITEM_DISCOUNT_STEP_NUMBER = "140";
-	public static final String NLC_STEP_NUMBER = "";
-	public static final String WARRANTY_STEP_NUMBER = "";
+	public static final String NLC_STEP_NUMBER = "421";
+	public static final String WARRANTY_STEP_NUMBER = "810";
 	
 	//Sap Document Types
 	public static final String DOCUMENT_TYPE = "DOC_TYPE"; 
@@ -158,7 +158,7 @@ public class SapConstants {
 	public static final String FULL_NAME = "NAME";
 	public static final String LAST_NAME = "NAME_2";
 	public static final String CITY = "CITY";
-	public static final String STATE = "REGION";"");
+	public static final String STATE = "REGION";
 	public static final String PINCODE = "POSTL_CODE";
 	public static final String COUNTRY = "COUNTRY";
 	public static final String PRIMARY_PHONE = "TELEPHONE";

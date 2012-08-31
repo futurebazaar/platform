@@ -8,7 +8,9 @@ import com.fb.commons.mom.to.OrderHeaderTO;
 import com.fb.commons.mom.to.PaymentTO;
 import com.fb.platform.sap.bapi.table.BapiTable;
 import com.fb.platform.sap.bapi.utils.SapConstants;
+import com.fb.platform.sap.bapi.utils.SapUtils;
 import com.sap.conn.jco.JCoFunction;
+import com.sap.conn.jco.JCoStructure;
 import com.sap.conn.jco.JCoTable;
 
 public class PaymentMapper {
@@ -32,10 +34,9 @@ public class PaymentMapper {
 		
 		orderCreditCard.appendRow();
 
-		String validTill = paymentTO.getValidTill().getYear() + "-" + paymentTO.getValidTill().getMonthOfYear() + "-" +paymentTO.getValidTill().getDayOfMonth();
-		String paymentDate = paymentTO.getPaymentTime().getYear() +"-" + paymentTO.getPaymentTime().getMonthOfYear() + "-" +  paymentTO.getPaymentTime().getDayOfMonth();
-		String paymentTime = paymentTO.getPaymentTime().getHourOfDay() + "" + paymentTO.getPaymentTime().getMinuteOfHour() + "" + paymentTO.getPaymentTime().getSecondOfMinute();  
-				
+		String validTill = SapUtils.convertDateToFormat(paymentTO.getValidTill(), "yyyMMdd");
+		String paymentDate = SapUtils.convertDateToFormat(paymentTO.getPaymentTime(), "yyyMMdd");
+		String paymentTime = SapUtils.convertDateToFormat(paymentTO.getPaymentTime(), "HHmmss");;  
 		orderCreditCard.setValue(SapConstants.INSTRUMENT_NO, paymentTO.getInstrumentNumber());
 		orderCreditCard.setValue(SapConstants.VALID_TILL, validTill);
 		orderCreditCard.setValue(SapConstants.PAYMENT_DATE, paymentDate);
@@ -68,8 +69,8 @@ public class PaymentMapper {
 	}
 	
 	private static void setCodDetails(JCoFunction bapiFunction, String paymentMode, OrderHeaderTO orderHeaderTO, PaymentTO paymentTO) {
-		JCoTable orderHeaderIN = bapiFunction.getTableParameterList().getTable(BapiTable.ORDER_HEADER_IN.toString());
-		JCoTable orderHeaderINX = bapiFunction.getTableParameterList().getTable(BapiTable.ORDER_HEADER_INX.toString());
+		JCoStructure orderHeaderIN = bapiFunction.getImportParameterList().getStructure(BapiTable.ORDER_HEADER_IN.toString());
+		JCoStructure orderHeaderINX = bapiFunction.getImportParameterList().getStructure(BapiTable.ORDER_HEADER_INX.toString());
 		orderHeaderIN.setValue(SapConstants.PAYMENT_TERM, SapConstants.COD_PAYMENT_TERM);
 		orderHeaderINX.setValue(SapConstants.PAYMENT_TERM, SapConstants.COMMIT_FLAG);
 

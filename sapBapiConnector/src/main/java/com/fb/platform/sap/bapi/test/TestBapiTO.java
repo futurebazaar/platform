@@ -18,7 +18,7 @@ public class TestBapiTO {
 	
 	public BapiTO getBapiTO() {
 		BapiTO bapiTO = new BapiTO();
-		bapiTO.setOrderType(TinlaOrderType.RET_ORDER);
+		bapiTO.setOrderType(TinlaOrderType.NEW_ORDER);
 		bapiTO.setOrderHeaderTO(getOrderTO());
 		bapiTO.setLineItemTO(getLineItemTO());
 		bapiTO.setAddressTO(getAddressTO());
@@ -34,8 +34,8 @@ public class TestBapiTO {
 		paymentTO1.setBank("ICICI");
 		paymentTO1.setInstrumentNumber("123456");
 		paymentTO1.setMerchantID("1982");
-		paymentTO1.setPaymentGateway("ICIC");
-		paymentTO1.setPaymentMode("credit-card-emi-web");
+		paymentTO1.setPaymentGateway("COD");
+		paymentTO1.setPaymentMode("COD");
 		paymentTO1.setPaymentTime(DateTime.now());
 		paymentTO1.setPgTransactionID("223344");
 		paymentTO1.setPricingTO(getPricingTO());
@@ -47,7 +47,7 @@ public class TestBapiTO {
 
 	private OrderHeaderTO getOrderTO() {
 		OrderHeaderTO orderHeaderTO = new OrderHeaderTO();
-		orderHeaderTO.setAccountNumber("2100000103");
+		orderHeaderTO.setAccountNumber("2100000104");
 		orderHeaderTO.setChannelType("WEBSITE");
 		orderHeaderTO.setClient("FUTUREBAZAAR");
 		orderHeaderTO.setCreatedOn(DateTime.now());
@@ -56,8 +56,8 @@ public class TestBapiTO {
 		orderHeaderTO.setSubmittedOn(DateTime.now());
 		//orderHeaderTO.set
 		orderHeaderTO.setSalesDocType("ZATG");
-		orderHeaderTO.setReferenceID("5049999916");
-		orderHeaderTO.setReturnOrderID("6070000000");
+		orderHeaderTO.setReferenceID("5049999912");
+		orderHeaderTO.setReturnOrderID("6699999999");
 		orderHeaderTO.setLoyaltyCardNumber("1234123412341234");
 		orderHeaderTO.setPricingTO(getPricingTO());
 		
@@ -81,7 +81,7 @@ public class TestBapiTO {
 		lineItemTO1.setPricingTO(getPricingTO());
 		lineItemTO1.setArticleID("000000000300000560");
 		lineItemTO1.setSapDocumentId(10);
-		lineItemTO1.setQuantity(new BigDecimal("2.00"));
+		lineItemTO1.setQuantity(new BigDecimal("9.00"));
 		lineItemTO1.setDescription("TEST ARTICLE");
 		lineItemTO1.setPlantId("2786");
 		lineItemTOList.add(lineItemTO1);

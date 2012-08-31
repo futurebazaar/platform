@@ -8,6 +8,7 @@ import com.fb.platform.sap.bapi.handler.PlatformBapiHandlerFactory;
 import com.fb.platform.sap.bapi.table.BapiTable;
 import com.fb.platform.sap.bapi.table.TinlaOrderType;
 import com.fb.platform.sap.bapi.utils.SapConstants;
+import com.fb.platform.sap.bapi.utils.SapUtils;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoStructure;
 
@@ -17,7 +18,7 @@ public class HeaderMapper {
 		JCoStructure orderHeaderIN = bapiFunction.getImportParameterList().getStructure(BapiTable.ORDER_HEADER_IN.toString());
 		JCoStructure orderHeaderINX = bapiFunction.getImportParameterList().getStructure(BapiTable.ORDER_HEADER_INX.toString());
 
-		String billDate = orderHeaderTO.getCreatedOn().getYear() + "-0" + orderHeaderTO.getCreatedOn().getMonthOfYear() + "-" + orderHeaderTO.getCreatedOn().getDayOfMonth();
+		String billDate = SapUtils.convertDateToFormat(orderHeaderTO.getCreatedOn(), "yyyMMdd");
 		
 		// common conditions
 		setCommonDetails(bapiFunction, orderHeaderTO, orderHeaderIN, orderHeaderINX, billDate, orderType);
@@ -69,11 +70,11 @@ public class HeaderMapper {
 		//orderHeaderIN.setValue(SapConstants.BLOCK_DELIVERY, "");
 		//orderHeaderINX.setValue(SapConstants.COMMIT_FLAG, SapConstants.BLOCK_DELIVERY);
 		
-		orderHeaderIN.setValue(SapConstants.CLIENT_NAME, orderHeaderTO.getClient());
+		orderHeaderIN.setValue(SapConstants.CHANNEL_TYPE, orderHeaderTO.getChannelType());
 		orderHeaderINX.setValue(SapConstants.CLIENT_NAME, SapConstants.COMMIT_FLAG);
 
 		// CHeck what are these
-		orderHeaderIN.setValue(SapConstants.REFERENCE_FIELD, orderHeaderTO.getChannelType());
+		orderHeaderIN.setValue(SapConstants.REFERENCE_FIELD, orderHeaderTO.getClient());
 		orderHeaderINX.setValue(SapConstants.REFERENCE_FIELD, SapConstants.COMMIT_FLAG);
 
 		//Figure out if this is required

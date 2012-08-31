@@ -26,7 +26,6 @@ public class ItemMapper {
 			orderItemIN.appendRow();
 			orderItemINX.appendRow();
 			
-			setCommonDetails(itemTO, orderHeaderTO, orderItemIN, orderItemINX);
 			// Set New Order conditions
 			if (orderType.equals(TinlaOrderType.NEW_ORDER)) {
 				setNewOrderDetails(itemTO, orderHeaderTO, orderItemIN, orderItemINX);
@@ -36,7 +35,7 @@ public class ItemMapper {
 			}
 			
 			// set Common Conditions
-			
+			setCommonDetails(itemTO, orderHeaderTO, orderItemIN, orderItemINX);			
 						
 		}
 	}

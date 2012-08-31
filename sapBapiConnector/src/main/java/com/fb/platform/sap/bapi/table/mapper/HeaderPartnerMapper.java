@@ -29,7 +29,7 @@ public class HeaderPartnerMapper {
 		orderPartner.setValue(SapConstants.PARTNER_ROLE, SapConstants.PARTNER_ROLE_WE);
 		orderPartner.setValue(SapConstants.ACCOUNT_NUMBER, orderHeaderTO.getAccountNumber());
 		orderPartner.setValue(SapConstants.ITEM_NUMBER, SapConstants.DEFAULT_ITEM_NUMER);
-		orderPartner.setValue(SapConstants.FULL_NAME, addressTO.getFirstName() + " " + addressTO.getMiddleName()	+ " " + addressTO.getLastName());
+		orderPartner.setValue(SapConstants.FULL_NAME, addressTO.getFirstName() + " " + addressTO.getLastName());
 		orderPartner.setValue(SapConstants.LANGUAGE, SapConstants.DEFAULT_LANGUAGE);
 		orderPartner.setValue(SapConstants.CITY, addressTO.getCity());
 		orderPartner.setValue( SapConstants.STATE, addressTO.getState());
@@ -52,7 +52,7 @@ public class HeaderPartnerMapper {
 		orderPartner.setValue(SapConstants.PARTNER_ROLE, SapConstants.PARTNER_ROLE_AG);
 		orderPartner.setValue(SapConstants.ACCOUNT_NUMBER, orderHeaderTO.getAccountNumber());
 		orderPartner.setValue(SapConstants.ITEM_NUMBER, SapConstants.DEFAULT_ITEM_NUMER);
-		orderPartner.setValue(SapConstants.FULL_NAME, addressTO.getFirstName() + " " + addressTO.getMiddleName()	+ " " + addressTO.getLastName());
+		orderPartner.setValue(SapConstants.FULL_NAME, addressTO.getFirstName() + " " + addressTO.getLastName());
 		orderPartner.setValue(SapConstants.LANGUAGE, SapConstants.DEFAULT_LANGUAGE);
 		orderPartner.setValue(SapConstants.CITY, addressTO.getCity());
 		orderPartner.setValue(SapConstants.STATE, addressTO.getState());
@@ -74,7 +74,7 @@ public class HeaderPartnerMapper {
 		orderPartner.setValue(SapConstants.PARTNER_ROLE, SapConstants.PARTNER_ROLE_RE);
 		orderPartner.setValue(SapConstants.ACCOUNT_NUMBER, orderHeaderTO.getAccountNumber());
 		orderPartner.setValue(SapConstants.ITEM_NUMBER, SapConstants.DEFAULT_ITEM_NUMER);
-		orderPartner.setValue(SapConstants.FULL_NAME, addressTO.getFirstName() + " " + addressTO.getMiddleName()	+ " " + addressTO.getLastName());
+		orderPartner.setValue(SapConstants.FULL_NAME, addressTO.getFirstName() + " " + addressTO.getLastName());
 		orderPartner.setValue(SapConstants.LANGUAGE, SapConstants.DEFAULT_LANGUAGE);
 		orderPartner.setValue(SapConstants.CITY, addressTO.getCity());
 		orderPartner.setValue(SapConstants.STATE, addressTO.getState());
@@ -96,7 +96,7 @@ public class HeaderPartnerMapper {
 		orderPartner.setValue(SapConstants.PARTNER_ROLE, SapConstants.PARTNER_ROLE_RG);
 		orderPartner.setValue(SapConstants.ACCOUNT_NUMBER, orderHeaderTO.getAccountNumber());
 		orderPartner.setValue(SapConstants.ITEM_NUMBER, SapConstants.DEFAULT_ITEM_NUMER);
-		orderPartner.setValue(SapConstants.FULL_NAME, addressTO.getFirstName() + " " + addressTO.getMiddleName()	+ " " + addressTO.getLastName());
+		orderPartner.setValue(SapConstants.FULL_NAME, addressTO.getFirstName() + " " + addressTO.getLastName());
 		orderPartner.setValue(SapConstants.LANGUAGE, SapConstants.DEFAULT_LANGUAGE);
 		orderPartner.setValue(SapConstants.CITY, addressTO.getCity());
 		orderPartner.setValue(SapConstants.STATE, addressTO.getState());

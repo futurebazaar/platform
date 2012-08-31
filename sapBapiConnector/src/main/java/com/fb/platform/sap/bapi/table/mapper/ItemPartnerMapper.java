@@ -25,7 +25,7 @@ public class ItemPartnerMapper {
 			orderPartner.setValue(SapConstants.PARTNER_ROLE, SapConstants.PARTNER_ROLE_WE);
 			orderPartner.setValue(SapConstants.ACCOUNT_NUMBER, orderHeaderTO.getAccountNumber());
 			orderPartner.setValue(SapConstants.ITEM_NUMBER, itemTO.getSapDocumentId());
-			orderPartner.setValue( SapConstants.FULL_NAME, addressTO.getFirstName() + " " + addressTO.getMiddleName() + " " + addressTO.getLastName());
+			orderPartner.setValue( SapConstants.FULL_NAME, addressTO.getFirstName() + " " + addressTO.getLastName());
 			orderPartner.setValue(SapConstants.LAST_NAME, addressTO.getLastName());
 			orderPartner.setValue(SapConstants.LANGUAGE, SapConstants.DEFAULT_LANGUAGE);
 			
