@@ -173,15 +173,15 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 	
 	@Override
 	public List<PromotionTO> searchPromotion(String promotionName, DateTime validFrom, DateTime validTill, int isActive, SearchPromotionOrderBy orderBy,
-			SortOrder order, int startRecord, int batchSize) throws NoDataFoundException{
+			SortOrder order, int startRecord, int batchSize, int isExpired) throws NoDataFoundException{
 		
 		List<PromotionTO> promotionsList = null;
 		
 		try {
-			promotionsList = promotionAdminDao.searchPromotion(promotionName, validFrom, validTill, isActive, orderBy, order, startRecord, batchSize);
+			promotionsList = promotionAdminDao.searchPromotion(promotionName, validFrom, validTill, isActive, orderBy, order, startRecord, batchSize, isExpired);
 			if(promotionsList == null || promotionsList.size() == 0) {
-				log.error("No promotions found for the search criteria promotionName : " + promotionName + " ,validFrom : " + validFrom + " ,validTill : " + validTill + " ,isActive : " + isActive );
-				throw new NoDataFoundException("No promotions found for the search criteria promotionName : " + promotionName + " ,validFrom : " + validFrom + " ,validTill : " + validTill + " ,isActive : " + isActive );
+				log.error("No promotions found for the search criteria promotionName : " + promotionName + " ,validFrom : " + validFrom + " ,validTill : " + validTill + " ,isActive : " + isActive + " ,isExpired : " + isExpired );
+				throw new NoDataFoundException("No promotions found for the search criteria promotionName : " + promotionName + " ,validFrom : " + validFrom + " ,validTill : " + validTill + " ,isActive : " + isActive + " ,isExpired : " + isExpired );
 			}
 		} catch (DataAccessException e) {
 			log.error("Exception while searching for promotion.", e);

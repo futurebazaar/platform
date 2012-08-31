@@ -146,6 +146,7 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
   <xs:element name="maxAmountPerUser" type="xs:decimal"/>
   <xs:element name="ruleName" type="xs:string"/>
   <xs:element name="couponCount" type="xs:int"/>
+  <xs:element name="isExpired" type="xs:boolean"/>
   
   <xs:element name="ruleConfigItemTO">
     <xs:complexType>
@@ -197,6 +198,7 @@ targetNamespace="http://www.fb.com/platform/promotion/admin/1.0.0" xmlns:promoti
         <xs:element ref="promotionAdmin:sortOrder"/>
         <xs:element ref="promotionAdmin:startRecord"/>
         <xs:element ref="promotionAdmin:batchSize"/>
+        <xs:element ref="promotionAdmin:isExpired"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>

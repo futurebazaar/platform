@@ -23,6 +23,7 @@ public class SearchPromotionRequest {
 	private SortOrder sortOrder;
 	private int startRecord;
 	private int batchSize;
+	private boolean isExpired;
 	
 	
 	public String getSessionToken() {
@@ -105,6 +106,12 @@ public class SearchPromotionRequest {
 	}
 	public void setSortOrder(SortOrder sortOrder) {
 		this.sortOrder = sortOrder;
+	}
+	public boolean isExpired() {
+		return isExpired;
+	}
+	public void setisExpired(boolean isExpired) {
+		this.isExpired = isExpired;
 	}
 	
 }

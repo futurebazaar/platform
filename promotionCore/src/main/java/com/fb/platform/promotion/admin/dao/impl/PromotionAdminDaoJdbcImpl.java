@@ -154,6 +154,9 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 	private static String SELECT_PROMOTION_VALID_TILL_FILTER_SQL = 
 			" pp.valid_till <= ? ";
 	
+	private static String SELECT_PROMOTION_VALID_NOW = 
+			" pp.valid_till >= ? and pp.valid_from <= ? ";
+	
 	private static String SELECT_PROMOTION_IS_ACTIVE_FILTER_SQL =
 			" pp.is_active=? ";
 	
@@ -406,7 +409,7 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 	 */
 	@Override
 	public List<PromotionTO> searchPromotion(String promotionName, DateTime validFrom, DateTime validTill, int isActive, SearchPromotionOrderBy orderBy,
-			SortOrder order, int startRecord, int batchSize) {
+			SortOrder order, int startRecord, int batchSize, int isExpired) {
 		
 		log.info("Search promotion with details => promotionName:" + promotionName + " , validFrom:" + validFrom + " ,validTill:" + validTill + " ,startRecord:" + " ,batchSize:" + batchSize);
 		
@@ -418,17 +421,37 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 			searchPromotionFilterList.add(SELECT_PROMOTION_NAME_FILTER_SQL);
 			args.add("%" + promotionName + "%");
 		}
-		if(validFrom != null) {
+		if(validFrom != null && isExpired <=0) {
 			searchPromotionFilterList.add(SELECT_PROMOTION_VALID_FROM_FILTER_SQL);
 			args.add(validFrom.toDate());
 		}
-		if(validTill != null) {
+		if(validTill != null && isExpired <=0) {
 			searchPromotionFilterList.add(SELECT_PROMOTION_VALID_TILL_FILTER_SQL);
 			args.add(validTill.toDate());
 		}
-		if(isActive >= 0) {
+		if(isActive > 0 && isExpired <=0 && (validTill != null || validFrom != null )) {
 			searchPromotionFilterList.add(SELECT_PROMOTION_IS_ACTIVE_FILTER_SQL);
 			args.add(isActive);
+		}
+		
+		if(isActive > 0 && validTill == null && validFrom == null) {
+			searchPromotionFilterList.add(SELECT_PROMOTION_VALID_NOW);
+			args.add(DateTime.now().toDate());
+			args.add(DateTime.now().toDate());
+		}
+		// inactive and not expired 
+		if(isActive <= 0 && validTill == null && validFrom == null && isExpired <=0) {
+			searchPromotionFilterList.add(SELECT_PROMOTION_VALID_NOW);
+			args.add(DateTime.now().toDate());
+			args.add(DateTime.now().toDate());
+			searchPromotionFilterList.add(SELECT_PROMOTION_IS_ACTIVE_FILTER_SQL);
+			args.add(isActive);
+			
+		}
+		
+		if(isExpired > 0) {
+			searchPromotionFilterList.add(SELECT_PROMOTION_VALID_TILL_FILTER_SQL);
+			args.add(DateTime.now().toDate());
 		}
 		
 		args.add(startRecord);

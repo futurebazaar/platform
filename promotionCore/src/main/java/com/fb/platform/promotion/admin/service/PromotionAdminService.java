@@ -50,11 +50,12 @@ public interface PromotionAdminService {
 	 * @param validTill
 	 * @param startRecord
 	 * @param batchSize
+	 * @param isExpired 
 	 * @return
 	 */
 	@Transactional(propagation=Propagation.REQUIRED)
 	public List<PromotionTO> searchPromotion(String promotionName, DateTime validFrom, DateTime validTill, int isActive, SearchPromotionOrderBy orderBy,
-			SortOrder order, int startRecord, int batchSize);
+			SortOrder order, int startRecord, int batchSize, int isExpired);
 	
 	/**
 	 * This function fetches a count of all promotions that meet the specified search criteria.

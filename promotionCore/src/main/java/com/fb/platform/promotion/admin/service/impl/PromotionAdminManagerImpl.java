@@ -221,6 +221,7 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 		searchPromotionResponse.setSessionToken(searchPromotionRequest.getSessionToken());
 		
 		int isActive = searchPromotionRequest.isActive() ? 1 : 0;
+		int isExpired = searchPromotionRequest.isExpired() ? 1 : 0;
 		try {
 			List<PromotionTO> promotionList = promotionAdminService.searchPromotion(	searchPromotionRequest.getPromotionName(), 
 					searchPromotionRequest.getValidFrom(), 
@@ -229,7 +230,8 @@ public class PromotionAdminManagerImpl implements PromotionAdminManager {
 					searchPromotionRequest.getSearchPromotionOrderBy(),
 					searchPromotionRequest.getSortOrder(),
 					searchPromotionRequest.getStartRecord(), 
-					searchPromotionRequest.getBatchSize());
+					searchPromotionRequest.getBatchSize(),
+					isExpired);
 			
 			searchPromotionResponse.setPromotionsList(promotionList);
 			int promotionCount = promotionAdminService.getPromotionCount(	searchPromotionRequest.getPromotionName(), 

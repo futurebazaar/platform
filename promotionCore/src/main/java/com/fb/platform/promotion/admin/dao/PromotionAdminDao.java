@@ -28,7 +28,7 @@ public interface PromotionAdminDao {
 	public void createPromotionRuleConfig(String name, String value, int promotionId, int ruleId);
 	
 	public List<PromotionTO> searchPromotion(String promotionName, DateTime validFrom, DateTime validTill, int isActive, SearchPromotionOrderBy orderBy,
-			SortOrder order, int startRecord, int batchSize);
+			SortOrder order, int startRecord, int batchSize, int isExpired);
 	
 	public int getPromotionCount(String promotionName, DateTime validFrom, DateTime validTill, int isActive);
 	
