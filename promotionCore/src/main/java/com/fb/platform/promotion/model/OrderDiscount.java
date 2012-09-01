@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.fb.platform.promotion.to.OrderItem;
 import com.fb.platform.promotion.to.OrderRequest;
@@ -27,16 +28,15 @@ public class OrderDiscount implements Serializable {
 	public void setOrderDiscountValue(BigDecimal orderDiscountValue) {
 		this.orderDiscountValue = orderDiscountValue;
 	}
-	
-	public OrderDiscount distributeDiscountOnOrder(OrderDiscount orderDiscount,List<Integer> brands, List<Integer> includeCategoryList, List<Integer> excludeCategoryList){ 
 
+	public OrderDiscount distributeDiscountOnOrder(OrderDiscount orderDiscount, List<Integer> brands, List<Integer> includeCategoryList, List<Integer> excludeCategoryList, Set<Integer> productIds){ 
 		OrderRequest orderRequest = orderDiscount.getOrderRequest();
 		BigDecimal totalRemainingDiscountOnOrder = orderDiscount.getOrderDiscountValue();
 		List<OrderItem> notLockedAplicableOrderItems = new ArrayList<OrderItem>();
 		BigDecimal totalOrderValueForRemainingApplicableItems = BigDecimal.ZERO;
 		
 		for (OrderItem eachOrderItemInRequest : orderRequest.getOrderItems()) {
-			if(eachOrderItemInRequest.isApplicableToOrderItem(eachOrderItemInRequest,brands,includeCategoryList,excludeCategoryList)){
+			if(eachOrderItemInRequest.isApplicableToOrderItem(eachOrderItemInRequest,brands,includeCategoryList,excludeCategoryList, productIds)){
 				if(eachOrderItemInRequest.isLocked()){
 					totalRemainingDiscountOnOrder = totalRemainingDiscountOnOrder.subtract(eachOrderItemInRequest.getTotalDiscount());
 				}else{
@@ -48,6 +48,10 @@ public class OrderDiscount implements Serializable {
 		
 		return distributeRemainingDiscountOnRemainingOrderItems(orderDiscount, totalRemainingDiscountOnOrder, notLockedAplicableOrderItems, 
 				totalOrderValueForRemainingApplicableItems);
+	}
+
+	public OrderDiscount distributeDiscountOnOrder(OrderDiscount orderDiscount,List<Integer> brands, List<Integer> includeCategoryList, List<Integer> excludeCategoryList) {
+		return distributeDiscountOnOrder(orderDiscount, brands, includeCategoryList, excludeCategoryList, null);
 	}
 	
 	private OrderDiscount distributeRemainingDiscountOnRemainingOrderItems(OrderDiscount orderDiscount, BigDecimal totalRemainingDiscountOnOrder,

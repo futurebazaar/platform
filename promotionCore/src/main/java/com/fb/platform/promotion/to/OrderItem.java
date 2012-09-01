@@ -5,7 +5,9 @@ package com.fb.platform.promotion.to;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
+import com.fb.commons.to.Money;
 import com.fb.platform.promotion.util.ListUtil;
 
 /**
@@ -71,10 +73,11 @@ public class OrderItem {
 		this.itemId = itemId;
 	}
 	
-	public boolean isApplicableToOrderItem(OrderItem orderItem,List<Integer> brands, List<Integer> includeCategoryList, List<Integer> excludeCategoryList){
+	public boolean isApplicableToOrderItem(OrderItem orderItem,List<Integer> brands, List<Integer> includeCategoryList, List<Integer> excludeCategoryList, Set<Integer> productIds){
 		if( (!ListUtil.isValidList(brands)|| orderItem.isOrderItemInBrand(brands))
 				&& (!ListUtil.isValidList(includeCategoryList) || orderItem.isOrderItemInCategory(includeCategoryList))
-				&&  (!ListUtil.isValidList(excludeCategoryList) || !orderItem.isOrderItemInCategory(excludeCategoryList))){
+				&&  (!ListUtil.isValidList(excludeCategoryList) || !orderItem.isOrderItemInCategory(excludeCategoryList))
+				&& (!ListUtil.isValidSet(productIds) || productIds.contains(getProduct().getProductId()))) {
 			return true;
 		}
 		return false;
@@ -86,4 +89,8 @@ public class OrderItem {
 		this.promotionProcessed = promotionProcessed;
 	}
 
+	public Money orderItemOfferPrice() {
+		Money productPrice = new Money(product.getPrice());
+		return productPrice.times(quantity);
+	}
 }

@@ -874,3 +874,15 @@ CREATE TABLE results_config (
 	PRIMARY KEY (id),
 	CONSTRAINT results_config_fk1 FOREIGN KEY (promotion_config_module_id) REFERENCES promotion_config_module(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE catalog_producttags (
+	id int(11) primary key NOT NULL AUTO_INCREMENT,
+	tag_id int(11),
+	product_id int(11),
+	type VARCHAR(25),
+	tab_id int(11),
+	show_default tinyint(1),
+	starts_on DATETIME,
+	ends_on DATETIME
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+

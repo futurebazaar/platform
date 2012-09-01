@@ -17,54 +17,113 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 
-import com.fb.platform.auth._1_0.LoginRequest;
-import com.fb.platform.auth._1_0.LoginResponse;
 import com.fb.platform.promotion._1_0.ApplyCouponRequest;
 import com.fb.platform.promotion._1_0.ApplyCouponResponse;
 import com.fb.platform.promotion._1_0.OrderItem;
 import com.fb.platform.promotion._1_0.OrderRequest;
 import com.fb.platform.promotion._1_0.Product;
+import com.fb.platform.promotion.admin._1_0.CreatePromotionRequest;
+import com.fb.platform.promotion.admin._1_0.CreatePromotionResponse;
+import com.fb.platform.promotion.admin._1_0.CreatePromotionTO;
+import com.fb.platform.promotion.admin._1_0.FetchRuleRequest;
+import com.fb.platform.promotion.admin._1_0.FetchRuleResponse;
+import com.fb.platform.promotion.admin._1_0.RuleConfigItemTO;
 
 public class PromotionRestClient {
 
 	
 	public static void main(String[] args) throws Exception {
-		//test login
-		String sessionToken = login();
-		
-		BigDecimal discValue = applyCoupon(sessionToken);
-		System.out.println(discValue);
-		//test logout
-//		logout(sessionToken);
+		//login
+		String sessionToken = RestClient.login();
+
+		createClearanceDiscountPromotion(sessionToken);
+		getAllPromotionRuleList(sessionToken);
+		//BigDecimal discValue = applyCoupon(sessionToken);
+		//System.out.println(discValue);
 	}
 
-	private static String login() throws Exception {
+	private static void createClearanceDiscountPromotion(String sessionToken) throws Exception {
 		HttpClient httpClient = new HttpClient();
-		PostMethod loginMethod = new PostMethod("http://localhost:8080/userWS/auth/login");
-		//StringRequestEntity requestEntity = new StringRequestEntity("<loginRequest><username>vinayak</username><password>password</password></loginRequest>", "application/xml", null);
-		LoginRequest loginRequest = new LoginRequest();
-		loginRequest.setUsername("jasvipul@gmail.com");
-		loginRequest.setPassword("testpass");
 
-		JAXBContext context = JAXBContext.newInstance("com.fb.platform.auth._1_0");
+		PostMethod postMethod = new PostMethod(RestClient.url + "promotionAdminWS/promotionAdmin/promotion/create");
+
+		CreatePromotionRequest xmlRequest = new CreatePromotionRequest();
+		xmlRequest.setSessionToken(sessionToken);
+
+		CreatePromotionTO promotion = new CreatePromotionTO();
+		promotion.setRuleName("DISCOUNT_ON_CLEARANCE_PRODUCT");
+		promotion.setIsActive(true);
+		promotion.setMaxAmount(new BigDecimal("-1"));
+		promotion.setMaxAmountPerUser(new BigDecimal("-1"));
+		promotion.setMaxUses(-1);
+		promotion.setMaxUsesPerUser(-1);
+		promotion.setPromotionName("clerance" + System.currentTimeMillis());
+
+		RuleConfigItemTO fixedDiscountOffConfig = new RuleConfigItemTO();
+		fixedDiscountOffConfig.setRuleConfigName("FIXED_DISCOUNT_RS_OFF");
+		fixedDiscountOffConfig.setRuleConfigValue("500");
+		promotion.getRuleConfigItemTO().add(fixedDiscountOffConfig);
+
+		//MIN_ORDER_VALUE
+		RuleConfigItemTO minOrderValueConfig = new RuleConfigItemTO();
+		minOrderValueConfig.setRuleConfigName("MIN_ORDER_VALUE");
+		minOrderValueConfig.setRuleConfigValue("2000");
+		promotion.getRuleConfigItemTO().add(minOrderValueConfig);
+
+		xmlRequest.setCreatePromotionTO(promotion);
+
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
+
 		Marshaller marshaller = context.createMarshaller();
 		StringWriter sw = new StringWriter();
-		marshaller.marshal(loginRequest, sw);
+		marshaller.marshal(xmlRequest, sw);
+		
+		System.out.println("\n" + RestClient.url + "promotionAdminWS/promotionAdmin/promotion/create");
+		System.out.println("\n createClearanceDiscountPromotion : \n" + sw.toString());
 
 		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
-		loginMethod.setRequestEntity(requestEntity);
+		postMethod.setRequestEntity(requestEntity);
 
-		int statusCode = httpClient.executeMethod(loginMethod);
+		int statusCode = httpClient.executeMethod(postMethod);
 		if (statusCode != HttpStatus.SC_OK) {
-			System.out.println("unable to execute the login method : " + statusCode);
-			return null;
+			System.out.println("unable to execute the createClearanceDiscountPromotion method : " + statusCode);
+			System.exit(1);
 		}
-		String loginResponseStr = loginMethod.getResponseBodyAsString();
-		System.out.println("Got the login Response : \n" + loginResponseStr);
+		String xmlStr = postMethod.getResponseBodyAsString();
+		System.out.println("Got the createClearanceDiscountPromotion Response : \n\n" + xmlStr);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
-		LoginResponse loginResponse = (LoginResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(loginResponseStr)));
+		CreatePromotionResponse xmlResponse = (CreatePromotionResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(xmlStr)));
+		System.out.println(xmlResponse.getCreatePromotionEnum().toString());
+	}
 
-		return loginResponse.getSessionToken();
+	private static void getAllPromotionRuleList(String sessionToken) throws Exception {
+		HttpClient httpClient = new HttpClient();
+		PostMethod getAllPromotionRuleList = new PostMethod(RestClient.url + "promotionAdminWS/promotionAdmin/rules");
+		FetchRuleRequest fetchRuleRequest = new FetchRuleRequest();
+		fetchRuleRequest.setSessionToken(sessionToken);
+		
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
+
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(fetchRuleRequest, sw);
+
+		System.out.println("\n" + RestClient.url + "promotionAdminWS/promotionAdmin/rules");
+		System.out.println("\n\ngetAllPromotionRuleList : \n" + sw.toString());
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		getAllPromotionRuleList.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(getAllPromotionRuleList);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the getAllPromotionRuleList method : " + statusCode);
+			System.exit(1);
+		}
+		String getAllPromotionRuleListResponseStr = getAllPromotionRuleList.getResponseBodyAsString();
+		System.out.println("Got the getAllPromotionRuleList Response : \n\n" + getAllPromotionRuleListResponseStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		FetchRuleResponse fetchRuleResponse = (FetchRuleResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(getAllPromotionRuleListResponseStr)));
+		System.out.println(fetchRuleResponse.getFetchRulesEnum().toString());
 	}
 
 	public static BigDecimal applyCoupon(String sessionToken) throws Exception{
