@@ -1777,6 +1777,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		CreateCouponResponse createCouponResponse = promotionAdminManager.createCoupons(createCouponRequest);
 		assertNotNull(createCouponResponse);
 		assertEquals(CreateCouponStatusEnum.SUCCESS, createCouponResponse.getStatus());
+	}
 
 	public void testPromotionPerformanceInvalidRequest() {
 		GetPromotionUsageRequest promotionPerformanceRequest = new GetPromotionUsageRequest();
@@ -1809,4 +1810,3 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		assertNotNull(promotionPerformanceResponse);
 		assertEquals(GetPromotionUsageEnum.NO_SESSION, promotionPerformanceResponse.getStatus());
 	}
-}
