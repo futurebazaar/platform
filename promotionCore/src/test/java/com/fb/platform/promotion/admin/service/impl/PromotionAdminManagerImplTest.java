@@ -109,7 +109,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 	public void loginUser() {
 
 		LoginRequest request = new LoginRequest();
-		request.setUsername("neha.garani@gmail.com");
+		request.setUsername("removingneha@test.com");
 		request.setPassword("testpass");
 
 		responseUser = userManager.login(request);
