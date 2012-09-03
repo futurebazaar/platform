@@ -1810,3 +1810,4 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		assertNotNull(promotionPerformanceResponse);
 		assertEquals(GetPromotionUsageEnum.NO_SESSION, promotionPerformanceResponse.getStatus());
 	}
+}
