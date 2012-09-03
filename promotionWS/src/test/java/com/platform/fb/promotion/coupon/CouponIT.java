@@ -38,7 +38,7 @@ public class CouponIT extends BaseTestCase {
 	@Before
 	public void setup() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);

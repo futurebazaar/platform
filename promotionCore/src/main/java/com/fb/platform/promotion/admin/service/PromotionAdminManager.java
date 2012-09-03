@@ -8,6 +8,8 @@ import com.fb.platform.promotion.admin.to.CreatePromotionRequest;
 import com.fb.platform.promotion.admin.to.CreatePromotionResponse;
 import com.fb.platform.promotion.admin.to.FetchRuleRequest;
 import com.fb.platform.promotion.admin.to.FetchRuleResponse;
+import com.fb.platform.promotion.admin.to.GetPromotionUsageRequest;
+import com.fb.platform.promotion.admin.to.GetPromotionUsageResponse;
 import com.fb.platform.promotion.admin.to.SearchCouponRequest;
 import com.fb.platform.promotion.admin.to.SearchCouponResponse;
 import com.fb.platform.promotion.admin.to.SearchPromotionRequest;
@@ -95,4 +97,5 @@ public interface PromotionAdminManager {
 	 */
 	public SearchScratchCardResponse searchScratchCard(SearchScratchCardRequest searchScratchCardRequest);
 	
+	public GetPromotionUsageResponse  getPromotionUsage(GetPromotionUsageRequest request);
 }

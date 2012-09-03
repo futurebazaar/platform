@@ -68,7 +68,7 @@ public class GiftVoucherManagerImplTest extends BaseTestCase {
 	public void loginUser1() {
 
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		responseUser1 = userManager.login(request);
@@ -78,7 +78,7 @@ public class GiftVoucherManagerImplTest extends BaseTestCase {
 
 		responseUser2 = userManager.login(request);
 
-		request.setUsername("neha.garani@gmail.com");
+		request.setUsername("removingneha@test.com");
 		request.setPassword("testpass");
 
 		responseUser6 = userManager.login(request);
@@ -101,7 +101,8 @@ public class GiftVoucherManagerImplTest extends BaseTestCase {
 
 	@Test
 	public void testCreateGiftVoucherWithEmail() {
-		/*CreateRequest createGiftVoucherRequest = new CreateRequest();
+		/*
+		CreateRequest createGiftVoucherRequest = new CreateRequest();
 		createGiftVoucherRequest.setEmail("keith.fernandez@futuregroup.in");
 		createGiftVoucherRequest.setOrderItemId(1);
 		createGiftVoucherRequest.setAmount(new BigDecimal(1000.00));
@@ -113,13 +114,14 @@ public class GiftVoucherManagerImplTest extends BaseTestCase {
 
 		assertNotNull(createGiftVoucherResponse);
 		assertNotNull(createGiftVoucherResponse.getSessionToken());
-		assertEquals(CreateResponseStatusEnum.SUCCESS, createGiftVoucherResponse.getResponseStatus());*/
+		assertEquals(CreateResponseStatusEnum.SUCCESS, createGiftVoucherResponse.getResponseStatus());
+		*/
 
 	}
 
 	@Test
-	public void testCreateGiftVoucherWithMobile() {
-		/*CreateRequest createGiftVoucherRequest = new CreateRequest();
+	public void testCreateGiftVoucherWithMobile() {/*
+		CreateRequest createGiftVoucherRequest = new CreateRequest();
 		createGiftVoucherRequest.setMobile("917498459473");
 		createGiftVoucherRequest.setOrderItemId(1);
 		createGiftVoucherRequest.setAmount(new BigDecimal(1000.00));
@@ -131,13 +133,15 @@ public class GiftVoucherManagerImplTest extends BaseTestCase {
 
 		assertNotNull(createGiftVoucherResponse);
 		assertNotNull(createGiftVoucherResponse.getSessionToken());
-		assertEquals(CreateResponseStatusEnum.SUCCESS, createGiftVoucherResponse.getResponseStatus());*/
+		assertEquals(CreateResponseStatusEnum.SUCCESS, createGiftVoucherResponse.getResponseStatus());
+		*/
 
 	}
 
 	@Test
 	public void testCreateGiftVoucherWithInvalidMobile() {
-		/*CreateRequest createGiftVoucherRequest = new CreateRequest();
+		/*
+		CreateRequest createGiftVoucherRequest = new CreateRequest();
 		createGiftVoucherRequest.setMobile("91749845947");
 		createGiftVoucherRequest.setOrderItemId(1);
 		createGiftVoucherRequest.setAmount(new BigDecimal(1000.00));
@@ -149,13 +153,15 @@ public class GiftVoucherManagerImplTest extends BaseTestCase {
 
 		assertNotNull(createGiftVoucherResponse);
 		assertNotNull(createGiftVoucherResponse.getSessionToken());
-		assertEquals(CreateResponseStatusEnum.SUCCESS, createGiftVoucherResponse.getResponseStatus());*/
+		assertEquals(CreateResponseStatusEnum.SUCCESS, createGiftVoucherResponse.getResponseStatus());
+		*/
 
 	}
 
 	@Test
 	public void testCreateGiftVoucherWithEmailAndMobile() {
-		/*CreateRequest createGiftVoucherRequest = new CreateRequest();
+		/*
+		CreateRequest createGiftVoucherRequest = new CreateRequest();
 		createGiftVoucherRequest.setEmail("keith.fernandez@futuregroup.in");
 		createGiftVoucherRequest.setMobile("917498459473");
 		createGiftVoucherRequest.setOrderItemId(1);
@@ -168,7 +174,8 @@ public class GiftVoucherManagerImplTest extends BaseTestCase {
 
 		assertNotNull(createGiftVoucherResponse);
 		assertNotNull(createGiftVoucherResponse.getSessionToken());
-		assertEquals(CreateResponseStatusEnum.SUCCESS, createGiftVoucherResponse.getResponseStatus());*/
+		assertEquals(CreateResponseStatusEnum.SUCCESS, createGiftVoucherResponse.getResponseStatus());
+		*/
 
 	}
 
@@ -275,6 +282,7 @@ public class GiftVoucherManagerImplTest extends BaseTestCase {
 
 	@Test
 	public void testSendPinGiftVoucherWithEmailAndMobile() {
+		/*
 
 		/*SendPinRequest sendPinGiftVoucherRequest = new SendPinRequest();
 		sendPinGiftVoucherRequest.setSessionToken(responseUser1.getSessionToken());
@@ -291,7 +299,8 @@ public class GiftVoucherManagerImplTest extends BaseTestCase {
 		assertNotNull(sendPinGiftVoucherResponse);
 		assertNotNull(sendPinGiftVoucherResponse.getSessionToken());
 		assertEquals(SendPinResponseStatusEnum.SUCCESS, sendPinGiftVoucherResponse.getResponseStatus());
-		assertEquals(-12345678924L, sendPinGiftVoucherResponse.getNumber());*/
+		assertEquals(-12345678924L, sendPinGiftVoucherResponse.getNumber());
+		*/
 
 	}
 

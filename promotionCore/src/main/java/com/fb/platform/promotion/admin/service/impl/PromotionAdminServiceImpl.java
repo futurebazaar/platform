@@ -25,6 +25,7 @@ import com.fb.platform.promotion.admin.to.SearchCouponOrderBy;
 import com.fb.platform.promotion.admin.to.SearchCouponResultBO;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
 import com.fb.platform.promotion.admin.to.SortOrder;
+import com.fb.platform.promotion.dao.PromotionDao;
 import com.fb.platform.promotion.dao.RuleDao;
 import com.fb.platform.promotion.dao.ScratchCardDao;
 import com.fb.platform.promotion.exception.CouponAlreadyAssignedToUserException;
@@ -32,6 +33,7 @@ import com.fb.platform.promotion.exception.CouponNotFoundException;
 import com.fb.platform.promotion.exception.InvalidCouponTypeException;
 import com.fb.platform.promotion.exception.PromotionNotFoundException;
 import com.fb.platform.promotion.exception.ScratchCardNotFoundException;
+import com.fb.platform.promotion.model.GlobalPromotionUses;
 import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
 import com.fb.platform.promotion.model.coupon.CouponType;
@@ -65,6 +67,9 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 
 	@Autowired
 	private PromotionAdminDao promotionAdminDao = null;
+	
+	@Autowired
+	private PromotionDao promotionDao = null;
 	
 	@Autowired
 	public UserAdminDao userAdminDao = null;
@@ -126,7 +131,7 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 		}
 		return promotionId;
 	}
-	
+
 	@Override
 	public void updatePromotion(PromotionTO promotionTO) throws PromotionNotFoundException {
 
@@ -398,4 +403,16 @@ public class PromotionAdminServiceImpl implements PromotionAdminService {
 		}
 		
 	}
+
+	@Override
+	public GlobalPromotionUses getPromotionPerformance(int id) {
+		try {
+			GlobalPromotionUses globalPromotionUsage = promotionDao.loadGlobalUses(id);
+			return globalPromotionUsage;
+		} catch(DataAccessException e) {
+			log.error("DataAccess Exception while creating promotion.", e);
+			throw new PlatformException("Exception while creating new promotion.", e);
+		}
+	}
+
 }

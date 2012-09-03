@@ -41,7 +41,7 @@ public class WalletDaoImpl implements WalletDao {
 			+ "gift_amount =?, "
 			+ "refund_amount=?, "
 			+ "wallet_password=?, "
-			+ "modified_on = CURDATE() "
+			+ "modified_on = NOW() "
 			+ "where id = ?";
 	private final String GET_WALLET_ID_USER_CLIENT = "Select "
 			+ "wallet_id " 
@@ -50,7 +50,7 @@ public class WalletDaoImpl implements WalletDao {
 	private final String CREATE_NEW_WALLET = "Insert "
 			+ "into wallets_wallet"
 			+ "(total_amount,cash_amount,gift_amount,refund_amount,created_on,modified_on,wallet_password) "
-			+ "values (0,0,0,0,CURDATE(),CURDATE(),?)" ;
+			+ "values (0,0,0,0,NOW(),NOW(),?)" ;
 	private final String CREATE_USER_CLIENT_WALLET = "Insert "
 			+ "into users_wallet "
 			+ "(user_id,client_id,wallet_id) "

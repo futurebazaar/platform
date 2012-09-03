@@ -44,7 +44,7 @@ public class PointsManagerTest  extends BaseTestCase{
 	public void insertEarnPointsTest(){
 		
 		LoginRequest loginRequest = new LoginRequest();
-		loginRequest.setUsername("jasvipul@gmail.com");
+		loginRequest.setUsername("removingjas@test.com");
 		loginRequest.setPassword("testpass");
 		responseUser1 = userManager.login(loginRequest);
 

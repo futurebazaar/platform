@@ -57,6 +57,7 @@
     <bean id="promotionRuleFactory" class="com.fb.platform.promotion.util.PromotionRuleFactory">
     	<property name="orderDao" ref="orderDao"/>
     	<property name="promotionDao" ref="promotionDao"/>
+    	<property name="productDao" ref="productDao"/>
     </bean>
     
     <bean id="messageSource"
