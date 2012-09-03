@@ -38,7 +38,7 @@ public class MailTest extends BaseTestCase {
 	@Test
 	public void sendTwoMails() {
 
-		/*momManager.registerReceiver(PlatformDestinationEnum.MAIL, testReceiver);
+		momManager.registerReceiver(PlatformDestinationEnum.MAIL, testReceiver);
 
 		String[] receivers = {"neha.garani@gmail.com",
 				"karnataki.v@gmail.com"};
@@ -54,7 +54,7 @@ public class MailTest extends BaseTestCase {
 		mail2.setFrom("vinayak.karnataki@futuregroup.in");
 		mail2.setSubject("MOM mail test 2");
 		mail2.setMessage("MOM mail test 2 its works!!!!!!!yehhhhh!!!!!");
-		mailSender.sendMessage(mail2);*/
+		mailSender.sendMessage(mail2);
 	}
 
 	@After

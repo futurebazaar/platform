@@ -32,19 +32,18 @@ public class ItemAckOrderItemProcessorImpl implements ItemAckOrderItemProcessor 
 
 	@Override
 	public List<ItemTO> getOrderItems(List<ZATGFLOW> ackList) {
-		
-		List<ItemTO> orderItems = new ArrayList<ItemTO>();
+		return  getHighestPriorityOrderItems(ackList);
+	}
+	
+	public List<ItemTO> getHighestPriorityOrderItems(List<ZATGFLOW> ackList) {
 		
 		/*
 		 * create the map of all the order items for the order in the idoc
 		 */
 		createOrderMap(ackList);
 		
-		/*
-		 * add the order items from the map to the list of order items. 
-		 * the basic information of the order will also be sent to the MoM queue 
-		 */
-		orderItems.addAll(cStateOrderItemMap.values());
+		Map<Integer, ItemTO> highestStateOrderItemMap = new HashMap<Integer, ItemTO>(cStateOrderItemMap);
+		
 		
 		ItemTO itemAck = null;
 		OrderStateEnum orderState = null;
@@ -53,21 +52,30 @@ public class ItemAckOrderItemProcessorImpl implements ItemAckOrderItemProcessor 
 			itemAck = null;
 			orderState = getOrderState(sapItemAck.getVBTYPN());
 			if(orderState != OrderStateEnum.C) {
-				ItemTO orderItem = getOrderItem(sapItemAck);
+				ItemTO orderItem = getCStateOrderItem(sapItemAck);
 				if(orderItem == null) {
 					throw new NoOrderItemFoundException("No Order Item found for order number : " + sapItemAck.getSOVBELN() + " , item number : " + sapItemAck.getSOPOSNR());
 				}
-				itemAck = mapperFactory.getItemAck(sapItemAck, orderItem);
-				if(itemAck != null) {
-					logger.info("Order Id : " + sapItemAck.getSOVBELN() + " , item number : " + sapItemAck.getSOPOSNR() + " , order state : " + sapItemAck.getVBTYPN());
-					orderItems.add(itemAck);
+				ItemTO highestStateOrderItem = highestStateOrderItemMap.get(orderItem.getAtgDocumentId());
+				if(isAckHigherPriority(highestStateOrderItem.getOrderState(), sapItemAck.getVBTYPN())) {
+					itemAck = mapperFactory.getItemAck(sapItemAck, orderItem);
+					if(itemAck != null) {
+						logger.info("Order Id : " + sapItemAck.getSOVBELN() + " , item number : " + sapItemAck.getSOPOSNR() + " , order state : " + sapItemAck.getVBTYPN());
+						highestStateOrderItemMap.put(itemAck.getAtgDocumentId(), itemAck);
+					}
 				}
 			}
 		}
-		return orderItems;
+		return new ArrayList<ItemTO>(highestStateOrderItemMap.values());
 	}
 	
-	private ItemTO getOrderItem(ZATGFLOW sapItemAck) {
+	private boolean isAckHigherPriority(String highOrderState, String newOrderState) {
+		OrderStateEnum highOrderStateEnum = OrderStateEnum.getInstance(highOrderState);
+		OrderStateEnum newOrderStateEnum = OrderStateEnum.getInstance(newOrderState);
+		return (highOrderStateEnum.getPriority() <= newOrderStateEnum.getPriority());
+	}
+	
+	private ItemTO getCStateOrderItem(ZATGFLOW sapItemAck) {
 		int orderItemNumber = sapItemAck.getSOPOSNR();
 		String orderId = sapItemAck.getSOVBELN();
 		ItemTO orderItem = cStateOrderItemMap.get(orderItemNumber);
@@ -93,7 +101,7 @@ public class ItemAckOrderItemProcessorImpl implements ItemAckOrderItemProcessor 
 		for(ZATGFLOW sapItemAck : ackList) {
 			orderState = getOrderState(sapItemAck.getVBTYPN());
 			if(orderState == OrderStateEnum.C && sapItemAck.getSOPOSNR() > 0) {
-				orderItem = getOrderItem(sapItemAck);
+				orderItem = getCStateOrderItem(sapItemAck);
 				if(orderItem == null) {
 					orderItem = new ItemTO();
 				}

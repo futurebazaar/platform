@@ -8,19 +8,21 @@ import java.util.Map;
  *
  */
 public enum OrderStateEnum {
-	C("C"),
-	R("R"),
-	M("M"),
-	N("N"),
-	O("O"),
-	T("T"),
-	J("J"),
-	Q("Q"),
-	H("H"),
-	X("X"),
-	PLUS("+");
+	C("C", 10),
+	J("J", 20),
+	R("R", 30),
+	M("M", 40),
+	O("O", 50),
+	T("T", 60),
+	H("H", 70),
+	N("N", 80),
+	Q("Q", -30),
+	X("X", -20),
+	PLUS("+", -10);
 	
 	private String orderState;
+	
+	private int priority;
 
 	private static Map<String, OrderStateEnum> orderStateMap = new HashMap<String, OrderStateEnum>();
 	
@@ -30,8 +32,9 @@ public enum OrderStateEnum {
 		}
 	}
 	
-	private OrderStateEnum(String orderState) {
+	private OrderStateEnum(String orderState, int priority) {
 		this.orderState = orderState;
+		this.priority = priority;
 	}
 	
 	public static OrderStateEnum getInstance(String orderState) {
@@ -45,5 +48,9 @@ public enum OrderStateEnum {
 	
 	private String getOrderState() {
 		return orderState;
+	}
+
+	public int getPriority() {
+		return priority;
 	}
 }

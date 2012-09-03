@@ -5,6 +5,19 @@
        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
     <!-- Transaction manager for JDBC Datasource -->
+    
+    <bean id="EmbeddedJms" class="org.hornetq.integration.spring.SpringJmsBootstrap" init-method="start" destroy-method="stop" depends-on="namingServer"/>
+    
+    <bean name="namingServerImpl" class="org.jnp.server.NamingBeanImpl" init-method="start" destroy-method="stop" />
+	 
+	<bean name="namingServer" class="org.jnp.server.Main" init-method="start" destroy-method="stop">
+	 <property name="namingInfo" ref="namingServerImpl" />
+	 <property name="port" value="1099" />
+	 <property name="bindAddress" value="localhost" />
+	 <property name="rmiPort" value="1098" />
+	 <property name="rmiBindAddress" value="localhost" />
+	</bean>
+	
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"></property>
     </bean>
@@ -25,12 +38,28 @@
                 <prop key="java.naming.factory.initial">org.jnp.interfaces.NamingContextFactory</prop>
                 <prop key="java.naming.provider.url">jnp://localhost:1099</prop>
                 <prop key="java.naming.factory.url.pkgs">org.jnp.interfaces:org.jboss.naming</prop>
-                <!-- <prop key="java.naming.security.principal">platformMomAdmin</prop>
-                <prop key="java.naming.security.credentials">lenanileindusnarmada</prop> -->
             </props>
         </property>
     </bean>
+    <!-- <bean id="connectionFactory"
+      class="org.springframework.jndi.JndiObjectFactoryBean">
+        <property name="jndiTemplate">
+            <ref bean="jndiTemplate"/>
+        </property>
+        <property name="jndiName">
+            <value>XAConnectionFactory</value>
+        </property>
+    </bean> -->
     
+     <bean name="connectionFactory" class="org.hornetq.jms.client.HornetQJMSConnectionFactory">
+         <constructor-arg name="ha" value="false"/>
+         <constructor-arg>
+                 <bean class="org.hornetq.api.core.TransportConfiguration">
+                         <constructor-arg value="org.hornetq.core.remoting.impl.netty.NettyConnectorFactory" />
+                 </bean>
+         </constructor-arg>
+     </bean>
+
     <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
 		<property name="connectionFactory" ref="userCredentialFactory"/>
 	</bean>

@@ -4,8 +4,6 @@
 package com.fb.platform.sap.idoc.itemAck;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import com.fb.commons.mom.to.ItemTO;
 import com.fb.commons.mom.to.OrderStateEnum;
@@ -35,6 +33,20 @@ public class ItemAckIdocMapperFactory {
 		}
 		
 		switch(orderState) {
+			case C:
+				itemAck = new ItemAckIdocMapperImpl().updateItemAck(sapItemAck, orderItem);
+				break;
+			case J:
+				/*
+				 * delivery number comes in J state hence updating it in the map 
+				 * so that all the future items receive C state data along with the delivery number.
+				 */
+				updateDeliveryNumber(sapItemAck, orderItem);
+				itemAck = new ItemTO();
+				itemAck.setItemTO(orderItem);
+				itemAck = new ItemAckIdocMapperImpl().updateItemAck(sapItemAck, itemAck);
+				itemAck.setOrderState(sapItemAck.getVBTYPN());
+				break;
 			case H:
 				itemAck = new ReturnOrderIdocMapperImpl().updateItemAck(sapItemAck, orderItem);
 				itemAck.setOrderState(sapItemAck.getVBTYPN());
@@ -65,20 +77,6 @@ public class ItemAckIdocMapperFactory {
 				break;
 			case T:
 				itemAck = new ReturnDeliveryIdocMapperImpl().updateItemAck(sapItemAck, orderItem);
-				itemAck.setOrderState(sapItemAck.getVBTYPN());
-				break;
-			case C:
-				itemAck = new ItemAckIdocMapperImpl().updateItemAck(sapItemAck, orderItem);
-				break;
-			case J:
-				/*
-				 * delivery number comes in J state hence updating it in the map 
-				 * so that all the future items receive C state data along with the delivery number.
-				 */
-				updateDeliveryNumber(sapItemAck, orderItem);
-				itemAck = new ItemTO();
-				itemAck.setItemTO(orderItem);
-				itemAck = new ItemAckIdocMapperImpl().updateItemAck(sapItemAck, itemAck);
 				itemAck.setOrderState(sapItemAck.getVBTYPN());
 				break;
 			default:
