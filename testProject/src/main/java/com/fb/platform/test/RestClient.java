@@ -130,7 +130,7 @@ public class RestClient {
 		LoginRequest loginRequest = new LoginRequest();
 		//loginRequest.setUsername("9920694762");
 		//loginRequest.setPassword("test");
-		loginRequest.setUsername("neha.garani@gmail.com");
+		loginRequest.setUsername("removingneha@test.com");
 		loginRequest.setPassword("testpass");
 //		loginRequest.setUsername("1010101010");
 		//loginRequest.setPassword("shagun");
@@ -635,7 +635,7 @@ public class RestClient {
 		PostMethod getUserMethod = new PostMethod(url + "userWS/user/get");
 		GetUserRequest getUserRequest = new GetUserRequest();
 		//getUserRequest.setKey("9920694762");
-		getUserRequest.setKey("jasvipul@gmail.com");
+		getUserRequest.setKey("removingjas@test.com");
 		getUserRequest.setSessionToken(sessionToken);
 
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.auth._1_0");
@@ -695,7 +695,7 @@ public class RestClient {
 		request.setSessionToken(sessionToken);
 		
 		request.setCouponCode("preIssuedNoCouponUserEntry");
-		request.setUserName("neha.garani@gmail.com");
+		request.setUserName("removingneha@test.com");
 
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
 
