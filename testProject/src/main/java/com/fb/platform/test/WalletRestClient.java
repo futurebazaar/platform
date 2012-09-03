@@ -96,7 +96,7 @@ public class WalletRestClient {
 		HttpClient httpClient = new HttpClient();
 		PostMethod loginMethod = new PostMethod("http://localhost:8080/userWS/auth/login");
 		LoginRequest loginRequest = new LoginRequest();
-		loginRequest.setUsername("jasvipul@gmail.com");
+		loginRequest.setUsername("removingjas@test.com");
 		loginRequest.setPassword("testpass");
 
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.auth._1_0");

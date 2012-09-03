@@ -96,7 +96,7 @@ public class eGVRestClient {
 		PostMethod loginMethod = new PostMethod(url);
 		LoginRequest loginRequest = new LoginRequest();
 		if (URL.equals(LOCALHOST)) {
-			loginRequest.setUsername("neha.garani@gmail.com");
+			loginRequest.setUsername("removingneha@test.com");
 			loginRequest.setPassword("testpass");
 		}
 		if (URL.equals(QA_URL)) {

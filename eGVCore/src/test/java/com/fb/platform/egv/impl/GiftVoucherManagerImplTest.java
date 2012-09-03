@@ -68,7 +68,7 @@ public class GiftVoucherManagerImplTest extends BaseTestCase {
 	public void loginUser1() {
 
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		responseUser1 = userManager.login(request);
@@ -78,7 +78,7 @@ public class GiftVoucherManagerImplTest extends BaseTestCase {
 
 		responseUser2 = userManager.login(request);
 
-		request.setUsername("neha.garani@gmail.com");
+		request.setUsername("removingneha@test.com");
 		request.setPassword("testpass");
 
 		responseUser6 = userManager.login(request);

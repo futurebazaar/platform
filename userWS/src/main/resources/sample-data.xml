@@ -39,7 +39,7 @@
             <value description="buyer_or_seller">buyer</value>
             <null />
             <value description="full_name">jas</value>
-            <value description="primary_email">jasvipul@gmail.com</value>
+            <value description="primary_email">removingjas@test.com</value>
             <value description="secondary_email"></value>
             <value description="gender"></value>
             <value description="salutation"></value>
@@ -133,16 +133,16 @@
   		<column>verification_code</column>
         <row>
         	<value description="id">1</value>
-        	<value description="email">jasvipul@gmail.com</value>
+        	<value description="email">removingjas@test.com</value>
         	<value description="type">primary</value>
             <value description="user_id">1</value>
-            <value description="cleaned_email">jasvipul@gmail.com</value>
+            <value description="cleaned_email">removingjas@test.com</value>
             <value description="is_verified">1</value>
             <value description="verified_on">2012-06-27 17:22:52</value>
             <value description="verification_code">254232</value>
         </row>
         <row>
-        	<value description="id">2</value>
+        	<value description="id">2</value>	
         	<value description="email">test@test.com</value>
         	<value description="type">primary</value>
             <value description="user_id">2</value>
