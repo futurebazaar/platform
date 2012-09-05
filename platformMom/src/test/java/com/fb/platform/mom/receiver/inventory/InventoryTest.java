@@ -23,9 +23,6 @@ import com.fb.platform.mom.manager.PlatformMessageReceiver;
 public class InventoryTest extends BaseTestCase {
 
 	@Autowired
-	private InventorySender inventorySender = null;
-
-	@Autowired
 	private MomManager momManager = null;
 
 	private TestInventoryReceiver testReceiver = null;
@@ -36,7 +33,7 @@ public class InventoryTest extends BaseTestCase {
 	}
 
 	@Test
-	public void sendTwoMessages() {
+	public void sendInventoryMessages() {
 
 		//inventoryListener.addReceiver(testReceiver);
 		momManager.registerReceiver(PlatformDestinationEnum.INVENTORY, testReceiver);
@@ -45,31 +42,32 @@ public class InventoryTest extends BaseTestCase {
 		inventory1.setArticleId("article1");
 		inventory1.setIssuingSite("issuingsite1");
 		inventory1.setIssuingStorageLoc("issuingstoragelocation1");
-		inventorySender.sendMessage(inventory1);
+		momManager.send(PlatformDestinationEnum.INVENTORY, inventory1);
+		//inventorySender.sendMessage(inventory1);
 
 		InventoryTO inventory2 = new InventoryTO();
 		inventory2.setArticleId("article2");
 		inventory2.setIssuingSite("issuingsite2");
 		inventory2.setIssuingStorageLoc("issuingstoragelocation2");
-		inventorySender.sendMessage(inventory2);
+		momManager.send(PlatformDestinationEnum.INVENTORY, inventory2);
 		
 		InventoryTO inventory3 = new InventoryTO();
-		inventory1.setArticleId("neha1");
-		inventory1.setIssuingSite("neha1");
-		inventory1.setIssuingStorageLoc("neha1");
-		inventorySender.sendMessage(inventory3);
+		inventory3.setArticleId("article3");
+		inventory3.setIssuingSite("issuingsite3");
+		inventory3.setIssuingStorageLoc("issuingstoragelocation3");
+		momManager.send(PlatformDestinationEnum.INVENTORY, inventory3);
 
 		InventoryTO inventory4 = new InventoryTO();
-		inventory2.setArticleId("neha2");
-		inventory2.setIssuingSite("neha2");
-		inventory2.setIssuingStorageLoc("neha2");
-		inventorySender.sendMessage(inventory4);
+		inventory4.setArticleId("article4");
+		inventory4.setIssuingSite("issuingsite4");
+		inventory4.setIssuingStorageLoc("issuingstoragelocation4");
+		momManager.send(PlatformDestinationEnum.INVENTORY, inventory4);
 		
 		InventoryTO inventory5 = new InventoryTO();
-		inventory1.setArticleId("neha3");
-		inventory1.setIssuingSite("neha3");
-		inventory1.setIssuingStorageLoc("neha3");
-		inventorySender.sendMessage(inventory5);
+		inventory5.setArticleId("article5");
+		inventory5.setIssuingSite("issuingsite5");
+		inventory5.setIssuingStorageLoc("issuingstoragelocation5");
+		momManager.send(PlatformDestinationEnum.INVENTORY, inventory5);
 	}
 
 	@After
@@ -80,7 +78,7 @@ public class InventoryTest extends BaseTestCase {
 
 	private static class TestInventoryReceiver implements PlatformMessageReceiver {
 
-		private int count = 0;
+		private static int count = 1;
 
 		/* (non-Javadoc)
 		 * @see com.fb.platform.mom.manager.PlatformMessageReceiver#handleMessage(java.lang.Object)
@@ -90,19 +88,21 @@ public class InventoryTest extends BaseTestCase {
 			System.out.println("TestInventoryReceiver, received the inventory message, count is : " + count + ", message is : " + message);
 			InventoryTO inventory = (InventoryTO) message;
 
-			if (count == 0) {
+			if (count == 1) {
 				assertEquals("article1", inventory.getArticleId());
-			} else if (count == 1) {
+			} else if (count == 2) {
 				assertEquals("article2", inventory.getArticleId());
+			} else if (count == 3) {
+				assertEquals("article3", inventory.getArticleId());
+			} else if (count == 4) {
+				assertEquals("article4", inventory.getArticleId());
+			} else if (count == 5) {
+				assertEquals("article5", inventory.getArticleId());
 			} else if (count > 5){
 				throw new IllegalArgumentException("Invalid message");
 			}
-			count ++;
+			count++;
 			System.out.println("TestInventoryReceiver Incremented count to : " + count);
-		}
-
-		public int getCount() {
-			return count;
 		}
 	}
 }

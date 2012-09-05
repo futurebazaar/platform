@@ -47,14 +47,14 @@ public class MailTest extends BaseTestCase {
 		mail1.setFrom("neha.garani@futuregroup.in");
 		mail1.setSubject("MOM mail test 1");
 		mail1.setMessage("MOM mail test 1 its works!!!!!!!yehhhhhh!!!!!");
-		mailSender.sendMessage(mail1);
+		momManager.send(PlatformDestinationEnum.MAIL, mail1);
 
 		MailTO mail2 = new MailTO();
 		mail2.setTo(receivers);
 		mail2.setFrom("vinayak.karnataki@futuregroup.in");
 		mail2.setSubject("MOM mail test 2");
 		mail2.setMessage("MOM mail test 2 its works!!!!!!!yehhhhh!!!!!");
-		mailSender.sendMessage(mail2);
+		momManager.send(PlatformDestinationEnum.MAIL, mail2);
 	}
 
 	@After
@@ -82,7 +82,7 @@ public class MailTest extends BaseTestCase {
 			} else {
 				throw new IllegalArgumentException("Invalid message");
 			}
-			count ++;
+			count++;
 			System.out.println("MailReceiver Incremented count to : " + count);
 		}
 

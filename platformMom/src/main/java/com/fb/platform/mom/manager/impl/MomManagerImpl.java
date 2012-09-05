@@ -206,8 +206,7 @@ public class MomManagerImpl implements MomManager {
 		this.corruptContainer = corruptContainer;
 	}
 
-	public void setDeliveryDeleteListener(
-			DeliveryDeleteMessageListener deliveryDeleteListener) {
+	public void setDeliveryDeleteListener(DeliveryDeleteMessageListener deliveryDeleteListener) {
 		this.deliveryDeleteListener = deliveryDeleteListener;
 	}
 
@@ -215,13 +214,11 @@ public class MomManagerImpl implements MomManager {
 		this.deliveryDeleteSender = deliveryDeleteSender;
 	}
 
-	public void setDeliveryDeleteContainer(
-			DefaultMessageListenerContainer deliveryDeleteContainer) {
+	public void setDeliveryDeleteContainer(DefaultMessageListenerContainer deliveryDeleteContainer) {
 		this.deliveryDeleteContainer = deliveryDeleteContainer;
 	}
 
-	public void setItemAckMessageListener(
-			ItemAckMessageListener itemAckMessageListener) {
+	public void setItemAckMessageListener(ItemAckMessageListener itemAckMessageListener) {
 		this.itemAckMessageListener = itemAckMessageListener;
 	}
 
