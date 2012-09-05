@@ -76,6 +76,7 @@ public class ItemTO implements Serializable {
 	private BigDecimal quantity;
 	private String orderState;
 	private int atgDocumentId;
+	private String lspCode;
 
 	public int getAtgDocumentId() {
 		return atgDocumentId;
@@ -246,6 +247,7 @@ public class ItemTO implements Serializable {
 				+ "\nitem category : " + itemCategory
 				+ "\norder id : " + orderId
 				+ "\ndelivery type : " + deliveryType
+				+ "\nlsp code : " + lspCode
 				+ "\nlsp name : " + lspName
 				+ "\nawb number : " + awbNumber
 				+ "\ncreated by : " + createdBy
@@ -261,6 +263,12 @@ public class ItemTO implements Serializable {
 		}
 		return order;
 		
+	}
+	public String getLspCode() {
+		return lspCode;
+	}
+	public void setLspCode(String lspCode) {
+		this.lspCode = lspCode;
 	}
 		   
 		   
