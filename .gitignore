@@ -146,3 +146,7 @@ execution/launcher.tar.gz
 execution/sapReceiver.tar.gz
 fulfilmentWS/.settings/org.eclipse.wst.common.component
 fulfilmentCore/.settings/org.eclipse.wst.common.component
+data/
+hornetQConfig/platform.tar.gz
+launcher/cp_dependency.txt
+
