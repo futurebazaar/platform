@@ -56,12 +56,12 @@ public class ItemAckOrderItemProcessorImpl implements ItemAckOrderItemProcessor 
 				if(orderItem == null) {
 					throw new NoOrderItemFoundException("No Order Item found for order number : " + sapItemAck.getSOVBELN() + " , item number : " + sapItemAck.getSOPOSNR());
 				}
-				ItemTO highestStateOrderItem = highestStateOrderItemMap.get(orderItem.getAtgDocumentId());
+				ItemTO highestStateOrderItem = highestStateOrderItemMap.get(orderItem.getSapDocumentId());
 				if(isAckHigherPriority(highestStateOrderItem.getOrderState(), sapItemAck.getVBTYPN())) {
 					itemAck = mapperFactory.getItemAck(sapItemAck, orderItem);
 					if(itemAck != null) {
 						logger.info("Order Id : " + sapItemAck.getSOVBELN() + " , item number : " + sapItemAck.getSOPOSNR() + " , order state : " + sapItemAck.getVBTYPN());
-						highestStateOrderItemMap.put(itemAck.getAtgDocumentId(), itemAck);
+						highestStateOrderItemMap.put(itemAck.getSapDocumentId(), itemAck);
 					}
 				}
 			}
@@ -106,8 +106,8 @@ public class ItemAckOrderItemProcessorImpl implements ItemAckOrderItemProcessor 
 					orderItem = new ItemTO();
 				}
 				itemAck = new ItemAckIdocMapperImpl().updateItemAck(sapItemAck, orderItem);
-				if(!cStateOrderItemMap.containsKey(itemAck.getAtgDocumentId())) {
-					cStateOrderItemMap.put(itemAck.getAtgDocumentId(), itemAck);
+				if(!cStateOrderItemMap.containsKey(itemAck.getSapDocumentId())) {
+					cStateOrderItemMap.put(itemAck.getSapDocumentId(), itemAck);
 				}
 			}
 		}

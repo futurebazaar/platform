@@ -97,6 +97,6 @@ public class CorruptMessageListener extends AbstractPlatformListener implements 
 				+ "\n\n error cause : " + corruptMessage.getCause()
 				+ "\n\n object : " + corruptMessage.getSapIdoc().toString() );
 		
-		super.notify(corruptMessage);
+		super.notify(corruptMail);
 	}
 }
