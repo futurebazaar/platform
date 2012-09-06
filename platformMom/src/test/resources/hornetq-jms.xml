@@ -68,8 +68,8 @@
       <entry name="/queue/deliveryDelete"/>
    </queue>
 
-   <queue name="order">
-      <entry name="/queue/order"/>
+   <queue name="itemAck">
+      <entry name="/queue/itemAck"/>
    </queue>
 
    <queue name="mailDLQ">

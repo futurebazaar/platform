@@ -88,22 +88,15 @@ public class CorruptMessageListener extends AbstractPlatformListener implements 
 				+ "\n\n message id : " + message.getJMSMessageID()
 				+ "\n\n priority : " + message.getJMSPriority()
 				+ "\n\n error cause : " + corruptMessage.getCause()
-				+ "\n\n object : " + corruptMessage.getMessage().toString() );
+				+ "\n\n object : " + corruptMessage.getSapIdoc().toString() );
 
 		logger.info("MOM corrupt message received : " + date.toString() 
 				+ "\n\n message timestamp : " + message.getJMSTimestamp() 
 				+ "\n\n message id : " + message.getJMSMessageID()
 				+ "\n\n priority : " + message.getJMSPriority()
 				+ "\n\n error cause : " + corruptMessage.getCause()
-				+ "\n\n object : " + corruptMessage.getMessage().toString() );
+				+ "\n\n object : " + corruptMessage.getSapIdoc().toString() );
 		
-		System.out.println("MOM corrupt message received : " + date.toString() 
-				+ "\n\n message timestamp : " + message.getJMSTimestamp() 
-				+ "\n\n message id : " + message.getJMSMessageID()
-				+ "\n\n priority : " + message.getJMSPriority()
-				+ "\n\n error cause : " + corruptMessage.getCause()
-				+ "\n\n object : " + corruptMessage.getMessage().toString() );
-
-		super.notify(corruptMail);
+		super.notify(corruptMessage);
 	}
 }

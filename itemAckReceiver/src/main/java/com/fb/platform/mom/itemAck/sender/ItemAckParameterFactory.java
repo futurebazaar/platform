@@ -16,6 +16,7 @@ import com.fb.commons.mom.to.ItemTO;
 import com.fb.commons.mom.to.PgiCreationItemTO;
 import com.fb.commons.mom.to.PgrCreationItemTO;
 import com.fb.commons.mom.to.ReturnDeliveryTO;
+import com.fb.commons.mom.to.ReturnInvoiceTO;
 import com.fb.commons.mom.to.ReturnOrderTO;
 import com.fb.platform.mom.itemAck.sender.impl.CancelInvoiceParameterImpl;
 import com.fb.platform.mom.itemAck.sender.impl.InvoiceParameterImpl;
@@ -23,6 +24,7 @@ import com.fb.platform.mom.itemAck.sender.impl.ItemAckParameterImpl;
 import com.fb.platform.mom.itemAck.sender.impl.PgiCreationParameterImpl;
 import com.fb.platform.mom.itemAck.sender.impl.PgrCreationParameterImpl;
 import com.fb.platform.mom.itemAck.sender.impl.ReturnDeliveryParameterImpl;
+import com.fb.platform.mom.itemAck.sender.impl.ReturnInvoiceParameterImpl;
 import com.fb.platform.mom.itemAck.sender.impl.ReturnOrderParameterImpl;
 
 /**
@@ -49,8 +51,8 @@ public class ItemAckParameterFactory {
 			paramList = new ReturnOrderParameterImpl().getParameters(itemParamList, itemAck);
 		} else if (ReturnDeliveryTO.class.isInstance(itemAck)) {
 			paramList = new ReturnDeliveryParameterImpl().getParameters(itemParamList, itemAck);
-		} else if (ReturnOrderTO.class.isInstance(itemAck)) {
-			paramList = new ReturnOrderParameterImpl().getParameters(itemParamList, itemAck);
+		} else if (ReturnInvoiceTO.class.isInstance(itemAck)) {
+			paramList = new ReturnInvoiceParameterImpl().getParameters(itemParamList, itemAck);
 		} else {
 			paramList = itemParamList;
 		}

@@ -33,7 +33,6 @@ public class DeliveryDeleteMessageListener extends AbstractPlatformListener impl
 			DeliveryDeleteTO deliveryDelete = (DeliveryDeleteTO) objectMessage.getObject();
 
 			logger.info("Received the delivery delete Message from SAP. \n" + deliveryDelete.toString());
-			System.out.println("Received the delivery delete Message from SAP. \n" + deliveryDelete.toString());
 
 			super.notify(deliveryDelete);
 		} catch (JMSException e) {
