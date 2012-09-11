@@ -369,12 +369,10 @@
     
     <modules>
     	<module>platformCommons</module>
-	<module>platformMailer</module>
+		<module>platformMailer</module>
     	<module>platformCaching</module>
-    	<module>catalogCommons</module>
-        <module>catalogCore</module>
-    	<module>orderCore</module>
-        <module>orderWS</module>
+    	<module>ifsCore</module>
+        <module>ifsWS</module>
         <module>userCore</module>
         <module>userWS</module>
         <module>authenticationCore</module>
@@ -385,6 +383,7 @@
 		<module>eGVCore</module>
 		<module>eGVWS</module>
 		<module>promotionWS</module>
+		<module>testProject</module>
     </modules>
 
     <reporting>

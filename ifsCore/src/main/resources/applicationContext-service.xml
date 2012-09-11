@@ -15,13 +15,6 @@
     
     <!-- This is to scan and load the CacheAccess classes -->
 	<context:component-scan base-package="com.fb.platform.ifs.caching"></context:component-scan>
-	
-    <!-- =================================================================== -->
-    <!-- Managers: For accessing DAOs                                        -->
-    <!-- =================================================================== -->
-    <bean id="ifsManager" class="com.fb.platform.ifs.manager.impl.IFSManagerImpl">
-        <property name="ifsDao" ref="ifsDao"/>
-        <property name="authenticationService" ref="authenticationService"></property>
-    </bean> 	
+
 </beans>
 

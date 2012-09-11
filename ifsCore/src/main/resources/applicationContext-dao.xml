@@ -12,9 +12,11 @@
 	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
-	
-	<bean id="ifsDao" class="com.fb.platform.ifs.dao.impl.IFSDaoJdbcImpl">
+
+	<bean id="lspDao" class="com.fb.platform.ifs.dao.lsp.impl.LSPDaoJdbcImpl">
 		<property name="jdbcTemplate" ref="jdbcTemplate"/>
-	</bean>	
+	</bean>
+
+   <!-- Add new DAOs here -->
 
 </beans>
