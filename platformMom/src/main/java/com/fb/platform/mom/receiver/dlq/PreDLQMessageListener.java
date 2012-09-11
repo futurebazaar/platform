@@ -66,22 +66,19 @@ public class PreDLQMessageListener extends AbstractPlatformListener implements M
 			dlqMail.setFrom(prop.getProperty("receiver.mail.dlq.from"));
 			Date date = new Date();
 			dlqMail.setSubject("MOM message delivery failed : " + date.toString());
-			dlqMail.setMessage("MOM message delivery failed : " + date.toString() 
+			dlqMail.setMessage("Search string _HQ_ORIG_MESSAGE_ID=" + objectMessage.getObjectProperty("_HQ_ORIG_MESSAGE_ID") 
+					+ "\n\n MOM message delivery failed : " + date.toString() 
 					+ "\n\n destination : " + objectMessage.getObjectProperty("_HQ_ORIG_ADDRESS") 
+					+ "\n\n original message id : " + objectMessage.getObjectProperty("_HQ_ORIG_MESSAGE_ID") 
 					+ "\n\n message timestamp : " + message.getJMSTimestamp() 
 					+ "\n\n message id : " + message.getJMSMessageID()
 					+ "\n\n priority : " + message.getJMSPriority()
 					+ "\n\n object : " + objectMessage.getObject().toString() );
 
-			logger.info("MOM message delivery failed : " + date.toString() 
+			logger.info("Search string _HQ_ORIG_MESSAGE_ID=" + objectMessage.getObjectProperty("_HQ_ORIG_MESSAGE_ID") 
+					+ "\n\n MOM message delivery failed : " + date.toString() 
 					+ "\n\n destination : " + objectMessage.getObjectProperty("_HQ_ORIG_ADDRESS") 
-					+ "\n\n message timestamp : " + message.getJMSTimestamp() 
-					+ "\n\n message id : " + message.getJMSMessageID()
-					+ "\n\n priority : " + message.getJMSPriority()
-					+ "\n\n object : " + objectMessage.getObject().toString() );
-			
-			System.out.println("MOM message delivery failed : " + date.toString() 
-					+ "\n\n destination : " + objectMessage.getObjectProperty("_HQ_ORIG_ADDRESS") 
+					+ "\n\n original message id : " + objectMessage.getObjectProperty("_HQ_ORIG_MESSAGE_ID") 
 					+ "\n\n message timestamp : " + message.getJMSTimestamp() 
 					+ "\n\n message id : " + message.getJMSMessageID()
 					+ "\n\n priority : " + message.getJMSPriority()

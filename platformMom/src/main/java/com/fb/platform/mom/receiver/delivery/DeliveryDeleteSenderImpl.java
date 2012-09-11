@@ -38,7 +38,6 @@ public class DeliveryDeleteSenderImpl implements DeliveryDeleteSender {
 			@Override
 			public Message createMessage(Session session) throws JMSException {
 				logger.info("Creating the Delivery Delete Message for sending.");
-				System.out.println("Creating the DeliveryDelete Message for sending.");
 				ObjectMessage jmsMessage = session.createObjectMessage();
 				jmsMessage.setObject(message);
 				return jmsMessage;
