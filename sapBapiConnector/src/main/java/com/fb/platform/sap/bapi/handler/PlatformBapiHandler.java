@@ -1,10 +1,18 @@
 package com.fb.platform.sap.bapi.handler;
 
-import com.fb.platform.sap.bapi.to.BapiTO;
-import com.fb.platform.sap.bapi.to.ResponseTO;
+import com.fb.platform.sap.bapi.to.SapInventoryDashboardRequestTO;
+import com.fb.platform.sap.bapi.to.SapInventoryDashboardResponseTO;
+import com.fb.platform.sap.bapi.to.SapInventoryLevelRequestTO;
+import com.fb.platform.sap.bapi.to.SapInventoryLevelResponseTO;
+import com.fb.platform.sap.bapi.to.SapOrderRequestTO;
+import com.fb.platform.sap.bapi.to.SapOrderResponseTO;
 
 public interface PlatformBapiHandler {
 	
-	public ResponseTO execute(String environment, BapiTO bapiTO);
+	public SapOrderResponseTO processOrder(String environment, SapOrderRequestTO orderRequestTO);
+	
+	public SapInventoryDashboardResponseTO processInventoryDashboard(String environment, SapInventoryDashboardRequestTO inventoryDashboardRequestTO);
+	
+	public SapInventoryLevelResponseTO processInventoryLevel(String environment, SapInventoryLevelRequestTO inventoryLevelRequestTO);
 
 }

@@ -2,6 +2,7 @@ package com.fb.platform.sap.bapi;
 
 import java.util.Properties;
 
+import com.fb.platform.sap.bapi.order.BapiOrderTemplate;
 import com.sap.conn.jco.JCoDestination;
 import com.sap.conn.jco.JCoDestinationManager;
 import com.sap.conn.jco.JCoException;
@@ -67,7 +68,7 @@ public class BapiConnector
         return connectProperties;
     }
     
-    public void connect(String environment, BapiTemplate template) throws JCoException{
+    public void connect(String environment, String template) throws JCoException{
         BapiDestinationDataProvider bapiProvider = new BapiDestinationDataProvider();
         bapiProperties = getDestinationPropertiesFromEnvironment(environment);
         try
@@ -84,7 +85,7 @@ public class BapiConnector
         JCoDestination destination = JCoDestinationManager.getDestination(bapiProperties.getProperty(DestinationDataProvider.JCO_DEST));
         setBapiDestination(destination);
         System.out.println(destination.getAttributes());
-        JCoFunctionTemplate jCoFunctionTemplate = destination.getRepository().getFunctionTemplate(template.toString());
+        JCoFunctionTemplate jCoFunctionTemplate = destination.getRepository().getFunctionTemplate(template);
         setBapiFunction(jCoFunctionTemplate.getFunction());
         
     }
