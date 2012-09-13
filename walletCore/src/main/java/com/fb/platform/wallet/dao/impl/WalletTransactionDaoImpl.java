@@ -602,7 +602,8 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 	}
 	
 	private void updatePaymetRefund(long refundId, Money amount , String status) {
-		jdbcTemplate.update(UPDATE_PAYMENT_REFUNDS,new Object[] {amount.getAmount(),status,refundId});		
+		//this is goving an lock sql exception will need to check this
+		//jdbcTemplate.update(UPDATE_PAYMENT_REFUNDS,new Object[] {amount.getAmount(),status,refundId});		
 	}
 	@Override
 	public List<WalletGifts> getWalletGifts(long walletId){
