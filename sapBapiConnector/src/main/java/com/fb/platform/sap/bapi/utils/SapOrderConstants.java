@@ -1,6 +1,6 @@
 package com.fb.platform.sap.bapi.utils;
 
-public class SapConstants {
+public class SapOrderConstants {
 
 	
 	//Common Constants
@@ -20,8 +20,9 @@ public class SapConstants {
 	public static final String CHAR_R = "R";
 	public static final String SUCCESS_FLAG ="S";
 	public static final String UPDATE_FLAG ="U";
-	public static final String CHAR_W = "W";
+	public static final String WARNING_FLAG = "W";
 	public static final String COMMIT_FLAG  = "X";
+	public static final String ERROR_FLAG = "E";
 	public static final String CHAR_Z = "Z";
 	public static final String CHANGE_FLAG = "L";
 	
@@ -166,7 +167,6 @@ public class SapConstants {
 	public static final String FAX_NUMBER = "FAX_NUMBER";
 	
 	//Sap Delivery Constants
-	public static final String PLANT = "PLANT";
 	public static final String STORAGE_LOCATION = "STORE_LOC";
 	public static final String SALES_UNIT = "SALES_UNIT";
 	public static final String SHIPMENT_TYPE = "SHIP_TYPE";
@@ -176,6 +176,7 @@ public class SapConstants {
 	public static final String SHIPPING_MODE = "POITM_NO_S";
 	
 	//Sap Dates Constants
+	public static final String REQ_DATE = "REQ_DATE";
 	public static final String GI_DATE = "GI_DATE";
 	public static final String MS_DATE = "MS_DATE";
 	public static final String LOAD_DATE = "LOAD_DATE";
@@ -183,7 +184,4 @@ public class SapConstants {
 	public static final String REQUIRED_DATE = "REQ_DATE_H"; 
 	
 	//Response Constants
-	
-	public static final String DATE_FORMAT = "yyyMMdd";
-	public static final String TIME_FORMAT = "HHmmss";
 }

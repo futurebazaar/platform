@@ -7,7 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import com.fb.commons.mom.to.AddressTO;
 import com.fb.commons.mom.to.LineItemTO;
 import com.fb.commons.mom.to.OrderHeaderTO;
-import com.fb.platform.sap.bapi.table.BapiTable;
+import com.fb.platform.sap.bapi.order.table.BapiOrderTable;
 import com.fb.platform.sap.bapi.utils.SapConstants;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoTable;
@@ -15,8 +15,8 @@ import com.sap.conn.jco.JCoTable;
 public class ItemPartnerMapper {
 	
 	public static void setDetails(JCoFunction bapiFunction, OrderHeaderTO orderHeaderTO, AddressTO addressTO, List<LineItemTO> lineItemTOList) {
-		JCoTable orderPartner = bapiFunction.getTableParameterList().getTable(BapiTable.ORDER_PARTNERS.toString());
-		JCoTable orderText = bapiFunction.getTableParameterList().getTable(BapiTable.ORDER_TEXT.toString());
+		JCoTable orderPartner = bapiFunction.getTableParameterList().getTable(BapiOrderTable.ORDER_PARTNERS.toString());
+		JCoTable orderText = bapiFunction.getTableParameterList().getTable(BapiOrderTable.ORDER_TEXT.toString());
 		
 		for (LineItemTO itemTO : lineItemTOList) {
 			orderPartner.appendRow();

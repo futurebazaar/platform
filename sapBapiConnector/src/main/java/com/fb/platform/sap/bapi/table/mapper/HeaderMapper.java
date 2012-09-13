@@ -5,8 +5,8 @@ import java.util.List;
 import com.fb.commons.mom.to.LineItemTO;
 import com.fb.commons.mom.to.OrderHeaderTO;
 import com.fb.platform.sap.bapi.handler.PlatformBapiHandlerFactory;
-import com.fb.platform.sap.bapi.table.BapiTable;
-import com.fb.platform.sap.bapi.table.TinlaOrderType;
+import com.fb.platform.sap.bapi.order.table.BapiOrderTable;
+import com.fb.platform.sap.bapi.order.table.TinlaOrderType;
 import com.fb.platform.sap.bapi.utils.SapConstants;
 import com.fb.platform.sap.bapi.utils.SapUtils;
 import com.sap.conn.jco.JCoFunction;
@@ -15,8 +15,8 @@ import com.sap.conn.jco.JCoStructure;
 public class HeaderMapper {
 	
 	public static void setDetails(JCoFunction bapiFunction, OrderHeaderTO orderHeaderTO, TinlaOrderType orderType) {
-		JCoStructure orderHeaderIN = bapiFunction.getImportParameterList().getStructure(BapiTable.ORDER_HEADER_IN.toString());
-		JCoStructure orderHeaderINX = bapiFunction.getImportParameterList().getStructure(BapiTable.ORDER_HEADER_INX.toString());
+		JCoStructure orderHeaderIN = bapiFunction.getImportParameterList().getStructure(BapiOrderTable.ORDER_HEADER_IN.toString());
+		JCoStructure orderHeaderINX = bapiFunction.getImportParameterList().getStructure(BapiOrderTable.ORDER_HEADER_INX.toString());
 
 		String billDate = SapUtils.convertDateToFormat(orderHeaderTO.getCreatedOn(), "yyyMMdd");
 		

@@ -3,8 +3,8 @@ package com.fb.platform.sap.bapi.table.mapper;
 import com.fb.commons.mom.to.AddressTO;
 import com.fb.commons.mom.to.OrderHeaderTO;
 import com.fb.platform.sap.bapi.handler.PlatformBapiHandlerFactory;
-import com.fb.platform.sap.bapi.table.BapiTable;
-import com.fb.platform.sap.bapi.table.TinlaOrderType;
+import com.fb.platform.sap.bapi.order.table.BapiOrderTable;
+import com.fb.platform.sap.bapi.order.table.TinlaOrderType;
 import com.fb.platform.sap.bapi.utils.SapConstants;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoTable;
@@ -14,7 +14,7 @@ public class HeaderPartnerMapper {
 	public static void setDetails(JCoFunction bapiFunction, OrderHeaderTO orderHeaderTO, AddressTO addressTO, TinlaOrderType orderType) {
 		
 		JCoTable orderPartner = bapiFunction.getTableParameterList().getTable(PlatformBapiHandlerFactory.getPartnersTable(orderType).toString());
-		JCoTable orderText = bapiFunction.getTableParameterList().getTable(BapiTable.ORDER_TEXT.toString());
+		JCoTable orderText = bapiFunction.getTableParameterList().getTable(BapiOrderTable.ORDER_TEXT.toString());
 		
 		setFirstPartnerDetails(orderPartner, orderText, orderHeaderTO, addressTO);
 		setSecondPartnerDetails(orderPartner, orderText, orderHeaderTO, addressTO);

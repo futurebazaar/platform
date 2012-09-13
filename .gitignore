@@ -149,4 +149,5 @@ fulfilmentCore/.settings/org.eclipse.wst.common.component
 data/
 hornetQConfig/platform.tar.gz
 launcher/cp_dependency.txt
-
+sapBapiConnector/.classpath
+sapBapiConnector/.settings

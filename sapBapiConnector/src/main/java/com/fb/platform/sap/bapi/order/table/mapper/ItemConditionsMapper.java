@@ -1,4 +1,4 @@
-package com.fb.platform.sap.bapi.table.mapper;
+package com.fb.platform.sap.bapi.order.table.mapper;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -11,7 +11,7 @@ import com.fb.platform.sap.bapi.order.table.BapiOrderTable;
 import com.fb.platform.sap.bapi.order.table.OrderTableType;
 import com.fb.platform.sap.bapi.order.table.TinlaOrderType;
 import com.fb.platform.sap.bapi.utils.ItemConditionsType;
-import com.fb.platform.sap.bapi.utils.SapConstants;
+import com.fb.platform.sap.bapi.utils.SapOrderConstants;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoTable;
 
@@ -62,27 +62,27 @@ public class ItemConditionsMapper {
 		Map<String, String> conditionKeyValueMap = PlatformBapiHandlerFactory.conditionValueMap(conditionType);
 		JCoTable orderConditionIN= bapiFunction.getTableParameterList().getTable(conditionTables.get(OrderTableType.VALUE_TABLE).toString());
 		orderConditionIN.appendRow();
-		orderConditionIN.setValue(SapConstants.ITEM_NUMBER, itemTO.getSapDocumentId());
-		orderConditionIN.setValue(SapConstants.CONDITION_TYPE, conditionKeyValueMap.get(SapConstants.CONDITION_TYPE));
-		orderConditionIN.setValue(SapConstants.CONDITION_VALUE, conditionValue.toString());
+		orderConditionIN.setValue(SapOrderConstants.ITEM_NUMBER, itemTO.getSapDocumentId());
+		orderConditionIN.setValue(SapOrderConstants.CONDITION_TYPE, conditionKeyValueMap.get(SapOrderConstants.CONDITION_TYPE));
+		orderConditionIN.setValue(SapOrderConstants.CONDITION_VALUE, conditionValue.toString());
 		
 		if (!orderType.equals(TinlaOrderType.NEW_ORDER)) {
-			orderConditionIN.setValue(SapConstants.CONDITION_STEP_NUMBER, conditionKeyValueMap.get(SapConstants.CONDITION_STEP_NUMBER));
-			orderConditionIN.setValue(SapConstants.CONDITION_COUNTER, conditionKeyValueMap.get(SapConstants.CONDITION_COUNTER));
+			orderConditionIN.setValue(SapOrderConstants.CONDITION_STEP_NUMBER, conditionKeyValueMap.get(SapOrderConstants.CONDITION_STEP_NUMBER));
+			orderConditionIN.setValue(SapOrderConstants.CONDITION_COUNTER, conditionKeyValueMap.get(SapOrderConstants.CONDITION_COUNTER));
 		}
 	
 		if (!orderType.equals(TinlaOrderType.RET_ORDER)) {
 			JCoTable orderConditionINX = bapiFunction.getTableParameterList().getTable(conditionTables.get(OrderTableType.COMMIT_TABLE).toString());
 			orderConditionINX.appendRow();
-			orderConditionINX.setValue(SapConstants.ITEM_NUMBER, itemTO.getSapDocumentId());
-			orderConditionINX.setValue(SapConstants.CONDITION_TYPE, conditionKeyValueMap.get(SapConstants.CONDITION_TYPE));
-			orderConditionINX.setValue(SapConstants.CONDITION_VALUE, SapConstants.COMMIT_FLAG);
-			orderConditionINX.setValue(SapConstants.OPERATION_FLAG, SapConstants.INSERT_FLAG);
+			orderConditionINX.setValue(SapOrderConstants.ITEM_NUMBER, itemTO.getSapDocumentId());
+			orderConditionINX.setValue(SapOrderConstants.CONDITION_TYPE, conditionKeyValueMap.get(SapOrderConstants.CONDITION_TYPE));
+			orderConditionINX.setValue(SapOrderConstants.CONDITION_VALUE, SapOrderConstants.COMMIT_FLAG);
+			orderConditionINX.setValue(SapOrderConstants.OPERATION_FLAG, SapOrderConstants.INSERT_FLAG);
 			
 			if (orderType.equals(TinlaOrderType.MOD_ORDER)) {
-				orderConditionINX.setValue(SapConstants.CONDITION_STEP_NUMBER, conditionKeyValueMap.get(SapConstants.CONDITION_STEP_NUMBER));
-				orderConditionINX.setValue(SapConstants.CONDITION_COUNTER, conditionKeyValueMap.get(SapConstants.CONDITION_COUNTER));
-				orderConditionINX.setValue(SapConstants.OPERATION_FLAG, SapConstants.UPDATE_FLAG);
+				orderConditionINX.setValue(SapOrderConstants.CONDITION_STEP_NUMBER, conditionKeyValueMap.get(SapOrderConstants.CONDITION_STEP_NUMBER));
+				orderConditionINX.setValue(SapOrderConstants.CONDITION_COUNTER, conditionKeyValueMap.get(SapOrderConstants.CONDITION_COUNTER));
+				orderConditionINX.setValue(SapOrderConstants.OPERATION_FLAG, SapOrderConstants.UPDATE_FLAG);
 			}
 		}
 	}

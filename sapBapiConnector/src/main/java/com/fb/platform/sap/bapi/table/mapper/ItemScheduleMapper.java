@@ -6,9 +6,9 @@ import java.util.Map;
 import com.fb.commons.mom.to.LineItemTO;
 import com.fb.commons.mom.to.OrderHeaderTO;
 import com.fb.platform.sap.bapi.handler.PlatformBapiHandlerFactory;
-import com.fb.platform.sap.bapi.table.BapiTable;
-import com.fb.platform.sap.bapi.table.TableType;
-import com.fb.platform.sap.bapi.table.TinlaOrderType;
+import com.fb.platform.sap.bapi.order.table.BapiOrderTable;
+import com.fb.platform.sap.bapi.order.table.OrderTableType;
+import com.fb.platform.sap.bapi.order.table.TinlaOrderType;
 import com.fb.platform.sap.bapi.utils.SapConstants;
 import com.fb.platform.sap.bapi.utils.SapUtils;
 import com.sap.conn.jco.JCoFunction;
@@ -17,9 +17,9 @@ import com.sap.conn.jco.JCoTable;
 public class ItemScheduleMapper {
 
 	public static void setDetails(JCoFunction bapiFunction, OrderHeaderTO orderHeaderTO, List<LineItemTO> lineItemTOList, TinlaOrderType orderType) {
-		Map<TableType, BapiTable> schedulesTables = PlatformBapiHandlerFactory.getScheduleTables(orderType);
-		JCoTable orderScheduleIN= bapiFunction.getTableParameterList().getTable(schedulesTables.get(TableType.VALUE_TABLE).toString());
-		JCoTable orderScheduleINX = bapiFunction.getTableParameterList().getTable(schedulesTables.get(TableType.COMMIT_TABLE).toString());
+		Map<OrderTableType, BapiOrderTable> schedulesTables = PlatformBapiHandlerFactory.getScheduleTables(orderType);
+		JCoTable orderScheduleIN= bapiFunction.getTableParameterList().getTable(schedulesTables.get(OrderTableType.VALUE_TABLE).toString());
+		JCoTable orderScheduleINX = bapiFunction.getTableParameterList().getTable(schedulesTables.get(OrderTableType.COMMIT_TABLE).toString());
 		
 		for (LineItemTO itemTO: lineItemTOList) {
 			orderScheduleIN.appendRow();
@@ -34,8 +34,8 @@ public class ItemScheduleMapper {
 			orderScheduleIN.setValue(SapConstants.ITEM_NUMBER, itemTO.getSapDocumentId());
 			orderScheduleINX.setValue(SapConstants.ITEM_NUMBER, itemTO.getSapDocumentId());
 
-			orderScheduleIN.setValue(SapConstants.REQ_DATE, commonDate);
-			orderScheduleINX.setValue(SapConstants.REQ_DATE, SapConstants.COMMIT_FLAG);
+			orderScheduleIN.setValue(SapConstants.REQUIRED_DATE, commonDate);
+			orderScheduleINX.setValue(SapConstants.REQUIRED_DATE, SapConstants.COMMIT_FLAG);
 
 			orderScheduleIN.setValue(SapConstants.REQUIRED_QUANTITY, itemTO.getQuantity().toString());
 			orderScheduleINX.setValue(SapConstants.REQUIRED_QUANTITY, SapConstants.COMMIT_FLAG);

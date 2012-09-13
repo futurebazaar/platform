@@ -10,7 +10,7 @@ import com.fb.commons.mom.to.PaymentTO;
 import com.fb.commons.mom.to.PricingTO;
 import com.fb.platform.sap.bapi.order.table.TinlaOrderType;
 
-public class BapiTO {
+public class SapOrderRequestTO {
 	
 	private TinlaOrderType orderType;
 	private OrderHeaderTO orderHeaderTO;

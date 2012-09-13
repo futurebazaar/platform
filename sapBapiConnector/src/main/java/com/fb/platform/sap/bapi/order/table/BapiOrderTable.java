@@ -1,6 +1,6 @@
-package com.fb.platform.sap.bapi.table;
+package com.fb.platform.sap.bapi.order.table;
 
-public enum BapiTable {
+public enum BapiOrderTable {
 	
 	RETURN,
 	ORDER_TEXT,

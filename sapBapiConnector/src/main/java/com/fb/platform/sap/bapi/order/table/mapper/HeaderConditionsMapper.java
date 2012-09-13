@@ -1,4 +1,4 @@
-package com.fb.platform.sap.bapi.table.mapper;
+package com.fb.platform.sap.bapi.order.table.mapper;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -8,7 +8,7 @@ import com.fb.platform.sap.bapi.handler.PlatformBapiHandlerFactory;
 import com.fb.platform.sap.bapi.order.table.BapiOrderTable;
 import com.fb.platform.sap.bapi.order.table.OrderTableType;
 import com.fb.platform.sap.bapi.order.table.TinlaOrderType;
-import com.fb.platform.sap.bapi.utils.SapConstants;
+import com.fb.platform.sap.bapi.utils.SapOrderConstants;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoTable;
 
@@ -24,16 +24,16 @@ public class HeaderConditionsMapper {
 			orderConditionsIN.appendRow();
 			orderConditionsINX.appendRow();
 
-			orderConditionsIN.setValue(SapConstants.ITEM_NUMBER, SapConstants.DEFAULT_ITEM_NUMER);
-			orderConditionsINX.setValue(SapConstants.ITEM_NUMBER, SapConstants.DEFAULT_ITEM_NUMER);
+			orderConditionsIN.setValue(SapOrderConstants.ITEM_NUMBER, SapOrderConstants.DEFAULT_ITEM_NUMER);
+			orderConditionsINX.setValue(SapOrderConstants.ITEM_NUMBER, SapOrderConstants.DEFAULT_ITEM_NUMER);
 
-			orderConditionsIN.setValue(SapConstants.CONDITION_TYPE, SapConstants.DISCOUNT_CONDITION_TYPE);
-			orderConditionsINX.setValue(SapConstants.CONDITION_TYPE, SapConstants.DISCOUNT_CONDITION_TYPE);
+			orderConditionsIN.setValue(SapOrderConstants.CONDITION_TYPE, SapOrderConstants.DISCOUNT_CONDITION_TYPE);
+			orderConditionsINX.setValue(SapOrderConstants.CONDITION_TYPE, SapOrderConstants.DISCOUNT_CONDITION_TYPE);
 
-			orderConditionsIN.setValue(SapConstants.CONDITION_VALUE, discount.toString());
-			orderConditionsINX.setValue(SapConstants.CONDITION_VALUE, SapConstants.COMMIT_FLAG);
+			orderConditionsIN.setValue(SapOrderConstants.CONDITION_VALUE, discount.toString());
+			orderConditionsINX.setValue(SapOrderConstants.CONDITION_VALUE, SapOrderConstants.COMMIT_FLAG);
 
-			orderConditionsINX.setValue(SapConstants.OPERATION_FLAG, SapConstants.INSERT_FLAG);
+			orderConditionsINX.setValue(SapOrderConstants.OPERATION_FLAG, SapOrderConstants.INSERT_FLAG);
 
 		}
 	}

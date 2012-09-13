@@ -6,7 +6,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.fb.commons.mom.to.OrderHeaderTO;
 import com.fb.commons.mom.to.PaymentTO;
-import com.fb.platform.sap.bapi.table.BapiTable;
+import com.fb.platform.sap.bapi.order.table.BapiOrderTable;
 import com.fb.platform.sap.bapi.utils.SapConstants;
 import com.fb.platform.sap.bapi.utils.SapUtils;
 import com.sap.conn.jco.JCoFunction;
@@ -30,7 +30,7 @@ public class PaymentMapper {
 	
 	private static void setCardDetails(JCoFunction bapiFunction, String paymentMode,
 			OrderHeaderTO orderHeaderTO, PaymentTO paymentTO) {
-		JCoTable orderCreditCard = bapiFunction.getTableParameterList().getTable(BapiTable.ORDER_CCARD.toString());
+		JCoTable orderCreditCard = bapiFunction.getTableParameterList().getTable(BapiOrderTable.ORDER_CCARD.toString());
 		
 		orderCreditCard.appendRow();
 
@@ -69,8 +69,8 @@ public class PaymentMapper {
 	}
 	
 	private static void setCodDetails(JCoFunction bapiFunction, String paymentMode, OrderHeaderTO orderHeaderTO, PaymentTO paymentTO) {
-		JCoStructure orderHeaderIN = bapiFunction.getImportParameterList().getStructure(BapiTable.ORDER_HEADER_IN.toString());
-		JCoStructure orderHeaderINX = bapiFunction.getImportParameterList().getStructure(BapiTable.ORDER_HEADER_INX.toString());
+		JCoStructure orderHeaderIN = bapiFunction.getImportParameterList().getStructure(BapiOrderTable.ORDER_HEADER_IN.toString());
+		JCoStructure orderHeaderINX = bapiFunction.getImportParameterList().getStructure(BapiOrderTable.ORDER_HEADER_INX.toString());
 		orderHeaderIN.setValue(SapConstants.PAYMENT_TERM, SapConstants.COD_PAYMENT_TERM);
 		orderHeaderINX.setValue(SapConstants.PAYMENT_TERM, SapConstants.COMMIT_FLAG);
 
