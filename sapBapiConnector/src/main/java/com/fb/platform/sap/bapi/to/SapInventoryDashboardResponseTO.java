@@ -4,28 +4,28 @@ import java.util.Date;
 
 public class SapInventoryDashboardResponseTO {
 	
-	private int idocNumber;
+	private String idocNumber;
 	private Date creationDate;
 	private Date creationTime;
 	private String transactionCode;
 	private String article;
 	private int actualQuantity;
-	private int transferQuantity;
+	private String transferQuantity;
 	private int segmentNumber;
-	private int poNumber;
-	private int unit;
+	private String poNumber;
+	private String unit;
 	private int supplyingSite;
 	private int receivingSite;
 	private int supplyingLocation;
 	private int receivingLocation;
-	private String materialType;
+	private String movementType;
 	private String articleDocument;
 	private String cancelGR;
 	
-	public int getIdocNumber() {
+	public String getIdocNumber() {
 		return idocNumber;
 	}
-	public void setIdocNumber(int idocNumber) {
+	public void setIdocNumber(String idocNumber) {
 		this.idocNumber = idocNumber;
 	}
 	public Date getCreationDate() {
@@ -58,10 +58,10 @@ public class SapInventoryDashboardResponseTO {
 	public void setActualQuantity(int actualQuantity) {
 		this.actualQuantity = actualQuantity;
 	}
-	public int getTransferQuantity() {
+	public String getTransferQuantity() {
 		return transferQuantity;
 	}
-	public void setTransferQuantity(int transferQuantity) {
+	public void setTransferQuantity(String transferQuantity) {
 		this.transferQuantity = transferQuantity;
 	}
 	public int getSegmentNumber() {
@@ -70,16 +70,16 @@ public class SapInventoryDashboardResponseTO {
 	public void setSegmentNumber(int segmentNumber) {
 		this.segmentNumber = segmentNumber;
 	}
-	public int getPoNumber() {
+	public String getPoNumber() {
 		return poNumber;
 	}
-	public void setPoNumber(int poNumber) {
+	public void setPoNumber(String poNumber) {
 		this.poNumber = poNumber;
 	}
-	public int getUnit() {
+	public String getUnit() {
 		return unit;
 	}
-	public void setUnit(int unit) {
+	public void setUnit(String unit) {
 		this.unit = unit;
 	}
 	public int getSupplyingSite() {
@@ -106,11 +106,11 @@ public class SapInventoryDashboardResponseTO {
 	public void setReceivingLocation(int receivingLocation) {
 		this.receivingLocation = receivingLocation;
 	}
-	public String getMaterialType() {
-		return materialType;
+	public String getMovementType() {
+		return movementType;
 	}
-	public void setMaterialType(String materialType) {
-		this.materialType = materialType;
+	public void setMovementType(String movementType) {
+		this.movementType = movementType;
 	}
 	public String getArticleDocument() {
 		return articleDocument;
@@ -136,7 +136,7 @@ public class SapInventoryDashboardResponseTO {
 				+ ", supplyingSite=" + supplyingSite + ", receivingSite="
 				+ receivingSite + ", supplyingLocation=" + supplyingLocation
 				+ ", receivingLocation=" + receivingLocation
-				+ ", materialType=" + materialType + ", articleDocument="
+				+ ", movementType=" + movementType + ", articleDocument="
 				+ articleDocument + ", cancelGR=" + cancelGR + "]";
 	}
 	

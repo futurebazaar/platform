@@ -1,5 +1,7 @@
 package com.fb.platform.sap.bapi.handler.impl;
 
+import java.io.IOException;
+
 import com.fb.platform.sap.bapi.BapiConnector;
 import com.fb.platform.sap.bapi.handler.PlatformBapiHandler;
 import com.fb.platform.sap.bapi.handler.PlatformBapiHandlerFactory;
@@ -63,9 +65,12 @@ public class SapBapiHandler implements PlatformBapiHandler {
 			PointsMapper.setDetails(bapiFunction, orderRequestTO.getPricingTO(), orderRequestTO.getOrderHeaderTO().getLoyaltyCardNumber());
 			ItemConditionsMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
 			
-			orderResponseTO = OrderResponseMapper.getDetails(bapiFunction);
+			orderResponseTO = OrderResponseMapper.getDetails(bapiFunction, bapiConnector);
 			
 		} catch (JCoException e) {
+			e.printStackTrace();
+			orderResponseTO.setSapMessage(e.getMessage());
+		} catch (IOException e) {
 			e.printStackTrace();
 			orderResponseTO.setSapMessage(e.getMessage());
 		}
@@ -79,13 +84,17 @@ public class SapBapiHandler implements PlatformBapiHandler {
 		try {
 			bapiConnector.connect(environment, BapiInventoryTemplate.ZFB_INVCHECK.toString());
 			JCoFunction bapiFunction = bapiConnector.getBapiFunction();
+
 			DashboardTimeMapper.setDetails(bapiFunction, inventoryDashboardRequestTO);
 			TabArticleMapper.setDetails(bapiFunction, inventoryDashboardRequestTO);
 			TabPlantMapper.setDetails(bapiFunction, inventoryDashboardRequestTO);
-			TabResponseMapper.getDetails(bapiFunction);
+			TabResponseMapper.getDetails(bapiFunction, bapiConnector);
 			return null;
 			
 		} catch (JCoException e) {
+			e.printStackTrace();
+			return new SapInventoryDashboardResponseTO();
+		} catch (IOException e) {
 			e.printStackTrace();
 			return new SapInventoryDashboardResponseTO();
 		}

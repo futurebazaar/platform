@@ -2,7 +2,8 @@ package com.fb.platform.sap.bapi.test;
 
 import com.fb.platform.sap.bapi.BapiConnector;
 import com.fb.platform.sap.bapi.handler.impl.SapBapiHandler;
-import com.fb.platform.sap.bapi.test.inventory.TestBapiOrderTO;
+import com.fb.platform.sap.bapi.test.inventory.TestInventoryDashboardTO;
+import com.fb.platform.sap.bapi.test.order.TestBapiOrderTO;
 import com.fb.platform.sap.bapi.to.SapInventoryDashboardRequestTO;
 import com.fb.platform.sap.bapi.to.SapOrderRequestTO;
 
@@ -14,10 +15,10 @@ public class TestBapiConnector {
 		
 		//Test Order
 		SapOrderRequestTO bapiOrderTO = new TestBapiOrderTO().getBapiTO();
-		System.out.println(bh.processOrder("dev", bapiOrderTO));
+		//System.out.println(bh.processOrder("dev", bapiOrderTO));
 		
 		//Test Inventory Dashboard
-		SapInventoryDashboardRequestTO inventoryDashboardRequestTO = new SapInventoryDashboardRequestTO();
+		SapInventoryDashboardRequestTO inventoryDashboardRequestTO = new TestInventoryDashboardTO().getRequestTO();
 		System.out.println(bh.processInventoryDashboard("dev", inventoryDashboardRequestTO));
 	}
 	

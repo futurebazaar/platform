@@ -1,4 +1,4 @@
-package com.fb.platform.sap.bapi.test;
+package com.fb.platform.sap.bapi.test.order;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -11,13 +11,13 @@ import com.fb.commons.mom.to.LineItemTO;
 import com.fb.commons.mom.to.OrderHeaderTO;
 import com.fb.commons.mom.to.PaymentTO;
 import com.fb.commons.mom.to.PricingTO;
-import com.fb.platform.sap.bapi.table.TinlaOrderType;
-import com.fb.platform.sap.bapi.to.BapiTO;
+import com.fb.platform.sap.bapi.order.table.TinlaOrderType;
+import com.fb.platform.sap.bapi.to.SapOrderRequestTO;
 
-public class TestBapiTO {
+public class TestBapiOrderTO {
 	
-	public BapiTO getBapiTO() {
-		BapiTO bapiTO = new BapiTO();
+	public SapOrderRequestTO getBapiTO() {
+		SapOrderRequestTO bapiTO = new SapOrderRequestTO();
 		bapiTO.setOrderType(TinlaOrderType.NEW_ORDER);
 		bapiTO.setOrderHeaderTO(getOrderTO());
 		bapiTO.setLineItemTO(getLineItemTO());
@@ -30,18 +30,32 @@ public class TestBapiTO {
 	private List<PaymentTO> getPaymentTO() {
 		List<PaymentTO> paymentTOList = new ArrayList<PaymentTO>();
 		PaymentTO paymentTO1 = new PaymentTO();
-		paymentTO1.setAuthCode("1234");
-		paymentTO1.setBank("ICICI");
-		paymentTO1.setInstrumentNumber("123456");
-		paymentTO1.setMerchantID("1982");
-		paymentTO1.setPaymentGateway("COD");
-		paymentTO1.setPaymentMode("COD");
+		paymentTO1.setAuthCode("1");
+		paymentTO1.setBank("");
+		paymentTO1.setInstrumentNumber("");
+		paymentTO1.setMerchantID("");
+		paymentTO1.setPaymentGateway("GVFB");
+		paymentTO1.setPaymentMode("egv");
 		paymentTO1.setPaymentTime(DateTime.now());
 		paymentTO1.setPgTransactionID("223344");
 		paymentTO1.setPricingTO(getPricingTO());
 		paymentTO1.setTransactionID("5051235");
 		paymentTO1.setValidTill(DateTime.now().plusMonths(4));
 		paymentTOList.add(paymentTO1);
+		
+		PaymentTO paymentTO2 = new PaymentTO();
+		paymentTO2.setAuthCode("1234");
+		paymentTO2.setBank("ICICI");
+		paymentTO2.setInstrumentNumber("123456");
+		paymentTO2.setMerchantID("1982");
+		paymentTO2.setPaymentGateway("ICI3");
+		paymentTO2.setPaymentMode("cheque");
+		paymentTO2.setPaymentTime(DateTime.now());
+		paymentTO2.setPgTransactionID("223344");
+		paymentTO2.setPricingTO(getPricingTO());
+		paymentTO2.setTransactionID("5051235");
+		paymentTO2.setValidTill(DateTime.now().plusMonths(4));
+		paymentTOList.add(paymentTO2);
 		return paymentTOList;
 	}
 
@@ -56,7 +70,7 @@ public class TestBapiTO {
 		orderHeaderTO.setSubmittedOn(DateTime.now());
 		//orderHeaderTO.set
 		orderHeaderTO.setSalesDocType("ZATG");
-		orderHeaderTO.setReferenceID("5049999912");
+		orderHeaderTO.setReferenceID("5049999910");
 		orderHeaderTO.setReturnOrderID("6699999999");
 		orderHeaderTO.setLoyaltyCardNumber("1234123412341234");
 		orderHeaderTO.setPricingTO(getPricingTO());
@@ -69,6 +83,7 @@ public class TestBapiTO {
 		pricingTO.setCurrency("INR");
 		pricingTO.setListPrice(new BigDecimal("1200.00"));
 		pricingTO.setOfferPrice(new BigDecimal("1100.00"));
+		pricingTO.setCouponDiscount(new BigDecimal("50"));
 		pricingTO.setPayableAmount(new BigDecimal("1100.00"));
 		pricingTO.setPointsEarn(new BigDecimal("40"));
 		pricingTO.setPointsEarnValue(new BigDecimal("10"));
@@ -81,7 +96,7 @@ public class TestBapiTO {
 		lineItemTO1.setPricingTO(getPricingTO());
 		lineItemTO1.setArticleID("000000000300000560");
 		lineItemTO1.setSapDocumentId(10);
-		lineItemTO1.setQuantity(new BigDecimal("9.00"));
+		lineItemTO1.setQuantity(new BigDecimal("7.00"));
 		lineItemTO1.setDescription("TEST ARTICLE");
 		lineItemTO1.setPlantId("2786");
 		lineItemTOList.add(lineItemTO1);
