@@ -7,9 +7,14 @@ import com.fb.platform.sap.bapi.handler.PlatformBapiHandler;
 import com.fb.platform.sap.bapi.handler.PlatformBapiHandlerFactory;
 import com.fb.platform.sap.bapi.inventory.BapiInventoryTemplate;
 import com.fb.platform.sap.bapi.inventory.table.mapper.DashboardTimeMapper;
+import com.fb.platform.sap.bapi.inventory.table.mapper.InventoryStockMapper;
+import com.fb.platform.sap.bapi.inventory.table.mapper.InventoryStockResponseMapper;
 import com.fb.platform.sap.bapi.inventory.table.mapper.TabArticleMapper;
 import com.fb.platform.sap.bapi.inventory.table.mapper.TabPlantMapper;
 import com.fb.platform.sap.bapi.inventory.table.mapper.TabResponseMapper;
+import com.fb.platform.sap.bapi.lsp.BapiLspTemplate;
+import com.fb.platform.sap.bapi.lsp.table.mapper.LspAwbResponseMapper;
+import com.fb.platform.sap.bapi.lsp.table.mapper.LspAwbUpdateMapper;
 import com.fb.platform.sap.bapi.order.BapiOrderTemplate;
 import com.fb.platform.sap.bapi.order.table.TinlaOrderType;
 import com.fb.platform.sap.bapi.order.table.mapper.HeaderConditionsMapper;
@@ -26,6 +31,8 @@ import com.fb.platform.sap.bapi.to.SapInventoryDashboardRequestTO;
 import com.fb.platform.sap.bapi.to.SapInventoryDashboardResponseTO;
 import com.fb.platform.sap.bapi.to.SapInventoryLevelRequestTO;
 import com.fb.platform.sap.bapi.to.SapInventoryLevelResponseTO;
+import com.fb.platform.sap.bapi.to.SapLspAwbUpdateRequestTO;
+import com.fb.platform.sap.bapi.to.SapLspAwbUpdateResponseTO;
 import com.fb.platform.sap.bapi.to.SapOrderRequestTO;
 import com.fb.platform.sap.bapi.to.SapOrderResponseTO;
 import com.sap.conn.jco.JCoException;
@@ -101,6 +108,33 @@ public class SapBapiHandler implements PlatformBapiHandler {
 
 	@Override
 	public SapInventoryLevelResponseTO processInventoryLevel(String environment, SapInventoryLevelRequestTO inventoryLevelRequestTO) {
+		try {
+			bapiConnector.connect(environment, BapiInventoryTemplate.ZBAPI_FM_TINLASTKQTY.toString());
+			JCoFunction bapiFunction = bapiConnector.getBapiFunction();
+			InventoryStockMapper.setDetails(bapiFunction, inventoryLevelRequestTO);
+			return InventoryStockResponseMapper.getDetails(bapiFunction, bapiConnector);
+			
+		} catch (JCoException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@Override
+	public SapLspAwbUpdateResponseTO processLspAwbUpdate(String environment, SapLspAwbUpdateRequestTO lspAwbUpdateRequestTO) {
+		try {
+			bapiConnector.connect(environment, BapiLspTemplate.ZFB_DELV_UPDT_AWB.toString());
+			JCoFunction bapiFunction = bapiConnector.getBapiFunction();
+			LspAwbUpdateMapper.setDetails(bapiFunction, lspAwbUpdateRequestTO);
+			return LspAwbResponseMapper.getDetails(bapiFunction, bapiConnector);
+			
+		} catch (JCoException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 	

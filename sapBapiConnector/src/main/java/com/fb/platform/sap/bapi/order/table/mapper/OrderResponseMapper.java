@@ -3,6 +3,7 @@ package com.fb.platform.sap.bapi.order.table.mapper;
 import com.fb.platform.sap.bapi.BapiConnector;
 import com.fb.platform.sap.bapi.order.table.BapiOrderTable;
 import com.fb.platform.sap.bapi.to.SapOrderResponseTO;
+import com.fb.platform.sap.bapi.utils.SapConstants;
 import com.fb.platform.sap.bapi.utils.SapOrderConstants;
 import com.fb.platform.sap.bapi.utils.SapResponseStatus;
 import com.sap.conn.jco.JCoException;
@@ -15,12 +16,12 @@ public class OrderResponseMapper {
 		SapOrderResponseTO orderResponseTO = new SapOrderResponseTO();
 		bapiFunction.execute(bapiConnector.getBapiDestination());
 		JCoTable jcoResponse = bapiFunction.getTableParameterList().getTable(BapiOrderTable.RETURN.toString());
-
+		bapiFunction.getImportParameterList().setValue("", "");
 		String message = "";
 		SapResponseStatus status = SapResponseStatus.FAILURE;
 		for (int i = 0; i < jcoResponse.getNumRows(); i++) {
 			jcoResponse.setRow(i);
-			String type = jcoResponse.getValue("TYPE").toString();
+			String type = jcoResponse.getValue(SapConstants.TYPE).toString();
 			if (type.equals(SapOrderConstants.SUCCESS_FLAG)) {
 				status = SapResponseStatus.SUCCESS;
 			}
@@ -31,7 +32,7 @@ public class OrderResponseMapper {
 				status = SapResponseStatus.WARNING;
 			}
 			
-			String typeMessage =  jcoResponse.getValue("MESSAGE").toString();
+			String typeMessage =  jcoResponse.getValue(SapConstants.MESSAGE).toString();
 			if (!(type.equals(SapOrderConstants.SUCCESS_FLAG) && typeMessage.startsWith("SALES"))) {
 				message += "ID: " + jcoResponse.getValue("ID").toString() + " || ";
 				message += "TYPE: " + type + " || ";
