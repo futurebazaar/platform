@@ -190,7 +190,7 @@ public class PointsServiceImpl implements PointsService {
 						applied = true;
 					}
 				}
-				if (!rule.allowNext() && applied) {
+				if (!rule.allowNext(orderRequest, null) && applied) {
 					break;
 				}
 			}
@@ -206,7 +206,7 @@ public class PointsServiceImpl implements PointsService {
 					orderRequest.setTxnPoints(rule.execute(orderRequest, null));
 				}
 			}
-			if (!rule.allowNext()) {
+			if (!rule.allowNext(orderRequest, null)) {
 				break;
 			}
 		}
