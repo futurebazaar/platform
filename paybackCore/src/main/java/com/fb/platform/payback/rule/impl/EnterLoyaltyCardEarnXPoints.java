@@ -14,14 +14,14 @@ import com.fb.platform.payback.to.OrderItemRequest;
 import com.fb.platform.payback.to.OrderRequest;
 import com.fb.platform.payback.util.PointsUtil;
 
-public class EnterLoyaltyCardEarnXPoints implements PointsRule {
+public class EnterLoyaltyCardEarnXPoints implements PointsRule  {
 	private BigDecimal earnRatio;
 	private PointsUtil pointsUtil;
 	private List<Long> excludedCategoryList = new ArrayList<Long>();
 	private DateTime validFrom;
 	private DateTime validTill;
 	
-	private boolean isNextRuleApplicable = true;
+	//private boolean isNextRuleApplicable = true;
 
 	
 	@Override
@@ -48,13 +48,14 @@ public class EnterLoyaltyCardEarnXPoints implements PointsRule {
 
 	@Override
 	public boolean isApplicable(OrderRequest request, OrderItemRequest itemRequest) {
-		if(request.getTxnTimestamp().toDate().compareTo(validFrom.toDate()) <0 || request.getTxnTimestamp().toDate().compareTo(validTill.toDate()) > 0){
-			this.isNextRuleApplicable = false;
-		}
-		if (this.excludedCategoryList != null && !this.excludedCategoryList.isEmpty() && excludedCategoryList.contains(itemRequest.getCategoryId())){
+		if (request.getTxnTimestamp().toDate().compareTo(validFrom.toDate()) <0 || request.getTxnTimestamp().toDate().compareTo(validTill.toDate()) > 0) {
+			//this.isNextRuleApplicable = false;
 			return false;
 		}
-		return isNextRuleApplicable;
+		if (this.excludedCategoryList != null && !this.excludedCategoryList.isEmpty() && excludedCategoryList.contains(itemRequest.getCategoryId())) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -63,8 +64,12 @@ public class EnterLoyaltyCardEarnXPoints implements PointsRule {
 	}
 
 	@Override
-	public boolean allowNext() {
-		return isNextRuleApplicable;
+	public boolean allowNext(OrderRequest request, OrderItemRequest itemRequest) {
+		if (request.getTxnTimestamp().toDate().compareTo(validFrom.toDate()) <0 || request.getTxnTimestamp().toDate().compareTo(validTill.toDate()) > 0) {
+			//this.isNextRuleApplicable = false;
+			return false;
+		}
+		return true;
 	}
 
 }
