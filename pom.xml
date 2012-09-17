@@ -153,6 +153,14 @@
         </snapshots> 
     </repository> 
 
+    <repository> 
+        <id>jboss-deprecated</id> 
+        <url>https://repository.jboss.org/nexus/content/repositories/deprecated</url> 
+        <snapshots> 
+            <enabled>false</enabled> 
+        </snapshots> 
+    </repository> 
+
 </repositories>
 
 <!-- download plugins from this repo -->
