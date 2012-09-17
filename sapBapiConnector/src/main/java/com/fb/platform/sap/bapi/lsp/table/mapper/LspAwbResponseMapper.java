@@ -1,9 +1,9 @@
 package com.fb.platform.sap.bapi.lsp.table.mapper;
 
 import com.fb.platform.sap.bapi.BapiConnector;
+import com.fb.platform.sap.bapi.commons.SapConstants;
 import com.fb.platform.sap.bapi.lsp.table.BapiLspTable;
 import com.fb.platform.sap.bapi.to.SapLspAwbUpdateResponseTO;
-import com.fb.platform.sap.bapi.utils.SapConstants;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoTable;

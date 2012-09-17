@@ -1,11 +1,11 @@
 package com.fb.platform.sap.bapi.order.table.mapper;
 
 import com.fb.platform.sap.bapi.BapiConnector;
+import com.fb.platform.sap.bapi.commons.SapConstants;
+import com.fb.platform.sap.bapi.commons.SapOrderConstants;
+import com.fb.platform.sap.bapi.commons.SapResponseStatus;
 import com.fb.platform.sap.bapi.order.table.BapiOrderTable;
 import com.fb.platform.sap.bapi.to.SapOrderResponseTO;
-import com.fb.platform.sap.bapi.utils.SapConstants;
-import com.fb.platform.sap.bapi.utils.SapOrderConstants;
-import com.fb.platform.sap.bapi.utils.SapResponseStatus;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoTable;

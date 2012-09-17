@@ -1,5 +1,7 @@
 package com.fb.platform.sap.bapi.handler;
 
+import java.util.List;
+
 import com.fb.platform.sap.bapi.to.SapInventoryDashboardRequestTO;
 import com.fb.platform.sap.bapi.to.SapInventoryDashboardResponseTO;
 import com.fb.platform.sap.bapi.to.SapInventoryLevelRequestTO;
@@ -13,7 +15,7 @@ public interface PlatformBapiHandler {
 	
 	public SapOrderResponseTO processOrder(String environment, SapOrderRequestTO orderRequestTO);
 	
-	public SapInventoryDashboardResponseTO processInventoryDashboard(String environment, SapInventoryDashboardRequestTO inventoryDashboardRequestTO);
+	public List<SapInventoryDashboardResponseTO> processInventoryDashboard(String environment, SapInventoryDashboardRequestTO inventoryDashboardRequestTO);
 	
 	public SapInventoryLevelResponseTO processInventoryLevel(String environment, SapInventoryLevelRequestTO inventoryLevelRequestTO);
 	

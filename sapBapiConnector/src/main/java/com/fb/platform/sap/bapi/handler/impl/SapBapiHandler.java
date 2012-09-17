@@ -1,10 +1,14 @@
 package com.fb.platform.sap.bapi.handler.impl;
 
 import java.io.IOException;
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.fb.platform.sap.bapi.BapiConnector;
+import com.fb.platform.sap.bapi.factory.PlatformBapiHandlerFactory;
 import com.fb.platform.sap.bapi.handler.PlatformBapiHandler;
-import com.fb.platform.sap.bapi.handler.PlatformBapiHandlerFactory;
 import com.fb.platform.sap.bapi.inventory.BapiInventoryTemplate;
 import com.fb.platform.sap.bapi.inventory.table.mapper.DashboardTimeMapper;
 import com.fb.platform.sap.bapi.inventory.table.mapper.InventoryStockMapper;
@@ -40,19 +44,19 @@ import com.sap.conn.jco.JCoFunction;
 
 public class SapBapiHandler implements PlatformBapiHandler {
 	
+	private static Log logger = LogFactory.getLog(SapBapiHandler.class);
 	private BapiConnector bapiConnector;
     
 	@Override
     public synchronized SapOrderResponseTO processOrder(String environment, SapOrderRequestTO orderRequestTO) {
+		logger.info("Environment : " + environment + " Order Request : " + orderRequestTO);
 		SapOrderResponseTO orderResponseTO = new SapOrderResponseTO();
     	try {
     		TinlaOrderType orderType = orderRequestTO.getOrderType();
-    		
-    		BapiOrderTemplate template = PlatformBapiHandlerFactory.getTemplate(orderType);
-    		
+    		BapiOrderTemplate template = PlatformBapiHandlerFactory.getTemplate(orderType, orderRequestTO.getOrderHeaderTO().getClient());
 			bapiConnector.connect(environment, template.toString());
+			logger.info("Connected Bapi template : " + template + "for orderType : " + orderType); 
 			JCoFunction bapiFunction = bapiConnector.getBapiFunction();
-			
 			if (orderType.equals(TinlaOrderType.RET_ORDER)) {
 				HeaderMapper.setReturnDetails(bapiFunction,  orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
 				ItemMapper.setReturnItemDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
@@ -61,83 +65,78 @@ public class SapBapiHandler implements PlatformBapiHandler {
 				HeaderConditionsMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderType);
 				ItemMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
 				ItemScheduleMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
-				
 				if (orderType.equals(TinlaOrderType.NEW_ORDER)) {
 					HeaderPartnerMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getAddressTO(), orderType);
 					PaymentMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getPaymentTO());
 					ItemPartnerMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getAddressTO(), orderRequestTO.getLineItemTO());
 				}
 			}
-			
 			PointsMapper.setDetails(bapiFunction, orderRequestTO.getPricingTO(), orderRequestTO.getOrderHeaderTO().getLoyaltyCardNumber());
 			ItemConditionsMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
-			
 			orderResponseTO = OrderResponseMapper.getDetails(bapiFunction, bapiConnector);
-			
 		} catch (JCoException e) {
-			e.printStackTrace();
+			logger.error("Environment : " + environment + " Failed to connet Order Bapi  for request : " + orderRequestTO, e);
 			orderResponseTO.setSapMessage(e.getMessage());
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Environment : " + environment + " Failed to connet Order Bapi  for request : " + orderRequestTO, e);
 			orderResponseTO.setSapMessage(e.getMessage());
 		}
     	orderResponseTO.setOrderID(orderRequestTO.getOrderHeaderTO().getReferenceID());
 		orderResponseTO.setType(orderRequestTO.getOrderType().toString());
+		logger.info("Response for order Request : " + orderRequestTO + " is : " + orderResponseTO);
     	return orderResponseTO;
     }
 	
 	@Override
-	public SapInventoryDashboardResponseTO processInventoryDashboard(String environment, SapInventoryDashboardRequestTO inventoryDashboardRequestTO) {
+	public List<SapInventoryDashboardResponseTO> processInventoryDashboard(String environment, SapInventoryDashboardRequestTO inventoryDashboardRequestTO) {
+		logger.info("Environment : " + environment + " Inventory Dashboard Request : " + inventoryDashboardRequestTO);
 		try {
 			bapiConnector.connect(environment, BapiInventoryTemplate.ZFB_INVCHECK.toString());
 			JCoFunction bapiFunction = bapiConnector.getBapiFunction();
 			DashboardTimeMapper.setDetails(bapiFunction, inventoryDashboardRequestTO);
 			TabArticleMapper.setDetails(bapiFunction, inventoryDashboardRequestTO);
 			TabPlantMapper.setDetails(bapiFunction, inventoryDashboardRequestTO);
-			TabResponseMapper.getDetails(bapiFunction, bapiConnector);
-			return null;
-			
+			return TabResponseMapper.getDetails(bapiFunction, bapiConnector);
 		} catch (JCoException e) {
-			e.printStackTrace();
-			return new SapInventoryDashboardResponseTO();
+			logger.error("Environment : " + environment + " Failed to connet Bapi Dashboard for request " + inventoryDashboardRequestTO, e);
 		} catch (IOException e) {
-			e.printStackTrace();
-			return new SapInventoryDashboardResponseTO();
+			logger.error("Environment : " + environment + " Failed to connet Bapi Dashboard for request " + inventoryDashboardRequestTO, e);
 		}
+		return null;
 	}
-
+	
 	@Override
 	public SapInventoryLevelResponseTO processInventoryLevel(String environment, SapInventoryLevelRequestTO inventoryLevelRequestTO) {
+		logger.info("Environment : " + environment + " Inventory Level Request : " + inventoryLevelRequestTO);
 		try {
 			bapiConnector.connect(environment, BapiInventoryTemplate.ZBAPI_FM_TINLASTKQTY.toString());
 			JCoFunction bapiFunction = bapiConnector.getBapiFunction();
 			InventoryStockMapper.setDetails(bapiFunction, inventoryLevelRequestTO);
 			return InventoryStockResponseMapper.getDetails(bapiFunction, bapiConnector);
-			
 		} catch (JCoException e) {
-			e.printStackTrace();
+			logger.error("Environment : " + environment + " Failed to connet Bapi Inventory Stock for request: " + inventoryLevelRequestTO, e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Environment : " + environment + " Failed to connet Bapi Inventory Stock for request: " + inventoryLevelRequestTO, e);
 		}
 		return null;
 	}
 	
 	@Override
 	public SapLspAwbUpdateResponseTO processLspAwbUpdate(String environment, SapLspAwbUpdateRequestTO lspAwbUpdateRequestTO) {
+		logger.info("Environment : " + environment + " Awb Update Request : " + lspAwbUpdateRequestTO);
 		try {
 			bapiConnector.connect(environment, BapiLspTemplate.ZFB_DELV_UPDT_AWB.toString());
 			JCoFunction bapiFunction = bapiConnector.getBapiFunction();
 			LspAwbUpdateMapper.setDetails(bapiFunction, lspAwbUpdateRequestTO);
 			return LspAwbResponseMapper.getDetails(bapiFunction, bapiConnector);
-			
 		} catch (JCoException e) {
-			e.printStackTrace();
+			logger.error("Environment : " + environment + " Failed to connet Bapi Awb Update for request: " + lspAwbUpdateRequestTO, e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Environment : " + environment + " Failed to connet Bapi Awb Update for request  " + lspAwbUpdateRequestTO, e);
 		}
 		return null;
 	}
-	
+
 	public void setBapiConnector(BapiConnector bapiConnector) {
 		this.bapiConnector = bapiConnector;
 	}

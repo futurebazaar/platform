@@ -1,8 +1,8 @@
 package com.fb.platform.sap.bapi.inventory.table.mapper;
 
 import com.fb.platform.sap.bapi.BapiConnector;
+import com.fb.platform.sap.bapi.commons.SapInventoryConstants;
 import com.fb.platform.sap.bapi.to.SapInventoryLevelResponseTO;
-import com.fb.platform.sap.bapi.utils.SapInventoryConstants;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
 

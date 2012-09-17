@@ -1,8 +1,8 @@
 package com.fb.platform.sap.bapi.inventory.table.mapper;
 
+import com.fb.platform.sap.bapi.commons.SapInventoryConstants;
+import com.fb.platform.sap.bapi.commons.SapOrderConstants;
 import com.fb.platform.sap.bapi.to.SapInventoryLevelRequestTO;
-import com.fb.platform.sap.bapi.utils.SapInventoryConstants;
-import com.fb.platform.sap.bapi.utils.SapOrderConstants;
 import com.sap.conn.jco.JCoFunction;
 
 public class InventoryStockMapper {

@@ -1,6 +1,6 @@
 package com.fb.platform.sap.bapi.to;
 
-import com.fb.platform.sap.bapi.utils.SapResponseStatus;
+import com.fb.platform.sap.bapi.commons.SapResponseStatus;
 
 public class SapOrderResponseTO {
 	
