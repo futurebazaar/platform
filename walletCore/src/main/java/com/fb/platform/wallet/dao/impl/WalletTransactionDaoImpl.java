@@ -569,8 +569,10 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 	private void debitWalletRefund(long walletId,WalletSubTransaction walletSubTransaction) {
 		Money amountToDebit = walletSubTransaction.getAmount();
 		List<WalletRefundCredit> walletRefundCredits = null;
+		boolean debitTransaction = true;
 		if(walletSubTransaction.getRefundId() > 0){
 			walletRefundCredits = jdbcTemplate.query(GET_WALLETREFUNDCREDIT_BY_WALLETID_REFUNDID, new Object[] {walletId,walletSubTransaction.getRefundId()},new WalletRefundCreditMapper());
+			debitTransaction = false;
 		}else{
 			walletRefundCredits = jdbcTemplate.query(GET_WALLET_REFUND_CREDIT_WALLET_ID, new Object[] {walletId},new WalletRefundCreditMapper());
 		}
@@ -578,12 +580,16 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 			if(walletRefundCredit.getAmountRemaining().gt(amountToDebit)){
 				insertWalletRefundDebit(walletId,walletSubTransaction,amountToDebit,walletRefundCredit.getId());
 				updateWalletRefundCredit(walletRefundCredit.getId(), walletRefundCredit.getAmountRemaining().minus(amountToDebit));
-				updatePaymetRefund(walletSubTransaction.getRefundId(), walletRefundCredit.getAmountRemaining().minus(amountToDebit) ,"wallet");
+				if(debitTransaction){
+					updatePaymetRefund(walletSubTransaction.getRefundId(), walletRefundCredit.getAmountRemaining().minus(amountToDebit) ,"wallet");
+				}
 				amountToDebit = amountToDebit.minus(amountToDebit);
 			}else{
 				insertWalletRefundDebit(walletId,walletSubTransaction,walletRefundCredit.getAmountRemaining(),walletRefundCredit.getId());
 				updateWalletRefundCredit(walletRefundCredit.getId(),new Money(new BigDecimal("0.00")));
-				updatePaymetRefund(walletSubTransaction.getRefundId(), new Money(new BigDecimal("0.00")) ,"closed");
+				if(debitTransaction){
+					updatePaymetRefund(walletSubTransaction.getRefundId(), new Money(new BigDecimal("0.00")) ,"closed");
+				}
 				amountToDebit = amountToDebit.minus(walletRefundCredit.getAmountRemaining());
 			}
 			if(amountToDebit.lteq(new Money(new BigDecimal("0.00")))){
@@ -602,8 +608,7 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 	}
 	
 	private void updatePaymetRefund(long refundId, Money amount , String status) {
-		//this is goving an lock sql exception will need to check this
-		//jdbcTemplate.update(UPDATE_PAYMENT_REFUNDS,new Object[] {amount.getAmount(),status,refundId});		
+		jdbcTemplate.update(UPDATE_PAYMENT_REFUNDS,new Object[] {amount.getAmount(),status,refundId});		
 	}
 	@Override
 	public List<WalletGifts> getWalletGifts(long walletId){
