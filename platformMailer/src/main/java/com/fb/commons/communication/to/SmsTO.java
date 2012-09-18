@@ -34,8 +34,11 @@ public class SmsTO {
 	
 	public String toListAsString() {
 		StringBuilder toListString = new StringBuilder();
-		for(String s : toList) {
-			toListString.append(s + ";");
+		for (int i = 0 ; i < toList.size() ; i++){
+			toListString.append(toList.get(i));
+			if(i>0){
+				toListString.append(";");
+			}
 		}
 		return toListString.toString();
 	}
