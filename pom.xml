@@ -373,8 +373,6 @@
     	<module>platformCaching</module>
     	<module>catalogCommons</module>
         <module>catalogCore</module>
-    	<module>orderCore</module>
-        <module>orderWS</module>
         <module>userCore</module>
         <module>userWS</module>
         <module>authenticationCore</module>
