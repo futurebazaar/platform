@@ -581,14 +581,14 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 				insertWalletRefundDebit(walletId,walletSubTransaction,amountToDebit,walletRefundCredit.getId());
 				updateWalletRefundCredit(walletRefundCredit.getId(), walletRefundCredit.getAmountRemaining().minus(amountToDebit));
 				if(debitTransaction){
-					updatePaymetRefund(walletSubTransaction.getRefundId(), walletRefundCredit.getAmountRemaining().minus(amountToDebit) ,"wallet");
+					updatePaymetRefund(walletRefundCredit.getRefundId(), walletRefundCredit.getAmountRemaining().minus(amountToDebit) ,"wallet");
 				}
 				amountToDebit = amountToDebit.minus(amountToDebit);
 			}else{
 				insertWalletRefundDebit(walletId,walletSubTransaction,walletRefundCredit.getAmountRemaining(),walletRefundCredit.getId());
 				updateWalletRefundCredit(walletRefundCredit.getId(),new Money(new BigDecimal("0.00")));
 				if(debitTransaction){
-					updatePaymetRefund(walletSubTransaction.getRefundId(), new Money(new BigDecimal("0.00")) ,"closed");
+					updatePaymetRefund(walletRefundCredit.getRefundId(), new Money(new BigDecimal("0.00")) ,"closed");
 				}
 				amountToDebit = amountToDebit.minus(walletRefundCredit.getAmountRemaining());
 			}
@@ -653,6 +653,9 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 		}
 		public Money getAmountRemaining() {
 			return amountRemaining;
+		}
+		public int getRefundId() {
+			return refundId;
 		}
 		
 	}
