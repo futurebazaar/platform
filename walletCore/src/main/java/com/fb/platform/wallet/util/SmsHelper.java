@@ -34,7 +34,15 @@ public class SmsHelper {
 	 */
 	public static SmsTO createSmsTO(String mobileNum, String eWalletPassword,String receiverName) throws MailException{
 		SmsTO smsTo = new SmsTO();
-		smsTo.addTo(mobileNum);
+		if(mobileNum.length() == 11 && mobileNum.substring(0,1)== "0"){
+			mobileNum = mobileNum.substring(0);
+		}
+		if(mobileNum.length() == 10){
+			smsTo.addTo("91" + mobileNum);
+		}else{
+			smsTo.addTo(mobileNum);
+		}
+		
 		
 		//Set message using template		
 		String message = SMS_TEMPLATE_STR.replaceAll(EWALLET_PASSWORD_SMS_TEMPLATE_STR, eWalletPassword)
