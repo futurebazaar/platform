@@ -17,6 +17,10 @@
 		<property name="jdbcTemplate" ref="jdbcTemplate"/>
 	</bean>
 
+	<bean id="dcDao" class="com.fb.platform.ifs.dao.lsp.impl.DCDaoJdbcImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
+	
    <!-- Add new DAOs here -->
 
 </beans>

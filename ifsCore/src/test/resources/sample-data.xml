@@ -29,6 +29,7 @@
 			<column>name</column>
 			<column>cod_flag</column>
 			<column>client_id</column>
+			<column>seller_id</column>
 			<column>address</column>
 	
 			<row> 
@@ -37,6 +38,7 @@
 			<value description="name">fecil-cdc-kolkata-maniktola road</value>
 			<value description="cod_flag">1</value>
 			<value description="client_id">5</value>
+			<value description="seller_id">87</value>
 			<value description="address">maa amba tower, nh-2 delhi road, chakundi, dankuni, hooghly, west bengal , kolkata - 712310</value>
 			</row> 
 	
@@ -46,6 +48,7 @@
 			<value description="name">fecil cdc mumbai(ray road)</value>
 			<value description="cod_flag">1</value>
 			<value description="client_id">5</value>
+			<value description="seller_id">87</value>
 			<value description="address">c/o dharambir manoharlal, 1, quay street, darukhana,mazagaon</value>
 			</row> 
 	
@@ -297,6 +300,24 @@
 		<value description="threshold">1.00</value>
 		<value description="stock_adjustment">2.00</value>
 		<value description="bookings_adjustment">1.00</value>
+		<null />
+		<value description="is_active">1</value>
+		<null />
+		</row>
+		<row>
+		<value description="id">3</value>
+		<value description="rate_chart_id">67437</value>
+		<value description="dc_id">90</value>
+		<value description="type">physical</value>
+		<value description="stock">10.00</value>
+		<value description="starts_on">1111-01-01 00:00:00</value>
+		<value description="ends_on">9999-12-31 00:00:00</value>
+		<null />
+		<value description="bookings">0.00</value>
+		<value description="outward">0.00</value>
+		<value description="threshold">0.00</value>
+		<value description="stock_adjustment">0.00</value>
+		<value description="bookings_adjustment">0.00</value>
 		<null />
 		<value description="is_active">1</value>
 		<null />
