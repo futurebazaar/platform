@@ -26,7 +26,6 @@ public class SmsSender {
 	public static String SMS_USERNAME_STR = "username";
 	public static String SMS_TEXT_STR = "text";
 	public static String SMS_TO_STR = "to";
-	public static String SMS_BCC_STR = "bcc";
 	public static String SMS_SENDER_ID_STR = "senderid";
 
 	public static String SMS_API_URL = "SMS_API_URL";
@@ -60,7 +59,6 @@ public class SmsSender {
 			queryParams.add(SMS_USERNAME_STR, SMSPropertiesUtil.getProperty(SMS_USERNAME_STR));
 			queryParams.add(SMS_TEXT_STR, smsTO.getMessage());
 			queryParams.add(SMS_TO_STR, smsTO.toListAsString());
-			queryParams.add(SMS_BCC_STR, smsTO.getBcc());
 			queryParams.add(SMS_SENDER_ID_STR, SMSPropertiesUtil.getProperty(SMS_SENDER_ID_STR));
 
 			ClientResponse response = webResource.queryParams(queryParams).accept("application/xml")
