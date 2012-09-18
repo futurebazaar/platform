@@ -83,6 +83,20 @@
 				<value name="created_on">2012-04-30 00:00:00</value>
 				<value name="last_modified_on">2012-04-30 00:00:00</value>
         </row>
+        <row>
+        		<value name="id">-1005</value>
+				<value name="number">-12345678902</value>
+				<value name="pin">sha1$d4e60$8315909744c42b46c93d6311bdf806c1b6c80099</value>
+				<value name="email">try1@gmail.com</value>
+				<value name="amount">1000</value>
+				<value name="user_id">-1</value>
+				<value name="order_item_id">-5</value>
+				<value name="status">CONFIRMED</value>
+				<value name="valid_from">2012-05-28 00:00:00</value>
+				<value name="valid_till">2013-07-31 00:00:00</value>
+				<value name="created_on">2012-04-30 00:00:00</value>
+				<value name="last_modified_on">2012-04-30 00:00:00</value>
+        </row>
         </table>
                 <table name="gift_voucher_usage">
                 <column>id</column>

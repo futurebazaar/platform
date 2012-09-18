@@ -39,6 +39,7 @@
   <xs:element name="email" type="xs:string"/>
   <xs:element name="mobile" type="xs:string"/>
   <xs:element name="number" type="xs:long"/>
+  <xs:element name="pin" type="xs:string"/>
   <xs:element name="validTill" type="xs:dateTime"/>
   <xs:element name="validFrom" type="xs:dateTime"/>
   <xs:element name="orderItemId" type="xs:int"/>
@@ -96,10 +97,11 @@
     <xs:restriction base="xs:string">
       <xs:enumeration value="SUCCESS"/>
       <xs:enumeration value="NO_SESSION"/>
-      <xs:enumeration value="INVALID_AMOUNT"/>
       <xs:enumeration value="UNABLE_TO_CREATE_ERROR"/>
       <xs:enumeration value="USER_NOT_AUTHORIZED"/>
       <xs:enumeration value="INTERNAL_ERROR"/>
+      <xs:enumeration value="SMS_SEND_FAILURE"/>
+      <xs:enumeration value="EMAIL_SEND_FAILURE"/>
     </xs:restriction>
   </xs:simpleType>
 
@@ -144,20 +146,26 @@
 	    <xs:complexType>
 	      <xs:sequence>
 	        <xs:element ref="egv:sessionToken"/>
-	        <xs:element ref="egv:giftVoucherNumber"/>
-	        <xs:element ref="egv:amount"/>
+	        <xs:element ref="egv:giftVoucherDetails" maxOccurs="unbounded"/>
 	        <xs:element ref="egv:orderId"/>
 	      </xs:sequence>
 	    </xs:complexType>
   	</xs:element>
 
+  <xs:element name="giftVoucherDetails">
+    <xs:complexType>
+      <xs:sequence>
+      	<xs:element ref="egv:giftVoucherNumber"/>
+	    <xs:element ref="egv:amount"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+      
   <xs:element name="useResponse">
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="egv:sessionToken"/>
         <xs:element ref="egv:useResponseStatus"/>
-        <xs:element ref="egv:number"/>
-        <xs:element ref="egv:amount"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -315,6 +323,41 @@
     <xs:element name="sendPinResponseStatus" type="egv:sendPinResponseStatusEnum"/>
   
   <xs:simpleType name="sendPinResponseStatusEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SUCCESS"/>
+      <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INVALID_GIFT_VOUCHER_NUMBER"/>
+      <xs:enumeration value="USER_NOT_AUTHORIZED"/>
+      <xs:enumeration value="SMS_SEND_FAILURE"/>
+      <xs:enumeration value="EMAIL_SEND_FAILURE"/>
+      <xs:enumeration value="INTERNAL_ERROR"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  	
+  <xs:element name="getPinRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="egv:sessionToken"/>
+        <xs:element ref="egv:giftVoucherNumber"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="getPinResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="egv:sessionToken"/>
+        <xs:element ref="egv:sendPinResponseStatus"/>
+        <xs:element ref="egv:number"/>
+        <xs:element ref="egv:pin"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+    <xs:element name="getPinResponseStatus" type="egv:getPinResponseStatusEnum"/>
+  
+  <xs:simpleType name="getPinResponseStatusEnum">
     <xs:restriction base="xs:string">
       <xs:enumeration value="SUCCESS"/>
       <xs:enumeration value="NO_SESSION"/>

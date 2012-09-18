@@ -65,4 +65,7 @@ public interface GiftVoucherService {
 	public void sendGiftVoucherPin(long giftVoucherNumber, String email, String mobile, String senderName,
 			String receiverName, String giftMessage);
 
+	@Transactional(propagation = Propagation.REQUIRED)
+	public String getGiftVoucherPin(long giftVoucherNumber);
+
 }

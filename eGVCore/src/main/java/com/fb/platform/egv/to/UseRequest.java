@@ -4,42 +4,48 @@
 package com.fb.platform.egv.to;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 
 /**
  * @author keith
- *
+ * 
  */
-public class UseRequest implements GiftVoucherRequest{
+public class UseRequest implements GiftVoucherRequest {
 
 	private String sessionToken;
-	private long giftVoucherNumber;
-	private BigDecimal amount;
+	private HashMap<Long, BigDecimal> giftVoucherDetails;
 	private int orderId;
-	
+
+	public UseRequest() {
+		giftVoucherDetails = new HashMap<Long, BigDecimal>();
+	}
+
 	public String getSessionToken() {
 		return sessionToken;
 	}
+
 	public void setSessionToken(String sessionToken) {
 		this.sessionToken = sessionToken;
 	}
-	public long getGiftVoucherNumber() {
-		return giftVoucherNumber;
-	}
-	public void setGiftVoucherNumber(long giftVoucherNumber) {
-		this.giftVoucherNumber = giftVoucherNumber;
-	}
-	public BigDecimal getAmount() {
-		return amount;
-	}
-	public void setAmount(BigDecimal amount) {
-		this.amount = amount;
-	}
+
 	public int getOrderId() {
 		return orderId;
 	}
+
 	public void setOrderId(int orderId) {
 		this.orderId = orderId;
 	}
-	
-	
+
+	public HashMap<Long, BigDecimal> getGiftVoucherDetails() {
+		return giftVoucherDetails;
+	}
+
+	public void setGiftVoucherDetails(HashMap<Long, BigDecimal> giftVoucherDetails) {
+		this.giftVoucherDetails = giftVoucherDetails;
+	}
+
+	public void addGiftVoucherDetails(long gvNumber, BigDecimal amount) {
+		this.giftVoucherDetails.put(Long.valueOf(gvNumber), amount);
+	}
+
 }

@@ -12,43 +12,46 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.transform.stream.StreamSource;
 
+import com.fb.platform.egv._1_0.GiftVoucherDetails;
 import com.fb.platform.egv.resource.GiftVoucherResource;
-
 
 /**
  * @author keith
- *
+ * 
  */
 public class UseMapper {
-	
-	public static com.fb.platform.egv.to.UseRequest xmlToCoreRequest(String webRequestXml)  throws JAXBException {
+
+	public static com.fb.platform.egv.to.UseRequest xmlToCoreRequest(String webRequestXml) throws JAXBException {
 		com.fb.platform.egv.to.UseRequest coreRequest = new com.fb.platform.egv.to.UseRequest();
-		try{
+		try {
 			Unmarshaller unmarshaller = GiftVoucherResource.getContext().createUnmarshaller();
 
-			com.fb.platform.egv._1_0.UseRequest webRequest = (com.fb.platform.egv._1_0.UseRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(webRequestXml)));
+			com.fb.platform.egv._1_0.UseRequest webRequest = (com.fb.platform.egv._1_0.UseRequest) unmarshaller
+					.unmarshal(new StreamSource(new StringReader(webRequestXml)));
 
 			// Mapping Code
 			coreRequest.setSessionToken(webRequest.getSessionToken());
-			coreRequest.setGiftVoucherNumber(webRequest.getGiftVoucherNumber());
-			coreRequest.setAmount(webRequest.getAmount());
+			// coreRequest.setGiftVoucherNumber(webRequest.getGiftVoucherNumber());
+			// coreRequest.setAmount(webRequest.getAmount());
+			for (GiftVoucherDetails gv : webRequest.getGiftVoucherDetails()) {
+				coreRequest.addGiftVoucherDetails(gv.getGiftVoucherNumber(), gv.getAmount());
+			}
 			coreRequest.setOrderId(webRequest.getOrderId());
 
-		}catch (JAXBException e) {
+		} catch (JAXBException e) {
 			// TODO: handle exception
 		}
 		return coreRequest;
 	}
-			
-	public static String coreResponseToXml(com.fb.platform.egv.to.UseResponse coreResponse) throws JAXBException,DatatypeConfigurationException{
-			
+	public static String coreResponseToXml(com.fb.platform.egv.to.UseResponse coreResponse) throws JAXBException,
+			DatatypeConfigurationException {
+
 		com.fb.platform.egv._1_0.UseResponse webResponse = new com.fb.platform.egv._1_0.UseResponse();
-		
+
 		// Mapping Code
-		webResponse.setUseResponseStatus(com.fb.platform.egv._1_0.UseResponseStatusEnum.fromValue(coreResponse.getResponseStatus().toString()));
+		webResponse.setUseResponseStatus(com.fb.platform.egv._1_0.UseResponseStatusEnum.fromValue(coreResponse
+				.getResponseStatus().toString()));
 		webResponse.setSessionToken(coreResponse.getSessionToken());
-		webResponse.setAmount(coreResponse.getAmount());
-		webResponse.setNumber(coreResponse.getNumber());
 
 		StringWriter outStringWriter = new StringWriter();
 		Marshaller marshaller = GiftVoucherResource.getContext().createMarshaller();
@@ -56,6 +59,5 @@ public class UseMapper {
 
 		return outStringWriter.toString();
 	}
-	
-}
 
+}

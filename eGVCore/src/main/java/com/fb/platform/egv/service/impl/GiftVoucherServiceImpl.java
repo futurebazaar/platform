@@ -352,4 +352,29 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 		}
 
 	}
+
+	@Override
+	public String getGiftVoucherPin(long giftVoucherNumber) {
+
+		GiftVoucher eGV;
+
+		try {
+			eGV = giftVoucherDao.load(giftVoucherNumber);
+			String gvPin = RandomGenerator.integerRandomGenerator(GV_PIN_LENGTH);
+			giftVoucherDao.updateGiftVoucher(giftVoucherNumber, GiftVoucherPinUtil.getEncryptedPassword(gvPin),
+					eGV.getEmail(), eGV.getUserId(), eGV.getAmount().getAmount(), eGV.getStatus(),
+					eGV.getOrderItemId(), eGV.getMobile(), eGV.getValidFrom(), eGV.getValidTill());
+
+			return gvPin;
+
+		} catch (GiftVoucherNotFoundException e) {
+			logger.info("No Such Gift Voucher Exists :  " + giftVoucherNumber);
+			throw new GiftVoucherNotFoundException("No Such Gift Voucher Exists :  " + giftVoucherNumber, e);
+		} catch (DataAccessException e) {
+			logger.error("Error while loading the GiftVoucher. GiftVoucherId  : " + giftVoucherNumber);
+			throw new PlatformException("Error while loading the GiftVoucher. GiftVoucherId  : " + giftVoucherNumber, e);
+		}
+
+	}
+
 }

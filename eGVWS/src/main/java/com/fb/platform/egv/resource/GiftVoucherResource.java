@@ -29,6 +29,7 @@ import com.fb.platform.egv.mapper.ApplyMapper;
 import com.fb.platform.egv.mapper.CancelMapper;
 import com.fb.platform.egv.mapper.CreateGVMapper;
 import com.fb.platform.egv.mapper.GetInfoMapper;
+import com.fb.platform.egv.mapper.GetPinMapper;
 import com.fb.platform.egv.mapper.RollbackUseMapper;
 import com.fb.platform.egv.mapper.SendPinMapper;
 import com.fb.platform.egv.mapper.UseMapper;
@@ -303,6 +304,36 @@ public class GiftVoucherResource {
 			return "error"; // TODO return proper error response
 		} catch (DatatypeConfigurationException e) {
 			logger.error("Error in the SendPin GiftVoucher call : ", e);
+			return "error"; // TODO return proper error response
+		}
+	}
+
+	@POST
+	@Path("/getPin")
+	@Consumes("application/xml")
+	@Produces("application/xml")
+	public String getPin(String getPinRequestXml) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("GetPinRequestXML : \n" + getPinRequestXml);
+		}
+		try {
+			com.fb.platform.egv.to.GetPinRequest getPinRequest = GetPinMapper.xmlToCoreRequest(getPinRequestXml);
+
+			com.fb.platform.egv.to.GetPinResponse getPinResponse = giftVoucherManager.getPin(getPinRequest);
+
+			String getPinResponseXml = GetPinMapper.coreResponseToXml(getPinResponse);
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("GetPin Response XML :\n" + getPinResponseXml);
+			}
+
+			return getPinResponseXml;
+
+		} catch (JAXBException e) {
+			logger.error("Error in the GetPin GiftVoucher call : ", e);
+			return "error"; // TODO return proper error response
+		} catch (DatatypeConfigurationException e) {
+			logger.error("Error in the GetPin GiftVoucher call : ", e);
 			return "error"; // TODO return proper error response
 		}
 	}

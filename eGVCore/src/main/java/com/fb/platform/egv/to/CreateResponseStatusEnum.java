@@ -12,7 +12,10 @@ public enum CreateResponseStatusEnum implements GiftVoucherResponseEnum {
 	
 	NO_SESSION,
 	INTERNAL_ERROR,
-	SENDING_MAIL_ERROR,
+	SMS_SEND_FAILURE,
+	UNABLE_TO_CREATE_ERROR,
+	EMAIL_SEND_FAILURE,
+	USER_NOT_AUTHORIZED,
 	SUCCESS;
 
 }

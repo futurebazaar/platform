@@ -3,6 +3,9 @@
  */
 package com.fb.platform.egv.service.impl;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,6 +40,9 @@ import com.fb.platform.egv.to.CreateResponseStatusEnum;
 import com.fb.platform.egv.to.GetInfoRequest;
 import com.fb.platform.egv.to.GetInfoResponse;
 import com.fb.platform.egv.to.GetInfoResponseStatusEnum;
+import com.fb.platform.egv.to.GetPinRequest;
+import com.fb.platform.egv.to.GetPinResponse;
+import com.fb.platform.egv.to.GetPinResponseStatusEnum;
 import com.fb.platform.egv.to.RollbackUseRequest;
 import com.fb.platform.egv.to.RollbackUseResponse;
 import com.fb.platform.egv.to.RollbackUseResponseStatusEnum;
@@ -99,9 +105,12 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 			response.setValidTill(gv.getValidTill());
 			response.setResponseStatus(CreateResponseStatusEnum.SUCCESS);
 
+		} catch (SmsException e) {
+			logger.error("Problem Sending SMS ", e);
+			response.setResponseStatus(CreateResponseStatusEnum.SMS_SEND_FAILURE);
 		} catch (MailException e) {
 			logger.error("Problem in sending mail to " + gv.getEmail(), e);
-			response.setResponseStatus(CreateResponseStatusEnum.SENDING_MAIL_ERROR);
+			response.setResponseStatus(CreateResponseStatusEnum.EMAIL_SEND_FAILURE);
 			throw new MailerException("Error sending mail", e);
 		} catch (PlatformException e) {
 			logger.error("Problem while creating new Gift Voucher of Amount : " + request.getAmount() + " for email "
@@ -153,11 +162,11 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 	@Override
 	public UseResponse use(UseRequest request) {
 		if (logger.isDebugEnabled()) {
-			logger.debug("Using Gift Voucher : " + request.getGiftVoucherNumber() + " as payment in order : "
-					+ request.getOrderId() + " worth : " + request.getAmount());
+			logger.debug("Use Request Manager Start");
 		}
 		UseResponse response = new UseResponse();
 
+		response.setSessionToken(request.getSessionToken());
 		if (request == null || StringUtils.isBlank(request.getSessionToken())) {
 			response.setResponseStatus(UseResponseStatusEnum.NO_SESSION);
 			return response;
@@ -175,10 +184,18 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 
 		int userId = authentication.getUserID();
 
+		HashMap<Long, BigDecimal> gvDetails = request.getGiftVoucherDetails();
 		try {
-			// use the gift voucher
-			giftVoucherService.useGiftVoucher(userId, request.getAmount(), request.getOrderId(),
-					request.getGiftVoucherNumber());
+			for (Long gvNumber : gvDetails.keySet()) {
+
+				if (logger.isDebugEnabled()) {
+					logger.debug("Using Gift Voucher : " + gvNumber + " as payment in order : " + request.getOrderId()
+							+ " worth : " + gvDetails.get(gvNumber));
+				}
+
+				// use the gift voucher
+				giftVoucherService.useGiftVoucher(userId, gvDetails.get(gvNumber), request.getOrderId(), gvNumber);
+			}
 			response.setResponseStatus(UseResponseStatusEnum.SUCCESS);
 
 		} catch (GiftVoucherNotFoundException e) {
@@ -192,7 +209,6 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 		} catch (PlatformException e) {
 			response.setResponseStatus(UseResponseStatusEnum.INTERNAL_ERROR);
 		}
-
 		return response;
 	}
 
@@ -377,6 +393,7 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 		return response;
 
 	}
+
 	@Override
 	public SendPinResponse sendPin(SendPinRequest request) {
 		if (logger.isDebugEnabled()) {
@@ -395,16 +412,17 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 		if (authentication == null) {
 			// invalid session token
 			response.setResponseStatus(SendPinResponseStatusEnum.NO_SESSION);
+			response.setNumber(request.getGiftVoucherNumber());
 			return response;
 		}
 
 		response.setSessionToken(request.getSessionToken());
+		response.setNumber(request.getGiftVoucherNumber());
 
 		try {
 			// Find the gift voucher
 			giftVoucherService.sendGiftVoucherPin(request.getGiftVoucherNumber(), request.getEmail(),
 					request.getMobile(), request.getSenderName(), request.getReceiverName(), request.getGiftMessage());
-			response.setNumber(request.getGiftVoucherNumber());
 			response.setResponseStatus(SendPinResponseStatusEnum.SUCCESS);
 
 		} catch (GiftVoucherNotFoundException e) {
@@ -417,6 +435,53 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 			response.setResponseStatus(SendPinResponseStatusEnum.EMAIL_SEND_FAILURE);
 		} catch (PlatformException e) {
 			response.setResponseStatus(SendPinResponseStatusEnum.INTERNAL_ERROR);
+		}
+
+		return response;
+
+	}
+
+	@Override
+	public GetPinResponse getPin(GetPinRequest request) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("GetPin of Gift Voucher  : " + request.getGiftVoucherNumber());
+		}
+		GetPinResponse response = new GetPinResponse();
+
+		if (request == null || StringUtils.isBlank(request.getSessionToken())) {
+			response.setResponseStatus(GetPinResponseStatusEnum.NO_SESSION);
+			response.setNumber(request.getGiftVoucherNumber());
+			return response;
+		}
+
+		// authenticate the session token and find out the userId
+		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
+		if (authentication == null) {
+			// invalid session token
+			response.setResponseStatus(GetPinResponseStatusEnum.NO_SESSION);
+			response.setNumber(request.getGiftVoucherNumber());
+			return response;
+		}
+
+		response.setSessionToken(request.getSessionToken());
+
+		try {
+			// Find the gift voucher
+			String pin = giftVoucherService.getGiftVoucherPin(request.getGiftVoucherNumber());
+			response.setNumber(request.getGiftVoucherNumber());
+			response.setPin(pin);
+			response.setResponseStatus(GetPinResponseStatusEnum.SUCCESS);
+
+		} catch (GiftVoucherNotFoundException e) {
+			response.setResponseStatus(GetPinResponseStatusEnum.INVALID_GIFT_VOUCHER_NUMBER);
+		} catch (SmsException e) {
+			logger.error("Problem Sending SMS ", e);
+			response.setResponseStatus(GetPinResponseStatusEnum.SMS_SEND_FAILURE);
+		} catch (MailException e) {
+			logger.error("Problem Sending Email", e);
+			response.setResponseStatus(GetPinResponseStatusEnum.EMAIL_SEND_FAILURE);
+		} catch (PlatformException e) {
+			response.setResponseStatus(GetPinResponseStatusEnum.INTERNAL_ERROR);
 		}
 
 		return response;
