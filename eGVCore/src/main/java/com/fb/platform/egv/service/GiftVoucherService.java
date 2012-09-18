@@ -66,6 +66,6 @@ public interface GiftVoucherService {
 			String receiverName, String giftMessage);
 
 	@Transactional(propagation = Propagation.REQUIRED)
-	public String getGiftVoucherPin(long giftVoucherNumber);
+	public String getGiftVoucherPin(long giftVoucherNumber, int userId);
 
 }

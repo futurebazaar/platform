@@ -22,6 +22,7 @@ import com.fb.platform.egv.exception.GiftVoucherException;
 import com.fb.platform.egv.exception.GiftVoucherExpiredException;
 import com.fb.platform.egv.exception.GiftVoucherNotFoundException;
 import com.fb.platform.egv.exception.InvalidPinException;
+import com.fb.platform.egv.exception.UserNotElligibleException;
 import com.fb.platform.egv.model.GiftVoucher;
 import com.fb.platform.egv.service.GiftVoucherManager;
 import com.fb.platform.egv.service.GiftVoucherService;
@@ -465,15 +466,21 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 
 		response.setSessionToken(request.getSessionToken());
 
+		int userId = authentication.getUserID();
+
 		try {
 			// Find the gift voucher
-			String pin = giftVoucherService.getGiftVoucherPin(request.getGiftVoucherNumber());
+			String pin = giftVoucherService.getGiftVoucherPin(request.getGiftVoucherNumber(), userId);
 			response.setNumber(request.getGiftVoucherNumber());
 			response.setPin(pin);
 			response.setResponseStatus(GetPinResponseStatusEnum.SUCCESS);
 
 		} catch (GiftVoucherNotFoundException e) {
 			response.setResponseStatus(GetPinResponseStatusEnum.INVALID_GIFT_VOUCHER_NUMBER);
+		} catch (UserNotElligibleException e) {
+			logger.info("The user " + userId + " is not Owner of the eGV " + request.getGiftVoucherNumber());
+			throw new UserNotElligibleException("The user " + userId + " is not Owner of the eGV"
+					+ request.getGiftVoucherNumber());
 		} catch (SmsException e) {
 			logger.error("Problem Sending SMS ", e);
 			response.setResponseStatus(GetPinResponseStatusEnum.SMS_SEND_FAILURE);

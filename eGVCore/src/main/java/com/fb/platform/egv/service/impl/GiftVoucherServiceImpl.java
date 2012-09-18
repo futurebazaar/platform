@@ -26,6 +26,7 @@ import com.fb.platform.egv.exception.GiftVoucherExpiredException;
 import com.fb.platform.egv.exception.GiftVoucherNotFoundException;
 import com.fb.platform.egv.exception.InvalidPinException;
 import com.fb.platform.egv.exception.NoOrderItemExistsException;
+import com.fb.platform.egv.exception.UserNotElligibleException;
 import com.fb.platform.egv.model.GiftVoucher;
 import com.fb.platform.egv.model.GiftVoucherStatusEnum;
 import com.fb.platform.egv.service.GiftVoucherService;
@@ -354,12 +355,16 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 	}
 
 	@Override
-	public String getGiftVoucherPin(long giftVoucherNumber) {
+	public String getGiftVoucherPin(long giftVoucherNumber, int userId) {
 
-		GiftVoucher eGV;
+		GiftVoucher eGV = null;
 
 		try {
 			eGV = giftVoucherDao.load(giftVoucherNumber);
+			if (userId != eGV.getUserId()) {
+				throw new UserNotElligibleException("The user " + userId + " is not Owner of the eGV "
+						+ eGV.getUserId());
+			}
 			String gvPin = RandomGenerator.integerRandomGenerator(GV_PIN_LENGTH);
 			giftVoucherDao.updateGiftVoucher(giftVoucherNumber, GiftVoucherPinUtil.getEncryptedPassword(gvPin),
 					eGV.getEmail(), eGV.getUserId(), eGV.getAmount().getAmount(), eGV.getStatus(),
@@ -370,11 +375,15 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 		} catch (GiftVoucherNotFoundException e) {
 			logger.info("No Such Gift Voucher Exists :  " + giftVoucherNumber);
 			throw new GiftVoucherNotFoundException("No Such Gift Voucher Exists :  " + giftVoucherNumber, e);
+		} catch (UserNotElligibleException e) {
+			logger.info("The user " + userId + " is not Owner of the eGV " + giftVoucherNumber + ". The Owner is "
+					+ eGV.getUserId());
+			throw new UserNotElligibleException("The user " + userId + " is not Owner of the eGV " + giftVoucherNumber
+					+ ". The Owner is " + eGV.getUserId());
 		} catch (DataAccessException e) {
 			logger.error("Error while loading the GiftVoucher. GiftVoucherId  : " + giftVoucherNumber);
 			throw new PlatformException("Error while loading the GiftVoucher. GiftVoucherId  : " + giftVoucherNumber, e);
 		}
 
 	}
-
 }
