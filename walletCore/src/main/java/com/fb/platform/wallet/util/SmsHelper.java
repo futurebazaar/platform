@@ -1,8 +1,5 @@
 package com.fb.platform.wallet.util;
 
-import java.math.BigDecimal;
-
-import org.joda.time.DateTime;
 import org.springframework.mail.MailException;
 
 import com.fb.commons.communication.to.SmsTO;
