@@ -3,9 +3,6 @@
  */
 package com.fb.platform.egv.service.impl;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -185,18 +182,9 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 
 		int userId = authentication.getUserID();
 
-		HashMap<Long, BigDecimal> gvDetails = request.getGiftVoucherDetails();
 		try {
-			for (Long gvNumber : gvDetails.keySet()) {
-
-				if (logger.isDebugEnabled()) {
-					logger.debug("Using Gift Voucher : " + gvNumber + " as payment in order : " + request.getOrderId()
-							+ " worth : " + gvDetails.get(gvNumber));
-				}
-
-				// use the gift voucher
-				giftVoucherService.useGiftVoucher(userId, gvDetails.get(gvNumber), request.getOrderId(), gvNumber);
-			}
+			// use the gift voucher
+			giftVoucherService.useGiftVoucher(userId, request.getGiftVoucherDetails(), request.getOrderId());
 			response.setResponseStatus(UseResponseStatusEnum.SUCCESS);
 
 		} catch (GiftVoucherNotFoundException e) {

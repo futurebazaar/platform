@@ -4,6 +4,7 @@
 package com.fb.platform.egv.service;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 
 import org.joda.time.DateTime;
 import org.springframework.transaction.annotation.Isolation;
@@ -49,7 +50,7 @@ public interface GiftVoucherService {
 			DateTime validTill, boolean active) throws PlatformException;
 
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void useGiftVoucher(int userId, BigDecimal amount, int orderId, long giftVoucherNumber);
+	public void useGiftVoucher(int userId, HashMap<Long, BigDecimal> gvDetails, int orderId);
 
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void cancelGiftVoucher(long giftVoucherNumber, int userId, int orderItemId);

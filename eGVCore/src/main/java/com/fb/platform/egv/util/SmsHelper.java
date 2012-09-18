@@ -34,8 +34,6 @@ public class SmsHelper {
 
 	public static String EGV_GIFT_SMS_MESSAGE_TEMPLATE_STR = "egv.message";
 
-	public static String EGV_GIFT_SMS_BCC_LIST = "pm@futuregroup.in";
-
 	/**
 	 * @param from
 	 *            The mail sender email address
@@ -60,7 +58,6 @@ public class SmsHelper {
 			DateTime date, String senderName, String receiverName, String giftMessage) throws MailException {
 		SmsTO smsTo = new SmsTO();
 		smsTo.addTo(mobileNum);
-		smsTo.setBcc(EGV_GIFT_SMS_BCC_LIST);
 
 		// Set message using template
 		String message = SMS_TEMPLATE_STR

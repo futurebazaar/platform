@@ -7,7 +7,6 @@ public class SmsTO {
 
 	private List<String> toList;
 	private String message;
-	private String bcc;
 
 	public SmsTO() {
 		toList = new ArrayList<String>();
@@ -37,13 +36,5 @@ public class SmsTO {
 			toListString.append(s + ";");
 		}
 		return toListString.toString();
-	}
-
-	public String getBcc() {
-		return bcc;
-	}
-
-	public void setBcc(String bcc) {
-		this.bcc = bcc;
 	}
 }

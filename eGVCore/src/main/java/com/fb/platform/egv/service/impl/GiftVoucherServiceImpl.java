@@ -4,6 +4,7 @@
 package com.fb.platform.egv.service.impl;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -193,32 +194,39 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 	}
 
 	@Override
-	public void useGiftVoucher(int userId, BigDecimal amount, int orderId, long giftVoucherNumber) {
+	public void useGiftVoucher(int userId, HashMap<Long, BigDecimal> gvDetails, int orderId) {
 		GiftVoucher eGV = new GiftVoucher();
-		try {
-			eGV = giftVoucherDao.load(giftVoucherNumber);
 
-			if (eGV.isUsable()) {
-				eGV.setStatus(GiftVoucherStatusEnum.USED);
-				giftVoucherDao.changeState(giftVoucherNumber, GiftVoucherStatusEnum.USED);
-				giftVoucherDao.createGiftVoucherUse(giftVoucherNumber, userId, orderId, amount);
-			} else {
-				throw new GiftVoucherAlreadyUsedException("Gift Voucher has GV number : " + giftVoucherNumber
-						+ " has laready been used");
+		for (Long gvNumber : gvDetails.keySet()) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Using Gift Voucher : " + gvNumber + " as payment in order : " + orderId + " worth : "
+						+ gvDetails.get(gvNumber));
 			}
-		} catch (GiftVoucherNotFoundException e) {
-			logger.info("No Such Gift Voucher Exists :  " + giftVoucherNumber);
-			throw new GiftVoucherNotFoundException("No Such Gift Voucher Exists :  " + giftVoucherNumber, e);
-		} catch (GiftVoucherExpiredException e) {
-			logger.info("Gift Voucher has expired GV number : " + giftVoucherNumber);
-			throw new GiftVoucherExpiredException("Gift Voucher has expired GV number : " + giftVoucherNumber, e);
-		} catch (GiftVoucherAlreadyUsedException e) {
-			logger.info("Gift Voucher has GV number : " + giftVoucherNumber + " has laready been used");
-			throw new GiftVoucherAlreadyUsedException("Gift Voucher has GV number : " + giftVoucherNumber
-					+ " has laready been used", e);
-		} catch (DataAccessException e) {
-			logger.error("Error while loading the GiftVoucher. GiftVoucherId  : " + giftVoucherNumber);
-			throw new PlatformException("Error while loading the GiftVoucher. GiftVoucherId  : " + giftVoucherNumber, e);
+			try {
+				eGV = giftVoucherDao.load(gvNumber);
+
+				if (eGV.isUsable()) {
+					eGV.setStatus(GiftVoucherStatusEnum.USED);
+					giftVoucherDao.changeState(gvNumber, GiftVoucherStatusEnum.USED);
+					giftVoucherDao.createGiftVoucherUse(gvNumber, userId, orderId, gvDetails.get(gvNumber));
+				} else {
+					throw new GiftVoucherAlreadyUsedException("Gift Voucher has GV number : " + gvNumber
+							+ " has already been used");
+				}
+			} catch (GiftVoucherNotFoundException e) {
+				logger.info("No Such Gift Voucher Exists :  " + gvNumber);
+				throw new GiftVoucherNotFoundException("No Such Gift Voucher Exists :  " + gvNumber, e);
+			} catch (GiftVoucherExpiredException e) {
+				logger.info("Gift Voucher has expired GV number : " + gvNumber);
+				throw new GiftVoucherExpiredException("Gift Voucher has expired GV number : " + gvNumber, e);
+			} catch (GiftVoucherAlreadyUsedException e) {
+				logger.info("Gift Voucher has GV number : " + gvNumber + " has laready been used");
+				throw new GiftVoucherAlreadyUsedException("Gift Voucher has GV number : " + gvNumber
+						+ " has laready been used", e);
+			} catch (DataAccessException e) {
+				logger.error("Error while loading the GiftVoucher. GiftVoucherId  : " + gvNumber);
+				throw new PlatformException("Error while loading the GiftVoucher. GiftVoucherId  : " + gvNumber, e);
+			}
 		}
 	}
 
