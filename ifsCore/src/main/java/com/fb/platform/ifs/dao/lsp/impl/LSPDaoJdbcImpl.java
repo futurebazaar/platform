@@ -31,5 +31,4 @@ public class LSPDaoJdbcImpl implements LSPDao {
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
-
 }
