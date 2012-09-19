@@ -1,4 +1,4 @@
-package com.fb.platform.sap.bapi.utils;
+package com.fb.platform.sap.client.commons;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;

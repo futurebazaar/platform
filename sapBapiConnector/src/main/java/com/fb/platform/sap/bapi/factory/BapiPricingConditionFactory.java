@@ -3,8 +3,8 @@ package com.fb.platform.sap.bapi.factory;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fb.platform.sap.bapi.commons.ItemConditionsType;
-import com.fb.platform.sap.bapi.commons.SapOrderConstants;
+import com.fb.platform.sap.client.commons.ItemConditionsType;
+import com.fb.platform.sap.client.commons.SapOrderConstants;
 
 public class BapiPricingConditionFactory {
 

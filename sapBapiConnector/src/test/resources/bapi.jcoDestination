@@ -1,0 +1,34 @@
+###############   Sap DEV connection properties ###################
+jco.destination.pool_capacity=1
+jco.client.lang=en
+jco.client.ashost=10.0.7.63
+jco.client.user=TUSHARA
+jco.client.dest=ZATGJCAPS_DV1
+jco.client.sysnr=01
+jco.destination.peak_limit=1
+jco.client.passwd=123456
+jco.client.client=500
+jco.client.trace=0
+
+
+################# Sap QA connection properties ####################
+#jco.destination.pool_capacity=1
+#jco.client.lang=en
+#jco.client.ashost=TECC5D183
+#jco.client.user=RFCATG
+#jco.client.tpname=ZATGJCAPS_DV1
+#jco.client.sysnr=00
+#jco.destination.peak_limit=1
+#jco.client.passwd=welcome1
+#jco.client.client=239
+
+###################### Sap PROD connection properties ###############
+#jco.destination.pool_capacity=1
+#jco.client.lang=en
+#jco.client.ashost=prirdb
+#jco.client.user=RFCATG
+#jco.client.tpname=ZATGJCAPS_PD1
+#jco.client.sysnr=00
+#jco.destination.peak_limit=1
+#jco.client.passwd=welcome1
+#jco.client.client=239

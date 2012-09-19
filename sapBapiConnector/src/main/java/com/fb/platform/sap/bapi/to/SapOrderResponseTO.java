@@ -1,6 +1,6 @@
 package com.fb.platform.sap.bapi.to;
 
-import com.fb.platform.sap.bapi.commons.SapResponseStatus;
+import com.fb.platform.sap.client.commons.SapResponseStatus;
 
 public class SapOrderResponseTO {
 	
@@ -36,10 +36,8 @@ public class SapOrderResponseTO {
 	
 	@Override
 	public String toString() {
-		String response = "\nOrder ID: " + orderID
-				+ "\nType: " + type
-				+ "\nMessage:  " + sapMessage;
-		return response;
+		return "SapOrderResponseTO [sapMessage=" + sapMessage + ", orderID="
+				+ orderID + ", type=" + type + ", status=" + status + "]";
 	}
 	
 }

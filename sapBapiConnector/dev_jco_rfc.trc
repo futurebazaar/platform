@@ -342,3 +342,299 @@ COUNTER     2
     error group: 102
     key: RFC_ERROR_COMMUNICATION
 
+
+**** Error file opened at 20120917 221625 India Standard Time Rel 3.0.8 (2011-11-28) [720.114]
+Error:  >Mon Sep 17 22:16:25,849<    RfcException: [null]
+    message: Connect to SAP gateway failed
+Connection parameters: TYPE=A DEST=devbapi ASHOST=10.0.7.63 SYSNR=01 PCS=1
+
+LOCATION    CPIC (TCP/IP) on local host with Unicode
+ERROR       partner '10.0.7.63:3301' not reached
+TIME        Mon Sep 17 22:16:25 2012
+RELEASE     720
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nibuf.cpp
+LINE        4634
+DETAIL      NiBufIConnect: connection pending after 60000ms
+SYSTEM CALL connect
+ERRNO       115
+ERRNO TEXT  Operation now in progress
+COUNTER     2
+
+    Return code: RFC_FAILURE(1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+
+
+**** Error file opened at 20120918 174452 India Standard Time Rel 3.0.8 (2011-11-28) [720.114]
+Error:  >Tue Sep 18 17:44:52,267<    RfcException: [null]
+    message: Connect to SAP gateway failed
+Connection parameters: TYPE=A DEST=ZATGJCAPS_DV1 ASHOST=10.0.7.63 SYSNR=01 PCS=1
+
+LOCATION    CPIC (TCP/IP) on local host with Unicode
+ERROR       partner '10.0.7.63:3301' not reached
+TIME        Tue Sep 18 17:44:52 2012
+RELEASE     720
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nibuf.cpp
+LINE        4634
+DETAIL      NiBufIConnect: connection pending after 60000ms
+SYSTEM CALL connect
+ERRNO       115
+ERRNO TEXT  Operation now in progress
+COUNTER     2
+
+    Return code: RFC_FAILURE(1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+
+
+**** Error file opened at 20120918 222620 India Standard Time Rel 3.0.8 (2011-11-28) [720.114]
+Error:  >Tue Sep 18 22:26:20,851<    RfcException: [null]
+    message: Connect to SAP gateway failed
+Connection parameters: TYPE=A DEST=ZATGJCAPS_DV1 ASHOST=10.0.7.63 SYSNR=01 PCS=1
+
+LOCATION    CPIC (TCP/IP) on local host with Unicode
+ERROR       partner '10.0.7.63:3301' not reached
+TIME        Tue Sep 18 22:26:20 2012
+RELEASE     720
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nibuf.cpp
+LINE        4634
+DETAIL      NiBufIConnect: connection pending after 60000ms
+SYSTEM CALL connect
+ERRNO       115
+ERRNO TEXT  Operation now in progress
+COUNTER     2
+
+    Return code: RFC_FAILURE(1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+
+Error:  >Tue Sep 18 22:27:20,924<    RfcException: [null]
+    message: Connect to SAP gateway failed
+Connection parameters: TYPE=A DEST=ZATGJCAPS_DV1 ASHOST=10.0.7.63 SYSNR=01 PCS=1
+
+LOCATION    CPIC (TCP/IP) on local host with Unicode
+ERROR       partner '10.0.7.63:3301' not reached
+TIME        Tue Sep 18 22:27:20 2012
+RELEASE     720
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nibuf.cpp
+LINE        4634
+DETAIL      NiBufIConnect: connection pending after 60000ms
+SYSTEM CALL connect
+ERRNO       115
+ERRNO TEXT  Operation now in progress
+COUNTER     4
+
+    Return code: RFC_FAILURE(1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+
+
+**** Error file opened at 20120918 223547 India Standard Time Rel 3.0.8 (2011-11-28) [720.114]
+Error:  >Tue Sep 18 22:35:47,767<    RfcException: [null]
+    message: Connect to SAP gateway failed
+Connection parameters: TYPE=A DEST=ZATGJCAPS_DV1 ASHOST=10.0.7.63 SYSNR=01 PCS=1
+
+LOCATION    CPIC (TCP/IP) on local host with Unicode
+ERROR       partner '10.0.7.63:3301' not reached
+TIME        Tue Sep 18 22:35:47 2012
+RELEASE     720
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nibuf.cpp
+LINE        4634
+DETAIL      NiBufIConnect: connection pending after 60000ms
+SYSTEM CALL connect
+ERRNO       115
+ERRNO TEXT  Operation now in progress
+COUNTER     2
+
+    Return code: RFC_FAILURE(1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+
+Error:  >Tue Sep 18 22:36:47,847<    RfcException: [null]
+    message: Connect to SAP gateway failed
+Connection parameters: TYPE=A DEST=ZATGJCAPS_DV1 ASHOST=10.0.7.63 SYSNR=01 PCS=1
+
+LOCATION    CPIC (TCP/IP) on local host with Unicode
+ERROR       partner '10.0.7.63:3301' not reached
+TIME        Tue Sep 18 22:36:47 2012
+RELEASE     720
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nibuf.cpp
+LINE        4634
+DETAIL      NiBufIConnect: connection pending after 60000ms
+SYSTEM CALL connect
+ERRNO       115
+ERRNO TEXT  Operation now in progress
+COUNTER     4
+
+    Return code: RFC_FAILURE(1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+
+
+**** Error file opened at 20120918 223815 India Standard Time Rel 3.0.8 (2011-11-28) [720.114]
+Error:  >Tue Sep 18 22:38:15,871<    RfcException: [null]
+    message: Connect to SAP gateway failed
+Connection parameters: TYPE=A DEST=ZATGJCAPS_DV1 ASHOST=10.0.7.63 SYSNR=01 PCS=1
+
+LOCATION    CPIC (TCP/IP) on local host with Unicode
+ERROR       partner '10.0.7.63:3301' not reached
+TIME        Tue Sep 18 22:38:15 2012
+RELEASE     720
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nibuf.cpp
+LINE        4634
+DETAIL      NiBufIConnect: connection pending after 60000ms
+SYSTEM CALL connect
+ERRNO       115
+ERRNO TEXT  Operation now in progress
+COUNTER     2
+
+    Return code: RFC_FAILURE(1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+
+
+**** Error file opened at 20120918 224148 India Standard Time Rel 3.0.8 (2011-11-28) [720.114]
+Error:  >Tue Sep 18 22:41:48,828<    RfcException: [null]
+    message: Connect to SAP gateway failed
+Connection parameters: TYPE=A DEST=ZATGJCAPS_DV1 ASHOST=10.0.7.63 SYSNR=01 PCS=1
+
+LOCATION    CPIC (TCP/IP) on local host with Unicode
+ERROR       partner '10.0.7.63:3301' not reached
+TIME        Tue Sep 18 22:41:48 2012
+RELEASE     720
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nibuf.cpp
+LINE        4634
+DETAIL      NiBufIConnect: connection pending after 60000ms
+SYSTEM CALL connect
+ERRNO       115
+ERRNO TEXT  Operation now in progress
+COUNTER     2
+
+    Return code: RFC_FAILURE(1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+
+
+**** Error file opened at 20120918 224541 India Standard Time Rel 3.0.8 (2011-11-28) [720.114]
+Error:  >Tue Sep 18 22:45:41,317<    RfcException: [null]
+    message: Connect to SAP gateway failed
+Connection parameters: TYPE=A DEST=ZATGJCAPS_DV1 ASHOST=10.0.7.63 SYSNR=01 PCS=1
+
+LOCATION    CPIC (TCP/IP) on local host with Unicode
+ERROR       partner '10.0.7.63:3301' not reached
+TIME        Tue Sep 18 22:45:41 2012
+RELEASE     720
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nibuf.cpp
+LINE        4634
+DETAIL      NiBufIConnect: connection pending after 60000ms
+SYSTEM CALL connect
+ERRNO       115
+ERRNO TEXT  Operation now in progress
+COUNTER     2
+
+    Return code: RFC_FAILURE(1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+
+
+**** Error file opened at 20120918 224822 India Standard Time Rel 3.0.8 (2011-11-28) [720.114]
+Error:  >Tue Sep 18 22:48:22,746<    RfcException: [null]
+    message: Connect to SAP gateway failed
+Connection parameters: TYPE=A DEST=ZATGJCAPS_DV1 ASHOST=10.0.7.63 SYSNR=01 PCS=1
+
+LOCATION    CPIC (TCP/IP) on local host with Unicode
+ERROR       partner '10.0.7.63:3301' not reached
+TIME        Tue Sep 18 22:48:22 2012
+RELEASE     720
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nibuf.cpp
+LINE        4634
+DETAIL      NiBufIConnect: connection pending after 60000ms
+SYSTEM CALL connect
+ERRNO       115
+ERRNO TEXT  Operation now in progress
+COUNTER     2
+
+    Return code: RFC_FAILURE(1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+
+
+**** Error file opened at 20120918 225759 India Standard Time Rel 3.0.8 (2011-11-28) [720.114]
+Error:  >Tue Sep 18 22:57:59,838<    RfcException: [null]
+    message: Connect to SAP gateway failed
+Connection parameters: TYPE=A DEST=ZATGJCAPS_DV1 ASHOST=10.0.7.63 SYSNR=01 PCS=1
+
+LOCATION    CPIC (TCP/IP) on local host with Unicode
+ERROR       partner '10.0.7.63:3301' not reached
+TIME        Tue Sep 18 22:57:59 2012
+RELEASE     720
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nibuf.cpp
+LINE        4634
+DETAIL      NiBufIConnect: connection pending after 60000ms
+SYSTEM CALL connect
+ERRNO       115
+ERRNO TEXT  Operation now in progress
+COUNTER     2
+
+    Return code: RFC_FAILURE(1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+
+
+**** Error file opened at 20120918 225902 India Standard Time Rel 3.0.8 (2011-11-28) [720.114]
+Error:  >Tue Sep 18 22:59:02,447<    RfcException: [null]
+    message: Connect to SAP gateway failed
+Connection parameters: TYPE=A DEST=ZATGJCAPS_DV1 ASHOST=10.0.7.63 SYSNR=01 PCS=1
+
+LOCATION    CPIC (TCP/IP) on local host with Unicode
+ERROR       partner '10.0.7.63:3301' not reached
+TIME        Tue Sep 18 22:59:02 2012
+RELEASE     720
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nibuf.cpp
+LINE        4634
+DETAIL      NiBufIConnect: connection pending after 60000ms
+SYSTEM CALL connect
+ERRNO       115
+ERRNO TEXT  Operation now in progress
+COUNTER     2
+
+    Return code: RFC_FAILURE(1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+

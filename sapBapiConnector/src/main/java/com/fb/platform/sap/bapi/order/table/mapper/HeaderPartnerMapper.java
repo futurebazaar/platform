@@ -1,9 +1,12 @@
 package com.fb.platform.sap.bapi.order.table.mapper;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.fb.commons.mom.to.AddressTO;
 import com.fb.commons.mom.to.OrderHeaderTO;
-import com.fb.platform.sap.bapi.commons.SapOrderConstants;
-import com.fb.platform.sap.bapi.commons.TinlaClient;
+import com.fb.platform.sap.client.commons.SapOrderConstants;
+import com.fb.platform.sap.client.commons.TinlaClient;
 import com.fb.platform.sap.bapi.factory.BapiTableFactory;
 import com.fb.platform.sap.bapi.order.table.BapiOrderTable;
 import com.fb.platform.sap.bapi.order.table.TinlaOrderType;
@@ -12,7 +15,11 @@ import com.sap.conn.jco.JCoTable;
 
 public class HeaderPartnerMapper {
 	
+	private static Log logger = LogFactory.getLog(HeaderPartnerMapper.class);
+	
 	public static void setDetails(JCoFunction bapiFunction, OrderHeaderTO orderHeaderTO, AddressTO addressTO, TinlaOrderType orderType) {
+		logger.info("Setting Header Partner details for : " + orderType + " " + orderHeaderTO.getReferenceID());
+		logger.info("partner Address details are : " + addressTO);
 		JCoTable orderPartner = bapiFunction.getTableParameterList().getTable(BapiTableFactory.getPartnersTable(orderType, TinlaClient.valueOf(orderHeaderTO.getClient())).toString());
 		JCoTable orderText = bapiFunction.getTableParameterList().getTable(BapiOrderTable.ORDER_TEXT.toString());
 		setFirstPartnerDetails(orderPartner, orderText, orderHeaderTO, addressTO);

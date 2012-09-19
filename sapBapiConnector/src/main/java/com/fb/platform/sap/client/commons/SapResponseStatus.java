@@ -1,4 +1,4 @@
-package com.fb.platform.sap.bapi.commons;
+package com.fb.platform.sap.client.commons;
 
 public enum SapResponseStatus {
 	

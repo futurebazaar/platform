@@ -1,16 +1,9 @@
 package com.fb.platform.sap.bapi.factory;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.fb.commons.PlatformException;
 import com.fb.platform.sap.bapi.order.BapiOrderTemplate;
-import com.fb.platform.sap.bapi.order.table.BapiOrderTable;
-import com.fb.platform.sap.bapi.order.table.OrderTableType;
 import com.fb.platform.sap.bapi.order.table.TinlaOrderType;
-import com.fb.platform.sap.bapi.commons.ItemConditionsType;
-import com.fb.platform.sap.bapi.commons.SapOrderConstants;
-import com.fb.platform.sap.bapi.commons.TinlaClient;
+import com.fb.platform.sap.client.commons.TinlaClient;
 
 public class PlatformBapiHandlerFactory {
 	

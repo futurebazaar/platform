@@ -6,8 +6,8 @@ import java.util.Map;
 import com.fb.platform.sap.bapi.order.table.BapiOrderTable;
 import com.fb.platform.sap.bapi.order.table.OrderTableType;
 import com.fb.platform.sap.bapi.order.table.TinlaOrderType;
-import com.fb.platform.sap.bapi.commons.SapOrderConstants;
-import com.fb.platform.sap.bapi.commons.TinlaClient;
+import com.fb.platform.sap.client.commons.SapOrderConstants;
+import com.fb.platform.sap.client.commons.TinlaClient;
 
 public class BapiTableFactory {
 

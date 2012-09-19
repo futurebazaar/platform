@@ -3,24 +3,29 @@ package com.fb.platform.sap.bapi.order.table.mapper;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.fb.commons.mom.to.OrderHeaderTO;
 import com.fb.commons.mom.to.PaymentTO;
-import com.fb.platform.sap.bapi.commons.SapConstants;
-import com.fb.platform.sap.bapi.commons.SapOrderConstants;
-import com.fb.platform.sap.bapi.commons.SapUtils;
+import com.fb.platform.sap.client.commons.SapConstants;
+import com.fb.platform.sap.client.commons.SapOrderConstants;
+import com.fb.platform.sap.client.commons.SapUtils;
 import com.fb.platform.sap.bapi.order.table.BapiOrderTable;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoStructure;
 import com.sap.conn.jco.JCoTable;
 
 public class PaymentMapper {
-	
+
+	private static Log logger = LogFactory.getLog(PaymentMapper.class);
 	private static final String DEFAULT_CREDIT_CARD = "12345";
 			
 	public static void setDetails(JCoFunction bapiFunction, OrderHeaderTO orderHeaderTO, List<PaymentTO> paymentTOList) {
+		logger.info("Setting Item Condition details for : " + orderHeaderTO.getReferenceID());
 		for (PaymentTO paymentTO : paymentTOList) {
 			String paymentMode = paymentTO.getPaymentMode();
+			logger.info("Payment Detail for payment mode " + paymentMode + " is: " + paymentTO);
 			if (paymentMode.equalsIgnoreCase("cod")) { 
 				setCodDetails(bapiFunction, paymentMode, orderHeaderTO, paymentTO);
 			}
@@ -33,7 +38,6 @@ public class PaymentMapper {
 	private static void setCardDetails(JCoFunction bapiFunction, String paymentMode, OrderHeaderTO orderHeaderTO, PaymentTO paymentTO) {
 		JCoTable orderCreditCard = bapiFunction.getTableParameterList().getTable(BapiOrderTable.ORDER_CCARD.toString());
 		orderCreditCard.appendRow();
-		String validTill = SapUtils.convertDateToFormat(paymentTO.getValidTill(), SapConstants.DATE_FORMAT);
 		String paymentDate = SapUtils.convertDateToFormat(paymentTO.getPaymentTime(), SapConstants.DATE_FORMAT);
 		String paymentTime = SapUtils.convertDateToFormat(paymentTO.getPaymentTime(), SapConstants.TIME_FORMAT);
 		String instrumentNo = DEFAULT_CREDIT_CARD;
@@ -41,7 +45,9 @@ public class PaymentMapper {
 			instrumentNo = paymentTO.getInstrumentNumber();
 		}
 		orderCreditCard.setValue(SapOrderConstants.INSTRUMENT_NO, instrumentNo);
-		orderCreditCard.setValue(SapOrderConstants.VALID_TILL, validTill);
+		if (paymentTO.getValidTill() != null) {
+			orderCreditCard.setValue(SapOrderConstants.VALID_TILL, SapUtils.convertDateToFormat(paymentTO.getValidTill(), SapConstants.DATE_FORMAT));			
+		}
 		orderCreditCard.setValue(SapOrderConstants.PAYMENT_DATE, paymentDate);
 		orderCreditCard.setValue(SapOrderConstants.PAYMENT_TIME, paymentTime);
 		String gateway = paymentTO.getPaymentGateway();

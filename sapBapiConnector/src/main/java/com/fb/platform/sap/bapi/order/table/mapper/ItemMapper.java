@@ -4,13 +4,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.fb.commons.mom.to.LineItemTO;
 import com.fb.commons.mom.to.OrderHeaderTO;
-import com.fb.platform.sap.bapi.commons.SapConstants;
-import com.fb.platform.sap.bapi.commons.SapOrderConstants;
-import com.fb.platform.sap.bapi.commons.SapUtils;
-import com.fb.platform.sap.bapi.commons.TinlaClient;
+import com.fb.platform.sap.client.commons.SapConstants;
+import com.fb.platform.sap.client.commons.SapOrderConstants;
+import com.fb.platform.sap.client.commons.SapUtils;
+import com.fb.platform.sap.client.commons.TinlaClient;
 import com.fb.platform.sap.bapi.factory.BapiTableFactory;
 import com.fb.platform.sap.bapi.order.table.BapiOrderTable;
 import com.fb.platform.sap.bapi.order.table.OrderTableType;
@@ -20,12 +22,17 @@ import com.sap.conn.jco.JCoTable;
 
 public class ItemMapper {
 	
+	private static Log logger = LogFactory.getLog(ItemMapper.class);
+	
 	public static void setDetails(JCoFunction bapiFunction, OrderHeaderTO orderHeaderTO, List<LineItemTO> LineItemTOList, TinlaOrderType orderType) {
+		logger.info("Setting Item Condition details for : " + orderType + " " + orderHeaderTO.getReferenceID());
 		Map<OrderTableType, BapiOrderTable> conditionTables = BapiTableFactory.getItemTables(orderType, TinlaClient.valueOf(orderHeaderTO.getClient()));
 		JCoTable orderItemIN= bapiFunction.getTableParameterList().getTable(conditionTables.get(OrderTableType.VALUE_TABLE).toString());
 		JCoTable orderItemINX = bapiFunction.getTableParameterList().getTable(conditionTables.get(OrderTableType.COMMIT_TABLE).toString());
 		for (LineItemTO itemTO : LineItemTOList) {
+			logger.info("Item : " + itemTO);
 			orderItemIN.appendRow();
+			orderItemINX.appendRow();
 			// Set New Order conditions
 			if (orderType.equals(TinlaOrderType.NEW_ORDER)) {
 				setNewOrderDetails(itemTO, orderHeaderTO, orderItemIN, orderItemINX);
@@ -91,8 +98,10 @@ public class ItemMapper {
 	}
 	
 	public static void setReturnItemDetails(JCoFunction bapiFunction, OrderHeaderTO orderHeaderTO, List<LineItemTO> LineItemTOList, TinlaOrderType orderType) {
+		logger.info("Setting Item Condition details for : " + orderType + " " + orderHeaderTO.getReferenceID());
 		JCoTable returnItem = bapiFunction.getTableParameterList().getTable(BapiOrderTable.RETURN_ITEM.toString());
 		for (LineItemTO itemTO : LineItemTOList) {
+			logger.info("Item : " + itemTO);
 			returnItem.appendRow();
 			returnItem.setValue(SapOrderConstants.ITEM_NUMBER, itemTO.getSapDocumentId());
 			returnItem.setValue(SapOrderConstants.QUANTITY, itemTO.getQuantity().toString());

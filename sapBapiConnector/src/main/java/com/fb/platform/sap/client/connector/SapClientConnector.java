@@ -1,8 +1,11 @@
-package com.fb.platform.sap.bapi;
+package com.fb.platform.sap.client.connector;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.sap.conn.jco.JCoDestination;
 import com.sap.conn.jco.JCoDestinationManager;
@@ -12,69 +15,58 @@ import com.sap.conn.jco.JCoFunctionTemplate;
 import com.sap.conn.jco.ext.DestinationDataEventListener;
 import com.sap.conn.jco.ext.DestinationDataProvider;
 
-public class BapiConnector
-{
+public class SapClientConnector {
+	
 	private JCoFunction bapiFunction = null;
 	private JCoDestination bapiDestination = null;
+	private static Log logger = LogFactory.getLog(SapClientConnector.class);
 	
 	private Properties bapiProperties = null;
-    private class BapiDestinationDataProvider implements DestinationDataProvider
-    {
+    private class BapiDestinationDataProvider implements DestinationDataProvider {
     	 
         private DestinationDataEventListener eL;
         
-        public Properties getDestinationProperties(String environment)
-        {
+        public Properties getDestinationProperties(String environment) {
         	return bapiProperties;
          }
         
-        public void setDestinationDataEventListener(DestinationDataEventListener eventListener)
-        {
+        public void setDestinationDataEventListener(DestinationDataEventListener eventListener) {
             this.eL = eventListener;
         }
 
-        public boolean supportsEvents()
-        {
+        public boolean supportsEvents() {
             return true;
         }
     } 
     
-    // This function returns the Properties From Enviroment
-    private Properties getDestinationPropertiesFromEnvironment(String environment) throws IOException
-    {
-    	InputStream inStream = this.getClass().getClassLoader().getResourceAsStream(environment + "bapi.jcoDestination");
+    private Properties getDestinationPropertiesFromEnvironment() throws IOException {
+    	InputStream inStream = this.getClass().getClassLoader().getResourceAsStream("bapi.jcoDestination");
     	Properties connectProperties = new Properties();
     	connectProperties.load(inStream);
         return connectProperties;
     }
     
-    public void connect(String environment, String template) throws JCoException, IOException{
+    public void connectBapi(String template) throws JCoException, IOException {
+    	logger.info("Making connection for template : " + template);
         BapiDestinationDataProvider bapiProvider = new BapiDestinationDataProvider();
-        bapiProperties = getDestinationPropertiesFromEnvironment(environment);
-        try
-        {
+        bapiProperties = getDestinationPropertiesFromEnvironment();
+        try {
             com.sap.conn.jco.ext.Environment.registerDestinationDataProvider(bapiProvider);
+        } catch(IllegalStateException providerAlreadyRegisteredException) {
+            logger.info("Environment already registered. Skipping the registration...");
         }
-        catch(IllegalStateException providerAlreadyRegisteredException)
-        {
-            //somebody else registered its implementation, 
-            //stop the execution
-            throw new Error(providerAlreadyRegisteredException);
-        }
-         
         JCoDestination destination = JCoDestinationManager.getDestination(bapiProperties.getProperty(DestinationDataProvider.JCO_DEST));
         setBapiDestination(destination);
-        System.out.println(destination.getAttributes());
+        logger.info("Template: " +  template + "Connection properties : " + destination.getAttributes());
         JCoFunctionTemplate jCoFunctionTemplate = destination.getRepository().getFunctionTemplate(template);
         setBapiFunction(jCoFunctionTemplate.getFunction());
-        
     }
 
 	public JCoFunction getBapiFunction() {
 		return bapiFunction;
 	}
 
-	public void setBapiFunction(JCoFunction bapiFunction) {
+	private void setBapiFunction(JCoFunction bapiFunction) {
 		this.bapiFunction = bapiFunction;
 	}
 	
@@ -82,7 +74,7 @@ public class BapiConnector
 		return bapiDestination;
 	}
 
-	public void setBapiDestination(JCoDestination bapiDestination) {
+	private void setBapiDestination(JCoDestination bapiDestination) {
 		this.bapiDestination = bapiDestination;
 	}
 }
