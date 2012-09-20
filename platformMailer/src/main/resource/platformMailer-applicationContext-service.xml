@@ -9,38 +9,25 @@
             http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-    
     <!-- Enable @Transactional support -->
     <tx:annotation-driven/>
     
+    <!-- Add new Managers here -->
+
     <!-- Add new services here -->
-    <bean id="giftVoucherService" class="com.fb.platform.egv.service.impl.GiftVoucherServiceImpl">
-        <property name="giftVoucherDao" ref="giftVoucherDao"></property>
-        <property name="mailSender" ref="mailSender"></property>
-         <property name="smsSender" ref="smsSender"></property>
-    </bean>
     
     <bean id="springMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
   		<property name="host" value="174.36.208.35"/>
-        <property name="port" value="25"/>  
+        <property name="port" value="25"/>
         <property name="javaMailProperties">
             <props>
                 <prop key="mail.smtp.localhost">mail.pantaloon.com</prop>
             </props>
          </property>
 	</bean>
-    <bean id="mailSender" class="com.fb.commons.mail.impl.MailSenderImpl">
+	
+	<bean id="mailSender" class="com.fb.commons.mail.impl.MailSenderImpl">
 	  	<property name="springMailSender" ref="springMailSender"/>
 	</bean>
 	
-	<bean id="smsSender" class="com.fb.commons.sms.SmsSender">
-	</bean>
-    
-
-    <!-- Add new Managers here -->
-    <bean id="giftVoucherManager" class="com.fb.platform.egv.service.impl.GiftVoucherManagerImpl">
-        <property name="giftVoucherService" ref="giftVoucherService"></property>
-        <property name="authenticationService" ref="authenticationService"></property>
-    </bean> 
-    
 </beans>

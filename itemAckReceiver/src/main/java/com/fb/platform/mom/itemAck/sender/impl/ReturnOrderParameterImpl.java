@@ -15,6 +15,7 @@ public class ReturnOrderParameterImpl implements ItemAckParameters {
 	public List<NameValuePair> getParameters(List<NameValuePair> parameters, ItemTO itemAck) {
 		ReturnOrderTO returnOrderTO = (ReturnOrderTO) itemAck;
 		parameters.add(new BasicNameValuePair("returnOrderId", returnOrderTO.getOrderId()));
+		parameters.add(new BasicNameValuePair("retID", returnOrderTO.getReturnId()));
 		if(returnOrderTO.getQuantity() != null) {
 			parameters.add(new BasicNameValuePair("returnQuantity", returnOrderTO.getQuantity().toString()));
 		}

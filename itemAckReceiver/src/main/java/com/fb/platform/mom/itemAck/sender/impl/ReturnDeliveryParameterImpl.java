@@ -15,7 +15,8 @@ public class ReturnDeliveryParameterImpl implements ItemAckParameters {
 	@Override
 	public List<NameValuePair> getParameters(List<NameValuePair> parameters, ItemTO itemAck) {
 		ReturnDeliveryTO returnDeliveryTO = (ReturnDeliveryTO) itemAck;
-		parameters.add(new BasicNameValuePair("returndeliveryno", returnDeliveryTO.getNumber()));
+		parameters.add(new BasicNameValuePair("retDeliveryNo", returnDeliveryTO.getNumber()));
+		parameters.add(new BasicNameValuePair("retID", returnDeliveryTO.getReturnId()));
 		parameters.add(new BasicNameValuePair("returndeliveryType", returnDeliveryTO.getType()));
 		if(returnDeliveryTO.getReturnCreatedDate() != null) {
 			parameters.add(new BasicNameValuePair("returnCreatedDate", new SimpleDateFormat("dd-MM-yyyy").format(returnDeliveryTO.getReturnCreatedDate().toDate())));

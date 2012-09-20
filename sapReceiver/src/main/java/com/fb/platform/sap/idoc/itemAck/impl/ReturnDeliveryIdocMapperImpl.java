@@ -30,6 +30,7 @@ public class ReturnDeliveryIdocMapperImpl implements ItemAckIdocMapper {
 			returnDelivery.setReturnCreatedDate(new DateTime(year, month, day, 0, 0));
 		}
 		returnDelivery.setNumber(sapItemAck.getVBELN());
+		returnDelivery.setReturnId(sapItemAck.getREVBELN());
 		returnDelivery.setType(sapItemAck.getLFART());
 		returnDelivery.setReturnCreatedBy(sapItemAck.getERNAMDEL());
 		return returnDelivery;

@@ -17,6 +17,7 @@ public class ReturnOrderTO extends ItemTO {
 	private static final long serialVersionUID = -1416820810593424096L;
 	
 	private String returnOrderId;
+	private String returnId;
 	private BigDecimal returnQuantity;
 	private String storageLocation;
 	private String category;
@@ -27,6 +28,14 @@ public class ReturnOrderTO extends ItemTO {
 
 	public void setReturnOrderId(String returnOrderId) {
 		this.returnOrderId = returnOrderId;
+	}
+
+	public String getReturnId() {
+		return returnId;
+	}
+
+	public void setReturnId(String returnId) {
+		this.returnId = returnId;
 	}
 
 	public BigDecimal getReturnQuantity() {
@@ -57,6 +66,7 @@ public class ReturnOrderTO extends ItemTO {
 	public String toString(){
 		String cancelItem = super.toString()
 				+ "\nreturn order id : " + returnOrderId
+				+ "\nreturn id : " + returnId
 				+ "\nreturn quantity : " + returnQuantity
 				+ "\nreturn storage location : " + storageLocation
 				+ "\nreturn category : " + category;

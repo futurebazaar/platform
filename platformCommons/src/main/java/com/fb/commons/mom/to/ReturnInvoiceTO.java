@@ -16,6 +16,7 @@ public class ReturnInvoiceTO extends ItemTO {
 	private static final long serialVersionUID = 1373091425879467564L;
 	
 	private String number;
+	private String returnId;
 	private DateTime invoiceDate;
 	private String type;
 	private String invoiceNet;
@@ -44,11 +45,18 @@ public class ReturnInvoiceTO extends ItemTO {
 	public void setInvoiceNet(String invoiceNet) {
 		this.invoiceNet = invoiceNet;
 	}
+	public String getReturnId() {
+		return returnId;
+	}
+	public void setReturnId(String returnId) {
+		this.returnId = returnId;
+	}
 
 	@Override
 	public String toString(){
 		String returnInvoice = super.toString()
 				+ "\nreturn invoice number : " + number
+				+ "\nreturn id : " + returnId
 				+ "\nreturn invoice type : " + type
 				+ "\nreturn invoice date : " + invoiceDate
 				+ "\nreturn invoice net : " + invoiceNet;

@@ -99,6 +99,7 @@ import javax.xml.bind.annotation.XmlType;
     "mandt",
     "sovbeln",
     "soposnr",
+    "revbeln",
     "vbelv",
     "posnv",
     "vbeln",
@@ -165,6 +166,8 @@ public class ZATGFLOW {
     protected String sovbeln;
     @XmlElement(name = "SO_POSNR")
     protected int soposnr;
+    @XmlElement(name = "RE_VBELN")
+    protected String revbeln;
     @XmlElement(name = "VBELV")
     protected String vbelv;
     @XmlElement(name = "POSNV")
@@ -286,6 +289,22 @@ public class ZATGFLOW {
      */
     public void setSOVBELN(String value) {
         this.sovbeln = value;
+    }
+    
+    /**
+     * Gets the value of the revbeln property.
+     * 
+     */
+    public String getREVBELN() {
+        return revbeln;
+    }
+
+    /**
+     * Sets the value of the revbeln property.
+     * 
+     */
+    public void setREVBELN(String value) {
+        this.revbeln = value;
     }
 
     /**

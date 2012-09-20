@@ -22,6 +22,7 @@ public class ReturnOrderIdocMapperImpl implements ItemAckIdocMapper {
 		ReturnOrderTO returnOrder = new ReturnOrderTO();
 		returnOrder.setItemTO(itemAck);
 		returnOrder.setReturnOrderId(sapItemAck.getVBELN());
+		returnOrder.setReturnId(sapItemAck.getREVBELN());
 		returnOrder.setReturnQuantity(sapItemAck.getRFMNG());
 		returnOrder.setStorageLocation(sapItemAck.getLGORT());
 		returnOrder.setCategory(sapItemAck.getPSTYV());

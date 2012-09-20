@@ -60,11 +60,13 @@ public class ItemAckIdocMapperFactory {
 				itemAck.setOrderState(sapItemAck.getVBTYPN());
 				break;
 			case O:
-				if(precedingOrderState == PrecedingOrderStateEnum.T) {
+				/* SAP confirmation that O simply means return invoice no further checking is required
+				 * if(precedingOrderState == PrecedingOrderStateEnum.T) {
 					itemAck = new PgrCreationIdocMapperImpl().updateItemAck(sapItemAck, orderItem);
 				} else {
 					itemAck = new ReturnInvoiceIdocMapperImpl().updateItemAck(sapItemAck, orderItem);
-				}
+				}*/
+				itemAck = new ReturnInvoiceIdocMapperImpl().updateItemAck(sapItemAck, orderItem);
 				itemAck.setOrderState(sapItemAck.getVBTYPN());
 				break;
 			case R:

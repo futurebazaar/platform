@@ -17,6 +17,7 @@ public class ReturnDeliveryTO extends ItemTO {
 	private static final long serialVersionUID = -4093465291534799187L;
 	
 	private String number;
+	private String returnId;
 	private String type;
 	private DateTime returnCreatedDate;
 	private String returnCreatedBy;
@@ -45,10 +46,18 @@ public class ReturnDeliveryTO extends ItemTO {
 	public void setReturnCreatedBy(String returnCreatedBy) {
 		this.returnCreatedBy = returnCreatedBy;
 	}
+	public String getReturnId() {
+		return returnId;
+	}
+	public void setReturnId(String returnId) {
+		this.returnId = returnId;
+	}
+	
 	@Override
 	public String toString(){
 		String returnDelivery = super.toString()
 				+ "\nreturn delivery number : " + number
+				+ "\nreturn id : " + returnId
 				+ "\nreturn delivery type : " + type
 				+ "\nreturn created date : " + returnCreatedDate
 				+ "\nreturn created by : " + returnCreatedBy;

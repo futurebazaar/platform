@@ -30,6 +30,7 @@ public class ReturnInvoiceIdocMapperImpl implements ItemAckIdocMapper {
 			returnInvoice.setInvoiceDate(new DateTime(year, month, day, 0, 0));
 		}
 		returnInvoice.setNumber(sapItemAck.getVBELN());
+		returnInvoice.setReturnId(sapItemAck.getREVBELN());
 		returnInvoice.setType(sapItemAck.getLFART());
 		returnInvoice.setInvoiceNet(sapItemAck.getNETWR());
 		return returnInvoice;
