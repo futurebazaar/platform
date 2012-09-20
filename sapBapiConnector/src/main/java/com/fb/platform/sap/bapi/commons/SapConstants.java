@@ -1,4 +1,4 @@
-package com.fb.platform.sap.bapi.utils;
+package com.fb.platform.sap.bapi.commons;
 
 public class SapConstants {
 	

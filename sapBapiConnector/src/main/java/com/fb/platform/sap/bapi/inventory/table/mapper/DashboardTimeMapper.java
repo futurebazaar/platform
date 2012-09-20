@@ -1,9 +1,9 @@
 package com.fb.platform.sap.bapi.inventory.table.mapper;
 
+import com.fb.platform.sap.bapi.commons.SapConstants;
+import com.fb.platform.sap.bapi.commons.SapUtils;
 import com.fb.platform.sap.bapi.inventory.table.BapiInventoryTable;
 import com.fb.platform.sap.bapi.to.SapInventoryDashboardRequestTO;
-import com.fb.platform.sap.bapi.utils.SapConstants;
-import com.fb.platform.sap.bapi.utils.SapUtils;
 import com.sap.conn.jco.JCoFunction;
 
 public class DashboardTimeMapper {
