@@ -34,10 +34,11 @@ public class SmsTO {
 		StringBuilder toListString = new StringBuilder();
 		for (int i = 0; i < toList.size(); i++) {
 			toListString.append(toList.get(i));
-			if (i > 0) {
+			if (i < (toList.size() - 1)) {
 				toListString.append(";");
 			}
 		}
+		System.out.println(toListString.toString());
 		return toListString.toString();
 	}
 }

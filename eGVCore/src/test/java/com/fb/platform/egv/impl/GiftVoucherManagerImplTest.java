@@ -160,8 +160,7 @@ public class GiftVoucherManagerImplTest extends BaseTestCase {
 
 		assertNotNull(createGiftVoucherResponse);
 		assertNotNull(createGiftVoucherResponse.getSessionToken());
-		// assertEquals(CreateResponseStatusEnum.SUCCESS,
-		// createGiftVoucherResponse.getResponseStatus());
+		assertEquals(CreateResponseStatusEnum.SUCCESS, createGiftVoucherResponse.getResponseStatus());
 
 	}
 
@@ -198,8 +197,7 @@ public class GiftVoucherManagerImplTest extends BaseTestCase {
 
 		assertNotNull(createGiftVoucherResponse);
 		assertNotNull(createGiftVoucherResponse.getSessionToken());
-		// assertEquals(CreateResponseStatusEnum.SUCCESS,
-		// createGiftVoucherResponse.getResponseStatus());
+		assertEquals(CreateResponseStatusEnum.SUCCESS, createGiftVoucherResponse.getResponseStatus());
 
 	}
 
@@ -390,8 +388,7 @@ public class GiftVoucherManagerImplTest extends BaseTestCase {
 
 		assertNotNull(sendPinGiftVoucherResponse);
 		assertNotNull(sendPinGiftVoucherResponse.getSessionToken());
-		// assertEquals(SendPinResponseStatusEnum.SUCCESS,
-		// sendPinGiftVoucherResponse.getResponseStatus());
+		assertEquals(SendPinResponseStatusEnum.SUCCESS, sendPinGiftVoucherResponse.getResponseStatus());
 		assertEquals(-12345678924L, sendPinGiftVoucherResponse.getNumber());
 
 	}
