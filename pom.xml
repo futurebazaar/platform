@@ -421,7 +421,7 @@
         <module>deliveryDeleteReceiver</module>
         <module>itemAckReceiver</module>
         <module>launcher</module>
-        <module>sapBapiConnector</module>
+	<!-- <module>sapBapiConnector</module> -->
         <module>walletCore</module>
         <module>walletWS</module>
     	<module>promotionWS</module>
