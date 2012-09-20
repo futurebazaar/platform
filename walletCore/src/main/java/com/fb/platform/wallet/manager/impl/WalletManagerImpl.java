@@ -348,7 +348,7 @@ public class WalletManagerImpl implements WalletManager {
 			
 			Money amount = new Money(revertRequest.getAmount());
 			
-			WalletTransaction transaction = walletService.reverseTransaction(revertRequest.getUserId(), revertRequest.getClientId(), revertRequest.getTransactionIdToRevert(), amount);
+			WalletTransaction transaction = walletService.reverseTransaction(revertRequest.getUserId(), revertRequest.getClientId(), revertRequest.getTransactionIdToRevert(), amount,revertRequest.getNewRefundId());
 			response.setTransactionId(transaction.getTransactionId());
 			response.setStatus(RevertStatusEnum.SUCCESS);
 			

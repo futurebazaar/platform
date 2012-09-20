@@ -9,6 +9,7 @@ public class RevertRequest {
 	private BigDecimal amount;
 	private String sessionToken;
 	private String transactionIdToRevert;
+	private long newRefundId;
 
 	public long getUserId() {
 		return userId;
@@ -49,5 +50,20 @@ public class RevertRequest {
 	public void setTransactionIdToRevert(String transactionIdToRevert) {
 		this.transactionIdToRevert = transactionIdToRevert;
 	}
+
+	/**
+	 * @return the newRefundId
+	 */
+	public long getNewRefundId() {
+		return newRefundId;
+	}
+
+	/**
+	 * @param newRefundId the newRefundId to set
+	 */
+	public void setNewRefundId(long newRefundId) {
+		this.newRefundId = newRefundId;
+	}
+	
 
 }
