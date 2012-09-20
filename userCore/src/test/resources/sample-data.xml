@@ -31,7 +31,7 @@
            	<value description="username">8080532955</value>
             <value description="first_name">Neha</value>
             <value description="last_name">Garani</value>
-            <value description="email">neha.garani@gmail.com</value>
+            <value description="email">removingneha@test.com</value>
             <value description="password" >sha1$da42a$46b44c51df06fcfdf3eda17286ed98b34bfb4917</value>
             <value description="is_staff">0</value>
             <value description="is_active">1</value>
@@ -209,7 +209,7 @@
             <value description="buyer_or_seller">buyer</value>
             <null />
             <value description="full_name">jas</value>
-            <value description="primary_email">jasvipul@gmail.com</value>
+            <value description="primary_email">removingjas@test.com</value>
             <value description="secondary_email"></value>
             <value description="gender"></value>
             <value description="salutation"></value>
@@ -271,7 +271,7 @@
             <value description="buyer_or_seller">buyer</value>
             <null />
             <value description="full_name">jas</value>
-            <value description="primary_email">jasvipul@gmail.com</value>
+            <value description="primary_email">removingjas@test.com</value>
             <value description="secondary_email"></value>
             <value description="gender"></value>
             <value description="salutation"></value>
@@ -302,7 +302,7 @@
             <value description="buyer_or_seller">buyer</value>
             <null />
             <value description="full_name">jas</value>
-            <value description="primary_email">jasvipul@gmail.com</value>
+            <value description="primary_email">removingjas@test.com</value>
             <value description="secondary_email"></value>
             <value description="gender"></value>
             <value description="salutation"></value>
@@ -333,7 +333,7 @@
             <value description="buyer_or_seller">buyer</value>
             <null />
             <value description="full_name">jas</value>
-            <value description="primary_email">jasvipul@gmail.com</value>
+            <value description="primary_email">removingjas@test.com</value>
             <value description="secondary_email"></value>
             <value description="gender"></value>
             <value description="salutation"></value>
@@ -364,7 +364,7 @@
             <value description="buyer_or_seller">buyer</value>
             <null />
             <value description="full_name">jas</value>
-            <value description="primary_email">jasvipul@gmail.com</value>
+            <value description="primary_email">removingjas@test.com</value>
             <value description="secondary_email"></value>
             <value description="gender"></value>
             <value description="salutation"></value>
@@ -395,7 +395,7 @@
             <value description="buyer_or_seller">buyer</value>
             <null />
             <value description="full_name">jas</value>
-            <value description="primary_email">jasvipul@gmail.com</value>
+            <value description="primary_email">removingjas@test.com</value>
             <value description="secondary_email"></value>
             <value description="gender"></value>
             <value description="salutation"></value>
@@ -457,7 +457,7 @@
             <value description="buyer_or_seller">buyer</value>
             <null />
             <value description="full_name">Neha Garani</value>
-            <value description="primary_email">neha.garani@gmail.com</value>
+            <value description="primary_email">removingneha@test.com</value>
             <value description="secondary_email"></value>
             <value description="gender"></value>
             <value description="salutation"></value>
@@ -517,23 +517,35 @@
 		<column>user_id</column>
 		<column>phone</column>
         <column>type</column>
+        <column>is_verified</column>
+  		<column>verified_on</column>
+  		<column>verification_code</column>
         <row>
         	<value description="id">1</value>
         	<value description="user_id">1</value>
         	<value description="phone">9326164025</value>
             <value description="type">primary</value>
+            <value description="is_verified">1</value>
+            <value description="verified_on">2012-06-27 17:22:52</value>
+            <value description="verification_code">254232</value>
         </row>
         <row>
         	<value description="id">2</value>
         	<value description="user_id">2</value>
         	<value description="phone">9870587074</value>
             <value description="type">primary</value>
+            <value description="is_verified">1</value>
+            <value description="verified_on">2012-06-27 17:22:52</value>
+            <value description="verification_code">23423</value>
         </row>
         <row>
         	<value description="id">3</value>
         	<value description="user_id">6</value>
         	<value description="phone">8080532955</value>
             <value description="type">primary</value>
+            <value description="is_verified">1</value>
+            <value description="verified_on">2012-06-27 17:22:52</value>
+            <value description="verification_code">234324</value>
         </row>
 	</table>
 	<table name="users_email">
@@ -541,29 +553,49 @@
 		<column>email</column>
 		<column>type</column>
         <column>user_id</column>
+        <column>cleaned_email</column>
+        <column>is_verified</column>
+  		<column>verified_on</column>
+  		<column>verification_code</column>
         <row>
         	<value description="id">1</value>
-        	<value description="email">jasvipul@gmail.com</value>
+        	<value description="email">removingjas@test.com</value>
         	<value description="type">primary</value>
             <value description="user_id">1</value>
+            <value description="cleaned_email">1</value>
+            <value description="is_verified">1</value>
+            <value description="verified_on">2012-06-27 17:22:52</value>
+            <value description="verification_code">sar4</value>
         </row>
         <row>
         	<value description="id">2</value>
         	<value description="email">test@test.com</value>
         	<value description="type">primary</value>
             <value description="user_id">2</value>
+            <value description="cleaned_email">test@test.com</value>
+            <value description="is_verified">1</value>
+            <value description="verified_on">2012-06-27 17:22:52</value>
+            <value description="verification_code">wrwrr</value>
         </row>
         <row>
         	<value description="id">3</value>
-        	<value description="email">neha.garani@gmail.com</value>
+        	<value description="email">removingneha@test.com</value>
         	<value description="type">primary</value>
             <value description="user_id">6</value>
+            <value description="cleaned_email">nehagarani@gmail.com</value>
+            <value description="is_verified">1</value>
+            <value description="verified_on">2012-06-27 17:22:52</value>
+            <value description="verification_code">123454354</value>
         </row>
     	<row>
         	<value description="id">4</value>
         	<value description="email">test.admin@gmail.com</value>
         	<value description="type">primary</value>
             <value description="user_id">24</value>
+            <value description="cleaned_email">testadmin@gmail.com</value>
+            <value description="is_verified">1</value>
+            <value description="verified_on">2012-06-27 17:22:52</value>
+            <value description="verification_code">uhiuh</value>
         </row> 
 	</table>
 	<table name="locations_country">

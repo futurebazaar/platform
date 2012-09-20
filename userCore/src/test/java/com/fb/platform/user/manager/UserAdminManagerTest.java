@@ -50,7 +50,7 @@ import com.fb.platform.user.manager.model.auth.LogoutResponse;
 
 public class UserAdminManagerTest extends BaseTestCase {
 
-	private static final String key  = "jasvipul@gmail.com";
+	private static final String key  = "removingjas@test.com";
 
 	@Autowired
 	private UserAdminManager userAdminManager;
@@ -61,7 +61,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testUserManager() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -98,7 +98,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testGetUserWrongSession() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -116,7 +116,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testGetUserInvalidUser() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -180,7 +180,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testAddUserDuplicate() {
 		AddUserRequest addUserRequest = new AddUserRequest();
-		addUserRequest.setUserName("jasvipul@gmail.com");
+		addUserRequest.setUserName("removingjas@test.com");
 		addUserRequest.setPassword("testpass");
 		AddUserResponse addUserResponse = userAdminManager.addUser(addUserRequest);
 		assertNotNull(addUserResponse);
@@ -197,7 +197,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testUpdateUser() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 		LoginResponse response = userManager.login(request);
 		
@@ -221,7 +221,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testUpdateUserMoreParameter() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 		LoginResponse response = userManager.login(request);
 		
@@ -251,7 +251,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testUpdateUserWrongSession() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 		LoginResponse response = userManager.login(request);
 		
@@ -271,7 +271,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testUpdateUserFailNoSession() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 		LoginResponse response = userManager.login(request);
 		
@@ -294,7 +294,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testIsValidUser(){
 		IsValidUserRequest isValidUserRequest = new IsValidUserRequest();
-		isValidUserRequest.setUserName("jasvipul@gmail.com");
+		isValidUserRequest.setUserName("removingjas@test.com");
 		IsValidUserResponse isValidUserResponse = userAdminManager.isValidUser(isValidUserRequest);
 		assertNotNull(isValidUserResponse);
 		assertNotNull(isValidUserResponse.getUserId());
@@ -321,7 +321,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testGetUserEmail(){
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 		LoginResponse response = userManager.login(request);
 		
@@ -368,7 +368,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testGetUserEmailFailNoSession(){
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 		LoginResponse response = userManager.login(request);
 		
@@ -387,7 +387,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testGetUserEmailFailInvalidSession(){
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 		LoginResponse response = userManager.login(request);
 		
@@ -415,7 +415,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testAddUserEmail(){
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 		LoginResponse response = userManager.login(request);
 		UserEmail userEmail = new UserEmail();
@@ -438,7 +438,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testAddUserEmailInvalid(){
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 		LoginResponse response = userManager.login(request);
 		UserEmail userEmail = new UserEmail();
@@ -468,7 +468,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testAddUserEmailNOSession(){
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 		LoginResponse response = userManager.login(request);
 		UserEmail userEmail = new UserEmail();
@@ -490,7 +490,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testAddUserEmailInvalidSession(){
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 		LoginResponse response = userManager.login(request);
 		UserEmail userEmail = new UserEmail();
@@ -512,11 +512,11 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testAddUserEmailAlready(){
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 		LoginResponse response = userManager.login(request);
 		UserEmail userEmail = new UserEmail();
-		userEmail.setEmail("jasvipul@gmail.com");
+		userEmail.setEmail("removingjas@test.com");
 		userEmail.setType("primary");
 		
 		AddUserEmailRequest addUserEmailRequest = new AddUserEmailRequest();
@@ -535,7 +535,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testDeleteUserEmail(){
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 		LoginResponse response = userManager.login(request);
 		UserEmail userEmail = new UserEmail();
@@ -600,7 +600,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testGetUserPhone(){
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 		LoginResponse response = userManager.login(request);
 		
@@ -650,7 +650,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testGetUserPhoneFailNoSession(){
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 		LoginResponse response = userManager.login(request);
 		
@@ -669,7 +669,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testGetUserPhoneFailInvalidSession(){
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 		LoginResponse response = userManager.login(request);
 		
@@ -697,7 +697,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testAddUserPhone(){
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 		LoginResponse response = userManager.login(request);
 		UserPhone userPhone = new UserPhone();
@@ -721,7 +721,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testAddUserPhoneInvalid(){
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 		LoginResponse response = userManager.login(request);
 		UserPhone userPhone = new UserPhone();
@@ -751,7 +751,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testAddUserPhoneNOSession(){
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 		LoginResponse response = userManager.login(request);
 		UserPhone userPhone = new UserPhone();
@@ -773,7 +773,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testAddUserPhoneInvalidSession(){
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 		LoginResponse response = userManager.login(request);
 		UserPhone userPhone = new UserPhone();
@@ -796,7 +796,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testAddUserPhoneError(){
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 		LoginResponse response = userManager.login(request);
 		UserPhone userPhone = new UserPhone();
@@ -819,7 +819,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testAddUserPhoneAlready(){
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 		LoginResponse response = userManager.login(request);
 		UserPhone userPhone = new UserPhone();
@@ -842,7 +842,7 @@ public class UserAdminManagerTest extends BaseTestCase {
 	@Test
 	public void testDeleteUserPhone(){
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 		LoginResponse response = userManager.login(request);
 		

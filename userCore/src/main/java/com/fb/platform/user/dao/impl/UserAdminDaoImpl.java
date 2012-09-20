@@ -78,9 +78,9 @@ public class UserAdminDaoImpl implements UserAdminDao {
 			+ " FROM users_profile up , auth_user au WHERE au.id = up.user_id AND au.username = ?";
 	
 
-	private static final String SELECT_EMAILS_BY_USER_ID = "SELECT email, type FROM users_email WHERE user_id = ?";
+	private static final String SELECT_EMAILS_BY_USER_ID = "SELECT email, type,is_verified FROM users_email WHERE user_id = ?";
 
-	private static final String SELECT_PHONES_BY_USER_ID = "SELECT phone, type FROM users_phone WHERE user_id = ?";
+	private static final String SELECT_PHONES_BY_USER_ID = "SELECT phone, type,is_verified FROM users_phone WHERE user_id = ?";
 
 	private static final String SELECT_ALL_USERS = SELECT_USER_FIELDS + "from users_profile up , auth_user au WHERE au.id = up.user_id";
 
@@ -137,8 +137,11 @@ public class UserAdminDaoImpl implements UserAdminDao {
 			+ "email,"
 			+ "type,"
 			+ "user_id,"
-			+ "cleaned_email ) "
-			+ "values (?,?,?,?)";
+			+ "cleaned_email,"
+			+ "is_verified,"
+			+ "verified_on,"
+			+ "verification_code ) "
+			+ "values (?,?,?,?,?,?,?)";
 
 	private static final String INSERT_NEW_PHONE = "INSERT into users_phone ("
 			+ "phone,"
@@ -453,11 +456,14 @@ public class UserAdminDaoImpl implements UserAdminDao {
 			long userid = (Long) keyHolderprofile.getKey();
 			if (userBo.getUserEmail() != null) {
 				for (UserEmailBo userEmailBo : userBo.getUserEmail()) {
-					Object[] objs = new Object[4];
+					Object[] objs = new Object[7];
 					objs[0] = userEmailBo.getEmail();
 					objs[1] = userEmailBo.getType();
 					objs[2] = userid;
 					objs[3] = userEmailBo.getEmail();
+					objs[4] = 0;
+					objs[5] = null;
+					objs[6] = null;
 					jdbcTemplate.update(INSERT_NEW_EMAIL, objs);
 				}
 			}
@@ -562,7 +568,7 @@ public class UserAdminDaoImpl implements UserAdminDao {
 			UserEmailBo userEmailBo = new UserEmailBo();
 			userEmailBo.setEmail(rs.getString("email"));
 			userEmailBo.setType(rs.getString("type"));
-
+			userEmailBo.setVerified(rs.getBoolean("is_verified"));
 			return userEmailBo;
 		}
     }
@@ -574,7 +580,7 @@ public class UserAdminDaoImpl implements UserAdminDao {
 			UserPhoneBo userPhoneBo = new UserPhoneBo();
 			userPhoneBo.setPhoneno(rs.getString("phone"));
 			userPhoneBo.setType(rs.getString("type"));
-
+			userPhoneBo.setVerified(rs.getBoolean("is_verified"));
 			return userPhoneBo;
     	}
     }
@@ -594,11 +600,14 @@ public class UserAdminDaoImpl implements UserAdminDao {
 	@Override
 	public boolean addUserEmail(int userId, UserEmailBo userEmailBo) {
 		if (userEmailBo != null) {
-				Object[] objs = new Object[4];
+				Object[] objs = new Object[7];
 				objs[0] = userEmailBo.getEmail();
 				objs[1] = userEmailBo.getType();
 				objs[2] = userId;
 				objs[3] = userEmailBo.getEmail();
+				objs[4] = 0;
+				objs[5] = null;
+				objs[6] = null;
 				int update = jdbcTemplate.update(INSERT_NEW_EMAIL, objs);
 				if (update > 0) {
 					return true;

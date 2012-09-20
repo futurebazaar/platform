@@ -4,6 +4,7 @@ public class UserEmailBo {
 
 	private String email;
 	private String type;
+	private boolean isVerified;
 	/**
 	 * @return the email
 	 */
@@ -28,9 +29,20 @@ public class UserEmailBo {
 	public void setType(String type) {
 		this.type = type;
 	}
+	
+	public boolean isVerified() {
+		return isVerified;
+	}
+	public void setVerified(boolean isVerified) {
+		this.isVerified = isVerified;
+	}
+	
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
+	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -39,6 +51,7 @@ public class UserEmailBo {
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */

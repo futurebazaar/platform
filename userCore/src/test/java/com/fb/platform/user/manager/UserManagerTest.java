@@ -38,7 +38,7 @@ public class UserManagerTest extends BaseTestCase {
 	@Test
 	public void testLoginWithEmail() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -65,7 +65,7 @@ public class UserManagerTest extends BaseTestCase {
 	@Test
 	public void testLoginInvalidPassword() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("invalid");
 
 		LoginResponse response = userManager.login(request);
@@ -276,7 +276,7 @@ public class UserManagerTest extends BaseTestCase {
 	@Test
 	public void loginWithoutPassword() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 
 		LoginResponse response = userManager.login(request);
 

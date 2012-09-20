@@ -369,22 +369,24 @@
     
     <modules>
     	<module>platformCommons</module>
-	    <module>platformMailer</module>
+	<module>platformMailer</module>
     	<module>platformCaching</module>
     	<module>catalogCommons</module>
         <module>catalogCore</module>
         <module>userCore</module>
         <module>userWS</module>
         <module>authenticationCore</module>
-		<module>fulfilmentCore</module>
-		<module>fulfilmentWS</module>
-		<module>promotionCore</module>
-		<module>promotionAdminWS</module>
-		<module>promotionWS</module>
+	<module>fulfilmentCore</module>
+	<module>fulfilmentWS</module>
+	<module>promotionCore</module>
+	<module>promotionAdminWS</module>
+	<module>promotionWS</module>
         <module>paybackCore</module>
         <module>paybackWS</module>
-		<module>eGVCore</module>
-		<module>eGVWS</module>
+	<module>eGVCore</module>
+	<module>eGVWS</module>
+	<module>walletCore</module>
+	<module>walletWS</module>
     </modules>
 
     <reporting>
@@ -421,8 +423,7 @@
 
     <properties>
         <dao.framework>jdbc</dao.framework>
-        <platform.version>1.0-SNAPSHOT</platform.version>
-        
+        <platform.version>1.1.0</platform.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.version>4.8.2</junit.version>
 		<spring.version>3.0.5.RELEASE</spring.version>
