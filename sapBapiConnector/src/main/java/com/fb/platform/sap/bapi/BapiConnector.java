@@ -1,8 +1,9 @@
 package com.fb.platform.sap.bapi;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
-import com.fb.platform.sap.bapi.order.BapiOrderTemplate;
 import com.sap.conn.jco.JCoDestination;
 import com.sap.conn.jco.JCoDestinationManager;
 import com.sap.conn.jco.JCoException;
@@ -36,39 +37,18 @@ public class BapiConnector
         {
             return true;
         }
-        
-        public void updateEventListener(String destName){
-        	eL.updated(destName);
-        }
     } 
     
     // This function returns the Properties From Enviroment
-    private Properties getDestinationPropertiesFromEnvironment(String environment)
+    private Properties getDestinationPropertiesFromEnvironment(String environment) throws IOException
     {
+    	InputStream inStream = this.getClass().getClassLoader().getResourceAsStream(environment + "bapi.jcoDestination");
     	Properties connectProperties = new Properties();
-    	
-        //adapt parameters in order to configure a valid destination
-    	
-    	//Properties for client TUSHARA
-        connectProperties.setProperty(DestinationDataProvider.JCO_ASHOST, "10.0.7.63");
-        connectProperties.setProperty(DestinationDataProvider.JCO_USER,   "TUSHARA");
-        connectProperties.setProperty(DestinationDataProvider.JCO_PASSWD, "123456");
-        connectProperties.setProperty(DestinationDataProvider.JCO_SYSNR,  "01");
-        connectProperties.setProperty(DestinationDataProvider.JCO_CLIENT, "500");
-        connectProperties.setProperty(DestinationDataProvider.JCO_DEST , "ZATGJCAPS_DV1");
-
-        // Properties for client RFCATG NOT WORKING: Missing Something
-        /*connectProperties.setProperty(DestinationDataProvider.JCO_SYSNR,  "00");
-        connectProperties.setProperty(DestinationDataProvider.JCO_CLIENT, "239");
-        connectProperties.setProperty(DestinationDataProvider.JCO_USER,   "RFCATG");
-        connectProperties.setProperty(DestinationDataProvider.JCO_PASSWD, "welcome1");
-        connectProperties.setProperty(DestinationDataProvider.JCO_LANG,   "en");*/
-        
-        connectProperties.setProperty(DestinationDataProvider.JCO_POOL_CAPACITY, "1");
+    	connectProperties.load(inStream);
         return connectProperties;
     }
     
-    public void connect(String environment, String template) throws JCoException{
+    public void connect(String environment, String template) throws JCoException, IOException{
         BapiDestinationDataProvider bapiProvider = new BapiDestinationDataProvider();
         bapiProperties = getDestinationPropertiesFromEnvironment(environment);
         try

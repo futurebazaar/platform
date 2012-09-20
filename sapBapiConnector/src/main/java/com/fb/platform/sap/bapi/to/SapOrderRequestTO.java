@@ -56,4 +56,12 @@ public class SapOrderRequestTO {
 		this.pricingTO = pricingTO;
 	}
 	
+	@Override
+	public String toString() {
+		return "SapOrderRequestTO [orderType=" + orderType + ", orderHeaderTO="
+				+ orderHeaderTO + ", lineItemTO=" + lineItemTO + ", paymentTO="
+				+ paymentTO + ", addressTO=" + addressTO + ", pricingTO="
+				+ pricingTO + "]";
+	}
+	
 }
