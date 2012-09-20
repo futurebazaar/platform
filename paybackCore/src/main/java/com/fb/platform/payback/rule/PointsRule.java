@@ -7,6 +7,11 @@ import com.fb.platform.payback.to.OrderItemRequest;
 import com.fb.platform.payback.to.OrderRequest;
 import com.fb.platform.payback.util.PointsUtil;
 
+/**
+ * 
+ * @author anubhav
+ *
+ */
 public interface PointsRule extends Serializable {
 
 	public void init(RuleConfiguration ruleConfig);
@@ -17,6 +22,12 @@ public interface PointsRule extends Serializable {
 
 	public void setPointsUtil(PointsUtil pointsUtil);
 
-	boolean allowNext();
+	/**
+	 * Indicates whether next rule in the chain should be executed.
+	 * @param request
+	 * @param itemRequest
+	 * @return
+	 */
+	boolean allowNext(OrderRequest request, OrderItemRequest itemRequest);
 
 }
