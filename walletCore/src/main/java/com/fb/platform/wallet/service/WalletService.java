@@ -126,7 +126,7 @@ public interface WalletService {
 	 * @throws PlatformException When an unrecoverable error happens.
 	 * @return WalletTransaction 
 	**/
-	public WalletTransaction reverseTransaction(long userId, long clientId,String transactionId,Money amount) throws WalletNotFoundException,InvalidTransactionIdException ,PlatformException;
+	public WalletTransaction reverseTransaction(long userId, long clientId,String transactionId,Money amount,long newRefundId) throws WalletNotFoundException,InvalidTransactionIdException ,PlatformException;
 
 	
 	/**

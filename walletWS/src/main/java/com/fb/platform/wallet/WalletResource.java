@@ -380,6 +380,7 @@ public class WalletResource {
 			apiRevertReq.setClientId(xmlRevertReq.getClientId());
 			apiRevertReq.setAmount(xmlRevertReq.getAmount());
 			apiRevertReq.setTransactionIdToRevert(xmlRevertReq.getTransactionIdToRevert());
+			apiRevertReq.setNewRefundId(xmlRevertReq.getNewRefundId());
 
 			com.fb.platform.wallet.manager.model.access.RevertResponse apiRevertResponse = walletManager.revertWalletTransaction(apiRevertReq);
 

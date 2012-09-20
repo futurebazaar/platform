@@ -319,7 +319,7 @@ public class WalletServiceTest extends BaseTestCase {
 		assertNotNull(walletTransactionCr3);
 		assertNotNull(walletTransactionDebit1);
 		assertNotNull(walletTransactionDebit2);
-		WalletTransaction walletTransactionRev = walletService.reverseTransaction(6, -5, walletTransactionDebit2.getTransactionId(),null);
+		WalletTransaction walletTransactionRev = walletService.reverseTransaction(6, -5, walletTransactionDebit2.getTransactionId(),null,0);
 		assertNotNull(walletTransactionRev);
 		assertEquals(new BigDecimal("500.00"), walletTransactionRev.getWallet().getTotalAmount().getAmount());		
 	}
@@ -339,13 +339,13 @@ public class WalletServiceTest extends BaseTestCase {
 		assertNotNull(walletTransactionCr3);
 		assertNotNull(walletTransactionDebit1);
 		assertNotNull(walletTransactionDebit2);
-		WalletTransaction walletTransactionRev = walletService.reverseTransaction(6, -5, walletTransactionDebit2.getTransactionId(),new Money(new BigDecimal("200.00")));
+		WalletTransaction walletTransactionRev = walletService.reverseTransaction(6, -5, walletTransactionDebit2.getTransactionId(),new Money(new BigDecimal("200.00")),0);
 		assertNotNull(walletTransactionRev);
 		assertEquals(new BigDecimal("300.00"), walletTransactionRev.getWallet().getTotalAmount().getAmount());
 		assertEquals(new BigDecimal("200.00"), walletTransactionRev.getWallet().getRefundSubWallet().getAmount());
 		assertEquals(new BigDecimal("100.00"), walletTransactionRev.getWallet().getCashSubWallet().getAmount());
 		
-		WalletTransaction walletTransactionRevAgain = walletService.reverseTransaction(6, -5, walletTransactionDebit2.getTransactionId(),new Money(new BigDecimal("150.00")));
+		WalletTransaction walletTransactionRevAgain = walletService.reverseTransaction(6, -5, walletTransactionDebit2.getTransactionId(),new Money(new BigDecimal("150.00")),0);
 		assertNotNull(walletTransactionRevAgain);
 		assertEquals(new BigDecimal("450.00"), walletTransactionRevAgain.getWallet().getTotalAmount().getAmount());
 		assertEquals(new BigDecimal("200.00"), walletTransactionRevAgain.getWallet().getRefundSubWallet().getAmount());
@@ -386,14 +386,14 @@ public class WalletServiceTest extends BaseTestCase {
 		assertEquals(new BigDecimal("0.00"), walletTransactionDebit2.getWallet().getCashSubWallet().getAmount());
 		assertEquals(new BigDecimal("400.00"), walletTransactionDebit2.getWallet().getGiftSubWallet().getAmount());
 		
-		WalletTransaction walletTransactionRev = walletService.reverseTransaction(6, -5, walletTransactionDebit2.getTransactionId(),new Money(new BigDecimal("150.00")));
+		WalletTransaction walletTransactionRev = walletService.reverseTransaction(6, -5, walletTransactionDebit2.getTransactionId(),new Money(new BigDecimal("150.00")),0);
 		assertNotNull(walletTransactionRev);
 		assertEquals(new BigDecimal("550.00"), walletTransactionRev.getWallet().getTotalAmount().getAmount());
 		assertEquals(new BigDecimal("0.00"), walletTransactionRev.getWallet().getRefundSubWallet().getAmount());
 		assertEquals(new BigDecimal("0.00"), walletTransactionRev.getWallet().getCashSubWallet().getAmount());
 		assertEquals(new BigDecimal("550.00"), walletTransactionRev.getWallet().getGiftSubWallet().getAmount());
 		
-		WalletTransaction walletTransactionRevAgain = walletService.reverseTransaction(6, -5, walletTransactionDebit2.getTransactionId(),new Money(new BigDecimal("150.00")));
+		WalletTransaction walletTransactionRevAgain = walletService.reverseTransaction(6, -5, walletTransactionDebit2.getTransactionId(),new Money(new BigDecimal("150.00")),0);
 		assertNotNull(walletTransactionRevAgain);
 		assertEquals(new BigDecimal("700.00"), walletTransactionRevAgain.getWallet().getTotalAmount().getAmount());
 		assertEquals(new BigDecimal("0.00"), walletTransactionRevAgain.getWallet().getRefundSubWallet().getAmount());
@@ -407,7 +407,7 @@ public class WalletServiceTest extends BaseTestCase {
 		assertEquals(new BigDecimal("0.00"), walletTransactionDebit3.getWallet().getCashSubWallet().getAmount());
 		assertEquals(new BigDecimal("200.00"), walletTransactionDebit3.getWallet().getGiftSubWallet().getAmount());
 		
-		WalletTransaction walletTransactionRevAgain1 = walletService.reverseTransaction(6, -5, walletTransactionDebit3.getTransactionId(),new Money(new BigDecimal("500.00")));
+		WalletTransaction walletTransactionRevAgain1 = walletService.reverseTransaction(6, -5, walletTransactionDebit3.getTransactionId(),new Money(new BigDecimal("500.00")),0);
 		assertNotNull(walletTransactionRevAgain1);
 		assertEquals(new BigDecimal("700.00"), walletTransactionRevAgain1.getWallet().getTotalAmount().getAmount());
 		assertEquals(new BigDecimal("0.00"), walletTransactionRevAgain1.getWallet().getRefundSubWallet().getAmount());
@@ -420,7 +420,7 @@ public class WalletServiceTest extends BaseTestCase {
 	@Test 
 	public void walletNotFoundTransactionRevTest(){
 		try{
-			WalletTransaction walletTransactionRev = walletService.reverseTransaction(6,-5, "adfsadf",null);
+			WalletTransaction walletTransactionRev = walletService.reverseTransaction(6,-5, "adfsadf",null,0);
 		} catch (Exception e) {
 			assertEquals("com.fb.platform.wallet.service.exception.WalletNotFoundException",e.getClass().getCanonicalName());
 		}			

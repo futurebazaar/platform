@@ -44,15 +44,15 @@ public class Wallet implements Serializable {
 			return walletTransaction;
 	}
 	
-	public WalletTransaction reverseTransaction(WalletTransaction walletTransaction,Money amount,Money alreadyReversed) {
+	public WalletTransaction reverseTransaction(WalletTransaction walletTransaction,Money amount,Money alreadyReversed,long newRefundId) {
 		    if(walletTransaction.getTransactionType().equals(TransactionType.CREDIT)){
 		    	return reverseTransactionCredit(walletTransaction, amount);
 		    }else{
-		    	return reverseTransactionDebit(walletTransaction, amount,alreadyReversed);
+		    	return reverseTransactionDebit(walletTransaction, amount,alreadyReversed,newRefundId);
 		    }
 			
 	}
-	private WalletTransaction reverseTransactionDebit(WalletTransaction walletTransaction , Money amount,Money alreadyReversed){
+	private WalletTransaction reverseTransactionDebit(WalletTransaction walletTransaction , Money amount,Money alreadyReversed,long newRefundId){
 		WalletTransaction walletTransactionRes = new WalletTransaction(this, TransactionType.CREDIT, amount,DateTime.now());
 		Money amountTobeReversed = amount;
 		WalletSubTransaction walletSubTransactionRefund = walletTransaction.subTransactionBySubWallet(SubWalletType.REFUND);
@@ -62,11 +62,11 @@ public class Wallet implements Serializable {
 			if(walletSubTransactionRefund.getAmount().gt(alreadyReversed)){
 				if(amountTobeReversed.lteq(walletSubTransactionRefund.getAmount().minus(alreadyReversed))){
 					refundSubWallet = refundSubWallet.plus(amountTobeReversed);
-					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,amountTobeReversed,0,walletSubTransactionRefund.getRefundId(),0,walletTransaction.getId(),0));
+					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,amountTobeReversed,0,newRefundId,0,walletTransaction.getId(),0));
 					amountTobeReversed = amountTobeReversed.minus(amountTobeReversed);
 				}else{
 					refundSubWallet = refundSubWallet.plus(walletSubTransactionRefund.getAmount().minus(alreadyReversed));
-					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,walletSubTransactionRefund.getAmount().minus(alreadyReversed),0,walletSubTransactionRefund.getRefundId(),0,walletTransaction.getId(),0));
+					walletTransactionRes.getWalletSubTransaction().add(new WalletSubTransaction(SubWalletType.REFUND,walletSubTransactionRefund.getAmount().minus(alreadyReversed),0,newRefundId,0,walletTransaction.getId(),0));
 					amountTobeReversed = amountTobeReversed.minus(walletSubTransactionRefund.getAmount().minus(alreadyReversed));
 				}
 				alreadyReversed = alreadyReversed.minus(alreadyReversed);

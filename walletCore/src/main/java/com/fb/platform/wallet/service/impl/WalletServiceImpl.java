@@ -224,7 +224,7 @@ public class WalletServiceImpl implements WalletService {
 
 	@Override
 	public WalletTransaction reverseTransaction(
-			long userId, long clientId, String transactionId,Money amount)
+			long userId, long clientId, String transactionId,Money amount,long newRefundId)
 			throws WalletNotFoundException, InvalidTransactionIdException,
 			PlatformException {
 		
@@ -244,7 +244,7 @@ public class WalletServiceImpl implements WalletService {
 			Money moneyAlreadyReversed = walletTransactionDao.amountAlreadyReversedByTransactionId(wallet.getId(), walletTransaction.getId());
 			Money amountToBeReversed = amount != null ? amount : walletTransaction.getAmount();
 			if(walletTransaction.getAmount().gteq(amountToBeReversed.plus(moneyAlreadyReversed))){
-				com.fb.platform.wallet.model.WalletTransaction walletTransactionNew = wallet.reverseTransaction(walletTransaction,amountToBeReversed,moneyAlreadyReversed);
+				com.fb.platform.wallet.model.WalletTransaction walletTransactionNew = wallet.reverseTransaction(walletTransaction,amountToBeReversed,moneyAlreadyReversed,newRefundId);
 				walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(walletTransactionNew));
 				walletTransactionRes.setWallet(walletReturnOperations(walletDao.update(wallet)));
 				return walletTransactionRes;
