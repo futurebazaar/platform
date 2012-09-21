@@ -1,13 +1,19 @@
 package com.fb.commons.mom.to;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author nehaga
  *
  */
-public class MailTO {
+public class MailTO implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8082027411633952722L;
+	
 	private String from;
 	private String[] to;
 	private String[] cc;
@@ -78,6 +84,13 @@ public class MailTO {
 	}
 	public void setFromPersonal(String fromPersonal) {
 		this.fromPersonal = fromPersonal;
+	}
+	
+	@Override
+	public String toString() {
+		return "from : " + from
+			+ "\n subject : " + subject 
+			+ "\n message : " + message ;
 	}
 	
 }

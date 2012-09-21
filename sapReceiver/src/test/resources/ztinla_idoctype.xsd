@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="ZTINLA_IDOCTYP">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="IDOC"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="IDOC">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="EDI_DC40"/>
+        <xs:element maxOccurs="unbounded" ref="ZTINLA_SEG_DLVR"/>
+      </xs:sequence>
+      <xs:attribute name="BEGIN" use="required" type="xs:int"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="EDI_DC40">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="TABNAM"/>
+        <xs:element ref="MANDT"/>
+        <xs:element ref="DOCNUM"/>
+        <xs:element ref="DOCREL"/>
+        <xs:element ref="STATUS"/>
+        <xs:element ref="DIRECT"/>
+        <xs:element ref="OUTMOD"/>
+        <xs:element ref="IDOCTYP"/>
+        <xs:element ref="MESTYP"/>
+        <xs:element ref="SNDPOR"/>
+        <xs:element ref="SNDPRT"/>
+        <xs:element ref="SNDPRN"/>
+        <xs:element ref="RCVPOR"/>
+        <xs:element ref="RCVPRT"/>
+        <xs:element ref="RCVPRN"/>
+        <xs:element ref="CREDAT"/>
+        <xs:element ref="CRETIM"/>
+        <xs:element ref="SERIAL"/>
+      </xs:sequence>
+      <xs:attribute name="SEGMENT" use="required" type="xs:int"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="TABNAM" type="xs:string"/>
+  <xs:element name="MANDT" type="xs:int"/>
+  <xs:element name="DOCNUM" type="xs:string"/>
+  <xs:element name="DOCREL" type="xs:int"/>
+  <xs:element name="STATUS" type="xs:int"/>
+  <xs:element name="DIRECT" type="xs:int"/>
+  <xs:element name="OUTMOD" type="xs:int"/>
+  <xs:element name="IDOCTYP" type="xs:string"/>
+  <xs:element name="MESTYP" type="xs:string"/>
+  <xs:element name="SNDPOR" type="xs:string"/>
+  <xs:element name="SNDPRT" type="xs:string"/>
+  <xs:element name="SNDPRN" type="xs:string"/>
+  <xs:element name="RCVPOR" type="xs:string"/>
+  <xs:element name="RCVPRT" type="xs:string"/>
+  <xs:element name="RCVPRN" type="xs:string"/>
+  <xs:element name="CREDAT" type="xs:int"/>
+  <xs:element name="CRETIM" type="xs:int"/>
+  <xs:element name="SERIAL" type="xs:int"/>
+  <xs:element name="ZTINLA_SEG_DLVR">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="T_CODE"/>
+        <xs:element ref="MATNR"/>
+        <xs:choice>
+          <xs:sequence>
+            <xs:element ref="R_WERKS"/>
+            <xs:element ref="R_LGORT"/>
+          </xs:sequence>
+          <xs:sequence>
+            <xs:element ref="I_WERKS"/>
+            <xs:element ref="I_LGORT"/>
+          </xs:sequence>
+        </xs:choice>
+        <xs:element ref="BWART"/>
+        <xs:element ref="MEINS"/>
+        <xs:element ref="TRNSFR_QUAN"/>
+        <xs:element ref="MAT_DOC"/>
+        <xs:element ref="SEG_NUM"/>
+        <xs:element ref="PO_NUM"/>
+        <xs:element ref="CAN_GR"/>
+      </xs:sequence>
+      <xs:attribute name="SEGMENT" use="required" type="xs:int"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="T_CODE" type="xs:string"/>
+  <xs:element name="MATNR" type="xs:string"/>
+  <xs:element name="R_WERKS" type="xs:string"/>
+  <xs:element name="R_LGORT" type="xs:string"/>
+  <xs:element name="I_WERKS" type="xs:string"/>
+  <xs:element name="I_LGORT" type="xs:string"/>
+  <xs:element name="BWART" type="xs:string"/>
+  <xs:element name="MEINS" type="xs:string"/>
+  <xs:element name="TRNSFR_QUAN" type="xs:string"/>
+  <xs:element name="MAT_DOC" type="xs:string"/>
+  <xs:element name="SEG_NUM" type="xs:int"/>
+  <xs:element name="PO_NUM" type="xs:string"/>
+  <xs:element name="CAN_GR" type="xs:string"/>
+</xs:schema>

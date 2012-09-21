@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:tx="http://www.springframework.org/schema/tx"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            http://www.springframework.org/schema/tx 
+            http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <!-- Enable @Transactional support -->
+    <tx:annotation-driven/>
+    
+    <!-- This is to scan and load the CacheAccess classes -->
+    <context:component-scan base-package="com.fb.platform.promotion.cache"></context:component-scan>
+
+    <!-- Add new services here -->
+    <bean id="inventoryMessageReceiver" class="com.fb.platform.mom.inventory.receiver.InventoryMessageReceiver">
+    </bean>
+    
+    <bean id="inventoryManager" class="com.fb.platform.mom.inventory.manager.impl.InventoryManagerImpl">
+    	<property name="inventoryMessageReceiver" ref="inventoryMessageReceiver"/>
+    	<property name="momManager" ref="momManager"></property>
+    </bean>
+    
+    <bean id="mailMessageReceiver" class="com.fb.platform.mom.mail.receiver.MailMessageReceiver">
+    	<property name="mailSender" ref="mailSender"/>
+    </bean>
+    
+    <bean id="mailManager" class="com.fb.platform.mom.mail.manager.impl.MailManagerImpl">
+    	<property name="mailMessageReceiver" ref="mailMessageReceiver"/>
+    	<property name="momManager" ref="momManager"/>
+    </bean>
+    
+    <bean id="springMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+  		<property name="host" value="174.36.208.35"/>
+        <property name="port" value="25"/>
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.localhost">mail.pantaloon.com</prop>
+            </props>
+         </property>
+	</bean>
+	
+	<bean id="mailSender" class="com.fb.commons.mail.impl.MailSenderImpl">
+	  	<property name="springMailSender" ref="springMailSender"/>
+	</bean>
+	
+	<bean id="deliveryDeleteMessageReceiver" class="com.fb.platform.mom.deliveryDelete.receiver.DeliveryDeleteMessageReceiver">
+    </bean>
+    
+    <bean id="deliveryDeleteManager" class="com.fb.platform.mom.deliveryDelete.manager.impl.DeliveryDeleteManagerImpl">
+    	<property name="deliveryDeleteMessageReceiver" ref="deliveryDeleteMessageReceiver"/>
+    	<property name="momManager" ref="momManager"></property>
+    </bean>
+    
+    <bean id="itemAckMessageReceiver" class="com.fb.platform.mom.itemAck.receiver.ItemAckMessageReceiver">
+    </bean>
+    
+    <bean id="itemAckManager" class="com.fb.platform.mom.itemAck.manager.impl.ItemAckManagerImpl">
+    	<property name="itemAckMessageReceiver" ref="itemAckMessageReceiver"/>
+    	<property name="momManager" ref="momManager"></property>
+    </bean>
+	
+</beans>

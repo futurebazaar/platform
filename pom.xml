@@ -186,15 +186,25 @@
             <artifactId>commons-dbcp</artifactId>
             <version>${commons.dbcp.version}</version>
         </dependency>
-		<dependency>
+		<!--<dependency>
 		    <groupId>commons-httpclient</groupId>
 		    <artifactId>commons-httpclient</artifactId>
 		    <version>3.0.1</version>
-		</dependency>
+		</dependency>-->
+	<dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.2</version>
+	</dependency>
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>${commons.lang.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons.io.version}</version>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
@@ -313,6 +323,11 @@
 		    <version>${spring.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jms</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-aspects</artifactId>
 		    <version>${spring.version}</version>
@@ -387,6 +402,14 @@
 	<module>eGVWS</module>
 	<module>walletCore</module>
 	<module>walletWS</module>
+
+    	<module>platformMom</module>
+    	<module>sapReceiver</module>
+    	<module>mailReceiver</module>
+        <module>inventoryReceiver</module>
+        <module>deliveryDeleteReceiver</module>
+        <module>itemAckReceiver</module>
+        <module>launcher</module>
     </modules>
 
     <reporting>
@@ -434,6 +457,7 @@
 		<log4j.version>1.2.16</log4j.version>
 		<commons.dbcp.version>1.2.2</commons.dbcp.version>
 		<commons.lang.version>2.6</commons.lang.version>
+		<commons.io.version>2.3</commons.io.version>
 		<cglib.version>2.2.2</cglib.version>
 
         <!-- Testing dependency versions -->
