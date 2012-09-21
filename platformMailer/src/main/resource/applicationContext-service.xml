@@ -15,10 +15,8 @@
     <!-- Add new services here -->
     
     <bean id="springMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-  		<property name="host" value="10.0.28.31"/>
-        <property name="port" value="587"/>
-        <property name="username" value="keith.fernandez@futuregroup.in" />
-		<property name="password" value="password1" />
+  		<property name="host" value="174.36.208.35"/>
+        <property name="port" value="25"/>
         <property name="javaMailProperties">
             <props>
                 <prop key="mail.smtp.localhost">mail.pantaloon.com</prop>
@@ -26,7 +24,7 @@
          </property>
 	</bean>
 	
-	<bean id="mailSender" class="com.fb.commons.mail.MailSender">
+	<bean id="mailSender" class="com.fb.commons.mail.impl.MailSenderImpl">
 	  	<property name="springMailSender" ref="springMailSender"/>
 	</bean>
 	

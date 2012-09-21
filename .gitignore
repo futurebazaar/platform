@@ -2,6 +2,9 @@
 .settings
 copyWar.sh
 restartTomcat.sh
+execution/
+data/
+data/journal/
 AllCommon/
 authenticationCore/.classpath
 authenticationCore/.project
@@ -113,5 +116,14 @@ paybackCore/.settings/
 paybackCore/.project
 paybackCore/bin/
 paybackCore/target/
-
-
+deliveryDeleteReceiver/.classpath
+fulfilmentCore/.classpath
+fulfilmentWS/.classpath
+inventoryReceiver/.classpath
+itemAckReceiver/.classpath
+launcher/.classpath
+mailReceiver/.classpath
+platformMom/.classpath
+sapReceiver/.classpath
+launcher/cp.txt
+sapReceiver/cp.txt
