@@ -127,3 +127,7 @@ platformMom/.classpath
 sapReceiver/.classpath
 launcher/cp.txt
 sapReceiver/cp.txt
+execution/sapReceiver/dependency/
+execution/launcher/dependency/
+execution/launcher/receivers.properties
+execution/sapReceiver/receivers.properties
