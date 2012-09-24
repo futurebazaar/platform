@@ -4,7 +4,7 @@ public class SapInventoryLevelRequestTO {
 	
 	private String plant;
 	private String material;
-	private String storageLocation;
+	private int storageLocation;
 
 	public String getPlant() {
 		return plant;
@@ -18,10 +18,10 @@ public class SapInventoryLevelRequestTO {
 	public void setMaterial(String material) {
 		this.material = material;
 	}
-	public String getStorageLocation() {
+	public int getStorageLocation() {
 		return storageLocation;
 	}
-	public void setStorageLocation(String storageLocation) {
+	public void setStorageLocation(int storageLocation) {
 		this.storageLocation = storageLocation;
 	}
 	

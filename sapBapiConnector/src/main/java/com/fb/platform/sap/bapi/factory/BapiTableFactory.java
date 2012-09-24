@@ -3,9 +3,9 @@ package com.fb.platform.sap.bapi.factory;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fb.platform.sap.bapi.order.TinlaOrderType;
 import com.fb.platform.sap.bapi.order.table.BapiOrderTable;
 import com.fb.platform.sap.bapi.order.table.OrderTableType;
-import com.fb.platform.sap.bapi.order.table.TinlaOrderType;
 import com.fb.platform.sap.client.commons.SapOrderConstants;
 import com.fb.platform.sap.client.commons.TinlaClient;
 

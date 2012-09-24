@@ -14,9 +14,10 @@ import com.fb.platform.sap.client.commons.SapOrderConstants;
 import com.fb.platform.sap.client.commons.TinlaClient;
 import com.fb.platform.sap.bapi.factory.BapiPricingConditionFactory;
 import com.fb.platform.sap.bapi.factory.BapiTableFactory;
+import com.fb.platform.sap.bapi.factory.SapOrderConfigFactory;
+import com.fb.platform.sap.bapi.order.TinlaOrderType;
 import com.fb.platform.sap.bapi.order.table.BapiOrderTable;
 import com.fb.platform.sap.bapi.order.table.OrderTableType;
-import com.fb.platform.sap.bapi.order.table.TinlaOrderType;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoTable;
 
@@ -64,6 +65,10 @@ public class ItemConditionsMapper {
 	}
 
 	private static void setItemCondition(JCoFunction bapiFunction, ItemConditionsType conditionType, BigDecimal conditionValue, LineItemTO itemTO, TinlaOrderType orderType, OrderHeaderTO orderHeaderTO) {
+		TinlaClient client = TinlaClient.valueOf(orderHeaderTO.getClient());
+		if (client.equals(TinlaClient.BIGBAZAAR) && itemTO.getOperationCode().equals(SapOrderConstants.CANCEL_FLAG) && orderType.equals(TinlaOrderType.MOD_ORDER)) {
+			return;
+		}
 		Map<OrderTableType, BapiOrderTable> conditionTables = BapiTableFactory.getConditionTables(orderType, TinlaClient.valueOf(orderHeaderTO.getClient()));
 		Map<String, String> conditionKeyValueMap = BapiPricingConditionFactory.conditionValueMap(conditionType);
 		JCoTable orderConditionIN= bapiFunction.getTableParameterList().getTable(conditionTables.get(OrderTableType.VALUE_TABLE).toString());
@@ -71,6 +76,7 @@ public class ItemConditionsMapper {
 		orderConditionIN.setValue(SapOrderConstants.ITEM_NUMBER, itemTO.getSapDocumentId());
 		orderConditionIN.setValue(SapOrderConstants.CONDITION_TYPE, conditionKeyValueMap.get(SapOrderConstants.CONDITION_TYPE));
 		orderConditionIN.setValue(SapOrderConstants.CONDITION_VALUE, conditionValue.toString());
+		orderConditionIN.setValue(SapOrderConstants.CURRENCY, SapOrderConfigFactory.getConfigValue(SapOrderConstants.CURRENCY, client, orderType));
 		if (!orderType.equals(TinlaOrderType.NEW_ORDER)) {
 			orderConditionIN.setValue(SapOrderConstants.CONDITION_STEP_NUMBER, conditionKeyValueMap.get(SapOrderConstants.CONDITION_STEP_NUMBER));
 			orderConditionIN.setValue(SapOrderConstants.CONDITION_COUNTER, conditionKeyValueMap.get(SapOrderConstants.CONDITION_COUNTER));
@@ -82,10 +88,11 @@ public class ItemConditionsMapper {
 			orderConditionINX.setValue(SapOrderConstants.CONDITION_TYPE, conditionKeyValueMap.get(SapOrderConstants.CONDITION_TYPE));
 			orderConditionINX.setValue(SapOrderConstants.CONDITION_VALUE, SapOrderConstants.COMMIT_FLAG);
 			orderConditionINX.setValue(SapOrderConstants.OPERATION_FLAG, SapOrderConstants.INSERT_FLAG);
+			orderConditionINX.setValue(SapOrderConstants.CURRENCY, SapOrderConstants.COMMIT_FLAG);
 			if (orderType.equals(TinlaOrderType.MOD_ORDER)) {
 				orderConditionINX.setValue(SapOrderConstants.CONDITION_STEP_NUMBER, conditionKeyValueMap.get(SapOrderConstants.CONDITION_STEP_NUMBER));
 				orderConditionINX.setValue(SapOrderConstants.CONDITION_COUNTER, conditionKeyValueMap.get(SapOrderConstants.CONDITION_COUNTER));
-				orderConditionINX.setValue(SapOrderConstants.OPERATION_FLAG, SapOrderConstants.UPDATE_FLAG);
+				orderConditionINX.setValue(SapOrderConstants.OPERATION_FLAG, itemTO.getOperationCode());
 			}
 		}
 	}

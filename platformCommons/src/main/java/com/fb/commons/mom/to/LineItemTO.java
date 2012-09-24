@@ -137,33 +137,22 @@ public class LineItemTO extends ItemTO {
 	public void setPayToOthers(String payToOthers) {
 		this.payToOthers = payToOthers;
 	}
-
+	
 	@Override
 	public String toString() {
-		String order = super.toString() 
-				+ "\nDescription: " + description
-				+ "\nArticleId: " + articleID
-				+ "\nIsThirdParty : " + isThirdParty
-				+ "\nVendor : " + vendor 
-				+ "\nTransport mode : " + transportMode
-				+ "\nGV details : " + giftVoucherDetails
-				+ "\nProduct group ID : " + ProductGroupID
-				+ "\nCatalog : " + catalog
-				+ "\nSales unit : " + salesUnit
-				+ "\nRequired delivery date : " + requiredDeliveryDate
-				+ "\nReason code : " + reasonCode
-				+ "\nNotes : " + notes
-				+ "\nBundle : " + bundle
-				+ "\nOperation code : " + operationCode
-				+ "\nParent Child Relationship ID : " + relationshipArticleID
-				+ "\nStorage location : " + storageLocation
-				+ "\nShipping mode : " + shippingMode
-				+ "\npay to others : " + payToOthers;
-		
-		if (pricingTO != null) {
-			order += "\n" + pricingTO.toString();
-		}
-		
-		return order;
+		return "LineItemTO [description=" + description + ", articleID="
+				+ articleID + ", isThirdParty=" + isThirdParty + ", vendor="
+				+ vendor + ", transportMode=" + transportMode
+				+ ", giftVoucherDetails=" + giftVoucherDetails
+				+ ", ProductGroupID=" + ProductGroupID + ", catalog=" + catalog
+				+ ", salesUnit=" + salesUnit + ", requiredDeliveryDate="
+				+ requiredDeliveryDate + ", reasonCode=" + reasonCode
+				+ ", notes=" + notes + ", bundle=" + bundle
+				+ ", operationCode=" + operationCode
+				+ ", relationshipArticleID=" + relationshipArticleID
+				+ ", storageLocation=" + storageLocation + ", shippingMode="
+				+ shippingMode + ", pricingTO=" + pricingTO + ", payToOthers="
+				+ payToOthers + "]";
 	}
+
 }

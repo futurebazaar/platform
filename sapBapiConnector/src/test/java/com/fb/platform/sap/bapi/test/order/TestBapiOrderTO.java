@@ -11,7 +11,7 @@ import com.fb.commons.mom.to.LineItemTO;
 import com.fb.commons.mom.to.OrderHeaderTO;
 import com.fb.commons.mom.to.PaymentTO;
 import com.fb.commons.mom.to.PricingTO;
-import com.fb.platform.sap.bapi.order.table.TinlaOrderType;
+import com.fb.platform.sap.bapi.order.TinlaOrderType;
 import com.fb.platform.sap.bapi.to.SapOrderRequestTO;
 
 public class TestBapiOrderTO {
@@ -70,7 +70,7 @@ public class TestBapiOrderTO {
 		orderHeaderTO.setSubmittedOn(DateTime.now());
 		//orderHeaderTO.set
 		orderHeaderTO.setSalesDocType("ZATG");
-		orderHeaderTO.setReferenceID("5049999904");
+		orderHeaderTO.setReferenceID("5049999896");
 		orderHeaderTO.setReturnOrderID("6699999999");
 		orderHeaderTO.setLoyaltyCardNumber("1234123412341234");
 		orderHeaderTO.setPricingTO(getPricingTO());
@@ -96,13 +96,44 @@ public class TestBapiOrderTO {
 		lineItemTO1.setPricingTO(getPricingTO());
 		lineItemTO1.setArticleID("000000000300000560");
 		lineItemTO1.setSapDocumentId(10);
-		lineItemTO1.setQuantity(new BigDecimal("7.00"));
+		lineItemTO1.setQuantity(new BigDecimal("5.00"));
 		lineItemTO1.setDescription("TEST ARTICLE");
 		lineItemTO1.setPlantId("2786");
-		lineItemTOList.add(lineItemTO1);
 		lineItemTO1.setSalesUnit("EA");
 		lineItemTO1.setStorageLocation("10");
 		lineItemTO1.setReasonCode("103");
+		lineItemTO1.setItemCategory("ZATX");
+		lineItemTO1.setOperationCode("C");
+		lineItemTOList.add(lineItemTO1);
+		
+		LineItemTO lineItemTO2 = new LineItemTO();
+		lineItemTO2.setPricingTO(getPricingTO());
+		lineItemTO2.setArticleID("000000000300000561");
+		lineItemTO2.setSapDocumentId(20);
+		lineItemTO2.setQuantity(new BigDecimal("5.00"));
+		lineItemTO2.setDescription("TEST ARTICLE");
+		lineItemTO2.setPlantId("2786");
+		lineItemTO2.setSalesUnit("EA");
+		lineItemTO2.setStorageLocation("10");
+		lineItemTO2.setReasonCode("103");
+		lineItemTO2.setItemCategory("ZATX");
+		lineItemTO2.setOperationCode("U");
+		lineItemTOList.add(lineItemTO2);
+		
+		LineItemTO lineItemTO3 = new LineItemTO();
+		lineItemTO3.setPricingTO(getPricingTO());
+		lineItemTO3.setArticleID("000000000300000558");
+		lineItemTO3.setSapDocumentId(30);
+		lineItemTO3.setQuantity(new BigDecimal("5.00"));
+		lineItemTO3.setDescription("TEST ARTICLE");
+		lineItemTO3.setPlantId("2786");
+		lineItemTO3.setSalesUnit("EA");
+		lineItemTO3.setStorageLocation("10");
+		lineItemTO3.setReasonCode("103");
+		lineItemTO3.setItemCategory("ZATX");
+		lineItemTO3.setOperationCode("I");
+		lineItemTOList.add(lineItemTO3);
+		
 		return lineItemTOList;
 	}
 	

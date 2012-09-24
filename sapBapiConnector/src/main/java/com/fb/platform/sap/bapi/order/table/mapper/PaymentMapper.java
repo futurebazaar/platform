@@ -11,6 +11,7 @@ import com.fb.commons.mom.to.PaymentTO;
 import com.fb.platform.sap.client.commons.SapConstants;
 import com.fb.platform.sap.client.commons.SapOrderConstants;
 import com.fb.platform.sap.client.commons.SapUtils;
+import com.fb.platform.sap.client.commons.TinlaClient;
 import com.fb.platform.sap.bapi.order.table.BapiOrderTable;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoStructure;
@@ -22,6 +23,10 @@ public class PaymentMapper {
 	private static final String DEFAULT_CREDIT_CARD = "12345";
 			
 	public static void setDetails(JCoFunction bapiFunction, OrderHeaderTO orderHeaderTO, List<PaymentTO> paymentTOList) {
+		// No Payment conditions defined in SAP for Big Bazaar and hence skipping
+		if (TinlaClient.valueOf(orderHeaderTO.getClient()).equals(TinlaClient.BIGBAZAAR)) {
+			return;
+		}
 		logger.info("Setting Item Condition details for : " + orderHeaderTO.getReferenceID());
 		for (PaymentTO paymentTO : paymentTOList) {
 			String paymentMode = paymentTO.getPaymentMode();

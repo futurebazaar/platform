@@ -14,9 +14,10 @@ import com.fb.platform.sap.client.commons.SapOrderConstants;
 import com.fb.platform.sap.client.commons.SapUtils;
 import com.fb.platform.sap.client.commons.TinlaClient;
 import com.fb.platform.sap.bapi.factory.BapiTableFactory;
+import com.fb.platform.sap.bapi.factory.SapOrderConfigFactory;
+import com.fb.platform.sap.bapi.order.TinlaOrderType;
 import com.fb.platform.sap.bapi.order.table.BapiOrderTable;
 import com.fb.platform.sap.bapi.order.table.OrderTableType;
-import com.fb.platform.sap.bapi.order.table.TinlaOrderType;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoTable;
 
@@ -38,36 +39,39 @@ public class ItemMapper {
 				setNewOrderDetails(itemTO, orderHeaderTO, orderItemIN, orderItemINX);
 			} else {
 				//set modification and Cancellation Conditions
-				setUpdateOrderDetails(bapiFunction, itemTO, orderHeaderTO, orderItemIN, orderItemINX);
+				setUpdateOrderDetails(bapiFunction, itemTO, orderHeaderTO, orderItemIN, orderItemINX, orderType);
 			}
 			// set Common Conditions
 			setCommonDetails(itemTO, orderHeaderTO, orderItemIN, orderItemINX);			
 		}
 	}
 
-	private static void setUpdateOrderDetails(JCoFunction bapiFunction, LineItemTO itemTO, OrderHeaderTO orderHeaderTO, JCoTable orderItemIN, JCoTable orderItemINX) {
+	private static void setUpdateOrderDetails(JCoFunction bapiFunction, LineItemTO itemTO, OrderHeaderTO orderHeaderTO, JCoTable orderItemIN, JCoTable orderItemINX, TinlaOrderType orderType) {
 		JCoTable changeIndicator = bapiFunction.getTableParameterList().getTable(BapiOrderTable.CHANGE_INDICATOR.toString());
 		changeIndicator.appendRow();
 		changeIndicator.setValue(SapOrderConstants.ITEM_NUMBER, itemTO.getSapDocumentId());
 		changeIndicator.setValue(SapOrderConstants.CHANGE_TYPE, SapOrderConstants.CHANGE_FLAG);
 		changeIndicator.setValue( SapOrderConstants.UPDATE_INDICATOR, SapOrderConstants.UPDATE_FLAG);
-		if (!StringUtils.isBlank(itemTO.getReasonCode()) && itemTO.getReasonCode().equals(SapOrderConstants.CANCEL_FLAG)){
+		String operationCode = itemTO.getOperationCode();
+		if (!StringUtils.isBlank(itemTO.getReasonCode()) && (itemTO.getOperationCode().equals(SapOrderConstants.CANCEL_FLAG) || orderType.equals(TinlaOrderType.CAN_ORDER))) {
 			orderItemIN.setValue(SapOrderConstants.REJECTION_REASON, itemTO.getReasonCode());
-			orderItemINX.setValue(SapOrderConstants.COMMIT_FLAG, itemTO.getReasonCode());
-			changeIndicator.setValue( SapOrderConstants.UPDATE_INDICATOR, SapOrderConstants.CANCEL_FLAG);
+			orderItemINX.setValue(SapOrderConstants.REJECTION_REASON, SapOrderConstants.COMMIT_FLAG);
+			operationCode = SapOrderConstants.UPDATE_FLAG;
 		}
-		orderItemINX.setValue(SapOrderConstants.OPERATION_FLAG, SapOrderConstants.UPDATE_FLAG);
+		changeIndicator.setValue( SapOrderConstants.UPDATE_INDICATOR, itemTO.getOperationCode());
+		orderItemINX.setValue(SapOrderConstants.OPERATION_FLAG, operationCode);
 	}
 
 	private static void setNewOrderDetails(LineItemTO itemTO, OrderHeaderTO orderHeaderTO, JCoTable orderItemIN, JCoTable orderItemINX) {
-		orderItemIN.setValue(SapOrderConstants.ITEM_CATEGORY, SapOrderConstants.DEFAULT_ITEM_CATEGORY);
+		TinlaClient client = TinlaClient.valueOf(orderHeaderTO.getClient());
+		orderItemIN.setValue(SapOrderConstants.ITEM_CATEGORY, SapOrderConfigFactory.getConfigValue(SapOrderConstants.ITEM_CATEGORY,  client, TinlaOrderType.NEW_ORDER));
 		if (!StringUtils.isBlank(itemTO.getItemCategory())) {
 			orderItemIN.setValue(SapOrderConstants.ITEM_CATEGORY, itemTO.getItemCategory());
 		}
 		orderItemINX.setValue(SapOrderConstants.ITEM_CATEGORY, SapOrderConstants.COMMIT_FLAG);
 		orderItemIN.setValue(SapOrderConstants.DESCRIPTION, itemTO.getDescription());
 		orderItemINX.setValue(SapOrderConstants.DESCRIPTION, SapOrderConstants.COMMIT_FLAG);
-		orderItemIN.setValue(SapOrderConstants.COMP_QUANT, itemTO.getItemCategory());
+		orderItemIN.setValue(SapOrderConstants.COMP_QUANT, itemTO.getQuantity());
 		orderItemINX.setValue(SapOrderConstants.COMP_QUANT, SapOrderConstants.COMMIT_FLAG);
 		orderItemIN.setValue(SapOrderConstants.SHIPPING_MODE, itemTO.getShippingMode());
 		orderItemINX.setValue(SapOrderConstants.SHIPPING_MODE, SapOrderConstants.COMMIT_FLAG);

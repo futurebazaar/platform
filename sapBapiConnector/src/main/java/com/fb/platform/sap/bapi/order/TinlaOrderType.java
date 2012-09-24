@@ -1,4 +1,4 @@
-package com.fb.platform.sap.bapi.order.table;
+package com.fb.platform.sap.bapi.order;
 
 public enum TinlaOrderType {
 	

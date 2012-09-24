@@ -8,7 +8,7 @@ import com.fb.commons.mom.to.LineItemTO;
 import com.fb.commons.mom.to.OrderHeaderTO;
 import com.fb.commons.mom.to.PaymentTO;
 import com.fb.commons.mom.to.PricingTO;
-import com.fb.platform.sap.bapi.order.table.TinlaOrderType;
+import com.fb.platform.sap.bapi.order.TinlaOrderType;
 
 public class SapOrderRequestTO {
 	

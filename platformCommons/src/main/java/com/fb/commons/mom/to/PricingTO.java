@@ -107,22 +107,15 @@ public class PricingTO implements Serializable {
 	
 	@Override
 	public String toString() {
-		String order = "\nExtra discount: " + extraDiscount
-				+ "\nCoupon discount: " + couponDiscount
-				+ "\nShipping amount: " + shippingAmount
-				+ "\nOffer price: " + offerPrice
-				+ "\nPayable amount: " + payableAmount
-				+ "\nList price: " + listPrice
-				+ "\nCurrency: " + currency
-				+ "\nPoints earned: " + pointsEarn
-				+ "\nPoints earn value: " + pointsEarnValue
-				+ "\nPoints burned: " + pointsBurn
-				+ "\nPoints burn value: " + pointsBurnValue
-				+ "\nCommission : " + commissionAmount
-				+ "\nNLC : " + nlc
-				+ "\nWarranty price: " + warrantyPrice;
-		
-		return order;
+		return "PricingTO [extraDiscount=" + extraDiscount
+				+ ", couponDiscount=" + couponDiscount + ", shippingAmount="
+				+ shippingAmount + ", payableAmount=" + payableAmount
+				+ ", offerPrice=" + offerPrice + ", listPrice=" + listPrice
+				+ ", currency=" + currency + ", pointsEarn=" + pointsEarn
+				+ ", pointsBurn=" + pointsBurn + ", pointsEarnValue="
+				+ pointsEarnValue + ", pointsBurnValue=" + pointsBurnValue
+				+ ", commissionAmount=" + commissionAmount + ", nlc=" + nlc
+				+ ", warrantyPrice=" + warrantyPrice + "]";
 	}
 	
 }

@@ -1,5 +1,7 @@
 package com.fb.platform.sap.bapi.inventory.table.mapper;
 
+import java.math.BigDecimal;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -19,9 +21,14 @@ public class InventoryStockResponseMapper {
 		bapiFunction.execute(bapiConnector.getBapiDestination());
 		inventoryLevelResponseTO.setSite(bapiFunction.getExportParameterList().getValue(SapInventoryConstants.SITE).toString());
 		inventoryLevelResponseTO.setArticle(bapiFunction.getExportParameterList().getValue(SapInventoryConstants.INV_ARTICLE).toString());
-		inventoryLevelResponseTO.setStockQuantity(bapiFunction.getExportParameterList().getValue(SapInventoryConstants.STOCK_QUANTITY).toString());
+		String quantity = bapiFunction.getExportParameterList().getString(SapInventoryConstants.STOCK_QUANTITY);
+		try {
+			inventoryLevelResponseTO.setStockQuantity(new BigDecimal(quantity));
+		} catch(NumberFormatException e) {
+			logger.error("Invalid number for stock quantity :"+quantity , e);
+		}
 		inventoryLevelResponseTO.setUnit(bapiFunction.getExportParameterList().getValue(SapInventoryConstants.UNIT).toString());
-		inventoryLevelResponseTO.setStorageLocation(bapiFunction.getExportParameterList().getValue(SapInventoryConstants.OUTPUT_STORAGE_LOCATION).toString());
+		inventoryLevelResponseTO.setStorageLocation(bapiFunction.getExportParameterList().getInt(SapInventoryConstants.OUTPUT_STORAGE_LOCATION));
 		logger.info("Inventory Level response :" + inventoryLevelResponseTO);
 		return inventoryLevelResponseTO;
 	}

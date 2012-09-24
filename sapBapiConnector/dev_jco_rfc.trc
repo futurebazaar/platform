@@ -638,3 +638,111 @@ COUNTER     2
     error group: 102
     key: RFC_ERROR_COMMUNICATION
 
+
+**** Error file opened at 20120921 154505 India Standard Time Rel 3.0.8 (2011-11-28) [720.114]
+Error:  >Fri Sep 21 15:45:05,044<    >RfcGetException rc (7) message: Name or password is incorrect. Please re-enter
+<RfcGetException
+
+
+**** Error file opened at 20120924 115323 India Standard Time Rel 3.0.8 (2011-11-28) [720.114]
+Error:  >Mon Sep 24 11:53:23,986<    RfcException: [null]
+    message: Connect to SAP gateway failed
+Connection parameters: TYPE=A DEST=ZATGJCAPS_DV1 ASHOST=10.0.7.63 SYSNR=01 PCS=1
+
+LOCATION    CPIC (TCP/IP) on local host with Unicode
+ERROR       partner '10.0.7.63:3301' not reached
+TIME        Mon Sep 24 11:53:23 2012
+RELEASE     720
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nibuf.cpp
+LINE        4634
+DETAIL      NiBufIConnect: connection pending after 60000ms
+SYSTEM CALL connect
+ERRNO       115
+ERRNO TEXT  Operation now in progress
+COUNTER     2
+
+    Return code: RFC_FAILURE(1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+
+
+**** Error file opened at 20120924 115746 India Standard Time Rel 3.0.8 (2011-11-28) [720.114]
+Error:  >Mon Sep 24 11:57:46,900<    >RfcGetException rc (3) message: CPIC-CALL: CMRCV on convId: 95127892
+
+LOCATION    CPIC (TCP/IP) on local host with Unicode
+ERROR       connection to partner '10.0.7.63:3301' broken
+TIME        Mon Sep 24 11:57:46 2012
+RELEASE     720
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -6
+MODULE      nixxi.cpp
+LINE        5087
+DETAIL      NiIRead: P=10.0.7.63:3301; L=10.202.24.76:60487
+SYSTEM CALL recv
+ERRNO       104
+ERRNO TEXT  Connection reset by peer
+COUNTER     5
+
+<RfcGetException
+
+Error: [2] >Mon Sep 24 11:57:46,911<    RfcException: [DV1|DECC5D190]
+    message: CPIC-CALL: CMRCV on convId: 95127892
+
+LOCATION    CPIC (TCP/IP) on local host with Unicode
+ERROR       connection to partner '10.0.7.63:3301' broken
+TIME        Mon Sep 24 11:57:46 2012
+RELEASE     720
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -6
+MODULE      nixxi.cpp
+LINE        5087
+DETAIL      NiIRead: P=10.0.7.63:3301; L=10.202.24.76:60487
+SYSTEM CALL recv
+ERRNO       104
+ERRNO TEXT  Connection reset by peer
+COUNTER     5
+
+    Return code: RFC_SYS_EXCEPTION(3)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+Exception raised by DV1|DECC5D190
+
+
+**** Error file opened at 20120924 121228 India Standard Time Rel 3.0.8 (2011-11-28) [720.114]
+Error:  >Mon Sep 24 12:12:28,708<    >RfcGetException rc (3) message: CPIC-CALL: CMRCV on convId: 95076766
+
+LOCATION    CPIC (TCP/IP) on local host with Unicode
+ERROR       internal error
+TIME        Mon Sep 24 12:12:28 2012
+RELEASE     720
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -1
+DETAIL      NiErrSet
+COUNTER     6
+
+<RfcGetException
+
+Error: [2] >Mon Sep 24 12:12:28,718<    RfcException: [DV1|DECC5D190]
+    message: CPIC-CALL: CMRCV on convId: 95076766
+
+LOCATION    CPIC (TCP/IP) on local host with Unicode
+ERROR       internal error
+TIME        Mon Sep 24 12:12:28 2012
+RELEASE     720
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -1
+DETAIL      NiErrSet
+COUNTER     6
+
+    Return code: RFC_SYS_EXCEPTION(3)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+Exception raised by DV1|DECC5D190
+

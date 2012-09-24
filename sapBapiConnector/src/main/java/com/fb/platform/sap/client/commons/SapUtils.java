@@ -18,5 +18,14 @@ public class SapUtils {
 
 		}
 	}
+	
+	public static DateTime getDateTimeFromString(String dateTime, String dateFormat) {
+		try {
+			DateTimeFormatter format = DateTimeFormat.forPattern(dateFormat);
+			return format.parseDateTime(dateTime);
+		} catch (Exception e) {
+			return null;
+		}
+	}
 
 }

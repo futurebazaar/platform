@@ -8,8 +8,8 @@ import com.fb.commons.mom.to.OrderHeaderTO;
 import com.fb.platform.sap.client.commons.SapOrderConstants;
 import com.fb.platform.sap.client.commons.TinlaClient;
 import com.fb.platform.sap.bapi.factory.BapiTableFactory;
+import com.fb.platform.sap.bapi.order.TinlaOrderType;
 import com.fb.platform.sap.bapi.order.table.BapiOrderTable;
-import com.fb.platform.sap.bapi.order.table.TinlaOrderType;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoTable;
 

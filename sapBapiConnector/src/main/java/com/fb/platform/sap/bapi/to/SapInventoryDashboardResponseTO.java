@@ -1,12 +1,11 @@
 package com.fb.platform.sap.bapi.to;
 
-import java.util.Date;
+import org.joda.time.DateTime;
 
 public class SapInventoryDashboardResponseTO {
 	
 	private String idocNumber;
-	private Date creationDate;
-	private Date creationTime;
+	private DateTime creationDateTime;
 	private String transactionCode;
 	private String article;
 	private int actualQuantity;
@@ -27,18 +26,6 @@ public class SapInventoryDashboardResponseTO {
 	}
 	public void setIdocNumber(String idocNumber) {
 		this.idocNumber = idocNumber;
-	}
-	public Date getCreationDate() {
-		return creationDate;
-	}
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
-	}
-	public Date getCreationTime() {
-		return creationTime;
-	}
-	public void setCreationTime(Date creationTime) {
-		this.creationTime = creationTime;
 	}
 	public String getTransactionCode() {
 		return transactionCode;
@@ -124,13 +111,19 @@ public class SapInventoryDashboardResponseTO {
 	public void setCancelGR(String cancelGR) {
 		this.cancelGR = cancelGR;
 	}
+	public DateTime getCreationDateTime() {
+		return creationDateTime;
+	}
+	public void setCreationDateTime(DateTime creationDateTime) {
+		this.creationDateTime = creationDateTime;
+	}
 	
 	@Override
 	public String toString() {
 		return "SapInventoryDashboardResponseTO [idocNumber=" + idocNumber
-				+ ", creationDate=" + creationDate + ", creationTime="
-				+ creationTime + ", transactionCode=" + transactionCode
-				+ ", article=" + article + ", actualQuantity=" + actualQuantity
+				+ ", creationDateTime=" + creationDateTime
+				+ ", transactionCode=" + transactionCode + ", article="
+				+ article + ", actualQuantity=" + actualQuantity
 				+ ", transferQuantity=" + transferQuantity + ", segmentNumber="
 				+ segmentNumber + ", poNumber=" + poNumber + ", unit=" + unit
 				+ ", supplyingSite=" + supplyingSite + ", receivingSite="

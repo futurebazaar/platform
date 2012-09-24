@@ -77,8 +77,13 @@ public class AddressTO implements Serializable{
 	}
 	
 	@Override
-	public String toString(){
-		return null;
+	public String toString() {
+		return "AddressTO [firstName=" + firstName + ", LastName=" + LastName
+				+ ", middleName=" + middleName + ", address=" + address
+				+ ", city=" + city + ", pincode=" + pincode + ", state="
+				+ state + ", country=" + country + ", primaryTelephone="
+				+ primaryTelephone + ", secondaryTelephone="
+				+ secondaryTelephone + "]";
 	}
-
+	
 }

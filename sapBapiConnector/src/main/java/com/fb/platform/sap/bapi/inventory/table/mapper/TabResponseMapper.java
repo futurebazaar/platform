@@ -1,14 +1,18 @@
 package com.fb.platform.sap.bapi.inventory.table.mapper;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTime;
 
 import com.fb.platform.sap.bapi.inventory.table.BapiInventoryTable;
 import com.fb.platform.sap.bapi.to.SapInventoryDashboardResponseTO;
+import com.fb.platform.sap.client.commons.SapConstants;
 import com.fb.platform.sap.client.commons.SapInventoryConstants;
+import com.fb.platform.sap.client.commons.SapUtils;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoTable;
@@ -22,12 +26,15 @@ public class TabResponseMapper {
 		List<SapInventoryDashboardResponseTO> responseTOList = new ArrayList<SapInventoryDashboardResponseTO>();
 		bapiFunction.execute(bapiConnector.getBapiDestination());
 		JCoTable dashboardResponse = bapiFunction.getTableParameterList().getTable(BapiInventoryTable.TAB_RETURN.toString());
+		logger.info("Total Idoc Count for Dashboard request  ---- " +dashboardResponse.getNumRows());
 		for (int i = 0; i < dashboardResponse.getNumRows(); i++) {
 			dashboardResponse.setRow(i);
 			SapInventoryDashboardResponseTO responseTO = new SapInventoryDashboardResponseTO();
 			responseTO.setIdocNumber(dashboardResponse.getString(SapInventoryConstants.IDOC_NUMBER));
-			responseTO.setCreationDate(dashboardResponse.getDate(SapInventoryConstants.CREATION_DATE));
-			responseTO.setCreationTime(dashboardResponse.getTime(SapInventoryConstants.CREATION_TIME));
+			String creationDate = dashboardResponse.getString(SapInventoryConstants.CREATION_DATE);
+			String creationTime = dashboardResponse.getString(SapInventoryConstants.CREATION_TIME);
+			DateTime creationDateTime = SapUtils.getDateTimeFromString(creationDate + " " + creationTime, SapConstants.JOIN_DATE_TIME_FORMAT);
+			responseTO.setCreationDateTime(creationDateTime);
 			responseTO.setActualQuantity(dashboardResponse.getInt(SapInventoryConstants.ACTUAL_QTY));
 			responseTO.setArticle(dashboardResponse.getString(SapInventoryConstants.ARTICLE_ID));
 			responseTO.setArticleDocument(dashboardResponse.getString(SapInventoryConstants.ARTICLE_DOCUMENT));

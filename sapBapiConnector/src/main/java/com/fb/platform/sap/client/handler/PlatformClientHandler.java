@@ -10,6 +10,8 @@ import com.fb.platform.sap.bapi.to.SapLspAwbUpdateRequestTO;
 import com.fb.platform.sap.bapi.to.SapLspAwbUpdateResponseTO;
 import com.fb.platform.sap.bapi.to.SapOrderRequestTO;
 import com.fb.platform.sap.bapi.to.SapOrderResponseTO;
+import com.fb.platform.sap.bapi.to.SapWalletRequestTO;
+import com.fb.platform.sap.bapi.to.SapWalletResponseTO;
 
 public interface PlatformClientHandler {
 	
@@ -20,5 +22,7 @@ public interface PlatformClientHandler {
 	public SapInventoryLevelResponseTO processInventoryLevel(SapInventoryLevelRequestTO inventoryLevelRequestTO);
 	
 	public SapLspAwbUpdateResponseTO processLspAwbUpdate(SapLspAwbUpdateRequestTO lspAwbUpdateRequestTO);
+	
+	public SapWalletResponseTO processWallet(SapWalletRequestTO walletRequestTO);
 
 }

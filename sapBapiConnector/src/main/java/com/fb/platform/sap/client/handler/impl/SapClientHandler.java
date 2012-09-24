@@ -19,7 +19,7 @@ import com.fb.platform.sap.bapi.lsp.BapiLspTemplate;
 import com.fb.platform.sap.bapi.lsp.table.mapper.LspAwbResponseMapper;
 import com.fb.platform.sap.bapi.lsp.table.mapper.LspAwbUpdateMapper;
 import com.fb.platform.sap.bapi.order.BapiOrderTemplate;
-import com.fb.platform.sap.bapi.order.table.TinlaOrderType;
+import com.fb.platform.sap.bapi.order.TinlaOrderType;
 import com.fb.platform.sap.bapi.order.table.mapper.HeaderConditionsMapper;
 import com.fb.platform.sap.bapi.order.table.mapper.HeaderMapper;
 import com.fb.platform.sap.bapi.order.table.mapper.HeaderPartnerMapper;
@@ -38,6 +38,9 @@ import com.fb.platform.sap.bapi.to.SapLspAwbUpdateRequestTO;
 import com.fb.platform.sap.bapi.to.SapLspAwbUpdateResponseTO;
 import com.fb.platform.sap.bapi.to.SapOrderRequestTO;
 import com.fb.platform.sap.bapi.to.SapOrderResponseTO;
+import com.fb.platform.sap.bapi.to.SapWalletRequestTO;
+import com.fb.platform.sap.bapi.to.SapWalletResponseTO;
+import com.fb.platform.sap.client.commons.SapResponseStatus;
 import com.fb.platform.sap.client.connector.SapClientConnector;
 import com.fb.platform.sap.client.handler.PlatformClientHandler;
 import com.sap.conn.jco.JCoException;
@@ -52,6 +55,7 @@ public class SapClientHandler implements PlatformClientHandler {
     public synchronized SapOrderResponseTO processOrder(SapOrderRequestTO orderRequestTO) {
 		logger.info("Order Request : " + orderRequestTO + " for order id: " + orderRequestTO.getOrderHeaderTO().getReferenceID());
 		SapOrderResponseTO orderResponseTO = new SapOrderResponseTO();
+		orderResponseTO.setStatus(SapResponseStatus.FAILURE);
 		TinlaOrderType orderType = orderRequestTO.getOrderType();
     	try {
     		BapiOrderTemplate template = PlatformBapiHandlerFactory.getTemplate(orderType, orderRequestTO.getOrderHeaderTO().getClient());
@@ -144,8 +148,13 @@ public class SapClientHandler implements PlatformClientHandler {
 		return lspAwbUpdateResponseTO;
 	}
 
+	@Override
+	public SapWalletResponseTO processWallet(SapWalletRequestTO walletRequestTO) {
+		return null;
+	}
+	
 	public void setBapiConnector(SapClientConnector bapiConnector) {
 		this.clientConnector = bapiConnector;
 	}
-	
+
 }

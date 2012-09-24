@@ -107,29 +107,6 @@ public class OrderHeaderTO implements Serializable {
 	public void setSubmittedOn(DateTime submittedOn) {
 		this.submittedOn = submittedOn;
 	}
-	
-	@Override
-	public String toString() {
-		String details = "\nReference Order ID: " + referenceID
-				+ "\nThird party order no.: " + thirdPartyOrder
-				+ "\nCreated date: " + createdOn
-				+ "\nOrder type: " + type
-				+ "\nBP no.: " + accountNumber
-				+ "\nSales document type: " + salesDocType
-				+ "\nSales channel: " + salesChannel
-				+ "\nSales Organization: " + salesOrganization
-				+ "\nIsThirdparty: " + isThirdParty
-				+ "\nReason Code: " + reasonCode
-				+ "\nClient: " + client
-				+ "\nChannel Type: " + channelType
-				+ "\nSubmitted On: " + submittedOn;
-		
-		if (pricingTO != null) {
-				details += pricingTO.toString();
-		}
-		
-		return details;
-	}
 	public String getLoyaltyCardNumber() {
 		return loyaltyCardNumber;
 	}
@@ -142,5 +119,20 @@ public class OrderHeaderTO implements Serializable {
 	public void setReturnOrderID(String returnOrderID) {
 		this.returnOrderID = returnOrderID;
 	}
-
+	
+	@Override
+	public String toString() {
+		return "OrderHeaderTO [referenceID=" + referenceID
+				+ ", thirdPartyOrder=" + thirdPartyOrder + ", createdOn="
+				+ createdOn + ", type=" + type + ", accountNumber="
+				+ accountNumber + ", salesDocType=" + salesDocType
+				+ ", salesChannel=" + salesChannel + ", salesOrganization="
+				+ salesOrganization + ", isThirdParty=" + isThirdParty
+				+ ", reasonCode=" + reasonCode + ", client=" + client
+				+ ", channelType=" + channelType + ", submittedOn="
+				+ submittedOn + ", pricingTO=" + pricingTO
+				+ ", loyaltyCardNumber=" + loyaltyCardNumber
+				+ ", returnOrderID=" + returnOrderID + "]";
+	}
+	
 }

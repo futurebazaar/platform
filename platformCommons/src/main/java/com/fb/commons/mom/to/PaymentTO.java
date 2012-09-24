@@ -94,23 +94,13 @@ public class PaymentTO implements Serializable {
 	
 	@Override
 	public String toString() {
-		String order =  "\nPayment mode: " + paymentMode
-				+ "\nPayment Gateway: " + paymentGateway
-				+ "\nbank: " + bank
-				+ "\nMerchant ID : " + merchantID
-				+ "\nTransaction ID: " + transactionID
-				+ "\nPG transaction ID: " + pgTransactionID
-				+ "\nRRN: " + RRN
-				+ "\nCard (Instrument) No.: " + instrumentNumber
-				+ "\nPayment time: " + paymentTime
-				+ "\nAuth code: " + authCode
-				+ "\nValidity: " + validTill;
-		
-		if (pricingTO != null) {
-			order += pricingTO.toString();
-		}
-		
-		return order;
+		return "PaymentTO [paymentMode=" + paymentMode + ", paymentGateway="
+				+ paymentGateway + ", bank=" + bank + ", merchantID="
+				+ merchantID + ", transactionID=" + transactionID
+				+ ", pgTransactionID=" + pgTransactionID + ", RRN=" + RRN
+				+ ", instrumentNumber=" + instrumentNumber + ", paymentTime="
+				+ paymentTime + ", authCode=" + authCode + ", validTill="
+				+ validTill + ", pricingTO=" + pricingTO + "]";
 	}
 	
 }

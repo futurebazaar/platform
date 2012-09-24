@@ -8,8 +8,9 @@ import org.apache.commons.logging.LogFactory;
 import com.fb.commons.mom.to.LineItemTO;
 import com.fb.commons.mom.to.OrderHeaderTO;
 import com.fb.platform.sap.bapi.factory.BapiTableFactory;
+import com.fb.platform.sap.bapi.factory.SapOrderConfigFactory;
+import com.fb.platform.sap.bapi.order.TinlaOrderType;
 import com.fb.platform.sap.bapi.order.table.BapiOrderTable;
-import com.fb.platform.sap.bapi.order.table.TinlaOrderType;
 import com.fb.platform.sap.client.commons.SapConstants;
 import com.fb.platform.sap.client.commons.SapOrderConstants;
 import com.fb.platform.sap.client.commons.SapUtils;
@@ -23,7 +24,7 @@ public class HeaderMapper {
 	
 	public static void setDetails(JCoFunction bapiFunction, OrderHeaderTO orderHeaderTO, TinlaOrderType orderType) {
 		logger.info("Setting Header details for : " + orderType + " " + orderHeaderTO.getReferenceID());
-		logger.info("Header Return details are : " + orderHeaderTO);
+		logger.info("Header details are : " + orderHeaderTO);
 		JCoStructure orderHeaderIN = bapiFunction.getImportParameterList().getStructure(BapiOrderTable.ORDER_HEADER_IN.toString());
 		JCoStructure orderHeaderINX = bapiFunction.getImportParameterList().getStructure(BapiOrderTable.ORDER_HEADER_INX.toString());
 		String billDate = SapUtils.convertDateToFormat(orderHeaderTO.getCreatedOn(), SapConstants.DATE_FORMAT);
@@ -41,6 +42,7 @@ public class HeaderMapper {
 	}
 
 	private static void setNewOrderDetails(OrderHeaderTO orderHeaderTO, JCoStructure orderHeaderIN, JCoStructure orderHeaderINX, String billDate) {
+		TinlaClient client = TinlaClient.valueOf(orderHeaderTO.getClient());
 		orderHeaderIN.setValue(SapOrderConstants.REFERENCE_DOCUMENT_CATEGORY, SapOrderConstants.REFERENCE_DOCUMENT_FLAG);
 		orderHeaderINX.setValue(SapOrderConstants.REFERENCE_DOCUMENT_CATEGORY, SapOrderConstants.COMMIT_FLAG);
 		orderHeaderIN.setValue(SapOrderConstants.DOCUMENT_TYPE, orderHeaderTO.getSalesDocType());
@@ -49,26 +51,27 @@ public class HeaderMapper {
 		orderHeaderINX.setValue(SapOrderConstants.THIRD_PARTY_ORDER, SapOrderConstants.COMMIT_FLAG);
 		orderHeaderIN.setValue(SapOrderConstants.CURRENCY, orderHeaderTO.getPricingTO().getCurrency());
 		orderHeaderINX.setValue(SapOrderConstants.CURRENCY, SapOrderConstants.COMMIT_FLAG);
-		orderHeaderIN.setValue(SapOrderConstants.SALES_ORGANIZATION, SapOrderConstants.FBIL_SALES_ORGANIZATION);
+		orderHeaderIN.setValue(SapOrderConstants.SALES_ORGANIZATION, SapOrderConfigFactory.getConfigValue(SapOrderConstants.SALES_ORGANIZATION,  client, TinlaOrderType.NEW_ORDER));
 		orderHeaderINX.setValue(SapOrderConstants.SALES_ORGANIZATION, SapOrderConstants.COMMIT_FLAG);
 		orderHeaderIN.setValue(SapOrderConstants.DISTRIBUTION_CHANNEL, SapOrderConstants.DEFAULT_DISTRIBUTION_CHANNEL);
 		orderHeaderINX.setValue(SapOrderConstants.DISTRIBUTION_CHANNEL, SapOrderConstants.COMMIT_FLAG);
 		orderHeaderIN.setValue(SapOrderConstants.DIVISION, SapOrderConstants.DEFAULT_DIVISION);
 		orderHeaderINX.setValue(SapOrderConstants.DIVISION, SapOrderConstants.COMMIT_FLAG);
-		orderHeaderIN.setValue(SapOrderConstants.CUSTOMER_GROUP, SapOrderConstants.FB_CUSTOMER_GROUP);
+		orderHeaderIN.setValue(SapOrderConstants.CUSTOMER_GROUP, SapOrderConfigFactory.getConfigValue(SapOrderConstants.CUSTOMER_GROUP,  client, TinlaOrderType.NEW_ORDER));
 		orderHeaderINX.setValue(SapOrderConstants.CUSTOMER_GROUP, SapOrderConstants.COMMIT_FLAG);
 		orderHeaderIN.setValue(SapOrderConstants.CHANNEL_TYPE, orderHeaderTO.getChannelType());
 		orderHeaderINX.setValue(SapOrderConstants.CLIENT_NAME, SapOrderConstants.COMMIT_FLAG);
 		orderHeaderIN.setValue(SapOrderConstants.REFERENCE_FIELD, orderHeaderTO.getClient());
 		orderHeaderINX.setValue(SapOrderConstants.REFERENCE_FIELD, SapOrderConstants.COMMIT_FLAG);
+		orderHeaderIN.setValue(SapOrderConstants.HEADER_LSP, SapOrderConfigFactory.getConfigValue(SapOrderConstants.HEADER_LSP,  client, TinlaOrderType.NEW_ORDER));
+		orderHeaderINX.setValue(SapOrderConstants.HEADER_LSP, SapOrderConstants.COMMIT_FLAG);
 		// setting default paymentTerms
-		if (SapOrderConstants.COD_ACCOUNT_NUMBER.equals(orderHeaderTO.getAccountNumber())) {
+		if (client.equals(TinlaClient.BIGBAZAAR) || SapOrderConstants.COD_ACCOUNT_NUMBER.equals(orderHeaderTO.getAccountNumber())) {
 			orderHeaderIN.setValue(SapOrderConstants.PAYMENT_TERM, SapOrderConstants.COD_PAYMENT_TERM);
 		} else {
 			orderHeaderIN.setValue(SapOrderConstants.PAYMENT_TERM, SapOrderConstants.DEFAULT_PAYMENT_TERM);
 		}
 		orderHeaderINX.setValue(SapOrderConstants.PAYMENT_TERM, SapOrderConstants.COMMIT_FLAG);
-		orderHeaderINX.setValue(SapOrderConstants.REF_1_S, SapOrderConstants.COMMIT_FLAG);
 		orderHeaderINX.setValue(SapOrderConstants.OPERATION_FLAG, SapOrderConstants.INSERT_FLAG);
 		
 	}

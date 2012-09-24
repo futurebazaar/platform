@@ -9,7 +9,8 @@ public class SapOrderConstants {
 	
 	//6 Digitis
 	public static final String REFERENCE_FIELD = "REF_1";
-	public static final String REF_1_S = "REF_1_S";
+	public static final String HEADER_LSP = "REF_1_S";
+	public static final String DEFAULT_HEADER_LSP = "FLSL";
 	
 	//Character Constants
 	public static final String CHAR_A = "A";
@@ -33,6 +34,7 @@ public class SapOrderConstants {
 	
 	//Numeric Constants
 	public static final String  FBIL_SALES_ORGANIZATION = "0103";
+	public static final String  BBIL_SALES_ORGANIZATION = "0117";
 	public static final String  DEFAULT_DISTRIBUTION_CHANNEL = "01";
 	public static final String  DEFAULT_DIVISION = "00";
 	
@@ -41,7 +43,8 @@ public class SapOrderConstants {
 	public static final String ITEM_NUMBER = "ITM_NUMBER";
 	public static final String ARTICLE_ID = "MATERIAL";
 	public static final String ITEM_CATEGORY = "ITEM_CATEG";
-	public static final String DEFAULT_ITEM_CATEGORY = "ZATX";
+	public static final String DEFAULT_FB_ITEM_CATEGORY = "ZATX";
+	public static final String DEFAULT_BB_ITEM_CATEGORY = "ZATN";
 	public static final String WARRANTY_ITEM_CATEGORY = "ZFBE";
 	public static final String GV_ITEM_CATEGORY = "ZFBS";
 	public static final String RELATIONSHIP_ARTICLE_ID = "PURCH_NO_S";
@@ -58,7 +61,7 @@ public class SapOrderConstants {
 	// Customer Account Constants
 	public static final String TEXT_ID = "TEXT_ID";
 	public static final String TEXT_LINE = "TEXT_LINE";
-	public static final String DEFAULT_TEXT_ID = "Z006";
+	public static final String PAYBACK_TEXT_ID = "Z006";
 	public static final String FIRST_PARTNER_TEXT_ID = "Z001";
 	public static final String SECOND_PARTNER_TEXT_ID = "Z002";
 	public static final String THIRD_PARTNER_TEXT_ID = "Z003";
@@ -70,6 +73,7 @@ public class SapOrderConstants {
 	public static final String CUSTOMER_GROUP = "CUST_GROUP";
 	
 	public static final String FB_CUSTOMER_GROUP = "Z3";	
+	public static final String BB_CUSTOMER_GROUP = "";
 	public static final String PARTNER_ROLE_WE = "WE";
 	public static final String PARTNER_ROLE_AG = "AG";
 	public static final String PARTNER_ROLE_RE = "RE";
@@ -82,6 +86,7 @@ public class SapOrderConstants {
 	public static final String DEFAULT_PAYMENT_TERM = "0001";
 	public static final String PAYMENT_TERM = "PMNTTRMS";
 	public static final String CURRENCY = "CURRENCY";
+	public static final String DEFAULT_CURRENCY = "INR";
 	public static final String INSTRUMENT_NO = "CC_NUMBER";
 	public static final String PAYMENT_DATE = "AUTH_DATE";
 	public static final String PAYMENT_TIME = "AUTH_TIME";
@@ -181,7 +186,7 @@ public class SapOrderConstants {
 	public static final String MS_DATE = "MS_DATE";
 	public static final String LOAD_DATE = "LOAD_DATE";
 	public static final String TP_DATE = "TP_DATE";
-	public static final String REQUIRED_DATE = "REQ_DATE_H"; 
+	public static final String REQUIRED_DATE = "REQ_DATE_H";
 	
 	//Response Constants
 }

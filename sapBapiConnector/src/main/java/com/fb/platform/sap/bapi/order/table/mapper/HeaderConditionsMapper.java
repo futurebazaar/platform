@@ -8,9 +8,10 @@ import org.apache.commons.logging.LogFactory;
 
 import com.fb.commons.mom.to.OrderHeaderTO;
 import com.fb.platform.sap.bapi.factory.BapiTableFactory;
+import com.fb.platform.sap.bapi.factory.SapOrderConfigFactory;
+import com.fb.platform.sap.bapi.order.TinlaOrderType;
 import com.fb.platform.sap.bapi.order.table.BapiOrderTable;
 import com.fb.platform.sap.bapi.order.table.OrderTableType;
-import com.fb.platform.sap.bapi.order.table.TinlaOrderType;
 import com.fb.platform.sap.client.commons.SapOrderConstants;
 import com.fb.platform.sap.client.commons.TinlaClient;
 import com.sap.conn.jco.JCoFunction;
@@ -25,6 +26,7 @@ public class HeaderConditionsMapper {
 		Map<OrderTableType, BapiOrderTable> conditionTables = BapiTableFactory.getConditionTables(orderType, TinlaClient.valueOf(orderHeaderTO.getClient()));
 		JCoTable orderConditionsIN= bapiFunction.getTableParameterList().getTable(conditionTables.get(OrderTableType.VALUE_TABLE).toString());
 		JCoTable orderConditionsINX = bapiFunction.getTableParameterList().getTable(conditionTables.get(OrderTableType.COMMIT_TABLE).toString());
+		TinlaClient client = TinlaClient.valueOf(orderHeaderTO.getClient());
 		BigDecimal discount = orderHeaderTO.getPricingTO().getCouponDiscount();
 		if (discount != null && discount.compareTo(BigDecimal.ZERO) > 0) {
 			logger.info("Setting Header Coupon Discount : " +  orderHeaderTO.getPricingTO().getCouponDiscount() + " for : " + orderType + " " + orderHeaderTO.getReferenceID());
@@ -37,6 +39,8 @@ public class HeaderConditionsMapper {
 			orderConditionsIN.setValue(SapOrderConstants.CONDITION_VALUE, discount.toString());
 			orderConditionsINX.setValue(SapOrderConstants.CONDITION_VALUE, SapOrderConstants.COMMIT_FLAG);
 			orderConditionsINX.setValue(SapOrderConstants.OPERATION_FLAG, SapOrderConstants.INSERT_FLAG);
+			orderConditionsIN.setValue(SapOrderConstants.CURRENCY, SapOrderConfigFactory.getConfigValue(SapOrderConstants.CURRENCY, client, orderType));
+			orderConditionsINX.setValue(SapOrderConstants.CURRENCY, SapOrderConstants.COMMIT_FLAG);
 		}
 	}
 

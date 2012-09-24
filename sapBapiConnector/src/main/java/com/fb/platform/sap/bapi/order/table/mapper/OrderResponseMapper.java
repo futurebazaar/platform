@@ -39,7 +39,7 @@ public class OrderResponseMapper {
 			String typeMessage =  jcoResponse.getValue(SapConstants.MESSAGE).toString();
 			String typeId =  jcoResponse.getValue("ID").toString();
 			logger.info("Response Type: " + type + " || Message: " + typeMessage + " || ID: " + typeId);
-			if (!(type.equals(SapOrderConstants.SUCCESS_FLAG) && typeMessage.startsWith("SALES"))) {
+			if (!(type.equals(SapOrderConstants.SUCCESS_FLAG)) || (typeMessage.contains("FECIL") || typeMessage.contains("FBIL"))) {
 				message += "ID: " + typeId + " || ";
 				message += "TYPE: " + type + " || ";
 				message += "MESSAGE: " + typeMessage + "\n";

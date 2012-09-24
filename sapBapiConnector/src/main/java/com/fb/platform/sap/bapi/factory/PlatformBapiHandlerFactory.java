@@ -2,7 +2,7 @@ package com.fb.platform.sap.bapi.factory;
 
 import com.fb.commons.PlatformException;
 import com.fb.platform.sap.bapi.order.BapiOrderTemplate;
-import com.fb.platform.sap.bapi.order.table.TinlaOrderType;
+import com.fb.platform.sap.bapi.order.TinlaOrderType;
 import com.fb.platform.sap.client.commons.TinlaClient;
 
 public class PlatformBapiHandlerFactory {

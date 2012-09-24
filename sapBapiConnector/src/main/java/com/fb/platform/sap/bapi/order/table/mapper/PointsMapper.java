@@ -20,7 +20,8 @@ public class PointsMapper {
 			JCoTable orderText = bapiFunction.getTableParameterList().getTable(BapiOrderTable.ORDER_TEXT.toString());
 			orderText.appendRow();
 			orderText.setValue(SapOrderConstants.ITEM_NUMBER, SapOrderConstants.DEFAULT_ITEM_NUMER);
-			orderText.setValue(SapOrderConstants.TEXT_ID, SapOrderConstants.DEFAULT_TEXT_ID);
+			orderText.setValue(SapOrderConstants.TEXT_ID, SapOrderConstants.PAYBACK_TEXT_ID);
+			orderText.setValue(SapOrderConstants.LANGUAGE, SapOrderConstants.DEFAULT_LANGUAGE);
 			String pointsLine = cardNumber + "||" + 
 												pricingTO.getPointsEarn() + "||" + pricingTO.getPointsEarnValue() + "||" + 
 												pricingTO.getPointsBurn() + "||" + pricingTO.getPointsBurnValue(); 

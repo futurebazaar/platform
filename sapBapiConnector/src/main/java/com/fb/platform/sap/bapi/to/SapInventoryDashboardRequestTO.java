@@ -34,13 +34,11 @@ public class SapInventoryDashboardRequestTO {
 		this.plant = plant;
 	}
 	
+	@Override
 	public String toString() {
-		String description = "\nArticle : " + article
-				+ "\nPlant : " + plant
-				+  "\n From Date Time : " + fromDateTime
-				+ "\n To Date Time : " + toDateTime;
-		return description;
-		
+		return "SapInventoryDashboardRequestTO [article=" + article
+				+ ", plant=" + plant + ", fromDateTime=" + fromDateTime
+				+ ", toDateTime=" + toDateTime + "]";
 	}
 	
 }

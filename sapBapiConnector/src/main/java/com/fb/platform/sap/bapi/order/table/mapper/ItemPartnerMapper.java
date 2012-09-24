@@ -10,6 +10,7 @@ import com.fb.commons.mom.to.AddressTO;
 import com.fb.commons.mom.to.LineItemTO;
 import com.fb.commons.mom.to.OrderHeaderTO;
 import com.fb.platform.sap.client.commons.SapOrderConstants;
+import com.fb.platform.sap.client.commons.TinlaClient;
 import com.fb.platform.sap.bapi.order.table.BapiOrderTable;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoTable;
@@ -19,6 +20,10 @@ public class ItemPartnerMapper {
 	private static Log logger = LogFactory.getLog(ItemPartnerMapper.class);
 	
 	public static void setDetails(JCoFunction bapiFunction, OrderHeaderTO orderHeaderTO, AddressTO addressTO, List<LineItemTO> lineItemTOList) {
+		// No item partner level details required in SAP for Big Bazaar and hence skipping
+		if (TinlaClient.valueOf(orderHeaderTO.getClient()).equals(TinlaClient.BIGBAZAAR)) {
+			return;
+		}
 		logger.info("Setting Item Condition details for : " + orderHeaderTO.getReferenceID());
 		JCoTable orderPartner = bapiFunction.getTableParameterList().getTable(BapiOrderTable.ORDER_PARTNERS.toString());
 		JCoTable orderText = bapiFunction.getTableParameterList().getTable(BapiOrderTable.ORDER_TEXT.toString());
@@ -53,7 +58,6 @@ public class ItemPartnerMapper {
 				orderPartner.setValue(SapOrderConstants.ACCOUNT_NUMBER, itemTO.getVendor());
 				orderPartner.setValue(SapOrderConstants.ITEM_NUMBER, itemTO.getSapDocumentId());
 			}
-			// Need to Check whether this condition should be set when empty?
 			if (!StringUtils.isBlank(itemTO.getPayToOthers())) {
 				logger.info("Setting pay to others: " + itemTO.getPayToOthers() + " for : " + orderHeaderTO.getReferenceID());
 				orderPartner.setValue(SapOrderConstants.ITEM_NUMBER, itemTO.getSapDocumentId());
