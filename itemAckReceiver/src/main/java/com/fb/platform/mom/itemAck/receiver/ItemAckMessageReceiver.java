@@ -27,6 +27,7 @@ import com.fb.commons.mom.to.ItemTO;
 import com.fb.commons.mom.to.OrderStateEnum;
 import com.fb.platform.mom.itemAck.sender.ItemAckParameterFactory;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
+import com.fb.platform.mom.util.LoggerConstants;
 
 /**
  * @author nehaga
@@ -34,13 +35,7 @@ import com.fb.platform.mom.manager.PlatformMessageReceiver;
  */
 public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 
-	/* (non-Javadoc)
-	 * @see com.fb.platform.mom.manager.PlatformMessageReceiver#handleMessage(java.lang.Object)
-	 */
-	
-	private static Log infoLog = LogFactory.getLog("ITEM_ACK_LOG");
-
-	private static Log errorLog = LogFactory.getLog("ITEM_ACK_ERROR");
+	private static Log infoLog = LogFactory.getLog(LoggerConstants.ITEM_ACK_LOG);
 	
 	private static Properties prop = initProperties();
 
@@ -50,12 +45,15 @@ public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 		try {
 			properties.load(propertiesStream);
 		} catch (IOException e) {
-			errorLog.error("Error loading properties file.", e);
+			infoLog.error("Error loading properties file.", e);
 			throw new PlatformException("Error loading properties file.", e);
 		}
 		return properties;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.fb.platform.mom.manager.PlatformMessageReceiver#handleMessage(java.lang.Object)
+	 */
 	@Override
 	public void handleMessage(Object message) {
 		infoLog.info("Received the message : " + message);
@@ -103,7 +101,7 @@ public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 				HttpResponse response = httpClient.execute(httpPost);
 				int statusCode = response.getStatusLine().getStatusCode();
 				if (statusCode != HttpStatus.SC_OK) {
-					errorLog.error("Item ack not delivered : " + itemAck.toString());
+					infoLog.error("Item ack not delivered : " + itemAck.toString());
 					throw new PlatformException("Item ack not delivered to tinla on URL : " + orderURL);
 				}
 				infoLog.info("Item ack delivered to tinla. Status code : " + statusCode);
@@ -111,16 +109,16 @@ public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 				infoLog.info("Request not sent to tinla because order state is not processed by tinla : " + itemAck.toString());
 			}
 		} catch (UnsupportedEncodingException e) {
-			errorLog.error("Error communicating with tinla on url : " + orderURL, e);
-			errorLog.error("Item ack not delivered : " + itemAck.toString());
+			infoLog.error("Error communicating with tinla on url : " + orderURL, e);
+			infoLog.error("Item ack not delivered : " + itemAck.toString());
 			throw new PlatformException("Error communicating with tinla on url : " + orderURL, e);
 		} catch (ClientProtocolException e) {
-			errorLog.error("Error communicating with tinla on url : " + orderURL, e);
-			errorLog.error("Item ack not delivered : " + itemAck.toString());
+			infoLog.error("Error communicating with tinla on url : " + orderURL, e);
+			infoLog.error("Item ack not delivered : " + itemAck.toString());
 			throw new PlatformException("Error communicating with tinla on url : " + orderURL, e);
 		} catch (IOException e) {
-			errorLog.error("Error communicating with tinla on url : " + orderURL, e);
-			errorLog.error("Item ack not delivered : " + itemAck.toString());
+			infoLog.error("Error communicating with tinla on url : " + orderURL, e);
+			infoLog.error("Item ack not delivered : " + itemAck.toString());
 			throw new PlatformException("Error communicating with tinla on url : " + orderURL, e);
 		}
 

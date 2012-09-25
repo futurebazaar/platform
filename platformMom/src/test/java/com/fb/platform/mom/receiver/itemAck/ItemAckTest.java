@@ -21,6 +21,7 @@ import com.fb.commons.mom.to.PgrCreationItemTO;
 import com.fb.commons.mom.to.ReturnDeliveryTO;
 import com.fb.commons.mom.to.ReturnInvoiceTO;
 import com.fb.commons.mom.to.ReturnOrderTO;
+import com.fb.commons.mom.to.SapMomTO;
 import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
@@ -52,27 +53,57 @@ public class ItemAckTest extends BaseTestCase {
 		itemCState.setAtgDocumentId(10);
 		itemCState.setDeliveryNumber("8100140302");
 		itemCState.setOrderId("5057271857");
+
+		SapMomTO sapIdoc1 = new SapMomTO(100);
+		sapIdoc1.setIdocNumber("x100");
+
+		itemCState.setSapIdoc(sapIdoc1);
+
 		momManager.send(PlatformDestinationEnum.ITEM_ACK, itemCState);
 		
 		PgiCreationItemTO pgiItemTO = new PgiCreationItemTO();
 		pgiItemTO.setItemTO(itemCState);
 		pgiItemTO.setPgiCreationDate(new DateTime(2009, 02, 22, 7, 0));
+
+		SapMomTO sapIdoc2 = new SapMomTO(100);
+		sapIdoc2.setIdocNumber("x100");
+
+		pgiItemTO.setSapIdoc(sapIdoc2);
+
 		momManager.send(PlatformDestinationEnum.ITEM_ACK, pgiItemTO);
 		
 		CancelItemTO cancelItemTO = new CancelItemTO();
 		cancelItemTO.setItemTO(itemCState);
 		cancelItemTO.setCancelInvoiceNumber("1234567");
+
+		SapMomTO sapIdoc3 = new SapMomTO(100);
+		sapIdoc3.setIdocNumber("x100");
+
+		cancelItemTO.setSapIdoc(sapIdoc3);
+
 		momManager.send(PlatformDestinationEnum.ITEM_ACK, cancelItemTO);
 		
 		ItemInvoiceTO itemInvoiceTO = new ItemInvoiceTO();
 		itemInvoiceTO.setItemTO(itemCState);
 		itemInvoiceTO.setInvoiceDate(new DateTime(2012, 02, 22, 7, 0));
 		itemInvoiceTO.setInvoiceNumber("1234567");
+
+		SapMomTO sapIdoc4 = new SapMomTO(100);
+		sapIdoc4.setIdocNumber("x100");
+
+		itemInvoiceTO.setSapIdoc(sapIdoc4);
+
 		momManager.send(PlatformDestinationEnum.ITEM_ACK, itemInvoiceTO);
 		
 		PgrCreationItemTO pgrItemTO = new PgrCreationItemTO();
 		pgrItemTO.setItemTO(itemCState);
 		pgrItemTO.setPgrCreationDate(new DateTime(2009, 02, 22, 7, 0));
+
+		SapMomTO sapIdoc5 = new SapMomTO(100);
+		sapIdoc5.setIdocNumber("x100");
+
+		pgrItemTO.setSapIdoc(sapIdoc5);
+
 		momManager.send(PlatformDestinationEnum.ITEM_ACK, pgrItemTO);
 		
 		ReturnDeliveryTO returnDeliveryTO = new ReturnDeliveryTO();
@@ -81,6 +112,12 @@ public class ItemAckTest extends BaseTestCase {
 		returnDeliveryTO.setReturnCreatedDate(new DateTime(2012, 02, 22, 7, 0));
 		returnDeliveryTO.setNumber("7654321");
 		returnDeliveryTO.setType("defected");
+
+		SapMomTO sapIdoc6 = new SapMomTO(100);
+		sapIdoc6.setIdocNumber("x100");
+
+		returnDeliveryTO.setSapIdoc(sapIdoc6);
+
 		momManager.send(PlatformDestinationEnum.ITEM_ACK, returnDeliveryTO);
 		
 		ReturnInvoiceTO returnInvoiceTO = new ReturnInvoiceTO();
@@ -89,6 +126,12 @@ public class ItemAckTest extends BaseTestCase {
 		returnInvoiceTO.setInvoiceDate(new DateTime(2012, 02, 22, 7, 0));
 		returnInvoiceTO.setNumber("7654321");
 		returnInvoiceTO.setType("defected");
+
+		SapMomTO sapIdoc7 = new SapMomTO(100);
+		sapIdoc7.setIdocNumber("x100");
+
+		returnInvoiceTO.setSapIdoc(sapIdoc7);
+
 		momManager.send(PlatformDestinationEnum.ITEM_ACK, returnInvoiceTO);
 		
 		ReturnOrderTO returnOrderTO = new ReturnOrderTO();
@@ -97,6 +140,12 @@ public class ItemAckTest extends BaseTestCase {
 		returnOrderTO.setQuantity(new BigDecimal(1));
 		returnOrderTO.setOrderId("7654321");
 		returnOrderTO.setCategory("defected");
+
+		SapMomTO sapIdoc8 = new SapMomTO(100);
+		sapIdoc8.setIdocNumber("x100");
+
+		returnOrderTO.setSapIdoc(sapIdoc8);
+
 		momManager.send(PlatformDestinationEnum.ITEM_ACK, returnOrderTO);
 		
 	}

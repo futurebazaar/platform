@@ -21,6 +21,7 @@ import com.fb.commons.mom.to.InventoryTO;
 import com.fb.commons.mom.to.SapMomTO;
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
+import com.fb.platform.mom.util.LoggerConstants;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler;
 import com.fb.platform.sap.idoc.generated.ztinlaIDocType.ObjectFactory;
 import com.fb.platform.sap.idoc.generated.ztinlaIDocType.ZTINLAIDOCTYP;
@@ -33,9 +34,7 @@ import com.fb.platform.sap.util.AckUIDSequenceGenerator;
  */
 public class InventoryIDocHandler implements PlatformIDocHandler {
 
-	private static Log infoLog = LogFactory.getLog("INVENTORY_LOG");
-	
-	private static Log errorLog = LogFactory.getLog("INVENTORY_ERROR");
+	private static Log infoLog = LogFactory.getLog(LoggerConstants.INVENTORY_LOG);
 
 	public static final String INVENTORY_IDOC_TYPE = "ZTINLA_IDOCTYP";
 
@@ -51,7 +50,7 @@ public class InventoryIDocHandler implements PlatformIDocHandler {
 			//TODO move from default package to inventory package somehow
 			return JAXBContext.newInstance(ObjectFactory.class);
 		} catch (JAXBException e) {
-			errorLog.error("Error Initializing the JAXBContext to bind the inventory idoc schema classes", e);
+			infoLog.error("Error Initializing the JAXBContext to bind the inventory idoc schema classes", e);
 			throw new PlatformException("Error Initializing the JAXBContext to bind the inventory idoc schema classes", e);
 		}
 	}
@@ -101,12 +100,10 @@ public class InventoryIDocHandler implements PlatformIDocHandler {
 			corruptMessage.setSapIdoc(sapIdoc);
 			corruptMessage.setCause(CorruptMessageCause.CORRUPT_IDOC);
 			momManager.send(PlatformDestinationEnum.CORRUPT_IDOCS, corruptMessage);
-			//TODO send this to some kind of error queue
-			errorLog.error("Unable to create Inventory Message for inventory idoc :\n" + sapIdoc.getIdoc());
-			errorLog.error("Message logged in corrupt queue.");
-			//throw new PlatformException("Exception while unmarshalling the inventory idoc xml", e);
+			infoLog.error("Unable to create Inventory Message for inventory idoc :\n" + sapIdoc.getIdoc(), e);
+			infoLog.error("Message logged in corrupt queue.");
 		} catch (Exception e) {
-			errorLog.error("Error in processing inventory idoc", e);
+			infoLog.error("Error in processing inventory idoc", e);
 			throw new PlatformException(e);
 		}
 	}

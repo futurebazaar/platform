@@ -21,6 +21,7 @@ import com.fb.commons.mom.to.ItemTO;
 import com.fb.commons.mom.to.SapMomTO;
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
+import com.fb.platform.mom.util.LoggerConstants;
 import com.fb.platform.sap.client.idoc.platform.ItemAckOrderItemProcessor;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler;
 import com.fb.platform.sap.idoc.generated.zatgflow.ObjectFactory;
@@ -34,9 +35,7 @@ import com.fb.platform.sap.util.AckUIDSequenceGenerator;
  */
 public class ItemAckIDocHandler implements PlatformIDocHandler {
 
-	private static Log infoLog = LogFactory.getLog("ITEM_ACK_LOG");
-	
-	private static Log errorLog = LogFactory.getLog("ITEM_ACK_ERROR");
+	private static Log infoLog = LogFactory.getLog(LoggerConstants.ITEM_ACK_LOG);
 
 	public static final String ITEM_ACK_IDOC_TYPE = "ZATGFLOW";
 
@@ -52,7 +51,7 @@ public class ItemAckIDocHandler implements PlatformIDocHandler {
 			//TODO move from default package to inventory package somehow
 			return JAXBContext.newInstance(ObjectFactory.class);
 		} catch (JAXBException e) {
-			errorLog.error("Error Initializing the JAXBContext to bind the order idoc schema classes", e);
+			infoLog.error("Error Initializing the JAXBContext to bind the order idoc schema classes", e);
 			throw new PlatformException("Error Initializing the JAXBContext to bind the order idoc schema classes", e);
 		}
 	}
@@ -97,12 +96,10 @@ public class ItemAckIDocHandler implements PlatformIDocHandler {
 			corruptMessage.setSapIdoc(sapIdoc);
 			corruptMessage.setCause(CorruptMessageCause.CORRUPT_IDOC);
 			momManager.send(PlatformDestinationEnum.CORRUPT_IDOCS, corruptMessage);
-			//TODO send this to some kind of error queue
-			errorLog.error("Unable to create Message for item ack idoc :\n" + sapIdoc.getIdoc());
-			errorLog.error("Message logged in corrupt queue.", e);
-			//throw new PlatformException("Exception while unmarshalling the inventory idoc xml", e);
+			infoLog.error("Unable to create Message for item ack idoc :\n" + sapIdoc.getIdoc(), e);
+			infoLog.error("Message logged in corrupt queue.", e);
 		} catch (Exception e) {
-			errorLog.error("Error in processing item ack idoc : " + sapIdoc.toString(), e);
+			infoLog.error("Error in processing item ack idoc : " + sapIdoc.toString(), e);
 			throw new PlatformException(e);
 		}
 	}

@@ -25,6 +25,7 @@ import org.apache.http.message.BasicNameValuePair;
 import com.fb.commons.PlatformException;
 import com.fb.commons.mom.to.InventoryTO;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
+import com.fb.platform.mom.util.LoggerConstants;
 
 /**
  * @author nehaga
@@ -32,13 +33,7 @@ import com.fb.platform.mom.manager.PlatformMessageReceiver;
  */
 public class InventoryMessageReceiver implements PlatformMessageReceiver {
 
-	/* (non-Javadoc)
-	 * @see com.fb.platform.mom.manager.PlatformMessageReceiver#handleMessage(java.lang.Object)
-	 */
-	
-	private static Log infoLog = LogFactory.getLog("INVENTORY_LOG");
-	
-	private static Log errorLog = LogFactory.getLog("INVENTORY_ERROR");
+	private static Log infoLog = LogFactory.getLog(LoggerConstants.INVENTORY_LOG);
 	
 	private static Properties prop = initProperties();
 
@@ -48,12 +43,15 @@ public class InventoryMessageReceiver implements PlatformMessageReceiver {
 		try {
 			properties.load(propertiesStream);
 		} catch (IOException e) {
-			errorLog.error("Error loading properties file.", e);
+			infoLog.error("Error loading properties file.", e);
 			throw new PlatformException("Error loading properties file.", e);
 		}
 		return properties;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.fb.platform.mom.manager.PlatformMessageReceiver#handleMessage(java.lang.Object)
+	 */
 	@Override
 	public void handleMessage(Object message) {
 		infoLog.info("Received the message : " + message);
@@ -96,21 +94,21 @@ public class InventoryMessageReceiver implements PlatformMessageReceiver {
 			HttpResponse response = httpClient.execute(httpPost);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode != HttpStatus.SC_OK) {
-				errorLog.error("Inventory ack not delivered : " + inventoryTO.toString());
+				infoLog.error("Inventory ack not delivered : " + inventoryTO.toString());
 				throw new PlatformException("Inventory ack not delivered to tinla on URL : " + inventoryURL);
 			}
 			infoLog.info("Inventory ack delivered to tinla. Status code : " + statusCode);
 		} catch (UnsupportedEncodingException e) {
-			errorLog.error("Error communicating with tinla on url : " + inventoryURL, e);
-			errorLog.error("Inventory ack not delivered : " + inventoryTO.toString());
+			infoLog.error("Error communicating with tinla on url : " + inventoryURL, e);
+			infoLog.error("Inventory ack not delivered : " + inventoryTO.toString());
 			throw new PlatformException("Error communicating with tinla on url : " + inventoryURL, e);
 		} catch (ClientProtocolException e) {
-			errorLog.error("Error communicating with tinla on url : " + inventoryURL, e);
-			errorLog.error("Inventory ack not delivered : " + inventoryTO.toString());
+			infoLog.error("Error communicating with tinla on url : " + inventoryURL, e);
+			infoLog.error("Inventory ack not delivered : " + inventoryTO.toString());
 			throw new PlatformException("Error communicating with tinla on url : " + inventoryURL, e);
 		} catch (IOException e) {
-			errorLog.error("Error communicating with tinla on url : " + inventoryURL, e);
-			errorLog.error("Inventory ack not delivered : " + inventoryTO.toString());
+			infoLog.error("Error communicating with tinla on url : " + inventoryURL, e);
+			infoLog.error("Inventory ack not delivered : " + inventoryTO.toString());
 			throw new PlatformException("Error communicating with tinla on url : " + inventoryURL, e);
 		}
 

@@ -12,6 +12,7 @@ import com.fb.platform.mom.itemAck.manager.ItemAckManager;
 import com.fb.platform.mom.itemAck.receiver.ItemAckMessageReceiver;
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
+import com.fb.platform.mom.util.LoggerConstants;
 
 /**
  * @author nehaga
@@ -19,9 +20,7 @@ import com.fb.platform.mom.manager.PlatformDestinationEnum;
  */
 public class ItemAckManagerImpl implements ReceiverManager, ItemAckManager {
 	
-	private static Log infoLog = LogFactory.getLog("ITEM_ACK_LOG");
-
-	private static Log errorLog = LogFactory.getLog("ITEM_ACK_ERROR");
+	private static Log infoLog = LogFactory.getLog(LoggerConstants.ITEM_ACK_LOG);
 
 	@Autowired
 	private MomManager momManager;

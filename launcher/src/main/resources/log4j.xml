@@ -49,34 +49,9 @@
 	        </layout>
 	</appender>
 	
-	<appender name="DELIVERY_DELETE_ERROR" class="org.apache.log4j.DailyRollingFileAppender">
-	        <!-- The active file to log to -->
-	        <param name="file" value="/var/log/tomcat6/launcher/deliveryDelete/error.log" />
-	        <param name="append" value="true" />
-	        <param name="encoding" value="UTF-8" />
-	        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
-	
-	        <layout class="org.apache.log4j.PatternLayout">
-	                <!-- The log message pattern -->
-	                <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] %c:%L - %m%n" />
-	        </layout>
-	</appender>
 	<appender name="INVENTORY_LOG" class="org.apache.log4j.DailyRollingFileAppender">
 	        <!-- The active file to log to -->
 	        <param name="file" value="/var/log/tomcat6/launcher/inventory/system.log" />
-	        <param name="append" value="true" />
-	        <param name="encoding" value="UTF-8" />
-	        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
-	
-	        <layout class="org.apache.log4j.PatternLayout">
-	                <!-- The log message pattern -->
-	                <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] %c:%L - %m%n" />
-	        </layout>
-	</appender>
-	
-	<appender name="INVENTORY_ERROR" class="org.apache.log4j.DailyRollingFileAppender">
-	        <!-- The active file to log to -->
-	        <param name="file" value="/var/log/tomcat6/launcher/inventory/error.log" />
 	        <param name="append" value="true" />
 	        <param name="encoding" value="UTF-8" />
 	        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
@@ -99,9 +74,34 @@
 	        </layout>
 	</appender>
 	
-	<appender name="ITEM_ACK_ERROR" class="org.apache.log4j.DailyRollingFileAppender">
+	<appender name="DELIVERY_DELETE_AUDIT_LOG" class="org.apache.log4j.DailyRollingFileAppender">
 	        <!-- The active file to log to -->
-	        <param name="file" value="/var/log/tomcat6/launcher/itemAck/error.log" />
+	        <param name="file" value="/var/log/tomcat6/launcher/audit/deliveryDelete.log" />
+	        <param name="append" value="true" />
+	        <param name="encoding" value="UTF-8" />
+	        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+	
+	        <layout class="org.apache.log4j.PatternLayout">
+	                <!-- The log message pattern -->
+	                <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] %c:%L - %m%n" />
+	        </layout>
+	</appender>
+	
+	<appender name="INVENTORY_AUDIT_LOG" class="org.apache.log4j.DailyRollingFileAppender">
+	        <!-- The active file to log to -->
+	        <param name="file" value="/var/log/tomcat6/launcher/audit/inventory.log" />
+	        <param name="append" value="true" />
+	        <param name="encoding" value="UTF-8" />
+	        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+	
+	        <layout class="org.apache.log4j.PatternLayout">
+	                <!-- The log message pattern -->
+	                <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] %c:%L - %m%n" />
+	        </layout>
+	</appender>
+	<appender name="ITEM_ACK_AUDIT_LOG" class="org.apache.log4j.DailyRollingFileAppender">
+	        <!-- The active file to log to -->
+	        <param name="file" value="/var/log/tomcat6/launcher/audit/itemAck.log" />
 	        <param name="append" value="true" />
 	        <param name="encoding" value="UTF-8" />
 	        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
@@ -135,32 +135,29 @@
         <level value="DEBUG"/>
         <appender-ref ref="INFOLOG"/>
 	</logger>
-	<logger name="DELIVERY_DELETE_ERROR">
-        <level value="INFO"/>
-        <appender-ref ref="DELIVERY_DELETE_ERROR"/>
-    </logger>
-    
     <logger name="DELIVERY_DELETE_LOG">
         <level value="INFO"/>
         <appender-ref ref="DELIVERY_DELETE_LOG"/>
     </logger>
-    <logger name="INVENTORY_ERROR">
-        <level value="INFO"/>
-        <appender-ref ref="INVENTORY_ERROR"/>
-    </logger>
-    
     <logger name="INVENTORY_LOG">
         <level value="INFO"/>
         <appender-ref ref="INVENTORY_LOG"/>
     </logger>
-    <logger name="ITEM_ACK_ERROR">
-        <level value="INFO"/>
-        <appender-ref ref="ITEM_ACK_ERROR"/>
-    </logger>
-    
     <logger name="ITEM_ACK_LOG">
         <level value="INFO"/>
         <appender-ref ref="ITEM_ACK_LOG"/>
+    </logger>
+    <logger name="DELIVERY_DELETE_AUDIT_LOG">
+        <level value="INFO"/>
+        <appender-ref ref="DELIVERY_DELETE_AUDIT_LOG"/>
+    </logger>
+    <logger name="INVENTORY_AUDIT_LOG">
+        <level value="INFO"/>
+        <appender-ref ref="INVENTORY_AUDIT_LOG"/>
+    </logger>
+    <logger name="ITEM_ACK_AUDIT_LOG">
+        <level value="INFO"/>
+        <appender-ref ref="ITEM_ACK_AUDIT_LOG"/>
     </logger>
     <logger name="LOGERROR">
         <level value="WARN"/>

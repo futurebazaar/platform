@@ -16,15 +16,19 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 
+import com.fb.commons.mom.to.DeliveryDeleteTO;
+import com.fb.commons.mom.to.SapMomTO;
+import com.fb.platform.mom.util.LoggerConstants;
+
 /**
  * @author nehaga
  *
  */
 public class DeliveryDeleteSenderImpl implements DeliveryDeleteSender {
 
-	private static Log infoLog = LogFactory.getLog("DELIVERY_DELETE_LOG");
+	private static Log infoLog = LogFactory.getLog(LoggerConstants.DELIVERY_DELETE_LOG);
 	
-	private static Log errorLog = LogFactory.getLog("DELIVERY_DELETE_ERROR");
+	private static Log auditLog = LogFactory.getLog(LoggerConstants.DELIVERY_DELETE_AUDIT_LOG);
 
 	private JmsTemplate jmsTemplate;
 
@@ -41,6 +45,16 @@ public class DeliveryDeleteSenderImpl implements DeliveryDeleteSender {
 			public Message createMessage(Session session) throws JMSException {
 				infoLog.info("Creating the Delivery Delete Message for sending.");
 				ObjectMessage jmsMessage = session.createObjectMessage();
+				SapMomTO sapIdoc = ((DeliveryDeleteTO)message).getSapIdoc();
+				
+				//set the properties on jms message as well
+				jmsMessage.setLongProperty(LoggerConstants.UID, sapIdoc.getAckUID());
+				jmsMessage.setStringProperty(LoggerConstants.IDOC_NO, sapIdoc.getIdocNumber());
+				jmsMessage.setStringProperty(LoggerConstants.TIMESTAMP, sapIdoc.getTimestamp().toString());
+				
+				//log for audit
+				auditLog.info(sapIdoc.getAckUID() + "," + sapIdoc.getIdocNumber() + "," + sapIdoc.getTimestamp());
+				
 				jmsMessage.setObject(message);
 				return jmsMessage;
 			}

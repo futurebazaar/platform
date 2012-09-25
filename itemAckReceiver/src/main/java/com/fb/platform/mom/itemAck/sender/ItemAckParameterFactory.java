@@ -26,6 +26,7 @@ import com.fb.platform.mom.itemAck.sender.impl.PgrCreationParameterImpl;
 import com.fb.platform.mom.itemAck.sender.impl.ReturnDeliveryParameterImpl;
 import com.fb.platform.mom.itemAck.sender.impl.ReturnInvoiceParameterImpl;
 import com.fb.platform.mom.itemAck.sender.impl.ReturnOrderParameterImpl;
+import com.fb.platform.mom.util.LoggerConstants;
 
 /**
  * @author nehaga
@@ -33,9 +34,7 @@ import com.fb.platform.mom.itemAck.sender.impl.ReturnOrderParameterImpl;
  */
 public class ItemAckParameterFactory {
 	
-	private static Log infoLog = LogFactory.getLog("ITEM_ACK_LOG");
-
-	private static Log errorLog = LogFactory.getLog("ITEM_ACK_ERROR");
+	private static Log infoLog = LogFactory.getLog(LoggerConstants.ITEM_ACK_LOG);
 	
 	public List<NameValuePair> getParameters(ItemTO itemAck) {
 		List<NameValuePair> itemParamList = new ItemAckParameterImpl().getParameters(new ArrayList<NameValuePair>(), itemAck);

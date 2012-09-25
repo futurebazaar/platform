@@ -12,6 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import com.fb.commons.PlatformException;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
+import com.fb.platform.mom.util.LoggerConstants;
 
 /**
  * @author vinayak
@@ -21,17 +22,11 @@ public abstract class AbstractPlatformListener {
 	
 	private static Log logger = LogFactory.getLog(AbstractPlatformListener.class);
 	
-	private static Log itemAckLog = LogFactory.getLog("ITEM_ACK_LOG");
+	private static Log itemAckLog = LogFactory.getLog(LoggerConstants.ITEM_ACK_LOG);
 	
-	private static Log itemAckError = LogFactory.getLog("ITEM_ACK_ERROR");
+	private static Log deliveryDeleteLog = LogFactory.getLog(LoggerConstants.DELIVERY_DELETE_LOG);
 	
-	private static Log deliveryDeleteLog = LogFactory.getLog("DELIVERY_DELETE_LOG");
-	
-	private static Log deliveryDeleteError = LogFactory.getLog("DELIVERY_DELETE_ERROR");
-	
-	private static Log inventoryLog = LogFactory.getLog("INVENTORY_LOG");
-	
-	private static Log inventoryError = LogFactory.getLog("INVENTORY_ERROR");
+	private static Log inventoryLog = LogFactory.getLog(LoggerConstants.INVENTORY_LOG);
 	
 	private volatile List<PlatformMessageReceiver> receivers = new ArrayList<PlatformMessageReceiver>();
 
@@ -70,20 +65,21 @@ public abstract class AbstractPlatformListener {
 			if(receivers.size() <= 0) {
 				switch(destination) {
 					case ITEM_ACK:
-						itemAckError.error("No receiver found for item ack : " + message.toString());
-						break;
+						itemAckLog.error("No receiver found for item ack : " + message.toString());
+						throw new PlatformException("No receiver registered for the destination : " + destination);
 					case DELIVERY_DELETE:
-						deliveryDeleteError.error("No receiver found for delivery delete : " + message.toString());
-						break;
+						deliveryDeleteLog.error("No receiver found for delivery delete : " + message.toString());
+						throw new PlatformException("No receiver registered for the destination : " + destination);
 					case INVENTORY:
-						inventoryError.error("No receiver found for inventory : " + message.toString());
-						break;
+						inventoryLog.error("No receiver found for inventory : " + message.toString());
+						throw new PlatformException("No receiver registered for the destination : " + destination);
 				}
 			}
 			for (PlatformMessageReceiver receiver : receivers) {
 				receiver.handleMessage(message);
 			}
 		} catch (PlatformException e) {
+			logger.error("Exception while notifying receivers on destination : " + destination, e);
 			throw e;
 		}
 	}

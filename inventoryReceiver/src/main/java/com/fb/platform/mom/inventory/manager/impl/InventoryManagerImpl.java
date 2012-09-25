@@ -12,6 +12,7 @@ import com.fb.platform.mom.inventory.manager.InventoryManager;
 import com.fb.platform.mom.inventory.receiver.InventoryMessageReceiver;
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
+import com.fb.platform.mom.util.LoggerConstants;
 
 /**
  * @author nehaga
@@ -19,9 +20,7 @@ import com.fb.platform.mom.manager.PlatformDestinationEnum;
  */
 public class InventoryManagerImpl implements ReceiverManager, InventoryManager {
 	
-	private static Log infoLog = LogFactory.getLog("INVENTORY_LOG");
-	
-	private static Log errorLog = LogFactory.getLog("INVENTORY_ERROR");
+	private static Log infoLog = LogFactory.getLog(LoggerConstants.INVENTORY_LOG);
 
 	@Autowired
 	private MomManager momManager;
