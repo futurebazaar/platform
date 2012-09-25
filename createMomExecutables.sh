@@ -22,7 +22,7 @@ cd ../..
 
 #create the cp.txt for the launcher project
 cd launcher
-mvn dependency:build-classpath -Dmdep.outputFile=cp.txt
+mvn dependency:build-classpath -Dmdep.outputFile=cp.txt -Dplatform.version=$1
 
 #replace the M2_REPO path with .dependency
 sed  "s|$M2_REPO|./dependency|g" cp.txt >target/cp.txt
@@ -55,7 +55,7 @@ cd ../..
 
 #create the cp.txt for the sapReceiver project
 cd sapReceiver
-mvn dependency:build-classpath -Dmdep.outputFile=cp.txt
+mvn dependency:build-classpath -Dmdep.outputFile=cp.txt -Dplatform.version=$1
 
 #replace the M2_REPO path with .dependency
 sed  "s|$M2_REPO|./dependency|g" cp.txt >target/cp.txt
