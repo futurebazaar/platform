@@ -28,6 +28,9 @@ public class AckUIDSequenceGenerator {
 	}
 
 	public long getNextSequenceNumber(PlatformDestinationEnum destination) {
-		return sequencerMap.get(destination).incrementAndGet();
+		AtomicLong sequence = sequencerMap.get(destination);
+		long currentValue = sequence.get();
+		System.out.print("***************** currentValue for destination : " + destination + " - " + currentValue);
+		return sequence.incrementAndGet();
 	}
 }
