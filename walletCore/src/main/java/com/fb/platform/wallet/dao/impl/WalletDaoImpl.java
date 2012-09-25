@@ -5,9 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
+import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -93,23 +95,36 @@ public class WalletDaoImpl implements WalletDao {
 	
 	private Wallet create(long userId, long clientId) {
 		try{
+			String randomPassword = RandomStringUtils.random(4, false, true);
+			String passwordEncrypted = Encrypt.encrypt(randomPassword);
+			long walletId = createNewWallet(passwordEncrypted);
+			jdbcTemplate.update(CREATE_USER_CLIENT_WALLET, new Object[]{userId,clientId,walletId});
+			walletPasswordSender.sendWalletPassword(userId,randomPassword);
+			return load(walletId);
+		}catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	private long createNewWallet(final String encryptedPassword) throws Exception{
+		try{
 			final KeyHolder keyHolder = new GeneratedKeyHolder();
-			final String passwordEncrypted = Encrypt.encrypt(walletPasswordSender.generateSendWalletPassword(userId));
 			jdbcTemplate.update(new PreparedStatementCreator() {
 				@Override
 				public PreparedStatement createPreparedStatement(Connection con)
 						throws SQLException {
 					PreparedStatement ps = con.prepareStatement(CREATE_NEW_WALLET, new String[]{"id"});
-					ps.setString(1,passwordEncrypted);
+					ps.setString(1,encryptedPassword);
 					return ps;
 				}
 			}, keyHolder);
 			long walletId = keyHolder.getKey().longValue();
-			jdbcTemplate.update(CREATE_USER_CLIENT_WALLET, new Object[]{userId,clientId,walletId});
-			return load(walletId);
-		}catch (Exception e) {
-			e.printStackTrace();
-			return null;
+			return walletId;
+		} catch (DataAccessResourceFailureException e) {
+			log.error("###This is a data access exxception while creating wallet####");
+			throw e;
+		} catch (Exception e) {
+			throw e;
 		}
 	}
 	
