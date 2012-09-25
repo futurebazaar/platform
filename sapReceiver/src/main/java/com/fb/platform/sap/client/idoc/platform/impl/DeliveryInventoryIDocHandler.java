@@ -32,7 +32,9 @@ import com.fb.platform.sap.idoc.generated.ztinlaDlvry.ZTINLADLVRYTOP;
  */
 public class DeliveryInventoryIDocHandler implements PlatformIDocHandler {
 
-	private static Log logger = LogFactory.getLog(DeliveryInventoryIDocHandler.class);
+	private static Log infoLog = LogFactory.getLog("INVENTORY_LOG");
+	
+	private static Log errorLog = LogFactory.getLog("INVENTORY_ERROR");
 
 	public static final String DELIVERY_INVENTORY_IDOC_TYPE = "ZTINLA_DLVRY";
 
@@ -46,7 +48,7 @@ public class DeliveryInventoryIDocHandler implements PlatformIDocHandler {
 			//TODO move from default package to inventory package somehow
 			return JAXBContext.newInstance(ObjectFactory.class);
 		} catch (JAXBException e) {
-			logger.error("Error Initializing the JAXBContext to bind the inventory idoc schema classes", e);
+			errorLog.error("Error Initializing the JAXBContext to bind the inventory idoc schema classes", e);
 			throw new PlatformException("Error Initializing the JAXBContext to bind the inventory idoc schema classes", e);
 		}
 	}
@@ -65,8 +67,9 @@ public class DeliveryInventoryIDocHandler implements PlatformIDocHandler {
 	 */
 	@Override
 	public void handle(String idocXml) {
-		logger.info("Begin handling Delivery Inventory idoc message.");
+		infoLog.info("Begin handling Delivery Inventory idoc message.");
 		SapMomTO sapIdoc = new SapMomTO();
+		sapIdoc.setIdoc(idocXml);
 		//convert the message xml into jaxb bean
 		try {
 			//the xml received from Sap is flawed. It contains ZTINLA_DLVRY as parent and child level item. We will replace the top level ZTINLA_DLVRY with ZTINLA_DLVRY_TOP
@@ -104,7 +107,7 @@ public class DeliveryInventoryIDocHandler implements PlatformIDocHandler {
 				inventoryTo.setSellingUnit(sapInventoryAck.getMEINS());
 				inventoryTo.setSapIdoc(sapIdoc);
 
-				logger.debug("Sending InventoryTO to Inventory destination : " + inventoryTo.toString());
+				infoLog.debug("Sending InventoryTO to Inventory destination : " + inventoryTo.toString());
 				momManager.send(PlatformDestinationEnum.INVENTORY, inventoryTo);
 			}
 
@@ -114,9 +117,12 @@ public class DeliveryInventoryIDocHandler implements PlatformIDocHandler {
 			corruptMessage.setCause(CorruptMessageCause.CORRUPT_IDOC);
 			momManager.send(PlatformDestinationEnum.CORRUPT_IDOCS, corruptMessage);
 			
-			logger.error("Unable to create Inventory Message for delivery inventory idoc :\n" + idocXml);
-			logger.error("Message logged in corrupt queue.");
+			errorLog.error("Unable to create Inventory Message for delivery inventory idoc :\n" + idocXml);
+			errorLog.error("Message logged in corrupt queue.");
 			//throw new PlatformException("Exception while unmarshalling the delivery inventory idoc xml", e);
+		} catch (Exception e) {
+			errorLog.error("Error in processing delivery inventory idoc", e);
+			throw new PlatformException(e);
 		}
 	}
 

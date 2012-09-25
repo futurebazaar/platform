@@ -36,7 +36,9 @@ public class InventoryMessageReceiver implements PlatformMessageReceiver {
 	 * @see com.fb.platform.mom.manager.PlatformMessageReceiver#handleMessage(java.lang.Object)
 	 */
 	
-	private static Log log = LogFactory.getLog(InventoryMessageReceiver.class);
+	private static Log infoLog = LogFactory.getLog("INVENTORY_LOG");
+	
+	private static Log errorLog = LogFactory.getLog("INVENTORY_ERROR");
 	
 	private static Properties prop = initProperties();
 
@@ -46,7 +48,7 @@ public class InventoryMessageReceiver implements PlatformMessageReceiver {
 		try {
 			properties.load(propertiesStream);
 		} catch (IOException e) {
-			log.error("Error loading properties file.", e);
+			errorLog.error("Error loading properties file.", e);
 			throw new PlatformException("Error loading properties file.", e);
 		}
 		return properties;
@@ -54,7 +56,7 @@ public class InventoryMessageReceiver implements PlatformMessageReceiver {
 
 	@Override
 	public void handleMessage(Object message) {
-		log.info("Received the message : " + message);
+		infoLog.info("Received the message : " + message);
 
 		InventoryTO inventoryTO = (InventoryTO) message;
 		sendAck(inventoryTO);
@@ -94,18 +96,21 @@ public class InventoryMessageReceiver implements PlatformMessageReceiver {
 			HttpResponse response = httpClient.execute(httpPost);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode != HttpStatus.SC_OK) {
-				log.error("Inventory ack not delivered : " + inventoryTO.toString());
+				errorLog.error("Inventory ack not delivered : " + inventoryTO.toString());
 				throw new PlatformException("Inventory ack not delivered to tinla on URL : " + inventoryURL);
 			}
-			log.info("Inventory ack delivered to tinla. Status code : " + statusCode);
+			infoLog.info("Inventory ack delivered to tinla. Status code : " + statusCode);
 		} catch (UnsupportedEncodingException e) {
-			log.error("Error communicating with tinla on url : " + inventoryURL, e);
+			errorLog.error("Error communicating with tinla on url : " + inventoryURL, e);
+			errorLog.error("Inventory ack not delivered : " + inventoryTO.toString());
 			throw new PlatformException("Error communicating with tinla on url : " + inventoryURL, e);
 		} catch (ClientProtocolException e) {
-			log.error("Error communicating with tinla on url : " + inventoryURL, e);
+			errorLog.error("Error communicating with tinla on url : " + inventoryURL, e);
+			errorLog.error("Inventory ack not delivered : " + inventoryTO.toString());
 			throw new PlatformException("Error communicating with tinla on url : " + inventoryURL, e);
 		} catch (IOException e) {
-			log.error("Error communicating with tinla on url : " + inventoryURL, e);
+			errorLog.error("Error communicating with tinla on url : " + inventoryURL, e);
+			errorLog.error("Inventory ack not delivered : " + inventoryTO.toString());
 			throw new PlatformException("Error communicating with tinla on url : " + inventoryURL, e);
 		}
 

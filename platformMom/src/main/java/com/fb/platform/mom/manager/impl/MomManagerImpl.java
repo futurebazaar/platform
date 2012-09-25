@@ -84,13 +84,12 @@ public class MomManagerImpl implements MomManager {
 	@Autowired
 	private DefaultMessageListenerContainer itemAckContainer = null;
 	
-
 	/* (non-Javadoc)
 	 * @see com.fb.platform.mom.manager.MomManager#send(com.fb.platform.mom.manager.PlatformDestinationEnum, java.lang.Object)
 	 */
 	@Override
 	public void send(PlatformDestinationEnum destination, Serializable message) {
-		logger.debug("Sending message to destination : " + destination);
+		logger.info("Sending message to destination : " + destination);
 
 		switch (destination) {
 		case INVENTORY:

@@ -66,7 +66,7 @@ public class DeliveryDeleteIdocHandlerTest extends BaseTestCase {
 	}
 	
 	@Test
-	public void processDeliveryDeleteIdoc() throws IOException{
+	public void processDeliveryDeleteIdoc() throws IOException, Exception {
 		momManager.registerReceiver(PlatformDestinationEnum.DELIVERY_DELETE, testReceiver);
 		
 		InputStream deliveryDeleteStream = DeliveryDeleteIdocHandlerTest.class.getClassLoader().getResourceAsStream("zatgdeld.xml");
@@ -77,7 +77,7 @@ public class DeliveryDeleteIdocHandlerTest extends BaseTestCase {
 	}
 	
 	@Test
-	public void processCorruptDeliveryDeleteIdoc() throws IOException{
+	public void processCorruptDeliveryDeleteIdoc() throws IOException, Exception {
 		momManager.registerReceiver(PlatformDestinationEnum.CORRUPT_IDOCS, corruptTestReceiver);
 		
 		InputStream deliveryDeleteStream = DeliveryDeleteIdocHandlerTest.class.getClassLoader().getResourceAsStream("ztinla_dlvry.xml");

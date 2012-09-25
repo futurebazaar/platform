@@ -18,7 +18,10 @@ import com.fb.platform.mom.manager.PlatformDestinationEnum;
  *
  */
 public class DeliveryDeleteManagerImpl implements ReceiverManager, DeliveryDeleteManager {
-	private static Log log = LogFactory.getLog(DeliveryDeleteManagerImpl.class);
+	
+	private static Log infoLog = LogFactory.getLog("DELIVERY_DELETE_LOG");
+	
+	private static Log errorLog = LogFactory.getLog("DELIVERY_DELETE_ERROR");
 
 	@Autowired
 	private MomManager momManager;
@@ -31,7 +34,7 @@ public class DeliveryDeleteManagerImpl implements ReceiverManager, DeliveryDelet
 	 */
 	@Override
 	public void start() {
-		log.info("Registering the receiver DeliveryDeleteMessageReceiver.");
+		infoLog.info("Registering the receiver DeliveryDeleteMessageReceiver.");
 		momManager.registerReceiver(PlatformDestinationEnum.DELIVERY_DELETE, deliveryDeleteMessageReceiver);
 
 	}

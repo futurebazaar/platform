@@ -22,7 +22,9 @@ import org.springframework.jms.core.MessageCreator;
  */
 public class InventorySenderImpl implements InventorySender {
 
-	private static Log logger = LogFactory.getLog(InventorySenderImpl.class);
+	private static Log infoLog = LogFactory.getLog("INVENTORY_LOG");
+	
+	private static Log errorLog = LogFactory.getLog("INVENTORY_ERROR");
 
 	private JmsTemplate jmsTemplate;
 
@@ -37,8 +39,7 @@ public class InventorySenderImpl implements InventorySender {
 			
 			@Override
 			public Message createMessage(Session session) throws JMSException {
-				logger.info("Creating the Inventory Message for sending.");
-				System.out.println("Creating the Inventory Message for sending.");
+				infoLog.info("Creating the Inventory Message for sending.");
 				ObjectMessage jmsMessage = session.createObjectMessage();
 				jmsMessage.setObject(message);
 				return jmsMessage;

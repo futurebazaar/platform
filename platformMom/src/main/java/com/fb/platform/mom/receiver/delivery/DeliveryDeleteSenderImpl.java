@@ -22,7 +22,9 @@ import org.springframework.jms.core.MessageCreator;
  */
 public class DeliveryDeleteSenderImpl implements DeliveryDeleteSender {
 
-	private static Log logger = LogFactory.getLog(DeliveryDeleteSenderImpl.class);
+	private static Log infoLog = LogFactory.getLog("DELIVERY_DELETE_LOG");
+	
+	private static Log errorLog = LogFactory.getLog("DELIVERY_DELETE_ERROR");
 
 	private JmsTemplate jmsTemplate;
 
@@ -37,7 +39,7 @@ public class DeliveryDeleteSenderImpl implements DeliveryDeleteSender {
 			
 			@Override
 			public Message createMessage(Session session) throws JMSException {
-				logger.info("Creating the Delivery Delete Message for sending.");
+				infoLog.info("Creating the Delivery Delete Message for sending.");
 				ObjectMessage jmsMessage = session.createObjectMessage();
 				jmsMessage.setObject(message);
 				return jmsMessage;

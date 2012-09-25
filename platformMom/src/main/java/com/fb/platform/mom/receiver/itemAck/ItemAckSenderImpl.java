@@ -22,7 +22,9 @@ import org.springframework.jms.core.MessageCreator;
  */
 public class ItemAckSenderImpl implements ItemAckSender {
 
-	private static Log logger = LogFactory.getLog(ItemAckSenderImpl.class);
+	private static Log infoLog = LogFactory.getLog("ITEM_ACK_LOG");
+
+	private static Log errorLog = LogFactory.getLog("ITEM_ACK_ERROR");
 
 	private JmsTemplate jmsTemplate;
 
@@ -37,7 +39,7 @@ public class ItemAckSenderImpl implements ItemAckSender {
 			
 			@Override
 			public Message createMessage(Session session) throws JMSException {
-				logger.info("Creating the Item Ack Message for sending.");
+				infoLog.info("Creating the Item Ack Message for sending.");
 				ObjectMessage jmsMessage = session.createObjectMessage();
 				jmsMessage.setObject(message);
 				return jmsMessage;

@@ -18,7 +18,10 @@ import com.fb.platform.mom.manager.PlatformDestinationEnum;
  *
  */
 public class InventoryManagerImpl implements ReceiverManager, InventoryManager {
-	private static Log log = LogFactory.getLog(InventoryManagerImpl.class);
+	
+	private static Log infoLog = LogFactory.getLog("INVENTORY_LOG");
+	
+	private static Log errorLog = LogFactory.getLog("INVENTORY_ERROR");
 
 	@Autowired
 	private MomManager momManager;
@@ -31,7 +34,7 @@ public class InventoryManagerImpl implements ReceiverManager, InventoryManager {
 	 */
 	@Override
 	public void start() {
-		log.info("Registering the receiver InventoryManagerImpl.");
+		infoLog.info("Registering the receiver InventoryManagerImpl.");
 		momManager.registerReceiver(PlatformDestinationEnum.INVENTORY, inventoryMessageReceiver);
 
 	}

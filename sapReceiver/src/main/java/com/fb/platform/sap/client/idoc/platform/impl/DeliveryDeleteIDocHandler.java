@@ -32,7 +32,9 @@ import com.fb.platform.sap.idoc.generated.zatgDeld.ZATGSOD;
  */
 public class DeliveryDeleteIDocHandler implements PlatformIDocHandler {
 
-	private static Log logger = LogFactory.getLog(DeliveryDeleteIDocHandler.class);
+	private static Log infoLog = LogFactory.getLog("DELIVERY_DELETE_LOG");
+	
+	private static Log errorLog = LogFactory.getLog("DELIVERY_DELETE_ERROR");
 
 	public static final String DELIVERY_DELETE = "ZATGDELD";
 
@@ -46,14 +48,14 @@ public class DeliveryDeleteIDocHandler implements PlatformIDocHandler {
 			//TODO move from default package to inventory package somehow
 			return JAXBContext.newInstance(ObjectFactory.class);
 		} catch (JAXBException e) {
-			logger.error("Error Initializing the JAXBContext to bind the delete delivery idoc schema classes", e);
+			errorLog.error("Error Initializing the JAXBContext to bind the delete delivery idoc schema classes", e);
 			throw new PlatformException("Error Initializing the JAXBContext to bind the delete delivery idoc schema classes", e);
 		}
 	}
 
 	@Override
 	public void handle(String idocXml) {
-		logger.info("Begin handling delivery delete idoc message.");
+		infoLog.info("Begin handling delivery delete idoc message.");
 		SapMomTO sapIdoc = new SapMomTO();
 		sapIdoc.setIdoc(idocXml);
 		//convert the message xml into jaxb bean
@@ -76,7 +78,7 @@ public class DeliveryDeleteIDocHandler implements PlatformIDocHandler {
 				deliveryDelete.setTransactionCode(sapDelvDel.getDELTCODE());
 				deliveryDelete.setUser(sapDelvDel.getDELUSER());
 				deliveryDelete.setSapIdoc(sapIdoc);
-				logger.info("Sending delivery delete idoc to deliveryDelete destination : " + deliveryDelete.toString());
+				infoLog.info("Sending delivery delete idoc to deliveryDelete destination : " + deliveryDelete.toString());
 				momManager.send(PlatformDestinationEnum.DELIVERY_DELETE, deliveryDelete);
 			}
 		} catch (JAXBException e) {
@@ -85,10 +87,13 @@ public class DeliveryDeleteIDocHandler implements PlatformIDocHandler {
 			corruptMessage.setCause(CorruptMessageCause.CORRUPT_IDOC);
 			momManager.send(PlatformDestinationEnum.CORRUPT_IDOCS, corruptMessage);
 			//TODO send this to some kind of error queue
-			logger.error("Unable to create Delivery Delete Message for delivery delete idoc :\n" + sapIdoc.getIdoc());
-			logger.error("Message logged in corrupt queue.");
+			errorLog.error("Unable to create Delivery Delete Message for delivery delete idoc :\n" + sapIdoc.getIdoc());
+			errorLog.error("Message logged in corrupt queue.");
 			e.printStackTrace();
 			//throw new PlatformException("Exception while unmarshalling the inventory idoc xml", e);
+		} catch (Exception e) {
+			errorLog.error("Error in processing delivery delete idoc", e);
+			throw new PlatformException(e);
 		}
 	}
 
