@@ -70,7 +70,7 @@ public class ItemAckIdocHandlerTest extends BaseTestCase {
 	}
 	
 	@Test
-	public void processDeliveryDeleteIdoc() throws IOException{
+	public void processDeliveryDeleteIdoc() throws IOException ,Exception {
 		momManager.registerReceiver(PlatformDestinationEnum.ITEM_ACK, testReceiver);
 		
 		InputStream itemAckStream = ItemAckIdocHandlerTest.class.getClassLoader().getResourceAsStream("zatgflow.xml");

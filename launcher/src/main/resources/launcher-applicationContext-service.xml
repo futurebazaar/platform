@@ -34,7 +34,7 @@
     </bean>
     
     <bean id="springMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-  		<property name="host" value="174.36.208.35"/>
+  		<property name="host" value="MUMOPBL01.fb.dc"/>
         <property name="port" value="25"/>
         <property name="javaMailProperties">
             <props>

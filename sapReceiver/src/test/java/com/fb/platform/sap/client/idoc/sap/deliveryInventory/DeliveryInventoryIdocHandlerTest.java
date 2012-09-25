@@ -65,7 +65,7 @@ public class DeliveryInventoryIdocHandlerTest extends BaseTestCase {
 	}
 	
 	@Test
-	public void processDeliveryDeleteIdoc() throws IOException{
+	public void processDeliveryDeleteIdoc() throws IOException ,Exception {
 		momManager.registerReceiver(PlatformDestinationEnum.INVENTORY, testReceiver);
 		
 		InputStream deliveryInventoryStream = DeliveryInventoryIdocHandlerTest.class.getClassLoader().getResourceAsStream("ztinla_dlvry.xml");

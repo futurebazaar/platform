@@ -38,7 +38,9 @@ public class DeliveryDeleteMessageReceiver implements PlatformMessageReceiver {
 	 * @see com.fb.platform.mom.manager.PlatformMessageReceiver#handleMessage(java.lang.Object)
 	 */
 	
-	private static Log log = LogFactory.getLog(DeliveryDeleteMessageReceiver.class);
+	private static Log infoLog = LogFactory.getLog("DELIVERY_DELETE_LOG");
+
+	private static Log errorLog = LogFactory.getLog("DELIVERY_DELETE_ERROR");
 	
 	private static Properties prop = initProperties();
 
@@ -48,7 +50,7 @@ public class DeliveryDeleteMessageReceiver implements PlatformMessageReceiver {
 		try {
 			properties.load(propertiesStream);
 		} catch (IOException e) {
-			log.error("Error loading properties file.", e);
+			errorLog.error("Error loading properties file.", e);
 			throw new PlatformException("Error loading properties file.", e);
 		}
 		return properties;
@@ -56,7 +58,7 @@ public class DeliveryDeleteMessageReceiver implements PlatformMessageReceiver {
 
 	@Override
 	public void handleMessage(Object message) {
-		log.info("Received the message : " + message);
+		infoLog.info("Received the message : " + message);
 
 		DeliveryDeleteTO deliveryDeleteTO = (DeliveryDeleteTO) message;
 		sendAck(deliveryDeleteTO);
@@ -103,18 +105,21 @@ public class DeliveryDeleteMessageReceiver implements PlatformMessageReceiver {
 			HttpResponse response = httpClient.execute(httpPost);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode != HttpStatus.SC_OK) {
-				log.error("Delivery Delete ack not delivered : " + deliveryDeleteTO.toString());
+				errorLog.error("Delivery Delete ack not delivered : " + deliveryDeleteTO.toString());
 				throw new PlatformException("Delivery Delete ack not delivered to tinla on URL : " + deliveryDeleteURL);
 			}
-			log.info("Delivery Delete ack delivered to tinla. Status code : " + statusCode);
+			infoLog.info("Delivery Delete ack delivered to tinla. Status code : " + statusCode);
 		} catch (UnsupportedEncodingException e) {
-			log.error("Error communicating with tinla on url : " + deliveryDeleteURL, e);
+			errorLog.error("Error communicating with tinla on url : " + deliveryDeleteURL, e);
+			errorLog.error("Delivery Delete ack not delivered : " + deliveryDeleteTO.toString());
 			throw new PlatformException("Error communicating with tinla on url : " + deliveryDeleteURL, e);
 		} catch (ClientProtocolException e) {
-			log.error("Error communicating with tinla on url : " + deliveryDeleteURL, e);
+			errorLog.error("Error communicating with tinla on url : " + deliveryDeleteURL, e);
+			errorLog.error("Delivery Delete ack not delivered : " + deliveryDeleteTO.toString());
 			throw new PlatformException("Error communicating with tinla on url : " + deliveryDeleteURL, e);
 		} catch (IOException e) {
-			log.error("Error communicating with tinla on url : " + deliveryDeleteURL, e);
+			errorLog.error("Error communicating with tinla on url : " + deliveryDeleteURL, e);
+			errorLog.error("Delivery Delete ack not delivered : " + deliveryDeleteTO.toString());
 			throw new PlatformException("Error communicating with tinla on url : " + deliveryDeleteURL, e);
 		}
 

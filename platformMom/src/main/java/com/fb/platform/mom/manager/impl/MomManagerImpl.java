@@ -84,13 +84,12 @@ public class MomManagerImpl implements MomManager {
 	@Autowired
 	private DefaultMessageListenerContainer itemAckContainer = null;
 	
-
 	/* (non-Javadoc)
 	 * @see com.fb.platform.mom.manager.MomManager#send(com.fb.platform.mom.manager.PlatformDestinationEnum, java.lang.Object)
 	 */
 	@Override
 	public void send(PlatformDestinationEnum destination, Serializable message) {
-		logger.debug("Sending message to destination : " + destination);
+		logger.info("Sending message to destination : " + destination);
 
 		switch (destination) {
 		case INVENTORY:
@@ -122,37 +121,37 @@ public class MomManagerImpl implements MomManager {
 
 		switch (destination) {
 		case INVENTORY:
-			inventoryListener.addReceiver(receiver);
+			inventoryListener.addReceiver(receiver, destination);
 			if (!inventoryContainer.isRunning()) {
 				inventoryContainer.start();
 			}
 			break;
 		case MAIL:
-			mailListener.addReceiver(receiver);
+			mailListener.addReceiver(receiver, destination);
 			if(!mailContainer.isRunning()) {
 				mailContainer.start();
 			}
 			break;
 		case PREDLQ:
-			preDLQListener.addReceiver(receiver);
+			preDLQListener.addReceiver(receiver, destination);
 			if(!preDLQContainer.isRunning()) {
 				preDLQContainer.start();
 			}
 			break;
 		case CORRUPT_IDOCS:
-			corruptListener.addReceiver(receiver);
+			corruptListener.addReceiver(receiver, destination);
 			if(!corruptContainer.isRunning()) {
 				corruptContainer.start();
 			}
 			break;
 		case DELIVERY_DELETE:
-			deliveryDeleteListener.addReceiver(receiver);
+			deliveryDeleteListener.addReceiver(receiver, destination);
 			if(!deliveryDeleteContainer.isRunning()) {
 				deliveryDeleteContainer.start();
 			}
 			break;
 		case ITEM_ACK:
-			itemAckMessageListener.addReceiver(receiver);
+			itemAckMessageListener.addReceiver(receiver, destination);
 			if(!itemAckContainer.isRunning()) {
 				itemAckContainer.start();
 			}

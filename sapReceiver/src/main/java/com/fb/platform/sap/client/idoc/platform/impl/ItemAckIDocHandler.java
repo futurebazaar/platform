@@ -34,7 +34,9 @@ import com.fb.platform.sap.util.AckUIDSequenceGenerator;
  */
 public class ItemAckIDocHandler implements PlatformIDocHandler {
 
-	private static Log logger = LogFactory.getLog(ItemAckIDocHandler.class);
+	private static Log infoLog = LogFactory.getLog("ITEM_ACK_LOG");
+	
+	private static Log errorLog = LogFactory.getLog("ITEM_ACK_ERROR");
 
 	public static final String ITEM_ACK_IDOC_TYPE = "ZATGFLOW";
 
@@ -50,16 +52,17 @@ public class ItemAckIDocHandler implements PlatformIDocHandler {
 			//TODO move from default package to inventory package somehow
 			return JAXBContext.newInstance(ObjectFactory.class);
 		} catch (JAXBException e) {
-			logger.error("Error Initializing the JAXBContext to bind the order idoc schema classes", e);
+			errorLog.error("Error Initializing the JAXBContext to bind the order idoc schema classes", e);
 			throw new PlatformException("Error Initializing the JAXBContext to bind the order idoc schema classes", e);
 		}
 	}
 
 	@Override
 	public void handle(String idocXml) {
-		logger.info("Begin handling order idoc message.");
+		infoLog.info("Begin handling order idoc message.");
 
 		SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.ITEM_ACK));
+		sapIdoc.setIdoc(idocXml);
 
 		ItemAckOrderItemProcessor orderItemProcessor = new ItemAckOrderItemProcessorImpl();
 		//convert the message xml into jaxb bean
@@ -75,7 +78,7 @@ public class ItemAckIDocHandler implements PlatformIDocHandler {
 			
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			
-			logger.info("received idoc : " + idocXml);
+			infoLog.info("received idoc : " + idocXml);
 
 			ZATGFLOWTOP orderIdoc = (ZATGFLOWTOP)unmarshaller.unmarshal(new StreamSource(new StringReader(idocXml)));
 			
@@ -86,7 +89,7 @@ public class ItemAckIDocHandler implements PlatformIDocHandler {
 			List<ItemTO> orderItems = orderItemProcessor.getOrderItems(ackList);
 			for (ItemTO orderItem : orderItems) {
 				orderItem.setSapIdoc(sapIdoc);
-				logger.info("Sending ItemTO to item ack destination : " + orderItem.toString());
+				infoLog.info("Sending ItemTO to item ack destination : " + orderItem.toString());
 				momManager.send(PlatformDestinationEnum.ITEM_ACK, orderItem);
 			}
 		} catch (JAXBException e) {
@@ -95,9 +98,12 @@ public class ItemAckIDocHandler implements PlatformIDocHandler {
 			corruptMessage.setCause(CorruptMessageCause.CORRUPT_IDOC);
 			momManager.send(PlatformDestinationEnum.CORRUPT_IDOCS, corruptMessage);
 			//TODO send this to some kind of error queue
-			logger.error("Unable to create Message for item ack idoc :\n" + sapIdoc.getIdoc());
-			logger.error("Message logged in corrupt queue.", e);
+			errorLog.error("Unable to create Message for item ack idoc :\n" + sapIdoc.getIdoc());
+			errorLog.error("Message logged in corrupt queue.", e);
 			//throw new PlatformException("Exception while unmarshalling the inventory idoc xml", e);
+		} catch (Exception e) {
+			errorLog.error("Error in processing item ack idoc : " + sapIdoc.toString(), e);
+			throw new PlatformException(e);
 		}
 	}
 	

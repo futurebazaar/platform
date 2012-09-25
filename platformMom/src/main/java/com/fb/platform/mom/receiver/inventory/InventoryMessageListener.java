@@ -12,7 +12,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.jms.support.JmsUtils;
 
+import com.fb.commons.PlatformException;
 import com.fb.commons.mom.to.InventoryTO;
+import com.fb.platform.mom.manager.PlatformDestinationEnum;
 import com.fb.platform.mom.manager.impl.AbstractPlatformListener;
 
 /**
@@ -21,25 +23,29 @@ import com.fb.platform.mom.manager.impl.AbstractPlatformListener;
  */
 public class InventoryMessageListener extends AbstractPlatformListener implements MessageListener {
 
-	private static Log logger = LogFactory.getLog(InventoryMessageListener.class);
+	private static Log infoLog = LogFactory.getLog("INVENTORY_LOG");
+	
+	private static Log errorLog = LogFactory.getLog("INVENTORY_ERROR");
 
 	@Override
 	public void onMessage(Message message) {
-		logger.info("Received the message for the Inventor destination.");
+		infoLog.info("Received the message for the Inventor destination.");
 		System.out.println("Received the message for the Inventor destination.");
 
 		try {
 			ObjectMessage objectMessage = (ObjectMessage) message;
 			InventoryTO inventory = (InventoryTO) objectMessage.getObject();
 
-			logger.info("Received the Inventory Message from SAP. \n" + inventory.toString());
-			System.out.println("Received the Inventory Message from SAP. \n" + inventory.toString());
+			infoLog.info("Received the Inventory Message from SAP. \n" + inventory.toString());
 
-			super.notify(inventory);
+			super.notify(inventory , PlatformDestinationEnum.INVENTORY);
 		} catch (JMSException e) {
+			errorLog.error("Error in processing hornetQ inventory message.", e);
 			throw JmsUtils.convertJmsAccessException(e);
 		} catch (Exception e) {
-			e.printStackTrace();
+			errorLog.error("Error in processing hornetQ inventory message.", e);
+			throw new PlatformException(e);
+			
 		}
 	}
 }

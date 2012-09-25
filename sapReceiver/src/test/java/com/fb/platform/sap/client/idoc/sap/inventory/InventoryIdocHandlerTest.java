@@ -66,7 +66,7 @@ public class InventoryIdocHandlerTest extends BaseTestCase {
 	}
 	
 	@Test
-	public void processInventoryIdoc() throws IOException{
+	public void processInventoryIdoc() throws IOException ,Exception {
 		momManager.registerReceiver(PlatformDestinationEnum.INVENTORY, testReceiver);
 		
 		InputStream inventoryStream = InventoryIdocHandlerTest.class.getClassLoader().getResourceAsStream("ztinla_idoctype.xml");
@@ -77,7 +77,7 @@ public class InventoryIdocHandlerTest extends BaseTestCase {
 	}
 	
 	@Test
-	public void processCorruptInventoryIdoc() throws IOException{
+	public void processCorruptInventoryIdoc() throws IOException ,Exception {
 		momManager.registerReceiver(PlatformDestinationEnum.CORRUPT_IDOCS, corruptTestReceiver);
 		
 		InputStream inventoryStream = InventoryIdocHandlerTest.class.getClassLoader().getResourceAsStream("zatgdeld.xml");
