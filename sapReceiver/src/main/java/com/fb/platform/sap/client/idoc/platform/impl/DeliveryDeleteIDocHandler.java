@@ -25,6 +25,7 @@ import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler;
 import com.fb.platform.sap.idoc.generated.zatgDeld.ObjectFactory;
 import com.fb.platform.sap.idoc.generated.zatgDeld.ZATGDELD;
 import com.fb.platform.sap.idoc.generated.zatgDeld.ZATGSOD;
+import com.fb.platform.sap.util.AckUIDSequenceGenerator;
 
 /**
  * @author nehaga
@@ -37,6 +38,8 @@ public class DeliveryDeleteIDocHandler implements PlatformIDocHandler {
 	public static final String DELIVERY_DELETE = "ZATGDELD";
 
 	private MomManager momManager = null;
+
+	private AckUIDSequenceGenerator ackUIDSequenceGenerator = null;
 
 	//JAXBContext class is thread safe and can be shared
 	private static final JAXBContext context = initContext();
@@ -54,7 +57,9 @@ public class DeliveryDeleteIDocHandler implements PlatformIDocHandler {
 	@Override
 	public void handle(String idocXml) {
 		logger.info("Begin handling delivery delete idoc message.");
-		SapMomTO sapIdoc = new SapMomTO();
+
+		SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.DELIVERY_DELETE));
+
 		sapIdoc.setIdoc(idocXml);
 		//convert the message xml into jaxb bean
 		try {
@@ -93,7 +98,8 @@ public class DeliveryDeleteIDocHandler implements PlatformIDocHandler {
 	}
 
 	@Override
-	public void init(MomManager momManager) {
+	public void init(MomManager momManager, AckUIDSequenceGenerator ackUIDSequenceGenerator) {
 		this.momManager = momManager;
+		this.ackUIDSequenceGenerator = ackUIDSequenceGenerator;
 	}
 }

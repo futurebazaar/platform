@@ -13,6 +13,7 @@ import com.fb.platform.sap.client.idoc.platform.impl.DeliveryDeleteIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.impl.DeliveryInventoryIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.impl.InventoryIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.impl.ItemAckIDocHandler;
+import com.fb.platform.sap.util.AckUIDSequenceGenerator;
 
 /**
  * @author vinayak
@@ -32,24 +33,26 @@ public class PlatformIDocHandlerFactory {
 
 	private DefaultIDocHandler defaultIDocHandler = null;
 
+	private AckUIDSequenceGenerator ackUIDSequenceGenerator = null;
+
 	@Autowired
 	private MomManager momManager = null;
 
 	public void init() {
 		inventoryIDocHandler = new InventoryIDocHandler();
-		inventoryIDocHandler.init(momManager);
+		inventoryIDocHandler.init(momManager, ackUIDSequenceGenerator);
 
 		deliveryInventoryIDocHandler = new DeliveryInventoryIDocHandler();
-		deliveryInventoryIDocHandler.init(momManager);
+		deliveryInventoryIDocHandler.init(momManager, ackUIDSequenceGenerator);
 		
 		deliveryDeleteIDocHandler = new DeliveryDeleteIDocHandler();
-		deliveryDeleteIDocHandler.init(momManager);
+		deliveryDeleteIDocHandler.init(momManager, ackUIDSequenceGenerator);
 		
 		orderIDocHandler = new ItemAckIDocHandler();
-		orderIDocHandler.init(momManager);
+		orderIDocHandler.init(momManager, ackUIDSequenceGenerator);
 
 		defaultIDocHandler = new DefaultIDocHandler();
-		defaultIDocHandler.init(momManager);
+		defaultIDocHandler.init(momManager, ackUIDSequenceGenerator);
 	}
 
 	public PlatformIDocHandler getHandler(String idocType) {
@@ -78,4 +81,9 @@ public class PlatformIDocHandlerFactory {
 	public void setMomManager(MomManager momManager) {
 		this.momManager = momManager;
 	}
+
+	public void setAckUIDSequenceGenerator(AckUIDSequenceGenerator ackUIDSequenceGenerator) {
+		this.ackUIDSequenceGenerator = ackUIDSequenceGenerator;
+	}
+
 }

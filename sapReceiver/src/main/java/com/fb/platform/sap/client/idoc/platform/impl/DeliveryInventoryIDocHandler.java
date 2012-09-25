@@ -25,6 +25,7 @@ import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler;
 import com.fb.platform.sap.idoc.generated.ztinlaDlvry.ObjectFactory;
 import com.fb.platform.sap.idoc.generated.ztinlaDlvry.ZTINLADLVRY;
 import com.fb.platform.sap.idoc.generated.ztinlaDlvry.ZTINLADLVRYTOP;
+import com.fb.platform.sap.util.AckUIDSequenceGenerator;
 
 /**
  * @author vinayak
@@ -37,6 +38,8 @@ public class DeliveryInventoryIDocHandler implements PlatformIDocHandler {
 	public static final String DELIVERY_INVENTORY_IDOC_TYPE = "ZTINLA_DLVRY";
 
 	private MomManager momManager = null;
+
+	private AckUIDSequenceGenerator ackUIDSequenceGenerator = null;
 
 	//JAXBContext class is thread safe and can be shared
 	private static final JAXBContext context = initContext();
@@ -56,8 +59,9 @@ public class DeliveryInventoryIDocHandler implements PlatformIDocHandler {
 	 * @see com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler#init(com.fb.platform.mom.manager.MomManager)
 	 */
 	@Override
-	public void init(MomManager momManager) {
+	public void init(MomManager momManager, AckUIDSequenceGenerator ackUIDSequenceGenerator) {
 		this.momManager = momManager;
+		this.ackUIDSequenceGenerator = ackUIDSequenceGenerator;
 	}
 
 	/* (non-Javadoc)
@@ -66,7 +70,9 @@ public class DeliveryInventoryIDocHandler implements PlatformIDocHandler {
 	@Override
 	public void handle(String idocXml) {
 		logger.info("Begin handling Delivery Inventory idoc message.");
-		SapMomTO sapIdoc = new SapMomTO();
+
+		SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.INVENTORY));
+
 		//convert the message xml into jaxb bean
 		try {
 			//the xml received from Sap is flawed. It contains ZTINLA_DLVRY as parent and child level item. We will replace the top level ZTINLA_DLVRY with ZTINLA_DLVRY_TOP

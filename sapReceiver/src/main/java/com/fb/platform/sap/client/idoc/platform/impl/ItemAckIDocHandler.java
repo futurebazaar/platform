@@ -26,6 +26,7 @@ import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler;
 import com.fb.platform.sap.idoc.generated.zatgflow.ObjectFactory;
 import com.fb.platform.sap.idoc.generated.zatgflow.ZATGFLOW;
 import com.fb.platform.sap.idoc.generated.zatgflow.ZATGFLOWTOP;
+import com.fb.platform.sap.util.AckUIDSequenceGenerator;
 
 /**
  * @author nehaga
@@ -38,6 +39,8 @@ public class ItemAckIDocHandler implements PlatformIDocHandler {
 	public static final String ITEM_ACK_IDOC_TYPE = "ZATGFLOW";
 
 	private MomManager momManager = null;
+
+	private AckUIDSequenceGenerator ackUIDSequenceGenerator = null;
 	
 	//JAXBContext class is thread safe and can be shared
 	private static final JAXBContext context = initContext();
@@ -55,7 +58,9 @@ public class ItemAckIDocHandler implements PlatformIDocHandler {
 	@Override
 	public void handle(String idocXml) {
 		logger.info("Begin handling order idoc message.");
-		SapMomTO sapIdoc = new SapMomTO();
+
+		SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.ITEM_ACK));
+
 		ItemAckOrderItemProcessor orderItemProcessor = new ItemAckOrderItemProcessorImpl();
 		//convert the message xml into jaxb bean
 		try {
@@ -80,6 +85,7 @@ public class ItemAckIDocHandler implements PlatformIDocHandler {
 			List<ZATGFLOW> ackList = orderIdoc.getIDOC().getZATGFLOW();
 			List<ItemTO> orderItems = orderItemProcessor.getOrderItems(ackList);
 			for (ItemTO orderItem : orderItems) {
+				orderItem.setSapIdoc(sapIdoc);
 				logger.info("Sending ItemTO to item ack destination : " + orderItem.toString());
 				momManager.send(PlatformDestinationEnum.ITEM_ACK, orderItem);
 			}
@@ -96,7 +102,8 @@ public class ItemAckIDocHandler implements PlatformIDocHandler {
 	}
 	
 	@Override
-	public void init(MomManager momManager) {
+	public void init(MomManager momManager, AckUIDSequenceGenerator ackUIDSequenceGenerator) {
 		this.momManager = momManager;
+		this.ackUIDSequenceGenerator = ackUIDSequenceGenerator;
 	}
 }

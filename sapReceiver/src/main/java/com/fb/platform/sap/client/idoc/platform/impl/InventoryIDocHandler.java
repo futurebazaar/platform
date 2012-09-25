@@ -25,6 +25,7 @@ import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler;
 import com.fb.platform.sap.idoc.generated.ztinlaIDocType.ObjectFactory;
 import com.fb.platform.sap.idoc.generated.ztinlaIDocType.ZTINLAIDOCTYP;
 import com.fb.platform.sap.idoc.generated.ztinlaIDocType.ZTINLASEGDLVR;
+import com.fb.platform.sap.util.AckUIDSequenceGenerator;
 
 /**
  * @author vinayak
@@ -37,6 +38,8 @@ public class InventoryIDocHandler implements PlatformIDocHandler {
 	public static final String INVENTORY_IDOC_TYPE = "ZTINLA_IDOCTYP";
 
 	private MomManager momManager = null;
+
+	private AckUIDSequenceGenerator ackUIDSequenceGenerator = null;
 
 	//JAXBContext class is thread safe and can be shared
 	private static final JAXBContext context = initContext();
@@ -54,7 +57,9 @@ public class InventoryIDocHandler implements PlatformIDocHandler {
 	@Override
 	public void handle(String idocXml) {
 		logger.info("Begin handling Inventory idoc message.");
-		SapMomTO sapIdoc = new SapMomTO();
+
+		SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.INVENTORY));
+
 		//convert the message xml into jaxb bean
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
@@ -73,7 +78,6 @@ public class InventoryIDocHandler implements PlatformIDocHandler {
 				sapIdoc.setPoNumber(sapInventoryAck.getPONUM());
 				sapIdoc.setCanGr(sapInventoryAck.getCANGR());
 				
-				inventoryTo.setSapIdoc(sapIdoc);
 				inventoryTo.setArticleId(sapInventoryAck.getMATNR());
 				inventoryTo.setIssuingSite(sapInventoryAck.getIWERKS());
 				inventoryTo.setIssuingStorageLoc(sapInventoryAck.getILGORT());
@@ -101,7 +105,8 @@ public class InventoryIDocHandler implements PlatformIDocHandler {
 	}
 
 	@Override
-	public void init(MomManager momManager) {
+	public void init(MomManager momManager, AckUIDSequenceGenerator ackUIDSequenceGenerator) {
 		this.momManager = momManager;
+		this.ackUIDSequenceGenerator = ackUIDSequenceGenerator;
 	}
 }
