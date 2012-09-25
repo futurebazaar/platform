@@ -445,7 +445,7 @@
 
     <properties>
         <dao.framework>jdbc</dao.framework>
-        <platform.version>1.1.0</platform.version>
+        <platform.version>1.0-SNAPSHOT</platform.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.version>4.8.2</junit.version>
 		<spring.version>3.0.5.RELEASE</spring.version>
