@@ -28,9 +28,9 @@ import com.fb.platform.sap.client.handler.impl.SapClientHandler;
 @Path("/lsp")
 @Component
 @Scope("request")
-public class SapLspResource {
+public class LspResource {
 
-private static Log logger = LogFactory.getLog(SapLspResource.class);
+private static Log logger = LogFactory.getLog(LspResource.class);
 	
 	//JAXBContext class is thread safe and can be shared
 	private static final JAXBContext context = initContext();

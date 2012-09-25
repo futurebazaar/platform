@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.fb.com/platform/sap/1.0.0" xmlns:sap="http://www.fb.com/platform/sap/1.0.0">
+
+  <xs:element name="modifyOrderRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="sap:deliveryItemsList"/>
+        <xs:element ref="sap:modifiedOrderHeader"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="deliveryItemsList">
+  	<xs:complexType>
+      <xs:sequence>
+      	<xs:element ref="sap:DelItem"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="DelItem">
+  	<xs:complexType>
+      <xs:sequence>
+        <xs:element type="xs:string" name="itemDesc"/>
+        <xs:element type="xs:int" name="itemID"/>
+        <xs:element type="xs:int" name="lineItemId"/>
+        <xs:element type="xs:string" name="itemState"/>
+        <xs:element type="xs:string" name="lspName"/>
+        <xs:element type="xs:string" name="lspNumber"/>
+        <xs:element type="xs:string" name="deliveryNumber"/>
+        <xs:element type="xs:string" name="invoiceNumber"/>
+        <xs:element type="xs:dateTime" name="invoiceDate"/>
+        <xs:element type="xs:string" name="trackingNumber"/>
+        <xs:element type="xs:int" name="quantity"/>
+        <xs:element type="xs:string" name="reasonOfCancellation"/>
+        <xs:element type="xs:string" name="operation"/>
+        <xs:element type="xs:string" name="plant"/>
+        <xs:element type="xs:decimal" name="salesPrice"/>
+        <xs:element type="xs:decimal" name="discount"/>
+        <xs:element type="xs:decimal" name="listPrice"/>
+        <xs:element type="xs:decimal" name="shippingPrice"/>
+        <xs:element type="xs:boolean" name="isThirdParty"/>
+        <xs:element type="xs:string" name="vendor"/>
+        <xs:element type="xs:decimal" name="nlc"/>
+        <xs:element type="xs:string" name="EANUPC"/>
+        <xs:element type="xs:string" name="onSale"/>
+        <xs:element type="xs:string" name="bundle"/>
+        <xs:element type="xs:string" name="gvClaimCodes"/>
+        <xs:element type="xs:dateTime" name="requiredDeliveryDate"/>
+        <xs:element ref="sap:ShippingAddress"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+        
+  <xs:element name="ShippingAddress">
+	<xs:complexType>
+	  <xs:sequence>
+	  	<xs:element type="xs:string" name="firstName"/>
+	    <xs:element type="xs:string" name="middleName"/>
+	    <xs:element type="xs:string" name="lastName"/>
+	    <xs:element type="xs:string" name="address1"/>
+	    <xs:element type="xs:string" name="address2"/>
+	    <xs:element type="xs:string" name="city"/>
+	    <xs:element type="xs:string" name="state"/>
+	    <xs:element type="xs:string" name="country"/>
+	    <xs:element type="xs:string" name="postalCode"/>
+	    <xs:element type="xs:string" name="telephone1"/>
+	    <xs:element type="xs:string" name="telephone2"/>
+	  </xs:sequence>
+	</xs:complexType>
+  </xs:element>
+  
+  <xs:element name="modifiedOrderHeader">
+  	<xs:complexType>
+      <xs:sequence>
+	    <xs:element type="xs:string" name="orderId"/>
+	    <xs:element type="xs:dateTime" name="dateOfCreation"/>
+	    <xs:element type="xs:dateTime" name="dateOfSubmission"/>
+	    <xs:element type="xs:decimal" name="shippingAmount"/>
+	    <xs:element type="xs:decimal" name="orderTotal"/>
+	    <xs:element type="xs:decimal" name="discount"/>
+	    <xs:element type="xs:string" name="bpNumber"/>
+	    <xs:element type="xs:string" name="loyaltyCardNumber"/>
+	    <xs:element type="xs:decimal" name="pointsEarn"/>
+	    <xs:element type="xs:decimal" name="pointsEarnValue"/>
+	    <xs:element type="xs:decimal" name="pointsBurn"/>
+	    <xs:element ref="sap:priceAdjustments"/>
+	  </xs:sequence>
+	</xs:complexType>
+  </xs:element>
+  
+  <xs:element name="priceAdjustments">
+  	<xs:complexType>
+      <xs:sequence>
+        <xs:element ref="sap:PriceAdjustment"/>
+      </xs:sequence>
+	</xs:complexType>
+  </xs:element>
+  
+  <xs:element name="PriceAdjustment">
+   	<xs:complexType>
+      <xs:sequence>
+        <xs:element type="xs:decimal" name="totalAdjustment"/>
+        <xs:element type="xs:string" name="description"/>
+      </xs:sequence>
+	</xs:complexType>
+  </xs:element>
+
+</xs:schema>

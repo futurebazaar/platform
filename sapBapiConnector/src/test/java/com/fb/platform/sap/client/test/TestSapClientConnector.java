@@ -25,16 +25,16 @@ public class TestSapClientConnector {
 		bh.setBapiConnector(bapiConnector);
 		
 		//Test Order
-		SapOrderRequestTO bapiOrderTO = new TestBapiOrderTO().getBapiTO();
-		//SapOrderRequestTO bapiOrderTO = new TestBBBapiOrderTO().getBapiTO();
-		//System.out.println(bh.processOrder(bapiOrderTO));
+		//SapOrderRequestTO bapiOrderTO = new TestBapiOrderTO().getBapiTO();
+		SapOrderRequestTO bapiOrderTO = new TestBBBapiOrderTO().getBapiTO();
+		System.out.println(bh.processOrder(bapiOrderTO));
 		
 		//Test Inventory Dashboard
 		SapInventoryDashboardRequestTO inventoryDashboardRequestTO = new TestInventoryDashboardTO().getRequestTO();
 		//System.out.println(bh.processInventoryDashboard(inventoryDashboardRequestTO));
 		
 		SapInventoryLevelRequestTO inventoryLevelRequestTO = new TestInventoryLevelTO().getInventoryLevelRequestTO();
-		System.out.println(bh.processInventoryLevel(inventoryLevelRequestTO));
+		//System.out.println(bh.processInventoryLevel(inventoryLevelRequestTO));
 		
 		SapLspAwbUpdateRequestTO lspAwbUpdateRequestTO = new TestLspAwbUpdateTO().getLspAwbUpdateRequestTO();
 		//System.out.println(bh.processLspAwbUpdate(lspAwbUpdateRequestTO));

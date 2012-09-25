@@ -44,9 +44,9 @@ import com.fb.platform.sap.client.handler.impl.SapClientHandler;
 @Path("/inventory")
 @Component
 @Scope("request")
-public class SapInventoryResource {
+public class InventoryResource {
 
-	private static Log logger = LogFactory.getLog(SapInventoryResource.class);
+	private static Log logger = LogFactory.getLog(InventoryResource.class);
 	
 	//JAXBContext class is thread safe and can be shared
 	private static final JAXBContext context = initContext();
@@ -96,6 +96,9 @@ public class SapInventoryResource {
 	}
 	
 	@Path("/dashboard")
+	@POST
+	@Consumes("application/xml")
+	@Produces("application/xml")
 	public String inventoryDashboard(String inventoryDashboardXml) {
 		logger.info("InventoryDashboardlXML : \n" + inventoryDashboardXml);
 		
