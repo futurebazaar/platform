@@ -54,6 +54,14 @@ public class GenerateSendWalletPassword {
 	
 	public String generateSendWalletPassword(long userId){
 		String randomPassword = RandomStringUtils.random(4, false, true);
+		try {
+			sendWalletPassword(userId, randomPassword);
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		return randomPassword;
+	}
+	public void sendWalletPassword(long userId,String randomPassword){
 		log.info("Wallet password generated for userId: " + userId + " :::::" + randomPassword);
 		try {
 			UserBo user = userAdminService.getUserByUserId(safeLongToInt(userId));
@@ -72,7 +80,6 @@ public class GenerateSendWalletPassword {
 		} catch (Exception e){
 			e.printStackTrace();
 		}
-		return randomPassword;
 	}
 	private int safeLongToInt(long l) {
 	    if (l < Integer.MIN_VALUE || l > Integer.MAX_VALUE) {
