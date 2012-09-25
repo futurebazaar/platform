@@ -52,7 +52,7 @@
   <xs:element name="PaymentGroups">
     <xs:complexType>
       <xs:sequence>
-      	<xs:element ref="sap:Details"/>
+      	<xs:element maxOccurs="unbounded" ref="sap:Details"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -128,7 +128,7 @@
   <xs:element name="OrderLineItems">
   	<xs:complexType>
       <xs:sequence>
-      	<xs:element ref="sap:LineItem"/>
+      	<xs:element maxOccurs="unbounded" ref="sap:LineItem"/>
       </xs:sequence>
    	</xs:complexType>
   </xs:element>
