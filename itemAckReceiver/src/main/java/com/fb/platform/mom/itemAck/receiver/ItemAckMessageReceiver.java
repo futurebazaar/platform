@@ -37,6 +37,8 @@ public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 
 	private static Log infoLog = LogFactory.getLog(ItemAckMessageReceiver.class);
 	
+	private static Log auditLog = LogFactory.getLog(LoggerConstants.ITEM_ACK_RECEIVER_AUDIT_LOG);
+	
 	private static Properties prop = initProperties();
 
 	private static Properties initProperties() {
@@ -56,9 +58,15 @@ public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 	 */
 	@Override
 	public void handleMessage(Object message) {
+		ItemTO itemTO = (ItemTO) message;
+		long uid = itemTO.getSapIdoc().getAckUID();
+		String idocNumber = itemTO.getSapIdoc().getIdocNumber();
+		String timestamp = itemTO.getSapIdoc().getTimestamp().toString();
+
+		auditLog.info(uid + "," + idocNumber + "," + timestamp + ",false");
 		infoLog.info("Received the message : " + message);
 
-		sendAck((ItemTO) message);
+		sendAck(itemTO);
 	}
 	
 	private boolean isOrderStateValid(ItemTO itemAck) {
@@ -104,8 +112,10 @@ public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 					infoLog.error("Item ack not delivered : " + itemAck.toString());
 					throw new PlatformException("Item ack not delivered to tinla on URL : " + orderURL);
 				}
+				auditLog.info(itemAck.getSapIdoc().getAckUID() + "," + itemAck.getSapIdoc().getIdocNumber() + "," + itemAck.getSapIdoc().getTimestamp() + ",true");
 				infoLog.info("Item ack delivered to tinla. Status code : " + statusCode);
 			} else {
+				auditLog.info(itemAck.getSapIdoc().getAckUID() + "," + itemAck.getSapIdoc().getIdocNumber() + "," + itemAck.getSapIdoc().getTimestamp() + ",true");
 				infoLog.info("Request not sent to tinla because order state is not processed by tinla : " + itemAck.toString());
 			}
 		} catch (UnsupportedEncodingException e) {

@@ -25,6 +25,7 @@ import org.apache.http.message.BasicNameValuePair;
 import com.fb.commons.PlatformException;
 import com.fb.commons.mom.to.InventoryTO;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
+import com.fb.platform.mom.util.LoggerConstants;
 
 /**
  * @author nehaga
@@ -33,6 +34,8 @@ import com.fb.platform.mom.manager.PlatformMessageReceiver;
 public class InventoryMessageReceiver implements PlatformMessageReceiver {
 
 	private static Log infoLog = LogFactory.getLog(InventoryMessageReceiver.class);
+	
+	private static Log auditLog = LogFactory.getLog(LoggerConstants.INVENTORY_RECEIVER_AUDIT_LOG);
 	
 	private static Properties prop = initProperties();
 
@@ -53,9 +56,14 @@ public class InventoryMessageReceiver implements PlatformMessageReceiver {
 	 */
 	@Override
 	public void handleMessage(Object message) {
+		InventoryTO inventoryTO = (InventoryTO) message;
+		long uid = inventoryTO.getSapIdoc().getAckUID();
+		String idocNumber = inventoryTO.getSapIdoc().getIdocNumber();
+		String timestamp = inventoryTO.getSapIdoc().getTimestamp().toString();
+
+		auditLog.info(uid + "," + idocNumber + "," + timestamp + ",false");
 		infoLog.info("Received the message : " + message);
 
-		InventoryTO inventoryTO = (InventoryTO) message;
 		sendAck(inventoryTO);
 	}
 
@@ -96,6 +104,7 @@ public class InventoryMessageReceiver implements PlatformMessageReceiver {
 				infoLog.error("Inventory ack not delivered : " + inventoryTO.toString());
 				throw new PlatformException("Inventory ack not delivered to tinla on URL : " + inventoryURL);
 			}
+			auditLog.info(inventoryTO.getSapIdoc().getAckUID() + "," + inventoryTO.getSapIdoc().getIdocNumber() + "," + inventoryTO.getSapIdoc().getTimestamp() + ",true");
 			infoLog.info("Inventory ack delivered to tinla. Status code : " + statusCode);
 		} catch (UnsupportedEncodingException e) {
 			infoLog.error("Error communicating with tinla on url : " + inventoryURL, e);

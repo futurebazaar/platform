@@ -111,6 +111,43 @@
 	                <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] %c:%L - %m%n" />
 	        </layout>
 	</appender>
+	<appender name="DELIVERY_DELETE_RECEIVER_AUDIT_LOG" class="org.apache.log4j.DailyRollingFileAppender">
+	        <!-- The active file to log to -->
+	        <param name="file" value="/var/log/tomcat6/launcher/audit/deliveryDeleteReceiver.log" />
+	        <param name="append" value="true" />
+	        <param name="encoding" value="UTF-8" />
+	        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+	
+	        <layout class="org.apache.log4j.PatternLayout">
+	                <!-- The log message pattern -->
+	                <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] %c:%L - %m%n" />
+	        </layout>
+	</appender>
+	
+	<appender name="INVENTORY_RECEIVER_AUDIT_LOG" class="org.apache.log4j.DailyRollingFileAppender">
+	        <!-- The active file to log to -->
+	        <param name="file" value="/var/log/tomcat6/launcher/audit/inventoryReceiver.log" />
+	        <param name="append" value="true" />
+	        <param name="encoding" value="UTF-8" />
+	        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+	
+	        <layout class="org.apache.log4j.PatternLayout">
+	                <!-- The log message pattern -->
+	                <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] %c:%L - %m%n" />
+	        </layout>
+	</appender>
+	<appender name="ITEM_ACK_RECEIVER_AUDIT_LOG" class="org.apache.log4j.DailyRollingFileAppender">
+	        <!-- The active file to log to -->
+	        <param name="file" value="/var/log/tomcat6/launcher/audit/itemAckReceiver.log" />
+	        <param name="append" value="true" />
+	        <param name="encoding" value="UTF-8" />
+	        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+	
+	        <layout class="org.apache.log4j.PatternLayout">
+	                <!-- The log message pattern -->
+	                <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] %c:%L - %m%n" />
+	        </layout>
+	</appender>
 
     <logger name="net.sf.ehcache">
 
@@ -170,6 +207,18 @@
     <logger name="ITEM_ACK_AUDIT_LOG">
         <level value="INFO"/>
         <appender-ref ref="ITEM_ACK_AUDIT_LOG"/>
+    </logger>
+    <logger name="DELIVERY_DELETE_RECEIVER_AUDIT_LOG">
+        <level value="INFO"/>
+        <appender-ref ref="DELIVERY_DELETE_RECEIVER_AUDIT_LOG"/>
+    </logger>
+    <logger name="INVENTORY_RECEIVER_AUDIT_LOG">
+        <level value="INFO"/>
+        <appender-ref ref="INVENTORY_RECEIVER_AUDIT_LOG"/>
+    </logger>
+    <logger name="ITEM_ACK_RECEIVER_AUDIT_LOG">
+        <level value="INFO"/>
+        <appender-ref ref="ITEM_ACK_RECEIVER_AUDIT_LOG"/>
     </logger>
     <logger name="LOGERROR">
         <level value="WARN"/>

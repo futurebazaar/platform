@@ -27,6 +27,7 @@ import com.fb.commons.PlatformException;
 import com.fb.commons.mom.to.DeliveryDeleteTO;
 import com.fb.commons.mom.to.TinlaAckType;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
+import com.fb.platform.mom.util.LoggerConstants;
 
 /**
  * @author nehaga
@@ -35,6 +36,8 @@ import com.fb.platform.mom.manager.PlatformMessageReceiver;
 public class DeliveryDeleteMessageReceiver implements PlatformMessageReceiver {
 
 	private static Log infoLog = LogFactory.getLog(DeliveryDeleteMessageReceiver.class);
+	
+	private static Log auditLog = LogFactory.getLog(LoggerConstants.DELIVERY_DELETE_RECEIVER_AUDIT_LOG);
 	
 	private static Properties prop = initProperties();
 
@@ -55,9 +58,14 @@ public class DeliveryDeleteMessageReceiver implements PlatformMessageReceiver {
 	 */
 	@Override
 	public void handleMessage(Object message) {
+		DeliveryDeleteTO deliveryDeleteTO = (DeliveryDeleteTO) message;
+		long uid = deliveryDeleteTO.getSapIdoc().getAckUID();
+		String idocNumber = deliveryDeleteTO.getSapIdoc().getIdocNumber();
+		String timestamp = deliveryDeleteTO.getSapIdoc().getTimestamp().toString();
+
+		auditLog.info(uid + "," + idocNumber + "," + timestamp + ",false");
 		infoLog.info("Received the message : " + message);
 
-		DeliveryDeleteTO deliveryDeleteTO = (DeliveryDeleteTO) message;
 		sendAck(deliveryDeleteTO);
 	}
 
@@ -105,6 +113,7 @@ public class DeliveryDeleteMessageReceiver implements PlatformMessageReceiver {
 				infoLog.error("Delivery Delete ack not delivered : " + deliveryDeleteTO.toString());
 				throw new PlatformException("Delivery Delete ack not delivered to tinla on URL : " + deliveryDeleteURL);
 			}
+			auditLog.info(deliveryDeleteTO.getSapIdoc().getAckUID() + "," + deliveryDeleteTO.getSapIdoc().getIdocNumber() + "," + deliveryDeleteTO.getSapIdoc().getTimestamp() + ",true");
 			infoLog.info("Delivery Delete ack delivered to tinla. Status code : " + statusCode);
 		} catch (UnsupportedEncodingException e) {
 			infoLog.error("Error communicating with tinla on url : " + deliveryDeleteURL, e);
