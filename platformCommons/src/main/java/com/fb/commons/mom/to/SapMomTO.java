@@ -83,11 +83,11 @@ public class SapMomTO implements Serializable {
 		return new ToStringBuilder(this)
 		.append("ackUID", this.ackUID)
 		.append("idocNumber", this.idocNumber)
+		.append("timestamp", this.timestamp)
 		.append("segmentNumber", this.segmentNumber)
 		.append("canGr", this.canGr)
 		.append("poNumber", this.poNumber)
 		.append("refUID", this.refUID)
-		.append("timestamp", this.timestamp)
 		.toString();
 	}
 }

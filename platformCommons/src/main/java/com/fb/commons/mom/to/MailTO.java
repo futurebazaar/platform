@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 /**
  * @author nehaga
  *
@@ -88,9 +90,17 @@ public class MailTO implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "from : " + from
-			+ "\n subject : " + subject 
-			+ "\n message : " + message ;
+		return new ToStringBuilder(this)
+		.append("", this.isHtmlText)
+		.append("", this.bcc)
+		.append("", this.bounceBack)
+		.append("", this.cc)
+		.append("", this.from)
+		.append("", this.fromPersonal)
+		//.append("", this.message)
+		.append("", this.subject)
+		.append("", this.to)
+		.toString();
 	}
 	
 }
