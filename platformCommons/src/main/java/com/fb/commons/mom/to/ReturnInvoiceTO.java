@@ -3,6 +3,7 @@
  */
 package com.fb.commons.mom.to;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.joda.time.DateTime;
 
 /**
@@ -54,12 +55,13 @@ public class ReturnInvoiceTO extends ItemTO {
 
 	@Override
 	public String toString(){
-		String returnInvoice = super.toString()
-				+ "\nreturn invoice number : " + number
-				+ "\nreturn id : " + returnId
-				+ "\nreturn invoice type : " + type
-				+ "\nreturn invoice date : " + invoiceDate
-				+ "\nreturn invoice net : " + invoiceNet;
-		return returnInvoice;
+		return new ToStringBuilder(this)
+		.append("itemTO", super.toString())
+		.append("pgrCreationDate", this.number)
+		.append("invoiceDate", this.invoiceDate)
+		.append("invoiceNet", this.invoiceNet)
+		.append("returnId", this.returnId)
+		.append("type", this.type)
+		.toString();
 	}
 }

@@ -5,6 +5,8 @@ package com.fb.commons.mom.to;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 /**
  * @author nehaga
  *
@@ -76,17 +78,15 @@ public class DeliveryDeleteTO implements Serializable{
 	
 	@Override
 	public String toString() {
-		String deliveryDelete = "delivery number:" + deliveryNo
-				+ "\norder number:" + orderNo
-				+ "\nitem number:" + itemNo
-				+ "\nuser:" + user
-				+ "\ntransaction code:" + transactionCode
-				+ "\ndate:" + date
-				+ "\ntime:" + time;
-		if(sapIdoc != null) {
-			deliveryDelete += "\n" + sapIdoc.toString();
-		}
-		return deliveryDelete;
+		return new ToStringBuilder(this)
+		.append("sapIdoc", this.sapIdoc)
+		.append("itemNo", this.itemNo)
+		.append("date", this.date)
+		.append("deliveryNo", this.deliveryNo)
+		.append("orderNo", this.orderNo)
+		.append("time", this.time)
+		.append("transactionCode", this.transactionCode)
+		.append("user", this.user)
+		.toString();
 	}
-	
 }

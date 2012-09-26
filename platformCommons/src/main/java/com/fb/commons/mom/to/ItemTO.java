@@ -235,8 +235,7 @@ public class ItemTO implements Serializable {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this)
-		.append("UID", this.sapIdoc.getAckUID())
-		.append("idocNumber", this.sapIdoc.getIdocNumber())
+		.append("sapIdoc", this.sapIdoc)
 		.append("orderId", this.orderId)
 		.append("atgDocumentId", this.atgDocumentId)
 		.append("sapDocumentId", this.sapDocumentId)
@@ -259,7 +258,6 @@ public class ItemTO implements Serializable {
 		.append("orderType", this.orderType)
 		.append("plantId", this.plantId)
 		.append("quantity", this.quantity)
-		.append("sapIdoc", this.sapIdoc)
 		.append("shipmentComments", this.shipmentComments)
 		.append("skuID", this.skuID)
 		.append("unitOfMeasurement", this.unitOfMeasurement)

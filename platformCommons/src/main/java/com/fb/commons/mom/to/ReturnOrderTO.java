@@ -5,6 +5,8 @@ package com.fb.commons.mom.to;
 
 import java.math.BigDecimal;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 /**
  * @author nehaga
  *
@@ -64,12 +66,13 @@ public class ReturnOrderTO extends ItemTO {
 
 	@Override
 	public String toString(){
-		String cancelItem = super.toString()
-				+ "\nreturn order id : " + returnOrderId
-				+ "\nreturn id : " + returnId
-				+ "\nreturn quantity : " + returnQuantity
-				+ "\nreturn storage location : " + storageLocation
-				+ "\nreturn category : " + category;
-		return cancelItem;
+		return new ToStringBuilder(this)
+		.append("itemTO", super.toString())
+		.append("category", this.category)
+		.append("returnOrderId", this.returnOrderId)
+		.append("returnQuantity", this.returnQuantity)
+		.append("returnId", this.returnId)
+		.append("storageLocation", this.storageLocation)
+		.toString();
 	}
 }
