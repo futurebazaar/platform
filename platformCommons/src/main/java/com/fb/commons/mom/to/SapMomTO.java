@@ -5,6 +5,7 @@ package com.fb.commons.mom.to;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.joda.time.DateTime;
 
 /**
@@ -79,15 +80,14 @@ public class SapMomTO implements Serializable {
 
 	@Override
 	public String toString() {
-		return "idoc number : " + idocNumber
-				+ "\nUID : " + ackUID
-				+ "\ntimestamp : " + timestamp
-			+ "\nreference UID : " + refUID
-			+ "\nsegment number : " + segmentNumber
-			//+ "\nidoc : " + idoc
-			+ "\npo number : " + poNumber
-			+ "\ncan gr : " + canGr;
+		return new ToStringBuilder(this)
+		.append("idocNumber", this.idocNumber)
+		.append("segmentNumber", this.segmentNumber)
+		.append("canGr", this.canGr)
+		.append("poNumber", this.poNumber)
+		.append("refUID", this.refUID)
+		.append("timestamp", this.timestamp)
+		.append("ackUID", this.ackUID)
+		.toString();
 	}
-	
-	
 }
