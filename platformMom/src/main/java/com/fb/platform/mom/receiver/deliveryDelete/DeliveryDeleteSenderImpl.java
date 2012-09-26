@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.fb.platform.mom.receiver.delivery;
+package com.fb.platform.mom.receiver.deliveryDelete;
 
 import java.io.Serializable;
 

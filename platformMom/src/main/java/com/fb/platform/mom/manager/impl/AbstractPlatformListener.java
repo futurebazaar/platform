@@ -12,7 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import com.fb.commons.PlatformException;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
-import com.fb.platform.mom.receiver.delivery.DeliveryDeleteMessageListener;
+import com.fb.platform.mom.receiver.deliveryDelete.DeliveryDeleteMessageListener;
 import com.fb.platform.mom.receiver.inventory.InventoryMessageListener;
 import com.fb.platform.mom.receiver.itemAck.ItemAckMessageListener;
 

@@ -91,15 +91,15 @@ public class MailTO implements Serializable {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this)
-		.append("", this.isHtmlText)
-		.append("", this.bcc)
-		.append("", this.bounceBack)
-		.append("", this.cc)
-		.append("", this.from)
-		.append("", this.fromPersonal)
+		.append("isHtmlText", this.isHtmlText)
+		.append("bcc", this.bcc)
+		.append("bounceBack", this.bounceBack)
+		.append("cc", this.cc)
+		.append("from", this.from)
+		.append("fromPersonal", this.fromPersonal)
 		//.append("", this.message)
-		.append("", this.subject)
-		.append("", this.to)
+		.append("subject", this.subject)
+		.append("to", this.to)
 		.toString();
 	}
 	

@@ -134,7 +134,7 @@
         <level value="INFO"/>
         <appender-ref ref="INFOLOG"/>
 	</logger>
-    <logger name="com.fb.platform.mom.receiver.delivery">
+    <logger name="com.fb.platform.mom.receiver.deliveryDelete">
         <level value="INFO"/>
         <appender-ref ref="DELIVERY_DELETE_LOG"/>
     </logger>
