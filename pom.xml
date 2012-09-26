@@ -429,7 +429,7 @@
         <module>deliveryDeleteReceiver</module>
         <module>itemAckReceiver</module>
         <module>launcher</module>
-	    <module>sapBapiConnector</module>
+	    <module>sapClientConnector</module>
 	    <module>sapWS</module>
         <module>walletCore</module>
         <module>walletWS</module>

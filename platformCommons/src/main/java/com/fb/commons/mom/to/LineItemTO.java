@@ -1,5 +1,8 @@
 package com.fb.commons.mom.to;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.joda.time.DateTime;
 
 public class LineItemTO extends ItemTO {
@@ -18,10 +21,11 @@ public class LineItemTO extends ItemTO {
 	private String bundle;
 	private String operationCode;
 	private String relationshipArticleID;
-	private String storageLocation;
+	private int storageLocation;
 	private String shippingMode;
 	private PricingTO pricingTO;
 	private String payToOthers;
+	private AddressTO addressTO;
 	
 	public String getDescription() {
 		return description;
@@ -113,10 +117,10 @@ public class LineItemTO extends ItemTO {
 	public void setRelationshipArticleID(String relationshipArticleID) {
 		this.relationshipArticleID = relationshipArticleID;
 	}
-	public String getStorageLocation() {
+	public int getStorageLocation() {
 		return storageLocation;
 	}
-	public void setStorageLocation(String storageLocation) {
+	public void setStorageLocation(int storageLocation) {
 		this.storageLocation = storageLocation;
 	}
 	public PricingTO getPricingTO() {
@@ -137,7 +141,13 @@ public class LineItemTO extends ItemTO {
 	public void setPayToOthers(String payToOthers) {
 		this.payToOthers = payToOthers;
 	}
-	
+	public AddressTO getAddressTO() {
+		return addressTO;
+	}
+	public void setAddressTO(AddressTO addressTO) {
+		this.addressTO = addressTO;
+	}
+
 	@Override
 	public String toString() {
 		return "LineItemTO [description=" + description + ", articleID="
@@ -152,7 +162,7 @@ public class LineItemTO extends ItemTO {
 				+ ", relationshipArticleID=" + relationshipArticleID
 				+ ", storageLocation=" + storageLocation + ", shippingMode="
 				+ shippingMode + ", pricingTO=" + pricingTO + ", payToOthers="
-				+ payToOthers + "]";
+				+ payToOthers + ", addressTO=" + addressTO + "]";
 	}
-
+	
 }

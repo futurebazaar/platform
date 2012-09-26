@@ -13,7 +13,7 @@
   <xs:element name="deliveryItemsList">
   	<xs:complexType>
       <xs:sequence>
-      	<xs:element ref="sap:DelItem"/>
+      	<xs:element maxOccurs="unbounded" ref="sap:DelItem"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -92,7 +92,7 @@
   <xs:element name="priceAdjustments">
   	<xs:complexType>
       <xs:sequence>
-        <xs:element ref="sap:PriceAdjustment"/>
+        <xs:element maxOccurs="unbounded" ref="sap:PriceAdjustment"/>
       </xs:sequence>
 	</xs:complexType>
   </xs:element>

@@ -193,5 +193,17 @@
 	  </xs:sequence>
 	</xs:complexType>
   </xs:element>
-        
+  
+  <xs:element name="sapOrderResponse">
+	<xs:complexType>
+	  <xs:sequence>
+	 	<xs:element type="xs:string" name="orderId"/>
+	 	<xs:element type="xs:string" name="returnOrderId"/>
+	  	<xs:element type="xs:string" name="message"/>
+	  	<xs:element type="xs:string" name="status"/>
+	  	<xs:element type="xs:string" name="type"/>
+      </xs:sequence>
+	</xs:complexType>
+  </xs:element>
+  
 </xs:schema>

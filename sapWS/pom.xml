@@ -30,7 +30,7 @@
 	  	</dependency>
 	  	<dependency>
 	  		<groupId>com.fb</groupId>
-			<artifactId>sapBapiConnector</artifactId>
+			<artifactId>sapClientConnector</artifactId>
 			<version>${platform.version}</version>
 	  	</dependency>
 		<dependency>
