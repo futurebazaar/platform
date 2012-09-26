@@ -11,6 +11,7 @@ import com.fb.platform.mom.manager.PlatformDestinationEnum;
 
 /**
  * Creates a unique incremental ID for each idoc type sent by sapReceiver to launcher's message listeners.
+ * 
  * @author vinayak
  *
  */
@@ -25,12 +26,11 @@ public class AckUIDSequenceGenerator {
 		sequencerMap.put(PlatformDestinationEnum.INVENTORY, new AtomicLong());
 		sequencerMap.put(PlatformDestinationEnum.ITEM_ACK, new AtomicLong());
 		sequencerMap.put(PlatformDestinationEnum.DELIVERY_DELETE, new AtomicLong());
+		sequencerMap.put(PlatformDestinationEnum.CORRUPT_IDOCS, new AtomicLong());
 	}
 
 	public long getNextSequenceNumber(PlatformDestinationEnum destination) {
 		AtomicLong sequence = sequencerMap.get(destination);
-		long currentValue = sequence.get();
-		System.out.print("***************** currentValue for destination : " + destination + " - " + currentValue);
 		return sequence.incrementAndGet();
 	}
 }

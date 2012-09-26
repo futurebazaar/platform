@@ -55,7 +55,6 @@ public class DeliveryInventoryIDocHandler implements PlatformIDocHandler {
 		}
 	}
 
-
 	/* (non-Javadoc)
 	 * @see com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler#init(com.fb.platform.mom.manager.MomManager)
 	 */
@@ -72,9 +71,6 @@ public class DeliveryInventoryIDocHandler implements PlatformIDocHandler {
 	public void handle(String idocXml) {
 		infoLog.info("Begin handling Delivery Inventory idoc message.");
 
-		SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.INVENTORY));
-
-		sapIdoc.setIdoc(idocXml);
 		//convert the message xml into jaxb bean
 		try {
 			//the xml received from Sap is flawed. It contains ZTINLA_DLVRY as parent and child level item. We will replace the top level ZTINLA_DLVRY with ZTINLA_DLVRY_TOP
@@ -87,16 +83,19 @@ public class DeliveryInventoryIDocHandler implements PlatformIDocHandler {
 			idocXml = sb.toString();
 			
 			Unmarshaller unmarshaller = context.createUnmarshaller();
+			
+			infoLog.info("received idoc : " + idocXml);
 
 			ZTINLADLVRYTOP inventoryIdoc = (ZTINLADLVRYTOP)unmarshaller.unmarshal(new StreamSource(new StringReader(idocXml)));
 			
-			sapIdoc.setIdoc(idocXml);
-			sapIdoc.setIdocNumber(inventoryIdoc.getIDOC().getEDIDC40().getDOCNUM());
-
 			List<ZTINLADLVRY> sapInventoryAckList = inventoryIdoc.getIDOC().getZTINLADLVRY();
 			for (ZTINLADLVRY sapInventoryAck : sapInventoryAckList) {
 				InventoryTO inventoryTo = new InventoryTO();
-				
+
+				SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.INVENTORY));
+				sapIdoc.setIdoc(idocXml);
+				sapIdoc.setIdocNumber(inventoryIdoc.getIDOC().getEDIDC40().getDOCNUM());
+
 				sapIdoc.setRefUID(sapInventoryAck.getMATDOC());
 				sapIdoc.setSegmentNumber(sapInventoryAck.getSEGNUM());
 				
@@ -112,12 +111,16 @@ public class DeliveryInventoryIDocHandler implements PlatformIDocHandler {
 				inventoryTo.setSellingUnit(sapInventoryAck.getMEINS());
 				inventoryTo.setSapIdoc(sapIdoc);
 
-				infoLog.debug("Sending InventoryTO to Inventory destination : " + inventoryTo.toString());
+				infoLog.info("Sending InventoryTO to Inventory destination : " + inventoryTo.toString());
 				momManager.send(PlatformDestinationEnum.INVENTORY, inventoryTo);
 			}
 
 		} catch (JAXBException e) {
 			CorruptMessageTO corruptMessage = new CorruptMessageTO();
+
+			SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.CORRUPT_IDOCS));
+			sapIdoc.setIdoc(idocXml);
+
 			corruptMessage.setSapIdoc(sapIdoc);
 			corruptMessage.setCause(CorruptMessageCause.CORRUPT_IDOC);
 			momManager.send(PlatformDestinationEnum.CORRUPT_IDOCS, corruptMessage);

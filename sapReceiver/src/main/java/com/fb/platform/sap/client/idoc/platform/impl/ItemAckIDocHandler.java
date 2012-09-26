@@ -60,9 +60,6 @@ public class ItemAckIDocHandler implements PlatformIDocHandler {
 	public void handle(String idocXml) {
 		infoLog.info("Begin handling order idoc message.");
 
-		SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.ITEM_ACK));
-		sapIdoc.setIdoc(idocXml);
-
 		ItemAckOrderItemProcessor orderItemProcessor = new ItemAckOrderItemProcessorImpl();
 		//convert the message xml into jaxb bean
 		try {
@@ -81,25 +78,31 @@ public class ItemAckIDocHandler implements PlatformIDocHandler {
 
 			ZATGFLOWTOP orderIdoc = (ZATGFLOWTOP)unmarshaller.unmarshal(new StreamSource(new StringReader(idocXml)));
 			
-			sapIdoc.setIdoc(idocXml);
-			sapIdoc.setIdocNumber(orderIdoc.getIDOC().getEDIDC40().getDOCNUM());
-
 			List<ZATGFLOW> ackList = orderIdoc.getIDOC().getZATGFLOW();
 			List<ItemTO> orderItems = orderItemProcessor.getOrderItems(ackList);
 			for (ItemTO orderItem : orderItems) {
+
+				SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.ITEM_ACK));
+				sapIdoc.setIdoc(idocXml);
+				sapIdoc.setIdocNumber(orderIdoc.getIDOC().getEDIDC40().getDOCNUM());
 				orderItem.setSapIdoc(sapIdoc);
-				infoLog.info("Sending ItemTO to item ack destination : " + orderItem.toString());
+
+				infoLog.info("*Sending ItemTO to item ack destination : " + orderItem.toString());
 				momManager.send(PlatformDestinationEnum.ITEM_ACK, orderItem);
 			}
 		} catch (JAXBException e) {
 			CorruptMessageTO corruptMessage = new CorruptMessageTO();
+
+			SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.CORRUPT_IDOCS));
+			sapIdoc.setIdoc(idocXml);
+
 			corruptMessage.setSapIdoc(sapIdoc);
 			corruptMessage.setCause(CorruptMessageCause.CORRUPT_IDOC);
 			momManager.send(PlatformDestinationEnum.CORRUPT_IDOCS, corruptMessage);
 			infoLog.error("Unable to create Message for item ack idoc :\n" + sapIdoc.getIdoc(), e);
 			infoLog.error("Message logged in corrupt queue.", e);
 		} catch (Exception e) {
-			infoLog.error("Error in processing item ack idoc : " + sapIdoc.toString(), e);
+			infoLog.error("Error in processing item ack idoc : " + idocXml, e);
 			throw new PlatformException(e);
 		}
 	}

@@ -59,16 +59,13 @@ public class DeliveryDeleteIDocHandler implements PlatformIDocHandler {
 	public void handle(String idocXml) {
 		infoLog.info("Begin handling delivery delete idoc message.");
 
-		SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.DELIVERY_DELETE));
-
-		sapIdoc.setIdoc(idocXml);
 		//convert the message xml into jaxb bean
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
+			
+			infoLog.info("received idoc : " + idocXml);
 
 			ZATGDELD deliveryDelIdoc = (ZATGDELD)unmarshaller.unmarshal(new StreamSource(new StringReader(idocXml)));
-			
-			sapIdoc.setIdocNumber(deliveryDelIdoc.getIDOC().getEDIDC40().getDOCNUM());
 			
 			List<ZATGSOD> sapDelvDelList = deliveryDelIdoc.getIDOC().getZATGSOH().getZATGSOD();
 			String orderNo = deliveryDelIdoc.getIDOC().getZATGSOH().getVBELN();
@@ -81,12 +78,21 @@ public class DeliveryDeleteIDocHandler implements PlatformIDocHandler {
 				deliveryDelete.setTime(sapDelvDel.getDELTIME());
 				deliveryDelete.setTransactionCode(sapDelvDel.getDELTCODE());
 				deliveryDelete.setUser(sapDelvDel.getDELUSER());
+
+				SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.DELIVERY_DELETE));
+				sapIdoc.setIdoc(idocXml);
+				sapIdoc.setIdocNumber(deliveryDelIdoc.getIDOC().getEDIDC40().getDOCNUM());
+				
 				deliveryDelete.setSapIdoc(sapIdoc);
 				infoLog.info("Sending delivery delete idoc to deliveryDelete destination : " + deliveryDelete.toString());
 				momManager.send(PlatformDestinationEnum.DELIVERY_DELETE, deliveryDelete);
 			}
 		} catch (JAXBException e) {
 			CorruptMessageTO corruptMessage = new CorruptMessageTO();
+
+			SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.CORRUPT_IDOCS));
+			sapIdoc.setIdoc(idocXml);
+
 			corruptMessage.setSapIdoc(sapIdoc);
 			corruptMessage.setCause(CorruptMessageCause.CORRUPT_IDOC);
 			momManager.send(PlatformDestinationEnum.CORRUPT_IDOCS, corruptMessage);

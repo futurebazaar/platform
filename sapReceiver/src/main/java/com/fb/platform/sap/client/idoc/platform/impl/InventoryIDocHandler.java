@@ -59,9 +59,6 @@ public class InventoryIDocHandler implements PlatformIDocHandler {
 	public void handle(String idocXml) {
 		infoLog.info("Begin handling Inventory idoc message.");
 
-		SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.INVENTORY));
-
-		sapIdoc.setIdoc(idocXml);
 		//convert the message xml into jaxb bean
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
@@ -70,12 +67,14 @@ public class InventoryIDocHandler implements PlatformIDocHandler {
 			
 			ZTINLAIDOCTYP inventoryIdoc = (ZTINLAIDOCTYP)unmarshaller.unmarshal(new StreamSource(new StringReader(idocXml)));
 			
-			sapIdoc.setIdocNumber(inventoryIdoc.getIDOC().getEDIDC40().getDOCNUM());
-
 			List<ZTINLASEGDLVR> sapInventoryAckList = inventoryIdoc.getIDOC().getZTINLASEGDLVR();
 			for (ZTINLASEGDLVR sapInventoryAck : sapInventoryAckList) {
 				InventoryTO inventoryTo = new InventoryTO();
-				
+
+				SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.INVENTORY));
+				sapIdoc.setIdoc(idocXml);
+				sapIdoc.setIdocNumber(inventoryIdoc.getIDOC().getEDIDC40().getDOCNUM());
+
 				sapIdoc.setRefUID(sapInventoryAck.getMATDOC());
 				sapIdoc.setSegmentNumber(sapInventoryAck.getSEGNUM());
 				sapIdoc.setPoNumber(sapInventoryAck.getPONUM());
@@ -92,11 +91,15 @@ public class InventoryIDocHandler implements PlatformIDocHandler {
 				inventoryTo.setSellingUnit(sapInventoryAck.getMEINS());
 				inventoryTo.setSapIdoc(sapIdoc);
 
-				infoLog.info("Sending InventoryTO to Inventory destination : " + inventoryTo.toString());
+				infoLog.info("*Sending InventoryTO to Inventory destination : " + inventoryTo.toString());
 				momManager.send(PlatformDestinationEnum.INVENTORY, inventoryTo);
 			}
 		} catch (JAXBException e) {
 			CorruptMessageTO corruptMessage = new CorruptMessageTO();
+
+			SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.CORRUPT_IDOCS));
+			sapIdoc.setIdoc(idocXml);
+
 			corruptMessage.setSapIdoc(sapIdoc);
 			corruptMessage.setCause(CorruptMessageCause.CORRUPT_IDOC);
 			momManager.send(PlatformDestinationEnum.CORRUPT_IDOCS, corruptMessage);
