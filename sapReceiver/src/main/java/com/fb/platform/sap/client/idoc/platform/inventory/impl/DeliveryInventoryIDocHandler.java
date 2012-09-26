@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.fb.platform.sap.client.idoc.platform.impl;
+package com.fb.platform.sap.client.idoc.platform.inventory.impl;
 
 import java.io.StringReader;
 import java.util.List;
@@ -25,6 +25,7 @@ import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler;
 import com.fb.platform.sap.idoc.generated.ztinlaDlvry.ObjectFactory;
 import com.fb.platform.sap.idoc.generated.ztinlaDlvry.ZTINLADLVRY;
 import com.fb.platform.sap.idoc.generated.ztinlaDlvry.ZTINLADLVRYTOP;
+import com.fb.platform.sap.util.AckUIDSequenceGenerator;
 
 /**
  * @author vinayak
@@ -32,11 +33,13 @@ import com.fb.platform.sap.idoc.generated.ztinlaDlvry.ZTINLADLVRYTOP;
  */
 public class DeliveryInventoryIDocHandler implements PlatformIDocHandler {
 
-	private static Log logger = LogFactory.getLog(DeliveryInventoryIDocHandler.class);
+	private static Log infoLog = LogFactory.getLog(DeliveryInventoryIDocHandler.class);
 
 	public static final String DELIVERY_INVENTORY_IDOC_TYPE = "ZTINLA_DLVRY";
 
 	private MomManager momManager = null;
+
+	private AckUIDSequenceGenerator ackUIDSequenceGenerator = null;
 
 	//JAXBContext class is thread safe and can be shared
 	private static final JAXBContext context = initContext();
@@ -46,18 +49,18 @@ public class DeliveryInventoryIDocHandler implements PlatformIDocHandler {
 			//TODO move from default package to inventory package somehow
 			return JAXBContext.newInstance(ObjectFactory.class);
 		} catch (JAXBException e) {
-			logger.error("Error Initializing the JAXBContext to bind the inventory idoc schema classes", e);
+			infoLog.error("Error Initializing the JAXBContext to bind the inventory idoc schema classes", e);
 			throw new PlatformException("Error Initializing the JAXBContext to bind the inventory idoc schema classes", e);
 		}
 	}
-
 
 	/* (non-Javadoc)
 	 * @see com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler#init(com.fb.platform.mom.manager.MomManager)
 	 */
 	@Override
-	public void init(MomManager momManager) {
+	public void init(MomManager momManager, AckUIDSequenceGenerator ackUIDSequenceGenerator) {
 		this.momManager = momManager;
+		this.ackUIDSequenceGenerator = ackUIDSequenceGenerator;
 	}
 
 	/* (non-Javadoc)
@@ -65,8 +68,8 @@ public class DeliveryInventoryIDocHandler implements PlatformIDocHandler {
 	 */
 	@Override
 	public void handle(String idocXml) {
-		logger.info("Begin handling Delivery Inventory idoc message.");
-		SapMomTO sapIdoc = new SapMomTO();
+		infoLog.info("Begin handling Delivery Inventory idoc message.");
+
 		//convert the message xml into jaxb bean
 		try {
 			//the xml received from Sap is flawed. It contains ZTINLA_DLVRY as parent and child level item. We will replace the top level ZTINLA_DLVRY with ZTINLA_DLVRY_TOP
@@ -79,16 +82,19 @@ public class DeliveryInventoryIDocHandler implements PlatformIDocHandler {
 			idocXml = sb.toString();
 			
 			Unmarshaller unmarshaller = context.createUnmarshaller();
+			
+			infoLog.info("received idoc : " + idocXml);
 
 			ZTINLADLVRYTOP inventoryIdoc = (ZTINLADLVRYTOP)unmarshaller.unmarshal(new StreamSource(new StringReader(idocXml)));
 			
-			sapIdoc.setIdoc(idocXml);
-			sapIdoc.setIdocNumber(inventoryIdoc.getIDOC().getEDIDC40().getDOCNUM());
-
 			List<ZTINLADLVRY> sapInventoryAckList = inventoryIdoc.getIDOC().getZTINLADLVRY();
 			for (ZTINLADLVRY sapInventoryAck : sapInventoryAckList) {
 				InventoryTO inventoryTo = new InventoryTO();
-				
+
+				SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.INVENTORY));
+				sapIdoc.setIdoc(idocXml);
+				sapIdoc.setIdocNumber(inventoryIdoc.getIDOC().getEDIDC40().getDOCNUM());
+
 				sapIdoc.setRefUID(sapInventoryAck.getMATDOC());
 				sapIdoc.setSegmentNumber(sapInventoryAck.getSEGNUM());
 				
@@ -104,19 +110,25 @@ public class DeliveryInventoryIDocHandler implements PlatformIDocHandler {
 				inventoryTo.setSellingUnit(sapInventoryAck.getMEINS());
 				inventoryTo.setSapIdoc(sapIdoc);
 
-				logger.debug("Sending InventoryTO to Inventory destination : " + inventoryTo.toString());
+				infoLog.info("Sending InventoryTO to Inventory destination : " + inventoryTo.toString());
 				momManager.send(PlatformDestinationEnum.INVENTORY, inventoryTo);
 			}
 
 		} catch (JAXBException e) {
 			CorruptMessageTO corruptMessage = new CorruptMessageTO();
+
+			SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.CORRUPT_IDOCS));
+			sapIdoc.setIdoc(idocXml);
+
 			corruptMessage.setSapIdoc(sapIdoc);
 			corruptMessage.setCause(CorruptMessageCause.CORRUPT_IDOC);
 			momManager.send(PlatformDestinationEnum.CORRUPT_IDOCS, corruptMessage);
 			
-			logger.error("Unable to create Inventory Message for delivery inventory idoc :\n" + idocXml);
-			logger.error("Message logged in corrupt queue.");
-			//throw new PlatformException("Exception while unmarshalling the delivery inventory idoc xml", e);
+			infoLog.error("Unable to create Inventory Message for delivery inventory idoc :\n" + idocXml, e);
+			infoLog.error("Message logged in corrupt queue.");
+		} catch (Exception e) {
+			infoLog.error("Error in processing delivery inventory idoc", e);
+			throw new PlatformException(e);
 		}
 	}
 

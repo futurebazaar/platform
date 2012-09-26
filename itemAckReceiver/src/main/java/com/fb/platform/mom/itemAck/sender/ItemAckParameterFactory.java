@@ -33,12 +33,12 @@ import com.fb.platform.mom.itemAck.sender.impl.ReturnOrderParameterImpl;
  */
 public class ItemAckParameterFactory {
 	
-	private static Log log = LogFactory.getLog(ItemAckParameterFactory.class);
+	private static Log infoLog = LogFactory.getLog(ItemAckParameterFactory.class);
 	
 	public List<NameValuePair> getParameters(ItemTO itemAck) {
 		List<NameValuePair> itemParamList = new ItemAckParameterImpl().getParameters(new ArrayList<NameValuePair>(), itemAck);
 		List<NameValuePair> paramList = null;
-		log.info("itemAck of type : " + itemAck.getClass());
+		infoLog.info("itemAck of type : " + itemAck.getClass());
 		if (PgrCreationItemTO.class.isInstance(itemAck)) {
 			paramList = new PgrCreationParameterImpl().getParameters(itemParamList, itemAck);
 		} else if (PgiCreationItemTO.class.isInstance(itemAck)) {

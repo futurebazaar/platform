@@ -31,7 +31,7 @@ import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandlerFactory;
-import com.fb.platform.sap.client.idoc.platform.impl.ItemAckIDocHandler;
+import com.fb.platform.sap.client.idoc.platform.itemAck.impl.ItemAckIDocHandler;
 
 /**
  * @author nehaga
@@ -70,7 +70,7 @@ public class ItemAckIdocHandlerTest extends BaseTestCase {
 	}
 	
 	@Test
-	public void processDeliveryDeleteIdoc() throws IOException{
+	public void processDeliveryDeleteIdoc() throws IOException ,Exception {
 		momManager.registerReceiver(PlatformDestinationEnum.ITEM_ACK, testReceiver);
 		
 		InputStream itemAckStream = ItemAckIdocHandlerTest.class.getClassLoader().getResourceAsStream("zatgflow.xml");

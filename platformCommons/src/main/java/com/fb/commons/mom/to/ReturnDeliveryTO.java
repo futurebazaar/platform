@@ -3,6 +3,7 @@
  */
 package com.fb.commons.mom.to;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.joda.time.DateTime;
 
 /**
@@ -55,13 +56,13 @@ public class ReturnDeliveryTO extends ItemTO {
 	
 	@Override
 	public String toString(){
-		String returnDelivery = super.toString()
-				+ "\nreturn delivery number : " + number
-				+ "\nreturn id : " + returnId
-				+ "\nreturn delivery type : " + type
-				+ "\nreturn created date : " + returnCreatedDate
-				+ "\nreturn created by : " + returnCreatedBy;
-		return returnDelivery;
+		return new ToStringBuilder(this)
+		.append("itemTO", super.toString())
+		.append("number", this.number)
+		.append("returnCreatedBy", this.returnCreatedBy)
+		.append("returnCreatedDate", this.returnCreatedDate)
+		.append("returnId", this.returnId)
+		.append("type", this.type)
+		.toString();
 	}
-	
 }

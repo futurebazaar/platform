@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.fb.platform.sap.client.idoc.platform.impl;
+package com.fb.platform.sap.client.idoc.platform.itemAck.impl;
 
 import java.io.StringReader;
 import java.util.List;
@@ -26,6 +26,7 @@ import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler;
 import com.fb.platform.sap.idoc.generated.zatgflow.ObjectFactory;
 import com.fb.platform.sap.idoc.generated.zatgflow.ZATGFLOW;
 import com.fb.platform.sap.idoc.generated.zatgflow.ZATGFLOWTOP;
+import com.fb.platform.sap.util.AckUIDSequenceGenerator;
 
 /**
  * @author nehaga
@@ -33,11 +34,13 @@ import com.fb.platform.sap.idoc.generated.zatgflow.ZATGFLOWTOP;
  */
 public class ItemAckIDocHandler implements PlatformIDocHandler {
 
-	private static Log logger = LogFactory.getLog(ItemAckIDocHandler.class);
+	private static Log infoLog = LogFactory.getLog(ItemAckIDocHandler.class);
 
 	public static final String ITEM_ACK_IDOC_TYPE = "ZATGFLOW";
 
 	private MomManager momManager = null;
+
+	private AckUIDSequenceGenerator ackUIDSequenceGenerator = null;
 	
 	//JAXBContext class is thread safe and can be shared
 	private static final JAXBContext context = initContext();
@@ -47,15 +50,15 @@ public class ItemAckIDocHandler implements PlatformIDocHandler {
 			//TODO move from default package to inventory package somehow
 			return JAXBContext.newInstance(ObjectFactory.class);
 		} catch (JAXBException e) {
-			logger.error("Error Initializing the JAXBContext to bind the order idoc schema classes", e);
+			infoLog.error("Error Initializing the JAXBContext to bind the order idoc schema classes", e);
 			throw new PlatformException("Error Initializing the JAXBContext to bind the order idoc schema classes", e);
 		}
 	}
 
 	@Override
 	public void handle(String idocXml) {
-		logger.info("Begin handling order idoc message.");
-		SapMomTO sapIdoc = new SapMomTO();
+		infoLog.info("Begin handling order idoc message.");
+
 		ItemAckOrderItemProcessor orderItemProcessor = new ItemAckOrderItemProcessorImpl();
 		//convert the message xml into jaxb bean
 		try {
@@ -70,33 +73,42 @@ public class ItemAckIDocHandler implements PlatformIDocHandler {
 			
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			
-			logger.info("received idoc : " + idocXml);
+			infoLog.info("received idoc : " + idocXml);
 
 			ZATGFLOWTOP orderIdoc = (ZATGFLOWTOP)unmarshaller.unmarshal(new StreamSource(new StringReader(idocXml)));
 			
-			sapIdoc.setIdoc(idocXml);
-			sapIdoc.setIdocNumber(orderIdoc.getIDOC().getEDIDC40().getDOCNUM());
-
 			List<ZATGFLOW> ackList = orderIdoc.getIDOC().getZATGFLOW();
 			List<ItemTO> orderItems = orderItemProcessor.getOrderItems(ackList);
 			for (ItemTO orderItem : orderItems) {
-				logger.info("Sending ItemTO to item ack destination : " + orderItem.toString());
+
+				SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.ITEM_ACK));
+				sapIdoc.setIdoc(idocXml);
+				sapIdoc.setIdocNumber(orderIdoc.getIDOC().getEDIDC40().getDOCNUM());
+				orderItem.setSapIdoc(sapIdoc);
+
+				infoLog.info("*Sending ItemTO to item ack destination : " + orderItem.toString());
 				momManager.send(PlatformDestinationEnum.ITEM_ACK, orderItem);
 			}
 		} catch (JAXBException e) {
 			CorruptMessageTO corruptMessage = new CorruptMessageTO();
+
+			SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.CORRUPT_IDOCS));
+			sapIdoc.setIdoc(idocXml);
+
 			corruptMessage.setSapIdoc(sapIdoc);
 			corruptMessage.setCause(CorruptMessageCause.CORRUPT_IDOC);
 			momManager.send(PlatformDestinationEnum.CORRUPT_IDOCS, corruptMessage);
-			//TODO send this to some kind of error queue
-			logger.error("Unable to create Message for item ack idoc :\n" + sapIdoc.getIdoc());
-			logger.error("Message logged in corrupt queue.", e);
-			//throw new PlatformException("Exception while unmarshalling the inventory idoc xml", e);
+			infoLog.error("Unable to create Message for item ack idoc :\n" + sapIdoc.getIdoc(), e);
+			infoLog.error("Message logged in corrupt queue.", e);
+		} catch (Exception e) {
+			infoLog.error("Error in processing item ack idoc : " + idocXml, e);
+			throw new PlatformException(e);
 		}
 	}
 	
 	@Override
-	public void init(MomManager momManager) {
+	public void init(MomManager momManager, AckUIDSequenceGenerator ackUIDSequenceGenerator) {
 		this.momManager = momManager;
+		this.ackUIDSequenceGenerator = ackUIDSequenceGenerator;
 	}
 }

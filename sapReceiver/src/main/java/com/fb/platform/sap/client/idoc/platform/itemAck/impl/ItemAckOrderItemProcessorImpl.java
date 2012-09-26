@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.fb.platform.sap.client.idoc.platform.impl;
+package com.fb.platform.sap.client.idoc.platform.itemAck.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;

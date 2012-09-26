@@ -22,6 +22,7 @@ import com.fb.commons.PlatformException;
 import com.fb.commons.mom.to.CorruptMessageCause;
 import com.fb.commons.mom.to.CorruptMessageTO;
 import com.fb.commons.mom.to.MailTO;
+import com.fb.platform.mom.manager.PlatformDestinationEnum;
 import com.fb.platform.mom.manager.impl.AbstractPlatformListener;
 import com.fb.platform.mom.receiver.dlq.PreDLQMessageListener;
 
@@ -97,6 +98,6 @@ public class CorruptMessageListener extends AbstractPlatformListener implements 
 				+ "\n\n error cause : " + corruptMessage.getCause()
 				+ "\n\n object : " + corruptMessage.getSapIdoc().toString() );
 		
-		super.notify(corruptMail);
+		super.notify(corruptMail , PlatformDestinationEnum.CORRUPT_IDOCS);
 	}
 }

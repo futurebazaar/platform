@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler;
+import com.fb.platform.sap.util.AckUIDSequenceGenerator;
 
 /**
  * @author vinayak
@@ -22,8 +23,9 @@ public class DefaultIDocHandler implements PlatformIDocHandler {
 	private MomManager momManager = null;
 
 	@Override
-	public void init(MomManager momManager) {
+	public void init(MomManager momManager, AckUIDSequenceGenerator ackUIDSequenceGenerator) {
 		this.momManager = momManager;
+		//this.ackUIDSequenceGenerator = ackUIDSequenceGenerator;
 	}
 
 	@Override
