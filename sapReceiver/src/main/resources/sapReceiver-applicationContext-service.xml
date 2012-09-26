@@ -15,8 +15,12 @@
     <!-- This is to scan and load the component classes for autowiring -->
     <context:component-scan base-package="com.fb.platform.sap"></context:component-scan>
 
+	<bean id="ackUIDSequenceGenerator" class="com.fb.platform.sap.util.AckUIDSequenceGenerator" init-method="init">
+	</bean>
+
 	<bean id="platformIDocHandlerFactory" class="com.fb.platform.sap.client.idoc.platform.PlatformIDocHandlerFactory" init-method="init">
 		<property name="momManager" ref="momManager"></property>
+		<property name="ackUIDSequenceGenerator" ref="ackUIDSequenceGenerator"></property>
 	</bean>
 
     <!-- Add new services here -->

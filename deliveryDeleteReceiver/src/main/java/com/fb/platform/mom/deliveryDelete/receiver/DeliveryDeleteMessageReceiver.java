@@ -27,6 +27,7 @@ import com.fb.commons.PlatformException;
 import com.fb.commons.mom.to.DeliveryDeleteTO;
 import com.fb.commons.mom.to.TinlaAckType;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
+import com.fb.platform.mom.util.LoggerConstants;
 
 /**
  * @author nehaga
@@ -34,11 +35,9 @@ import com.fb.platform.mom.manager.PlatformMessageReceiver;
  */
 public class DeliveryDeleteMessageReceiver implements PlatformMessageReceiver {
 
-	/* (non-Javadoc)
-	 * @see com.fb.platform.mom.manager.PlatformMessageReceiver#handleMessage(java.lang.Object)
-	 */
+	private static Log infoLog = LogFactory.getLog(DeliveryDeleteMessageReceiver.class);
 	
-	private static Log log = LogFactory.getLog(DeliveryDeleteMessageReceiver.class);
+	private static Log auditLog = LogFactory.getLog(LoggerConstants.DELIVERY_DELETE_RECEIVER_AUDIT_LOG);
 	
 	private static Properties prop = initProperties();
 
@@ -48,17 +47,25 @@ public class DeliveryDeleteMessageReceiver implements PlatformMessageReceiver {
 		try {
 			properties.load(propertiesStream);
 		} catch (IOException e) {
-			log.error("Error loading properties file.", e);
+			infoLog.error("Error loading properties file.", e);
 			throw new PlatformException("Error loading properties file.", e);
 		}
 		return properties;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.fb.platform.mom.manager.PlatformMessageReceiver#handleMessage(java.lang.Object)
+	 */
 	@Override
 	public void handleMessage(Object message) {
-		log.info("Received the message : " + message);
-
 		DeliveryDeleteTO deliveryDeleteTO = (DeliveryDeleteTO) message;
+		long uid = deliveryDeleteTO.getSapIdoc().getAckUID();
+		String idocNumber = deliveryDeleteTO.getSapIdoc().getIdocNumber();
+		String timestamp = deliveryDeleteTO.getSapIdoc().getTimestamp().toString();
+
+		auditLog.info(uid + "," + idocNumber + "," + timestamp + ",false");
+		infoLog.info("Received the message : " + message);
+
 		sendAck(deliveryDeleteTO);
 	}
 
@@ -103,18 +110,22 @@ public class DeliveryDeleteMessageReceiver implements PlatformMessageReceiver {
 			HttpResponse response = httpClient.execute(httpPost);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode != HttpStatus.SC_OK) {
-				log.error("Delivery Delete ack not delivered : " + deliveryDeleteTO.toString());
+				infoLog.error("Delivery Delete ack not delivered : " + deliveryDeleteTO.toString());
 				throw new PlatformException("Delivery Delete ack not delivered to tinla on URL : " + deliveryDeleteURL);
 			}
-			log.info("Delivery Delete ack delivered to tinla. Status code : " + statusCode);
+			auditLog.info(deliveryDeleteTO.getSapIdoc().getAckUID() + "," + deliveryDeleteTO.getSapIdoc().getIdocNumber() + "," + deliveryDeleteTO.getSapIdoc().getTimestamp() + ",true");
+			infoLog.info("Delivery Delete ack delivered to tinla. Status code : " + statusCode);
 		} catch (UnsupportedEncodingException e) {
-			log.error("Error communicating with tinla on url : " + deliveryDeleteURL, e);
+			infoLog.error("Error communicating with tinla on url : " + deliveryDeleteURL, e);
+			infoLog.error("Delivery Delete ack not delivered : " + deliveryDeleteTO.toString());
 			throw new PlatformException("Error communicating with tinla on url : " + deliveryDeleteURL, e);
 		} catch (ClientProtocolException e) {
-			log.error("Error communicating with tinla on url : " + deliveryDeleteURL, e);
+			infoLog.error("Error communicating with tinla on url : " + deliveryDeleteURL, e);
+			infoLog.error("Delivery Delete ack not delivered : " + deliveryDeleteTO.toString());
 			throw new PlatformException("Error communicating with tinla on url : " + deliveryDeleteURL, e);
 		} catch (IOException e) {
-			log.error("Error communicating with tinla on url : " + deliveryDeleteURL, e);
+			infoLog.error("Error communicating with tinla on url : " + deliveryDeleteURL, e);
+			infoLog.error("Delivery Delete ack not delivered : " + deliveryDeleteTO.toString());
 			throw new PlatformException("Error communicating with tinla on url : " + deliveryDeleteURL, e);
 		}
 

@@ -23,7 +23,7 @@ import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandlerFactory;
-import com.fb.platform.sap.client.idoc.platform.impl.InventoryIDocHandler;
+import com.fb.platform.sap.client.idoc.platform.inventory.impl.InventoryIDocHandler;
 
 /**
  * @author nehaga
@@ -66,7 +66,7 @@ public class InventoryIdocHandlerTest extends BaseTestCase {
 	}
 	
 	@Test
-	public void processInventoryIdoc() throws IOException{
+	public void processInventoryIdoc() throws IOException ,Exception {
 		momManager.registerReceiver(PlatformDestinationEnum.INVENTORY, testReceiver);
 		
 		InputStream inventoryStream = InventoryIdocHandlerTest.class.getClassLoader().getResourceAsStream("ztinla_idoctype.xml");
@@ -77,7 +77,7 @@ public class InventoryIdocHandlerTest extends BaseTestCase {
 	}
 	
 	@Test
-	public void processCorruptInventoryIdoc() throws IOException{
+	public void processCorruptInventoryIdoc() throws IOException ,Exception {
 		momManager.registerReceiver(PlatformDestinationEnum.CORRUPT_IDOCS, corruptTestReceiver);
 		
 		InputStream inventoryStream = InventoryIdocHandlerTest.class.getClassLoader().getResourceAsStream("zatgdeld.xml");

@@ -13,6 +13,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.jms.support.JmsUtils;
 
 import com.fb.commons.mom.to.MailTO;
+import com.fb.platform.mom.manager.PlatformDestinationEnum;
 import com.fb.platform.mom.manager.impl.AbstractPlatformListener;
 
 /**
@@ -35,7 +36,7 @@ public class MailMessageListener extends AbstractPlatformListener implements Mes
 			logger.info("Received the Mail Message. \n" + mail.toString());
 			System.out.println("Received the Mail Message. \n" + mail.toString());
 
-			super.notify(mail);
+			super.notify(mail , PlatformDestinationEnum.MAIL);
 		} catch (JMSException e) {
 			throw JmsUtils.convertJmsAccessException(e);
 		}

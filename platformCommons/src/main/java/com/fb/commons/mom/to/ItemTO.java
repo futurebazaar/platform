@@ -6,6 +6,7 @@ package com.fb.commons.mom.to;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.joda.time.DateTime;
 
 /**
@@ -233,36 +234,34 @@ public class ItemTO implements Serializable {
 	}
 	@Override
 	public String toString() {
-		String order = "sap Document Id: " + sapDocumentId
-				+ "\nATG Document Id : " + atgDocumentId
-				+ "\norder state : " + orderState
-				+ "\nheader : " + header
-				+ "\norder header del block : " + orderHeaderDelBlock
-				+ "\ndelivery date : " + deliveryDate
-				+ "\nunit of measurement : " + unitOfMeasurement
-				+ "\nshipment comments : " + shipmentComments
-				+ "\norder type : " + orderType
-				+ "\ndelivery number : " + deliveryNumber
-				+ "\nblock msg : " + blockMsg
-				+ "\nitem category : " + itemCategory
-				+ "\norder id : " + orderId
-				+ "\ndelivery type : " + deliveryType
-				+ "\nlsp code : " + lspCode
-				+ "\nlsp name : " + lspName
-				+ "\nawb number : " + awbNumber
-				+ "\ncreated by : " + createdBy
-				+ "\ncreated date : " + createdDate
-				+ "\nsku id : " + skuID
-				+ "\nlsp update description : " + lspUpdateDesc
-				+ "\nplant id : " + plantId
-				+ "\nitem state : " + itemState
-				+ "\norder date : " + orderDate
-				+ "\nquantity : " + quantity;
-		if(sapIdoc != null) {
-			order += "\n" + sapIdoc.toString();
-		}
-		return order;
-		
+		return new ToStringBuilder(this)
+		.append("sapIdoc", this.sapIdoc)
+		.append("orderId", this.orderId)
+		.append("atgDocumentId", this.atgDocumentId)
+		.append("sapDocumentId", this.sapDocumentId)
+		.append("awbNumber", this.awbNumber)
+		.append("blockMsg", this.blockMsg)
+		.append("createdBy", this.createdBy)
+		.append("createdDate", this.createdDate)
+		.append("deliveryDate", this.deliveryDate)
+		.append("deliveryNumber", this.deliveryNumber)
+		.append("deliveryType", this.deliveryType)
+		.append("header", this.header)
+		.append("itemCategory", this.itemCategory)
+		.append("itemState", this.itemState)
+		.append("lspCode", this.lspCode)
+		.append("lspName", this.lspName)
+		.append("lspUpdateDesc", this.lspUpdateDesc)
+		.append("orderDate", this.orderDate)
+		.append("orderHeaderDelBlock", this.orderHeaderDelBlock)
+		.append("orderState", this.orderState)
+		.append("orderType", this.orderType)
+		.append("plantId", this.plantId)
+		.append("quantity", this.quantity)
+		.append("shipmentComments", this.shipmentComments)
+		.append("skuID", this.skuID)
+		.append("unitOfMeasurement", this.unitOfMeasurement)
+		.toString();
 	}
 	public String getLspCode() {
 		return lspCode;

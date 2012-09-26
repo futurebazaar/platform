@@ -27,6 +27,7 @@ import com.fb.commons.mom.to.ItemTO;
 import com.fb.commons.mom.to.OrderStateEnum;
 import com.fb.platform.mom.itemAck.sender.ItemAckParameterFactory;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
+import com.fb.platform.mom.util.LoggerConstants;
 
 /**
  * @author nehaga
@@ -34,11 +35,9 @@ import com.fb.platform.mom.manager.PlatformMessageReceiver;
  */
 public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 
-	/* (non-Javadoc)
-	 * @see com.fb.platform.mom.manager.PlatformMessageReceiver#handleMessage(java.lang.Object)
-	 */
+	private static Log infoLog = LogFactory.getLog(ItemAckMessageReceiver.class);
 	
-	private static Log log = LogFactory.getLog(ItemAckMessageReceiver.class);
+	private static Log auditLog = LogFactory.getLog(LoggerConstants.ITEM_ACK_RECEIVER_AUDIT_LOG);
 	
 	private static Properties prop = initProperties();
 
@@ -48,17 +47,26 @@ public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 		try {
 			properties.load(propertiesStream);
 		} catch (IOException e) {
-			log.error("Error loading properties file.", e);
+			infoLog.error("Error loading properties file.", e);
 			throw new PlatformException("Error loading properties file.", e);
 		}
 		return properties;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.fb.platform.mom.manager.PlatformMessageReceiver#handleMessage(java.lang.Object)
+	 */
 	@Override
 	public void handleMessage(Object message) {
-		log.info("Received the message : " + message);
+		ItemTO itemTO = (ItemTO) message;
+		long uid = itemTO.getSapIdoc().getAckUID();
+		String idocNumber = itemTO.getSapIdoc().getIdocNumber();
+		String timestamp = itemTO.getSapIdoc().getTimestamp().toString();
 
-		sendAck((ItemTO) message);
+		auditLog.info(uid + "," + idocNumber + "," + timestamp + ",false");
+		infoLog.info("Received the message : " + message);
+
+		sendAck(itemTO);
 	}
 	
 	private boolean isOrderStateValid(ItemTO itemAck) {
@@ -86,7 +94,7 @@ public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 		List<NameValuePair> parameters = new ItemAckParameterFactory().getParameters(itemAck);
 		
 		for (NameValuePair param : parameters) {
-			log.info(param.getName() + "********" + param.getValue());
+			infoLog.info(param.getName() + "********" + param.getValue());
 		}
 		
 		parameters.add(new BasicNameValuePair("sender", "MOM"));
@@ -101,21 +109,26 @@ public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 				HttpResponse response = httpClient.execute(httpPost);
 				int statusCode = response.getStatusLine().getStatusCode();
 				if (statusCode != HttpStatus.SC_OK) {
-					log.error("Item ack not delivered : " + itemAck.toString());
+					infoLog.error("Item ack not delivered : " + itemAck.toString());
 					throw new PlatformException("Item ack not delivered to tinla on URL : " + orderURL);
 				}
-				log.info("Item ack delivered to tinla. Status code : " + statusCode);
+				auditLog.info(itemAck.getSapIdoc().getAckUID() + "," + itemAck.getSapIdoc().getIdocNumber() + "," + itemAck.getSapIdoc().getTimestamp() + ",true");
+				infoLog.info("Item ack delivered to tinla. Status code : " + statusCode);
 			} else {
-				log.info("Request not sent to tinla because order state is C / R : " + itemAck.toString());
+				auditLog.info(itemAck.getSapIdoc().getAckUID() + "," + itemAck.getSapIdoc().getIdocNumber() + "," + itemAck.getSapIdoc().getTimestamp() + ",true");
+				infoLog.info("Request not sent to tinla because order state is not processed by tinla : " + itemAck.toString());
 			}
 		} catch (UnsupportedEncodingException e) {
-			log.error("Error communicating with tinla on url : " + orderURL, e);
+			infoLog.error("Error communicating with tinla on url : " + orderURL, e);
+			infoLog.error("Item ack not delivered : " + itemAck.toString());
 			throw new PlatformException("Error communicating with tinla on url : " + orderURL, e);
 		} catch (ClientProtocolException e) {
-			log.error("Error communicating with tinla on url : " + orderURL, e);
+			infoLog.error("Error communicating with tinla on url : " + orderURL, e);
+			infoLog.error("Item ack not delivered : " + itemAck.toString());
 			throw new PlatformException("Error communicating with tinla on url : " + orderURL, e);
 		} catch (IOException e) {
-			log.error("Error communicating with tinla on url : " + orderURL, e);
+			infoLog.error("Error communicating with tinla on url : " + orderURL, e);
+			infoLog.error("Item ack not delivered : " + itemAck.toString());
 			throw new PlatformException("Error communicating with tinla on url : " + orderURL, e);
 		}
 

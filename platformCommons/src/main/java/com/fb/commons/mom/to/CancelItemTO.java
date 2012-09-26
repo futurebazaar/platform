@@ -1,5 +1,7 @@
 package com.fb.commons.mom.to;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 /**
  * 
  */
@@ -26,8 +28,9 @@ public class CancelItemTO extends ItemTO {
 	}
 	@Override
 	public String toString(){
-		String cancelItem = super.toString()
-				+ "\ncancel invoice number : " + cancelInvoiceNumber;
-		return cancelItem;
+		return new ToStringBuilder(this)
+			.append("itemTo", super.toString())
+			.append("cancelInvoiceNumber", this.cancelInvoiceNumber)
+			.toString();
 	}
 }

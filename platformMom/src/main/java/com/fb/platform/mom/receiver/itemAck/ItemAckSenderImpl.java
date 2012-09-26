@@ -16,13 +16,19 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 
+import com.fb.commons.mom.to.ItemTO;
+import com.fb.commons.mom.to.SapMomTO;
+import com.fb.platform.mom.util.LoggerConstants;
+
 /**
  * @author nehaga
  *
  */
 public class ItemAckSenderImpl implements ItemAckSender {
 
-	private static Log logger = LogFactory.getLog(ItemAckSenderImpl.class);
+	private static Log infoLog = LogFactory.getLog(ItemAckSenderImpl.class);
+	
+	private static Log auditLog = LogFactory.getLog(LoggerConstants.ITEM_ACK_AUDIT_LOG);
 
 	private JmsTemplate jmsTemplate;
 
@@ -37,9 +43,18 @@ public class ItemAckSenderImpl implements ItemAckSender {
 			
 			@Override
 			public Message createMessage(Session session) throws JMSException {
-				logger.info("Creating the Item Ack Message for sending.");
+				infoLog.info("Creating the Item Ack Message for sending.");
 				ObjectMessage jmsMessage = session.createObjectMessage();
 				jmsMessage.setObject(message);
+				SapMomTO sapIdoc = ((ItemTO) message).getSapIdoc();
+				
+				//set the properties on jms message as well
+				jmsMessage.setLongProperty(LoggerConstants.UID, sapIdoc.getAckUID());
+				jmsMessage.setStringProperty(LoggerConstants.IDOC_NO, sapIdoc.getIdocNumber());
+				jmsMessage.setStringProperty(LoggerConstants.TIMESTAMP, sapIdoc.getTimestamp().toString());
+				
+				//log for audit
+				auditLog.info(sapIdoc.getAckUID() + "," + sapIdoc.getIdocNumber() + "," + sapIdoc.getTimestamp());
 				return jmsMessage;
 			}
 		});

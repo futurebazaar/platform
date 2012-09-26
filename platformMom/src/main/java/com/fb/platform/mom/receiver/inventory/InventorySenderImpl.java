@@ -16,13 +16,19 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 
+import com.fb.commons.mom.to.InventoryTO;
+import com.fb.commons.mom.to.SapMomTO;
+import com.fb.platform.mom.util.LoggerConstants;
+
 /**
  * @author vinayak
  *
  */
 public class InventorySenderImpl implements InventorySender {
 
-	private static Log logger = LogFactory.getLog(InventorySenderImpl.class);
+	private static Log infoLog = LogFactory.getLog(InventorySenderImpl.class);
+	
+	private static Log auditLog = LogFactory.getLog(LoggerConstants.INVENTORY_AUDIT_LOG);
 
 	private JmsTemplate jmsTemplate;
 
@@ -37,10 +43,20 @@ public class InventorySenderImpl implements InventorySender {
 			
 			@Override
 			public Message createMessage(Session session) throws JMSException {
-				logger.info("Creating the Inventory Message for sending.");
-				System.out.println("Creating the Inventory Message for sending.");
+				infoLog.info("Creating the Inventory Message for sending.");
 				ObjectMessage jmsMessage = session.createObjectMessage();
+
+				SapMomTO sapIdoc = ((InventoryTO) message).getSapIdoc();
+
+				//set the properties on jms message as well
+				jmsMessage.setLongProperty(LoggerConstants.UID, sapIdoc.getAckUID());
+				jmsMessage.setStringProperty(LoggerConstants.IDOC_NO, sapIdoc.getIdocNumber());
+				jmsMessage.setStringProperty(LoggerConstants.TIMESTAMP, sapIdoc.getTimestamp().toString());
+
 				jmsMessage.setObject(message);
+
+				//log for audit
+				auditLog.info(sapIdoc.getAckUID() + "," + sapIdoc.getIdocNumber() + "," + sapIdoc.getTimestamp());
 				return jmsMessage;
 			}
 		});

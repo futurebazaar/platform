@@ -5,6 +5,8 @@ package com.fb.commons.mom.to;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 /**
  * @author nehaga
  *
@@ -30,17 +32,12 @@ public class CorruptMessageTO implements Serializable{
 	public void setSapIdoc(SapMomTO sapIdoc) {
 		this.sapIdoc = sapIdoc;
 	}
+
 	@Override
 	public String toString() {
-		String corruptMessage = "";
-		if(cause != null) {
-			corruptMessage = "cause : " + cause.toString();
-		}
-		if(sapIdoc != null) {
-			corruptMessage += "\n" + sapIdoc.toString();
-		}
-		
-		return corruptMessage; 
+		return new ToStringBuilder(this)
+		.append("sapIdoc", this.sapIdoc)
+		.append("cause", this.cause)
+		.toString();
 	}
-	
 }

@@ -5,6 +5,9 @@ package com.fb.commons.mom.to;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.joda.time.DateTime;
+
 /**
  * @author nehaga
  *
@@ -21,6 +24,17 @@ public class SapMomTO implements Serializable {
 	private int segmentNumber;
 	private String poNumber;
 	private String canGr;
+	private long ackUID;
+	private DateTime timestamp;
+
+	public SapMomTO(long ackUID) {
+		this.ackUID = ackUID;
+		this.timestamp = new DateTime();
+	}
+
+	public long getAckUID() {
+		return ackUID;
+	}
 	
 	public String getIdocNumber() {
 		return idocNumber;
@@ -60,14 +74,20 @@ public class SapMomTO implements Serializable {
 	public void setCanGr(String canGr) {
 		this.canGr = canGr;
 	}
+	public DateTime getTimestamp() {
+		return timestamp;
+	}
+
 	@Override
 	public String toString() {
-		return "idoc number : " + idocNumber
-			+ "\nreference UID : " + refUID
-			+ "\nsegment number : " + segmentNumber
-			//+ "\nidoc : " + idoc
-			+ "\npo number : " + poNumber
-			+ "\ncan gr : " + canGr;
+		return new ToStringBuilder(this)
+		.append("ackUID", this.ackUID)
+		.append("idocNumber", this.idocNumber)
+		.append("timestamp", this.timestamp)
+		.append("segmentNumber", this.segmentNumber)
+		.append("canGr", this.canGr)
+		.append("poNumber", this.poNumber)
+		.append("refUID", this.refUID)
+		.toString();
 	}
-	
 }
