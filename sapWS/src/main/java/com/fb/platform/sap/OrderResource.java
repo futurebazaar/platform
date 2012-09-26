@@ -25,18 +25,22 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.fb.commons.PlatformException;
+import com.fb.commons.mom.to.AddressTO;
 import com.fb.commons.mom.to.LineItemTO;
 import com.fb.commons.mom.to.OrderHeaderTO;
 import com.fb.commons.mom.to.PaymentTO;
 import com.fb.commons.mom.to.PricingTO;
 import com.fb.platform.sap._1_0.CommonOrderRequest;
 import com.fb.platform.sap._1_0.Details;
+import com.fb.platform.sap._1_0.LineItem;
 import com.fb.platform.sap._1_0.OrderHeader;
+import com.fb.platform.sap._1_0.OrderLineItems;
 import com.fb.platform.sap._1_0.PaymentGroups;
 import com.fb.platform.sap._1_0.ReturnHeader;
 import com.fb.platform.sap._1_0.ReturnItem;
 import com.fb.platform.sap._1_0.ReturnOrderRequest;
 import com.fb.platform.sap._1_0.SapOrderResponse;
+import com.fb.platform.sap._1_0.ShipAddress;
 import com.fb.platform.sap.bapi.order.TinlaOrderType;
 import com.fb.platform.sap.bapi.to.SapOrderRequestTO;
 import com.fb.platform.sap.bapi.to.SapOrderResponseTO;
@@ -78,7 +82,6 @@ public class OrderResource {
 			setHeaderDetails(orderRequestTO, commonOrderRequest);
 			setPaymentDetails(orderRequestTO, commonOrderRequest);
 			setLineItemDetails(orderRequestTO, commonOrderRequest);
-			//setAddressDetails(orderRequestTO, commonOrderRequest);
 			SapOrderResponseTO orderResponseTO = sapClientHandler.processOrder(orderRequestTO);
 			SapOrderResponse sapOrderResponseXml = setOrderResponseXml(orderResponseTO);
 			StringWriter outStringWriter = new StringWriter();
@@ -93,6 +96,19 @@ public class OrderResource {
 		}
 	}
 	
+	private void setAddressDetails(SapOrderRequestTO orderRequestTO,ShipAddress shipAddress) {
+		AddressTO addressTO = new AddressTO();
+		addressTO.setCity(shipAddress.getCity());
+		addressTO.setFirstName(shipAddress.getFirstName());
+		addressTO.setLastName(shipAddress.getLastName());
+		addressTO.setPincode(shipAddress.getPoCode());
+		addressTO.setPrimaryTelephone(shipAddress.getTelephone1());
+		addressTO.setSecondaryTelephone(shipAddress.getTelephone2());
+		addressTO.setState(shipAddress.getState());
+		addressTO.setAddress(shipAddress.getAddress1());
+		addressTO.setCountry(shipAddress.getCountry());
+	}
+
 	private SapOrderResponse setOrderResponseXml(SapOrderResponseTO orderResponseTO) {
 		SapOrderResponse sapOrderResponseXml = new SapOrderResponse();
 		sapOrderResponseXml.setMessage(orderResponseTO.getSapMessage());
@@ -104,13 +120,45 @@ public class OrderResource {
 	}
 
 	private void setLineItemDetails(SapOrderRequestTO orderRequestTO, CommonOrderRequest commonOrderRequest) {
-		
+		List<LineItemTO> LineItemTOList = new ArrayList<LineItemTO>();
+		OrderLineItems lineItemsList = commonOrderRequest.getOrderLineItems();
+		List<LineItem> lineItemList  = (List<LineItem>) lineItemsList.getLineItem();
+		setAddressDetails(orderRequestTO,lineItemList.get(0).getShipAddress());
+		for (LineItem lineItem : lineItemList) {
+			LineItemTO lineItemTO = new LineItemTO();
+			lineItemTO.setArticleID(lineItem.getItemID());
+			lineItemTO.setDescription(lineItem.getItemDesc());
+			lineItemTO.setItemCategory(lineItem.getItemCategory());
+			lineItemTO.setItemState(lineItem.getItemState());
+			lineItemTO.setCatalog(lineItem.getCatalogs());
+			lineItemTO.setVendor(lineItem.getVendor());
+			lineItemTO.setThirdParty(lineItem.isIsThirdParty());
+			
+			PricingTO pricingTO = new PricingTO();
+			pricingTO.setCurrency(commonOrderRequest.getOrderHeader().getCurrency());
+			pricingTO.setListPrice(lineItem.getMRP());
+			pricingTO.setOfferPrice(lineItem.getOfferPrice());
+			pricingTO.setCouponDiscount(lineItem.getDiscount());
+			pricingTO.setPayableAmount(lineItem.getAmount());
+			//pricingTO.setPointsEarn(lineItem.get);
+			//pricingTO.setPointsEarnValue(new BigDecimal("10"));
+			lineItemTO.setPricingTO(pricingTO);
+			lineItemTO.setQuantity(new BigDecimal(lineItem.getQuantity()));
+			lineItemTO.setPlantId(lineItem.getPlant());
+			lineItemTO.setSalesUnit(lineItem.getSalesUnit());
+			lineItemTO.setSapDocumentId(lineItem.getItemSno());
+			lineItemTO.setStorageLocation(10);
+			lineItemTO.setReasonCode(lineItem.getReason());
+			lineItemTO.setOperationCode("C");
+			LineItemTOList.add(lineItemTO);
+		}
+		orderRequestTO.setLineItemTO(LineItemTOList);		
 	}
 
 	private void setPaymentDetails(SapOrderRequestTO orderRequestTO, CommonOrderRequest commonOrderRequest) {
 		List<PaymentTO> paymentTOList = new ArrayList<PaymentTO>();
 		PaymentGroups paymentGroups = commonOrderRequest.getPaymentGroups();
-		List<Details> paymentDetailList = paymentGroups.getDetails();
+		List<Details> paymentDetailList = (List<Details>) paymentGroups.getDetails();
 		for (Details paymentDetail : paymentDetailList) {
 			PaymentTO paymentTO = new PaymentTO();
 			paymentTO.setAuthCode(paymentDetail.getAuthRefCode());

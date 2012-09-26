@@ -14,8 +14,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.fb.commons.PlatformException;
-import com.fb.platform.sap.InventoryResource;
-import com.fb.platform.sap.LspResource;
 import com.fb.platform.sap.OrderResource;
 import com.fb.platform.sap._1_0.CommonOrderRequest;
 import com.fb.platform.sap._1_0.InventoryLevelRequest;
@@ -65,8 +63,8 @@ public class TestResource {
 			
 			OrderResource orderResource = new OrderResource();
 			orderResource.setSapClientHandler(sapClientHandler);
-			String returnXml = testSapResource.getReturnOrderXml();
-			System.out.println(orderResource.returnOrder(returnXml));	
+			String newOrderXml = testSapResource.getCommonOrderXml();
+			System.out.println(orderResource.writeOrder(newOrderXml));	
 			
 		} catch (Exception e) {
 			e.printStackTrace();
