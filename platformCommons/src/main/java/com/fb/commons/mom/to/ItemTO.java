@@ -235,6 +235,9 @@ public class ItemTO implements Serializable {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this)
+		.append("UID", this.sapIdoc.getAckUID())
+		.append("idocNumber", this.sapIdoc.getIdocNumber())
+		.append("orderId", this.orderId)
 		.append("atgDocumentId", this.atgDocumentId)
 		.append("sapDocumentId", this.sapDocumentId)
 		.append("awbNumber", this.awbNumber)
@@ -252,7 +255,6 @@ public class ItemTO implements Serializable {
 		.append("lspUpdateDesc", this.lspUpdateDesc)
 		.append("orderDate", this.orderDate)
 		.append("orderHeaderDelBlock", this.orderHeaderDelBlock)
-		.append("orderId", this.orderId)
 		.append("orderState", this.orderState)
 		.append("orderType", this.orderType)
 		.append("plantId", this.plantId)

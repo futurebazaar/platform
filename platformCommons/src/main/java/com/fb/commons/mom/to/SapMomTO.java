@@ -81,13 +81,13 @@ public class SapMomTO implements Serializable {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this)
+		.append("ackUID", this.ackUID)
 		.append("idocNumber", this.idocNumber)
 		.append("segmentNumber", this.segmentNumber)
 		.append("canGr", this.canGr)
 		.append("poNumber", this.poNumber)
 		.append("refUID", this.refUID)
 		.append("timestamp", this.timestamp)
-		.append("ackUID", this.ackUID)
 		.toString();
 	}
 }
