@@ -25,7 +25,7 @@ import com.fb.platform.mom.util.LoggerConstants;
  */
 public class ItemAckMessageListener extends AbstractPlatformListener implements MessageListener {
 
-	private static Log infoLog = LogFactory.getLog(LoggerConstants.ITEM_ACK_LOG);
+	private static Log infoLog = LogFactory.getLog(ItemAckMessageListener.class);
 	
 	private static Log auditLog = LogFactory.getLog(LoggerConstants.ITEM_ACK_AUDIT_LOG);
 

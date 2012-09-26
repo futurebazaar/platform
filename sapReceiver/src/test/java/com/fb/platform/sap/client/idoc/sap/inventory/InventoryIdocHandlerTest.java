@@ -23,7 +23,7 @@ import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandlerFactory;
-import com.fb.platform.sap.client.idoc.platform.impl.InventoryIDocHandler;
+import com.fb.platform.sap.client.idoc.platform.inventory.impl.InventoryIDocHandler;
 
 /**
  * @author nehaga

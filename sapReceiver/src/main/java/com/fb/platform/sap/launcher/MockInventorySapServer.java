@@ -15,9 +15,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandlerFactory;
-import com.fb.platform.sap.client.idoc.platform.impl.DeliveryDeleteIDocHandler;
-import com.fb.platform.sap.client.idoc.platform.impl.DeliveryInventoryIDocHandler;
-import com.fb.platform.sap.client.idoc.platform.impl.InventoryIDocHandler;
+import com.fb.platform.sap.client.idoc.platform.deliveryDelete.impl.DeliveryDeleteIDocHandler;
+import com.fb.platform.sap.client.idoc.platform.inventory.impl.DeliveryInventoryIDocHandler;
+import com.fb.platform.sap.client.idoc.platform.inventory.impl.InventoryIDocHandler;
 
 /**
  * @author vinayak

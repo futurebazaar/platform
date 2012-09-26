@@ -26,7 +26,7 @@ import com.fb.platform.mom.util.LoggerConstants;
  */
 public class ItemAckSenderImpl implements ItemAckSender {
 
-	private static Log infoLog = LogFactory.getLog(LoggerConstants.ITEM_ACK_LOG);
+	private static Log infoLog = LogFactory.getLog(ItemAckSenderImpl.class);
 	
 	private static Log auditLog = LogFactory.getLog(LoggerConstants.ITEM_ACK_AUDIT_LOG);
 

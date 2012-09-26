@@ -17,7 +17,6 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 
 import com.fb.commons.mom.to.InventoryTO;
-import com.fb.commons.mom.to.ItemTO;
 import com.fb.commons.mom.to.SapMomTO;
 import com.fb.platform.mom.util.LoggerConstants;
 
@@ -27,7 +26,7 @@ import com.fb.platform.mom.util.LoggerConstants;
  */
 public class InventorySenderImpl implements InventorySender {
 
-	private static Log infoLog = LogFactory.getLog(LoggerConstants.INVENTORY_LOG);
+	private static Log infoLog = LogFactory.getLog(InventorySenderImpl.class);
 	
 	private static Log auditLog = LogFactory.getLog(LoggerConstants.INVENTORY_AUDIT_LOG);
 

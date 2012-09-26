@@ -25,7 +25,7 @@ import com.fb.platform.mom.util.LoggerConstants;
  */
 public class InventoryMessageListener extends AbstractPlatformListener implements MessageListener {
 
-	private static Log infoLog = LogFactory.getLog(LoggerConstants.INVENTORY_LOG);
+	private static Log infoLog = LogFactory.getLog(InventoryMessageListener.class);
 	
 	private static Log auditLog = LogFactory.getLog(LoggerConstants.INVENTORY_AUDIT_LOG);
 

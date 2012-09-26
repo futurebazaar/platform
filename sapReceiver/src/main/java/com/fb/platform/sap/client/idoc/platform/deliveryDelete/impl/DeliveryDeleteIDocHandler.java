@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.fb.platform.sap.client.idoc.platform.impl;
+package com.fb.platform.sap.client.idoc.platform.deliveryDelete.impl;
 
 import java.io.StringReader;
 import java.util.List;
@@ -21,7 +21,6 @@ import com.fb.commons.mom.to.DeliveryDeleteTO;
 import com.fb.commons.mom.to.SapMomTO;
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
-import com.fb.platform.mom.util.LoggerConstants;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler;
 import com.fb.platform.sap.idoc.generated.zatgDeld.ObjectFactory;
 import com.fb.platform.sap.idoc.generated.zatgDeld.ZATGDELD;
@@ -34,7 +33,7 @@ import com.fb.platform.sap.util.AckUIDSequenceGenerator;
  */
 public class DeliveryDeleteIDocHandler implements PlatformIDocHandler {
 
-	private static Log infoLog = LogFactory.getLog(LoggerConstants.DELIVERY_DELETE_LOG);
+	private static Log infoLog = LogFactory.getLog(DeliveryDeleteIDocHandler.class);
 	
 	public static final String DELIVERY_DELETE = "ZATGDELD";
 

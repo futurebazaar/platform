@@ -19,10 +19,10 @@ import org.terracotta.agent.repkg.de.schlichtherle.io.FileInputStream;
 import com.fb.commons.PlatformException;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandlerFactory;
-import com.fb.platform.sap.client.idoc.platform.impl.DeliveryDeleteIDocHandler;
-import com.fb.platform.sap.client.idoc.platform.impl.DeliveryInventoryIDocHandler;
-import com.fb.platform.sap.client.idoc.platform.impl.InventoryIDocHandler;
-import com.fb.platform.sap.client.idoc.platform.impl.ItemAckIDocHandler;
+import com.fb.platform.sap.client.idoc.platform.deliveryDelete.impl.DeliveryDeleteIDocHandler;
+import com.fb.platform.sap.client.idoc.platform.inventory.impl.DeliveryInventoryIDocHandler;
+import com.fb.platform.sap.client.idoc.platform.inventory.impl.InventoryIDocHandler;
+import com.fb.platform.sap.client.idoc.platform.itemAck.impl.ItemAckIDocHandler;
 
 /**
  * @author nehaga

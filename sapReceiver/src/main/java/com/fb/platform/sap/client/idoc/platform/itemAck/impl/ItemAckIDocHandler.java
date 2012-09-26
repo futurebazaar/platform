@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.fb.platform.sap.client.idoc.platform.impl;
+package com.fb.platform.sap.client.idoc.platform.itemAck.impl;
 
 import java.io.StringReader;
 import java.util.List;
@@ -21,7 +21,6 @@ import com.fb.commons.mom.to.ItemTO;
 import com.fb.commons.mom.to.SapMomTO;
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
-import com.fb.platform.mom.util.LoggerConstants;
 import com.fb.platform.sap.client.idoc.platform.ItemAckOrderItemProcessor;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler;
 import com.fb.platform.sap.idoc.generated.zatgflow.ObjectFactory;
@@ -35,7 +34,7 @@ import com.fb.platform.sap.util.AckUIDSequenceGenerator;
  */
 public class ItemAckIDocHandler implements PlatformIDocHandler {
 
-	private static Log infoLog = LogFactory.getLog(LoggerConstants.ITEM_ACK_LOG);
+	private static Log infoLog = LogFactory.getLog(ItemAckIDocHandler.class);
 
 	public static final String ITEM_ACK_IDOC_TYPE = "ZATGFLOW";
 

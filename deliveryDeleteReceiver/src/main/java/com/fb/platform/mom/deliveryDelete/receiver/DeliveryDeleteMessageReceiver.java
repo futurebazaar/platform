@@ -27,7 +27,6 @@ import com.fb.commons.PlatformException;
 import com.fb.commons.mom.to.DeliveryDeleteTO;
 import com.fb.commons.mom.to.TinlaAckType;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
-import com.fb.platform.mom.util.LoggerConstants;
 
 /**
  * @author nehaga
@@ -35,7 +34,7 @@ import com.fb.platform.mom.util.LoggerConstants;
  */
 public class DeliveryDeleteMessageReceiver implements PlatformMessageReceiver {
 
-	private static Log infoLog = LogFactory.getLog(LoggerConstants.DELIVERY_DELETE_LOG);
+	private static Log infoLog = LogFactory.getLog(DeliveryDeleteMessageReceiver.class);
 	
 	private static Properties prop = initProperties();
 

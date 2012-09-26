@@ -8,11 +8,11 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.platform.mom.manager.MomManager;
+import com.fb.platform.sap.client.idoc.platform.deliveryDelete.impl.DeliveryDeleteIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.impl.DefaultIDocHandler;
-import com.fb.platform.sap.client.idoc.platform.impl.DeliveryDeleteIDocHandler;
-import com.fb.platform.sap.client.idoc.platform.impl.DeliveryInventoryIDocHandler;
-import com.fb.platform.sap.client.idoc.platform.impl.InventoryIDocHandler;
-import com.fb.platform.sap.client.idoc.platform.impl.ItemAckIDocHandler;
+import com.fb.platform.sap.client.idoc.platform.inventory.impl.DeliveryInventoryIDocHandler;
+import com.fb.platform.sap.client.idoc.platform.inventory.impl.InventoryIDocHandler;
+import com.fb.platform.sap.client.idoc.platform.itemAck.impl.ItemAckIDocHandler;
 import com.fb.platform.sap.util.AckUIDSequenceGenerator;
 
 /**

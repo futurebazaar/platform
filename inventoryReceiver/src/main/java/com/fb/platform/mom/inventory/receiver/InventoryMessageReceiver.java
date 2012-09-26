@@ -25,7 +25,6 @@ import org.apache.http.message.BasicNameValuePair;
 import com.fb.commons.PlatformException;
 import com.fb.commons.mom.to.InventoryTO;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
-import com.fb.platform.mom.util.LoggerConstants;
 
 /**
  * @author nehaga
@@ -33,7 +32,7 @@ import com.fb.platform.mom.util.LoggerConstants;
  */
 public class InventoryMessageReceiver implements PlatformMessageReceiver {
 
-	private static Log infoLog = LogFactory.getLog(LoggerConstants.INVENTORY_LOG);
+	private static Log infoLog = LogFactory.getLog(InventoryMessageReceiver.class);
 	
 	private static Properties prop = initProperties();
 

@@ -26,7 +26,7 @@ import com.fb.platform.mom.util.LoggerConstants;
  */
 public class DeliveryDeleteSenderImpl implements DeliveryDeleteSender {
 
-	private static Log infoLog = LogFactory.getLog(LoggerConstants.DELIVERY_DELETE_LOG);
+	private static Log infoLog = LogFactory.getLog(DeliveryDeleteSenderImpl.class);
 	
 	private static Log auditLog = LogFactory.getLog(LoggerConstants.DELIVERY_DELETE_AUDIT_LOG);
 

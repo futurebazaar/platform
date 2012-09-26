@@ -12,7 +12,9 @@ import org.apache.commons.logging.LogFactory;
 import com.fb.commons.PlatformException;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
-import com.fb.platform.mom.util.LoggerConstants;
+import com.fb.platform.mom.receiver.delivery.DeliveryDeleteMessageListener;
+import com.fb.platform.mom.receiver.inventory.InventoryMessageListener;
+import com.fb.platform.mom.receiver.itemAck.ItemAckMessageListener;
 
 /**
  * @author vinayak
@@ -22,11 +24,11 @@ public abstract class AbstractPlatformListener {
 	
 	private static Log logger = LogFactory.getLog(AbstractPlatformListener.class);
 	
-	private static Log itemAckLog = LogFactory.getLog(LoggerConstants.ITEM_ACK_LOG);
+	private static Log itemAckLog = LogFactory.getLog(ItemAckMessageListener.class);
 	
-	private static Log deliveryDeleteLog = LogFactory.getLog(LoggerConstants.DELIVERY_DELETE_LOG);
+	private static Log deliveryDeleteLog = LogFactory.getLog(DeliveryDeleteMessageListener.class);
 	
-	private static Log inventoryLog = LogFactory.getLog(LoggerConstants.INVENTORY_LOG);
+	private static Log inventoryLog = LogFactory.getLog(InventoryMessageListener.class);
 	
 	private volatile List<PlatformMessageReceiver> receivers = new ArrayList<PlatformMessageReceiver>();
 

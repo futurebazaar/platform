@@ -35,7 +35,7 @@ import com.fb.platform.mom.util.LoggerConstants;
  */
 public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 
-	private static Log infoLog = LogFactory.getLog(LoggerConstants.ITEM_ACK_LOG);
+	private static Log infoLog = LogFactory.getLog(ItemAckMessageReceiver.class);
 	
 	private static Properties prop = initProperties();
 

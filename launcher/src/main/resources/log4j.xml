@@ -135,15 +135,27 @@
         <level value="DEBUG"/>
         <appender-ref ref="INFOLOG"/>
 	</logger>
-    <logger name="DELIVERY_DELETE_LOG">
+    <logger name="com.fb.platform.mom.deliveryDelete">
         <level value="INFO"/>
         <appender-ref ref="DELIVERY_DELETE_LOG"/>
     </logger>
-    <logger name="INVENTORY_LOG">
+    <logger name="com.fb.platform.mom.receiver.deliveryDelete">
+        <level value="INFO"/>
+        <appender-ref ref="DELIVERY_DELETE_LOG"/>
+    </logger>
+    <logger name="com.fb.platform.mom.inventory">
         <level value="INFO"/>
         <appender-ref ref="INVENTORY_LOG"/>
     </logger>
-    <logger name="ITEM_ACK_LOG">
+    <logger name="com.fb.platform.mom.receiver.inventory">
+        <level value="INFO"/>
+        <appender-ref ref="INVENTORY_LOG"/>
+    </logger>
+    <logger name="com.fb.platform.mom.receiver.itemAck">
+        <level value="INFO"/>
+        <appender-ref ref="ITEM_ACK_LOG"/>
+    </logger>
+    <logger name="com.fb.platform.mom.itemAck">
         <level value="INFO"/>
         <appender-ref ref="ITEM_ACK_LOG"/>
     </logger>
