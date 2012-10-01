@@ -12,6 +12,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.Test;
 
 import com.fb.commons.PlatformException;
 import com.fb.platform.sap.OrderResource;
@@ -72,5 +73,8 @@ public class TestResource {
 			e.printStackTrace();
 		} 
 	}
-
+	@Test
+	public void dummy() {
+		
+	}
 }

@@ -1,5 +1,8 @@
 package com.fb.platform.sap.bapi.test.inventory;
 
+import org.junit.Test;
+
+import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.sap.bapi.to.SapInventoryLevelRequestTO;
 
 public class TestInventoryLevelTO {
@@ -11,5 +14,9 @@ public class TestInventoryLevelTO {
 		inventoryLevelRequestTO.setPlant("2786");
 		return inventoryLevelRequestTO;
 	}
-
+	
+	@Test
+	public void dummy() {
+		
+	}
 }

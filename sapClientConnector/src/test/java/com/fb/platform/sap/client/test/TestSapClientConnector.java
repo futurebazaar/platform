@@ -2,7 +2,9 @@ package com.fb.platform.sap.client.test;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.Test;
 
+import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.sap.bapi.test.inventory.TestInventoryDashboardTO;
 import com.fb.platform.sap.bapi.test.inventory.TestInventoryLevelTO;
 import com.fb.platform.sap.bapi.test.lsp.TestLspAwbUpdateTO;
@@ -49,4 +51,8 @@ public class TestSapClientConnector {
 		System.out.println(bh.sendIdoc(walletIdoc));
 	}
 	
+	@Test
+	public void dummy() {
+		
+	}
 }

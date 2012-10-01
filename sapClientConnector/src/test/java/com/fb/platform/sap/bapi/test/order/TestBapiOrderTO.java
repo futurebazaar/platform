@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.junit.Test;
 
 import com.fb.commons.mom.to.AddressTO;
 import com.fb.commons.mom.to.LineItemTO;
 import com.fb.commons.mom.to.OrderHeaderTO;
 import com.fb.commons.mom.to.PaymentTO;
 import com.fb.commons.mom.to.PricingTO;
+import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.sap.bapi.order.TinlaOrderType;
 import com.fb.platform.sap.bapi.to.SapOrderRequestTO;
 
@@ -152,5 +154,9 @@ public class TestBapiOrderTO {
 		addressTO.setCountry("IN");
 		return addressTO;
 	}
-
+	
+	@Test
+	public void dummy() {
+		
+	}
 }

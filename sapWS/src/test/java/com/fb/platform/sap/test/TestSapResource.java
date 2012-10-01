@@ -13,6 +13,7 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.transform.stream.StreamSource;
 
 import org.joda.time.DateTime;
+import org.junit.Test;
 
 import com.fb.platform.sap._1_0.AwbUpdateRequest;
 import com.fb.platform.sap._1_0.CommonOrderRequest;
@@ -80,5 +81,9 @@ public class TestSapResource {
 		String modifiedXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><modifyOrderRequest xmlns=\"http://www.fb.com/platform/sap/1.0.0\"><deliveryItemsList><DelItem><itemDesc>Electrolux EJ30CSS6 30L Microwave Oven + Starter kit</itemDesc><itemID>000000000100000002</itemID><lineItemId>10</lineItemId><itemState /><lspName /><lspNumber /><deliveryNumber /><invoiceNumber /><invoiceDate /><trackingNumber /><quantity>1</quantity><reasonOfCancellation /><operation>U</operation><plant>4608</plant><salesPrice>8990.00</salesPrice><discount /><listPrice>13290.00</listPrice><shippingPrice>0.00</shippingPrice><isThirdParty>false</isThirdParty><vendor /><nlc>0.0</nlc><EANUPC /><onSale /><bundle /><gvClaimCodes /><requiredDeliveryDate /><ShippingAddress><firstName>Pradyumna Kumar</firstName><middleName /><lastName /><address1>TEST ORDER PLEASE CANCEL</address1><address2 /><city>Mumbai</city><state>13</state><country>IN</country><postalCode>400008</postalCode><telephone1>9967442905</telephone1><telephone2 /></ShippingAddress></DelItem></deliveryItemsList><modifiedOrderHeader><orderId>I000001021</orderId><dateOfCreation>20120128</dateOfCreation><dateOfSubmission>20120130</dateOfSubmission><shippingAmount>0.00</shippingAmount><orderTotal>8990.00</orderTotal><discount>4300.00</discount><bpNumber>G100000103</bpNumber><loyaltyCardNumber /><pointsEarn>0.0</pointsEarn><pointsEarnValue>0.0</pointsEarnValue><pointsBurn>0.0</pointsBurn><priceAdjustments><PriceAdjustment><totalAdjustment>8990.00</totalAdjustment><description>Order Subtotal</description></PriceAdjustment></priceAdjustments><client>BIGBAZAAR</client></modifiedOrderHeader></modifyOrderRequest>";
 		return modifiedXml;
 	}
-
+	
+	@Test
+	public void dummy() {
+		
+	}
 }

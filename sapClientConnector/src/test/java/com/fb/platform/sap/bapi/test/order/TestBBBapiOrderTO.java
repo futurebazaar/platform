@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.junit.Test;
 
 import com.fb.commons.mom.to.AddressTO;
 import com.fb.commons.mom.to.LineItemTO;
@@ -114,5 +115,9 @@ public class TestBBBapiOrderTO {
 		addressTO.setCountry("IN");
 		return addressTO;
 	}
-
+	
+	@Test
+	public void dummy() {
+		
+	}
 }
