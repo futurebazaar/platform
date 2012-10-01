@@ -18,8 +18,12 @@ import com.fb.platform.mom.manager.PlatformDestinationEnum;
  *
  */
 public class InventoryManagerImpl implements ReceiverManager, InventoryManager {
+<<<<<<< HEAD
 	
 	private static Log infoLog = LogFactory.getLog(InventoryManagerImpl.class);
+=======
+	private static Log log = LogFactory.getLog(InventoryManagerImpl.class);
+>>>>>>> sapConnector
 
 	@Autowired
 	private MomManager momManager;
@@ -32,7 +36,11 @@ public class InventoryManagerImpl implements ReceiverManager, InventoryManager {
 	 */
 	@Override
 	public void start() {
+<<<<<<< HEAD
 		infoLog.info("Registering the receiver InventoryManagerImpl.");
+=======
+		log.info("Registering the receiver InventoryManagerImpl.");
+>>>>>>> sapConnector
 		momManager.registerReceiver(PlatformDestinationEnum.INVENTORY, inventoryMessageReceiver);
 
 	}

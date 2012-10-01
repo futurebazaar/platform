@@ -18,8 +18,12 @@ import com.fb.platform.mom.manager.PlatformDestinationEnum;
  *
  */
 public class ItemAckManagerImpl implements ReceiverManager, ItemAckManager {
+<<<<<<< HEAD
 	
 	private static Log infoLog = LogFactory.getLog(ItemAckManagerImpl.class);
+=======
+	private static Log log = LogFactory.getLog(ItemAckManagerImpl.class);
+>>>>>>> sapConnector
 
 	@Autowired
 	private MomManager momManager;
@@ -32,7 +36,11 @@ public class ItemAckManagerImpl implements ReceiverManager, ItemAckManager {
 	 */
 	@Override
 	public void start() {
+<<<<<<< HEAD
 		infoLog.info("Registering the receiver ItemAckManagerImpl.");
+=======
+		log.info("Registering the receiver ItemAckManagerImpl.");
+>>>>>>> sapConnector
 		momManager.registerReceiver(PlatformDestinationEnum.ITEM_ACK, itemAckMessageReceiver);
 
 	}

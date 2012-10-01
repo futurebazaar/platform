@@ -12,7 +12,11 @@
     
     <appender name="INFOLOG" class="org.apache.log4j.DailyRollingFileAppender">
 	        <!-- The active file to log to -->
+<<<<<<< HEAD
 	        <param name="file" value="/var/log/tomcat6/launcher/system.log" />
+=======
+	        <param name="file" value="/var/log/tomcat6/inventoryReceiver/system.log" />
+>>>>>>> sapConnector
 	        <param name="append" value="true" />
 	        <param name="encoding" value="UTF-8" />
 	        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
@@ -25,6 +29,7 @@
 	
 	<appender name="ERRORLOG" class="org.apache.log4j.DailyRollingFileAppender">
 	        <!-- The active file to log to -->
+<<<<<<< HEAD
 	        <param name="file" value="/var/log/tomcat6/launcher/error.log" />
 	        <param name="append" value="true" />
 	        <param name="encoding" value="UTF-8" />
@@ -139,6 +144,9 @@
 	<appender name="ITEM_ACK_RECEIVER_AUDIT_LOG" class="org.apache.log4j.DailyRollingFileAppender">
 	        <!-- The active file to log to -->
 	        <param name="file" value="/var/log/tomcat6/launcher/audit/itemAckReceiver.log" />
+=======
+	        <param name="file" value="/var/log/tomcat6/inventoryReceiver/error.log" />
+>>>>>>> sapConnector
 	        <param name="append" value="true" />
 	        <param name="encoding" value="UTF-8" />
 	        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
@@ -172,6 +180,7 @@
         <level value="DEBUG"/>
         <appender-ref ref="INFOLOG"/>
 	</logger>
+<<<<<<< HEAD
     <logger name="com.fb.platform.mom.deliveryDelete">
         <level value="INFO"/>
         <appender-ref ref="DELIVERY_DELETE_LOG"/>
@@ -220,6 +229,8 @@
         <level value="INFO"/>
         <appender-ref ref="ITEM_ACK_RECEIVER_AUDIT_LOG"/>
     </logger>
+=======
+>>>>>>> sapConnector
     <logger name="LOGERROR">
         <level value="WARN"/>
         <appender-ref ref="ERRORLOG"/>

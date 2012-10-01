@@ -3,7 +3,10 @@
  */
 package com.fb.commons.mom.to;
 
+<<<<<<< HEAD
 import org.apache.commons.lang.builder.ToStringBuilder;
+=======
+>>>>>>> sapConnector
 import org.joda.time.DateTime;
 
 /**
@@ -56,6 +59,7 @@ public class ReturnDeliveryTO extends ItemTO {
 	
 	@Override
 	public String toString(){
+<<<<<<< HEAD
 		return new ToStringBuilder(this)
 		.append("itemTO", super.toString())
 		.append("number", this.number)
@@ -65,4 +69,15 @@ public class ReturnDeliveryTO extends ItemTO {
 		.append("type", this.type)
 		.toString();
 	}
+=======
+		String returnDelivery = super.toString()
+				+ "\nreturn delivery number : " + number
+				+ "\nreturn id : " + returnId
+				+ "\nreturn delivery type : " + type
+				+ "\nreturn created date : " + returnCreatedDate
+				+ "\nreturn created by : " + returnCreatedBy;
+		return returnDelivery;
+	}
+	
+>>>>>>> sapConnector
 }

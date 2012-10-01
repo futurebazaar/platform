@@ -16,19 +16,26 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 
+<<<<<<< HEAD
 import com.fb.commons.mom.to.ItemTO;
 import com.fb.commons.mom.to.SapMomTO;
 import com.fb.platform.mom.util.LoggerConstants;
 
+=======
+>>>>>>> sapConnector
 /**
  * @author nehaga
  *
  */
 public class ItemAckSenderImpl implements ItemAckSender {
 
+<<<<<<< HEAD
 	private static Log infoLog = LogFactory.getLog(ItemAckSenderImpl.class);
 	
 	private static Log auditLog = LogFactory.getLog(LoggerConstants.ITEM_ACK_AUDIT_LOG);
+=======
+	private static Log logger = LogFactory.getLog(ItemAckSenderImpl.class);
+>>>>>>> sapConnector
 
 	private JmsTemplate jmsTemplate;
 
@@ -43,6 +50,7 @@ public class ItemAckSenderImpl implements ItemAckSender {
 			
 			@Override
 			public Message createMessage(Session session) throws JMSException {
+<<<<<<< HEAD
 				infoLog.info("Creating the Item Ack Message for sending.");
 				ObjectMessage jmsMessage = session.createObjectMessage();
 				jmsMessage.setObject(message);
@@ -55,6 +63,11 @@ public class ItemAckSenderImpl implements ItemAckSender {
 				
 				//log for audit
 				auditLog.info(sapIdoc.getAckUID() + "," + sapIdoc.getIdocNumber() + "," + sapIdoc.getTimestamp());
+=======
+				logger.info("Creating the Item Ack Message for sending.");
+				ObjectMessage jmsMessage = session.createObjectMessage();
+				jmsMessage.setObject(message);
+>>>>>>> sapConnector
 				return jmsMessage;
 			}
 		});

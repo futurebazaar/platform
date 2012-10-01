@@ -1,18 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
-	<table name="categories_store">
-		<column>id</column>
-		<column>name</column>
-        <column>slug</column>
-        <row>
-        	<value description="id">-1</value>
-        	<value description="name">Test Store 1</value>
-            <value description="slug">test store 1</value>
-        </row>
-        <row>
-        	<value description="id">-2</value>
-        	<value description="name">Test Store 2</value>
-            <value description="slug">test store 2</value>
-        </row>
-	</table>
-</dataset>
+    </dataset>

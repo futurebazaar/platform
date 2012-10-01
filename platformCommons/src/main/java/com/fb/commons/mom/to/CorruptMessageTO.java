@@ -5,8 +5,11 @@ package com.fb.commons.mom.to;
 
 import java.io.Serializable;
 
+<<<<<<< HEAD
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+=======
+>>>>>>> sapConnector
 /**
  * @author nehaga
  *
@@ -32,6 +35,7 @@ public class CorruptMessageTO implements Serializable{
 	public void setSapIdoc(SapMomTO sapIdoc) {
 		this.sapIdoc = sapIdoc;
 	}
+<<<<<<< HEAD
 
 	@Override
 	public String toString() {
@@ -40,4 +44,19 @@ public class CorruptMessageTO implements Serializable{
 		.append("cause", this.cause)
 		.toString();
 	}
+=======
+	@Override
+	public String toString() {
+		String corruptMessage = "";
+		if(cause != null) {
+			corruptMessage = "cause : " + cause.toString();
+		}
+		if(sapIdoc != null) {
+			corruptMessage += "\n" + sapIdoc.toString();
+		}
+		
+		return corruptMessage; 
+	}
+	
+>>>>>>> sapConnector
 }

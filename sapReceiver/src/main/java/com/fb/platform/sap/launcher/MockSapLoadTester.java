@@ -19,10 +19,17 @@ import org.terracotta.agent.repkg.de.schlichtherle.io.FileInputStream;
 import com.fb.commons.PlatformException;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandlerFactory;
+<<<<<<< HEAD
 import com.fb.platform.sap.client.idoc.platform.deliveryDelete.impl.DeliveryDeleteIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.inventory.impl.DeliveryInventoryIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.inventory.impl.InventoryIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.itemAck.impl.ItemAckIDocHandler;
+=======
+import com.fb.platform.sap.client.idoc.platform.impl.DeliveryDeleteIDocHandler;
+import com.fb.platform.sap.client.idoc.platform.impl.DeliveryInventoryIDocHandler;
+import com.fb.platform.sap.client.idoc.platform.impl.InventoryIDocHandler;
+import com.fb.platform.sap.client.idoc.platform.impl.ItemAckIDocHandler;
+>>>>>>> sapConnector
 
 /**
  * @author nehaga
@@ -48,12 +55,17 @@ public class MockSapLoadTester {
 	/**
 	 * @param args
 	 */
+<<<<<<< HEAD
 	public static void main(String[] args) throws Exception {
+=======
+	public static void main(String[] args) {
+>>>>>>> sapConnector
 		logger.warn("Starting the Sap Server Connector.");
 		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("sapReceiver-applicationContext-service.xml", "platformMom-applicationContext-resources.xml", "platformMom-applicationContext-service.xml");
 
 		PlatformIDocHandlerFactory idocFactory = (PlatformIDocHandlerFactory) applicationContext.getBean("platformIDocHandlerFactory");
 
+<<<<<<< HEAD
 		while(true) {
 			sendInventoryIdoc(idocFactory.getHandler(InventoryIDocHandler.INVENTORY_IDOC_TYPE));
 			sendDeliveryInventoryIdoc(idocFactory.getHandler(DeliveryInventoryIDocHandler.DELIVERY_INVENTORY_IDOC_TYPE));
@@ -61,6 +73,13 @@ public class MockSapLoadTester {
 			sendItemAckIdoc(idocFactory.getHandler(ItemAckIDocHandler.ITEM_ACK_IDOC_TYPE));
 			Thread.sleep(5000);
 		}
+=======
+		
+		sendInventoryIdoc(idocFactory.getHandler(InventoryIDocHandler.INVENTORY_IDOC_TYPE));
+		sendDeliveryInventoryIdoc(idocFactory.getHandler(DeliveryInventoryIDocHandler.DELIVERY_INVENTORY_IDOC_TYPE));
+		sendDeliveryDeleteIdoc(idocFactory.getHandler(DeliveryDeleteIDocHandler.DELIVERY_DELETE));
+		sendItemAckIdoc(idocFactory.getHandler(ItemAckIDocHandler.ITEM_ACK_IDOC_TYPE));
+>>>>>>> sapConnector
 
 	}
 	

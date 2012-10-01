@@ -33,12 +33,20 @@ import com.fb.platform.mom.itemAck.sender.impl.ReturnOrderParameterImpl;
  */
 public class ItemAckParameterFactory {
 	
+<<<<<<< HEAD
 	private static Log infoLog = LogFactory.getLog(ItemAckParameterFactory.class);
+=======
+	private static Log log = LogFactory.getLog(ItemAckParameterFactory.class);
+>>>>>>> sapConnector
 	
 	public List<NameValuePair> getParameters(ItemTO itemAck) {
 		List<NameValuePair> itemParamList = new ItemAckParameterImpl().getParameters(new ArrayList<NameValuePair>(), itemAck);
 		List<NameValuePair> paramList = null;
+<<<<<<< HEAD
 		infoLog.info("itemAck of type : " + itemAck.getClass());
+=======
+		log.info("itemAck of type : " + itemAck.getClass());
+>>>>>>> sapConnector
 		if (PgrCreationItemTO.class.isInstance(itemAck)) {
 			paramList = new PgrCreationParameterImpl().getParameters(itemParamList, itemAck);
 		} else if (PgiCreationItemTO.class.isInstance(itemAck)) {

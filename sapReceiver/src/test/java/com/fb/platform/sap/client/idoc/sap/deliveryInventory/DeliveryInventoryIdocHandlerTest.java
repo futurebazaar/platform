@@ -25,8 +25,13 @@ import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandlerFactory;
+<<<<<<< HEAD
 import com.fb.platform.sap.client.idoc.platform.deliveryDelete.impl.DeliveryDeleteIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.inventory.impl.DeliveryInventoryIDocHandler;
+=======
+import com.fb.platform.sap.client.idoc.platform.impl.DeliveryDeleteIDocHandler;
+import com.fb.platform.sap.client.idoc.platform.impl.DeliveryInventoryIDocHandler;
+>>>>>>> sapConnector
 
 /**
  * @author nehaga
@@ -65,7 +70,11 @@ public class DeliveryInventoryIdocHandlerTest extends BaseTestCase {
 	}
 	
 	@Test
+<<<<<<< HEAD
 	public void processDeliveryDeleteIdoc() throws IOException ,Exception {
+=======
+	public void processDeliveryDeleteIdoc() throws IOException{
+>>>>>>> sapConnector
 		momManager.registerReceiver(PlatformDestinationEnum.INVENTORY, testReceiver);
 		
 		InputStream deliveryInventoryStream = DeliveryInventoryIdocHandlerTest.class.getClassLoader().getResourceAsStream("ztinla_dlvry.xml");

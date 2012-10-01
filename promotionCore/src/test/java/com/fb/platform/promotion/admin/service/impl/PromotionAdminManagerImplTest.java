@@ -30,6 +30,9 @@ import com.fb.platform.promotion.admin.to.CreatePromotionResponse;
 import com.fb.platform.promotion.admin.to.FetchRuleRequest;
 import com.fb.platform.promotion.admin.to.FetchRuleResponse;
 import com.fb.platform.promotion.admin.to.FetchRulesEnum;
+import com.fb.platform.promotion.admin.to.GetPromotionUsageEnum;
+import com.fb.platform.promotion.admin.to.GetPromotionUsageRequest;
+import com.fb.platform.promotion.admin.to.GetPromotionUsageResponse;
 import com.fb.platform.promotion.admin.to.PromotionTO;
 import com.fb.platform.promotion.admin.to.RuleConfigItemTO;
 import com.fb.platform.promotion.admin.to.SearchCouponRequest;
@@ -1690,8 +1693,20 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 				searchScratchCardResponse.getStatus());
 
 	}
+	
+	@Test
+	public void testPromotionPerformanceInvalidPromotionId() {
+		GetPromotionUsageRequest promotionPerformanceRequest = new GetPromotionUsageRequest();
+		promotionPerformanceRequest.setpromotionId(0);
+		promotionPerformanceRequest.setSessionToken(responseUser.getSessionToken());
+		GetPromotionUsageResponse promotionPerformanceResponse = promotionAdminManager.getPromotionUsage(promotionPerformanceRequest);
+		assertNotNull(promotionPerformanceResponse);
+		assertEquals(GetPromotionUsageEnum.INVALID_PROMOTION, promotionPerformanceResponse.getStatus());
+		
+	}
 
 	@Test
+
 	public void createClearanceDiscountPromotion() {
 		CreatePromotionRequest createPromotionRequest = new CreatePromotionRequest();
 		PromotionTO promotionTO = new PromotionTO();
@@ -1762,5 +1777,37 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		CreateCouponResponse createCouponResponse = promotionAdminManager.createCoupons(createCouponRequest);
 		assertNotNull(createCouponResponse);
 		assertEquals(CreateCouponStatusEnum.SUCCESS, createCouponResponse.getStatus());
+	}
+
+	public void testPromotionPerformanceInvalidRequest() {
+		GetPromotionUsageRequest promotionPerformanceRequest = new GetPromotionUsageRequest();
+		promotionPerformanceRequest.setSessionToken("test arbit");
+		promotionPerformanceRequest.setpromotionId(-5002);
+		
+		GetPromotionUsageResponse promotionPerformanceResponse = promotionAdminManager.getPromotionUsage(promotionPerformanceRequest);
+		assertNotNull(promotionPerformanceResponse);
+		assertEquals(GetPromotionUsageEnum.NO_SESSION, promotionPerformanceResponse.getStatus());
+	}
+	
+	@Test
+	public void testPromotionPerformance() {
+		GetPromotionUsageRequest promotionPerformanceRequest = new GetPromotionUsageRequest();
+		promotionPerformanceRequest.setSessionToken(responseUser.getSessionToken());
+		promotionPerformanceRequest.setpromotionId(-5002);
+		
+		GetPromotionUsageResponse promotionPerformanceResponse = promotionAdminManager.getPromotionUsage(promotionPerformanceRequest);
+		assertNotNull(promotionPerformanceResponse);
+		// TODO change these..
+		int orders = 2;
+		assertEquals(orders, promotionPerformanceResponse.gettotalOrders());
+		assertEquals(new BigDecimal("20.00"), promotionPerformanceResponse.getdiscount().getAmount());
+
+	}
+	
+	@Test
+	public void testPromotionPerformanceNullSession() {
+		GetPromotionUsageResponse promotionPerformanceResponse = promotionAdminManager.getPromotionUsage(null);
+		assertNotNull(promotionPerformanceResponse);
+		assertEquals(GetPromotionUsageEnum.NO_SESSION, promotionPerformanceResponse.getStatus());
 	}
 }

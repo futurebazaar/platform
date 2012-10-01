@@ -25,7 +25,10 @@ import org.apache.http.message.BasicNameValuePair;
 import com.fb.commons.PlatformException;
 import com.fb.commons.mom.to.InventoryTO;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
+<<<<<<< HEAD
 import com.fb.platform.mom.util.LoggerConstants;
+=======
+>>>>>>> sapConnector
 
 /**
  * @author nehaga
@@ -33,9 +36,17 @@ import com.fb.platform.mom.util.LoggerConstants;
  */
 public class InventoryMessageReceiver implements PlatformMessageReceiver {
 
+<<<<<<< HEAD
 	private static Log infoLog = LogFactory.getLog(InventoryMessageReceiver.class);
 	
 	private static Log auditLog = LogFactory.getLog(LoggerConstants.INVENTORY_RECEIVER_AUDIT_LOG);
+=======
+	/* (non-Javadoc)
+	 * @see com.fb.platform.mom.manager.PlatformMessageReceiver#handleMessage(java.lang.Object)
+	 */
+	
+	private static Log log = LogFactory.getLog(InventoryMessageReceiver.class);
+>>>>>>> sapConnector
 	
 	private static Properties prop = initProperties();
 
@@ -45,12 +56,17 @@ public class InventoryMessageReceiver implements PlatformMessageReceiver {
 		try {
 			properties.load(propertiesStream);
 		} catch (IOException e) {
+<<<<<<< HEAD
 			infoLog.error("Error loading properties file.", e);
+=======
+			log.error("Error loading properties file.", e);
+>>>>>>> sapConnector
 			throw new PlatformException("Error loading properties file.", e);
 		}
 		return properties;
 	}
 
+<<<<<<< HEAD
 	/* (non-Javadoc)
 	 * @see com.fb.platform.mom.manager.PlatformMessageReceiver#handleMessage(java.lang.Object)
 	 */
@@ -64,6 +80,13 @@ public class InventoryMessageReceiver implements PlatformMessageReceiver {
 		auditLog.info(uid + "," + idocNumber + "," + timestamp + ",false");
 		infoLog.info("Received the message : " + message);
 
+=======
+	@Override
+	public void handleMessage(Object message) {
+		log.info("Received the message : " + message);
+
+		InventoryTO inventoryTO = (InventoryTO) message;
+>>>>>>> sapConnector
 		sendAck(inventoryTO);
 	}
 
@@ -101,6 +124,7 @@ public class InventoryMessageReceiver implements PlatformMessageReceiver {
 			HttpResponse response = httpClient.execute(httpPost);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode != HttpStatus.SC_OK) {
+<<<<<<< HEAD
 				infoLog.error("Inventory ack not delivered : " + inventoryTO.toString());
 				throw new PlatformException("Inventory ack not delivered to tinla on URL : " + inventoryURL);
 			}
@@ -117,6 +141,20 @@ public class InventoryMessageReceiver implements PlatformMessageReceiver {
 		} catch (IOException e) {
 			infoLog.error("Error communicating with tinla on url : " + inventoryURL, e);
 			infoLog.error("Inventory ack not delivered : " + inventoryTO.toString());
+=======
+				log.error("Inventory ack not delivered : " + inventoryTO.toString());
+				throw new PlatformException("Inventory ack not delivered to tinla on URL : " + inventoryURL);
+			}
+			log.info("Inventory ack delivered to tinla. Status code : " + statusCode);
+		} catch (UnsupportedEncodingException e) {
+			log.error("Error communicating with tinla on url : " + inventoryURL, e);
+			throw new PlatformException("Error communicating with tinla on url : " + inventoryURL, e);
+		} catch (ClientProtocolException e) {
+			log.error("Error communicating with tinla on url : " + inventoryURL, e);
+			throw new PlatformException("Error communicating with tinla on url : " + inventoryURL, e);
+		} catch (IOException e) {
+			log.error("Error communicating with tinla on url : " + inventoryURL, e);
+>>>>>>> sapConnector
 			throw new PlatformException("Error communicating with tinla on url : " + inventoryURL, e);
 		}
 

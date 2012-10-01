@@ -58,13 +58,18 @@
 	  	<dependency>
 	  		<groupId>com.fb</groupId>
 			<artifactId>promotionCore</artifactId>
-        	<version>${platform.version}</version>
+			<version>${platform.version}</version>
 	  	</dependency>
 	  	<dependency>
 	  		<groupId>com.fb</groupId>
 			<artifactId>fulfilmentCore</artifactId>
-        	<version>${platform.version}</version>
+			<version>${platform.version}</version>
 	  	</dependency>
+		<dependency>
+		    <groupId>commons-httpclient</groupId>
+		    <artifactId>commons-httpclient</artifactId>
+		    <version>3.0.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>

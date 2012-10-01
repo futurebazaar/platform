@@ -7,7 +7,10 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.mom.to.DeliveryDeleteTO;
+<<<<<<< HEAD
 import com.fb.commons.mom.to.SapMomTO;
+=======
+>>>>>>> sapConnector
 import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
@@ -41,11 +44,14 @@ public class DeliveryDeleteTest extends BaseTestCase {
 		deliveryDeleteTO1.setUser("YOGENDRAB");
 		deliveryDeleteTO1.setDate("20120625");
 		deliveryDeleteTO1.setTime("172208");
+<<<<<<< HEAD
 
 		SapMomTO sapIdoc1 = new SapMomTO(100);
 		sapIdoc1.setIdocNumber("x100");
 
 		deliveryDeleteTO1.setSapIdoc(sapIdoc1);
+=======
+>>>>>>> sapConnector
 		momManager.send(PlatformDestinationEnum.DELIVERY_DELETE, deliveryDeleteTO1);
 		
 		DeliveryDeleteTO deliveryDeleteTO2 = new DeliveryDeleteTO();
@@ -56,11 +62,14 @@ public class DeliveryDeleteTest extends BaseTestCase {
 		deliveryDeleteTO2.setUser("YOGENDRAB");
 		deliveryDeleteTO2.setDate("20120625");
 		deliveryDeleteTO2.setTime("172208");
+<<<<<<< HEAD
 
 		SapMomTO sapIdoc2 = new SapMomTO(100);
 		sapIdoc2.setIdocNumber("x100");
 
 		deliveryDeleteTO2.setSapIdoc(sapIdoc2);
+=======
+>>>>>>> sapConnector
 		momManager.send(PlatformDestinationEnum.DELIVERY_DELETE, deliveryDeleteTO2);
 	}
 	
