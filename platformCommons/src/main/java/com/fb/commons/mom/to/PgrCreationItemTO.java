@@ -1,9 +1,6 @@
 package com.fb.commons.mom.to;
 
-<<<<<<< HEAD
 import org.apache.commons.lang.builder.ToStringBuilder;
-=======
->>>>>>> sapConnector
 import org.joda.time.DateTime;
 
 /**
@@ -33,15 +30,9 @@ public class PgrCreationItemTO extends ItemTO {
 
 	@Override
 	public String toString(){
-<<<<<<< HEAD
 		return new ToStringBuilder(this)
 		.append("itemTO", super.toString())
 		.append("pgrCreationDate", this.pgrCreationDate)
 		.toString();
-=======
-		String cancelItem = super.toString()
-				+ "\nPGR creation date : " + pgrCreationDate;
-		return cancelItem;
->>>>>>> sapConnector
 	}
 }

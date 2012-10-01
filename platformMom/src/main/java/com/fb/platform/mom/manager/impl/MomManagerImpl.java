@@ -15,13 +15,8 @@ import com.fb.platform.mom.manager.PlatformDestinationEnum;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
 import com.fb.platform.mom.receiver.corrupt.CorruptMessageListener;
 import com.fb.platform.mom.receiver.corrupt.CorruptSender;
-<<<<<<< HEAD
 import com.fb.platform.mom.receiver.deliveryDelete.DeliveryDeleteMessageListener;
 import com.fb.platform.mom.receiver.deliveryDelete.DeliveryDeleteSender;
-=======
-import com.fb.platform.mom.receiver.delivery.DeliveryDeleteMessageListener;
-import com.fb.platform.mom.receiver.delivery.DeliveryDeleteSender;
->>>>>>> sapConnector
 import com.fb.platform.mom.receiver.dlq.PreDLQMessageListener;
 import com.fb.platform.mom.receiver.inventory.InventoryMessageListener;
 import com.fb.platform.mom.receiver.inventory.InventorySender;
@@ -89,20 +84,12 @@ public class MomManagerImpl implements MomManager {
 	@Autowired
 	private DefaultMessageListenerContainer itemAckContainer = null;
 	
-<<<<<<< HEAD
-=======
-
->>>>>>> sapConnector
 	/* (non-Javadoc)
 	 * @see com.fb.platform.mom.manager.MomManager#send(com.fb.platform.mom.manager.PlatformDestinationEnum, java.lang.Object)
 	 */
 	@Override
 	public void send(PlatformDestinationEnum destination, Serializable message) {
-<<<<<<< HEAD
 		logger.info("Sending message to destination : " + destination);
-=======
-		logger.debug("Sending message to destination : " + destination);
->>>>>>> sapConnector
 
 		switch (destination) {
 		case INVENTORY:
@@ -134,61 +121,37 @@ public class MomManagerImpl implements MomManager {
 
 		switch (destination) {
 		case INVENTORY:
-<<<<<<< HEAD
 			inventoryListener.addReceiver(receiver, destination);
-=======
-			inventoryListener.addReceiver(receiver);
->>>>>>> sapConnector
 			if (!inventoryContainer.isRunning()) {
 				inventoryContainer.start();
 			}
 			break;
 		case MAIL:
-<<<<<<< HEAD
 			mailListener.addReceiver(receiver, destination);
-=======
-			mailListener.addReceiver(receiver);
->>>>>>> sapConnector
 			if(!mailContainer.isRunning()) {
 				mailContainer.start();
 			}
 			break;
 		case PREDLQ:
-<<<<<<< HEAD
 			preDLQListener.addReceiver(receiver, destination);
-=======
-			preDLQListener.addReceiver(receiver);
->>>>>>> sapConnector
 			if(!preDLQContainer.isRunning()) {
 				preDLQContainer.start();
 			}
 			break;
 		case CORRUPT_IDOCS:
-<<<<<<< HEAD
 			corruptListener.addReceiver(receiver, destination);
-=======
-			corruptListener.addReceiver(receiver);
->>>>>>> sapConnector
 			if(!corruptContainer.isRunning()) {
 				corruptContainer.start();
 			}
 			break;
 		case DELIVERY_DELETE:
-<<<<<<< HEAD
 			deliveryDeleteListener.addReceiver(receiver, destination);
-=======
-			deliveryDeleteListener.addReceiver(receiver);
->>>>>>> sapConnector
 			if(!deliveryDeleteContainer.isRunning()) {
 				deliveryDeleteContainer.start();
 			}
 			break;
 		case ITEM_ACK:
-<<<<<<< HEAD
 			itemAckMessageListener.addReceiver(receiver, destination);
-=======
-			itemAckMessageListener.addReceiver(receiver);
->>>>>>> sapConnector
 			if(!itemAckContainer.isRunning()) {
 				itemAckContainer.start();
 			}

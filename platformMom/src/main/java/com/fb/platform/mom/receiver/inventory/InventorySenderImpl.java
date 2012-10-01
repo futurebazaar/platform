@@ -16,26 +16,19 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 
-<<<<<<< HEAD
 import com.fb.commons.mom.to.InventoryTO;
 import com.fb.commons.mom.to.SapMomTO;
 import com.fb.platform.mom.util.LoggerConstants;
 
-=======
->>>>>>> sapConnector
 /**
  * @author vinayak
  *
  */
 public class InventorySenderImpl implements InventorySender {
 
-<<<<<<< HEAD
 	private static Log infoLog = LogFactory.getLog(InventorySenderImpl.class);
 	
 	private static Log auditLog = LogFactory.getLog(LoggerConstants.INVENTORY_AUDIT_LOG);
-=======
-	private static Log logger = LogFactory.getLog(InventorySenderImpl.class);
->>>>>>> sapConnector
 
 	private JmsTemplate jmsTemplate;
 
@@ -50,7 +43,6 @@ public class InventorySenderImpl implements InventorySender {
 			
 			@Override
 			public Message createMessage(Session session) throws JMSException {
-<<<<<<< HEAD
 				infoLog.info("Creating the Inventory Message for sending.");
 				ObjectMessage jmsMessage = session.createObjectMessage();
 
@@ -65,12 +57,6 @@ public class InventorySenderImpl implements InventorySender {
 
 				//log for audit
 				auditLog.info(sapIdoc.getAckUID() + "," + sapIdoc.getIdocNumber() + "," + sapIdoc.getTimestamp());
-=======
-				logger.info("Creating the Inventory Message for sending.");
-				System.out.println("Creating the Inventory Message for sending.");
-				ObjectMessage jmsMessage = session.createObjectMessage();
-				jmsMessage.setObject(message);
->>>>>>> sapConnector
 				return jmsMessage;
 			}
 		});

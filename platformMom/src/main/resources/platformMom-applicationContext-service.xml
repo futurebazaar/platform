@@ -182,11 +182,7 @@
 	   <constructor-arg index="0" value="deliveryDelete"/>
 	</bean>
 
-<<<<<<< HEAD
 	<bean id="deliveryDeleteListener" class="com.fb.platform.mom.receiver.deliveryDelete.DeliveryDeleteMessageListener"></bean>
-=======
-	<bean id="deliveryDeleteListener" class="com.fb.platform.mom.receiver.delivery.DeliveryDeleteMessageListener"></bean>
->>>>>>> sapConnector
 	
 	<bean id="deliveryDeleteContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
 		<property name="connectionFactory" ref="userCredentialFactory"/>
@@ -196,11 +192,7 @@
 		<property name="sessionTransacted" value="true"/>
 	</bean>
 
-<<<<<<< HEAD
 	<bean id="deliveryDeleteSender" class="com.fb.platform.mom.receiver.deliveryDelete.DeliveryDeleteSenderImpl">
-=======
-	<bean id="deliveryDeleteSender" class="com.fb.platform.mom.receiver.delivery.DeliveryDeleteSenderImpl">
->>>>>>> sapConnector
         <property name="jmsTemplate" ref="jmsTemplate"/>
         <property name="deliveryDeleteDestination" ref="deliveryDeleteDestination"/>
 	</bean>

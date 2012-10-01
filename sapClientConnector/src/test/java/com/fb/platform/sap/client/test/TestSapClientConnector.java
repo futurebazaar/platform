@@ -28,21 +28,21 @@ public class TestSapClientConnector {
 		
 		//Test Order
 		SapOrderRequestTO bbOrderTO = new TestBBBapiOrderTO().getBapiTO();
-		System.out.println(bh.processOrder(bbOrderTO));
+		//System.out.println(bh.processOrder(bbOrderTO));
 		SapOrderRequestTO bapiOrderTO = new TestBapiOrderTO().getBapiTO();
-		System.out.println(bh.processOrder(bapiOrderTO));
+		//System.out.println(bh.processOrder(bapiOrderTO));
 		
 		//Test Inventory Dashboard
 		SapInventoryDashboardRequestTO inventoryDashboardRequestTO = new TestInventoryDashboardTO().getRequestTO();
-		System.out.println(bh.processInventoryDashboard(inventoryDashboardRequestTO));
+		//System.out.println(bh.processInventoryDashboard(inventoryDashboardRequestTO));
 
 		//Test Inventory Level
 		SapInventoryLevelRequestTO inventoryLevelRequestTO = new TestInventoryLevelTO().getInventoryLevelRequestTO();
-		System.out.println(bh.processInventoryLevel(inventoryLevelRequestTO));
+		//System.out.println(bh.processInventoryLevel(inventoryLevelRequestTO));
 		
 		//Test Lsp Awb Update
 		SapLspAwbUpdateRequestTO lspAwbUpdateRequestTO = new TestLspAwbUpdateTO().getLspAwbUpdateRequestTO();
-		System.out.println(bh.processLspAwbUpdate(lspAwbUpdateRequestTO));
+		//System.out.println(bh.processLspAwbUpdate(lspAwbUpdateRequestTO));
 		
 		//Test Wallet
 		String walletIdoc = new TestWalletIdoc().getWalletIdocXml();

@@ -5,11 +5,8 @@ package com.fb.commons.mom.to;
 
 import java.io.Serializable;
 
-<<<<<<< HEAD
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-=======
->>>>>>> sapConnector
 /**
  * @author nehaga
  *
@@ -81,7 +78,6 @@ public class DeliveryDeleteTO implements Serializable{
 	
 	@Override
 	public String toString() {
-<<<<<<< HEAD
 		return new ToStringBuilder(this)
 		.append("sapIdoc", this.sapIdoc)
 		.append("itemNo", this.itemNo)
@@ -93,19 +89,4 @@ public class DeliveryDeleteTO implements Serializable{
 		.append("user", this.user)
 		.toString();
 	}
-=======
-		String deliveryDelete = "delivery number:" + deliveryNo
-				+ "\norder number:" + orderNo
-				+ "\nitem number:" + itemNo
-				+ "\nuser:" + user
-				+ "\ntransaction code:" + transactionCode
-				+ "\ndate:" + date
-				+ "\ntime:" + time;
-		if(sapIdoc != null) {
-			deliveryDelete += "\n" + sapIdoc.toString();
-		}
-		return deliveryDelete;
-	}
-	
->>>>>>> sapConnector
 }

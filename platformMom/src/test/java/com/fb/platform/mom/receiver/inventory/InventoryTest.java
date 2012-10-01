@@ -11,10 +11,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.mom.to.InventoryTO;
-<<<<<<< HEAD
 import com.fb.commons.mom.to.SapMomTO;
-=======
->>>>>>> sapConnector
 import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
@@ -46,15 +43,12 @@ public class InventoryTest extends BaseTestCase {
 		inventory1.setArticleId("article1");
 		inventory1.setIssuingSite("issuingsite1");
 		inventory1.setIssuingStorageLoc("issuingstoragelocation1");
-<<<<<<< HEAD
 
 		SapMomTO sapIdoc1 = new SapMomTO(100);
 		sapIdoc1.setIdocNumber("x100");
 
 		inventory1.setSapIdoc(sapIdoc1);
 
-=======
->>>>>>> sapConnector
 		momManager.send(PlatformDestinationEnum.INVENTORY, inventory1);
 		//inventorySender.sendMessage(inventory1);
 
@@ -62,52 +56,40 @@ public class InventoryTest extends BaseTestCase {
 		inventory2.setArticleId("article2");
 		inventory2.setIssuingSite("issuingsite2");
 		inventory2.setIssuingStorageLoc("issuingstoragelocation2");
-<<<<<<< HEAD
 		SapMomTO sapIdoc2 = new SapMomTO(100);
 		sapIdoc2.setIdocNumber("x100");
 
 		inventory2.setSapIdoc(sapIdoc2);
-=======
->>>>>>> sapConnector
 		momManager.send(PlatformDestinationEnum.INVENTORY, inventory2);
 		
 		InventoryTO inventory3 = new InventoryTO();
 		inventory3.setArticleId("article3");
 		inventory3.setIssuingSite("issuingsite3");
 		inventory3.setIssuingStorageLoc("issuingstoragelocation3");
-<<<<<<< HEAD
 		SapMomTO sapIdoc3 = new SapMomTO(100);
 		sapIdoc3.setIdocNumber("x100");
 
 		inventory3.setSapIdoc(sapIdoc3);
-=======
->>>>>>> sapConnector
 		momManager.send(PlatformDestinationEnum.INVENTORY, inventory3);
 
 		InventoryTO inventory4 = new InventoryTO();
 		inventory4.setArticleId("article4");
 		inventory4.setIssuingSite("issuingsite4");
 		inventory4.setIssuingStorageLoc("issuingstoragelocation4");
-<<<<<<< HEAD
 		SapMomTO sapIdoc4 = new SapMomTO(100);
 		sapIdoc4.setIdocNumber("x100");
 
 		inventory4.setSapIdoc(sapIdoc4);
-=======
->>>>>>> sapConnector
 		momManager.send(PlatformDestinationEnum.INVENTORY, inventory4);
 		
 		InventoryTO inventory5 = new InventoryTO();
 		inventory5.setArticleId("article5");
 		inventory5.setIssuingSite("issuingsite5");
 		inventory5.setIssuingStorageLoc("issuingstoragelocation5");
-<<<<<<< HEAD
 		SapMomTO sapIdoc5 = new SapMomTO(100);
 		sapIdoc5.setIdocNumber("x100");
 
 		inventory5.setSapIdoc(sapIdoc5);
-=======
->>>>>>> sapConnector
 		momManager.send(PlatformDestinationEnum.INVENTORY, inventory5);
 	}
 

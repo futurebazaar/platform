@@ -20,10 +20,7 @@ import org.springframework.jms.support.JmsUtils;
 
 import com.fb.commons.PlatformException;
 import com.fb.commons.mom.to.MailTO;
-<<<<<<< HEAD
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
-=======
->>>>>>> sapConnector
 import com.fb.platform.mom.manager.impl.AbstractPlatformListener;
 
 /**
@@ -88,11 +85,7 @@ public class PreDLQMessageListener extends AbstractPlatformListener implements M
 					+ "\n\n priority : " + message.getJMSPriority()
 					+ "\n\n object : " + objectMessage.getObject().toString() );
 
-<<<<<<< HEAD
 			super.notify(dlqMail , PlatformDestinationEnum.PREDLQ);
-=======
-			super.notify(dlqMail);
->>>>>>> sapConnector
 		} catch (JMSException e) {
 			logger.error("JMSException in preDLQ", e);
 			throw JmsUtils.convertJmsAccessException(e);

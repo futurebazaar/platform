@@ -27,10 +27,7 @@ import com.fb.commons.mom.to.ItemTO;
 import com.fb.commons.mom.to.OrderStateEnum;
 import com.fb.platform.mom.itemAck.sender.ItemAckParameterFactory;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
-<<<<<<< HEAD
 import com.fb.platform.mom.util.LoggerConstants;
-=======
->>>>>>> sapConnector
 
 /**
  * @author nehaga
@@ -38,17 +35,9 @@ import com.fb.platform.mom.util.LoggerConstants;
  */
 public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 
-<<<<<<< HEAD
 	private static Log infoLog = LogFactory.getLog(ItemAckMessageReceiver.class);
 	
 	private static Log auditLog = LogFactory.getLog(LoggerConstants.ITEM_ACK_RECEIVER_AUDIT_LOG);
-=======
-	/* (non-Javadoc)
-	 * @see com.fb.platform.mom.manager.PlatformMessageReceiver#handleMessage(java.lang.Object)
-	 */
-	
-	private static Log log = LogFactory.getLog(ItemAckMessageReceiver.class);
->>>>>>> sapConnector
 	
 	private static Properties prop = initProperties();
 
@@ -58,17 +47,12 @@ public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 		try {
 			properties.load(propertiesStream);
 		} catch (IOException e) {
-<<<<<<< HEAD
 			infoLog.error("Error loading properties file.", e);
-=======
-			log.error("Error loading properties file.", e);
->>>>>>> sapConnector
 			throw new PlatformException("Error loading properties file.", e);
 		}
 		return properties;
 	}
 
-<<<<<<< HEAD
 	/* (non-Javadoc)
 	 * @see com.fb.platform.mom.manager.PlatformMessageReceiver#handleMessage(java.lang.Object)
 	 */
@@ -83,13 +67,6 @@ public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 		infoLog.info("Received the message : " + message);
 
 		sendAck(itemTO);
-=======
-	@Override
-	public void handleMessage(Object message) {
-		log.info("Received the message : " + message);
-
-		sendAck((ItemTO) message);
->>>>>>> sapConnector
 	}
 	
 	private boolean isOrderStateValid(ItemTO itemAck) {
@@ -117,11 +94,7 @@ public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 		List<NameValuePair> parameters = new ItemAckParameterFactory().getParameters(itemAck);
 		
 		for (NameValuePair param : parameters) {
-<<<<<<< HEAD
 			infoLog.info(param.getName() + "********" + param.getValue());
-=======
-			log.info(param.getName() + "********" + param.getValue());
->>>>>>> sapConnector
 		}
 		
 		parameters.add(new BasicNameValuePair("sender", "MOM"));
@@ -136,7 +109,6 @@ public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 				HttpResponse response = httpClient.execute(httpPost);
 				int statusCode = response.getStatusLine().getStatusCode();
 				if (statusCode != HttpStatus.SC_OK) {
-<<<<<<< HEAD
 					infoLog.error("Item ack not delivered : " + itemAck.toString());
 					throw new PlatformException("Item ack not delivered to tinla on URL : " + orderURL);
 				}
@@ -157,23 +129,6 @@ public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 		} catch (IOException e) {
 			infoLog.error("Error communicating with tinla on url : " + orderURL, e);
 			infoLog.error("Item ack not delivered : " + itemAck.toString());
-=======
-					log.error("Item ack not delivered : " + itemAck.toString());
-					throw new PlatformException("Item ack not delivered to tinla on URL : " + orderURL);
-				}
-				log.info("Item ack delivered to tinla. Status code : " + statusCode);
-			} else {
-				log.info("Request not sent to tinla because order state is C / R : " + itemAck.toString());
-			}
-		} catch (UnsupportedEncodingException e) {
-			log.error("Error communicating with tinla on url : " + orderURL, e);
-			throw new PlatformException("Error communicating with tinla on url : " + orderURL, e);
-		} catch (ClientProtocolException e) {
-			log.error("Error communicating with tinla on url : " + orderURL, e);
-			throw new PlatformException("Error communicating with tinla on url : " + orderURL, e);
-		} catch (IOException e) {
-			log.error("Error communicating with tinla on url : " + orderURL, e);
->>>>>>> sapConnector
 			throw new PlatformException("Error communicating with tinla on url : " + orderURL, e);
 		}
 

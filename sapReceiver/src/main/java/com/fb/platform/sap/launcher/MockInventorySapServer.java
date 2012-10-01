@@ -15,15 +15,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandlerFactory;
-<<<<<<< HEAD
 import com.fb.platform.sap.client.idoc.platform.deliveryDelete.impl.DeliveryDeleteIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.inventory.impl.DeliveryInventoryIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.inventory.impl.InventoryIDocHandler;
-=======
-import com.fb.platform.sap.client.idoc.platform.impl.DeliveryDeleteIDocHandler;
-import com.fb.platform.sap.client.idoc.platform.impl.DeliveryInventoryIDocHandler;
-import com.fb.platform.sap.client.idoc.platform.impl.InventoryIDocHandler;
->>>>>>> sapConnector
 
 /**
  * @author vinayak
@@ -127,11 +121,7 @@ public class MockInventorySapServer {
 	 * @param args
 	 * @throws InterruptedException 
 	 */
-<<<<<<< HEAD
 	public static void main(String[] args) throws InterruptedException ,Exception {
-=======
-	public static void main(String[] args) throws InterruptedException {
->>>>>>> sapConnector
 		logger.warn("Starting the Sap Server Connector.");
 		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("sapReceiver-applicationContext-service.xml", "platformMom-applicationContext-resources.xml", "platformMom-applicationContext-service.xml");
 

@@ -3,10 +3,7 @@
  */
 package com.fb.commons.mom.to;
 
-<<<<<<< HEAD
 import org.apache.commons.lang.builder.ToStringBuilder;
-=======
->>>>>>> sapConnector
 import org.joda.time.DateTime;
 
 /**
@@ -44,20 +41,12 @@ public class ItemInvoiceTO extends ItemTO {
 	}
 	@Override
 	public String toString(){
-<<<<<<< HEAD
 		return new ToStringBuilder(this)
 		.append("itemTo", super.toString())
 		.append("invoiceNumber", this.invoiceNumber)
 		.append("billingType", this.billingType)
 		.append("invoiceDate", this.invoiceDate)
 		.toString();
-=======
-		String itemInvoice = super.toString()
-				+ "\ninvoice number : " + invoiceNumber
-				+ "\ninvoice date : " + invoiceDate
-				+ "\nbilling type : " + billingType;
-		return itemInvoice;
->>>>>>> sapConnector
 	}
 	
 }

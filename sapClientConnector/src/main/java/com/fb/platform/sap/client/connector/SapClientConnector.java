@@ -13,11 +13,14 @@ import com.sap.conn.idoc.IDocParseException;
 import com.sap.conn.idoc.IDocRepository;
 import com.sap.conn.idoc.IDocXMLProcessor;
 import com.sap.conn.idoc.jco.JCoIDoc;
+import com.sap.conn.idoc.jco.rt.JCoIDocDocument;
+import com.sap.conn.idoc.jco.rt.JCoIDocFunction;
 import com.sap.conn.jco.JCoDestination;
 import com.sap.conn.jco.JCoDestinationManager;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoFunctionTemplate;
+import com.sap.conn.jco.JCoTable;
 import com.sap.conn.jco.ext.DestinationDataEventListener;
 import com.sap.conn.jco.ext.DestinationDataProvider;
 
@@ -77,14 +80,20 @@ public class SapClientConnector {
     public void sendIdoc(String xml) throws JCoException, IOException, IDocParseException{  
         // get the JCo destination  
     	bapiProperties = getDestinationPropertiesFromEnvironment();
-    	JCoDestination destination = JCoDestinationManager.getDestination(bapiProperties.getProperty(DestinationDataProvider.JCO_DEST));  
+    	JCoDestination destination = JCoDestinationManager.getDestination("bapi");  
         // Create repository  
+    	
         IDocRepository iDocRepository = JCoIDoc.getIDocRepository(destination);
         String transactionID = destination.createTID();
         IDocFactory iDocFactory = JCoIDoc.getIDocFactory();  
         IDocXMLProcessor iDocXMLProcessor = iDocFactory.getIDocXMLProcessor();
         IDocDocumentList iDocDocumentList = iDocXMLProcessor.parse(iDocRepository, xml);  
         JCoIDoc.send(iDocDocumentList, IDocFactory.IDOC_VERSION_DEFAULT, destination, transactionID);
+        System.out.println(destination.getRepository().getFunction("ZABHI_INBOUND"));
+//        function.execute(destination);
+//        JCoTable table = function.getTableParameterList().getTable("RETURN");
+//        table.setRow(0);
+//        System.out.println(table.getValue("IDOC_STATUS"));
         destination.confirmTID(transactionID);
     }
     

@@ -12,10 +12,7 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
-<<<<<<< HEAD
 import org.springframework.stereotype.Component;
-=======
->>>>>>> sapConnector
 
 import com.fb.commons.mail.MailSender;
 import com.fb.commons.mail.exception.MailNoReceiverException;
@@ -27,10 +24,7 @@ import com.fb.commons.mom.to.MailTO;
  * @author nehaga
  *
  */
-<<<<<<< HEAD
 @Component
-=======
->>>>>>> sapConnector
 public class MailSenderImpl implements MailSender {
 	
 	private static Log logger = LogFactory.getLog(MailSenderImpl.class);

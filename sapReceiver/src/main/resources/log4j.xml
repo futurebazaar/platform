@@ -35,7 +35,6 @@
 	                <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] %c:%L - %m%n" />
 	        </layout>
 	</appender>
-<<<<<<< HEAD
 	
 	<appender name="DELIVERY_DELETE_LOG" class="org.apache.log4j.DailyRollingFileAppender">
 	        <!-- The active file to log to -->
@@ -111,8 +110,6 @@
 	                <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] %c:%L - %m%n" />
 	        </layout>
 	</appender>
-=======
->>>>>>> sapConnector
 
     <logger name="net.sf.ehcache">
 
@@ -137,7 +134,6 @@
         <level value="INFO"/>
         <appender-ref ref="INFOLOG"/>
 	</logger>
-<<<<<<< HEAD
     <logger name="com.fb.platform.mom.receiver.deliveryDelete">
         <level value="INFO"/>
         <appender-ref ref="DELIVERY_DELETE_LOG"/>
@@ -175,9 +171,6 @@
         <appender-ref ref="ITEM_ACK_AUDIT_LOG"/>
     </logger>
 	<logger name="LOGERROR">
-=======
-    <logger name="LOGERROR">
->>>>>>> sapConnector
         <level value="WARN"/>
         <appender-ref ref="ERRORLOG"/>
     </logger>
@@ -186,11 +179,7 @@
         <level value="INFO"/>
         <appender-ref ref="INFOLOG"/>
     </logger>
-<<<<<<< HEAD
     
-=======
-
->>>>>>> sapConnector
     <root>
         <level value="INFO"/>
         <appender-ref ref="CONSOLE"/>

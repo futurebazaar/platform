@@ -5,11 +5,8 @@ package com.fb.commons.mom.to;
 
 import java.io.Serializable;
 
-<<<<<<< HEAD
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-=======
->>>>>>> sapConnector
 /**
  * @author nehaga
  *
@@ -97,7 +94,6 @@ public class InventoryTO implements Serializable {
 	
 	@Override
 	public String toString() {
-<<<<<<< HEAD
 		return new ToStringBuilder(this)
 		.append("sapIdoc", this.sapIdoc)
 		.append("articleId", this.articleId)
@@ -110,22 +106,6 @@ public class InventoryTO implements Serializable {
 		.append("sellingUnit", this.sellingUnit)
 		.append("transactionCode", this.transactionCode)
 		.toString();
-=======
-		String inventory = "transactionCode : " + transactionCode
-				+ "\narticleId : " + articleId
-				+ "\nissuingSite : " + issuingSite
-				+ "\nreceivingSite : " + receivingSite
-				+ "\nissuingStorageLoc : " + issuingStorageLoc
-				+ "\nreceivingStorageLoc : " + receivingStorageLoc
-				+ "\nmovementType : "+ movementType
-				+ "\nsellingUnit : "+ sellingUnit
-				+ "\nquantity:" + quantity;
-		
-		if(sapIdoc != null) {
-			inventory += "\n" + sapIdoc.toString();
-		}
-		return inventory;
->>>>>>> sapConnector
 	}
 		   
 		   

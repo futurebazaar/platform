@@ -6,7 +6,6 @@ package com.fb.platform.mom.manager.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-<<<<<<< HEAD
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -16,16 +15,12 @@ import com.fb.platform.mom.manager.PlatformMessageReceiver;
 import com.fb.platform.mom.receiver.deliveryDelete.DeliveryDeleteMessageListener;
 import com.fb.platform.mom.receiver.inventory.InventoryMessageListener;
 import com.fb.platform.mom.receiver.itemAck.ItemAckMessageListener;
-=======
-import com.fb.platform.mom.manager.PlatformMessageReceiver;
->>>>>>> sapConnector
 
 /**
  * @author vinayak
  *
  */
 public abstract class AbstractPlatformListener {
-<<<<<<< HEAD
 	
 	private static Log logger = LogFactory.getLog(AbstractPlatformListener.class);
 	
@@ -88,18 +83,6 @@ public abstract class AbstractPlatformListener {
 		} catch (PlatformException e) {
 			logger.error("Exception while notifying receivers on destination : " + destination, e);
 			throw e;
-=======
-
-	private List<PlatformMessageReceiver> receivers = new ArrayList<PlatformMessageReceiver>();
-
-	public void addReceiver(PlatformMessageReceiver receiver) {
-		this.receivers.add(receiver);
-	}
-
-	public void notify(Object message) {
-		for (PlatformMessageReceiver receiver : receivers) {
-			receiver.handleMessage(message);
->>>>>>> sapConnector
 		}
 	}
 }

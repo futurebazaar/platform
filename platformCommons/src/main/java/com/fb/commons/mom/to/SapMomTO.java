@@ -5,12 +5,9 @@ package com.fb.commons.mom.to;
 
 import java.io.Serializable;
 
-<<<<<<< HEAD
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.joda.time.DateTime;
 
-=======
->>>>>>> sapConnector
 /**
  * @author nehaga
  *
@@ -27,7 +24,6 @@ public class SapMomTO implements Serializable {
 	private int segmentNumber;
 	private String poNumber;
 	private String canGr;
-<<<<<<< HEAD
 	private long ackUID;
 	private DateTime timestamp;
 
@@ -39,8 +35,6 @@ public class SapMomTO implements Serializable {
 	public long getAckUID() {
 		return ackUID;
 	}
-=======
->>>>>>> sapConnector
 	
 	public String getIdocNumber() {
 		return idocNumber;
@@ -80,7 +74,6 @@ public class SapMomTO implements Serializable {
 	public void setCanGr(String canGr) {
 		this.canGr = canGr;
 	}
-<<<<<<< HEAD
 	public DateTime getTimestamp() {
 		return timestamp;
 	}
@@ -97,16 +90,4 @@ public class SapMomTO implements Serializable {
 		.append("refUID", this.refUID)
 		.toString();
 	}
-=======
-	@Override
-	public String toString() {
-		return "idoc number : " + idocNumber
-			+ "\nreference UID : " + refUID
-			+ "\nsegment number : " + segmentNumber
-			//+ "\nidoc : " + idoc
-			+ "\npo number : " + poNumber
-			+ "\ncan gr : " + canGr;
-	}
-	
->>>>>>> sapConnector
 }

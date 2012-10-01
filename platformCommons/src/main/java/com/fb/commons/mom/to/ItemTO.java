@@ -6,10 +6,7 @@ package com.fb.commons.mom.to;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-<<<<<<< HEAD
 import org.apache.commons.lang.builder.ToStringBuilder;
-=======
->>>>>>> sapConnector
 import org.joda.time.DateTime;
 
 /**
@@ -237,7 +234,6 @@ public class ItemTO implements Serializable {
 	}
 	@Override
 	public String toString() {
-<<<<<<< HEAD
 		return new ToStringBuilder(this)
 		.append("sapIdoc", this.sapIdoc)
 		.append("orderId", this.orderId)
@@ -266,38 +262,6 @@ public class ItemTO implements Serializable {
 		.append("skuID", this.skuID)
 		.append("unitOfMeasurement", this.unitOfMeasurement)
 		.toString();
-=======
-		String order = "sap Document Id: " + sapDocumentId
-				+ "\nATG Document Id : " + atgDocumentId
-				+ "\norder state : " + orderState
-				+ "\nheader : " + header
-				+ "\norder header del block : " + orderHeaderDelBlock
-				+ "\ndelivery date : " + deliveryDate
-				+ "\nunit of measurement : " + unitOfMeasurement
-				+ "\nshipment comments : " + shipmentComments
-				+ "\norder type : " + orderType
-				+ "\ndelivery number : " + deliveryNumber
-				+ "\nblock msg : " + blockMsg
-				+ "\nitem category : " + itemCategory
-				+ "\norder id : " + orderId
-				+ "\ndelivery type : " + deliveryType
-				+ "\nlsp code : " + lspCode
-				+ "\nlsp name : " + lspName
-				+ "\nawb number : " + awbNumber
-				+ "\ncreated by : " + createdBy
-				+ "\ncreated date : " + createdDate
-				+ "\nsku id : " + skuID
-				+ "\nlsp update description : " + lspUpdateDesc
-				+ "\nplant id : " + plantId
-				+ "\nitem state : " + itemState
-				+ "\norder date : " + orderDate
-				+ "\nquantity : " + quantity;
-		if(sapIdoc != null) {
-			order += "\n" + sapIdoc.toString();
-		}
-		return order;
-		
->>>>>>> sapConnector
 	}
 	public String getLspCode() {
 		return lspCode;

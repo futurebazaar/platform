@@ -1,10 +1,7 @@
 package com.fb.commons.mom.to;
 
-<<<<<<< HEAD
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-=======
->>>>>>> sapConnector
 /**
  * 
  */
@@ -31,15 +28,9 @@ public class CancelItemTO extends ItemTO {
 	}
 	@Override
 	public String toString(){
-<<<<<<< HEAD
 		return new ToStringBuilder(this)
 			.append("itemTo", super.toString())
 			.append("cancelInvoiceNumber", this.cancelInvoiceNumber)
 			.toString();
-=======
-		String cancelItem = super.toString()
-				+ "\ncancel invoice number : " + cancelInvoiceNumber;
-		return cancelItem;
->>>>>>> sapConnector
 	}
 }

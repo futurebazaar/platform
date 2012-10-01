@@ -5,11 +5,8 @@ package com.fb.commons.mom.to;
 
 import java.math.BigDecimal;
 
-<<<<<<< HEAD
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-=======
->>>>>>> sapConnector
 /**
  * @author nehaga
  *
@@ -69,7 +66,6 @@ public class ReturnOrderTO extends ItemTO {
 
 	@Override
 	public String toString(){
-<<<<<<< HEAD
 		return new ToStringBuilder(this)
 		.append("itemTO", super.toString())
 		.append("category", this.category)
@@ -78,14 +74,5 @@ public class ReturnOrderTO extends ItemTO {
 		.append("returnId", this.returnId)
 		.append("storageLocation", this.storageLocation)
 		.toString();
-=======
-		String cancelItem = super.toString()
-				+ "\nreturn order id : " + returnOrderId
-				+ "\nreturn id : " + returnId
-				+ "\nreturn quantity : " + returnQuantity
-				+ "\nreturn storage location : " + storageLocation
-				+ "\nreturn category : " + category;
-		return cancelItem;
->>>>>>> sapConnector
 	}
 }
