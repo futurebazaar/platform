@@ -386,7 +386,7 @@ public class WalletResource {
 
 			RevertResponse xmlRevertResponse = new RevertResponse();
 			xmlRevertResponse.setSessionToken(apiRevertResponse.getSessionToken());
-			xmlRevertResponse.setTransactionId(apiRevertResponse.getTransactionId());
+			xmlRevertResponse.setTransaction(fromTransactionTotoTransactionApi(apiRevertResponse.getWalletTransaction()));
 			xmlRevertResponse.setRevertStatus(RevertStatus.fromValue(apiRevertResponse.getStatus().name() ));
 			
 			
@@ -493,35 +493,38 @@ public class WalletResource {
 		xmlWalletHistoryResponse.setTotalNumberOfTransaction(apiWalletHistoryResp.getTotalTransactionSize());
 		List<Transaction> transactionList = new ArrayList<Transaction>();
 		if(apiWalletHistoryResp.getTransactionList() != null){
-			for (com.fb.platform.wallet.to.WalletTransaction apiTransaction : apiWalletHistoryResp.getTransactionList()){
-				Transaction transaction = new Transaction();
-				transaction.setTransactionId(apiTransaction.getTransactionId());
-				transaction.setType(apiTransaction.getTransactionType().name());
-				transaction.setAmount(apiTransaction.getAmount().getAmount());
-				transaction.setTimestamp(apiTransaction.getTimeStamp());
-				transaction.setWalletBalance(apiTransaction.getWalletBalance().getAmount());
-				List<SubTransaction> subTransactionList = new ArrayList<SubTransaction>();
-				if (apiTransaction.getWalletSubTransaction() != null){
-					for (com.fb.platform.wallet.to.WalletSubTransaction apiSubTransaction : apiTransaction.getWalletSubTransaction()){
-						SubTransaction subTransaction = new SubTransaction();
-						subTransaction.setSubWallet(SubWallet.fromValue(apiSubTransaction.getSubWalletType().toString()));
-						subTransaction.setAmount(apiSubTransaction.getAmount().getAmount());
-						subTransaction.setOrderId(apiSubTransaction.getOrderId());
-						subTransaction.setPaymentId(apiSubTransaction.getPaymentId());
-						subTransaction.setRefundId(apiSubTransaction.getRefundId());
-						subTransaction.setPaymentReversalId(apiSubTransaction.getPaymentReversalId());
-						subTransaction.setGiftCode(apiSubTransaction.getGiftCode());
-						
-						subTransactionList.add(subTransaction);
-					}
-					transaction.getSubTransaction().addAll(subTransactionList);
-				}
-				transactionList.add(transaction);
-			}
-			
+			for (com.fb.platform.wallet.to.WalletTransaction apiTransaction : apiWalletHistoryResp.getTransactionList()){				
+				transactionList.add(fromTransactionTotoTransactionApi(apiTransaction));
+			}			
 		}
 		xmlWalletHistoryResponse.getTransaction().addAll(transactionList);
 		return xmlWalletHistoryResponse;
+	}
+	
+	private Transaction fromTransactionTotoTransactionApi(com.fb.platform.wallet.to.WalletTransaction apiTransaction){
+		Transaction transaction = new Transaction();
+		transaction.setTransactionId(apiTransaction.getTransactionId());
+		transaction.setType(apiTransaction.getTransactionType().name());
+		transaction.setAmount(apiTransaction.getAmount().getAmount());
+		transaction.setTimestamp(apiTransaction.getTimeStamp());
+		transaction.setWalletBalance(apiTransaction.getWalletBalance().getAmount());
+		List<SubTransaction> subTransactionList = new ArrayList<SubTransaction>();
+		if (apiTransaction.getWalletSubTransaction() != null){
+			for (com.fb.platform.wallet.to.WalletSubTransaction apiSubTransaction : apiTransaction.getWalletSubTransaction()){
+				SubTransaction subTransaction = new SubTransaction();
+				subTransaction.setSubWallet(SubWallet.fromValue(apiSubTransaction.getSubWalletType().toString()));
+				subTransaction.setAmount(apiSubTransaction.getAmount().getAmount());
+				subTransaction.setOrderId(apiSubTransaction.getOrderId());
+				subTransaction.setPaymentId(apiSubTransaction.getPaymentId());
+				subTransaction.setRefundId(apiSubTransaction.getRefundId());
+				subTransaction.setPaymentReversalId(apiSubTransaction.getPaymentReversalId());
+				subTransaction.setGiftCode(apiSubTransaction.getGiftCode());
+				
+				subTransactionList.add(subTransaction);
+			}
+			transaction.getSubTransaction().addAll(subTransactionList);
+		}
+		return transaction;
 	}
 	
 	
