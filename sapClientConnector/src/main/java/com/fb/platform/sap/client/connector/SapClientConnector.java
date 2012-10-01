@@ -39,6 +39,12 @@ public class SapClientConnector {
         public void setDestinationDataEventListener(DestinationDataEventListener eventListener) {
             this.eL = eventListener;
         }
+        
+        public DestinationDataEventListener getDestinationDataEventListener() {
+        	return eL;
+        }
+        
+        
 
         public boolean supportsEvents() {
             return true;
@@ -68,10 +74,10 @@ public class SapClientConnector {
         setBapiFunction(jCoFunctionTemplate.getFunction());
     }
     
-    public void connectIdoc(String xml) throws JCoException, IOException, IDocParseException{  
+    public void sendIdoc(String xml) throws JCoException, IOException, IDocParseException{  
         // get the JCo destination  
     	bapiProperties = getDestinationPropertiesFromEnvironment();
-    	JCoDestination destination = JCoDestinationManager.getDestination("bapi");  
+    	JCoDestination destination = JCoDestinationManager.getDestination(bapiProperties.getProperty(DestinationDataProvider.JCO_DEST));  
         // Create repository  
         IDocRepository iDocRepository = JCoIDoc.getIDocRepository(destination);
         String transactionID = destination.createTID();
@@ -79,7 +85,7 @@ public class SapClientConnector {
         IDocXMLProcessor iDocXMLProcessor = iDocFactory.getIDocXMLProcessor();
         IDocDocumentList iDocDocumentList = iDocXMLProcessor.parse(iDocRepository, xml);  
         JCoIDoc.send(iDocDocumentList, IDocFactory.IDOC_VERSION_DEFAULT, destination, transactionID);
-        destination.confirmTID(transactionID);  
+        destination.confirmTID(transactionID);
     }
     
 	public JCoFunction getBapiFunction() {

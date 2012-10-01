@@ -29,9 +29,9 @@
         <xs:element type="xs:string" name="OrderRefID"/>
         <xs:element type="xs:string" name="OrderRefID2"/>
 	    <xs:element type="xs:string" name="OrderRefID3"/>
-	    <xs:element type="xs:dateTime" name="CreateDate"/>
+	    <xs:element type="xs:string" name="CreateDate"/>
 	    <xs:element type="xs:string" name="OrderType"/>
-	    <xs:element type="xs:dateTime" name="DeliveryDate"/>
+	    <xs:element type="xs:string" name="DeliveryDate"/>
 	    <xs:element type="xs:string" name="SoldToParty"/>
 	    <xs:element type="xs:string" name="SalesDocType"/>
 	    <xs:element type="xs:string" name="SalesChannel"/>
@@ -64,8 +64,8 @@
         <xs:element type="xs:string" name="Type"/>
         <xs:element type="xs:decimal" name="Amount"/>
         <xs:element type="xs:decimal" name="AuthAmount"/>
-        <xs:element type="xs:dateTime" name="AuthDate"/>
-        <xs:element type="xs:dateTime" name="AuthTime"/>
+        <xs:element type="xs:string" name="AuthDate"/>
+        <xs:element type="xs:string" name="AuthTime"/>
         <xs:element type="xs:decimal" name="ReAmount"/>
         <xs:element type="xs:string" name="MerchantID"/>
         <xs:element type="xs:string" name="TranRefID"/>
@@ -77,7 +77,7 @@
         <xs:element type="xs:string" name="BankName"/>
         <xs:element type="xs:string" name="AccNo"/>
         <xs:element type="xs:string" name="ChequeNo"/>
-        <xs:element type="xs:dateTime" name="ValidDate"/>
+        <xs:element type="xs:string" name="ValidDate"/>
         <xs:element type="xs:string" name="Status"/>
         <xs:element type="xs:string" name="RefCode"/>
         <xs:element type="xs:string" name="Text1"/>
@@ -141,8 +141,8 @@
         <xs:element type="xs:string" name="ItemDesc"/>
         <xs:element type="xs:string" name="RefID"/>
         <xs:element type="xs:string" name="ShipGroupCode"/>
-        <xs:element type="xs:int" name="Quantity"/>
-        <xs:element type="xs:dateTime" name="ReqDelivDate"/>
+        <xs:element type="xs:decimal" name="Quantity"/>
+        <xs:element type="xs:string" name="ReqDelivDate"/>
         <xs:element type="xs:string" name="ItemState"/>
         <xs:element type="xs:string" name="SalesUnit"/>
         <xs:element type="xs:string" name="ItemCategory"/>
@@ -153,7 +153,7 @@
         <xs:element type="xs:decimal" name="OfferPrice"/>
         <xs:element type="xs:decimal" name="Amount"/>
         <xs:element type="xs:decimal" name="Discount"/>
-        <xs:element type="xs:string" name="NLC"/>
+        <xs:element type="xs:decimal" name="NLC"/>
         <xs:element type="xs:string" name="Plant"/>
         <xs:element type="xs:string" name="Catalogs"/>
         <xs:element type="xs:string" name="ProductGroupId"/>

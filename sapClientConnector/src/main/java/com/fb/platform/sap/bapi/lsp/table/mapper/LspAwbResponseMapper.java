@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.fb.platform.sap.client.commons.SapConstants;
-import com.fb.platform.sap.bapi.inventory.table.mapper.TabPlantMapper;
 import com.fb.platform.sap.bapi.lsp.table.BapiLspTable;
 import com.fb.platform.sap.bapi.to.SapLspAwbUpdateResponseTO;
 import com.fb.platform.sap.client.connector.SapClientConnector;

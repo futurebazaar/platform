@@ -15,12 +15,10 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.joda.time.DateTime;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -31,8 +29,13 @@ import com.fb.commons.mom.to.OrderHeaderTO;
 import com.fb.commons.mom.to.PaymentTO;
 import com.fb.commons.mom.to.PricingTO;
 import com.fb.platform.sap._1_0.CommonOrderRequest;
+import com.fb.platform.sap._1_0.Customer;
+import com.fb.platform.sap._1_0.DefaultShippingAddress;
+import com.fb.platform.sap._1_0.DelItem;
 import com.fb.platform.sap._1_0.Details;
 import com.fb.platform.sap._1_0.LineItem;
+import com.fb.platform.sap._1_0.ModifiedOrderHeader;
+import com.fb.platform.sap._1_0.ModifyOrderRequest;
 import com.fb.platform.sap._1_0.OrderHeader;
 import com.fb.platform.sap._1_0.OrderLineItems;
 import com.fb.platform.sap._1_0.PaymentGroups;
@@ -41,9 +44,12 @@ import com.fb.platform.sap._1_0.ReturnItem;
 import com.fb.platform.sap._1_0.ReturnOrderRequest;
 import com.fb.platform.sap._1_0.SapOrderResponse;
 import com.fb.platform.sap._1_0.ShipAddress;
+import com.fb.platform.sap._1_0.ShippingAddress;
 import com.fb.platform.sap.bapi.order.TinlaOrderType;
 import com.fb.platform.sap.bapi.to.SapOrderRequestTO;
 import com.fb.platform.sap.bapi.to.SapOrderResponseTO;
+import com.fb.platform.sap.client.commons.SapOrderConstants;
+import com.fb.platform.sap.client.commons.SapUtils;
 import com.fb.platform.sap.client.handler.impl.SapClientHandler;
 
 @Path("/order/")
@@ -51,7 +57,7 @@ import com.fb.platform.sap.client.handler.impl.SapClientHandler;
 @Scope("request")
 public class OrderResource {
 	
-	private static Log logger = LogFactory.getLog(InventoryResource.class);
+	private static Log logger = LogFactory.getLog(OrderResource.class);
 	
 	private SapClientHandler sapClientHandler = null;
 	
@@ -67,21 +73,25 @@ public class OrderResource {
 		}
 	}
 	
-	@Path("/new")
+	@Path("/common")
 	@POST
 	@Consumes("application/xml")
 	@Produces("application/xml")
 	public String writeOrder(String commonOrderXml) {
 		logger.info("CommonOrderXML : \n" + commonOrderXml);
-		
 		try {	
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			CommonOrderRequest commonOrderRequest = (CommonOrderRequest)unmarshaller.unmarshal(new StreamSource(new StringReader(commonOrderXml)));
 			SapOrderRequestTO orderRequestTO = new SapOrderRequestTO();
 			orderRequestTO.setOrderType(TinlaOrderType.NEW_ORDER);
+			if (commonOrderRequest.getHeader().getMessageType().equals("CANORD")) {
+				orderRequestTO.setOrderType(TinlaOrderType.MOD_ORDER);
+			}
 			setHeaderDetails(orderRequestTO, commonOrderRequest);
 			setPaymentDetails(orderRequestTO, commonOrderRequest);
 			setLineItemDetails(orderRequestTO, commonOrderRequest);
+			setBillingAddress(orderRequestTO, commonOrderRequest);
+			setDefaultShippingAddress(orderRequestTO, commonOrderRequest);
 			SapOrderResponseTO orderResponseTO = sapClientHandler.processOrder(orderRequestTO);
 			SapOrderResponse sapOrderResponseXml = setOrderResponseXml(orderResponseTO);
 			StringWriter outStringWriter = new StringWriter();
@@ -91,12 +101,43 @@ public class OrderResource {
 			logger.info("CommonOrderXml response :\n" + xmlResponse);
 			return xmlResponse;
 		} catch (Exception e) {
-			logger.error("Error in the Sap Inventory Level call.", e);
+			logger.error("Error in the Common Order call", e);
 			return "error";
 		}
 	}
 	
-	private void setAddressDetails(SapOrderRequestTO orderRequestTO,ShipAddress shipAddress) {
+	private void setDefaultShippingAddress(SapOrderRequestTO orderRequestTO, CommonOrderRequest commonOrderRequest) {
+		AddressTO addressTO = new AddressTO();
+		DefaultShippingAddress shippingDetail = commonOrderRequest.getDefaultShippingAddress();
+		addressTO.setCity(shippingDetail.getCity());
+		addressTO.setFirstName(shippingDetail.getFirstName());
+		addressTO.setLastName(shippingDetail.getLastName());
+		addressTO.setPincode(shippingDetail.getPoCode());
+		addressTO.setPrimaryTelephone(shippingDetail.getTelephone1());
+		addressTO.setSecondaryTelephone(shippingDetail.getTelephone2());
+		addressTO.setState(shippingDetail.getState());
+		addressTO.setAddress(shippingDetail.getAddress1());
+		addressTO.setCountry(shippingDetail.getCountry());
+		orderRequestTO.setDefaultShippingAddressTO(addressTO);
+		
+	}
+	
+	private void setBillingAddress(SapOrderRequestTO orderRequestTO, CommonOrderRequest commonOrderRequest) {
+		AddressTO addressTO = new AddressTO();
+		Customer customerDetail = commonOrderRequest.getCustomer();
+		addressTO.setCity(customerDetail.getCity());
+		addressTO.setFirstName(customerDetail.getFirstName());
+		addressTO.setLastName(customerDetail.getLastName());
+		addressTO.setPincode(customerDetail.getPoCode());
+		addressTO.setPrimaryTelephone(customerDetail.getTelephone1());
+		addressTO.setSecondaryTelephone(customerDetail.getTelephone2());
+		addressTO.setState(customerDetail.getState());
+		addressTO.setAddress(customerDetail.getAddress1());
+		addressTO.setCountry(customerDetail.getCountry());
+		orderRequestTO.setBillingAddressTO(addressTO);
+	}
+
+	private void setItemAddressDetails(LineItemTO lineItemTO, ShipAddress shipAddress) {
 		AddressTO addressTO = new AddressTO();
 		addressTO.setCity(shipAddress.getCity());
 		addressTO.setFirstName(shipAddress.getFirstName());
@@ -107,6 +148,7 @@ public class OrderResource {
 		addressTO.setState(shipAddress.getState());
 		addressTO.setAddress(shipAddress.getAddress1());
 		addressTO.setCountry(shipAddress.getCountry());
+		lineItemTO.setAddressTO(addressTO);
 	}
 
 	private SapOrderResponse setOrderResponseXml(SapOrderResponseTO orderResponseTO) {
@@ -123,9 +165,11 @@ public class OrderResource {
 		List<LineItemTO> LineItemTOList = new ArrayList<LineItemTO>();
 		OrderLineItems lineItemsList = commonOrderRequest.getOrderLineItems();
 		List<LineItem> lineItemList  = (List<LineItem>) lineItemsList.getLineItem();
-		setAddressDetails(orderRequestTO,lineItemList.get(0).getShipAddress());
 		for (LineItem lineItem : lineItemList) {
 			LineItemTO lineItemTO = new LineItemTO();
+			if (commonOrderRequest.getHeader().getMessageType().equals("CANORD")) {
+				lineItemTO.setOperationCode(SapOrderConstants.CANCEL_FLAG);
+			}
 			lineItemTO.setArticleID(lineItem.getItemID());
 			lineItemTO.setDescription(lineItem.getItemDesc());
 			lineItemTO.setItemCategory(lineItem.getItemCategory());
@@ -133,6 +177,12 @@ public class OrderResource {
 			lineItemTO.setCatalog(lineItem.getCatalogs());
 			lineItemTO.setVendor(lineItem.getVendor());
 			lineItemTO.setThirdParty(lineItem.isIsThirdParty());
+			lineItemTO.setQuantity(lineItem.getQuantity());
+			lineItemTO.setPlantId(lineItem.getPlant());
+			lineItemTO.setSalesUnit(lineItem.getSalesUnit());
+			lineItemTO.setSapDocumentId(lineItem.getItemSno());
+			lineItemTO.setStorageLocation(10);
+			lineItemTO.setReasonCode(lineItem.getReason());
 			
 			PricingTO pricingTO = new PricingTO();
 			pricingTO.setCurrency(commonOrderRequest.getOrderHeader().getCurrency());
@@ -140,16 +190,8 @@ public class OrderResource {
 			pricingTO.setOfferPrice(lineItem.getOfferPrice());
 			pricingTO.setCouponDiscount(lineItem.getDiscount());
 			pricingTO.setPayableAmount(lineItem.getAmount());
-			//pricingTO.setPointsEarn(lineItem.get);
-			//pricingTO.setPointsEarnValue(new BigDecimal("10"));
 			lineItemTO.setPricingTO(pricingTO);
-			lineItemTO.setQuantity(new BigDecimal(lineItem.getQuantity()));
-			lineItemTO.setPlantId(lineItem.getPlant());
-			lineItemTO.setSalesUnit(lineItem.getSalesUnit());
-			lineItemTO.setSapDocumentId(lineItem.getItemSno());
-			lineItemTO.setStorageLocation(10);
-			lineItemTO.setReasonCode(lineItem.getReason());
-			lineItemTO.setOperationCode("C");
+			setItemAddressDetails(lineItemTO,lineItem.getShipAddress());
 			LineItemTOList.add(lineItemTO);
 		}
 		orderRequestTO.setLineItemTO(LineItemTOList);		
@@ -170,38 +212,46 @@ public class OrderResource {
 			paymentTO.setPgTransactionID(paymentDetail.getTranRefID2());
 			paymentTO.setTransactionID(paymentDetail.getTranRefID());
 			paymentTO.setRRN(paymentDetail.getRRN());
-			XMLGregorianCalendar gregCal = paymentDetail.getValidDate();
-			paymentTO.setValidTill(new DateTime(gregCal.getYear(), gregCal.getMonth(), gregCal.getDay(), gregCal.getHour(), gregCal.getMinute(), gregCal.getSecond()));
+			paymentTO.setValidTill(SapUtils.getDateTimeFromString(paymentDetail.getValidDate(), "yyyyMMdd"));
+			PricingTO pricingTO = new PricingTO();
+			pricingTO.setPayableAmount(paymentDetail.getAmount());
+			paymentTO.setPricingTO(pricingTO);
 			paymentTOList.add(paymentTO);
 		}
 		orderRequestTO.setPaymentTO(paymentTOList);
 	}
 
+	// Common Order Header Details
 	private void setHeaderDetails(SapOrderRequestTO orderRequestTO, CommonOrderRequest commonOrderRequest) {
 		OrderHeaderTO orderHeaderTO = new OrderHeaderTO();
 		OrderHeader orderHeaderXml = commonOrderRequest.getOrderHeader();
 		orderHeaderTO.setAccountNumber(orderHeaderXml.getSoldToParty());
 		String location = orderHeaderXml.getLocation();
-		String client = location.split("#")[0];
-		String channel = location.split("#")[1];
-		orderHeaderTO.setChannelType(channel);
-		orderHeaderTO.setClient(client);
+		try {
+			String client = location.split("#")[0];
+			orderHeaderTO.setClient(client);
+			String channel = location.split("#")[1];
+			orderHeaderTO.setChannelType(channel);
+		} catch (Exception e) {
+			logger.error("Error setting client/channel for location : " + location);
+		}
 		orderHeaderTO.setReferenceID(orderHeaderXml.getOrderRefID());
 		orderHeaderTO.setSalesDocType(orderHeaderXml.getSalesDocType());
 		orderHeaderTO.setSalesChannel(orderHeaderXml.getSalesChannel());
 		orderHeaderTO.setThirdParty(orderHeaderXml.isIsThirdParty());
-		XMLGregorianCalendar gregCal = orderHeaderXml.getCreateDate();
-		orderHeaderTO.setCreatedOn(new DateTime(gregCal.getYear(), gregCal.getMonth(), gregCal.getDay(), gregCal.getHour(), gregCal.getMinute(), gregCal.getSecond()));
-		gregCal = orderHeaderXml.getDeliveryDate();
-		orderHeaderTO.setSubmittedOn(new DateTime(gregCal.getYear(), gregCal.getMonth(), gregCal.getDay(), gregCal.getHour(), gregCal.getMinute(), gregCal.getSecond()));
-		
+		//orderHeaderTO.setCreatedOn(SapUtils.getDateTimeFromString(arg0, arg1));
+		//gregCal = orderHeaderXml.getDeliveryDate();
+		//orderHeaderTO.setSubmittedOn(new DateTime(gregCal.getYear(), gregCal.getMonth(), gregCal.getDay(), gregCal.getHour(), gregCal.getMinute(), gregCal.getSecond()));
 		PricingTO pricingTO = new PricingTO();
 		pricingTO.setCouponDiscount(orderHeaderXml.getOrderDiscount());
 		pricingTO.setOfferPrice(orderHeaderXml.getOrderOfferPrice());
 		pricingTO.setCurrency(orderHeaderXml.getCurrency());
-		setPointsDetails(orderHeaderTO, pricingTO, orderHeaderXml.getText2());
+		try {
+			setPointsDetails(orderHeaderTO, pricingTO, commonOrderRequest.getPaymentGroups().getDetails().get(0).getText2());
+		} catch (Exception e) {
+			logger.error("invalid payment points", e);
+		}
 		orderHeaderTO.setPricingTO(pricingTO);
-		
 		orderRequestTO.setOrderHeaderTO(orderHeaderTO);
 	}
 
@@ -220,23 +270,20 @@ public class OrderResource {
 	@Produces("application/xml")
 	public String returnOrder(String returnOrderXml) {
 		logger.info("ReturnOrderXML : \n" + returnOrderXml);
-		
 		try {	
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			ReturnOrderRequest returnOrderRequest = (ReturnOrderRequest)unmarshaller.unmarshal(new StreamSource(new StringReader(returnOrderXml)));
 			SapOrderRequestTO orderRequestTO = new SapOrderRequestTO();
 			orderRequestTO.setOrderType(TinlaOrderType.RET_ORDER);
-			
 			ReturnHeader returnHeader = returnOrderRequest.getReturnHeader();
 			OrderHeaderTO orderHeaderTO = new OrderHeaderTO();
 			orderHeaderTO.setReferenceID(returnHeader.getOriginalOrderId());
 			orderHeaderTO.setReturnOrderID(returnHeader.getReturnOrderId());
-			orderRequestTO.setOrderHeaderTO(orderHeaderTO);
-			
+			orderHeaderTO.setClient("FUTUREBAZAAR");
 			PricingTO headerPricingTO = new PricingTO();
 			setPointsDetails(orderHeaderTO, headerPricingTO, returnHeader.getPointsDetails());
-			orderRequestTO.setPricingTO(headerPricingTO);
-			
+			orderHeaderTO.setPricingTO(headerPricingTO);
+			orderRequestTO.setOrderHeaderTO(orderHeaderTO);
 			List<ReturnItem> returnItemList = returnOrderRequest.getReturnOrderItems().getReturnItem();
 			List<LineItemTO> lineItemTOList = new ArrayList<LineItemTO>();
 			for (ReturnItem returnItem : returnItemList) {
@@ -246,7 +293,6 @@ public class OrderResource {
 				lineItemTO.setStorageLocation(returnItem.getStorageLocation());
 				lineItemTO.setReasonCode(returnItem.getReturnReason());
 				lineItemTO.setPlantId(returnItem.getPlant());
-				
 				PricingTO itemPricingTO = new PricingTO();
 				itemPricingTO.setCouponDiscount(returnItem.getCouponDiscount());
 				itemPricingTO.setExtraDiscount(returnItem.getItemDiscount());
@@ -255,7 +301,6 @@ public class OrderResource {
 				lineItemTOList.add(lineItemTO);
 			}
 			orderRequestTO.setLineItemTO(lineItemTOList);
-			
 			SapOrderResponseTO orderResponseTO = sapClientHandler.processOrder(orderRequestTO);
 			SapOrderResponse sapOrderResponseXml = setOrderResponseXml(orderResponseTO);
 			StringWriter outStringWriter = new StringWriter();
@@ -279,39 +324,12 @@ public class OrderResource {
 		
 		try {	
 			Unmarshaller unmarshaller = context.createUnmarshaller();
-			ReturnOrderRequest returnOrderRequest = (ReturnOrderRequest)unmarshaller.unmarshal(new StreamSource(new StringReader(modifiedOrderXml)));
+			ModifyOrderRequest modifyOrderRequest = (ModifyOrderRequest)unmarshaller.unmarshal(new StreamSource(new StringReader(modifiedOrderXml)));
 			SapOrderRequestTO orderRequestTO = new SapOrderRequestTO();
-			orderRequestTO.setOrderType(TinlaOrderType.RET_ORDER);
-			
-			ReturnHeader returnHeader = returnOrderRequest.getReturnHeader();
-			OrderHeaderTO orderHeaderTO = new OrderHeaderTO();
-			orderHeaderTO.setReferenceID(returnHeader.getOriginalOrderId());
-			orderHeaderTO.setReturnOrderID(returnHeader.getReturnOrderId());
-			orderRequestTO.setOrderHeaderTO(orderHeaderTO);
-			
-			PricingTO headerPricingTO = new PricingTO();
-			setPointsDetails(orderHeaderTO, headerPricingTO, returnHeader.getPointsDetails());
-			orderRequestTO.setPricingTO(headerPricingTO);
-			
-			List<ReturnItem> returnItemList = returnOrderRequest.getReturnOrderItems().getReturnItem();
-			List<LineItemTO> lineItemTOList = new ArrayList<LineItemTO>();
-			for (ReturnItem returnItem : returnItemList) {
-				LineItemTO lineItemTO = new LineItemTO();
-				lineItemTO.setSapDocumentId(returnItem.getSapItemId());
-				lineItemTO.setQuantity(returnItem.getQuantityToReturn());
-				lineItemTO.setStorageLocation(returnItem.getStorageLocation());
-				lineItemTO.setReasonCode(returnItem.getReturnReason());
-				lineItemTO.setPlantId(returnItem.getPlant());
-				
-				PricingTO itemPricingTO = new PricingTO();
-				itemPricingTO.setCouponDiscount(returnItem.getCouponDiscount());
-				itemPricingTO.setExtraDiscount(returnItem.getItemDiscount());
-				itemPricingTO.setShippingAmount(returnItem.getShippingCharge());
-				lineItemTO.setPricingTO(itemPricingTO);
-				lineItemTOList.add(lineItemTO);
-			}
-			orderRequestTO.setLineItemTO(lineItemTOList);
-			
+			setHeaderDetails(orderRequestTO, modifyOrderRequest);
+			orderRequestTO.setOrderType(TinlaOrderType.MOD_ORDER);
+			setHeaderDetails(orderRequestTO, modifyOrderRequest);
+			setItemDetails(orderRequestTO, modifyOrderRequest);
 			SapOrderResponseTO orderResponseTO = sapClientHandler.processOrder(orderRequestTO);
 			SapOrderResponse sapOrderResponseXml = setOrderResponseXml(orderResponseTO);
 			StringWriter outStringWriter = new StringWriter();
@@ -321,11 +339,87 @@ public class OrderResource {
 			logger.info("ReturnOrderXML response :\n" + xmlResponse);
 			return xmlResponse;
 		} catch (Exception e) {
-			logger.error("Error in the Sap Inventory Level call.", e);
+			logger.error("Error in the Sap Common Order call.", e);
 			return "error";
 		}
 	}
 	
+	//Modify order item Details
+	private void setItemDetails(SapOrderRequestTO orderRequestTO, ModifyOrderRequest modifyOrderRequest) {
+		List<LineItemTO> lineItemTOList = new ArrayList<LineItemTO>();
+		List<DelItem> modifiedItemList = modifyOrderRequest.getDeliveryItemsList().getDelItem();
+		for (DelItem modifiedItem : modifiedItemList) {
+			LineItemTO lineItemTO = new LineItemTO();
+			lineItemTO.setArticleID(modifiedItem.getItemID());
+			lineItemTO.setSapDocumentId(modifiedItem.getLineItemId());
+			lineItemTO.setItemState(modifiedItem.getItemState());
+			lineItemTO.setLspName(modifiedItem.getLspName());
+			lineItemTO.setLspCode(modifiedItem.getLspNumber());
+			lineItemTO.setDeliveryNumber(modifiedItem.getDeliveryNumber());
+			lineItemTO.setQuantity(modifiedItem.getQuantity());
+			lineItemTO.setReasonCode(modifiedItem.getReasonOfCancellation());
+			lineItemTO.setOperationCode(modifiedItem.getOperation());
+			lineItemTO.setPlantId(modifiedItem.getPlant());
+			lineItemTO.setThirdParty(modifiedItem.isIsThirdParty());
+			lineItemTO.setVendor(modifiedItem.getVendor());
+			lineItemTO.setBundle(modifiedItem.getBundle());
+			lineItemTO.setGiftVoucherDetails(modifiedItem.getGvClaimCodes());
+			lineItemTO.setDeliveryDate(SapUtils.getDateTimeFromString(modifiedItem.getRequiredDeliveryDate(), "yyyyMMdd"));
+			setItemPricingDetails(lineItemTO, modifiedItem);
+			setItemAddressDetails(lineItemTO, modifiedItem.getShippingAddress());
+			lineItemTOList.add(lineItemTO);
+		}
+		orderRequestTO.setLineItemTO(lineItemTOList);
+	}
+
+	private void setItemAddressDetails(LineItemTO lineItemTO, ShippingAddress shipAddress) {
+		AddressTO addressTO = new AddressTO();
+		addressTO.setCity(shipAddress.getCity());
+		addressTO.setFirstName(shipAddress.getFirstName());
+		addressTO.setLastName(shipAddress.getLastName());
+		addressTO.setPincode(shipAddress.getPostalCode());
+		addressTO.setPrimaryTelephone(shipAddress.getTelephone1());
+		addressTO.setSecondaryTelephone(shipAddress.getTelephone2());
+		addressTO.setState(shipAddress.getState());
+		addressTO.setAddress(shipAddress.getAddress1());
+		addressTO.setCountry(shipAddress.getCountry());
+		lineItemTO.setAddressTO(addressTO);
+	}
+
+	private void setItemPricingDetails(LineItemTO lineItemTO, DelItem modifiedItem) {
+		PricingTO pricingTO = new PricingTO();
+		pricingTO.setExtraDiscount(modifiedItem.getDiscount());
+		pricingTO.setCouponDiscount(modifiedItem.getCouponDiscount());
+		pricingTO.setCommissionAmount(modifiedItem.getItemCommisionAmount());
+		pricingTO.setShippingAmount(modifiedItem.getShippingPrice());
+		pricingTO.setListPrice(modifiedItem.getListPrice());
+		pricingTO.setOfferPrice(modifiedItem.getSalesPrice());
+		pricingTO.setNlc(modifiedItem.getNlc());
+		lineItemTO.setPricingTO(pricingTO);
+	}
+
+	//Modified order Header Details
+	private void setHeaderDetails(SapOrderRequestTO orderRequestTO, ModifyOrderRequest modifyOrderRequest) {
+		OrderHeaderTO orderHeaderTO = new OrderHeaderTO();
+		ModifiedOrderHeader modifiedOrderHeader = modifyOrderRequest.getModifiedOrderHeader();
+		orderHeaderTO.setClient(modifiedOrderHeader.getClient());
+		orderHeaderTO.setLoyaltyCardNumber(modifiedOrderHeader.getLoyaltyCardNumber());
+		orderHeaderTO.setReferenceID(modifiedOrderHeader.getOrderId());
+		orderHeaderTO.setAccountNumber(modifiedOrderHeader.getBpNumber());
+		orderHeaderTO.setCreatedOn(SapUtils.getDateTimeFromString(modifiedOrderHeader.getDateOfCreation(), "yyyyMMdd"));
+		orderHeaderTO.setSubmittedOn(SapUtils.getDateTimeFromString(modifiedOrderHeader.getDateOfSubmission(), "yyyyMMdd"));
+		PricingTO pricingTO = new PricingTO();
+		pricingTO.setPointsEarn(modifiedOrderHeader.getPointsEarn());
+		pricingTO.setPointsBurn(modifiedOrderHeader.getPointsBurn());
+		pricingTO.setPointsEarnValue(modifiedOrderHeader.getPointsEarnValue());
+		pricingTO.setShippingAmount(modifiedOrderHeader.getShippingAmount());
+		pricingTO.setPayableAmount(modifiedOrderHeader.getOrderTotal());
+		pricingTO.setExtraDiscount(modifiedOrderHeader.getDiscount());
+		orderHeaderTO.setPricingTO(pricingTO);
+		orderRequestTO.setOrderHeaderTO(orderHeaderTO);
+		
+	}
+
 	public void setSapClientHandler(SapClientHandler sapClientHandler) {
 		this.sapClientHandler = sapClientHandler;
 	}

@@ -53,7 +53,7 @@ public class ItemMapper {
 		changeIndicator.setValue(SapOrderConstants.CHANGE_TYPE, SapOrderConstants.CHANGE_FLAG);
 		changeIndicator.setValue( SapOrderConstants.UPDATE_INDICATOR, SapOrderConstants.UPDATE_FLAG);
 		String operationCode = itemTO.getOperationCode();
-		if (!StringUtils.isBlank(itemTO.getReasonCode()) && (itemTO.getOperationCode().equals(SapOrderConstants.CANCEL_FLAG) || orderType.equals(TinlaOrderType.CAN_ORDER))) {
+		if (!StringUtils.isBlank(itemTO.getReasonCode()) && itemTO.getOperationCode().equals(SapOrderConstants.CANCEL_FLAG)) {
 			orderItemIN.setValue(SapOrderConstants.REJECTION_REASON, itemTO.getReasonCode());
 			orderItemINX.setValue(SapOrderConstants.REJECTION_REASON, SapOrderConstants.COMMIT_FLAG);
 			operationCode = SapOrderConstants.UPDATE_FLAG;

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+
+        <table name="orders_order">
+        	<column>id</column>
+        	<column>user_id</column>
+        	<column>state</column>
+        	<column>payable_amount</column>
+        	<column>timestamp</column>
+        	<column>modified_on</column>
+        	<column>payment_realized_on</column>
+        	<column>payment_mode</column>
+        	<column>coupon_discount</column>
+        	<column>coupon_id</column>
+        	<column>call_id</column>
+        	<column>list_price_total</column>
+        	<column>total</column>
+        	<column>shipping_charges</column>
+        	<column>taxes</column>
+        	<column>transaction_charges</column>
+        	<column>payment_realized_mode</column>
+        	<column>medium</column>
+        	<column>partner</column>
+        	<column>reference_order_id</column>
+        	<column>ga_tracked</column>
+        	<column>wstore_id</column>
+        	<column>client_id</column>
+        	<column>top10_discount</column>
+        	<column>auto_promotions_discount</column>
+        	<column>verify_code</column>
+        	<column>notes</column>
+        	<column>payback_id</column>
+        	<column>cashback_amount_total</column>
+        	<column>booking_agent_id</column>
+        	<column>confirming_agent_id</column>
+        	<column>booking_timestamp</column>
+        	<column>confirming_timestamp</column>
+        	<column>agent_id</column>
+        	<column>support_state</column>
+        	<column>client_domain_id</column>
+        	<column>sap_date</column>
+		<row>
+    		<value name="id">1</value>
+        	<value name="user_id">1</value>
+        	<value name="state">confirmed</value>
+        	<value name="payable_amount">33200.00</value>
+        	<value name="timestamp">2009-08-01 00:00:00</value>
+        	<value name="modified_on">2010-03-08 23:58:34</value>
+        	<null/>
+        	<value name="payment_mode">card-web</value>
+        	<value name="coupon_discount">0.00</value>
+        	<value name="coupon_id">-3002</value>
+        	<value name="call_id"></value>
+        	<value name="list_price_total">33200.00</value>
+        	<value name="total">33200.00</value>
+        	<value name="shipping_charges">0.00</value>
+        	<value name="taxes">0.00</value>
+        	<value name="transaction_charges">0.00</value>
+        	<value name="payment_realized_mode"></value>
+        	<value name="medium">cc</value>
+        	<value name="partner"></value>
+        	<value name="reference_order_id">133826</value>
+        	<value name="ga_tracked">0</value>
+        	<value name="wstore_id">78</value>
+        	<value name="client_id">1</value>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<value name="notes">notes</value>
+        	<value name="payback_id"></value>
+        	<null/>
+        	<null/>
+        	<null/>
+        	<value name="booking_timestamp">2010-03-08 23:58:34</value>
+        	<value name="confirming_timestamp">2010-03-08 23:58:34</value>
+        	<null/>
+        	<value name="support_state">delivered</value>
+        	<null/>
+        	<null/>
+    	</row>
+    </table>
+    
+	<table name="orders_orderxml">
+		<column>id</column>
+		<column>order_id</column>
+		<column>xml</column>
+		<column>created_on</column>
+		<column>modified_on</column>
+		<column>status</column>
+		<column>reference_order_id</column>	
+		<column>type</column>
+		
+		<row>
+			<value name="id">1</value>
+			<value name="order_id">1</value>
+			<value name="xml"><commonOrderRequest><Header><MessageType>NEWORD</MessageType><BussOpr /></Header><OrderHeader><OrderRefID>I000001022</OrderRefID><OrderRefID2 /><OrderRefID3 /><CreateDate>20120128</CreateDate><OrderType>order</OrderType><DeliveryDate /><SoldToParty>G100000103</SoldToParty><SalesDocType>ZFGB</SalesDocType><SalesChannel>true</SalesChannel><SalesOrganisation>false</SalesOrganisation><isThirdParty>false</isThirdParty><Currency>INR</Currency><OrderDiscount>0.00</OrderDiscount><OrderOfferPrice>17980.00</OrderOfferPrice><Reason /><Location>BIGBAZAAR#WEBSITE</Location><Text1>false</Text1><Text2 /><Text3 /></OrderHeader><PaymentGroups><Details><PayMethod>CHEQ</PayMethod><Type>icici</Type><Amount>26970.00</Amount><AuthAmount>26970.00</AuthAmount><AuthDate>20120128</AuthDate><AuthTime>172225</AuthTime><ReAmount /><MerchantID /><TranRefID>20120128153513277451245055843910</TranRefID><TranRefID2 /><TranRefID3 /><AuthRefCode /><Currency>INR</Currency><RRN /><BankName>icici</BankName><AccNo /><ChequeNo>47899</ChequeNo><ValidDate>20120126</ValidDate><Status /><RefCode /><Text1 /><Text2 /><Text3 /></Details></PaymentGroups><DefaultShippingAddress><FirstName>Pradyumna Kumar</FirstName><MiddleName /><LastName /><Address1>TEST ORDER PLEASE CANCEL</Address1><Address2 /><City>Mumbai</City><State>13</State><Country>IN</Country><PoCode>400008</PoCode><Telephone1>9967442905</Telephone1><Telephone2 /></DefaultShippingAddress><Customer><CustomerRole>AG</CustomerRole><CustomerID>826468</CustomerID><FirstName>Pradyumna</FirstName><MiddleName /><LastName>Kumar</LastName><Address1>TEST ORDER PLEASE CANCEL</Address1><Address2 /><City>Mumbai</City><State>13</State><Country>IN</Country><PoCode>400008</PoCode><Telephone1>9967442905</Telephone1><Telephone2 /></Customer><OrderLineItems><LineItem><ItemSno>10</ItemSno><ItemID>000000000100000002</ItemID><ItemDesc>Electrolux EJ30CSS6 30L Microwave Oven + Starter kit</ItemDesc><RefID /><ShipGroupCode /><Quantity>2</Quantity><ReqDelivDate /><ItemState /><SalesUnit /><ItemCategory /><isThirdParty>false</isThirdParty><Vendor /><MRP>13290.00</MRP><SalesPrice>8990.00</SalesPrice><OfferPrice>8990.00</OfferPrice><Amount>17980.00</Amount><Discount /><NLC /><Plant>4608</Plant><Catalogs>|FutureBazaar</Catalogs><ProductGroupId /><ModeOfTransport /><ShippingMode /><LSP /><ShipCharge>0.00</ShipCharge><EANUPC /><Reason /><Notes /><ItemSno1 /><GV /><Bundle /><ShipAddress><FirstName>Pradyumna Kumar</FirstName><MiddleName /><LastName /><Address1>TEST ORDER PLEASE CANCEL</Address1><Address2 /><City>Mumbai</City><State>13</State><Country>IN</Country><PoCode>400008</PoCode><Telephone1>9967442905</Telephone1><Telephone2 /></ShipAddress><BackorderText /><Text1>true</Text1><Text2 /><Text3 /></LineItem></OrderLineItems></commonOrderRequest></value>
+			<value name="created_on">2012-09-30</value>
+			<value name="modified_on">2012-09-30</value>
+			<value name="status">bb_new</value>
+			<value name="reference_order_id">5051</value>
+			<value name="type">bb_new</value>
+		</row>
+		<row>
+			<value name="id">2</value>
+			<value name="order_id">1</value>
+			<value name="xml"><commonOrderRequest><Header><MessageType>NEWORD</MessageType><BussOpr /></Header><OrderHeader><OrderRefID>I000001022</OrderRefID><OrderRefID2 /><OrderRefID3 /><CreateDate>20120128</CreateDate><OrderType>order</OrderType><DeliveryDate /><SoldToParty>G100000103</SoldToParty><SalesDocType>ZFGB</SalesDocType><SalesChannel>true</SalesChannel><SalesOrganisation>false</SalesOrganisation><isThirdParty>false</isThirdParty><Currency>INR</Currency><OrderDiscount>0.00</OrderDiscount><OrderOfferPrice>17980.00</OrderOfferPrice><Reason /><Location>BIGBAZAAR#WEBSITE</Location><Text1>false</Text1><Text2 /><Text3 /></OrderHeader><PaymentGroups><Details><PayMethod>CHEQ</PayMethod><Type>icici</Type><Amount>26970.00</Amount><AuthAmount>26970.00</AuthAmount><AuthDate>20120128</AuthDate><AuthTime>172225</AuthTime><ReAmount /><MerchantID /><TranRefID>20120128153513277451245055843910</TranRefID><TranRefID2 /><TranRefID3 /><AuthRefCode /><Currency>INR</Currency><RRN /><BankName>icici</BankName><AccNo /><ChequeNo>47899</ChequeNo><ValidDate>20120126</ValidDate><Status /><RefCode /><Text1 /><Text2 /><Text3 /></Details></PaymentGroups><DefaultShippingAddress><FirstName>Pradyumna Kumar</FirstName><MiddleName /><LastName /><Address1>TEST ORDER PLEASE CANCEL</Address1><Address2 /><City>Mumbai</City><State>13</State><Country>IN</Country><PoCode>400008</PoCode><Telephone1>9967442905</Telephone1><Telephone2 /></DefaultShippingAddress><Customer><CustomerRole>AG</CustomerRole><CustomerID>826468</CustomerID><FirstName>Pradyumna</FirstName><MiddleName /><LastName>Kumar</LastName><Address1>TEST ORDER PLEASE CANCEL</Address1><Address2 /><City>Mumbai</City><State>13</State><Country>IN</Country><PoCode>400008</PoCode><Telephone1>9967442905</Telephone1><Telephone2 /></Customer><OrderLineItems><LineItem><ItemSno>10</ItemSno><ItemID>000000000100000002</ItemID><ItemDesc>Electrolux EJ30CSS6 30L Microwave Oven + Starter kit</ItemDesc><RefID /><ShipGroupCode /><Quantity>2</Quantity><ReqDelivDate /><ItemState /><SalesUnit /><ItemCategory /><isThirdParty>false</isThirdParty><Vendor /><MRP>13290.00</MRP><SalesPrice>8990.00</SalesPrice><OfferPrice>8990.00</OfferPrice><Amount>17980.00</Amount><Discount /><NLC /><Plant>4608</Plant><Catalogs>|FutureBazaar</Catalogs><ProductGroupId /><ModeOfTransport /><ShippingMode /><LSP /><ShipCharge>0.00</ShipCharge><EANUPC /><Reason /><Notes /><ItemSno1 /><GV /><Bundle /><ShipAddress><FirstName>Pradyumna Kumar</FirstName><MiddleName /><LastName /><Address1>TEST ORDER PLEASE CANCEL</Address1><Address2 /><City>Mumbai</City><State>13</State><Country>IN</Country><PoCode>400008</PoCode><Telephone1>9967442905</Telephone1><Telephone2 /></ShipAddress><BackorderText /><Text1>true</Text1><Text2 /><Text3 /></LineItem></OrderLineItems></commonOrderRequest></value>
+			<value name="created_on">2012-09-30</value>
+			<value name="modified_on">2012-09-30</value>
+			<value name="status">bb_new</value>
+			<value name="reference_order_id">5051</value>
+			<value name="type">bb_cancel</value>
+		</row>
+		<row>
+			<value name="id">3</value>
+			<value name="order_id">1</value>
+			<value name="xml"><commonOrderRequest><Header><MessageType>NEWORD</MessageType><BussOpr /></Header><OrderHeader><OrderRefID>I000001022</OrderRefID><OrderRefID2 /><OrderRefID3 /><CreateDate>20120128</CreateDate><OrderType>order</OrderType><DeliveryDate /><SoldToParty>G100000103</SoldToParty><SalesDocType>ZFGB</SalesDocType><SalesChannel>true</SalesChannel><SalesOrganisation>false</SalesOrganisation><isThirdParty>false</isThirdParty><Currency>INR</Currency><OrderDiscount>0.00</OrderDiscount><OrderOfferPrice>17980.00</OrderOfferPrice><Reason /><Location>BIGBAZAAR#WEBSITE</Location><Text1>false</Text1><Text2 /><Text3 /></OrderHeader><PaymentGroups><Details><PayMethod>CHEQ</PayMethod><Type>icici</Type><Amount>26970.00</Amount><AuthAmount>26970.00</AuthAmount><AuthDate>20120128</AuthDate><AuthTime>172225</AuthTime><ReAmount /><MerchantID /><TranRefID>20120128153513277451245055843910</TranRefID><TranRefID2 /><TranRefID3 /><AuthRefCode /><Currency>INR</Currency><RRN /><BankName>icici</BankName><AccNo /><ChequeNo>47899</ChequeNo><ValidDate>20120126</ValidDate><Status /><RefCode /><Text1 /><Text2 /><Text3 /></Details></PaymentGroups><DefaultShippingAddress><FirstName>Pradyumna Kumar</FirstName><MiddleName /><LastName /><Address1>TEST ORDER PLEASE CANCEL</Address1><Address2 /><City>Mumbai</City><State>13</State><Country>IN</Country><PoCode>400008</PoCode><Telephone1>9967442905</Telephone1><Telephone2 /></DefaultShippingAddress><Customer><CustomerRole>AG</CustomerRole><CustomerID>826468</CustomerID><FirstName>Pradyumna</FirstName><MiddleName /><LastName>Kumar</LastName><Address1>TEST ORDER PLEASE CANCEL</Address1><Address2 /><City>Mumbai</City><State>13</State><Country>IN</Country><PoCode>400008</PoCode><Telephone1>9967442905</Telephone1><Telephone2 /></Customer><OrderLineItems><LineItem><ItemSno>10</ItemSno><ItemID>000000000100000002</ItemID><ItemDesc>Electrolux EJ30CSS6 30L Microwave Oven + Starter kit</ItemDesc><RefID /><ShipGroupCode /><Quantity>2</Quantity><ReqDelivDate /><ItemState /><SalesUnit /><ItemCategory /><isThirdParty>false</isThirdParty><Vendor /><MRP>13290.00</MRP><SalesPrice>8990.00</SalesPrice><OfferPrice>8990.00</OfferPrice><Amount>17980.00</Amount><Discount /><NLC /><Plant>4608</Plant><Catalogs>|FutureBazaar</Catalogs><ProductGroupId /><ModeOfTransport /><ShippingMode /><LSP /><ShipCharge>0.00</ShipCharge><EANUPC /><Reason /><Notes /><ItemSno1 /><GV /><Bundle /><ShipAddress><FirstName>Pradyumna Kumar</FirstName><MiddleName /><LastName /><Address1>TEST ORDER PLEASE CANCEL</Address1><Address2 /><City>Mumbai</City><State>13</State><Country>IN</Country><PoCode>400008</PoCode><Telephone1>9967442905</Telephone1><Telephone2 /></ShipAddress><BackorderText /><Text1>true</Text1><Text2 /><Text3 /></LineItem></OrderLineItems></commonOrderRequest></value>
+			<value name="created_on">2012-09-30</value>
+			<value name="modified_on">2012-09-30</value>
+			<value name="status">bb_new</value>
+			<value name="reference_order_id">5051</value>
+			<value name="type">bb_modify</value>
+		</row>
+		<row>
+			<value name="id">4</value>
+			<value name="order_id">1</value>
+			<value name="xml"><commonOrderRequest><Header><MessageType>NEWORD</MessageType><BussOpr /></Header><OrderHeader><OrderRefID>I000001022</OrderRefID><OrderRefID2 /><OrderRefID3 /><CreateDate>20120128</CreateDate><OrderType>order</OrderType><DeliveryDate /><SoldToParty>G100000103</SoldToParty><SalesDocType>ZFGB</SalesDocType><SalesChannel>true</SalesChannel><SalesOrganisation>false</SalesOrganisation><isThirdParty>false</isThirdParty><Currency>INR</Currency><OrderDiscount>0.00</OrderDiscount><OrderOfferPrice>17980.00</OrderOfferPrice><Reason /><Location>BIGBAZAAR#WEBSITE</Location><Text1>false</Text1><Text2 /><Text3 /></OrderHeader><PaymentGroups><Details><PayMethod>CHEQ</PayMethod><Type>icici</Type><Amount>26970.00</Amount><AuthAmount>26970.00</AuthAmount><AuthDate>20120128</AuthDate><AuthTime>172225</AuthTime><ReAmount /><MerchantID /><TranRefID>20120128153513277451245055843910</TranRefID><TranRefID2 /><TranRefID3 /><AuthRefCode /><Currency>INR</Currency><RRN /><BankName>icici</BankName><AccNo /><ChequeNo>47899</ChequeNo><ValidDate>20120126</ValidDate><Status /><RefCode /><Text1 /><Text2 /><Text3 /></Details></PaymentGroups><DefaultShippingAddress><FirstName>Pradyumna Kumar</FirstName><MiddleName /><LastName /><Address1>TEST ORDER PLEASE CANCEL</Address1><Address2 /><City>Mumbai</City><State>13</State><Country>IN</Country><PoCode>400008</PoCode><Telephone1>9967442905</Telephone1><Telephone2 /></DefaultShippingAddress><Customer><CustomerRole>AG</CustomerRole><CustomerID>826468</CustomerID><FirstName>Pradyumna</FirstName><MiddleName /><LastName>Kumar</LastName><Address1>TEST ORDER PLEASE CANCEL</Address1><Address2 /><City>Mumbai</City><State>13</State><Country>IN</Country><PoCode>400008</PoCode><Telephone1>9967442905</Telephone1><Telephone2 /></Customer><OrderLineItems><LineItem><ItemSno>10</ItemSno><ItemID>000000000100000002</ItemID><ItemDesc>Electrolux EJ30CSS6 30L Microwave Oven + Starter kit</ItemDesc><RefID /><ShipGroupCode /><Quantity>2</Quantity><ReqDelivDate /><ItemState /><SalesUnit /><ItemCategory /><isThirdParty>false</isThirdParty><Vendor /><MRP>13290.00</MRP><SalesPrice>8990.00</SalesPrice><OfferPrice>8990.00</OfferPrice><Amount>17980.00</Amount><Discount /><NLC /><Plant>4608</Plant><Catalogs>|FutureBazaar</Catalogs><ProductGroupId /><ModeOfTransport /><ShippingMode /><LSP /><ShipCharge>0.00</ShipCharge><EANUPC /><Reason /><Notes /><ItemSno1 /><GV /><Bundle /><ShipAddress><FirstName>Pradyumna Kumar</FirstName><MiddleName /><LastName /><Address1>TEST ORDER PLEASE CANCEL</Address1><Address2 /><City>Mumbai</City><State>13</State><Country>IN</Country><PoCode>400008</PoCode><Telephone1>9967442905</Telephone1><Telephone2 /></ShipAddress><BackorderText /><Text1>true</Text1><Text2 /><Text3 /></LineItem></OrderLineItems></commonOrderRequest></value>
+			<value name="created_on">2012-09-30</value>
+			<value name="modified_on">2012-09-30</value>
+			<value name="status">bb_new</value>
+			<value name="reference_order_id">5051</value>
+			<value name="type">bb_return</value>
+		</row>
+		<row>
+			<value name="id">5</value>
+			<value name="order_id">1</value>
+			<value name="xml"><commonOrderRequest><Header><MessageType>NEWORD</MessageType><BussOpr /></Header><OrderHeader><OrderRefID>I000001022</OrderRefID><OrderRefID2 /><OrderRefID3 /><CreateDate>20120128</CreateDate><OrderType>order</OrderType><DeliveryDate /><SoldToParty>G100000103</SoldToParty><SalesDocType>ZFGB</SalesDocType><SalesChannel>true</SalesChannel><SalesOrganisation>false</SalesOrganisation><isThirdParty>false</isThirdParty><Currency>INR</Currency><OrderDiscount>0.00</OrderDiscount><OrderOfferPrice>17980.00</OrderOfferPrice><Reason /><Location>BIGBAZAAR#WEBSITE</Location><Text1>false</Text1><Text2 /><Text3 /></OrderHeader><PaymentGroups><Details><PayMethod>CHEQ</PayMethod><Type>icici</Type><Amount>26970.00</Amount><AuthAmount>26970.00</AuthAmount><AuthDate>20120128</AuthDate><AuthTime>172225</AuthTime><ReAmount /><MerchantID /><TranRefID>20120128153513277451245055843910</TranRefID><TranRefID2 /><TranRefID3 /><AuthRefCode /><Currency>INR</Currency><RRN /><BankName>icici</BankName><AccNo /><ChequeNo>47899</ChequeNo><ValidDate>20120126</ValidDate><Status /><RefCode /><Text1 /><Text2 /><Text3 /></Details></PaymentGroups><DefaultShippingAddress><FirstName>Pradyumna Kumar</FirstName><MiddleName /><LastName /><Address1>TEST ORDER PLEASE CANCEL</Address1><Address2 /><City>Mumbai</City><State>13</State><Country>IN</Country><PoCode>400008</PoCode><Telephone1>9967442905</Telephone1><Telephone2 /></DefaultShippingAddress><Customer><CustomerRole>AG</CustomerRole><CustomerID>826468</CustomerID><FirstName>Pradyumna</FirstName><MiddleName /><LastName>Kumar</LastName><Address1>TEST ORDER PLEASE CANCEL</Address1><Address2 /><City>Mumbai</City><State>13</State><Country>IN</Country><PoCode>400008</PoCode><Telephone1>9967442905</Telephone1><Telephone2 /></Customer><OrderLineItems><LineItem><ItemSno>10</ItemSno><ItemID>000000000100000002</ItemID><ItemDesc>Electrolux EJ30CSS6 30L Microwave Oven + Starter kit</ItemDesc><RefID /><ShipGroupCode /><Quantity>2</Quantity><ReqDelivDate /><ItemState /><SalesUnit /><ItemCategory /><isThirdParty>false</isThirdParty><Vendor /><MRP>13290.00</MRP><SalesPrice>8990.00</SalesPrice><OfferPrice>8990.00</OfferPrice><Amount>17980.00</Amount><Discount /><NLC /><Plant>4608</Plant><Catalogs>|FutureBazaar</Catalogs><ProductGroupId /><ModeOfTransport /><ShippingMode /><LSP /><ShipCharge>0.00</ShipCharge><EANUPC /><Reason /><Notes /><ItemSno1 /><GV /><Bundle /><ShipAddress><FirstName>Pradyumna Kumar</FirstName><MiddleName /><LastName /><Address1>TEST ORDER PLEASE CANCEL</Address1><Address2 /><City>Mumbai</City><State>13</State><Country>IN</Country><PoCode>400008</PoCode><Telephone1>9967442905</Telephone1><Telephone2 /></ShipAddress><BackorderText /><Text1>true</Text1><Text2 /><Text3 /></LineItem></OrderLineItems></commonOrderRequest></value>
+			<value name="created_on">2012-09-30</value>
+			<value name="modified_on">2012-09-30</value>
+			<value name="status">bb_new</value>
+			<value name="reference_order_id">5051</value>
+			<value name="type">return</value>
+		</row>
+	</table>
+</dataset>

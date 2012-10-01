@@ -37,20 +37,22 @@ public class ItemPartnerMapper {
 			orderPartner.setValue( SapOrderConstants.FULL_NAME, addressTO.getFirstName() + " " + addressTO.getLastName());
 			orderPartner.setValue(SapOrderConstants.LAST_NAME, addressTO.getLastName());
 			orderPartner.setValue(SapOrderConstants.LANGUAGE, SapOrderConstants.DEFAULT_LANGUAGE);
-			orderText.setValue(SapOrderConstants.TEXT_LINE, addressTO.getAddress());
 			orderPartner.setValue(SapOrderConstants.CITY, addressTO.getCity());
 			orderPartner.setValue(SapOrderConstants.STATE, addressTO.getState());
 			orderPartner.setValue(SapOrderConstants.COUNTRY, addressTO.getCountry());
 			orderPartner.setValue(SapOrderConstants.PINCODE, addressTO.getPincode());
 			orderPartner.setValue(SapOrderConstants.PRIMARY_PHONE, addressTO.getPrimaryTelephone());
 			orderPartner.setValue(SapOrderConstants.FAX_NUMBER, addressTO.getSecondaryTelephone());
+			orderText.setValue(SapOrderConstants.TEXT_LINE, addressTO.getAddress());
 			orderText.setValue(SapOrderConstants.TEXT_ID, SapOrderConstants.FIRST_PARTNER_TEXT_ID);
+			orderText.setValue(SapOrderConstants.LANGUAGE, SapOrderConstants.DEFAULT_LANGUAGE);
 			if (!StringUtils.isBlank(itemTO.getLspCode())) { // lsp
 				logger.info("Setting LSP code: " + itemTO.getLspCode() + " for : " + orderHeaderTO.getReferenceID());
 				orderPartner.appendRow();
 				orderPartner.setValue(SapOrderConstants.PARTNER_ROLE, SapOrderConstants.PARTNER_ROLE_LSP);
 				orderPartner.setValue(SapOrderConstants.ACCOUNT_NUMBER, itemTO.getLspCode());
 				orderPartner.setValue(SapOrderConstants.ITEM_NUMBER, itemTO.getSapDocumentId());
+				orderPartner.setValue(SapOrderConstants.LANGUAGE, SapOrderConstants.DEFAULT_LANGUAGE);
 			}
 			if (!StringUtils.isBlank(itemTO.getVendor())) { // vendor
 				logger.info("Setting Vendor: " + itemTO.getVendor() + " for : " + orderHeaderTO.getReferenceID());
@@ -58,6 +60,7 @@ public class ItemPartnerMapper {
 				orderPartner.setValue(SapOrderConstants.PARTNER_ROLE, SapOrderConstants.PARTNER_ROLE_VENDOR);
 				orderPartner.setValue(SapOrderConstants.ACCOUNT_NUMBER, itemTO.getVendor());
 				orderPartner.setValue(SapOrderConstants.ITEM_NUMBER, itemTO.getSapDocumentId());
+				orderPartner.setValue(SapOrderConstants.LANGUAGE, SapOrderConstants.DEFAULT_LANGUAGE);
 			}
 			if (!StringUtils.isBlank(itemTO.getPayToOthers())) {
 				logger.info("Setting pay to others: " + itemTO.getPayToOthers() + " for : " + orderHeaderTO.getReferenceID());
@@ -65,6 +68,7 @@ public class ItemPartnerMapper {
 				orderText.setValue(SapOrderConstants.TEXT_ID, SapOrderConstants.THIRD_PARTNER_TEXT_ID);
 				orderPartner.setValue( SapOrderConstants.LANGUAGE, SapOrderConstants.DEFAULT_LANGUAGE);
 				orderText.setValue(SapOrderConstants.TEXT_LINE, itemTO.getPayToOthers());
+				orderPartner.setValue(SapOrderConstants.LANGUAGE, SapOrderConstants.DEFAULT_LANGUAGE);
 			}
 		}
 	}

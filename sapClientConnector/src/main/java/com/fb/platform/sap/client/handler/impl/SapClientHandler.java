@@ -38,8 +38,6 @@ import com.fb.platform.sap.bapi.to.SapLspAwbUpdateRequestTO;
 import com.fb.platform.sap.bapi.to.SapLspAwbUpdateResponseTO;
 import com.fb.platform.sap.bapi.to.SapOrderRequestTO;
 import com.fb.platform.sap.bapi.to.SapOrderResponseTO;
-import com.fb.platform.sap.bapi.to.SapWalletRequestTO;
-import com.fb.platform.sap.bapi.to.SapWalletResponseTO;
 import com.fb.platform.sap.client.commons.SapResponseStatus;
 import com.fb.platform.sap.client.connector.SapClientConnector;
 import com.fb.platform.sap.client.handler.PlatformClientHandler;
@@ -55,7 +53,7 @@ public class SapClientHandler implements PlatformClientHandler {
     public synchronized SapOrderResponseTO processOrder(SapOrderRequestTO orderRequestTO) {
 		logger.info("Order Request : " + orderRequestTO + " for order id: " + orderRequestTO.getOrderHeaderTO().getReferenceID());
 		SapOrderResponseTO orderResponseTO = new SapOrderResponseTO();
-		orderResponseTO.setStatus(SapResponseStatus.FAILURE);
+		orderResponseTO.setStatus(SapResponseStatus.ERROR);
 		TinlaOrderType orderType = orderRequestTO.getOrderType();
     	try {
     		BapiOrderTemplate template = PlatformBapiHandlerFactory.getTemplate(orderType, orderRequestTO.getOrderHeaderTO().getClient());
@@ -71,12 +69,12 @@ public class SapClientHandler implements PlatformClientHandler {
 				ItemMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
 				ItemScheduleMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
 				if (orderType.equals(TinlaOrderType.NEW_ORDER)) {
-					HeaderPartnerMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getBillingAddressTO(), orderType);
+					HeaderPartnerMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getDefaultShippingAddressTO(), orderRequestTO.getBillingAddressTO(), orderType);
 					PaymentMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getPaymentTO());
 					ItemPartnerMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO());
 				}
 			}
-			PointsMapper.setDetails(bapiFunction, orderRequestTO.getPricingTO(), orderRequestTO.getOrderHeaderTO().getLoyaltyCardNumber());
+			PointsMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO().getPricingTO(), orderRequestTO.getOrderHeaderTO().getLoyaltyCardNumber());
 			ItemConditionsMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
 			orderResponseTO = OrderResponseMapper.getDetails(bapiFunction, clientConnector);
 		} catch (JCoException e) {
@@ -150,8 +148,15 @@ public class SapClientHandler implements PlatformClientHandler {
 	}
 
 	@Override
-	public SapWalletResponseTO processWallet(SapWalletRequestTO walletRequestTO) {
-		return null;
+	public SapResponseStatus sendIdoc(String idocXml) {
+		logger.info("Sending Idoc..." + idocXml);
+		try {
+			clientConnector.sendIdoc(idocXml);
+			return SapResponseStatus.SUCCESS;
+		} catch (Exception e) {
+			logger.error("Sending Idoc Failed", e);
+			return SapResponseStatus.ERROR;
+		}
 	}
 	
 	public void setBapiConnector(SapClientConnector bapiConnector) {

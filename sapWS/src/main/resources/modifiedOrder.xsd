@@ -22,21 +22,23 @@
   	<xs:complexType>
       <xs:sequence>
         <xs:element type="xs:string" name="itemDesc"/>
-        <xs:element type="xs:int" name="itemID"/>
+        <xs:element type="xs:string" name="itemID"/>
         <xs:element type="xs:int" name="lineItemId"/>
         <xs:element type="xs:string" name="itemState"/>
         <xs:element type="xs:string" name="lspName"/>
         <xs:element type="xs:string" name="lspNumber"/>
         <xs:element type="xs:string" name="deliveryNumber"/>
         <xs:element type="xs:string" name="invoiceNumber"/>
-        <xs:element type="xs:dateTime" name="invoiceDate"/>
+        <xs:element type="xs:string" name="invoiceDate"/>
         <xs:element type="xs:string" name="trackingNumber"/>
-        <xs:element type="xs:int" name="quantity"/>
+        <xs:element type="xs:decimal" name="quantity"/>
         <xs:element type="xs:string" name="reasonOfCancellation"/>
         <xs:element type="xs:string" name="operation"/>
         <xs:element type="xs:string" name="plant"/>
         <xs:element type="xs:decimal" name="salesPrice"/>
         <xs:element type="xs:decimal" name="discount"/>
+        <xs:element type="xs:decimal" name="CouponDiscount"/>
+        <xs:element type="xs:decimal" name="ItemCommisionAmount"/>
         <xs:element type="xs:decimal" name="listPrice"/>
         <xs:element type="xs:decimal" name="shippingPrice"/>
         <xs:element type="xs:boolean" name="isThirdParty"/>
@@ -46,7 +48,7 @@
         <xs:element type="xs:string" name="onSale"/>
         <xs:element type="xs:string" name="bundle"/>
         <xs:element type="xs:string" name="gvClaimCodes"/>
-        <xs:element type="xs:dateTime" name="requiredDeliveryDate"/>
+        <xs:element type="xs:string" name="requiredDeliveryDate"/>
         <xs:element ref="sap:ShippingAddress"/>
       </xs:sequence>
     </xs:complexType>
@@ -73,9 +75,10 @@
   <xs:element name="modifiedOrderHeader">
   	<xs:complexType>
       <xs:sequence>
+        <xs:element type="xs:string" name="client"/>
 	    <xs:element type="xs:string" name="orderId"/>
-	    <xs:element type="xs:dateTime" name="dateOfCreation"/>
-	    <xs:element type="xs:dateTime" name="dateOfSubmission"/>
+	    <xs:element type="xs:string" name="dateOfCreation"/>
+	    <xs:element type="xs:string" name="dateOfSubmission"/>
 	    <xs:element type="xs:decimal" name="shippingAmount"/>
 	    <xs:element type="xs:decimal" name="orderTotal"/>
 	    <xs:element type="xs:decimal" name="discount"/>

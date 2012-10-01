@@ -42,7 +42,6 @@ public class TestResource {
 		SapClientConnector sapClientConnector = new SapClientConnector();
 		sapClientHandler.setBapiConnector(sapClientConnector);
 		TestSapResource testSapResource = new TestSapResource();
-		
 		logger.info("Setting xml");
 		try {
 //			InventoryResource sapInventoryResource = new InventoryResource();
@@ -64,7 +63,10 @@ public class TestResource {
 			OrderResource orderResource = new OrderResource();
 			orderResource.setSapClientHandler(sapClientHandler);
 			String newOrderXml = testSapResource.getCommonOrderXml();
-			System.out.println(orderResource.writeOrder(newOrderXml));	
+			System.out.println(orderResource.writeOrder(newOrderXml));
+			
+			//String modifiedOrderXml = testSapResource.getModifiedOrderXml();
+			//System.out.println(orderResource.modifyOrder(modifiedOrderXml));
 			
 		} catch (Exception e) {
 			e.printStackTrace();

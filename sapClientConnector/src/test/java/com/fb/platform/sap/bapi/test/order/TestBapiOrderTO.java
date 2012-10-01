@@ -22,7 +22,6 @@ public class TestBapiOrderTO {
 		bapiTO.setOrderHeaderTO(getOrderTO());
 		bapiTO.setLineItemTO(getLineItemTO());
 		bapiTO.setBillingAddressTO(getAddressTO());
-		bapiTO.setPricingTO(getPricingTO());
 		bapiTO.setPaymentTO(getPaymentTO());
 		return bapiTO;
 	}
@@ -70,7 +69,7 @@ public class TestBapiOrderTO {
 		orderHeaderTO.setSubmittedOn(DateTime.now());
 		//orderHeaderTO.set
 		orderHeaderTO.setSalesDocType("ZATG");
-		orderHeaderTO.setReferenceID("5049999895");
+		orderHeaderTO.setReferenceID("5049999894");
 		orderHeaderTO.setReturnOrderID("6699999999");
 		orderHeaderTO.setLoyaltyCardNumber("1234123412341234");
 		orderHeaderTO.setPricingTO(getPricingTO());
@@ -104,6 +103,7 @@ public class TestBapiOrderTO {
 		lineItemTO1.setReasonCode("103");
 		lineItemTO1.setItemCategory("ZATX");
 		lineItemTO1.setOperationCode("C");
+		lineItemTO1.setLspCode("300413");
 		lineItemTO1.setAddressTO(getAddressTO());
 		lineItemTOList.add(lineItemTO1);
 		

@@ -10,8 +10,7 @@ import com.fb.platform.sap.bapi.to.SapLspAwbUpdateRequestTO;
 import com.fb.platform.sap.bapi.to.SapLspAwbUpdateResponseTO;
 import com.fb.platform.sap.bapi.to.SapOrderRequestTO;
 import com.fb.platform.sap.bapi.to.SapOrderResponseTO;
-import com.fb.platform.sap.bapi.to.SapWalletRequestTO;
-import com.fb.platform.sap.bapi.to.SapWalletResponseTO;
+import com.fb.platform.sap.client.commons.SapResponseStatus;
 
 public interface PlatformClientHandler {
 	
@@ -23,6 +22,6 @@ public interface PlatformClientHandler {
 	
 	public SapLspAwbUpdateResponseTO processLspAwbUpdate(SapLspAwbUpdateRequestTO lspAwbUpdateRequestTO);
 	
-	public SapWalletResponseTO processWallet(SapWalletRequestTO walletRequestTO);
+	public SapResponseStatus sendIdoc(String idocXml);
 
 }

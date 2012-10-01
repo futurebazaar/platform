@@ -5,6 +5,6 @@ public enum SapResponseStatus {
 	SUCCESS,
 	ERROR,
 	WARNING,
-	FAILURE;
+	FAILED;
 
 }

@@ -7,7 +7,6 @@ import com.fb.commons.mom.to.AddressTO;
 import com.fb.commons.mom.to.LineItemTO;
 import com.fb.commons.mom.to.OrderHeaderTO;
 import com.fb.commons.mom.to.PaymentTO;
-import com.fb.commons.mom.to.PricingTO;
 import com.fb.platform.sap.bapi.order.TinlaOrderType;
 
 public class SapOrderRequestTO {
@@ -17,7 +16,7 @@ public class SapOrderRequestTO {
 	private List<LineItemTO> lineItemTO = new ArrayList<LineItemTO>();
 	private List<PaymentTO> paymentTO = new ArrayList<PaymentTO>();
 	private AddressTO billingAddressTO;
-	private PricingTO pricingTO;
+	private AddressTO defaultShippingAddressTO;
 	
 	public TinlaOrderType getOrderType() {
 		return orderType;
@@ -43,25 +42,26 @@ public class SapOrderRequestTO {
 	public void setPaymentTO(List<PaymentTO> paymentTO) {
 		this.paymentTO = paymentTO;
 	}
-	public PricingTO getPricingTO() {
-		return pricingTO;
-	}
-	public void setPricingTO(PricingTO pricingTO) {
-		this.pricingTO = pricingTO;
-	}
 	public AddressTO getBillingAddressTO() {
 		return billingAddressTO;
 	}
 	public void setBillingAddressTO(AddressTO billingAddressTO) {
 		this.billingAddressTO = billingAddressTO;
 	}
+	public AddressTO getDefaultShippingAddressTO() {
+		return defaultShippingAddressTO;
+	}
+	public void setDefaultShippingAddressTO(AddressTO defaultShippingAddressTO) {
+		this.defaultShippingAddressTO = defaultShippingAddressTO;
+	}
 	
 	@Override
 	public String toString() {
 		return "SapOrderRequestTO [orderType=" + orderType + ", orderHeaderTO="
 				+ orderHeaderTO + ", lineItemTO=" + lineItemTO + ", paymentTO="
-				+ paymentTO + ", billingAddressTO=" + billingAddressTO + ", pricingTO="
-				+ pricingTO + "]";
+				+ paymentTO + ", billingAddressTO=" + billingAddressTO
+				+ ", defaultShippingAddressTO=" + defaultShippingAddressTO
+				+ "]";
 	}
 	
 }

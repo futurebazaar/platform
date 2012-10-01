@@ -63,6 +63,7 @@ DROP TABLE IF EXISTS rules;
 DROP TABLE IF EXISTS conditions_config;
 DROP TABLE IF EXISTS results_config;
 DROP TABLE IF EXISTS promotion_config_module;
+DROP TABLE IF EXISTS orders_orderxml;
 
 --  ******************** CREATE TABLE *****************
 CREATE TABLE categories_store
@@ -1075,5 +1076,22 @@ CREATE TABLE catalog_producttags (
 	show_default tinyint(1),
 	starts_on DATETIME,
 	ends_on DATETIME
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `orders_orderxml` (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  order_id int(11) NOT NULL,
+  xml longtext NOT NULL,
+  created_on datetime NOT NULL,
+  modified_on datetime NOT NULL,
+  status varchar(20) NOT NULL,
+  expiry_time datetime DEFAULT NULL,
+  attempts int(11) NOT NULL DEFAULT '0',
+  reason longtext,
+  error_type varchar(20) DEFAULT NULL,
+  reference_order_id varchar(15) DEFAULT NULL,
+  type varchar(10) NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT orders_orderxml_fk1 FOREIGN KEY (order_id) REFERENCES orders_order(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -17,17 +17,17 @@ public class TestBBBapiOrderTO {
 	
 	public SapOrderRequestTO getBapiTO() {
 		SapOrderRequestTO bapiTO = new SapOrderRequestTO();
-		bapiTO.setOrderType(TinlaOrderType.NEW_ORDER);
+		bapiTO.setOrderType(TinlaOrderType.MOD_ORDER);
 		bapiTO.setOrderHeaderTO(getOrderTO());
 		bapiTO.setLineItemTO(getLineItemTO());
 		bapiTO.setBillingAddressTO(getAddressTO());
-		bapiTO.setPricingTO(getPricingTO());
+		bapiTO.setDefaultShippingAddressTO(getAddressTO());
 		return bapiTO;
 	}
 	
 	private OrderHeaderTO getOrderTO() {
 		OrderHeaderTO orderHeaderTO = new OrderHeaderTO();
-		orderHeaderTO.setAccountNumber("G000001006");
+		orderHeaderTO.setAccountNumber("G000001005");
 		orderHeaderTO.setChannelType("WEBSITE");
 		orderHeaderTO.setClient("BIGBAZAAR");
 		orderHeaderTO.setCreatedOn(DateTime.now());
@@ -36,7 +36,7 @@ public class TestBBBapiOrderTO {
 		orderHeaderTO.setSubmittedOn(DateTime.now());
 		//orderHeaderTO.set
 		orderHeaderTO.setSalesDocType("ZFGB");
-		orderHeaderTO.setReferenceID("I000001011");
+		orderHeaderTO.setReferenceID("I000001012");
 		orderHeaderTO.setLoyaltyCardNumber("1234123412341234");
 		orderHeaderTO.setPricingTO(getPricingTO());
 		
@@ -57,19 +57,19 @@ public class TestBBBapiOrderTO {
 
 	private List<LineItemTO> getLineItemTO() {
 		List<LineItemTO> lineItemTOList = new ArrayList<LineItemTO>();
-//		LineItemTO lineItemTO1 = new LineItemTO();
-//		lineItemTO1.setPricingTO(getPricingTO());
-//		lineItemTO1.setArticleID("000000000100000105");
-//		lineItemTO1.setSapDocumentId(10);
-//		lineItemTO1.setQuantity(new BigDecimal("2.00"));
-//		lineItemTO1.setDescription("TEST ARTICLE");
-//		lineItemTO1.setPlantId("4608");
-//		lineItemTO1.setSalesUnit("EA");
-//		lineItemTO1.setStorageLocation(10);
-//		lineItemTO1.setReasonCode("01");
-//		lineItemTO1.setOperationCode("U");
-//		lineItemTO1.setAddressTO(getAddressTO());
-//		lineItemTOList.add(lineItemTO1);
+		LineItemTO lineItemTO1 = new LineItemTO();
+		lineItemTO1.setPricingTO(getPricingTO());
+		lineItemTO1.setArticleID("000000000100000105");
+		lineItemTO1.setSapDocumentId(10);
+		lineItemTO1.setQuantity(new BigDecimal("2.00"));
+		lineItemTO1.setDescription("TEST ARTICLE");
+		lineItemTO1.setPlantId("4608");
+		lineItemTO1.setSalesUnit("EA");
+		lineItemTO1.setStorageLocation(10);
+		lineItemTO1.setReasonCode("01");
+		lineItemTO1.setOperationCode("C");
+		lineItemTO1.setAddressTO(getAddressTO());
+		lineItemTOList.add(lineItemTO1);
 		
 		LineItemTO lineItemTO2 = new LineItemTO();
 		lineItemTO2.setPricingTO(getPricingTO());
@@ -84,7 +84,7 @@ public class TestBBBapiOrderTO {
 		lineItemTO2.setOperationCode("I");
 		lineItemTO2.setAddressTO(getAddressTO());
 		lineItemTOList.add(lineItemTO2);
-		
+//		
 //		LineItemTO lineItemTO3 = new LineItemTO();
 //		lineItemTO3.setPricingTO(getPricingTO());
 //		lineItemTO3.setArticleID("000000000100000001");
@@ -108,7 +108,7 @@ public class TestBBBapiOrderTO {
 		addressTO.setLastName("JAIN");
 		addressTO.setPincode("400060");
 		addressTO.setPrimaryTelephone("01234567890");
-		addressTO.setSecondaryTelephone("11234567890");
+		//addressTO.setSecondaryTelephone("11234567890");
 		addressTO.setState("13");
 		addressTO.setAddress("FUTUREBAZZAAR SECOND PARTNER TEST ORDER. CHECK IT IN SAP AND HENCE VERIFY");
 		addressTO.setCountry("IN");

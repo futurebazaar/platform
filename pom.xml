@@ -430,6 +430,7 @@
         <module>itemAckReceiver</module>
         <module>launcher</module>
 	    <module>sapClientConnector</module>
+	    <module>platformScheduler</module>
 	    <module>sapWS</module>
         <module>walletCore</module>
         <module>walletWS</module>

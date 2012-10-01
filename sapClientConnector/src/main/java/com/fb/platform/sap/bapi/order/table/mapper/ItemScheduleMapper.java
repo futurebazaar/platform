@@ -55,7 +55,7 @@ public class ItemScheduleMapper {
 				orderScheduleINX.setValue(SapOrderConstants.OPERATION_FLAG, SapOrderConstants.INSERT_FLAG);
 			} else {
 				String operationCode = itemTO.getOperationCode();
-				if (itemTO.getOperationCode().equals(SapOrderConstants.CANCEL_FLAG) || orderType.equals(TinlaOrderType.CAN_ORDER)) {
+				if (itemTO.getOperationCode().equals(SapOrderConstants.CANCEL_FLAG)) {
 					operationCode = SapOrderConstants.UPDATE_FLAG;
 				}
 				orderScheduleINX.setValue(SapOrderConstants.OPERATION_FLAG, operationCode);

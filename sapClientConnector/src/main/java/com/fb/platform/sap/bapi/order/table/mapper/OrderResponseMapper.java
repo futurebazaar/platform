@@ -23,7 +23,7 @@ public class OrderResponseMapper {
 		bapiFunction.execute(bapiConnector.getBapiDestination());
 		JCoTable jcoResponse = bapiFunction.getTableParameterList().getTable(BapiOrderTable.RETURN.toString());
 		String message = "";
-		SapResponseStatus status = SapResponseStatus.FAILURE;
+		SapResponseStatus status = SapResponseStatus.ERROR;
 		for (int i = 0; i < jcoResponse.getNumRows(); i++) {
 			jcoResponse.setRow(i);
 			String type = jcoResponse.getValue(SapConstants.TYPE).toString();
@@ -31,7 +31,7 @@ public class OrderResponseMapper {
 				status = SapResponseStatus.SUCCESS;
 			}
 			else if (type.equals(SapOrderConstants.ERROR_FLAG)) {
-				status = SapResponseStatus.ERROR;
+				status = SapResponseStatus.FAILED;
 			}
 			else if (type.equals(SapOrderConstants.WARNING_FLAG)) {
 				status = SapResponseStatus.WARNING;
@@ -39,7 +39,7 @@ public class OrderResponseMapper {
 			String typeMessage =  jcoResponse.getValue(SapConstants.MESSAGE).toString();
 			String typeId =  jcoResponse.getValue("ID").toString();
 			logger.info("Response Type: " + type + " || Message: " + typeMessage + " || ID: " + typeId);
-			if (!(type.equals(SapOrderConstants.SUCCESS_FLAG)) || (typeMessage.contains("FECIL") || typeMessage.contains("FBIL"))) {
+			if (!(type.equals(SapOrderConstants.SUCCESS_FLAG)) || (typeMessage.contains("FECIL") || typeMessage.contains("FBIL") || typeMessage.contains("FBG"))) {
 				message += "ID: " + typeId + " || ";
 				message += "TYPE: " + type + " || ";
 				message += "MESSAGE: " + typeMessage + "\n";
