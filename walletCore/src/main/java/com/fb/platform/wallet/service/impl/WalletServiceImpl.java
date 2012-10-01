@@ -238,16 +238,15 @@ public class WalletServiceImpl implements WalletService {
 		log.info("orderId::" + transactionId);
 		
 		try{
-			WalletTransaction walletTransactionRes = new WalletTransaction();
 			Wallet wallet = load(userId,clientId,false);
 			com.fb.platform.wallet.model.WalletTransaction walletTransaction = walletTransactionDao.transactionById(wallet.getId(), transactionId);
 			Money moneyAlreadyReversed = walletTransactionDao.amountAlreadyReversedByTransactionId(wallet.getId(), walletTransaction.getId());
 			Money amountToBeReversed = amount != null ? amount : walletTransaction.getAmount();
 			if(walletTransaction.getAmount().gteq(amountToBeReversed.plus(moneyAlreadyReversed))){
 				com.fb.platform.wallet.model.WalletTransaction walletTransactionNew = wallet.reverseTransaction(walletTransaction,amountToBeReversed,moneyAlreadyReversed,newRefundId);
-				walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(walletTransactionNew));
-				walletTransactionRes.setWallet(walletReturnOperations(walletDao.update(wallet)));
-				return walletTransactionRes;
+				walletTransactionNew.setTransactionId(walletTransactionDao.insertTransaction(walletTransactionNew));
+				walletTransactionNew.setWallet(walletReturnOperations(walletDao.update(wallet)));
+				return walletTransactionModeltoTO(walletTransactionNew);
 			}else{
 				throw new InSufficientFundsException();
 			}

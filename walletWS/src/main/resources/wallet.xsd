@@ -12,6 +12,7 @@
   <xs:element name="giftAmount" type="xs:decimal"/>
   <xs:element name="totalAmount" type="xs:decimal"/>
   <xs:element name="refundableAmount" type="xs:decimal"/>
+  <xs:element name="nonRefundableAmount" type="xs:decimal"/>
   <xs:element name="giftExpiryAmt1" type="xs:decimal" nillable="true"/>
   <xs:element name="giftExpiryAmt2" type="xs:decimal" nillable="true"/>
   <xs:element name="giftExpiryDt1" type="xs:dateTime" nillable="true"/>
@@ -303,7 +304,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="tns:sessionToken"/>
-        <xs:element ref="tns:transactionId"/>
+        <xs:element ref="tns:transaction"/>
         <xs:element ref="tns:revertStatus"/>        
       </xs:sequence>
     </xs:complexType>
@@ -418,8 +419,7 @@
       <xs:enumeration value="INVALID_WALLET"/>
       <xs:enumeration value="FAILED_TRANSACTION"/>      
     </xs:restriction>
-  </xs:simpleType>
-     
+  </xs:simpleType>     
   <xs:annotation>
   	<xs:appinfo>
     	<jaxb:globalBindings>
