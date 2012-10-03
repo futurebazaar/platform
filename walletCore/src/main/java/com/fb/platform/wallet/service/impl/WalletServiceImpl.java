@@ -370,7 +370,7 @@ public class WalletServiceImpl implements WalletService {
 			throws WalletNotFoundException, PlatformException {
 		try{
 			Wallet wallet = load(userId,clientId,false);
-			wallet.setWalletPassword(Encrypt.encrypt(generateSendWalletPassword.generateSendWalletPassword(userId)));
+			wallet.setWalletPassword(Encrypt.encrypt(generateSendWalletPassword.generateSendWalletPassword(userId,true)));
 			walletDao.update(wallet);
 		} catch (WalletNotFoundException e){
 			throw new WalletNotFoundException("No wallet with this userId");
