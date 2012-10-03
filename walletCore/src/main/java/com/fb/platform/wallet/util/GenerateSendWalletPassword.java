@@ -52,22 +52,22 @@ public class GenerateSendWalletPassword {
 
 	private Log log = LogFactory.getLog(GenerateSendWalletPassword.class);
 	
-	public String generateSendWalletPassword(long userId){
+	public String generateSendWalletPassword(long userId,boolean isReset){
 		String randomPassword = RandomStringUtils.random(4, false, true);
 		try {
-			sendWalletPassword(userId, randomPassword);
+			sendWalletPassword(userId, randomPassword,isReset);
 		} catch (Exception e){
 			e.printStackTrace();
 		}
 		return randomPassword;
 	}
-	public void sendWalletPassword(long userId,String randomPassword){
+	public void sendWalletPassword(long userId,String randomPassword,boolean isReset){
 		log.info("Wallet password generated for userId: " + userId + " :::::" + randomPassword);
 		try {
 			UserBo user = userAdminService.getUserByUserId(safeLongToInt(userId));
 			for(UserEmailBo userEmailBo : user.getUserEmail()){
 				if(userEmailBo.isVerified()){
-					MailTO message = MailHelper.createMailTO(userEmailBo.getEmail(), randomPassword, user.getName());
+					MailTO message = MailHelper.createMailTO(userEmailBo.getEmail(), randomPassword, user.getName(),isReset);
 					mailSender.send(message);
 				}
 			}
