@@ -21,8 +21,11 @@ public class MailHelper {
 	
 	public static final String MESSAGE_TEMPLATE_URL = "ewallet_mailer_template.html";
 	
+	public static final String MESSAGE_RESET_TEMPLATE_URL = "ewallet_mailer_template.html";
+	
 	//Used to load the template in this
 	public static String MESSAGE_TEMPLATE_STR = "";
+	public static String MESSAGE_RESET_TEMPLATE_STR = "";
 	
 	public static String EWALET_PASSWORD_MESSAGE_TEMPLATE_STR = "ewallet.password";
 	
@@ -54,14 +57,20 @@ public class MailHelper {
 	 * @return
 	 * @throws MailException
 	 */
-	public static MailTO createMailTO(String to, String eWalletPassword, String receiverName) throws MailException{
+	public static MailTO createMailTO(String to, String eWalletPassword, String receiverName,boolean isReset) throws MailException{
 		MailTO mail = new MailTO();
 		mail.setFrom(FROM);
 		mail.setFromPersonal(FROM_NAME);
 		//Set message using template		
 		String message = MESSAGE_TEMPLATE_STR.replaceAll(EWALET_PASSWORD_MESSAGE_TEMPLATE_STR, eWalletPassword)
 				.replaceAll(EWALET_RECEIVER_MESSAGE_TEMPLATE_STR, receiverName);
+		String messageReset = MESSAGE_RESET_TEMPLATE_STR.replaceAll(EWALET_PASSWORD_MESSAGE_TEMPLATE_STR, eWalletPassword)
+				.replaceAll(EWALET_RECEIVER_MESSAGE_TEMPLATE_STR, receiverName);
+		
 		mail.setMessage(message);
+		if(isReset){
+			mail.setMessage(messageReset);
+		}
 		mail.setSubject(SUBJECT);
 		mail.setTo(new String[] { to });		
 //		mail.setCc(new String[] { CC });
@@ -83,6 +92,22 @@ public class MailHelper {
 			  MESSAGE_TEMPLATE_STR = messageTemplateString.toString();
 		} catch (IOException e) {
 			throw new MailerException("Error While Reading Message Template from file " + MESSAGE_TEMPLATE_URL, e);
+		}
+		
+	}
+	// Static block to load the reset message template from html
+	static {
+		try {
+			  InputStream messageTemplateStream = MailHelper.class.getClassLoader().getResourceAsStream(MESSAGE_RESET_TEMPLATE_URL);
+			  BufferedReader br = new BufferedReader(new InputStreamReader(messageTemplateStream));
+			  StringBuilder messageTemplateString = new StringBuilder("");
+			  String strLine;
+			  while ((strLine = br.readLine()) != null)   {
+				  messageTemplateString.append(strLine);
+			  }
+			  MESSAGE_RESET_TEMPLATE_STR = messageTemplateString.toString();
+		} catch (IOException e) {
+			throw new MailerException("Error While Reading Message Template from file " + MESSAGE_RESET_TEMPLATE_URL, e);
 		}
 		
 	}

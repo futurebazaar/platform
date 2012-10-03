@@ -99,7 +99,7 @@ public class WalletDaoImpl implements WalletDao {
 			String passwordEncrypted = Encrypt.encrypt(randomPassword);
 			long walletId = createNewWallet(passwordEncrypted);
 			jdbcTemplate.update(CREATE_USER_CLIENT_WALLET, new Object[]{userId,clientId,walletId});
-			walletPasswordSender.sendWalletPassword(userId,randomPassword);
+			walletPasswordSender.sendWalletPassword(userId,randomPassword,false);
 			return load(walletId);
 		}catch (Exception e) {
 			e.printStackTrace();
