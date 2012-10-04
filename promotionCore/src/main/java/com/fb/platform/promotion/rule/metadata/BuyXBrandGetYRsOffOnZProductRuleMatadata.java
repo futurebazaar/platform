@@ -12,8 +12,7 @@ import com.fb.platform.promotion.rule.config.RuleConfigDescriptorEnum;
  * @author keith
  *
  */
-public class BuyXBrandGetYRsOffOnZProductRuleMatadata extends
-		RuleConfigMetadata {
+public class BuyXBrandGetYRsOffOnZProductRuleMatadata extends RuleConfigMetadata {
 
 	public BuyXBrandGetYRsOffOnZProductRuleMatadata() {
 		List<RuleConfigItemMetadata> ruleConfigItemMetadata = new ArrayList<RuleConfigItemMetadata>();

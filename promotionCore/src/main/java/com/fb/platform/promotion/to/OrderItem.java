@@ -93,4 +93,7 @@ public class OrderItem {
 		Money productPrice = new Money(product.getPrice());
 		return productPrice.times(quantity);
 	}
+	public boolean isOrderItemOfProduct(List<Integer> productList) {
+		return product.isProductApplicable(productList);
+	}
 }

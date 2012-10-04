@@ -26,6 +26,7 @@ public class BuyWorthXGetYRsOffRuleMetadata extends RuleConfigMetadata {
 		ruleConfigItemMetadata.add(new RuleConfigItemMetadata(RuleConfigDescriptorEnum.BRAND_LIST, false));
 		ruleConfigItemMetadata.add(new RuleConfigItemMetadata(RuleConfigDescriptorEnum.MIN_ORDER_VALUE, false));
 		ruleConfigItemMetadata.add(new RuleConfigItemMetadata(RuleConfigDescriptorEnum.FIXED_DISCOUNT_RS_OFF, true));
+		ruleConfigItemMetadata.add(new RuleConfigItemMetadata(RuleConfigDescriptorEnum.PRODUCT_ID, false));
 		
 		this.setRuleConfigItemMetadata(ruleConfigItemMetadata);
 		

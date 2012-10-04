@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang.math.RandomUtils;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -411,5 +412,40 @@ public class PromotionManagerImplTest extends BaseTestCase{
 		assertTrue((couponResponse.getPromoName()).equals("Clearance Discount promotion"));
 		assertTrue(couponResponse.getPromoDescription().equals("Rs 250 Off on 500 Rs order of clearance products"));
 		assertEquals(couponResponse.getStatusMessage(), ApplyCouponResponseStatusEnum.SUCCESS.getMesage());
+	}
+	
+	@Test
+	public void productPercentOff() {
+		ApplyCouponRequest request = new ApplyCouponRequest();
+		OrderRequest orderRequest = new OrderRequest();
+		
+		request.setCouponCode("RAONE");
+		request.setIsOrderCommitted(false);
+		request.setOrderBookingDate(new DateTime());
+		request.setSessionToken(responseUser1.getSessionToken());
+		
+		orderRequest.setOrderId(-6000);
+		
+		List<OrderItem> orderItems = new ArrayList<OrderItem>();
+		OrderItem orderItem = new OrderItem();
+		Product prod = new Product();
+		
+		prod.setPrice(new BigDecimal(600));
+		prod.setProductId(110084);
+		
+		orderItem.setQuantity(1);
+		orderItem.setProduct(prod);
+		
+		orderItems.add(orderItem);
+		orderRequest.setOrderItems(orderItems);
+		orderRequest.setClientId(5);
+		request.setOrderReq(orderRequest);
+		
+		ApplyCouponResponse response = promotionManager.applyCoupon(request);
+		assertNotNull(response);
+		assertEquals(response.getCouponStatus(), ApplyCouponResponseStatusEnum.SUCCESS);
+		assertEquals(60, response.getOrderDiscount().getOrderDiscountValue().intValue());
+		assertEquals("Buy Worth X and Get Y Percent Off for Product", response.getPromoName());
+		assertNotNull(response);
 	}
 }

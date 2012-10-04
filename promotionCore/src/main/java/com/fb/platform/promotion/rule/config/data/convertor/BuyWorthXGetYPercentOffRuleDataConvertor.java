@@ -35,6 +35,7 @@ public class BuyWorthXGetYPercentOffRuleDataConvertor implements
 		data.setMinOrderValue((Money) RuleConfigDescriptorEnum.MIN_ORDER_VALUE.parse(ruleConfig, metadata));
 		data.setDiscountPercentage((BigDecimal)RuleConfigDescriptorEnum.DISCOUNT_PERCENTAGE.parse(ruleConfig, metadata));
 		data.setMaxDiscountPerUse((Money) RuleConfigDescriptorEnum.MAX_DISCOUNT_CEIL_IN_VALUE.parse(ruleConfig, metadata));
+		data.setProductIds((List<Integer>)RuleConfigDescriptorEnum.PRODUCT_ID.parse(ruleConfig, metadata));
 		
 		return data;
 	}
