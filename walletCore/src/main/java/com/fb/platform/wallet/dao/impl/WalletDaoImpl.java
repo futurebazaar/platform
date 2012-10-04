@@ -10,6 +10,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.springframework.dao.DataAccessResourceFailureException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -24,6 +25,7 @@ import com.fb.platform.wallet.service.exception.WalletCreationError;
 import com.fb.platform.wallet.service.exception.WalletNotFoundException;
 import com.fb.platform.wallet.util.Encrypt;
 import com.fb.platform.wallet.util.GenerateSendWalletPassword;
+import com.sun.org.apache.regexp.internal.RE;
 
 public class WalletDaoImpl implements WalletDao {
 	
@@ -98,8 +100,12 @@ public class WalletDaoImpl implements WalletDao {
 			String randomPassword = RandomStringUtils.random(4, false, true);
 			String passwordEncrypted = Encrypt.encrypt(randomPassword);
 			long walletId = createNewWallet(passwordEncrypted);
-			jdbcTemplate.update(CREATE_USER_CLIENT_WALLET, new Object[]{userId,clientId,walletId});
-			walletPasswordSender.sendWalletPassword(userId,randomPassword,false);
+			if (walletId > 0){
+				jdbcTemplate.update(CREATE_USER_CLIENT_WALLET, new Object[]{userId,clientId,walletId});
+				walletPasswordSender.sendWalletPassword(userId,randomPassword,false);
+			}else{
+				return load(userId, clientId, false);
+			}
 			return load(walletId);
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -120,6 +126,8 @@ public class WalletDaoImpl implements WalletDao {
 			}, keyHolder);
 			long walletId = keyHolder.getKey().longValue();
 			return walletId;
+		}catch (DuplicateKeyException e) {
+			return 0;
 		} catch (DataAccessResourceFailureException e) {
 			log.error("###This is a data access exxception while creating wallet####");
 			throw e;
