@@ -503,26 +503,28 @@ public class WalletResource {
 	
 	private Transaction fromTransactionTotoTransactionApi(com.fb.platform.wallet.to.WalletTransaction apiTransaction){
 		Transaction transaction = new Transaction();
-		transaction.setTransactionId(apiTransaction.getTransactionId());
-		transaction.setType(apiTransaction.getTransactionType().name());
-		transaction.setAmount(apiTransaction.getAmount().getAmount());
-		transaction.setTimestamp(apiTransaction.getTimeStamp());
-		transaction.setWalletBalance(apiTransaction.getWalletBalance().getAmount());
-		List<SubTransaction> subTransactionList = new ArrayList<SubTransaction>();
-		if (apiTransaction.getWalletSubTransaction() != null){
-			for (com.fb.platform.wallet.to.WalletSubTransaction apiSubTransaction : apiTransaction.getWalletSubTransaction()){
-				SubTransaction subTransaction = new SubTransaction();
-				subTransaction.setSubWallet(SubWallet.fromValue(apiSubTransaction.getSubWalletType().toString()));
-				subTransaction.setAmount(apiSubTransaction.getAmount().getAmount());
-				subTransaction.setOrderId(apiSubTransaction.getOrderId());
-				subTransaction.setPaymentId(apiSubTransaction.getPaymentId());
-				subTransaction.setRefundId(apiSubTransaction.getRefundId());
-				subTransaction.setPaymentReversalId(apiSubTransaction.getPaymentReversalId());
-				subTransaction.setGiftCode(apiSubTransaction.getGiftCode());
-				
-				subTransactionList.add(subTransaction);
+		if(apiTransaction !=null){
+			transaction.setTransactionId(apiTransaction.getTransactionId());
+			transaction.setType(apiTransaction.getTransactionType().name());
+			transaction.setAmount(apiTransaction.getAmount().getAmount());
+			transaction.setTimestamp(apiTransaction.getTimeStamp());
+			transaction.setWalletBalance(apiTransaction.getWalletBalance().getAmount());
+			List<SubTransaction> subTransactionList = new ArrayList<SubTransaction>();
+			if (apiTransaction.getWalletSubTransaction() != null){
+				for (com.fb.platform.wallet.to.WalletSubTransaction apiSubTransaction : apiTransaction.getWalletSubTransaction()){
+					SubTransaction subTransaction = new SubTransaction();
+					subTransaction.setSubWallet(SubWallet.fromValue(apiSubTransaction.getSubWalletType().toString()));
+					subTransaction.setAmount(apiSubTransaction.getAmount().getAmount());
+					subTransaction.setOrderId(apiSubTransaction.getOrderId());
+					subTransaction.setPaymentId(apiSubTransaction.getPaymentId());
+					subTransaction.setRefundId(apiSubTransaction.getRefundId());
+					subTransaction.setPaymentReversalId(apiSubTransaction.getPaymentReversalId());
+					subTransaction.setGiftCode(apiSubTransaction.getGiftCode());
+					
+					subTransactionList.add(subTransaction);
+				}
+				transaction.getSubTransaction().addAll(subTransactionList);
 			}
-			transaction.getSubTransaction().addAll(subTransactionList);
 		}
 		return transaction;
 	}
