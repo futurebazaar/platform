@@ -35,6 +35,8 @@ public class MailHelper {
 	
 	public static final String SUBJECT = "Your Future Bazaar Wallet Password";
 	
+	public static final String SUBJECT_RESET = "Your Future Bazaar Wallet Pin has been reset";
+	
 	public static final String CC = "";
 	
 	public static final String BCC = "pm@futurebazaar.com";
@@ -68,10 +70,12 @@ public class MailHelper {
 				.replaceAll(EWALET_RECEIVER_MESSAGE_TEMPLATE_STR, receiverName);
 		
 		mail.setMessage(message);
+		mail.setSubject(SUBJECT);
 		if(isReset){
 			mail.setMessage(messageReset);
+			mail.setSubject(SUBJECT_RESET);
 		}
-		mail.setSubject(SUBJECT);
+		
 		mail.setTo(new String[] { to });		
 //		mail.setCc(new String[] { CC });
 		mail.setBcc(new String[] {BCC });
