@@ -21,7 +21,7 @@ public class MailHelper {
 	
 	public static final String MESSAGE_TEMPLATE_URL = "ewallet_mailer_template.html";
 	
-	public static final String MESSAGE_RESET_TEMPLATE_URL = "ewallet_mailer_template.html";
+	public static final String MESSAGE_RESET_TEMPLATE_URL = "ewallet_reset_mailer_template.html";
 	
 	//Used to load the template in this
 	public static String MESSAGE_TEMPLATE_STR = "";
