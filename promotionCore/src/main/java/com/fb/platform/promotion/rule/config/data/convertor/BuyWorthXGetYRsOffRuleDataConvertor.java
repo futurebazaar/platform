@@ -33,6 +33,7 @@ public class BuyWorthXGetYRsOffRuleDataConvertor implements
 		data.setBrands((List<Integer>)RuleConfigDescriptorEnum.BRAND_LIST.parse(ruleConfig, metadata));
 		data.setMinOrderValue((Money) RuleConfigDescriptorEnum.MIN_ORDER_VALUE.parse(ruleConfig, metadata));
 		data.setFixedRsOff((Money)RuleConfigDescriptorEnum.FIXED_DISCOUNT_RS_OFF.parse(ruleConfig, metadata));
+		data.setProductIds((List<Integer>)RuleConfigDescriptorEnum.PRODUCT_ID.parse(ruleConfig, metadata));
 		
 		return data;
 		

@@ -25,6 +25,7 @@ public class BuyWorthXGetYPercentOffRuleMetadata extends RuleConfigMetadata {
 		ruleConfigItemMetadata.add(new RuleConfigItemMetadata(RuleConfigDescriptorEnum.MIN_ORDER_VALUE, false));
 		ruleConfigItemMetadata.add(new RuleConfigItemMetadata(RuleConfigDescriptorEnum.DISCOUNT_PERCENTAGE, true));
 		ruleConfigItemMetadata.add(new RuleConfigItemMetadata(RuleConfigDescriptorEnum.MAX_DISCOUNT_CEIL_IN_VALUE, false));
+		ruleConfigItemMetadata.add(new RuleConfigItemMetadata(RuleConfigDescriptorEnum.PRODUCT_ID, false));
 		
 		setRuleConfigItemMetadata(ruleConfigItemMetadata);
 	}

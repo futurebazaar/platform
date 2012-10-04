@@ -57,8 +57,11 @@ public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule {
 		if (ListUtil.isValidList(data.getBrands()) && !request.isAnyProductInBrand(data.getBrands())) {
 			return PromotionStatusEnum.BRAND_MISMATCH;
 		}
+		if (ListUtil.isValidList(data.getProductIds()) && !request.hasProduct(data.getProductIds())) {
+			return PromotionStatusEnum.PRODUCT_NOT_PRESENT;
+		}
 		
-		Money orderValue = request.getOrderValueForRelevantProducts(data.getBrands(), data.getIncludeCategoryList(), data.getExcludeCategoryList());
+		Money orderValue = request.getOrderValue(data.getBrands(), data.getIncludeCategoryList(), data.getExcludeCategoryList(), data.getProductIds());
 		if(data.getMinOrderValue() !=null && orderValue.lt(data.getMinOrderValue())) {
 			return PromotionStatusEnum.LESS_ORDER_AMOUNT;
 		}
@@ -94,6 +97,7 @@ public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule {
 		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.BRAND_LIST, false));
 		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.MIN_ORDER_VALUE, false));
 		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.FIXED_DISCOUNT_RS_OFF, true));
+		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.PRODUCT_ID, false));
 		
 		return ruleConfigs;
 	}
