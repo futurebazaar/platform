@@ -5,7 +5,9 @@ package com.fb.platform.promotion.rule.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -57,7 +59,10 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule {
 		if (ListUtil.isValidList(data.getBrands()) && !request.isAnyProductInBrand(data.getBrands())) {
 			return PromotionStatusEnum.BRAND_MISMATCH;
 		}
-		Money orderValue = request.getOrderValueForRelevantProducts(data.getBrands(), data.getIncludeCategoryList(), data.getExcludeCategoryList());
+		if (ListUtil.isValidList(data.getProductIds()) && !request.hasProduct(data.getProductIds())) {
+			return PromotionStatusEnum.PRODUCT_NOT_PRESENT;
+		}
+		Money orderValue = request.getOrderValue(data.getBrands(), data.getIncludeCategoryList(), data.getExcludeCategoryList(), data.getProductIds());
 		if(data.getMinOrderValue() !=null && orderValue.lt(data.getMinOrderValue())) {
 			return PromotionStatusEnum.LESS_ORDER_AMOUNT;
 		}
@@ -67,10 +72,11 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule {
 	@Override
 	public OrderDiscount execute(OrderDiscount orderDiscount) {
 		OrderRequest request = orderDiscount.getOrderRequest();
+		Set<Integer> productSet = null;
 		if(log.isDebugEnabled()) {
 			log.debug("Executing BuyWorthXGetYPercentOffRuleImpl on order : " + request.getOrderId());
 		}
-		Money orderVal = request.getOrderValueForRelevantProducts(data.getBrands(), data.getIncludeCategoryList(), data.getExcludeCategoryList());
+		Money orderVal = request.getOrderValue(data.getBrands(), data.getIncludeCategoryList(), data.getExcludeCategoryList(), data.getProductIds());
 		Money discountCalculated = (orderVal.times(data.getDiscountPercentage().doubleValue())).div(100);
 		Money finalDiscountAmount = new Money(new BigDecimal(0));
 		if(data.getMaxDiscountPerUse() != null && discountCalculated.gt(data.getMaxDiscountPerUse())) {
@@ -83,7 +89,10 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule {
 		}
 		
 		orderDiscount.setOrderDiscountValue(finalDiscountAmount.getAmount());
-		return orderDiscount.distributeDiscountOnOrder(orderDiscount,data.getBrands(),data.getIncludeCategoryList(),data.getExcludeCategoryList());
+		if(ListUtil.isValidList(data.getProductIds())) {
+			productSet = new HashSet<Integer>(data.getProductIds());
+		}
+		return orderDiscount.distributeDiscountOnOrder(orderDiscount,data.getBrands(),data.getIncludeCategoryList(),data.getExcludeCategoryList(), productSet);
 	}
 	
 	@Override
@@ -103,6 +112,7 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule {
 		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.MIN_ORDER_VALUE, false));
 		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.DISCOUNT_PERCENTAGE, true));
 		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.MAX_DISCOUNT_CEIL_IN_VALUE, true));
+		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.PRODUCT_ID, false));
 		
 		return ruleConfigs;
 	}

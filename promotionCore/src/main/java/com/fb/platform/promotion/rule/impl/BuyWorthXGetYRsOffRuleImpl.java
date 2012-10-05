@@ -3,9 +3,10 @@
  */
 package com.fb.platform.promotion.rule.impl;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -57,8 +58,11 @@ public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule {
 		if (ListUtil.isValidList(data.getBrands()) && !request.isAnyProductInBrand(data.getBrands())) {
 			return PromotionStatusEnum.BRAND_MISMATCH;
 		}
+		if (ListUtil.isValidList(data.getProductIds()) && !request.hasProduct(data.getProductIds())) {
+			return PromotionStatusEnum.PRODUCT_NOT_PRESENT;
+		}
 		
-		Money orderValue = request.getOrderValueForRelevantProducts(data.getBrands(), data.getIncludeCategoryList(), data.getExcludeCategoryList());
+		Money orderValue = request.getOrderValue(data.getBrands(), data.getIncludeCategoryList(), data.getExcludeCategoryList(), data.getProductIds());
 		if(data.getMinOrderValue() !=null && orderValue.lt(data.getMinOrderValue())) {
 			return PromotionStatusEnum.LESS_ORDER_AMOUNT;
 		}
@@ -69,13 +73,17 @@ public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule {
 
 	@Override
 	public OrderDiscount execute(OrderDiscount orderDiscount) {
-		OrderRequest request = orderDiscount.getOrderRequest();	
+		OrderRequest request = orderDiscount.getOrderRequest();
+		Set<Integer> productSet = null;
 		if(log.isDebugEnabled()) {
 			log.debug("Executing BuyWorthXGetYRsOffRuleImpl on order : " + request.getOrderId());
 		}
 		orderDiscount.setOrderDiscountValue(data.getFixedRsOff().getAmount());
-
-		return orderDiscount.distributeDiscountOnOrder(orderDiscount,data.getBrands(),data.getIncludeCategoryList(),data.getExcludeCategoryList());
+		
+		if(ListUtil.isValidList(data.getProductIds())) {
+			productSet = new HashSet<Integer>(data.getProductIds());
+		}
+		return orderDiscount.distributeDiscountOnOrder(orderDiscount,data.getBrands(),data.getIncludeCategoryList(),data.getExcludeCategoryList(), productSet);
 		
 	}
 	
@@ -94,6 +102,7 @@ public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule {
 		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.BRAND_LIST, false));
 		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.MIN_ORDER_VALUE, false));
 		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.FIXED_DISCOUNT_RS_OFF, true));
+		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.PRODUCT_ID, false));
 		
 		return ruleConfigs;
 	}

@@ -72,4 +72,7 @@ public class Product {
 	public boolean isProductOfBrand(List<Integer> brandList){
 		return brandList.containsAll(this.brands);
 	}
+	public boolean isProductApplicable(List<Integer> productList) {
+		return productList.contains(productId);
+	}
 }

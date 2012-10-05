@@ -212,7 +212,6 @@ public class eGVRestClient {
 			String senderName, String receiverName, String giftMessage, boolean isDefer, String mobile,
 			DateTime validFrom, DateTime validTill) throws Exception {
 		HttpClient httpClient = new HttpClient();
-		GregorianCalendar gregCal = new GregorianCalendar();
 		String url = EGV_URL + "/create";
 		PostMethod postMethod = new PostMethod(url);
 
@@ -225,10 +224,8 @@ public class eGVRestClient {
 		createRequest.setReceiverName(receiverName);
 		createRequest.setGiftMessage(giftMessage);
 		createRequest.setIsDeferActivation(isDefer);
-		gregCal.set(validFrom.getYear(), validFrom.getMonthOfYear() - 1, validFrom.getDayOfMonth(), 0, 0, 0);
-		createRequest.setValidFrom(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
-		gregCal.set(validTill.getYear(), validTill.getMonthOfYear() - 1, validTill.getDayOfMonth(), 0, 0, 0);
-		createRequest.setValidTill(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+		createRequest.setValidFrom(new DateTime(validFrom.getYear(), validFrom.getMonthOfYear() - 1, validFrom.getDayOfMonth(), 00, 00, 00));
+		createRequest.setValidTill(new DateTime(validTill.getYear(), validTill.getMonthOfYear() - 1, validTill.getDayOfMonth(), 00, 00, 00));
 
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.egv._1_0");
 
@@ -374,7 +371,6 @@ public class eGVRestClient {
 	private static void activateGV(String sessionToken, String gvNumber, BigDecimal amount, DateTime validFrom,
 			DateTime validTill) throws Exception {
 		HttpClient httpClient = new HttpClient();
-		GregorianCalendar gregCal = new GregorianCalendar();
 		String url = EGV_URL + "/activate";
 		PostMethod postMethod = new PostMethod(url);
 
@@ -382,10 +378,8 @@ public class eGVRestClient {
 		activateRequest.setGiftVoucherNumber(Long.parseLong(gvNumber));
 		activateRequest.setSessionToken(sessionToken);
 		activateRequest.setAmount(amount);
-		gregCal.set(validFrom.getYear(), validFrom.getMonthOfYear() - 1, validFrom.getDayOfMonth(), 0, 0, 0);
-		activateRequest.setValidFrom(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
-		gregCal.set(validTill.getYear(), validTill.getMonthOfYear() - 1, validTill.getDayOfMonth(), 0, 0, 0);
-		activateRequest.setValidTill(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregCal));
+		activateRequest.setValidFrom(new DateTime(validFrom.getYear(), validFrom.getMonthOfYear() - 1, validFrom.getDayOfMonth(), 00, 00, 00));
+		activateRequest.setValidTill(new DateTime(validTill.getYear(), validTill.getMonthOfYear() - 1, validTill.getDayOfMonth(), 00, 00, 00));
 
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.egv._1_0");
 
