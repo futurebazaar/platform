@@ -11,8 +11,11 @@ import com.sap.conn.idoc.IDocDocumentList;
 import com.sap.conn.idoc.IDocFactory;
 import com.sap.conn.idoc.IDocParseException;
 import com.sap.conn.idoc.IDocRepository;
+import com.sap.conn.idoc.IDocTraceListener;
 import com.sap.conn.idoc.IDocXMLProcessor;
 import com.sap.conn.idoc.jco.JCoIDoc;
+import com.sap.conn.idoc.jco.JCoIDocServerContext;
+import com.sap.conn.idoc.jco.rt.DefaultIDocHandlerFactory;
 import com.sap.conn.idoc.jco.rt.JCoIDocDocument;
 import com.sap.conn.idoc.jco.rt.JCoIDocFunction;
 import com.sap.conn.jco.JCoDestination;
@@ -20,6 +23,7 @@ import com.sap.conn.jco.JCoDestinationManager;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoFunctionTemplate;
+import com.sap.conn.jco.JCoResponse;
 import com.sap.conn.jco.JCoTable;
 import com.sap.conn.jco.ext.DestinationDataEventListener;
 import com.sap.conn.jco.ext.DestinationDataProvider;
@@ -46,8 +50,6 @@ public class SapClientConnector {
         public DestinationDataEventListener getDestinationDataEventListener() {
         	return eL;
         }
-        
-        
 
         public boolean supportsEvents() {
             return true;
@@ -82,18 +84,12 @@ public class SapClientConnector {
     	bapiProperties = getDestinationPropertiesFromEnvironment();
     	JCoDestination destination = JCoDestinationManager.getDestination("bapi");  
         // Create repository  
-    	
         IDocRepository iDocRepository = JCoIDoc.getIDocRepository(destination);
         String transactionID = destination.createTID();
-        IDocFactory iDocFactory = JCoIDoc.getIDocFactory();  
+        IDocFactory iDocFactory = JCoIDoc.getIDocFactory();
         IDocXMLProcessor iDocXMLProcessor = iDocFactory.getIDocXMLProcessor();
-        IDocDocumentList iDocDocumentList = iDocXMLProcessor.parse(iDocRepository, xml);  
-        JCoIDoc.send(iDocDocumentList, IDocFactory.IDOC_VERSION_DEFAULT, destination, transactionID);
-        System.out.println(destination.getRepository().getFunction("ZABHI_INBOUND"));
-//        function.execute(destination);
-//        JCoTable table = function.getTableParameterList().getTable("RETURN");
-//        table.setRow(0);
-//        System.out.println(table.getValue("IDOC_STATUS"));
+        IDocDocumentList iDocDocumentList = iDocXMLProcessor.parse(iDocRepository, xml);
+        JCoIDoc.send(iDocDocumentList, IDocFactory.IDOC_VERSION_3, destination, transactionID);
         destination.confirmTID(transactionID);
     }
     

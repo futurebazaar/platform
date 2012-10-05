@@ -59,11 +59,14 @@
   <classpathentry kind="var" path="M2_REPO/org/springframework/spring-web/3.0.5.RELEASE/spring-web-3.0.5.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-web/3.0.5.RELEASE/spring-web-3.0.5.RELEASE-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/javax/mail/mail/1.4/mail-1.4.jar" sourcepath="M2_REPO/javax/mail/mail/1.4/mail-1.4-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/jcraft/jsch/0.1.47/jsch-0.1.47.jar" sourcepath="M2_REPO/com/jcraft/jsch/0.1.47/jsch-0.1.47-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/jmock/jmock/2.5.1/jmock-2.5.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/hamcrest/hamcrest-library/1.1/hamcrest-library-1.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/net/sf/ehcache/ehcache-core/2.5.1/ehcache-core-2.5.1.jar" sourcepath="M2_REPO/net/sf/ehcache/ehcache-core/2.5.1/ehcache-core-2.5.1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/net/sf/ehcache/ehcache-terracotta/2.5.1/ehcache-terracotta-2.5.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/terracotta/terracotta-toolkit-1.4-runtime/4.1.0/terracotta-toolkit-1.4-runtime-4.1.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/javax/servlet/servlet-api/2.4/servlet-api-2.4.jar" sourcepath="M2_REPO/javax/servlet/servlet-api/2.4/servlet-api-2.4-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/jmock/jmock/1.1.0/jmock-1.1.0.jar" sourcepath="M2_REPO/jmock/jmock/1.1.0/jmock-1.1.0-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/jmock/jmock/1.2.0/jmock-1.2.0.jar" sourcepath="M2_REPO/jmock/jmock/1.2.0/jmock-1.2.0-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/junit/junit/4.8.2/junit-4.8.2.jar" sourcepath="M2_REPO/junit/junit/4.8.2/junit-4.8.2-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/subethamail/subethasmtp-wiser/1.0.3/subethasmtp-wiser-1.0.3.jar" sourcepath="M2_REPO/org/subethamail/subethasmtp-wiser/1.0.3/subethasmtp-wiser-1.0.3-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/subethamail/subethasmtp-smtp/1.0.3/subethasmtp-smtp-1.0.3.jar" sourcepath="M2_REPO/org/subethamail/subethasmtp-smtp/1.0.3/subethasmtp-smtp-1.0.3-sources.jar"/>

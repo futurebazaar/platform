@@ -434,11 +434,11 @@
         <module>deliveryDeleteReceiver</module>
         <module>itemAckReceiver</module>
         <module>launcher</module>
-	    <module>sapClientConnector</module>
-	    <module>platformScheduler</module>
-	    <module>sapWS</module>
         <module>walletCore</module>
         <module>walletWS</module>
+	    <module>sapClientConnector</module>
+	    <module>sapWS</module>
+	    <module>platformScheduler</module>
     	<module>promotionWS</module>
     </modules>
 
