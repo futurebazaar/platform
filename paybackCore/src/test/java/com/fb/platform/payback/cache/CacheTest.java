@@ -43,7 +43,6 @@ public class CacheTest extends BaseTestCase{
 		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.ENTER_LOYALTY_CARD_EARN_X_POINTS);
 		ruleCacheAccess.put(EarnPointsRuleEnum.ENTER_LOYALTY_CARD_EARN_X_POINTS.name(), rule);
 		PointsRule cacheRule =ruleCacheAccess.get(EarnPointsRuleEnum.ENTER_LOYALTY_CARD_EARN_X_POINTS.name());
-		assertTrue(cacheRule.allowNext());
 		 
 		OrderRequest orderRequest = new OrderRequest();
 		orderRequest.setTxnTimestamp(DateTime.now());
@@ -62,7 +61,7 @@ public class CacheTest extends BaseTestCase{
 		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.BUY_WORTH_X_EARN_Y_BONUS_POINTS);
 		ruleCacheAccess.put(EarnPointsRuleEnum.BUY_WORTH_X_EARN_Y_BONUS_POINTS.name(), rule);
 		PointsRule cacheRule =ruleCacheAccess.get(EarnPointsRuleEnum.BUY_WORTH_X_EARN_Y_BONUS_POINTS.name());
-		assertTrue(cacheRule.allowNext());
+		assertTrue(cacheRule.allowNext(null, null));
 		 
 		OrderRequest orderRequest = new OrderRequest();
 		orderRequest.setTxnTimestamp(DateTime.now());
@@ -82,7 +81,7 @@ public class CacheTest extends BaseTestCase{
 		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.EARN_X_POINTS_ON_Y_DAY);
 		ruleCacheAccess.put(EarnPointsRuleEnum.EARN_X_POINTS_ON_Y_DAY.name(), rule);
 		PointsRule cacheRule =ruleCacheAccess.get(EarnPointsRuleEnum.EARN_X_POINTS_ON_Y_DAY.name());
-		assertFalse(cacheRule.allowNext());
+		assertFalse(cacheRule.allowNext(null, null));
 		 
 		OrderRequest orderRequest = new OrderRequest();
 		orderRequest.setTxnTimestamp(new DateTime(2012, 05, 25, 0, 0, 0));

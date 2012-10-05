@@ -132,7 +132,7 @@ public class BuyHeroDealEarnYPoints implements PointsRule {
 	}
 
 	@Override
-	public boolean allowNext() {
+	public boolean allowNext(OrderRequest request, OrderItemRequest itemRequest) {
 		return true;
 	}
 

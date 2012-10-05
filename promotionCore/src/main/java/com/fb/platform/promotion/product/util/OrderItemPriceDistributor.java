@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.lang.Math;
 
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.to.OrderItem;
@@ -38,15 +39,27 @@ public class OrderItemPriceDistributor {
 			}
 		}
 
-		Money totalPriceQuantity = new Money(BigDecimal.ZERO);
+		double totalPriceQuantity = 0;
 		for (BigDecimal key : priceQuantityMap.keySet()) {
 			PriceQuantity pq = priceQuantityMap.get(key);
-			totalPriceQuantity = totalPriceQuantity.plus(pq.getPriceQuantity());
+			totalPriceQuantity += pq.getPriceQuantity().getAmount().doubleValue();
 		}
-
+		
+		int keyCount = priceQuantityMap.keySet().size();
+		double totalItemShare = totalPrice.getAmount().doubleValue();
+		double remItemShare = totalItemShare;
+		double itemShare = 0;
 		for (BigDecimal key : priceQuantityMap.keySet()) {
 			PriceQuantity pq = priceQuantityMap.get(key);
-			pq.setTotalPriceQuantity(totalPriceQuantity, totalPrice);
+			if (keyCount == 1)
+				itemShare = remItemShare;
+			else {
+				double ratio = pq.getPriceQuantity().getAmount().doubleValue() / totalPriceQuantity;
+				itemShare = Math.ceil(ratio * totalPrice.getAmount().doubleValue());
+			}
+			pq.setTotalPriceQuantity(itemShare);
+			remItemShare -= itemShare;
+			keyCount--;
 		}
 
 	}
@@ -86,23 +99,19 @@ public class OrderItemPriceDistributor {
 		public void addOrderItem(OrderItem orderItem) {
 			orderItems.add(orderItem);
 		}
-		public void setTotalPriceQuantity(Money totalPriceQuantity, Money totalPrice) {
-			this.totalPriceQuantity = totalPriceQuantity;
-
-			Money priceQuantity = getPriceQuantity();
-			double ratio = priceQuantity.getAmount().doubleValue() / totalPriceQuantity.getAmount().doubleValue();
-			double orderItemShare = ratio * totalPrice.getAmount().doubleValue();
-			//BigDecimal ratio = priceQuantity.getAmount().divide(totalPriceQuantity.getAmount(), RoundingMode.HALF_EVEN);
-			//individualProductPrice = priceQuantity.div(totalPriceQuantity.getAmount().doubleValue());
-			//BigDecimal orderItemShare = ratio.multiply(totalPrice.getAmount());
-			BigDecimal orderItemShareBD = new BigDecimal(orderItemShare);
-			orderItemShareBD = orderItemShareBD.setScale(2, RoundingMode.HALF_EVEN);
-			Money individualProductPrice = new Money(orderItemShareBD).div(quantity);
-			
-			//individualProductPrice = getPriceQuantity().div(totalPriceQuantity.getAmount().doubleValue()).times(totalPrice.getAmount().doubleValue()).div(quantity);
+		public void setTotalPriceQuantity(double totalItemShare) {
+			int itemCount = orderItems.size();
+			double remItemShare = totalItemShare;
+			double itemShare = 0;
 			for (OrderItem orderItem : orderItems) {
-				orderItem.getProduct().setDiscountedPrice(individualProductPrice.getAmount());
+				if (itemCount == 1)
+					itemShare = remItemShare;
+				else
+					itemShare = Math.ceil((orderItem.getQuantity() / this.getQuantity()) * totalItemShare);
+				orderItem.setTotalDiscount(orderItem.getPrice().subtract(new BigDecimal(itemShare)));
 				orderItem.setPromotionProcessed(true);
+				remItemShare -= itemShare;
+				itemCount--;
 			}
 		}
 	}
