@@ -11,6 +11,9 @@ import java.math.BigDecimal;
  */
 public class ProductVolumeTO {
 
+	private static BigDecimal TWELVE = new BigDecimal("12.00"); //1 foot = 12 inches
+	private static BigDecimal volumeToKGConstant = new BigDecimal("6.00");
+
 	//all units should be in inches 
 	private BigDecimal length = BigDecimal.ZERO;
 	private BigDecimal height = BigDecimal.ZERO;
@@ -28,9 +31,7 @@ public class ProductVolumeTO {
 		volumeInInches = volumeInInches.multiply(length).multiply(height).multiply(width);
 
 		if (volumeInInches.compareTo(BigDecimal.ZERO) != 0) {
-			BigDecimal twelve = new BigDecimal("12.00"); //1 foot = 12 inches
-
-			volumeWeight = volumeInInches.divide(twelve).divide(twelve).divide(twelve).multiply(new BigDecimal("6"));
+			volumeWeight = volumeInInches.divide(TWELVE).divide(TWELVE).divide(TWELVE).multiply(volumeToKGConstant);
 		}
 
 		return volumeWeight;
