@@ -300,7 +300,7 @@
 			<null />
 			<null />
 			<value name="valid_from">2012-02-01 00:00:00</value>
-			<value name="valid_till">2012-08-31 00:00:00</value>
+			<value name="valid_till">2014-08-31 00:00:00</value>
 			<value name="name">GlobalCouponPromotion</value>
 			<value name="description">This promotion is asscociated with a global coupon
 			</value>
@@ -313,7 +313,7 @@
 			<null />
 			<null />
 			<value name="valid_from">2012-02-01 00:00:00</value>
-			<value name="valid_till">2012-08-31 00:00:00</value>
+			<value name="valid_till">2014-08-31 00:00:00</value>
 			<value name="name">ScratchCard Response</value>
 			<value name="description">This promotion is asscociated with a scratch coupon
 			</value>
@@ -326,7 +326,7 @@
 			<null />
 			<null />
 			<value name="valid_from">2012-11-29 00:00:00</value>
-			<value name="valid_till">2013-03-01 00:00:00</value>
+			<value name="valid_till">2014-03-01 00:00:00</value>
 			<value name="name">New Promotion Original</value>
 			<value name="description">Test new promotion via Promotion Admin</value>
 			<null />
@@ -338,7 +338,7 @@
 			<null />
 			<null />
 			<value name="valid_from">2012-12-29 00:00:00</value>
-			<value name="valid_till">2013-03-01 00:00:00</value>
+			<value name="valid_till">2014-03-01 00:00:00</value>
 			<value name="name">New Promotion Copy</value>
 			<value name="description">Test new promotion via Promotion Admin</value>
 			<null />
