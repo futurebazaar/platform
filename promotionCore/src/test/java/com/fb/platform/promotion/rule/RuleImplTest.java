@@ -413,7 +413,7 @@ public class RuleImplTest extends BaseTestCase {
 		assertNotNull(ruleConfiguration);
 		assertEquals(3, ruleConfiguration.getConfigItems().size());
 
-		assertEquals(rule.isApplicable(orderReq1,userId,isCouponCommitted),PromotionStatusEnum.SUCCESS);
+		assertEquals(PromotionStatusEnum.SUCCESS, rule.isApplicable(orderReq1,userId,isCouponCommitted));
 		assertEquals(rule.isApplicable(orderReq2,userId,isCouponCommitted),PromotionStatusEnum.LESS_ORDER_AMOUNT);
 		assertEquals(rule.isApplicable(orderReq3,userId,isCouponCommitted),PromotionStatusEnum.SUCCESS);;
 		assertEquals(rule.isApplicable(orderReq4,userId,isCouponCommitted),PromotionStatusEnum.SUCCESS);

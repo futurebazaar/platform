@@ -19,6 +19,7 @@ public class BuyWorthXGetYRsOffRuleData implements RuleData {
 	private List<Integer> includeCategoryList = null;
 	private List<Integer> excludeCategoryList = null;
 	private List<Integer> brands;
+	private List<Integer> productIds = null;;
 	
 	public Money getFixedRsOff() {
 		return fixedRsOff;
@@ -55,6 +56,12 @@ public class BuyWorthXGetYRsOffRuleData implements RuleData {
 	}
 	public void setBrands(List<Integer> brands) {
 		this.brands = brands;
+	}
+	public List<Integer> getProductIds() {
+		return productIds;
+	}
+	public void setProductIds(List<Integer> productIds) {
+		this.productIds = productIds;
 	}
 	
 }

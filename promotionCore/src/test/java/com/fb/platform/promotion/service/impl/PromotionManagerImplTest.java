@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang.math.RandomUtils;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
-import com.fb.platform.promotion.product.to.CommitAutoPromotionRequest;
 import com.fb.platform.promotion.service.PromotionManager;
 import com.fb.platform.promotion.service.PromotionService;
 import com.fb.platform.promotion.to.ApplyCouponRequest;
@@ -411,5 +411,298 @@ public class PromotionManagerImplTest extends BaseTestCase{
 		assertTrue((couponResponse.getPromoName()).equals("Clearance Discount promotion"));
 		assertTrue(couponResponse.getPromoDescription().equals("Rs 250 Off on 500 Rs order of clearance products"));
 		assertEquals(couponResponse.getStatusMessage(), ApplyCouponResponseStatusEnum.SUCCESS.getMesage());
+	}
+	
+	@Test
+	public void productPercentOff() {
+		ApplyCouponRequest request = new ApplyCouponRequest();
+		OrderRequest orderRequest = new OrderRequest();
+		
+		request.setCouponCode("RAONE");
+		request.setIsOrderCommitted(false);
+		request.setOrderBookingDate(new DateTime());
+		request.setSessionToken(responseUser1.getSessionToken());
+		
+		orderRequest.setOrderId(-6000);
+		
+		List<OrderItem> orderItems = new ArrayList<OrderItem>();
+		OrderItem orderItem = new OrderItem();
+		Product prod = new Product();
+		
+		prod.setPrice(new BigDecimal(600));
+		prod.setProductId(110084);
+		
+		orderItem.setQuantity(1);
+		orderItem.setProduct(prod);
+		
+		orderItems.add(orderItem);
+		orderRequest.setOrderItems(orderItems);
+		orderRequest.setClientId(5);
+		request.setOrderReq(orderRequest);
+		
+		ApplyCouponResponse response = promotionManager.applyCoupon(request);
+		assertNotNull(response);
+		assertEquals(ApplyCouponResponseStatusEnum.SUCCESS, response.getCouponStatus());
+		assertEquals(60, response.getOrderDiscount().getOrderDiscountValue().intValue());
+		assertEquals("Buy Worth X and Get Y Percent Off for Product", response.getPromoName());
+	}
+	
+	@Test
+	public void productPercentOffMultipleQuantity() {
+		ApplyCouponRequest request = new ApplyCouponRequest();
+		OrderRequest orderRequest = new OrderRequest();
+		
+		request.setCouponCode("RAONE");
+		request.setIsOrderCommitted(false);
+		request.setOrderBookingDate(new DateTime());
+		request.setSessionToken(responseUser1.getSessionToken());
+		
+		orderRequest.setOrderId(-6000);
+		
+		List<OrderItem> orderItems = new ArrayList<OrderItem>();
+		OrderItem orderItem = new OrderItem();
+		Product prod = new Product();
+		
+		prod.setPrice(new BigDecimal(600));
+		prod.setProductId(110084);
+		
+		orderItem.setQuantity(2);
+		orderItem.setProduct(prod);
+		
+		orderItems.add(orderItem);
+		orderRequest.setOrderItems(orderItems);
+		orderRequest.setClientId(5);
+		request.setOrderReq(orderRequest);
+		
+		ApplyCouponResponse response = promotionManager.applyCoupon(request);
+		assertNotNull(response);
+		assertEquals(ApplyCouponResponseStatusEnum.SUCCESS, response.getCouponStatus());
+		assertEquals(120, response.getOrderDiscount().getOrderDiscountValue().intValue());
+		assertEquals("Buy Worth X and Get Y Percent Off for Product", response.getPromoName());
+	}
+	
+	@Test
+	public void productPercentOffMultipleProducts() {
+		ApplyCouponRequest request = new ApplyCouponRequest();
+		OrderRequest orderRequest = new OrderRequest();
+		
+		request.setCouponCode("RAONE");
+		request.setIsOrderCommitted(false);
+		request.setOrderBookingDate(new DateTime());
+		request.setSessionToken(responseUser1.getSessionToken());
+		
+		orderRequest.setOrderId(-6000);
+		
+		List<OrderItem> orderItems = new ArrayList<OrderItem>();
+		OrderItem orderItem = new OrderItem();
+		Product prod = new Product();
+		
+		prod.setPrice(new BigDecimal(600));
+		prod.setProductId(110084);
+		
+		orderItem.setQuantity(1);
+		orderItem.setProduct(prod);
+		
+		orderItems.add(orderItem);
+		
+		orderItem = new OrderItem();
+		prod = new Product();
+		
+		prod.setPrice(new BigDecimal(400));
+		prod.setProductId(110033);
+		
+		orderItem.setQuantity(1);
+		orderItem.setProduct(prod);
+		
+		orderItems.add(orderItem);
+		
+		orderRequest.setOrderItems(orderItems);
+		orderRequest.setClientId(5);
+		request.setOrderReq(orderRequest);
+		
+		ApplyCouponResponse response = promotionManager.applyCoupon(request);
+		assertNotNull(response);
+		assertEquals(ApplyCouponResponseStatusEnum.SUCCESS, response.getCouponStatus());
+		assertEquals(100, response.getOrderDiscount().getOrderDiscountValue().intValue());
+		assertEquals("Buy Worth X and Get Y Percent Off for Product", response.getPromoName());
+	}
+	
+	@Test
+	public void productFixedOff() {
+		ApplyCouponRequest request = new ApplyCouponRequest();
+		OrderRequest orderRequest = new OrderRequest();
+		
+		request.setCouponCode("RATWO");
+		request.setIsOrderCommitted(false);
+		request.setOrderBookingDate(new DateTime());
+		request.setSessionToken(responseUser1.getSessionToken());
+		
+		orderRequest.setOrderId(-6100);
+		
+		List<OrderItem> orderItems = new ArrayList<OrderItem>();
+		OrderItem orderItem = new OrderItem();
+		Product prod = new Product();
+		
+		prod.setPrice(new BigDecimal(600));
+		prod.setProductId(110084);
+		
+		orderItem.setQuantity(1);
+		orderItem.setProduct(prod);
+		
+		orderItems.add(orderItem);
+		orderRequest.setOrderItems(orderItems);
+		orderRequest.setClientId(5);
+		request.setOrderReq(orderRequest);
+		
+		ApplyCouponResponse response = promotionManager.applyCoupon(request);
+		assertNotNull(response);
+		assertEquals(ApplyCouponResponseStatusEnum.SUCCESS, response.getCouponStatus());
+		assertEquals(50, response.getOrderDiscount().getOrderDiscountValue().intValue());
+		assertEquals("Buy Worth X and Get Y Rs Off for Product", response.getPromoName());
+	}
+	
+	@Test
+	public void productFixedOffMultipleQuantity() {
+		ApplyCouponRequest request = new ApplyCouponRequest();
+		OrderRequest orderRequest = new OrderRequest();
+		
+		request.setCouponCode("RATWO");
+		request.setIsOrderCommitted(false);
+		request.setOrderBookingDate(new DateTime());
+		request.setSessionToken(responseUser1.getSessionToken());
+		
+		orderRequest.setOrderId(-6100);
+		
+		List<OrderItem> orderItems = new ArrayList<OrderItem>();
+		OrderItem orderItem = new OrderItem();
+		Product prod = new Product();
+		
+		prod.setPrice(new BigDecimal(600));
+		prod.setProductId(110084);
+		
+		orderItem.setQuantity(2);
+		orderItem.setProduct(prod);
+		
+		orderItems.add(orderItem);
+		orderRequest.setOrderItems(orderItems);
+		orderRequest.setClientId(5);
+		request.setOrderReq(orderRequest);
+		
+		ApplyCouponResponse response = promotionManager.applyCoupon(request);
+		assertNotNull(response);
+		assertEquals(ApplyCouponResponseStatusEnum.SUCCESS, response.getCouponStatus());
+		assertEquals(50, response.getOrderDiscount().getOrderDiscountValue().intValue());
+		assertEquals("Buy Worth X and Get Y Rs Off for Product", response.getPromoName());
+	}
+	
+	@Test
+	public void productFixedOffMultipleProducts() {
+		ApplyCouponRequest request = new ApplyCouponRequest();
+		OrderRequest orderRequest = new OrderRequest();
+		
+		request.setCouponCode("RATWO");
+		request.setIsOrderCommitted(false);
+		request.setOrderBookingDate(new DateTime());
+		request.setSessionToken(responseUser1.getSessionToken());
+		
+		orderRequest.setOrderId(-6100);
+		
+		List<OrderItem> orderItems = new ArrayList<OrderItem>();
+		OrderItem orderItem = new OrderItem();
+		Product prod = new Product();
+		
+		prod.setPrice(new BigDecimal(600));
+		prod.setProductId(110084);
+		
+		orderItem.setQuantity(1);
+		orderItem.setProduct(prod);
+		
+		orderItems.add(orderItem);
+		
+		orderItem = new OrderItem();
+		prod = new Product();
+		
+		prod.setPrice(new BigDecimal(400));
+		prod.setProductId(110044);
+		
+		orderItem.setQuantity(1);
+		orderItem.setProduct(prod);
+		
+		orderItems.add(orderItem);
+		
+		
+		orderRequest.setOrderItems(orderItems);
+		orderRequest.setClientId(5);
+		request.setOrderReq(orderRequest);
+		
+		ApplyCouponResponse response = promotionManager.applyCoupon(request);
+		assertNotNull(response);
+		assertEquals(ApplyCouponResponseStatusEnum.SUCCESS, response.getCouponStatus());
+		assertEquals(50, response.getOrderDiscount().getOrderDiscountValue().intValue());
+		assertEquals("Buy Worth X and Get Y Rs Off for Product", response.getPromoName());
+	}
+	
+	@Test
+	public void productFixedOffProductNotFound() {
+		ApplyCouponRequest request = new ApplyCouponRequest();
+		OrderRequest orderRequest = new OrderRequest();
+		
+		request.setCouponCode("RATWO");
+		request.setIsOrderCommitted(false);
+		request.setOrderBookingDate(new DateTime());
+		request.setSessionToken(responseUser1.getSessionToken());
+		
+		orderRequest.setOrderId(-6100);
+		
+		List<OrderItem> orderItems = new ArrayList<OrderItem>();
+		OrderItem orderItem = new OrderItem();
+		Product prod = new Product();
+		
+		prod.setPrice(new BigDecimal(600));
+		prod.setProductId(110022);
+		
+		orderItem.setQuantity(1);
+		orderItem.setProduct(prod);
+		
+		orderItems.add(orderItem);
+		orderRequest.setOrderItems(orderItems);
+		orderRequest.setClientId(5);
+		request.setOrderReq(orderRequest);
+		
+		ApplyCouponResponse response = promotionManager.applyCoupon(request);
+		assertNotNull(response);
+		assertEquals(ApplyCouponResponseStatusEnum.PRODUCT_NOT_PRESENT, response.getCouponStatus());
+	}
+	
+	@Test
+	public void productPercentOffProductNotFound() {
+		ApplyCouponRequest request = new ApplyCouponRequest();
+		OrderRequest orderRequest = new OrderRequest();
+		
+		request.setCouponCode("RAONE");
+		request.setIsOrderCommitted(false);
+		request.setOrderBookingDate(new DateTime());
+		request.setSessionToken(responseUser1.getSessionToken());
+		
+		orderRequest.setOrderId(-6000);
+		
+		List<OrderItem> orderItems = new ArrayList<OrderItem>();
+		OrderItem orderItem = new OrderItem();
+		Product prod = new Product();
+		
+		prod.setPrice(new BigDecimal(600));
+		prod.setProductId(110022);
+		
+		orderItem.setQuantity(1);
+		orderItem.setProduct(prod);
+		
+		orderItems.add(orderItem);
+		orderRequest.setOrderItems(orderItems);
+		orderRequest.setClientId(5);
+		request.setOrderReq(orderRequest);
+		
+		ApplyCouponResponse response = promotionManager.applyCoupon(request);
+		assertNotNull(response);
+		assertEquals(ApplyCouponResponseStatusEnum.PRODUCT_NOT_PRESENT, response.getCouponStatus());
 	}
 }
