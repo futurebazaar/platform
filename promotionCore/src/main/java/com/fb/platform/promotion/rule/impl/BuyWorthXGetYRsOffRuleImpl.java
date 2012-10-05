@@ -3,9 +3,10 @@
  */
 package com.fb.platform.promotion.rule.impl;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -72,13 +73,17 @@ public class BuyWorthXGetYRsOffRuleImpl implements PromotionRule {
 
 	@Override
 	public OrderDiscount execute(OrderDiscount orderDiscount) {
-		OrderRequest request = orderDiscount.getOrderRequest();	
+		OrderRequest request = orderDiscount.getOrderRequest();
+		Set<Integer> productSet = null;
 		if(log.isDebugEnabled()) {
 			log.debug("Executing BuyWorthXGetYRsOffRuleImpl on order : " + request.getOrderId());
 		}
 		orderDiscount.setOrderDiscountValue(data.getFixedRsOff().getAmount());
-
-		return orderDiscount.distributeDiscountOnOrder(orderDiscount,data.getBrands(),data.getIncludeCategoryList(),data.getExcludeCategoryList());
+		
+		if(ListUtil.isValidList(data.getProductIds())) {
+			productSet = new HashSet<Integer>(data.getProductIds());
+		}
+		return orderDiscount.distributeDiscountOnOrder(orderDiscount,data.getBrands(),data.getIncludeCategoryList(),data.getExcludeCategoryList(), productSet);
 		
 	}
 	
