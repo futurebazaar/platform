@@ -136,7 +136,7 @@ public class OrderRequest implements Serializable {
 		return new Money(new BigDecimal(0));
 	}
 	
-	public Money getOrderValueForRelevantProducts(List<Integer> brandList,List<Integer> catIncludeList,List<Integer> catExcludeList){
+	public Money getOrderValueForRelevantProducts(List<Integer> brandList,List<Integer> catIncludeList,List<Integer> catExcludeList) {
 		Money orderValueForBrandProducts = new Money(new BigDecimal(0)); 
 		for(OrderItem o:orderItems){
 			if( (!ListUtil.isValidList(brandList)|| o.isOrderItemInBrand(brandList))

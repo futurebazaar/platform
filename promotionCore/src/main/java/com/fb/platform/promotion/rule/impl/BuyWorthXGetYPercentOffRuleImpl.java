@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -71,6 +72,7 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule {
 	@Override
 	public OrderDiscount execute(OrderDiscount orderDiscount) {
 		OrderRequest request = orderDiscount.getOrderRequest();
+		Set<Integer> productSet = null;
 		if(log.isDebugEnabled()) {
 			log.debug("Executing BuyWorthXGetYPercentOffRuleImpl on order : " + request.getOrderId());
 		}
@@ -87,7 +89,10 @@ public class BuyWorthXGetYPercentOffRuleImpl implements PromotionRule {
 		}
 		
 		orderDiscount.setOrderDiscountValue(finalDiscountAmount.getAmount());
-		return orderDiscount.distributeDiscountOnOrder(orderDiscount,data.getBrands(),data.getIncludeCategoryList(),data.getExcludeCategoryList());
+		if(ListUtil.isValidList(data.getProductIds())) {
+			productSet = new HashSet<Integer>(data.getProductIds());
+		}
+		return orderDiscount.distributeDiscountOnOrder(orderDiscount,data.getBrands(),data.getIncludeCategoryList(),data.getExcludeCategoryList(), productSet);
 	}
 	
 	@Override
