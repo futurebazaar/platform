@@ -12,7 +12,7 @@ public class DCManagerImplTest {
 	
 	@Test
 	public void findStockAvailabilityTest(){
-		DCManager dcManager = new DCMa
+		//DCManager dcManager = new DCMa
 	}
 	
 }
