@@ -397,8 +397,8 @@ public class RestClient {
 		
 		promotionTO.setPromotionName("New Promotion");
 		
-		promotionTO.setValidFrom(new DateTime(2012, 02, 29, 0, 0));
-		promotionTO.setValidTill(new DateTime(2013, 02, 28, 0, 0));
+		promotionTO.setValidFrom(new DateTime(2012, 01, 29, 00, 00, 00));
+		promotionTO.setValidTill(new DateTime(2014, 01, 29, 00, 00, 00));
 		promotionTO.setDescription("Test new promotion 2");
 		promotionTO.setIsActive(true);
 		promotionTO.setMaxUses(20);
@@ -460,10 +460,8 @@ public class RestClient {
 		nameSearchPromotionRequest.setSearchPromotionOrderBy(SearchPromotionOrderBy.VALID_FROM);
 		nameSearchPromotionRequest.setIsActive(true);
 		nameSearchPromotionRequest.setSortOrder(SortOrder.ASCENDING);
-		
-		nameSearchPromotionRequest.setValidFrom(new DateTime(2012, 01, 02, 0, 0, 0));
-		
-		nameSearchPromotionRequest.setValidTill(new DateTime(2012, 05, 30, 0, 0, 0));
+		nameSearchPromotionRequest.setValidFrom(new DateTime(2012, 01, 02, 00, 00, 00));
+		nameSearchPromotionRequest.setValidTill(new DateTime(2014, 05, 30, 00, 00, 00));
 		
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
 
@@ -539,9 +537,8 @@ public class RestClient {
 		PromotionTO updatePromotion = new PromotionTO();
 		
 		updatePromotion.setPromotionName("End to End Test Promoti");
-		
-		updatePromotion.setValidFrom(new DateTime(2012, 01, 22, 0, 0, 0));
-		updatePromotion.setValidTill(new DateTime(2013, 01, 22, 0, 0, 0));
+		updatePromotion.setValidFrom(new DateTime(2012, 01, 22, 00, 00, 00));
+		updatePromotion.setValidTill(new DateTime(2014, 01, 22, 00, 00, 00));
 		updatePromotion.setDescription("Test new promotion NEHA");
 		updatePromotion.setIsActive(false);
 		updatePromotion.setMaxUses(22);

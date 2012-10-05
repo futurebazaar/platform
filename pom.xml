@@ -420,7 +420,7 @@
         <module>userWS</module>
         <module>authenticationCore</module>
         <module>promotionCore</module>
-	<module>promotionWS</module>
+	    <module>promotionWS</module>
     	<module>fulfilmentCore</module>
     	<module>fulfilmentWS</module>
     	<module>promotionAdminWS</module>
@@ -434,10 +434,10 @@
         <module>itemAckReceiver</module>
         <module>invoiceReceiver</module>
         <module>launcher</module>
-	<module>sapClientConnector</module>
-	<module>platformScheduler</module>
-	<module>sapWS</module>
-	<module>eGVCore</module>
+        <module>sapClientConnector</module>
+        <module>platformScheduler</module>
+        <module>sapWS</module>
+        <module>eGVCore</module>
     	<module>eGVWS</module>
         <module>walletCore</module>
         <module>walletWS</module>

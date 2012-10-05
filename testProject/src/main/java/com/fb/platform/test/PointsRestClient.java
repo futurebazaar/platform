@@ -139,7 +139,7 @@ public class PointsRestClient {
 	private static DisplayPointsRequest setDisplayPointsRequest() throws Exception {
 		DisplayPointsRequest request = new DisplayPointsRequest();
 		request.setActionCode(ActionCode.BURN_REVERSAL);
-		request.setTimestamp(new DateTime(2012, 05, 27, 0, 0, 0));
+		request.setTimestamp(new DateTime(2012, 05, 27, 00, 00, 00));
 		request.setOrderAmount(new BigDecimal(500));
 		OrderItemRequest itemRequest = new OrderItemRequest();
 		itemRequest.setAmount(new BigDecimal(500));
@@ -206,7 +206,7 @@ public class PointsRestClient {
 		orderRequest.setAmount(new BigDecimal(500));
 		orderRequest.setReason("REST CLIENT");
 		orderRequest.setReferenceId("5052");
-		orderRequest.setTimestamp(new DateTime(2012, 05, 27, 0, 0, 0));
+		orderRequest.setTimestamp(new DateTime(2012, 05, 27, 00, 00, 00));
 		
 		OrderItemRequest itemRequest = new OrderItemRequest();
 		itemRequest.setAmount(new BigDecimal(500));
