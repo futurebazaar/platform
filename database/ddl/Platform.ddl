@@ -439,6 +439,7 @@ CREATE TABLE `fulfillment_dc` (
   `name` varchar(100) NOT NULL,
   `cod_flag` tinyint(1) NOT NULL default '0',
   `client_id` int(11) NOT NULL,
+  `seller_id` int(11) NOT NULL,
   `address` varchar(250) NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `fulfillment_dc_code_140b70462a118a7_uniq` (`code`,`client_id`),

@@ -3,6 +3,9 @@
  */
 package com.fb.platform.ifs.service;
 
+import com.fb.platform.ifs.model.DCAvailability;
+import com.fb.platform.ifs.to.order.Order;
+
 /**
  * @author vinayak
  *
@@ -16,5 +19,5 @@ public interface DCManager {
 	 * @param pincode
 	 * @return
 	 */
-	public Object findAvailability(Object order, String pincode);
+	public DCAvailability findStockAvailability(Order order, String pincode, boolean isCod);
 }
