@@ -8,7 +8,7 @@ import com.fb.platform.sap.client.commons.SapOrderConstants;
 import com.fb.platform.sap.client.commons.SapResponseStatus;
 import com.fb.platform.sap.bapi.order.table.BapiOrderTable;
 import com.fb.platform.sap.bapi.to.SapOrderResponseTO;
-import com.fb.platform.sap.client.connector.SapClientConnector;
+import com.sap.conn.jco.JCoDestination;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoTable;
@@ -17,10 +17,10 @@ public class OrderResponseMapper {
 	
 	private static Log logger = LogFactory.getLog(HeaderConditionsMapper.class);
 	
-	public static SapOrderResponseTO getDetails(JCoFunction bapiFunction, SapClientConnector bapiConnector) throws JCoException {
+	public static SapOrderResponseTO getDetails(JCoFunction bapiFunction, JCoDestination destination) throws JCoException {
 		logger.info("Executing order details");
 		SapOrderResponseTO orderResponseTO = new SapOrderResponseTO();
-		bapiFunction.execute(bapiConnector.getBapiDestination());
+		bapiFunction.execute(destination);
 		JCoTable jcoResponse = bapiFunction.getTableParameterList().getTable(BapiOrderTable.RETURN.toString());
 		String message = "";
 		SapResponseStatus status = SapResponseStatus.ERROR;

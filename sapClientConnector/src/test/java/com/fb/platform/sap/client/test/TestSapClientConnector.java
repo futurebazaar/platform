@@ -54,8 +54,8 @@ public class TestSapClientConnector {
 		//System.out.println(bh.processLspAwbUpdate(lspAwbUpdateRequestTO));
 		
 		//Test Wallet
-		String walletIdoc = new TestWalletIdoc().getWalletIdocXml();
-		System.out.println(bh.sendIdoc(walletIdoc));
+		//String walletIdoc = new TestWalletIdoc().getWalletIdocXml();
+		//System.out.println(bh.sendIdoc(walletIdoc));
 		
 	}
 	

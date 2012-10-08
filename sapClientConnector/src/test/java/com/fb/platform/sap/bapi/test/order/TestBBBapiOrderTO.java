@@ -18,7 +18,7 @@ public class TestBBBapiOrderTO {
 	
 	public SapOrderRequestTO getBapiTO() {
 		SapOrderRequestTO bapiTO = new SapOrderRequestTO();
-		bapiTO.setOrderType(TinlaOrderType.MOD_ORDER);
+		bapiTO.setOrderType(TinlaOrderType.NEW_ORDER);
 		bapiTO.setOrderHeaderTO(getOrderTO());
 		bapiTO.setLineItemTO(getLineItemTO());
 		bapiTO.setBillingAddressTO(getAddressTO());
@@ -37,7 +37,7 @@ public class TestBBBapiOrderTO {
 		orderHeaderTO.setSubmittedOn(DateTime.now());
 		//orderHeaderTO.set
 		orderHeaderTO.setSalesDocType("ZFGB");
-		orderHeaderTO.setReferenceID("I000001012");
+		orderHeaderTO.setReferenceID("I000001013");
 		orderHeaderTO.setLoyaltyCardNumber("1234123412341234");
 		orderHeaderTO.setPricingTO(getPricingTO());
 		

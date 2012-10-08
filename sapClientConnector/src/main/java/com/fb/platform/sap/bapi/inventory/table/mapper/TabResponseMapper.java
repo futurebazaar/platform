@@ -12,6 +12,7 @@ import com.fb.platform.sap.bapi.to.SapInventoryDashboardResponseTO;
 import com.fb.platform.sap.client.commons.SapConstants;
 import com.fb.platform.sap.client.commons.SapInventoryConstants;
 import com.fb.platform.sap.client.commons.SapUtils;
+import com.sap.conn.jco.JCoDestination;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoTable;
@@ -20,10 +21,10 @@ public class TabResponseMapper {
 	
 	private static Log logger = LogFactory.getLog(TabResponseMapper.class);
 	
-	public static List<SapInventoryDashboardResponseTO> getDetails(JCoFunction bapiFunction, com.fb.platform.sap.client.connector.SapClientConnector bapiConnector) throws JCoException {
+	public static List<SapInventoryDashboardResponseTO> getDetails(JCoFunction bapiFunction, JCoDestination destination) throws JCoException {
 		logger.info("Executing Inventory Dashboard details");
 		List<SapInventoryDashboardResponseTO> responseTOList = new ArrayList<SapInventoryDashboardResponseTO>();
-		bapiFunction.execute(bapiConnector.getBapiDestination());
+		bapiFunction.execute(destination);
 		JCoTable dashboardResponse = bapiFunction.getTableParameterList().getTable(BapiInventoryTable.TAB_RETURN.toString());
 		logger.info("Total Idoc Count for Dashboard request  ---- " +dashboardResponse.getNumRows());
 		for (int i = 0; i < dashboardResponse.getNumRows(); i++) {

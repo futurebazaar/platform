@@ -51,7 +51,7 @@ import com.fb.platform.sap.bapi.to.SapOrderRequestTO;
 import com.fb.platform.sap.bapi.to.SapOrderResponseTO;
 import com.fb.platform.sap.client.commons.SapOrderConstants;
 import com.fb.platform.sap.client.commons.SapUtils;
-import com.fb.platform.sap.client.handler.impl.SapClientHandler;
+import com.fb.platform.sap.client.handler.PlatformClientHandler;
 
 @Path("/order/")
 @Component
@@ -61,7 +61,7 @@ public class OrderResource {
 	private static Log logger = LogFactory.getLog(OrderResource.class);
 	
 	@Autowired
-	private SapClientHandler sapClientHandler = null;
+	private PlatformClientHandler sapClientHandler = null;
 	
 	//JAXBContext class is thread safe and can be shared
 	private static final JAXBContext context = initContext();

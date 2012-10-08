@@ -11,7 +11,7 @@ public class TestInventoryDashboardTO {
 	public SapInventoryDashboardRequestTO getRequestTO() {
 		SapInventoryDashboardRequestTO inventoryDashboardRequestTO = new SapInventoryDashboardRequestTO();
 		inventoryDashboardRequestTO.setArticle("000000000300000560");
-		inventoryDashboardRequestTO.setFromDateTime(DateTime.now());
+		inventoryDashboardRequestTO.setFromDateTime(new DateTime(2012, 9, 1, 0, 0, 0));
 		inventoryDashboardRequestTO.setToDateTime(DateTime.now());
 		inventoryDashboardRequestTO.setPlant("");
 		return inventoryDashboardRequestTO;
