@@ -12,7 +12,7 @@
     <tx:annotation-driven/>
     
 	<!-- Connector beans -->
-    <bean id="sapClientConnector" class="com.fb.platform.sap.client.connector.SapClientConnector">
+    <bean id="sapClientConnector" class="com.fb.platform.sap.client.connector.impl.SapClientConnector">
 	</bean> 
 
     <!-- Handler Beans --> 

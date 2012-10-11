@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.scheduler.dao.OrderXmlDao;
 import com.fb.platform.scheduler.to.OrderXmlTO;
+import com.fb.platform.scheduler.utils.SchedulerConstants;
 
 public class OrderXmlDaoTest extends BaseTestCase {
 	
@@ -20,7 +21,7 @@ public class OrderXmlDaoTest extends BaseTestCase {
 	@Test
 	public void testGetOrderXmls() {
 		assertNotNull(orderXmlDao.getOrderXmlList().get(0));
-		assertEquals("bb_new", orderXmlDao.getOrderXmlList().get(0).getType());
+		assertEquals(SchedulerConstants.NEW_STATUS, orderXmlDao.getOrderXmlList().get(0).getType());
 	}
 	
 	@Test

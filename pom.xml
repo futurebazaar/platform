@@ -434,13 +434,14 @@
         <module>itemAckReceiver</module>
         <module>invoiceReceiver</module>
         <module>launcher</module>
-        <module>sapClientConnector</module>
-        <module>platformScheduler</module>
-        <module>sapWS</module>
         <module>eGVCore</module>
     	<module>eGVWS</module>
         <module>walletCore</module>
         <module>walletWS</module>
+	    <module>sapClientConnector</module>
+	    <module>sapWS</module>
+	    <module>platformScheduler</module>
+    	<module>promotionWS</module>
     </modules>
 
     <reporting>

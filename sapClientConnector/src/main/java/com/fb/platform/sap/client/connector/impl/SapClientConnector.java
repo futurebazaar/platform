@@ -1,4 +1,4 @@
-package com.fb.platform.sap.client.connector;
+package com.fb.platform.sap.client.connector.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,6 +7,7 @@ import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.fb.platform.sap.client.connector.PlatformClientConnector;
 import com.sap.conn.idoc.IDocDocumentList;
 import com.sap.conn.idoc.IDocFactory;
 import com.sap.conn.idoc.IDocParseException;
@@ -19,7 +20,7 @@ import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.ext.DestinationDataEventListener;
 import com.sap.conn.jco.ext.DestinationDataProvider;
 
-public class SapClientConnector {
+public class SapClientConnector implements PlatformClientConnector {
 	
 	private static Log logger = LogFactory.getLog(SapClientConnector.class);
 	
@@ -55,7 +56,8 @@ public class SapClientConnector {
         return connectProperties;
     }
     
-    public JCoDestination connectBapi() throws IOException, JCoException {
+    @Override
+    public JCoDestination connectSap() throws IOException, JCoException {
         SapDestinationDataProvider sapProvider = new SapDestinationDataProvider();
         Properties bapiProperties = getDestinationPropertiesFromEnvironment();
         try {
@@ -67,10 +69,9 @@ public class SapClientConnector {
         return destination;
     }
     
+    @Override
     public void sendIdoc(String xml) throws JCoException, IOException, IDocParseException{  
-        // get the JCo destination  
-    	JCoDestination destination = JCoDestinationManager.getDestination("bapi");  
-        // Create repository  
+    	JCoDestination destination = connectSap();  
         IDocRepository iDocRepository = JCoIDoc.getIDocRepository(destination);
         String transactionID = destination.createTID();
         IDocFactory iDocFactory = JCoIDoc.getIDocFactory();

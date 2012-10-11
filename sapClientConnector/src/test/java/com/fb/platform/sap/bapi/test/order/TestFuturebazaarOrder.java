@@ -1,11 +1,15 @@
 package com.fb.platform.sap.bapi.test.order;
 
+import static org.junit.Assert.assertEquals;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.fb.commons.mom.to.AddressTO;
 import com.fb.commons.mom.to.LineItemTO;
@@ -14,11 +18,14 @@ import com.fb.commons.mom.to.PaymentTO;
 import com.fb.commons.mom.to.PricingTO;
 import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.sap.bapi.order.TinlaOrderType;
+import com.fb.platform.sap.bapi.to.SapInventoryLevelResponseTO;
 import com.fb.platform.sap.bapi.to.SapOrderRequestTO;
+import com.fb.platform.sap.bapi.to.SapOrderResponseTO;
+import com.fb.platform.sap.client.handler.PlatformClientHandler;
 
-public class TestBapiOrderTO {
+public class TestFuturebazaarOrder extends BaseTestCase {
 	
-	public SapOrderRequestTO getBapiTO() {
+	private SapOrderRequestTO getBapiTO() {
 		SapOrderRequestTO bapiTO = new SapOrderRequestTO();
 		bapiTO.setOrderType(TinlaOrderType.NEW_ORDER);
 		bapiTO.setOrderHeaderTO(getOrderTO());
@@ -157,7 +164,12 @@ public class TestBapiOrderTO {
 	}
 	
 	@Test
-	public void dummy() {
-		
+	public void testFutureBazaarOrder() {
+		SapOrderRequestTO orderRequestTO = getBapiTO();
+		ApplicationContext context = new ClassPathXmlApplicationContext("test-applicationContext-service.xml");
+		PlatformClientHandler bh = (PlatformClientHandler) context.getBean("sapClientHandler");
+		SapOrderResponseTO responseTO = bh.processOrder(orderRequestTO);
+		assertEquals(orderRequestTO.getOrderHeaderTO().getReferenceID(), responseTO.getOrderId());
+		assertEquals("ID: TEST VALUE || TYPE: TEST VALUE || MESSAGE: FBG TEST MESSAGE", responseTO.getSapMessage().trim());
 	}
 }

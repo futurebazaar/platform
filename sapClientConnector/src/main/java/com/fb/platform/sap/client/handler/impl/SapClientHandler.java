@@ -39,7 +39,8 @@ import com.fb.platform.sap.bapi.to.SapLspAwbUpdateResponseTO;
 import com.fb.platform.sap.bapi.to.SapOrderRequestTO;
 import com.fb.platform.sap.bapi.to.SapOrderResponseTO;
 import com.fb.platform.sap.client.commons.SapResponseStatus;
-import com.fb.platform.sap.client.connector.SapClientConnector;
+import com.fb.platform.sap.client.connector.PlatformClientConnector;
+import com.fb.platform.sap.client.connector.impl.SapClientConnector;
 import com.fb.platform.sap.client.handler.PlatformClientHandler;
 import com.sap.conn.jco.JCoDestination;
 import com.sap.conn.jco.JCoException;
@@ -48,7 +49,7 @@ import com.sap.conn.jco.JCoFunction;
 public class SapClientHandler implements PlatformClientHandler {
 	
 	private static Log logger = LogFactory.getLog(SapClientHandler.class);
-	private SapClientConnector sapClientConnector;
+	private PlatformClientConnector sapClientConnector;
     
 	@Override
     public SapOrderResponseTO processOrder(SapOrderRequestTO orderRequestTO) {
@@ -58,8 +59,8 @@ public class SapClientHandler implements PlatformClientHandler {
 		TinlaOrderType orderType = orderRequestTO.getOrderType();
     	try {
     		BapiOrderTemplate template = PlatformBapiHandlerFactory.getTemplate(orderType, orderRequestTO.getOrderHeaderTO().getClient());
-			logger.info("Connected Bapi template : " + template + "for : " + orderType + " " + orderRequestTO.getOrderHeaderTO().getReferenceID()); 
-			JCoDestination destination = sapClientConnector.connectBapi();
+			logger.info("Connected Bapi template : " + template + "for : " + orderType + " " + orderRequestTO.getOrderHeaderTO().getReferenceID());
+			JCoDestination destination = sapClientConnector.connectSap();
 			JCoFunction bapiFunction = destination.getRepository().getFunctionTemplate(template.toString()).getFunction(); 
 			if (orderType.equals(TinlaOrderType.RET_ORDER)) {
 				HeaderMapper.setReturnDetails(bapiFunction,  orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
@@ -97,7 +98,7 @@ public class SapClientHandler implements PlatformClientHandler {
 		logger.info("Inventory Dashboard Request : " + inventoryDashboardRequestTO);
 		List<SapInventoryDashboardResponseTO> inventoryDashboardResponseTO = new ArrayList<SapInventoryDashboardResponseTO>();
 		try {
-			JCoDestination destination = sapClientConnector.connectBapi();
+			JCoDestination destination = sapClientConnector.connectSap();
 			JCoFunction bapiFunction = destination.getRepository().getFunctionTemplate(BapiInventoryTemplate.ZFB_INVCHECK.toString()).getFunction();
 			DashboardTimeMapper.setDetails(bapiFunction, inventoryDashboardRequestTO);
 			TabArticleMapper.setDetails(bapiFunction, inventoryDashboardRequestTO);
@@ -117,7 +118,7 @@ public class SapClientHandler implements PlatformClientHandler {
 		logger.info("Inventory Level Request : " + inventoryLevelRequestTO);
 		SapInventoryLevelResponseTO inventoryLevelResponseTO = new SapInventoryLevelResponseTO();
 		try {
-			JCoDestination destination = sapClientConnector.connectBapi();
+			JCoDestination destination = sapClientConnector.connectSap();
 			JCoFunction bapiFunction = destination.getRepository().getFunctionTemplate(BapiInventoryTemplate.ZBAPI_FM_TINLASTKQTY.toString()).getFunction();
 			InventoryStockMapper.setDetails(bapiFunction, inventoryLevelRequestTO);
 			inventoryLevelResponseTO = InventoryStockResponseMapper.getDetails(bapiFunction, destination);
@@ -135,7 +136,7 @@ public class SapClientHandler implements PlatformClientHandler {
 		logger.info("Awb Update Request : " + lspAwbUpdateRequestTO);
 		SapLspAwbUpdateResponseTO lspAwbUpdateResponseTO = new SapLspAwbUpdateResponseTO();
 		try {
-			JCoDestination destination = sapClientConnector.connectBapi();
+			JCoDestination destination = sapClientConnector.connectSap();
 			JCoFunction bapiFunction = destination.getRepository().getFunctionTemplate(BapiLspTemplate.ZFB_DELV_UPDT_AWB.toString()).getFunction();
 			LspAwbUpdateMapper.setDetails(bapiFunction, lspAwbUpdateRequestTO);
 			lspAwbUpdateResponseTO = LspAwbResponseMapper.getDetails(bapiFunction, destination);
@@ -160,7 +161,7 @@ public class SapClientHandler implements PlatformClientHandler {
 		}
 	}
 	
-	public void setSapClientConnector(SapClientConnector sapClientConnector) {
+	public void setSapClientConnector(PlatformClientConnector sapClientConnector) {
 		this.sapClientConnector = sapClientConnector;
 	}
 	

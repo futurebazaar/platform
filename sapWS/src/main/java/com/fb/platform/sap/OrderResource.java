@@ -102,9 +102,12 @@ public class OrderResource {
 			String xmlResponse = outStringWriter.toString();
 			logger.info("CommonOrderXml response :\n" + xmlResponse);
 			return xmlResponse;
+		} catch (JAXBException e) {
+			logger.error("Error in Sap Common Call", e);
+			return "unmarshal";
 		} catch (Exception e) {
-			logger.error("Error in the Common Order call", e);
-			return e.getMessage();
+			logger.error("Error in Sap Common Call", e);
+			return "error";
 		}
 	}
 	
@@ -311,9 +314,12 @@ public class OrderResource {
 			String xmlResponse = outStringWriter.toString();
 			logger.info("ReturnOrderXML response :\n" + xmlResponse);
 			return xmlResponse;
+		} catch (JAXBException e) {
+			logger.error("Error in Sap Return Call", e);
+			return "unmarshal";
 		} catch (Exception e) {
-			logger.error("Error in the Sap Inventory Level call.", e);
-			return e.getMessage();
+			logger.error("Error in Sap Return Call", e);
+			return "error";
 		}
 	}
 	
@@ -340,9 +346,12 @@ public class OrderResource {
 			String xmlResponse = outStringWriter.toString();
 			logger.info("ReturnOrderXML response :\n" + xmlResponse);
 			return xmlResponse;
+		} catch (JAXBException e) {
+			logger.error("Error in Sap Mdofication Call", e);
+			return "unmarshal";
 		} catch (Exception e) {
-			logger.error("Error in the Sap Common Order call.", e);
-			return e.getMessage();
+			logger.error("Error in Sap Mdofication Call", e);
+			return "error";
 		}
 	}
 	
