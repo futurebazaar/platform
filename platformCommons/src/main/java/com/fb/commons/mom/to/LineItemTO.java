@@ -26,6 +26,7 @@ public class LineItemTO extends ItemTO {
 	private PricingTO pricingTO;
 	private String payToOthers;
 	private AddressTO addressTO;
+	private String relatedCategory;
 	
 	public String getDescription() {
 		return description;
@@ -147,7 +148,13 @@ public class LineItemTO extends ItemTO {
 	public void setAddressTO(AddressTO addressTO) {
 		this.addressTO = addressTO;
 	}
-
+	public String getRelatedCategory() {
+		return relatedCategory;
+	}
+	public void setRelatedCategory(String relatedCategory) {
+		this.relatedCategory = relatedCategory;
+	}
+	
 	@Override
 	public String toString() {
 		return "LineItemTO [description=" + description + ", articleID="
@@ -162,7 +169,8 @@ public class LineItemTO extends ItemTO {
 				+ ", relationshipArticleID=" + relationshipArticleID
 				+ ", storageLocation=" + storageLocation + ", shippingMode="
 				+ shippingMode + ", pricingTO=" + pricingTO + ", payToOthers="
-				+ payToOthers + ", addressTO=" + addressTO + "]";
+				+ payToOthers + ", addressTO=" + addressTO
+				+ ", relatedCategory=" + relatedCategory + "]";
 	}
 	
 }

@@ -1,26 +1,20 @@
 package com.fb.platform.sap.test;
 
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.GregorianCalendar;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
-import javax.xml.transform.stream.StreamSource;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
 
 import com.fb.platform.sap._1_0.AwbUpdateRequest;
-import com.fb.platform.sap._1_0.CommonOrderRequest;
 import com.fb.platform.sap._1_0.InventoryDashboardRequest;
 import com.fb.platform.sap._1_0.InventoryLevelRequest;
-import com.fb.platform.sap._1_0.ModifyOrderRequest;
-import com.fb.platform.sap._1_0.ReturnOrderRequest;
 
 public class TestSapResource {
 	

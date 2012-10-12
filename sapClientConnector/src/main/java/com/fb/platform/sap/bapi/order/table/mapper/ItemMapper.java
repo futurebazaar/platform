@@ -73,10 +73,7 @@ public class ItemMapper {
 		orderItemINX.setValue(SapOrderConstants.DESCRIPTION, SapOrderConstants.COMMIT_FLAG);
 		orderItemIN.setValue(SapOrderConstants.COMP_QUANT, itemTO.getQuantity());
 		orderItemINX.setValue(SapOrderConstants.COMP_QUANT, SapOrderConstants.COMMIT_FLAG);
-		orderItemIN.setValue(SapOrderConstants.SHIPPING_MODE, itemTO.getShippingMode());
-		orderItemINX.setValue(SapOrderConstants.SHIPPING_MODE, SapOrderConstants.COMMIT_FLAG);
 		orderItemINX.setValue(SapOrderConstants.REFERENCE_FIELD, SapOrderConstants.COMMIT_FLAG);
-		orderItemINX.setValue(SapOrderConstants.SHIPMENT_TYPE, SapOrderConstants.COMMIT_FLAG);
 		orderItemINX.setValue(SapOrderConstants.DELIVERY_PRIORITY, SapOrderConstants.COMMIT_FLAG);
 		orderItemINX.setValue(SapOrderConstants.OPERATION_FLAG, SapOrderConstants.INSERT_FLAG);		
 	}
