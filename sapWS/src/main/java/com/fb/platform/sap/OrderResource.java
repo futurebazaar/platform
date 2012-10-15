@@ -244,8 +244,15 @@ public class OrderResource {
 			orderHeaderTO.setReferenceID(returnHeader.getOriginalOrderId());
 			orderHeaderTO.setReturnOrderID(returnHeader.getReturnOrderId());
 			orderHeaderTO.setClient("FUTUREBAZAAR");
+			orderHeaderTO.setLoyaltyCardNumber(returnHeader.getLoyaltyCardNumber());
+			
 			PricingTO headerPricingTO = new PricingTO();
+			headerPricingTO.setPointsBurn(returnHeader.getPointsBurn());
+			headerPricingTO.setPointsBurnValue(returnHeader.getPointsBurnValue());
+			headerPricingTO.setPointsEarn(returnHeader.getPointsEarn());
+			headerPricingTO.setPointsEarnValue(returnHeader.getPointsEarnValue());
 			orderHeaderTO.setPricingTO(headerPricingTO);
+			
 			orderRequestTO.setOrderHeaderTO(orderHeaderTO);
 			List<ReturnItem> returnItemList = returnOrderRequest.getReturnOrderItems().getReturnItem();
 			List<LineItemTO> lineItemTOList = new ArrayList<LineItemTO>();
