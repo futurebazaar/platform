@@ -420,7 +420,6 @@
         <module>userWS</module>
         <module>authenticationCore</module>
         <module>promotionCore</module>
-	    <module>promotionWS</module>
     	<module>fulfilmentCore</module>
     	<module>fulfilmentWS</module>
     	<module>promotionAdminWS</module>
