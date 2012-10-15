@@ -87,5 +87,13 @@
    <queue name="corrupt">
       <entry name="/queue/corrupt"/>
    </queue>
+   
+   <queue name="invoice">
+      <entry name="/queue/invoice"/>
+   </queue>
+   
+   <queue name="delivery">
+      <entry name="/queue/delivery"/>
+   </queue>
 
 </configuration>

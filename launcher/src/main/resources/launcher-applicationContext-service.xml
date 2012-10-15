@@ -62,5 +62,12 @@
     	<property name="itemAckMessageReceiver" ref="itemAckMessageReceiver"/>
     	<property name="momManager" ref="momManager"></property>
     </bean>
+    
+    <bean id="invoiceMessageReceiver" class="com.fb.platform.mom.invoice.receiver.InvoiceMessageReceiver"/>
+    
+    <bean id="invoiceManager" class="com.fb.platform.mom.invoice.manager.impl.InvoiceManagerImpl">
+    	<property name="messageReceiver" ref="invoiceMessageReceiver"/>
+    	<property name="momManager" ref="momManager"/>
+    </bean>
 	
 </beans>

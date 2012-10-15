@@ -216,6 +216,25 @@
         <property name="itemAckDestination" ref="itemAckDestination"/>
 	</bean>
 	
+	<bean id="invoiceDestination" class="org.hornetq.api.jms.HornetQJMSClient" factory-method="createQueue">
+	   <constructor-arg index="0" value="invoice"/>
+	</bean>
+
+	<bean id="invoiceMessageListener" class="com.fb.platform.mom.receiver.bigBazaar.invoice.InvoiceMessageListener"></bean>
+	
+	<bean id="invoiceContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="userCredentialFactory"/>
+		<property name="destination" ref="invoiceDestination"/>
+		<property name="messageListener" ref="invoiceMessageListener" />
+		<property name="autoStartup" value="false"/>
+		<property name="sessionTransacted" value="true"/>
+	</bean>
+
+	<bean id="invoiceSender" class="com.fb.platform.mom.receiver.bigBazaar.invoice.InvoiceSenderImpl">
+        <property name="jmsTemplate" ref="jmsTemplate"/>
+        <property name="invoiceDestination" ref="invoiceDestination"/>
+	</bean>
+	
     <bean id="momManager" class="com.fb.platform.mom.manager.impl.MomManagerImpl">
         <property name="inventoryListener" ref="inventoryListener"/>
         <property name="inventorySender" ref="inventorySender"/>
@@ -234,6 +253,9 @@
         <property name="itemAckMessageListener" ref="itemAckMessageListener"/>
         <property name="itemAckSender" ref="itemAckSender"/>
         <property name="itemAckContainer" ref="itemAckContainer"/>
+        <property name="invoiceMessageListener" ref="invoiceMessageListener"/>
+        <property name="invoiceSender" ref="invoiceSender"/>
+        <property name="invoiceContainer" ref="invoiceContainer"/>
         <!-- <property name="orderMessageListener" ref="orderMessageListener"/>
         <property name="orderSender" ref="orderSender"/>
         <property name="orderContainer" ref="orderContainer"/> -->

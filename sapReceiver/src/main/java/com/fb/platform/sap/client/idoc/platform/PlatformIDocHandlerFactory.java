@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.platform.mom.manager.MomManager;
+import com.fb.platform.sap.client.idoc.platform.bigBazaar.invoice.InvoiceIdocHandler;
 import com.fb.platform.sap.client.idoc.platform.deliveryDelete.impl.DeliveryDeleteIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.impl.DefaultIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.inventory.impl.DeliveryInventoryIDocHandler;
@@ -30,6 +31,8 @@ public class PlatformIDocHandlerFactory {
 	private DeliveryDeleteIDocHandler deliveryDeleteIDocHandler = null;
 	
 	private ItemAckIDocHandler orderIDocHandler = null;
+	
+	private InvoiceIdocHandler invoiceIDocHandler = null;
 
 	private DefaultIDocHandler defaultIDocHandler = null;
 
@@ -50,29 +53,27 @@ public class PlatformIDocHandlerFactory {
 		
 		orderIDocHandler = new ItemAckIDocHandler();
 		orderIDocHandler.init(momManager, ackUIDSequenceGenerator);
+		
+		invoiceIDocHandler = new InvoiceIdocHandler();
+		invoiceIDocHandler.init(momManager, ackUIDSequenceGenerator);
 
 		defaultIDocHandler = new DefaultIDocHandler();
 		defaultIDocHandler.init(momManager, ackUIDSequenceGenerator);
 	}
 
 	public PlatformIDocHandler getHandler(String idocType) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Returning handler for idocType : " + idocType);
-		}
-		System.out.println("Returning handler for idocType : " + idocType);
 		logger.info("Returning handler for idocType : " + idocType);
-
+		
 		if (idocType.equals(InventoryIDocHandler.INVENTORY_IDOC_TYPE)) {
 		return inventoryIDocHandler;
-		}
-		if (idocType.equals(DeliveryInventoryIDocHandler.DELIVERY_INVENTORY_IDOC_TYPE)) {
+		} else if (idocType.equals(DeliveryInventoryIDocHandler.DELIVERY_INVENTORY_IDOC_TYPE)) {
 			return deliveryInventoryIDocHandler;
-		}
-		if (idocType.equals(DeliveryDeleteIDocHandler.DELIVERY_DELETE)) {
+		} else if (idocType.equals(DeliveryDeleteIDocHandler.DELIVERY_DELETE)) {
 			return deliveryDeleteIDocHandler;
-		}
-		if (idocType.equals(ItemAckIDocHandler.ITEM_ACK_IDOC_TYPE)) {
+		} else if (idocType.equals(ItemAckIDocHandler.ITEM_ACK_IDOC_TYPE)) {
 			return orderIDocHandler;
+		} else if (idocType.equals(InvoiceIdocHandler.INVOICE_IDOC_TYPE)) {
+			return invoiceIDocHandler;
 		}
 		logger.error("No Handler is configured for idocType : " + idocType + ", returning default handler.");
 		return defaultIDocHandler;

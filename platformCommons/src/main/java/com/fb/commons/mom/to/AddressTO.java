@@ -4,8 +4,13 @@ import java.io.Serializable;
 
 public class AddressTO implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5117312460451747403L;
+	
 	private String firstName;
-	private String LastName;
+	private String lastName;
 	private String middleName;
 	private String address;
 	private String city;
@@ -64,10 +69,10 @@ public class AddressTO implements Serializable{
 		this.firstName = firstName;
 	}
 	public String getLastName() {
-		return LastName;
+		return lastName;
 	}
 	public void setLastName(String lastName) {
-		LastName = lastName;
+		this.lastName = lastName;
 	}
 	public String getMiddleName() {
 		return middleName;
@@ -78,7 +83,7 @@ public class AddressTO implements Serializable{
 	
 	@Override
 	public String toString() {
-		return "AddressTO [firstName=" + firstName + ", LastName=" + LastName
+		return "AddressTO [firstName=" + firstName + ", lastName=" + lastName
 				+ ", middleName=" + middleName + ", address=" + address
 				+ ", city=" + city + ", pincode=" + pincode + ", state="
 				+ state + ", country=" + country + ", primaryTelephone="

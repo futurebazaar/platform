@@ -13,6 +13,8 @@ import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
+import com.fb.platform.mom.receiver.bigBazaar.invoice.InvoiceMessageListener;
+import com.fb.platform.mom.receiver.bigBazaar.invoice.InvoiceSender;
 import com.fb.platform.mom.receiver.corrupt.CorruptMessageListener;
 import com.fb.platform.mom.receiver.corrupt.CorruptSender;
 import com.fb.platform.mom.receiver.deliveryDelete.DeliveryDeleteMessageListener;
@@ -84,6 +86,15 @@ public class MomManagerImpl implements MomManager {
 	@Autowired
 	private DefaultMessageListenerContainer itemAckContainer = null;
 	
+	@Autowired
+	private InvoiceMessageListener invoiceMessageListener = null;
+
+	@Autowired
+	private InvoiceSender invoiceSender = null;
+
+	@Autowired
+	private DefaultMessageListenerContainer invoiceContainer = null;
+	
 	/* (non-Javadoc)
 	 * @see com.fb.platform.mom.manager.MomManager#send(com.fb.platform.mom.manager.PlatformDestinationEnum, java.lang.Object)
 	 */
@@ -106,6 +117,9 @@ public class MomManagerImpl implements MomManager {
 			break;
 		case ITEM_ACK:
 			itemAckSender.sendMessage(message);
+			break;
+		case INVOICE:
+			invoiceSender.sendMessage(message);
 			break;
 		default:
 			throw new IllegalStateException("No sender is configured for the destination : " + destination);
@@ -154,6 +168,12 @@ public class MomManagerImpl implements MomManager {
 			itemAckMessageListener.addReceiver(receiver, destination);
 			if(!itemAckContainer.isRunning()) {
 				itemAckContainer.start();
+			}
+			break;
+		case INVOICE:
+			invoiceMessageListener.addReceiver(receiver, destination);
+			if(!invoiceContainer.isRunning()) {
+				invoiceContainer.start();
 			}
 			break;
 		default:
@@ -227,6 +247,18 @@ public class MomManagerImpl implements MomManager {
 
 	public void setItemAckContainer(DefaultMessageListenerContainer itemAckContainer) {
 		this.itemAckContainer = itemAckContainer;
+	}
+
+	public void setInvoiceMessageListener(InvoiceMessageListener invoiceMessageListener) {
+		this.invoiceMessageListener = invoiceMessageListener;
+	}
+
+	public void setInvoiceSender(InvoiceSender invoiceSender) {
+		this.invoiceSender = invoiceSender;
+	}
+
+	public void setInvoiceContainer(DefaultMessageListenerContainer invoiceContainer) {
+		this.invoiceContainer = invoiceContainer;
 	}
 	
 }
