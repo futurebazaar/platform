@@ -1,10 +1,5 @@
 package com.fb.platform.scheduler.mbean;
 
-import javax.management.ObjectName;
-
-import org.springframework.jmx.export.notification.NotificationPublisher;
-import org.springframework.jmx.export.notification.NotificationPublisherAware;
-
 /**
  * @author anubhav
  *

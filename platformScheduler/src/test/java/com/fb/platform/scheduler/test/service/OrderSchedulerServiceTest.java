@@ -2,8 +2,6 @@ package com.fb.platform.scheduler.test.service;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;

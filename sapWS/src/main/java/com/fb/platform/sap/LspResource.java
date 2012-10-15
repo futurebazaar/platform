@@ -23,7 +23,7 @@ import com.fb.platform.sap._1_0.AwbUpdateRequest;
 import com.fb.platform.sap._1_0.AwbUpdateResponse;
 import com.fb.platform.sap.bapi.to.SapLspAwbUpdateRequestTO;
 import com.fb.platform.sap.bapi.to.SapLspAwbUpdateResponseTO;
-import com.fb.platform.sap.client.handler.impl.SapClientHandler;
+import com.fb.platform.sap.client.handler.PlatformClientHandler;
 
 @Path("/lsp")
 @Component
@@ -44,7 +44,7 @@ private static Log logger = LogFactory.getLog(LspResource.class);
 		}
 	}
 	
-	private SapClientHandler sapClientHandler = null;
+	private PlatformClientHandler sapClientHandler = null;
 	
 	@Path("/assignAWB")
 	@POST
@@ -76,7 +76,7 @@ private static Log logger = LogFactory.getLog(LspResource.class);
 		}
 	}
 	
-	public void setSapClientHandler(SapClientHandler sapClientHandler) {
+	public void setSapClientHandler(PlatformClientHandler sapClientHandler) {
 		this.sapClientHandler = sapClientHandler;
 	}
 	

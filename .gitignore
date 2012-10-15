@@ -155,10 +155,10 @@ authenticationCore/bin/
 dummyTinlaListner/.classpath
 dummyTinlaListner/.settings/
 dummyTinlaListner/bin/
-fulfilmentCore/.classpath
-fulfilmentCore/.settings
-fulfilmentWS/.classpath
-fulfilmentWS/.settings
+fulfilmentCore/.classpath*
+fulfilmentCore/.settings/*
+fulfilmentWS/.classpath*
+fulfilmentWS/.settings/*
 socketSample/
 sapReceiver/src/main/resources/backup_ztinla_idoctype1.xml
 execution/launcher.tar.gz
@@ -170,5 +170,5 @@ hornetQConfig/platform.tar.gz
 launcher/cp_dependency.txt
 sapBapiConnector/.classpath
 sapBapiConnector/.settings
-*/*.trc
+**/*.trc
 */nohup*

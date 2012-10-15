@@ -34,7 +34,7 @@ import com.fb.platform.sap.bapi.to.SapInventoryDashboardRequestTO;
 import com.fb.platform.sap.bapi.to.SapInventoryDashboardResponseTO;
 import com.fb.platform.sap.bapi.to.SapInventoryLevelRequestTO;
 import com.fb.platform.sap.bapi.to.SapInventoryLevelResponseTO;
-import com.fb.platform.sap.client.handler.impl.SapClientHandler;
+import com.fb.platform.sap.client.handler.PlatformClientHandler;
 
 /**
  * @author anubhav
@@ -60,7 +60,7 @@ public class InventoryResource {
 		}
 	}
 	
-	private SapClientHandler sapClientHandler = null;
+	private PlatformClientHandler sapClientHandler = null;
 	
 	@Path("/stock")
 	@POST
@@ -160,7 +160,7 @@ public class InventoryResource {
 		return sapInventoryDashboardRequestTO;
 	}
 
-	public void setSapClientHandler(SapClientHandler sapClientHandler) {
+	public void setSapClientHandler(PlatformClientHandler sapClientHandler) {
 		this.sapClientHandler = sapClientHandler;
 	}
 	

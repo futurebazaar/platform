@@ -45,7 +45,7 @@ public class OrderSchedulerServiceImpl implements OrderSchedulerService {
 				
 			} catch (Exception e) {
 				logger.error("Posting to Bapi Failed for : "+ orderXmlTO, e);
-				orderXmlDao.updateOrderXml(orderXmlTO.getAttempts() + 1, e.getMessage(), SchedulerConstants.ERROR_STATUS, orderXmlTO.getId());
+				orderXmlDao.updateOrderXml(orderXmlTO.getAttempts() + 1, e.getMessage(), SchedulerConstants.FAILED_STATUS, orderXmlTO.getId());
 			}
 		}
 	}

@@ -19,6 +19,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -50,7 +51,7 @@ import com.fb.platform.sap.bapi.to.SapOrderRequestTO;
 import com.fb.platform.sap.bapi.to.SapOrderResponseTO;
 import com.fb.platform.sap.client.commons.SapOrderConstants;
 import com.fb.platform.sap.client.commons.SapUtils;
-import com.fb.platform.sap.client.handler.impl.SapClientHandler;
+import com.fb.platform.sap.client.handler.PlatformClientHandler;
 
 @Path("/order/")
 @Component
@@ -59,7 +60,8 @@ public class OrderResource {
 	
 	private static Log logger = LogFactory.getLog(OrderResource.class);
 	
-	private SapClientHandler sapClientHandler = null;
+	@Autowired
+	private PlatformClientHandler sapClientHandler = null;
 	
 	//JAXBContext class is thread safe and can be shared
 	private static final JAXBContext context = initContext();
@@ -102,7 +104,7 @@ public class OrderResource {
 			return xmlResponse;
 		} catch (Exception e) {
 			logger.error("Error in the Common Order call", e);
-			return "error";
+			return e.getMessage();
 		}
 	}
 	
@@ -233,7 +235,7 @@ public class OrderResource {
 			String channel = location.split("#")[1];
 			orderHeaderTO.setChannelType(channel);
 		} catch (Exception e) {
-			logger.error("Error setting client/channel for location : " + location);
+			logger.info("Error setting client/channel for location : " + location);
 		}
 		orderHeaderTO.setReferenceID(orderHeaderXml.getOrderRefID());
 		orderHeaderTO.setSalesDocType(orderHeaderXml.getSalesDocType());
@@ -249,7 +251,7 @@ public class OrderResource {
 		try {
 			setPointsDetails(orderHeaderTO, pricingTO, commonOrderRequest.getPaymentGroups().getDetails().get(0).getText2());
 		} catch (Exception e) {
-			logger.error("invalid payment points", e);
+			logger.info("invalid payment points", e);
 		}
 		orderHeaderTO.setPricingTO(pricingTO);
 		orderRequestTO.setOrderHeaderTO(orderHeaderTO);
@@ -311,7 +313,7 @@ public class OrderResource {
 			return xmlResponse;
 		} catch (Exception e) {
 			logger.error("Error in the Sap Inventory Level call.", e);
-			return "error";
+			return e.getMessage();
 		}
 	}
 	
@@ -340,7 +342,7 @@ public class OrderResource {
 			return xmlResponse;
 		} catch (Exception e) {
 			logger.error("Error in the Sap Common Order call.", e);
-			return "error";
+			return e.getMessage();
 		}
 	}
 	
@@ -418,10 +420,6 @@ public class OrderResource {
 		orderHeaderTO.setPricingTO(pricingTO);
 		orderRequestTO.setOrderHeaderTO(orderHeaderTO);
 		
-	}
-
-	public void setSapClientHandler(SapClientHandler sapClientHandler) {
-		this.sapClientHandler = sapClientHandler;
 	}
 
 }

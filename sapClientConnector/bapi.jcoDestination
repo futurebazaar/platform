@@ -3,11 +3,12 @@ jco.destination.pool_capacity=1
 jco.client.lang=en
 jco.client.ashost=10.0.7.63
 jco.client.dest=ZATGJCAPS_DV1
+jco.client.tpname=ZATGJCAPS1
 jco.client.sysnr=01
 jco.destination.peak_limit=1
 jco.client.user=ABHISHEKG
 jco.client.passwd=abhi@fg2
-jco.client.client=400
+jco.client.client=500
 
 ################# Sap QA connection properties ####################
 #jco.destination.pool_capacity=1
