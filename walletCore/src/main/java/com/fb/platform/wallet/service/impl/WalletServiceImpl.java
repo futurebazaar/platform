@@ -350,10 +350,14 @@ public class WalletServiceImpl implements WalletService {
 			PlatformException {
 		try{
 			Wallet wallet = load(userId,clientId,false);
-			if(!wallet.verifyPassword(password)){
-				throw new WrongWalletPassword("Wrong wallet password");
+			if (wallet.isActive()){
+				if(!wallet.verifyPassword(password)){
+					throw new WrongWalletPassword("Wrong wallet password");
+				}
+				return wallet;
+			}else {
+				throw new WalletInActiveException();
 			}
-			return wallet;
 		} catch (WrongWalletPassword e){
 			throw new WrongWalletPassword("The password provided for the wallet is incorrect");
 		}  
