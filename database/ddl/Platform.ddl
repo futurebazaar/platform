@@ -750,6 +750,7 @@ CREATE TABLE wallets_wallet
 	created_on DATETIME NOT NULL,
 	modified_on DATETIME NULL,
 	wallet_password varchar(50) NOT NULL,
+	is_active BIT NOT NULL DEFAULT 1,
 	PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

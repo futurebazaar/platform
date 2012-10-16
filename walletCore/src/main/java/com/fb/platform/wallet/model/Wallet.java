@@ -28,6 +28,7 @@ public class Wallet implements Serializable {
 	private DateTime createdOn;
 	private DateTime modifiedOn;
 	private String walletPassword;
+	private boolean isActive;
 	
 	public WalletTransaction credit(Money amount,SubWalletType subWalletType,long paymentId,long refundId,long giftId){
 		if (subWalletType.equals(SubWalletType.CASH)) {
@@ -466,6 +467,16 @@ public class Wallet implements Serializable {
 			return false;
 		}
 		return true;
+	}
+	
+	
+
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
 	}
 
 	/* (non-Javadoc)

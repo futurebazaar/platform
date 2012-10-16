@@ -16,6 +16,7 @@ import com.fb.platform.wallet.service.exception.AlreadyRefundedException;
 import com.fb.platform.wallet.service.exception.InSufficientFundsException;
 import com.fb.platform.wallet.service.exception.InvalidTransactionIdException;
 import com.fb.platform.wallet.service.exception.RefundExpiredException;
+import com.fb.platform.wallet.service.exception.WalletInActiveException;
 import com.fb.platform.wallet.service.exception.WalletNotFoundException;
 import com.fb.platform.wallet.service.exception.WrongWalletPassword;
 
@@ -30,7 +31,7 @@ public interface WalletService {
 	 * @return Wallet
 	 */
 	@Transactional(propagation = Propagation.REQUIRED)
-	public Wallet load(long walletId) throws WalletNotFoundException,PlatformException;
+	public Wallet load(long walletId) throws WalletNotFoundException,WalletInActiveException,PlatformException;
 	
 	/**
 	 * Returns the Wallet associated with a userId,ClientId.
@@ -41,7 +42,7 @@ public interface WalletService {
 	 * @return Wallet
 	 */
 	@Transactional(propagation = Propagation.REQUIRED)
-	public Wallet load(long userId,long clientId);
+	public Wallet load(long userId,long clientId) throws WalletNotFoundException,WalletInActiveException,PlatformException;
 	
 	/**
 	 * Returns the Wallet Transactions associated with a wallet.
@@ -51,7 +52,7 @@ public interface WalletService {
 	 * @return List of Wallet Transactions
 	**/
 	@Transactional (propagation = Propagation.REQUIRED)
-	public WalletTransactionResultSet walletHistory (long walletId,DateTime fromDate , DateTime toDate,SubWalletType subWalletType);
+	public WalletTransactionResultSet walletHistory (long walletId,DateTime fromDate , DateTime toDate,SubWalletType subWalletType) throws WalletNotFoundException,WalletInActiveException,PlatformException;;
 	
 	/**
 	 * Returns the Wallet Transactions associated with a wallet.
@@ -64,7 +65,7 @@ public interface WalletService {
 	 * @return List of Wallet Transactions
 	**/
 	@Transactional (propagation = Propagation.REQUIRED)
-	public WalletTransactionResultSet walletHistory (long userId,long clientId,int pageNumber , int resultPerPage,SubWalletType subWalletType);
+	public WalletTransactionResultSet walletHistory (long userId,long clientId,int pageNumber , int resultPerPage,SubWalletType subWalletType) throws WalletNotFoundException,WalletInActiveException,PlatformException;;
 	
 	/**
 	 * Credit the wallet with the given amount.
@@ -80,7 +81,7 @@ public interface WalletService {
 	 * @return WalletTransaction
 	**/
 	@Transactional (propagation = Propagation.REQUIRED)
-	public WalletTransaction credit (long walletId, Money amount , String subWalletType , long paymentId , long refundId , String gitfCoupon , DateTime giftExpiry) throws WalletNotFoundException,PlatformException;
+	public WalletTransaction credit (long walletId, Money amount , String subWalletType , long paymentId , long refundId , String gitfCoupon , DateTime giftExpiry) throws WalletNotFoundException,WalletInActiveException,PlatformException;
 	
 	/**
 	 * Debit the wallet with the given amount.
@@ -96,7 +97,7 @@ public interface WalletService {
 	 * @return WalletTransaction 
 	**/
 	@Transactional (propagation = Propagation.REQUIRED)
-	public WalletTransaction debit (long userId, long clientId , Money amount , long orderId,String walletPassword) throws WalletNotFoundException,InSufficientFundsException,WrongWalletPassword ,PlatformException;
+	public WalletTransaction debit (long userId, long clientId , Money amount , long orderId,String walletPassword) throws WalletNotFoundException,InSufficientFundsException,WalletInActiveException ,WrongWalletPassword ,PlatformException;
 	
 	/**
 	 * Refund requested from the wallet.
@@ -113,7 +114,7 @@ public interface WalletService {
 	 * @return WalletTransaction 
 	**/
 	@Transactional (propagation = Propagation.REQUIRED)
-	public WalletTransaction refund (long userId, long clientId , Money amount , long refundId , boolean ignoreExpiry) throws WalletNotFoundException, AlreadyRefundedException,RefundExpiredException,InSufficientFundsException,PlatformException;
+	public WalletTransaction refund (long userId, long clientId , Money amount , long refundId , boolean ignoreExpiry) throws WalletNotFoundException,WalletInActiveException, AlreadyRefundedException,RefundExpiredException,InSufficientFundsException,PlatformException;
 	
 	/**
 	 * Reverse the transaction if an order is cancelled which is paid via the wallet.
@@ -126,7 +127,7 @@ public interface WalletService {
 	 * @throws PlatformException When an unrecoverable error happens.
 	 * @return WalletTransaction 
 	**/
-	public WalletTransaction reverseTransaction(long userId, long clientId,String transactionId,Money amount,long newRefundId) throws WalletNotFoundException,InvalidTransactionIdException ,PlatformException;
+	public WalletTransaction reverseTransaction(long userId, long clientId,String transactionId,Money amount,long newRefundId) throws WalletNotFoundException,WalletInActiveException,InvalidTransactionIdException ,PlatformException;
 
 	
 	/**
@@ -139,7 +140,7 @@ public interface WalletService {
 	 * @throws WrongWalletPassword when the password to debit the wallet is invalid.
 	 * @throws PlatformException When an unrecoverable error happens.
 	**/
-	public Wallet verifyWallet(long userId, long clientId,String password)throws WalletNotFoundException,WrongWalletPassword ,PlatformException;
+	public Wallet verifyWallet(long userId, long clientId,String password)throws WalletNotFoundException,WalletInActiveException, WrongWalletPassword ,PlatformException;
 
 	/**
 	 * Change the wallet password
@@ -151,7 +152,7 @@ public interface WalletService {
 	 * @throws WrongWalletPassword when the old password for the wallet is invalid.
 	 * @throws PlatformException When an unrecoverable error happens.
 	**/
-	public void changeWalletPassword(long userId, long clientId,String oldPassword, String newPassword) throws WalletNotFoundException,WrongWalletPassword ,PlatformException;;
+	public void changeWalletPassword(long userId, long clientId,String oldPassword, String newPassword) throws WalletNotFoundException,WalletInActiveException, WrongWalletPassword ,PlatformException;;
 
 	/**
 	 * Reset the wallet password if wallet exists
@@ -160,6 +161,6 @@ public interface WalletService {
 	 * @throws WalletNotFoundException When no wallet is found matching the wallet.
 	 * @throws PlatformException When an unrecoverable error happens.
 	**/
-	public void resetWalletPassword(long userId, long clientId) throws WalletNotFoundException ,PlatformException;;
+	public void resetWalletPassword(long userId, long clientId) throws WalletNotFoundException ,WalletInActiveException,PlatformException;;
 	
 }

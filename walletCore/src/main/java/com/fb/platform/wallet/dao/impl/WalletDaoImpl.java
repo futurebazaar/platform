@@ -35,7 +35,8 @@ public class WalletDaoImpl implements WalletDao {
 			+ "gift_amount, "
 			+ "refund_amount, "
 			+ "created_on, "
-			+ "wallet_password "
+			+ "wallet_password, "
+			+ "is_active "
 			+ "from wallets_wallet "
 			+ "where id = ?";
 	private final String UPDATE_WALLET_ID = "Update wallets_wallet set "
@@ -69,7 +70,7 @@ public class WalletDaoImpl implements WalletDao {
 			Wallet wallet = jdbcTemplate.queryForObject(SELECT_WALLET_ID, 
 					new Object[] {walletId},
 					new WalletMapper());
-			return wallet;
+				return wallet;
 		}catch (EmptyResultDataAccessException e) {
 			throw new WalletNotFoundException();
 		}
@@ -170,6 +171,7 @@ public class WalletDaoImpl implements WalletDao {
 			wallet.setRefundSubWallet(new Money(rs.getBigDecimal("refund_amount")));
 			wallet.setGiftSubWallet(new Money(rs.getBigDecimal("gift_amount")));
 			wallet.setWalletPassword(rs.getString("wallet_password"));
+			wallet.setActive(rs.getBoolean("is_active"));
 			return wallet;
     	}
     }

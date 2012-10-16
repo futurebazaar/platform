@@ -24,6 +24,7 @@ import com.fb.platform.wallet.service.exception.AlreadyRefundedException;
 import com.fb.platform.wallet.service.exception.InSufficientFundsException;
 import com.fb.platform.wallet.service.exception.InvalidTransactionIdException;
 import com.fb.platform.wallet.service.exception.RefundExpiredException;
+import com.fb.platform.wallet.service.exception.WalletInActiveException;
 import com.fb.platform.wallet.service.exception.WalletNotFoundException;
 import com.fb.platform.wallet.service.exception.WorngRefundIdException;
 import com.fb.platform.wallet.service.exception.WrongWalletPassword;
@@ -49,11 +50,13 @@ public class WalletServiceImpl implements WalletService {
 			return walletReturnOperations(wallet);
 		}catch (WalletNotFoundException e){
 			throw new WalletNotFoundException("No wallet found with this walletId");
+		}catch (WalletInActiveException e){
+			throw new WalletInActiveException("This wallet is not active at present");
 		}	
 	}
 
 	@Override
-	public Wallet load(long userId, long clientId) throws PlatformException {
+	public Wallet load(long userId, long clientId) throws WalletInActiveException,PlatformException {
 		return load(userId,clientId,true);			
 	}
 	
@@ -69,6 +72,8 @@ public class WalletServiceImpl implements WalletService {
 			}
 		}catch (WalletNotFoundException e) {
 			throw new WalletNotFoundException();
+		}catch (WalletInActiveException e){
+			throw new WalletInActiveException();
 		}catch (PlatformException e){
 			throw new PlatformException();
 		}
@@ -113,6 +118,8 @@ public class WalletServiceImpl implements WalletService {
 			return walletTransactionResultSet;
 		}catch (WalletNotFoundException e){
 			throw new WalletNotFoundException("Exception no wallet for this wallet id");
+		}catch (WalletInActiveException e){
+			throw new WalletInActiveException();
 		}catch (PlatformException e) {
 			throw new PlatformException("Exception while loading wallet transactions");
 		}
@@ -141,8 +148,9 @@ public class WalletServiceImpl implements WalletService {
 			return walletTransactionRes;
 		} catch (WalletNotFoundException e){
 			throw new WalletNotFoundException("No wallet with this wallet id");
-		}
-		catch (PlatformException e) {
+		} catch (WalletInActiveException e){
+			throw new WalletInActiveException();
+		} catch (PlatformException e) {
 			throw new PlatformException("No wallet with this wallet id");
 		}
 	}
@@ -160,6 +168,7 @@ public class WalletServiceImpl implements WalletService {
 			WalletTransaction walletTransactionRes = new WalletTransaction();
 			Wallet wallet = load(userId,clientId,false);
 			//if(wallet.verifyPassword(walletPassword)){
+			if (wallet.isActive()){
 				if(wallet.isSufficientFund(amount)){
 					com.fb.platform.wallet.model.WalletTransaction walletTransaction = wallet
 							.debit(amount, orderId);
@@ -169,6 +178,9 @@ public class WalletServiceImpl implements WalletService {
 				}else{
 					throw new InSufficientFundsException("Insufficient fund in wallet");
 				}
+			}else {
+				throw new WalletInActiveException();
+			}
 			/*}else {
 				throw new WrongWalletPassword("Insufficient fund in wallet");
 			}*/
@@ -176,6 +188,8 @@ public class WalletServiceImpl implements WalletService {
 			throw new InSufficientFundsException("Not enough fund in the wallet");
 		} catch (WalletNotFoundException e){
 			throw new WalletNotFoundException("No wallet with this wallet id");
+		} catch (WalletInActiveException e){
+			throw new WalletInActiveException();
 		} catch (PlatformException e) {
 			throw new PlatformException("No wallet with this wallet id");
 		}
@@ -195,25 +209,32 @@ public class WalletServiceImpl implements WalletService {
 		try {
 			WalletTransaction walletTransactionRes =  new WalletTransaction();
 			Wallet wallet = load(userId,clientId,false);
-			if(walletTransactionDao.isRefundable(wallet,refundId,amount)){
-				/***
-				 * Removing the Expiry date cade as the expiry tome is getting ignored.
-				 *  || walletTransaction.getTimeStamp().plusDays(refundExpiryDays).isAfterNow()
-				 */
-				if(ignoreExpiry){
-					walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(wallet.refund(amount,refundId)));
-					walletTransactionRes.setWallet(walletReturnOperations(walletDao.update(wallet)));							
-				}/***else {
-					throw new RefundExpiredException();
-				}*/
+			if (wallet.isActive()){
+				if(walletTransactionDao.isRefundable(wallet,refundId,amount)){
+					/***
+					 * Removing the Expiry date cade as the expiry tome is getting ignored.
+					 *  || walletTransaction.getTimeStamp().plusDays(refundExpiryDays).isAfterNow()
+					 */
+					if(ignoreExpiry){
+						walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(wallet.refund(amount,refundId)));
+						walletTransactionRes.setWallet(walletReturnOperations(walletDao.update(wallet)));							
+					}/***else {
+						throw new RefundExpiredException();
+					}*/
+				}
+			}else {
+				throw new WalletInActiveException();
 			}
 			return walletTransactionRes;
+			
 		} catch (InSufficientFundsException e){
 			throw new InSufficientFundsException("Not enough fund in the wallet");
 		} catch (WorngRefundIdException e){
 			throw new WorngRefundIdException("This refund id does not belog to this wallet");
 		} catch (WalletNotFoundException e){
 			throw new WalletNotFoundException("No wallet with this wallet id");
+		} catch (WalletInActiveException e){
+			throw new WalletInActiveException();
 		} catch (PlatformException e) {
 			throw new PlatformException("An unrecoverable exception has occured while refund");
 		}
@@ -247,13 +268,15 @@ public class WalletServiceImpl implements WalletService {
 			}else{
 				throw new InSufficientFundsException();
 			}
-		}  catch (InSufficientFundsException e){
+		} catch (InSufficientFundsException e){
 			throw new InSufficientFundsException("The amount is invalid for reversing the transaction");		
 		} catch (WalletNotFoundException e){
 			throw new WalletNotFoundException("No wallet with this wallet id");		
-		}  catch (InvalidTransactionIdException e) {
+		} catch (InvalidTransactionIdException e) {
 			throw new InvalidTransactionIdException("This is an invalid transaction Id");
-		} 	catch (PlatformException e) {
+		} catch (WalletInActiveException e){
+			throw new WalletInActiveException();
+		} catch (PlatformException e) {
 			e.printStackTrace();
 			throw new PlatformException("an unhandeled exception has occured while trnasaction reversal");
 		}
@@ -324,15 +347,22 @@ public class WalletServiceImpl implements WalletService {
 			PlatformException {
 		try{
 			Wallet wallet = load(userId,clientId,false);
-			if(!wallet.verifyPassword(password)){
-				throw new WrongWalletPassword("Wrong wallet password");
+			if (wallet.isActive()){
+				if(!wallet.verifyPassword(password)){
+					throw new WrongWalletPassword("Wrong wallet password");
+				}
+				return wallet;
+			}else {
+				throw new WalletInActiveException();
 			}
-			return wallet;
 		} catch (WrongWalletPassword e){
 			throw new WrongWalletPassword("The password provided for the wallet is incorrect");
 		}  
 		catch (WalletNotFoundException e){
 			throw new WalletNotFoundException("No wallet with this wallet id");
+		}
+		catch (WalletInActiveException e){
+			throw new WalletInActiveException();
 		}
 		catch (PlatformException e) {
 			throw new PlatformException("No wallet with this wallet id");
@@ -357,6 +387,8 @@ public class WalletServiceImpl implements WalletService {
 			throw new WrongWalletPassword("The password provided for the wallet is incorrect");
 		} catch (WalletNotFoundException e){
 			throw new WalletNotFoundException("No wallet with this user id");
+		} catch (WalletInActiveException e){
+			throw new WalletInActiveException();
 		} catch (PlatformException e) {
 			throw new PlatformException("The password could not be changed at this time");
 		}		
@@ -371,6 +403,8 @@ public class WalletServiceImpl implements WalletService {
 			walletDao.update(wallet);
 		} catch (WalletNotFoundException e){
 			throw new WalletNotFoundException("No wallet with this userId");
+		} catch (WalletInActiveException e){
+			throw new WalletInActiveException();
 		} catch (PlatformException e) {
 			throw new PlatformException("The password could not be reset at this time");
 		}		

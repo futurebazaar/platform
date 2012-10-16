@@ -1,0 +1,1 @@
+ALTER TABLE wallets_wallet ADD COLUMN is_active BIT  NOT NULL DEFAULT 1 AFTER wallet_password;
