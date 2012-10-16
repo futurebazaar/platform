@@ -102,7 +102,7 @@ public class WalletDaoImpl implements WalletDao {
 			long walletId = createNewWallet(passwordEncrypted);
 			if (walletId > 0){
 				jdbcTemplate.update(CREATE_USER_CLIENT_WALLET, new Object[]{userId,clientId,walletId});
-			    walletPasswordSender.sendWalletPassword(userId,randomPassword,false);
+				walletPasswordSender.sendWalletPassword(userId,randomPassword,false);
 			}else{
 				return load(userId, clientId, false);
 			}

@@ -50,6 +50,10 @@ public class FBSapServer {
 			idocServer.start();
 
 		} catch (JCoException e) {
+			logger.error("Exception while connecting the sap server to the environment : " + environment, e);
+			throw new PlatformSapException("Exception while connecting the sap server to the environment : " + environment, e);
+		} catch (Exception e) {
+			logger.error("Exception while connecting the sap server to the environment : " + environment, e);
 			throw new PlatformSapException("Exception while connecting the sap server to the environment : " + environment, e);
 		}
 	}
