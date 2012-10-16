@@ -22,11 +22,9 @@ import com.fb.commons.to.Money;
 import com.fb.platform.wallet.dao.WalletDao;
 import com.fb.platform.wallet.model.Wallet;
 import com.fb.platform.wallet.service.exception.WalletCreationError;
-import com.fb.platform.wallet.service.exception.WalletInActiveException;
 import com.fb.platform.wallet.service.exception.WalletNotFoundException;
 import com.fb.platform.wallet.util.Encrypt;
 import com.fb.platform.wallet.util.GenerateSendWalletPassword;
-import com.sun.org.apache.regexp.internal.RE;
 
 public class WalletDaoImpl implements WalletDao {
 	
@@ -72,11 +70,7 @@ public class WalletDaoImpl implements WalletDao {
 			Wallet wallet = jdbcTemplate.queryForObject(SELECT_WALLET_ID, 
 					new Object[] {walletId},
 					new WalletMapper());
-			if (wallet.isActive()){
 				return wallet;
-			}else {
-				throw new WalletInActiveException();
-			}
 		}catch (EmptyResultDataAccessException e) {
 			throw new WalletNotFoundException();
 		}

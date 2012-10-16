@@ -171,6 +171,7 @@ public class WalletServiceImpl implements WalletService {
 			WalletTransaction walletTransactionRes = new WalletTransaction();
 			Wallet wallet = load(userId,clientId,false);
 			//if(wallet.verifyPassword(walletPassword)){
+			if (wallet.isActive()){
 				if(wallet.isSufficientFund(amount)){
 					com.fb.platform.wallet.model.WalletTransaction walletTransaction = wallet
 							.debit(amount, orderId);
@@ -180,6 +181,9 @@ public class WalletServiceImpl implements WalletService {
 				}else{
 					throw new InSufficientFundsException("Insufficient fund in wallet");
 				}
+			}else {
+				throw new WalletInActiveException();
+			}
 			/*}else {
 				throw new WrongWalletPassword("Insufficient fund in wallet");
 			}*/
@@ -208,19 +212,24 @@ public class WalletServiceImpl implements WalletService {
 		try {
 			WalletTransaction walletTransactionRes =  new WalletTransaction();
 			Wallet wallet = load(userId,clientId,false);
-			if(walletTransactionDao.isRefundable(wallet,refundId,amount)){
-				/***
-				 * Removing the Expiry date cade as the expiry tome is getting ignored.
-				 *  || walletTransaction.getTimeStamp().plusDays(refundExpiryDays).isAfterNow()
-				 */
-				if(ignoreExpiry){
-					walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(wallet.refund(amount,refundId)));
-					walletTransactionRes.setWallet(walletReturnOperations(walletDao.update(wallet)));							
-				}/***else {
-					throw new RefundExpiredException();
-				}*/
+			if (wallet.isActive()){
+				if(walletTransactionDao.isRefundable(wallet,refundId,amount)){
+					/***
+					 * Removing the Expiry date cade as the expiry tome is getting ignored.
+					 *  || walletTransaction.getTimeStamp().plusDays(refundExpiryDays).isAfterNow()
+					 */
+					if(ignoreExpiry){
+						walletTransactionRes.setTransactionId(walletTransactionDao.insertTransaction(wallet.refund(amount,refundId)));
+						walletTransactionRes.setWallet(walletReturnOperations(walletDao.update(wallet)));							
+					}/***else {
+						throw new RefundExpiredException();
+					}*/
+				}
+			}else {
+				throw new WalletInActiveException();
 			}
 			return walletTransactionRes;
+			
 		} catch (InSufficientFundsException e){
 			throw new InSufficientFundsException("Not enough fund in the wallet");
 		} catch (WorngRefundIdException e){
