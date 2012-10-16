@@ -43,6 +43,7 @@
     <xs:restriction base="xs:string">
       <xs:enumeration value="SUCCESS"/>
       <xs:enumeration value="INVALID_USER"/>
+      <xs:enumeration value="INACTIVE_WALLET"/>
       <xs:enumeration value="NO_SESSION"/>
       <xs:enumeration value="ERROR_RETRIVING_WALLET_SUMMARY"/>
     </xs:restriction>
@@ -131,6 +132,7 @@
     <xs:restriction base="xs:string">
       <xs:enumeration value="SUCCESS"/>
       <xs:enumeration value="NO_SESSION"/>
+      <xs:enumeration value="INACTIVE_WALLET"/>
       <xs:enumeration value="INVALID_WALLET"/>
       <xs:enumeration value="ERROR_RETRIVING_WALLET_HISTORY"/>
     </xs:restriction>
@@ -204,6 +206,7 @@
       <xs:enumeration value="SUCCESS"/>
       <xs:enumeration value="NO_SESSION"/>
       <xs:enumeration value="INVALID_WALLET"/>
+      <xs:enumeration value="INACTIVE_WALLET"/>
       <xs:enumeration value="FAILED_TRANSACTION"/>
     </xs:restriction>
   </xs:simpleType>
@@ -241,6 +244,7 @@
       <xs:enumeration value="SUCCESS"/>
       <xs:enumeration value="NO_SESSION"/>
       <xs:enumeration value="INVALID_WALLET"/>
+      <xs:enumeration value="INACTIVE_WALLET"/>
       <xs:enumeration value="BALANCE_UNAVAILABLE"/>
       <xs:enumeration value="FAILED_TRANSACTION"/>
     </xs:restriction>
@@ -278,6 +282,7 @@
       <xs:enumeration value="SUCCESS"/>
       <xs:enumeration value="NO_SESSION"/>
       <xs:enumeration value="INVALID_WALLET"/>
+      <xs:enumeration value="INACTIVE_WALLET"/>
       <xs:enumeration value="ALREADY_REFUNDED"/>
       <xs:enumeration value="DUPLICATE_REFUND_REQUEST"/>
       <xs:enumeration value="BALANCE_UNAVAILABLE"/>
@@ -317,6 +322,7 @@
       <xs:enumeration value="SUCCESS"/>
       <xs:enumeration value="NO_SESSION"/>
       <xs:enumeration value="INVALID_WALLET"/>
+      <xs:enumeration value="INACTIVE_WALLET"/>
       <xs:enumeration value="BALANCE_UNAVAILABLE"/>
       <xs:enumeration value="INVALID_TRANSACTION_ID"/>
       <xs:enumeration value="FAILED_TRANSACTION"/>
@@ -352,6 +358,7 @@
       <xs:enumeration value="SUCCESS"/>
       <xs:enumeration value="NO_SESSION"/>
       <xs:enumeration value="INVALID_WALLET"/>
+      <xs:enumeration value="INACTIVE_WALLET"/>
       <xs:enumeration value="BALANCE_UNAVAILABLE"/>
       <xs:enumeration value="WRONG_PASSWORD"/>
       <xs:enumeration value="FAILED_TRANSACTION"/>      
@@ -386,6 +393,7 @@
       <xs:enumeration value="SUCCESS"/>
       <xs:enumeration value="NO_SESSION"/>
       <xs:enumeration value="INVALID_WALLET"/>
+      <xs:enumeration value="INACTIVE_WALLET"/>
       <xs:enumeration value="WRONG_PASSWORD"/>
       <xs:enumeration value="FAILED_TRANSACTION"/>      
     </xs:restriction>
@@ -417,6 +425,7 @@
       <xs:enumeration value="SUCCESS"/>
       <xs:enumeration value="NO_SESSION"/>
       <xs:enumeration value="INVALID_WALLET"/>
+      <xs:enumeration value="INACTIVE_WALLET"/>
       <xs:enumeration value="FAILED_TRANSACTION"/>      
     </xs:restriction>
   </xs:simpleType>     

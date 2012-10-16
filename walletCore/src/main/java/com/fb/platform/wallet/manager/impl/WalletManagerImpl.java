@@ -12,6 +12,7 @@ import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
 import com.fb.platform.user.manager.exception.UserNotFoundException;
 
+import com.fb.platform.wallet.service.exception.WalletInActiveException;
 import com.fb.platform.wallet.service.exception.WalletNotFoundException;
 import com.fb.platform.wallet.service.exception.InSufficientFundsException;
 import com.fb.platform.wallet.service.exception.AlreadyRefundedException;
@@ -117,6 +118,9 @@ public class WalletManagerImpl implements WalletManager {
 			walletDetails.setGiftExpiryDt2(wallet.getGiftExpiryDt2());
 			walletSummaryResponse.setWalletDetails(walletDetails);
 
+		} catch (WalletInActiveException e) {
+			logger.info("getWalletSummary: inactive wallet " + walletSummaryRequest.getUserId());
+			walletSummaryResponse.setWalletSummaryStatus(WalletSummaryStatusEnum.INACTIVE_WALLET);
 		} catch (UserNotFoundException e) {
 			logger.info("getWalletSummary: invalid user id " + walletSummaryRequest.getUserId());
 			walletSummaryResponse.setWalletSummaryStatus(WalletSummaryStatusEnum.INVALID_USER);
@@ -151,6 +155,9 @@ public class WalletManagerImpl implements WalletManager {
 			response.setTotalTransactionSize(resultSet.getTotalTransactionSize());
 			response.setWalletHistoryStatus(WalletHistoryStatusEnum.SUCCESS);
 
+		} catch (WalletInActiveException e) {
+			logger.info("getWalletHistory: inactive wallet " + walletHistoryRequest.getUserId());
+			response.setWalletHistoryStatus(WalletHistoryStatusEnum.INACTIVE_WALLET);
 		} catch (WalletNotFoundException e) {
 			logger.info("getWalletHistory: invalid wallet id " + walletHistoryRequest.getWalletId());
 			response.setWalletHistoryStatus(WalletHistoryStatusEnum.INVALID_WALLET);
@@ -184,6 +191,9 @@ public class WalletManagerImpl implements WalletManager {
 			response.setTotalTransactionSize(resultSet.getTotalTransactionSize());
 			response.setWalletHistoryStatus(WalletHistoryStatusEnum.SUCCESS);
 
+		} catch (WalletInActiveException e) {
+			logger.info("getWalletHistory: inactive wallet " +  walletHistoryRequest.getUserId());
+			response.setWalletHistoryStatus(WalletHistoryStatusEnum.INACTIVE_WALLET);
 		} catch (WalletNotFoundException e) {
 			logger.info("getWalletHistory: invalid wallet id " + walletHistoryRequest.getWalletId());
 			response.setWalletHistoryStatus(WalletHistoryStatusEnum.INVALID_WALLET);
@@ -222,7 +232,10 @@ public class WalletManagerImpl implements WalletManager {
 			response.setTransactionId(transaction.getTransactionId());
 			response.setStatus(FillWalletStatusEnum.SUCCESS);
 			
-		} catch (PlatformException pe) {
+		} catch (WalletInActiveException e) {
+			logger.info("fillWallet: inactive wallet " + fillWalletRequest.getUserId());
+			response.setStatus(FillWalletStatusEnum.INACTIVE_WALLET);
+		}  catch (PlatformException pe) {
 			logger.error("fillWallet: Exception for user id " + fillWalletRequest.getUserId(), pe);
 			response.setStatus(FillWalletStatusEnum.FAILED_TRANSACTION);
 		}
@@ -257,6 +270,9 @@ public class WalletManagerImpl implements WalletManager {
 			response.setTransactionId(transaction.getTransactionId());
 			response.setStatus(PayStatusEnum.SUCCESS);
 			
+		} catch (WalletInActiveException e) {
+			logger.info("payFromWallet: inactive wallet " + payRequest.getUserId());
+			response.setStatus(PayStatusEnum.INACTIVE_WALLET);
 		} catch (WalletNotFoundException e) {
 			logger.info("payFromWallet: No wallet for user id " + payRequest.getUserId());
 			response.setStatus(PayStatusEnum.INVALID_WALLET);
@@ -298,6 +314,9 @@ public class WalletManagerImpl implements WalletManager {
 			response.setTransactionId(transaction.getTransactionId());
 			response.setStatus(RefundStatusEnum.SUCCESS);
 			
+		} catch (WalletInActiveException e) {
+			logger.info("refundFromWallet: inactive wallet " + refundRequest.getUserId());
+			response.setStatus(RefundStatusEnum.INACTIVE_WALLET);
 		} catch (WalletNotFoundException e) {
 			logger.info("refundFromWallet: No wallet exists for user Id " + refundRequest.getUserId());
 			response.setStatus(RefundStatusEnum.INVALID_WALLET);
@@ -355,6 +374,9 @@ public class WalletManagerImpl implements WalletManager {
 		} catch (WalletNotFoundException e) {
 			logger.info("revertWalletTransaction: No wallet exists for user id " + revertRequest.getUserId());
 			response.setStatus(RevertStatusEnum.INVALID_WALLET);
+		} catch (WalletInActiveException e) {
+			logger.info("revertWalletTransaction: inactive wallet " + revertRequest.getUserId());
+			response.setStatus(RevertStatusEnum.INACTIVE_WALLET);
 		} catch (InvalidTransactionIdException e) {
 			logger.info("revertWalletTransaction: Invalid transaction id " + revertRequest.getTransactionIdToRevert());
 			response.setStatus(RevertStatusEnum.INVALID_TRANSACTION_ID);
@@ -402,6 +424,9 @@ public class WalletManagerImpl implements WalletManager {
 		} catch (WrongWalletPassword e) {
 			logger.info("verifyWallet: Worng password wa provided to verify the wallet " + apiVerifyReq.getUserId());
 			response.setStatus(VerifyWalletStatusEnum.WRONG_PASSWORD);
+		} catch (WalletInActiveException e) {
+			logger.info("verifyWallet: inactive wallet " + apiVerifyReq.getUserId());
+			response.setStatus(VerifyWalletStatusEnum.INACTIVE_WALLET);
 		} catch (WalletNotFoundException e) {
 			logger.info("verifyWallet: No wallet for user id " + apiVerifyReq.getUserId());
 			response.setStatus(VerifyWalletStatusEnum.INVALID_WALLET);
@@ -431,6 +456,9 @@ public class WalletManagerImpl implements WalletManager {
 		} catch (WrongWalletPassword e) {
 			logger.info("changeWalletPassword: Worng password wa provided to change the wallet password" + apichangeWalletPasswordReq.getUserId());
 			response.setStatus(ChangeWalletPasswordStatusEnum.WRONG_PASSWORD);
+		} catch (WalletInActiveException e) {
+			logger.info("changeWalletPassword: inactive wallet " + apichangeWalletPasswordReq.getUserId());
+			response.setStatus(ChangeWalletPasswordStatusEnum.INACTIVE_WALLET);
 		} catch (WalletNotFoundException e) {
 			logger.info("changeWalletPassword: No wallet for user id " + apichangeWalletPasswordReq.getUserId());
 			response.setStatus(ChangeWalletPasswordStatusEnum.INVALID_WALLET);
@@ -456,6 +484,9 @@ public class WalletManagerImpl implements WalletManager {
 			response.setSessionToken(authentication.getToken());
 			walletService.resetWalletPassword(apiresetWalletPasswordReq.getUserId(), apiresetWalletPasswordReq.getClientId());
 			response.setStatus(ResetWalletPasswordStatusEnum.SUCCESS);		
+		} catch (WalletInActiveException e) {
+			logger.info("resetWalletPassword: inactive wallet " + apiresetWalletPasswordReq.getUserId());
+			response.setStatus(ResetWalletPasswordStatusEnum.INACTIVE_WALLET);
 		} catch (WalletNotFoundException e) {
 			logger.info("resetWalletPassword: No wallet for user id " + apiresetWalletPasswordReq.getUserId());
 			response.setStatus(ResetWalletPasswordStatusEnum.INVALID_WALLET);
