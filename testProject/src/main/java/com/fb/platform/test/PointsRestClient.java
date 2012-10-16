@@ -29,6 +29,7 @@ import com.fb.platform.payback._1_0.PointsRequest;
 import com.fb.platform.payback._1_0.PointsResponse;
 import com.fb.platform.payback._1_0.RollbackPointsRequest;
 import com.fb.platform.payback._1_0.RollbackPointsResponse;
+import com.fb.platform.payback.rule.EarnPointsRuleEnum;
 
 
 public class PointsRestClient {
@@ -190,7 +191,7 @@ public class PointsRestClient {
 
 	private static ClearCacheRequest setClearCacheRequest() throws Exception {
 		ClearCacheRequest cacheRequest = new ClearCacheRequest();
-		cacheRequest.setRuleName(EarnPointsRuleEnum.ENTER_LOYALTY_CARD_EARN_X_POINTS.name() + "_" + "BIGBAZAAR");
+		cacheRequest.setRuleName(EarnPointsRuleEnum.ENTER_LOYALTY_CARD_EARN_X_POINTS + "_" + "BIGBAZAAR");
 		cacheRequest.setSessionToken(login());
 		return cacheRequest;
 	}
@@ -198,10 +199,9 @@ public class PointsRestClient {
 	private static PointsRequest setPointsRequest() throws Exception {
 		PointsRequest request = new PointsRequest();
 		request.setActionCode(ActionCode.PREALLOC_EARN);
-		request.setClientName("Big Bazaar");
 		request.setSessionToken(login());
-		
 		OrderRequest orderRequest = new OrderRequest();
+		orderRequest.setClientName("Big Bazaar");
 		orderRequest.setAmount(new BigDecimal(500));
 		orderRequest.setLoyaltyCard("1234567812345678");
 		orderRequest.setOrderId(2);

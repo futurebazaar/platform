@@ -5,7 +5,6 @@
     <xs:complexType>
       <xs:sequence>
       	<xs:element ref="payback:actionCode"/>
-      	<xs:element ref="payback:clientName" />
       	<xs:element ref="payback:sessionToken" />
       	<xs:element ref="payback:orderRequest" />
       </xs:sequence>
@@ -28,6 +27,7 @@
   <xs:element name="orderRequest">
     <xs:complexType>
       <xs:sequence>
+      	<xs:element ref="payback:clientName" />
         <xs:element ref="payback:orderId"/>
         <xs:element ref="payback:referenceId"/>
         <xs:element ref="payback:loyaltyCard"/>
@@ -123,6 +123,7 @@
       	<xs:element ref="payback:actionCode"/>
       	<xs:element ref="payback:timestamp" />
       	<xs:element ref="payback:orderAmount" />
+      	<xs:element ref="payback:clientName" />
       	<xs:element maxOccurs="unbounded" ref="payback:orderItemRequest" />
       </xs:sequence>
     </xs:complexType>

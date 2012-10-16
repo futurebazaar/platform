@@ -66,6 +66,21 @@
         	<version>${platform.version}</version>
 	  	</dependency>
 	  	<dependency>
+	  		<groupId>com.fb</groupId>
+			<artifactId>paybackCore</artifactId>
+        	<version>${platform.version}</version>
+	  	</dependency>
+	  	<dependency>
+	  		<groupId>com.fb</groupId>
+			<artifactId>eGVCore</artifactId>
+        	<version>${platform.version}</version>
+	  	</dependency>
+	  	<dependency>
+	  		<groupId>com.fb</groupId>
+			<artifactId>walletCore</artifactId>
+        	<version>${platform.version}</version>
+	  	</dependency>
+	  	<dependency>
 			<groupId>commons-httpclient</groupId>
 			<artifactId>commons-httpclient</artifactId>
 			<version>3.1</version>

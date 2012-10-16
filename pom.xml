@@ -391,11 +391,11 @@
         <module>userCore</module>
         <module>userWS</module>
         <module>authenticationCore</module>
-	<module>fulfilmentCore</module>
-	<module>fulfilmentWS</module>
-	<module>promotionCore</module>
-	<module>promotionAdminWS</module>
-	<module>promotionWS</module>
+        <module>fulfilmentCore</module>
+        <module>fulfilmentWS</module>
+        <module>promotionCore</module>
+        <module>promotionAdminWS</module>
+        <module>promotionWS</module>
         <module>paybackCore</module>
         <module>paybackWS</module>
     	<module>platformMom</module>
@@ -405,11 +405,11 @@
         <module>deliveryDeleteReceiver</module>
         <module>itemAckReceiver</module>
         <module>launcher</module>
-	<module>testProject</module>
-	<module>eGVCore</module>
-	<module>eGVWS</module>
-	<module>walletCore</module>
-	<module>walletWS</module>
+        <module>eGVCore</module>
+        <module>eGVWS</module>
+        <module>walletCore</module>
+        <module>walletWS</module>
+        <module>testProject</module>
     </modules>
 
     <reporting>
