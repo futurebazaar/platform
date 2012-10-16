@@ -25,7 +25,6 @@ import com.fb.platform.wallet.service.exception.WalletCreationError;
 import com.fb.platform.wallet.service.exception.WalletNotFoundException;
 import com.fb.platform.wallet.util.Encrypt;
 import com.fb.platform.wallet.util.GenerateSendWalletPassword;
-import com.sun.org.apache.regexp.internal.RE;
 
 public class WalletDaoImpl implements WalletDao {
 	
