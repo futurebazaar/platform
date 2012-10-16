@@ -51,9 +51,10 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 			"		valid_from, " +
 			"		valid_till, " +
 			"		name, " +
-			"		description, " +
+			"		description," +
+			"		is_coupon, " +
 			"		is_active) " +
-			"VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+			"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
 
 	private static final String CREATE_PROMOTION_RULE_CONFIG = 
@@ -318,7 +319,8 @@ public class PromotionAdminDaoJdbcImpl  implements PromotionAdminDao {
 						}
 						ps.setString(6, name);
 						ps.setString(7, description);
-						ps.setInt(8, active);
+						ps.setInt(8, 1); //TODO for product based promotion this will be false. refactor when product promotions are moved to use promotion admin
+						ps.setInt(9, active);
 						return ps;
 					}
 				}, promotionKeyHolder);

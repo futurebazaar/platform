@@ -7,13 +7,13 @@ import java.math.BigDecimal;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.datatype.DatatypeFactory;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.joda.time.DateTime;
 
 import com.fb.platform.auth._1_0.LoginRequest;
 import com.fb.platform.auth._1_0.LoginResponse;
@@ -29,7 +29,6 @@ import com.fb.platform.payback._1_0.PointsRequest;
 import com.fb.platform.payback._1_0.PointsResponse;
 import com.fb.platform.payback._1_0.RollbackPointsRequest;
 import com.fb.platform.payback._1_0.RollbackPointsResponse;
-import com.fb.platform.payback.rule.EarnPointsRuleEnum;
 
 
 public class PointsRestClient {
@@ -40,7 +39,7 @@ public class PointsRestClient {
 		HttpClient httpClient = new HttpClient();
 		PostMethod loginMethod = new PostMethod("http://localhost:8080/userWS/auth/login");
 		LoginRequest loginRequest = new LoginRequest();
-		loginRequest.setUsername("jasvipul@gmail.com");
+		loginRequest.setUsername("removingjas@test.com");
 		loginRequest.setPassword("testpass");
 
 		JAXBContext context = JAXBContext.newInstance("com.fb.platform.auth._1_0");
@@ -142,7 +141,7 @@ public class PointsRestClient {
 		DisplayPointsRequest request = new DisplayPointsRequest();
 		request.setActionCode(ActionCode.PREALLOC_EARN	);
 		request.setClientName("Big Bazaar");
-		request.setTimestamp(DatatypeFactory.newInstance().newXMLGregorianCalendar(2012, 05, 27, 0, 0, 0, 0, 0));
+		request.setTimestamp(new DateTime(2012, 05, 27, 00, 00, 00));
 		request.setOrderAmount(new BigDecimal(500));
 		OrderItemRequest itemRequest = new OrderItemRequest();
 		itemRequest.setAmount(new BigDecimal(500));
@@ -210,7 +209,7 @@ public class PointsRestClient {
 		orderRequest.setReason("REST CLIENT");
 		orderRequest.setReferenceId("5052");
 		orderRequest.setOrderTotal(new BigDecimal("2000"));
-		orderRequest.setTimestamp(DatatypeFactory.newInstance().newXMLGregorianCalendar(2012, 05, 27, 0, 0, 0, 0, 0));
+		orderRequest.setTimestamp(new DateTime(2012, 05, 27, 00, 00, 00));
 		
 		OrderItemRequest itemRequest = new OrderItemRequest();
 		itemRequest.setAmount(new BigDecimal(500));

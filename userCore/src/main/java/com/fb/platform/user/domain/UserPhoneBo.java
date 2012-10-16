@@ -4,6 +4,7 @@ public class UserPhoneBo {
 
 	private String phoneno;
 	private String type;
+	private boolean isVerified;
 	/**
 	 * @return the phoneno
 	 */
@@ -27,6 +28,13 @@ public class UserPhoneBo {
 	 */
 	public void setType(String type) {
 		this.type = type;
+	}
+	
+	public boolean isVerified() {
+		return isVerified;
+	}
+	public void setVerified(boolean isVerified) {
+		this.isVerified = isVerified;
 	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()

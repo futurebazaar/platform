@@ -2,7 +2,7 @@ package com.fb.platform.promotion.admin.to;
 
 import java.util.List;
 
-import com.fb.platform.promotion.rule.RuleConfigDescriptor;
+import com.fb.platform.promotion.rule.config.RuleConfigDescriptor;
 
 /**
  * @author nehaga

@@ -13,7 +13,7 @@ import com.fb.platform.egv.util.GiftVoucherPinUtil;
 
 /**
  * @author keith
- *
+ * 
  */
 public class GiftVoucher implements Serializable {
 
@@ -23,10 +23,11 @@ public class GiftVoucher implements Serializable {
 	private GiftVoucherDates dates;
 	private int orderItemId;
 	private String email;
+	private String mobile;
 	private int userId;
 	private GiftVoucherStatusEnum status;
 	private Money amount;
-	
+
 	public int getId() {
 		return id;
 	}
@@ -63,6 +64,12 @@ public class GiftVoucher implements Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	public String getMobile() {
+		return mobile;
+	}
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
 	public int getUserId() {
 		return userId;
 	}
@@ -81,25 +88,33 @@ public class GiftVoucher implements Serializable {
 	public void setStatus(GiftVoucherStatusEnum status) {
 		this.status = status;
 	}
-	
+
 	public boolean isUsable() {
-		return (getStatus() == GiftVoucherStatusEnum.CONFIRMED);
+		return (getStatus() == GiftVoucherStatusEnum.CONFIRMED || getStatus() == GiftVoucherStatusEnum.USE_ROLLBACKED);
 	}
-	
+
+	public boolean isUsed() {
+		return (this.status == GiftVoucherStatusEnum.USED);
+	}
+
 	public boolean isValidPin(String pin) {
 		return GiftVoucherPinUtil.checkPassword(pin, this.pin);
 	}
-	
+
 	public boolean isExpired() {
 		return !(this.dates.isWithinDates());
 	}
-	
+
 	public DateTime getValidFrom() {
 		return this.dates.getValidFrom();
 	}
-	
+
 	public DateTime getValidTill() {
 		return this.dates.getValidTill();
+	}
+
+	public boolean isActive() {
+		return !(getStatus() == GiftVoucherStatusEnum.INACTIVE);
 	}
 
 }

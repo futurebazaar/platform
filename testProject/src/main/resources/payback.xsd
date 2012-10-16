@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.fb.com/platform/payback/1.0.0" xmlns:payback="http://www.fb.com/platform/payback/1.0.0">
+  
+  <xs:element name="pointsRequest">
+    <xs:complexType>
+      <xs:sequence>
+      	<xs:element ref="payback:actionCode"/>
+      	<xs:element ref="payback:clientName" />
+      	<xs:element ref="payback:sessionToken" />
+      	<xs:element ref="payback:orderRequest" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="actionCode" type="payback:actionCode"/>
+  
+  <xs:simpleType name="actionCode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="PREALLOC_EARN"/>
+      <xs:enumeration value="EARN_REVERSAL"/>
+      <xs:enumeration value="BURN_REVERSAL"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:element name="clientName" type="xs:string"/>
+  <xs:element name="sessionToken" type="xs:string"/>
+  
+  <xs:element name="orderRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="payback:orderId"/>
+        <xs:element ref="payback:referenceId"/>
+        <xs:element ref="payback:loyaltyCard"/>
+        <xs:element ref="payback:amount"/>
+        <xs:element ref="payback:orderTotal" />
+        <xs:element ref="payback:reason"/>
+        <xs:element ref="payback:timestamp"/>
+        <xs:element maxOccurs="unbounded" ref="payback:orderItemRequest"/>
+        <xs:element maxOccurs="unbounded" ref="payback:paymentRequest"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="timestamp" type="xs:dateTime"/>
+  <xs:element name="orderId" type="xs:long"/>
+  <xs:element name="referenceId" type="xs:string"/>
+  <xs:element name="loyaltyCard" type="xs:string"/>
+  <xs:element name="reason" type="xs:string"/>
+  <xs:element name="amount" type="xs:decimal"/>
+   <xs:element name="orderTotal" type="xs:decimal"/>
+  
+  <xs:element name="orderItemRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="payback:itemId"/>
+         <xs:element ref="payback:articleId"/>
+        <xs:element ref="payback:quantity"/>
+        <xs:element ref="payback:amount"/>
+        <xs:element ref="payback:categoryId"/>
+        <xs:element ref="payback:sellerRateChartId"/>
+        <xs:element ref="payback:departmentName"/>
+        <xs:element ref="payback:departmentCode" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="paymentRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="payback:amount"/>
+        <xs:element ref="payback:paymentMode" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="paymentMode" type="xs:string"/>
+  <xs:element name="categoryId" type="xs:long"/>
+  <xs:element name="sellerRateChartId" type="xs:long"/>
+  <xs:element name="itemId" type="xs:long"/>
+  <xs:element name="articleId" type="xs:string"/>
+  <xs:element name="quantity" type="xs:int"/>
+  <xs:element name="departmentName" type="xs:string"/>
+  <xs:element name="departmentCode" type="xs:long"/>
+  
+  <xs:element name="pointsResponse">
+  	<xs:complexType>
+      <xs:sequence>
+	  	 <xs:element ref="payback:actionCode"/>
+        <xs:element ref="payback:statusCode"/>
+        <xs:element ref="payback:message"/>
+        <xs:element ref="payback:totalPoints"/>
+        <xs:element ref="payback:headerId"/>
+	  </xs:sequence>
+	</xs:complexType>
+  </xs:element>
+  <xs:element name="statusCode" type="xs:string"/>
+  <xs:element name="message" type="xs:string"/>
+  
+  <xs:element name="clearCacheRequest">
+    <xs:complexType>
+      <xs:sequence>
+      	<xs:element ref="payback:ruleName"/>
+      	<xs:element ref="payback:sessionToken" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="ruleName" type="xs:string"/>
+  
+  <xs:element name="clearCacheResponse">
+    <xs:complexType>
+      <xs:sequence>
+      	<xs:element ref="payback:ruleName"/>
+      	<xs:element ref="payback:sessionToken" />
+      	<xs:element ref="payback:statusCode" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="displayPointsRequest">
+    <xs:complexType>
+      <xs:sequence>
+      	<xs:element ref="payback:actionCode"/>
+      	<xs:element ref="payback:timestamp" />
+      	<xs:element ref="payback:orderAmount" />
+      	<xs:element maxOccurs="unbounded" ref="payback:orderItemRequest" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="displayPointsResponse">
+    <xs:complexType>
+      <xs:sequence>
+      	<xs:element ref="payback:totalPoints"/>
+      	<xs:element ref="payback:earnPoints"/>
+      	<xs:element ref="payback:bonusPoints"/>
+      	<xs:element ref="payback:purchasablePoints"/>
+      	<xs:element maxOccurs="unbounded" ref="payback:itemResponse" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="itemResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="payback:itemId"/>
+        <xs:element ref="payback:amount" />
+        <xs:element ref="payback:txnPoints" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="earnPoints" type="xs:int"/>
+  <xs:element name="totalPoints" type="xs:int"/>
+  <xs:element name="purchasablePoints" type="xs:int"/>
+  <xs:element name="txnPoints" type="xs:int"/>
+  <xs:element name="bonusPoints" type="xs:int"/>
+  <xs:element name="orderAmount" type="xs:decimal"/>
+  
+  <xs:element name="rollbackPointsRequest">
+    <xs:complexType>
+      <xs:sequence>
+      	<xs:element ref="payback:headerId"/>
+      	<xs:element ref="payback:sessionToken" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="headerId" type="xs:long"/>
+  
+  <xs:element name="rollbackPointsResponse">
+    <xs:complexType>
+      <xs:sequence>
+      	<xs:element ref="payback:headerId"/>
+      	<xs:element ref="payback:deletedHeaderRows" />
+      	<xs:element ref="payback:deletedItemRows" />
+      	<xs:element ref="payback:statusCode" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="deletedHeaderRows" type="xs:int"/>
+  <xs:element name="deletedItemRows" type="xs:int"/>
+  
+</xs:schema>

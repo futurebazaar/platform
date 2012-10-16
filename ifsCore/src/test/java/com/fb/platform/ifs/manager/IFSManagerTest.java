@@ -24,7 +24,7 @@ public class IFSManagerTest extends BaseTestCase {
 	public void testIFSManager()
     {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);

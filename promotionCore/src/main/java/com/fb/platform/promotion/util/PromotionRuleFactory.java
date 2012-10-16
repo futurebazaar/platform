@@ -8,16 +8,21 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.platform.promotion.dao.OrderDao;
+import com.fb.platform.promotion.dao.ProductDao;
+import com.fb.platform.promotion.dao.PromotionDao;
 import com.fb.platform.promotion.rule.PromotionRule;
-import com.fb.platform.promotion.rule.RuleConfigDescriptorItem;
-import com.fb.platform.promotion.rule.RuleConfiguration;
 import com.fb.platform.promotion.rule.RulesEnum;
+import com.fb.platform.promotion.rule.config.RuleConfigItemDescriptor;
+import com.fb.platform.promotion.rule.config.RuleConfiguration;
 import com.fb.platform.promotion.rule.impl.BuyWorthXGetYPercentOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyWorthXGetYRsOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyXBrandGetYRsOffOnZProductRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyXGetYFreeRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyXQuantityGetVariablePercentOffRuleImpl;
+import com.fb.platform.promotion.rule.impl.CategoryBasedVariablePercentOffRuleImpl;
+import com.fb.platform.promotion.rule.impl.DiscountOnClearanceProductsRuleImpl;
 import com.fb.platform.promotion.rule.impl.FirstPurchaseBuyWorthXGetYRsOffRuleImpl;
+import com.fb.platform.promotion.rule.impl.MonthlyDiscountRsOffRuleImpl;
 
 /**
  * @author vinayak
@@ -29,11 +34,25 @@ public class PromotionRuleFactory {
 	@Autowired
 	private static OrderDao orderDao = null;
 	
+	@Autowired
+	private static PromotionDao promotionDao = null;
+
+	@Autowired
+	private static ProductDao productDao = null;
+
 	public void setOrderDao(OrderDao orderDao) {
 		this.orderDao = orderDao;
 	}
+	
+	public void setPromotionDao(PromotionDao promotionDao) {
+		this.promotionDao = promotionDao;
+	}
 
-	private static PromotionRule getRule(RulesEnum ruleName) {
+	public void setProductDao(ProductDao productDao) {
+		this.productDao = productDao;
+	}
+
+	private static PromotionRule getRule(RulesEnum ruleName, int promotionId) {
 		PromotionRule rule = null;
 
 		switch (ruleName) {
@@ -63,6 +82,18 @@ public class PromotionRuleFactory {
 			rule = new BuyXQuantityGetVariablePercentOffRuleImpl();
 			break;
 			
+		case MONTHLY_DISCOUNT_RS_OFF:
+			rule = new MonthlyDiscountRsOffRuleImpl();
+			((MonthlyDiscountRsOffRuleImpl)rule).setPromotionId(promotionId);
+			((MonthlyDiscountRsOffRuleImpl)rule).setPromotionDao(promotionDao);
+			break;
+		case CATEGORY_BASED_VARIABLE_PERCENT_OFF:
+			rule = new CategoryBasedVariablePercentOffRuleImpl();
+			break;
+		case DISCOUNT_ON_CLEARANCE_PRODUCT:
+			rule = new DiscountOnClearanceProductsRuleImpl();
+			((DiscountOnClearanceProductsRuleImpl)rule).setProductDao(productDao);
+			break;
 		default:
 			throw new IllegalArgumentException("Unkown RulesEnum object found : " + ruleName);
 		}
@@ -70,14 +101,14 @@ public class PromotionRuleFactory {
 		return rule;
 	}
 	
-	public static List<RuleConfigDescriptorItem> getRuleConfig(RulesEnum ruleName) {
-		PromotionRule rule = getRule(ruleName);
-		List<RuleConfigDescriptorItem> ruleConfigs = rule.getRuleConfigs();
+	public static List<RuleConfigItemDescriptor> getRuleConfig(RulesEnum ruleName, int promotionId) {
+		PromotionRule rule = getRule(ruleName, promotionId);
+		List<RuleConfigItemDescriptor> ruleConfigs = rule.getRuleConfigs();
 		return ruleConfigs;
 	}
 	
-	public static PromotionRule createRule(RulesEnum ruleName, RuleConfiguration ruleConfig) {
-		PromotionRule rule = getRule(ruleName);
+	public static PromotionRule createRule(RulesEnum ruleName, RuleConfiguration ruleConfig, int promotionId) {
+		PromotionRule rule = getRule(ruleName,promotionId);
 		rule.init(ruleConfig);
 		return rule;
 	}

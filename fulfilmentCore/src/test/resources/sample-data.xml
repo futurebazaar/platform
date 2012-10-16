@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+		<table name="accounts_client">
+				<column>id</column>
+				<column>name</column>
+				<column>confirmed_order_email</column>
+				<column>pending_order_email</column>
+				<column>share_product_email</column>
+				<column>signature</column>
+				<column>pending_order_helpline</column>
+				<column>confirmed_order_helpline</column>
+				<column>sms_mask</column>
+				<column>noreply_email</column>
+				<column>feedback_email</column>
+				<column>promotions_email</column>
+				<column>sale_pricelist</column>
+				<column>list_pricelist</column>
+				<column>clientdomain_name</column>
+				<column>slug</column>
+			
+			<row>
+				<value name="id">-11000</value>
+				<value name="name">futurebazaar</value>
+				<value name="confirmed_order_email">suhas.kajbaje@futuregroup.in</value>
+				<value name="pending_order_email">suhas.kajbaje@futuregroup.in</value>
+				<value name="share_product_email">suhas.kajbaje@futuregroup.in</value>
+				<value name="signature">NA</value>
+				<value name="pending_order_helpline">7498186324</value>
+				<value name="confirmed_order_helpline">7498186324</value>
+				<value name="sms_mask">TDFB</value>
+				<value name="noreply_email">suhas.kajbaje@futuregroup.in</value>
+				<value name="feedback_email">suhas.kajbaje@futuregroup.in</value>
+				<value name="promotions_email">suhas.kajbaje@futuregroup.in</value>
+				<value name="sale_pricelist">SALE_PRICE</value>
+				<value name="list_pricelist">LIST_PRICE</value>
+				<value name="clientdomain_name">NA</value>
+				<value name="slug">futurebazaar</value>
+			</row>
+		
+		</table>
+
+        <table name="accounts_account">
+                <column>id</column>
+                <column>client_id</column>
+                <column>is_exclusive</column>
+                <column>ships_everywhere</column>
+                <column>shipping_duration</column>
+                <column>delivery_duration</column>
+                <column>sap_support_needed</column>
+                <column>name</column>
+                <column>website</column>
+                <column>type</column>
+                <column>customer_support_no</column>
+                <column>primary_phone</column>
+                <column>secondary_phone</column>
+                <column>primary_email</column>
+                <column>secondary_email</column>
+                <column>shipping_policy</column>
+                <column>returns_policy</column>
+                <column>tos</column>
+                <column>code</column>
+                <column>dni</column>
+                <column>greeting_title</column>
+                <column>greeting_text</column>
+                <column>confirmed_order_email</column>
+                <column>pending_order_email</column>
+                <column>signature</column>
+                <column>pending_order_helpline</column>
+                <column>confirmed_order_helpline</column>
+                <column>pg_return_url</column>
+                <column>sms_mask</column>
+                <column>share_product_email</column>
+                <column>slug</column>
+        	<row>
+            	<value name="id">-10500</value>
+		        <value name="client_id">-11000</value>
+		        <value name="is_exclusive">1</value>
+		        <value name="ships_everywhere">0</value>
+		        <value name="shipping_duration">3</value>
+		        <value name="delivery_duration">3</value>
+		        <value name="sap_support_needed">1</value>
+		        <value name="website">suhas</value>
+                <value name="name">Big Bazaar Sakinaka</value>
+		        <value name="type">web</value>
+		        <value name="customer_support_no">7498186324</value>
+		        <value name="primary_phone">7498186324</value>
+		        <value name="secondary_phone">7498186324</value>
+		        <value name="primary_email">suhas.kajbaje@futuregroup.in</value>
+		        <value name="secondary_email">suhas.kajbaje@futuregroup.in</value>
+		        <value name="shipping_policy">NA</value>
+		        <value name="returns_policy">NA</value>
+		        <value name="tos">NA</value>
+		        <value name="code">devfb</value>
+		        <value name="dni">NA</value>
+		        <value name="greeting_title">2222</value>
+		        <value name="greeting_text">4444</value>
+		        <value name="confirmed_order_email">NA</value>
+		        <value name="pending_order_email">NA</value>
+		        <value name="signature">NA</value>
+		        <value name="pending_order_helpline">7498186424</value>
+		        <value name="confirmed_order_helpline">7498186424</value>
+		        <value name="pg_return_url">devpg.futurebazaar.com</value>
+		        <value name="sms_mask">TD-FB</value>
+		        <value name="share_product_email">suhas.kajbaje@futuregroup.in</value>
+		        <value name="slug">devfb</value>
+        	</row>
+        	
+        	<row>
+                <value name="id">-10501</value>
+                <value name="client_id">-11000</value>
+               	<value name="is_exclusive">1</value>
+               	<value name="ships_everywhere">0</value>
+		        <value name="shipping_duration">3</value>
+		        <value name="delivery_duration">3</value>
+		        <value name="sap_support_needed">1</value>
+                <value name="name">Big Bazaar Thane</value>
+            	<value name="website">dev.futurebazaar.com</value>
+		        <value name="type">web</value>
+		        <value name="customer_support_no">7498186324</value>
+		        <value name="primary_phone">7498186324</value>
+		        <value name="secondary_phone">7498186324</value>
+		        <value name="primary_email">suhas.kajbaje@futuregroup.in</value>
+		        <value name="secondary_email">suhas.kajbaje@futuregroup.in</value>
+		        <value name="shipping_policy">NA</value>
+		        <value name="returns_policy">NA</value>
+		        <value name="tos">NA</value>
+		        <value name="code">devfb</value>
+		        <value name="dni">NA</value>
+		        <value name="greeting_title">NA</value>
+		        <value name="greeting_text">Sample Text</value>
+		        <value name="confirmed_order_email">NA</value>
+		        <value name="pending_order_email">NA</value>
+		        <value name="signature">NA</value>
+		        <value name="pending_order_helpline">7498186424</value>
+		        <value name="confirmed_order_helpline">7498186424</value>
+		        <value name="pg_return_url">devpg.futurebazaar.com</value>
+		        <value name="sms_mask">TD-FB</value>
+		        <value name="share_product_email">NA</value>
+		        <value name="slug">devfb</value>
+        	</row>
+        	<row>
+                <value name="id">-10502</value>
+                <value name="client_id">-11000</value>
+                <value name="is_exclusive">1</value>
+                <value name="ships_everywhere">0</value>
+		        <value name="shipping_duration">3</value>
+		        <value name="delivery_duration">3</value>
+		        <value name="sap_support_needed">1</value>
+                <value name="name">KBFP Ghatkopar</value>
+            	<value name="website">dev.futurebazaar.com</value>
+		        <value name="type">web</value>
+		        <value name="customer_support_no">7498186324</value>
+		        <value name="primary_phone">7498186324</value>
+		        <value name="secondary_phone">7498186324</value>
+		        <value name="primary_email">suhas.kajbaje@futuregroup.in</value>
+		        <value name="secondary_email">suhas.kajbaje@futuregroup.in</value>
+		        <value name="shipping_policy">NA</value>
+		        <value name="returns_policy">NA</value>
+		        <value name="tos">NA</value>
+		        <value name="code">devfb</value>
+		        <value name="dni">NA</value>
+		        <value name="greeting_title">NA</value>
+		        <value name="greeting_text">Sample Text</value>
+		        <value name="confirmed_order_email">NA</value>
+		        <value name="pending_order_email">NA</value>
+		        <value name="signature">NA</value>
+		        <value name="pending_order_helpline">7498186424</value>
+		        <value name="confirmed_order_helpline">7498186424</value>
+		        <value name="pg_return_url">devpg.futurebazaar.com</value>
+		        <value name="sms_mask">TD-FB</value>
+		        <value name="share_product_email">NA</value>
+		        <value name="slug">devfb</value>
+        	</row>
+        	
+        </table>
+
+        <table name="fulfillment_sellerpincodemap">
+                <column>id</column>
+                <column>pincode</column>
+                <column>seller_id</column>
+        		
+        	<row>
+                        <value name="id">-10000</value>
+                        <value name="pincode">400001</value>
+                        <value name="seller_id">-10500</value>
+        	</row>
+        	<row>
+                        <value name="id">-10001</value>
+                        <value name="pincode">400002</value>
+                        <value name="seller_id">-10501</value>
+        	</row>
+        	<row>
+                        <value name="id">-10002</value>
+                        <value name="pincode">400002</value>
+                        <value name="seller_id">-10502</value>
+        	</row>
+        </table>
+        	
+</dataset>

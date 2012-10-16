@@ -1,0 +1,173 @@
+<configuration xmlns="urn:hornetq"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="urn:hornetq /schema/hornetq-configuration.xsd">
+
+   <clustered>true</clustered>
+
+<!-- these settings will be needed for HA
+   <backup>false</backup>
+   <failover-on-shutdown>true</failover-on-shutdown>
+   <allow-failback>true</allow-failback>
+   <persistence-enabled>true</persistence-enabled>
+   <shared-store>true</shared-store> -->
+
+   <cluster-user>platformMomClusterUser</cluster-user>
+   <cluster-password>lenanileindusnarmada</cluster-password>
+
+   <!-- The live and backup server must have a shared store -->
+   <paging-directory>${data.dir:../data}/paging</paging-directory>
+   <bindings-directory>${data.dir:../data}/bindings</bindings-directory>
+   <journal-directory>${data.dir:../data}/journal</journal-directory>
+   <journal-min-files>10</journal-min-files>
+   <large-messages-directory>${data.dir:../data}/large-messages</large-messages-directory>
+
+   <jmx-management-enabled>true</jmx-management-enabled>
+
+   <connectors>      
+      <connector name="netty">
+         <factory-class>org.hornetq.core.remoting.impl.netty.NettyConnectorFactory</factory-class>
+         <param key="host"  value="${hornetq.remoting.netty.host:10.202.24.76}"/>
+         <param key="port"  value="${hornetq.remoting.netty.port:5445}"/>
+      </connector>
+      
+      <connector name="netty-throughput">
+         <factory-class>org.hornetq.core.remoting.impl.netty.NettyConnectorFactory</factory-class>
+         <param key="host"  value="${hornetq.remoting.netty.host:localhost}"/>
+         <param key="port"  value="${hornetq.remoting.netty.batch.port:5455}"/>
+         <param key="batch-delay" value="50"/>
+      </connector>
+   </connectors>
+
+   <acceptors>
+      <acceptor name="netty">
+         <factory-class>org.hornetq.core.remoting.impl.netty.NettyAcceptorFactory</factory-class>
+         <param key="host"  value="${hornetq.remoting.netty.host:0.0.0.0}"/>
+         <param key="port"  value="${hornetq.remoting.netty.port:5445}"/>
+      </acceptor>
+      
+      <acceptor name="netty-throughput">
+         <factory-class>org.hornetq.core.remoting.impl.netty.NettyAcceptorFactory</factory-class>
+         <param key="host"  value="${hornetq.remoting.netty.host:localhost}"/>
+         <param key="port"  value="${hornetq.remoting.netty.batch.port:5455}"/>
+         <param key="batch-delay" value="50"/>
+         <param key="direct-deliver" value="false"/>
+      </acceptor>
+   </acceptors>
+
+   <broadcast-groups>
+      <broadcast-group name="bg-group1">
+         <group-address>229.141.145.81</group-address>
+         <group-port>9876</group-port>
+         <broadcast-period>5000</broadcast-period>
+         <connector-ref>netty</connector-ref>
+      </broadcast-group>
+   </broadcast-groups>
+
+   <discovery-groups>
+      <discovery-group name="dg-group1">
+         <group-address>229.141.145.81</group-address>
+         <group-port>9876</group-port>
+         <refresh-timeout>10000</refresh-timeout>
+      </discovery-group>
+   </discovery-groups>
+   
+   <cluster-connections>
+      <cluster-connection name="my-cluster">
+         <address>jms</address>	 
+         <connector-ref>netty</connector-ref>
+         <forward-when-no-consumers>false</forward-when-no-consumers>
+         <discovery-group-ref discovery-group-name="dg-group1"/>
+      </cluster-connection>
+   </cluster-connections>
+
+   <!-- We need to create a core queue for the JMS queue explicitly because the bridge will be deployed
+   before the JMS queue is deployed, so the first time, it otherwise won't find the queue  --> 
+   <queues>   
+      <queue name="preDLQ">
+         <address>jms.queue.preDLQ</address>
+      </queue>
+      <queue name="platformDLQ">
+         <address>jms.queue.platformDLQ</address>
+      </queue>
+  </queues>
+
+   <!-- We set-up a bridge that forwards from a queue on this node to an address on another node.
+   We specify a filter with the bridge, and a transformer too. The filter and transformer are optional -->
+   <bridges>
+      <bridge name="platform-bridge">
+          <queue-name>preDLQ</queue-name>
+          <forwarding-address>jms.queue.platformDLQ</forwarding-address>
+          <reconnect-attempts>-1</reconnect-attempts> 
+          <user>platformMomClusterUser</user>
+          <password>lenanileindusnarmada</password>
+          <static-connectors>
+             <connector-ref>netty</connector-ref>
+          </static-connectors>
+
+          <!-- <discovery-group-ref discovery-group-name="dg-group1"/>
+          <transformer-class-name>org.hornetq.jms.example.HatColourChangeTransformer</transformer-class-name>
+          <static-connectors>
+             <connector-ref>remote-connector</connector-ref>
+          </static-connectors> -->
+       </bridge>
+   </bridges>
+
+   <security-settings>
+      <security-setting match="#">
+         <permission type="createNonDurableQueue" roles="admin"/>
+         <permission type="deleteNonDurableQueue" roles="admin"/>
+         <permission type="consume" roles="admin"/>
+         <permission type="send" roles="admin"/>
+      </security-setting>
+   </security-settings>
+
+   <!--security for management queue
+   <security-setting match="jms.queue.hornetq.management">
+      <permission type="manage" roles="guest" />
+   </security-setting>-->
+
+   <address-settings>
+      <!--default for catch all-->
+      <address-setting match="#">
+         <dead-letter-address>jms.queue.DLQ</dead-letter-address>
+         <max-delivery-attempts>2</max-delivery-attempts>
+         <expiry-address>jms.queue.ExpiryQueue</expiry-address>
+         <redelivery-delay>5000</redelivery-delay>
+         <max-size-bytes>10485760</max-size-bytes>       
+         <message-counter-history-day-limit>10</message-counter-history-day-limit>
+         <address-full-policy>BLOCK</address-full-policy>
+         <redistribution-delay>0</redistribution-delay>
+         <send-to-dla-on-no-route>true</send-to-dla-on-no-route>
+      </address-setting>
+      <address-setting match="jms.queue.platformMail">
+         <dead-letter-address>jms.queue.mailDLQ</dead-letter-address>
+         <max-delivery-attempts>2</max-delivery-attempts>
+         <expiry-address>jms.queue.ExpiryQueue</expiry-address>
+         <redelivery-delay>5000</redelivery-delay>
+         <max-size-bytes>10485760</max-size-bytes>       
+         <message-counter-history-day-limit>10</message-counter-history-day-limit>
+         <address-full-policy>BLOCK</address-full-policy>
+         <redistribution-delay>0</redistribution-delay>
+      </address-setting>
+	<address-setting match="jms.queue.preDLQ">
+         <dead-letter-address>jms.queue.DLQ</dead-letter-address>
+         <max-delivery-attempts>2</max-delivery-attempts>
+         <expiry-address>jms.queue.ExpiryQueue</expiry-address>
+         <redelivery-delay>5000</redelivery-delay>
+         <max-size-bytes>10485760</max-size-bytes>       
+         <message-counter-history-day-limit>10</message-counter-history-day-limit>
+         <address-full-policy>BLOCK</address-full-policy>
+         <redistribution-delay>0</redistribution-delay>
+      </address-setting>
+      <address-setting match="jms.queue.#">
+         <dead-letter-address>jms.queue.preDLQ</dead-letter-address>
+         <max-delivery-attempts>2</max-delivery-attempts>
+         <expiry-address>jms.queue.ExpiryQueue</expiry-address>
+         <redelivery-delay>5000</redelivery-delay>
+         <max-size-bytes>10485760</max-size-bytes>       
+         <message-counter-history-day-limit>10</message-counter-history-day-limit>
+         <address-full-policy>BLOCK</address-full-policy>
+         <redistribution-delay>0</redistribution-delay>
+      </address-setting>
+   </address-settings>
+</configuration>

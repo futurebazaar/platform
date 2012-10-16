@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.fb.platform.promotion.to.OrderItem;
 import com.fb.platform.promotion.to.OrderRequest;
@@ -12,7 +13,8 @@ import com.fb.platform.promotion.to.OrderRequest;
 public class OrderDiscount implements Serializable {
 
 	private OrderRequest orderRequest = null;
-	private BigDecimal totalOrderDiscount = BigDecimal.ZERO;
+	private BigDecimal orderDiscountValue = BigDecimal.ZERO;
+	private List<Integer> promotions = new ArrayList<Integer>();
 	
 	public OrderRequest getOrderRequest() {
 		return orderRequest;
@@ -20,22 +22,21 @@ public class OrderDiscount implements Serializable {
 	public void setOrderRequest(OrderRequest orderRequest) {
 		this.orderRequest = orderRequest;
 	}
-	public BigDecimal getTotalOrderDiscount() {
-		return totalOrderDiscount;
+	public BigDecimal getOrderDiscountValue() {
+		return orderDiscountValue;
 	}
-	public void setTotalOrderDiscount(BigDecimal totalOrderDiscount) {
-		this.totalOrderDiscount = totalOrderDiscount;
+	public void setOrderDiscountValue(BigDecimal orderDiscountValue) {
+		this.orderDiscountValue = orderDiscountValue;
 	}
-	
-	public OrderDiscount distributeDiscountOnOrder(OrderDiscount orderDiscount,List<Integer> brands, List<Integer> includeCategoryList, List<Integer> excludeCategoryList){ 
 
+	public OrderDiscount distributeDiscountOnOrder(OrderDiscount orderDiscount, List<Integer> brands, List<Integer> includeCategoryList, List<Integer> excludeCategoryList, Set<Integer> productIds){ 
 		OrderRequest orderRequest = orderDiscount.getOrderRequest();
-		BigDecimal totalRemainingDiscountOnOrder = orderDiscount.getTotalOrderDiscount();
+		BigDecimal totalRemainingDiscountOnOrder = orderDiscount.getOrderDiscountValue();
 		List<OrderItem> notLockedAplicableOrderItems = new ArrayList<OrderItem>();
 		BigDecimal totalOrderValueForRemainingApplicableItems = BigDecimal.ZERO;
 		
 		for (OrderItem eachOrderItemInRequest : orderRequest.getOrderItems()) {
-			if(eachOrderItemInRequest.isApplicableToOrderItem(eachOrderItemInRequest,brands,includeCategoryList,excludeCategoryList)){
+			if(eachOrderItemInRequest.isApplicableToOrderItem(eachOrderItemInRequest,brands,includeCategoryList,excludeCategoryList, productIds)){
 				if(eachOrderItemInRequest.isLocked()){
 					totalRemainingDiscountOnOrder = totalRemainingDiscountOnOrder.subtract(eachOrderItemInRequest.getTotalDiscount());
 				}else{
@@ -47,6 +48,10 @@ public class OrderDiscount implements Serializable {
 		
 		return distributeRemainingDiscountOnRemainingOrderItems(orderDiscount, totalRemainingDiscountOnOrder, notLockedAplicableOrderItems, 
 				totalOrderValueForRemainingApplicableItems);
+	}
+
+	public OrderDiscount distributeDiscountOnOrder(OrderDiscount orderDiscount,List<Integer> brands, List<Integer> includeCategoryList, List<Integer> excludeCategoryList) {
+		return distributeDiscountOnOrder(orderDiscount, brands, includeCategoryList, excludeCategoryList, null);
 	}
 	
 	private OrderDiscount distributeRemainingDiscountOnRemainingOrderItems(OrderDiscount orderDiscount, BigDecimal totalRemainingDiscountOnOrder,
@@ -75,4 +80,11 @@ public class OrderDiscount implements Serializable {
 		return orderDiscount;
 	}
 
+	public void promotionApplied(int promotionId) {
+		this.promotions.add(promotionId);
+	}
+
+	public List<Integer> getAppliedPromotions() {
+		return this.promotions;
+	}
 }

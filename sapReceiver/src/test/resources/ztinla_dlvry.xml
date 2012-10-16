@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ZTINLA_DLVRY>
+        <IDOC BEGIN="1">
+                <EDI_DC40 SEGMENT="1">
+                        <TABNAM>EDI_DC40</TABNAM>
+                        <MANDT>239</MANDT>
+                        <DOCNUM>0000000206260365</DOCNUM>
+                        <DOCREL>640</DOCREL>
+                        <STATUS>30</STATUS>
+                        <DIRECT>1</DIRECT>
+                        <OUTMOD>2</OUTMOD>
+                        <IDOCTYP>ZTINLA_DLVRY</IDOCTYP>
+                        <MESTYP>ZTINLA_DLVRY</MESTYP>
+                        <SNDPOR>SAPQA3</SNDPOR>
+                        <SNDPRT>LS</SNDPRT>
+                        <SNDPRN>PD1CLNT239</SNDPRN>
+                        <RCVPOR>ZATGJCAPS</RCVPOR>
+                        <RCVPRT>LS</RCVPRT>
+                        <RCVPRN>ZATGJCAPS</RCVPRN>
+                        <CREDAT>20120712</CREDAT>
+                        <CRETIM>144800</CRETIM>
+                        <SERIAL>20120712144726</SERIAL>
+                </EDI_DC40>
+		<ZTINLA_DLVRY SEGMENT="1">
+			<T_CODE>VNA07</T_CODE>
+			<MATNR>000000000100315457</MATNR>
+			<I_WERKS>2786</I_WERKS>
+			<R_WERKS>2786</R_WERKS>
+			<I_LGORT>10</I_LGORT>
+			<R_LGORT>90</R_LGORT>
+			<BWART>311</BWART>
+			<MEINS>EA</MEINS>
+			<TRNSFR_QUAN>2.000</TRNSFR_QUAN>
+		</ZTINLA_DLVRY>
+        </IDOC>
+</ZTINLA_DLVRY>

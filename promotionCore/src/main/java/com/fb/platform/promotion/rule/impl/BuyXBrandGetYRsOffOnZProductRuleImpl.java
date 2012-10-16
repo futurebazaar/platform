@@ -3,7 +3,6 @@
  */
 package com.fb.platform.promotion.rule.impl;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +15,11 @@ import org.apache.commons.logging.LogFactory;
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.model.OrderDiscount;
 import com.fb.platform.promotion.rule.PromotionRule;
-import com.fb.platform.promotion.rule.RuleConfigDescriptorEnum;
-import com.fb.platform.promotion.rule.RuleConfigDescriptorItem;
-import com.fb.platform.promotion.rule.RuleConfiguration;
+import com.fb.platform.promotion.rule.config.RuleConfigDescriptorEnum;
+import com.fb.platform.promotion.rule.config.RuleConfigItemDescriptor;
+import com.fb.platform.promotion.rule.config.RuleConfiguration;
+import com.fb.platform.promotion.rule.metadata.BuyXBrandGetYRsOffOnZProductRuleMatadata;
+import com.fb.platform.promotion.rule.metadata.RuleConfigMetadata;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.PromotionStatusEnum;
 import com.fb.platform.promotion.util.ListUtil;
@@ -28,7 +29,7 @@ import com.fb.platform.promotion.util.StringToIntegerList;
  * @author keith
  *
  */
-public class BuyXBrandGetYRsOffOnZProductRuleImpl implements PromotionRule, Serializable {
+public class BuyXBrandGetYRsOffOnZProductRuleImpl implements PromotionRule {
 
 	private static transient Log log = LogFactory.getLog(BuyXBrandGetYRsOffOnZProductRuleImpl.class);
 	private Money minOrderValue;
@@ -36,7 +37,7 @@ public class BuyXBrandGetYRsOffOnZProductRuleImpl implements PromotionRule, Seri
 	private List<Integer> clientList;
 	private int productId;
 	private Money productDiscountValue;
-	private List<RuleConfigDescriptorItem> ruleConfigs = new ArrayList<RuleConfigDescriptorItem>();
+	private List<RuleConfigItemDescriptor> ruleConfigs = new ArrayList<RuleConfigItemDescriptor>();
 	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
@@ -62,20 +63,20 @@ public class BuyXBrandGetYRsOffOnZProductRuleImpl implements PromotionRule, Seri
 			log.debug("Checking if BuyXBrandGetYRsOffOnZProductRuleImpl applies on order : " + request.getOrderId());
 		}
 		//Money orderValue = new Money(request.getOrderValue());
-		if(ListUtil.isValidList(clientList) && !request.isValidClient(clientList)){
+		if(ListUtil.isValidList(clientList) && !request.isValidClient(clientList)) {
 			return PromotionStatusEnum.INVALID_CLIENT;
 		}
 		/*if(orderValue.lt(minOrderValue)){
 			return PromotionStatusEnum.LESS_ORDER_AMOUNT;
 		}*/
-		if(!request.isAnyProductInBrand(brands)){
+		if(!request.isAnyProductInBrand(brands)) {
 			return PromotionStatusEnum.BRAND_MISMATCH;
 		}
 		Money brandOrderValue = request.getOrderValueForBrand(brands);
-		if(brandOrderValue.lt(minOrderValue)){
+		if(brandOrderValue.lt(minOrderValue)) {
 			return PromotionStatusEnum.LESS_ORDER_AMOUNT_OF_BRAND_PRODUCTS;
 		}
-		if(!request.isProductPresent(productId)){
+		if(!request.isProductPresent(productId)) {
 			return PromotionStatusEnum.PRODUCT_NOT_PRESENT;
 		}
 		return PromotionStatusEnum.SUCCESS;
@@ -119,14 +120,19 @@ public class BuyXBrandGetYRsOffOnZProductRuleImpl implements PromotionRule, Seri
 	}*/
 	
 	@Override
-	public List<RuleConfigDescriptorItem> getRuleConfigs() {
-		List<RuleConfigDescriptorItem> ruleConfigs = new ArrayList<RuleConfigDescriptorItem>();
+	public List<RuleConfigItemDescriptor> getRuleConfigs() {
+		List<RuleConfigItemDescriptor> ruleConfigs = new ArrayList<RuleConfigItemDescriptor>();
 		
-		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.CLIENT_LIST, false));
-		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.BRAND_LIST, true));
-		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.PRODUCT_ID, true));
-		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.MIN_ORDER_VALUE, true));
-		ruleConfigs.add(new RuleConfigDescriptorItem(RuleConfigDescriptorEnum.PRODUCT_DISCOUNTED_VALUE, true));
+		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.CLIENT_LIST, false));
+		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.BRAND_LIST, true));
+		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.PRODUCT_ID, true));
+		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.MIN_ORDER_VALUE, true));
+		ruleConfigs.add(new RuleConfigItemDescriptor(RuleConfigDescriptorEnum.PRODUCT_DISCOUNTED_VALUE, true));
 		return ruleConfigs;
+	}
+
+	@Override
+	public RuleConfigMetadata getRuleConfigMetadata() {
+		return new BuyXBrandGetYRsOffOnZProductRuleMatadata();
 	}
 }

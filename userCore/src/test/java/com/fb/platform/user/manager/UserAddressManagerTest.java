@@ -39,7 +39,7 @@ public class UserAddressManagerTest extends BaseTestCase {
 	@Test
 	public void testGetAddress() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -66,7 +66,7 @@ public class UserAddressManagerTest extends BaseTestCase {
 	@Test
 	public void testGetAddressNoSession() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -84,7 +84,7 @@ public class UserAddressManagerTest extends BaseTestCase {
 	@Test
 	public void testGetAddressWrongSession() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -102,7 +102,7 @@ public class UserAddressManagerTest extends BaseTestCase {
 	@Test
 	public void testGetAddressWrongUserId() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -120,7 +120,7 @@ public class UserAddressManagerTest extends BaseTestCase {
 	@Test
 	public void testGetAddressNOAddress() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("testonlyusername");
+		request.setUsername("-5");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -138,7 +138,7 @@ public class UserAddressManagerTest extends BaseTestCase {
 	@Test
 	public void testAddAddress() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -171,7 +171,7 @@ public class UserAddressManagerTest extends BaseTestCase {
 	@Test
 	public void testAddAddressNoSession() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -197,7 +197,7 @@ public class UserAddressManagerTest extends BaseTestCase {
 	@Test
 	public void testAddAddressWrongSession() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -223,7 +223,7 @@ public class UserAddressManagerTest extends BaseTestCase {
 	@Test
 	public void testAddAddressWrongUserId() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -249,7 +249,7 @@ public class UserAddressManagerTest extends BaseTestCase {
 	@Test
 	public void testAddAddressEmptyAddress() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -275,7 +275,7 @@ public class UserAddressManagerTest extends BaseTestCase {
 	@Test
 	public void testUpdateAddress() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -327,7 +327,7 @@ public class UserAddressManagerTest extends BaseTestCase {
 	@Test
 	public void testUpdateAddressNoSession() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -366,7 +366,7 @@ public class UserAddressManagerTest extends BaseTestCase {
 	@Test
 	public void testUpdateAddressInvalidUser() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -405,7 +405,7 @@ public class UserAddressManagerTest extends BaseTestCase {
 	@Test
 	public void testUpdateAddressNoAddress() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -423,7 +423,7 @@ public class UserAddressManagerTest extends BaseTestCase {
 	@Test
 	public void testUpdateAddressNOAddressId() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -445,7 +445,7 @@ public class UserAddressManagerTest extends BaseTestCase {
 	@Test
 	public void testUpdateAddressWrongSession() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -484,7 +484,7 @@ public class UserAddressManagerTest extends BaseTestCase {
 	@Test
 	public void testUpdateAddressUserAddressMismatch() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -523,7 +523,7 @@ public class UserAddressManagerTest extends BaseTestCase {
 	@Test
 	public void testDeleteAddress() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -578,7 +578,7 @@ public class UserAddressManagerTest extends BaseTestCase {
 	@Test
 	public void testDeleteAddressNoAddressId() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -597,7 +597,7 @@ public class UserAddressManagerTest extends BaseTestCase {
 	@Test
 	public void testDeleteAddressWrongSession() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -632,7 +632,7 @@ public class UserAddressManagerTest extends BaseTestCase {
 	@Test
 	public void testDeleteAddressNoUser() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -667,7 +667,7 @@ public class UserAddressManagerTest extends BaseTestCase {
 	@Test
 	public void testDeleteAddressAddressUserMismatch() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -702,7 +702,7 @@ public class UserAddressManagerTest extends BaseTestCase {
 	@Test
 	public void testDeleteAddressRepete() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);

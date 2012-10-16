@@ -12,7 +12,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.fb.platform.promotion.admin.dao.CouponAdminDao;
-import com.fb.platform.promotion.service.CouponCodeGenerationException;
+import com.fb.platform.promotion.exception.CouponCodeGenerationException;
 import com.fb.platform.promotion.to.AlphaNumericType;
 import com.fb.platform.promotion.to.AlphabetCase;
 import com.fb.platform.promotion.to.CouponCodeCharEnum;

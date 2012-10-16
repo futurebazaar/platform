@@ -38,7 +38,7 @@ public class UserManagerTest extends BaseTestCase {
 	@Test
 	public void testLoginWithEmail() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("testpass");
 
 		LoginResponse response = userManager.login(request);
@@ -48,8 +48,8 @@ public class UserManagerTest extends BaseTestCase {
 		assertNotNull(response.getSessionToken());
 		assertEquals(1, response.getUserId().intValue());
 	}
-
-	@Test
+	//Commented as auth user diaabled
+	/*@Test
 	public void testLoginWithOnlyAtuthUsername() {
 		LoginRequest request = new LoginRequest();
 		request.setUsername("testonlyusername");
@@ -61,11 +61,11 @@ public class UserManagerTest extends BaseTestCase {
 		assertEquals(LoginStatusEnum.LOGIN_SUCCESS, response.getLoginStatus());
 		assertNotNull(response.getSessionToken());
 		assertEquals(-5, response.getUserId().intValue());
-	}
+	}*/
 	@Test
 	public void testLoginInvalidPassword() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 		request.setPassword("invalid");
 
 		LoginResponse response = userManager.login(request);
@@ -276,7 +276,7 @@ public class UserManagerTest extends BaseTestCase {
 	@Test
 	public void loginWithoutPassword() {
 		LoginRequest request = new LoginRequest();
-		request.setUsername("jasvipul@gmail.com");
+		request.setUsername("removingjas@test.com");
 
 		LoginResponse response = userManager.login(request);
 

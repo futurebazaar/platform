@@ -5,7 +5,7 @@ package com.fb.platform.promotion.to;
 
 import java.io.Serializable;
 
-import com.fb.platform.promotion.service.InvalidAlphaNumericTypeException;
+import com.fb.platform.promotion.exception.InvalidAlphaNumericTypeException;
 
 /**
  * @author ashish

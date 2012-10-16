@@ -6,6 +6,11 @@ import java.math.BigDecimal;
 import com.fb.platform.payback.to.OrderItemRequest;
 import com.fb.platform.payback.to.OrderRequest;
 
+/**
+ * 
+ * @author anubhav
+ *
+ */
 public interface PointsRule extends Serializable {
 
 	public void init(RuleConfiguration ruleConfig);

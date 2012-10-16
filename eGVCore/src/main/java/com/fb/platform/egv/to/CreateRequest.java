@@ -5,6 +5,8 @@ package com.fb.platform.egv.to;
 
 import java.math.BigDecimal;
 
+import org.joda.time.DateTime;
+
 /**
  * @author keith
  *
@@ -14,9 +16,22 @@ public class CreateRequest implements GiftVoucherRequest{
 	private String sessionToken;
 	private int orderItemId;
 	private String email;
+	private String mobile;
 	private BigDecimal amount;
 	private String senderName;
 	private String receiverName;
+	private String giftMessage;
+	private DateTime validFrom;
+	private DateTime validTill;
+	private boolean isDeferActivation;
+
+	public DateTime getValidTill() {
+		return validTill;
+	}
+
+	public void setValidTill(DateTime validTill) {
+		this.validTill = validTill;
+	}
 
 	public String getSessionToken() {
 		return sessionToken;
@@ -50,6 +65,14 @@ public class CreateRequest implements GiftVoucherRequest{
 		this.email = email;
 	}
 
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
 	public String getSenderName() {
 		return senderName;
 	}
@@ -64,6 +87,30 @@ public class CreateRequest implements GiftVoucherRequest{
 
 	public void setReceiverName(String receiverName) {
 		this.receiverName = receiverName;
+	}
+
+	public String getGiftMessage() {
+		return giftMessage;
+	}
+
+	public void setGiftMessage(String giftMessage) {
+		this.giftMessage = giftMessage;
+	}
+
+	public boolean isDeferActivation() {
+		return isDeferActivation;
+	}
+
+	public void setDeferActivation(boolean isDeferActivation) {
+		this.isDeferActivation = isDeferActivation;
+	}
+
+	public DateTime getValidFrom() {
+		return validFrom;
+	}
+
+	public void setValidFrom(DateTime validFrom) {
+		this.validFrom = validFrom;
 	}
 	
 }

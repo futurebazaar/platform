@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:tx="http://www.springframework.org/schema/tx"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            http://www.springframework.org/schema/tx 
+            http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    
+    <!-- Enable @Transactional support -->
+    <tx:annotation-driven/>
+    
+    <!-- This is to scan and load the CacheAccess classes -->
+    <context:component-scan base-package="com.fb.platform.fulfilment.cache"></context:component-scan>
+
+    <!-- Add new services here -->
+    <bean id="fulfilmentService" class="com.fb.platform.fulfilment.service.impl.FulfilmentServiceImpl">
+        <!--  <property name="sellerPincodeMapDao" ref="sellerPincodeMapDao"/> -->
+    </bean>
+
+    <!-- Add new Managers here -->
+    <bean id="fulfilmentManager" class="com.fb.platform.fulfilment.service.impl.FulfilmentManagerImpl">
+        <!-- <property name="couponDao" ref="couponDao"/>
+        <property name="promotionDao" ref="promotionDao"></property> -->
+        <!--  property name="fulfilmentService" ref="fulfilmentService"></property> -->
+    </bean>
+</beans>

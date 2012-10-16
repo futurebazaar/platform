@@ -15,19 +15,20 @@ import com.fb.commons.PlatformException;
 import com.fb.commons.to.Money;
 import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
+import com.fb.platform.promotion.exception.CouponAlreadyAssignedToUserException;
+import com.fb.platform.promotion.exception.CouponNotCommitedException;
+import com.fb.platform.promotion.exception.CouponNotFoundException;
+import com.fb.platform.promotion.exception.PromotionNotFoundException;
+import com.fb.platform.promotion.exception.ScratchCardNotFoundException;
+import com.fb.platform.promotion.exception.UserNotElligibleException;
 import com.fb.platform.promotion.model.OrderDiscount;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.model.PromotionDates;
 import com.fb.platform.promotion.model.coupon.Coupon;
+import com.fb.platform.promotion.model.coupon.CouponPromotion;
 import com.fb.platform.promotion.model.scratchCard.ScratchCard;
-import com.fb.platform.promotion.service.CouponAlreadyAssignedToUserException;
-import com.fb.platform.promotion.service.CouponNotCommitedException;
-import com.fb.platform.promotion.service.CouponNotFoundException;
 import com.fb.platform.promotion.service.PromotionManager;
-import com.fb.platform.promotion.service.PromotionNotFoundException;
 import com.fb.platform.promotion.service.PromotionService;
-import com.fb.platform.promotion.service.ScratchCardNotFoundException;
-import com.fb.platform.promotion.service.UserNotElligibleException;
 import com.fb.platform.promotion.to.ApplyCouponRequest;
 import com.fb.platform.promotion.to.ApplyCouponResponse;
 import com.fb.platform.promotion.to.ApplyCouponResponseStatusEnum;
@@ -113,9 +114,9 @@ public class PromotionManagerImpl implements PromotionManager {
 				return response;
 			}
 			
-			OrderDiscount orderDiscount = promotion.apply(request.getOrderReq());
+			OrderDiscount orderDiscount = ((CouponPromotion)promotion).apply(request.getOrderReq());
 			if(orderDiscount!=null){
-				Money discount = orderDiscount.getTotalOrderDiscount()==null ? null : new Money(orderDiscount.getTotalOrderDiscount());
+				Money discount = orderDiscount.getOrderDiscountValue()==null ? null : new Money(orderDiscount.getOrderDiscountValue());
 				response.setOrderDiscount(orderDiscount);
 				PromotionStatusEnum postDiscountCheckStatus = promotionService.isApplicable(userId, request.getOrderReq(), discount, coupon, promotion, request.getIsOrderCommitted());
 				if(PromotionStatusEnum.SUCCESS.compareTo(postDiscountCheckStatus)!=0){

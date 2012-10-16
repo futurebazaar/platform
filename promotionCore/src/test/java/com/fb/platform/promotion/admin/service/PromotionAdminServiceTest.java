@@ -10,11 +10,11 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.test.BaseTestCase;
+import com.fb.platform.promotion.exception.CouponAlreadyAssignedToUserException;
+import com.fb.platform.promotion.exception.CouponNotFoundException;
+import com.fb.platform.promotion.exception.InvalidCouponTypeException;
 import com.fb.platform.promotion.model.coupon.Coupon;
 import com.fb.platform.promotion.model.coupon.CouponType;
-import com.fb.platform.promotion.service.CouponAlreadyAssignedToUserException;
-import com.fb.platform.promotion.service.CouponNotFoundException;
-import com.fb.platform.promotion.service.InvalidCouponTypeException;
 import com.fb.platform.promotion.service.PromotionService;
 
 /**

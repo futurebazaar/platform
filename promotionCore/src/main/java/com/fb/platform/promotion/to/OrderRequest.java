@@ -20,6 +20,7 @@ public class OrderRequest implements Serializable {
 	private int orderId = 0;
 	private List<OrderItem> orderItems = new ArrayList<OrderItem>();
 	private int clientId = 0;
+	private int noOfTimesInMonth = 0;
 	
 	public int getOrderId() {
 		return orderId;
@@ -87,6 +88,15 @@ public class OrderRequest implements Serializable {
 		return false;
 	}
 	
+	public boolean hasProduct(List<Integer> products) {
+		for(Integer productId : products) {
+			if(isProductPresent(productId)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public boolean isProductPresent(int productId){
 		for(OrderItem o:orderItems){
 			if(o.isProductPresent(productId)){
@@ -126,7 +136,7 @@ public class OrderRequest implements Serializable {
 		return new Money(new BigDecimal(0));
 	}
 	
-	public Money getOrderValueForRelevantProducts(List<Integer> brandList,List<Integer> catIncludeList,List<Integer> catExcludeList){
+	public Money getOrderValueForRelevantProducts(List<Integer> brandList,List<Integer> catIncludeList,List<Integer> catExcludeList) {
 		Money orderValueForBrandProducts = new Money(new BigDecimal(0)); 
 		for(OrderItem o:orderItems){
 			if( (!ListUtil.isValidList(brandList)|| o.isOrderItemInBrand(brandList))
@@ -136,6 +146,19 @@ public class OrderRequest implements Serializable {
 			}
 		}
 		return orderValueForBrandProducts;
+	}
+	
+	public Money getOrderValue(List<Integer> brandList,List<Integer> catIncludeList,List<Integer> catExcludeList, List<Integer> productList) {
+		Money orderValue = new Money(new BigDecimal(0));
+		for(OrderItem o:orderItems){
+			if((!ListUtil.isValidList(brandList) || o.isOrderItemInBrand(brandList)) 
+					&& (!ListUtil.isValidList(catIncludeList) || o.isOrderItemInCategory(catIncludeList))
+					&& (!ListUtil.isValidList(catExcludeList) || !o.isOrderItemInCategory(catExcludeList))
+					&& (!ListUtil.isValidList(productList) || o.isOrderItemOfProduct(productList))) {
+				orderValue = orderValue.plus(new Money(o.getPrice()));
+			}
+		}
+		return orderValue;
 	}
 	
 	public int getOrderQuantityForBrand(List<Integer> brandList){
@@ -160,4 +183,21 @@ public class OrderRequest implements Serializable {
 		return count;
 	}
 	
+	public int getNoOfTimesInMonth() {
+		
+		
+		
+		return noOfTimesInMonth;
+	}
+	
+	
+	public void setNoOfTimesInMonth(int noOfTimesInMonth) {
+		this.noOfTimesInMonth = noOfTimesInMonth;
+	}
+
+	public void resetDiscountedPrice() {
+		for (OrderItem orderItem : orderItems) {
+			orderItem.getProduct().setDiscountedPrice(null);
+		}
+	}
 }

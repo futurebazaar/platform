@@ -25,7 +25,7 @@ public class UserAdminDaoTest extends BaseTestCase {
 	@Autowired
 	private UserAdminDao userAdminDao;
 
-	private static final String key  = "jasvipul@gmail.com";
+	private static final String key  = "removingjas@test.com";
 
 	@Test
 	public void testload() {

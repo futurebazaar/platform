@@ -15,9 +15,9 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.fb.platform.promotion.dao.RuleDao;
 import com.fb.platform.promotion.rule.PromotionRule;
-import com.fb.platform.promotion.rule.RuleConfigItem;
-import com.fb.platform.promotion.rule.RuleConfiguration;
 import com.fb.platform.promotion.rule.RulesEnum;
+import com.fb.platform.promotion.rule.config.RuleConfigItem;
+import com.fb.platform.promotion.rule.config.RuleConfiguration;
 import com.fb.platform.promotion.util.PromotionRuleFactory;
 
 /**
@@ -81,11 +81,11 @@ public class RuleDaoJdbcImpl implements RuleDao {
 			return null;
 		}
 
-		RulesEnum ruleName = RulesEnum.valueOf(rcbh.ruleName);
+		RulesEnum ruleName = RulesEnum.getRule(rcbh.ruleName);
 
 		RuleConfiguration ruleConfig = loadRuleConfiguration(promotionId, ruleId);
 
-		PromotionRule rule = PromotionRuleFactory.createRule(ruleName, ruleConfig);
+		PromotionRule rule = PromotionRuleFactory.createRule(ruleName, ruleConfig, promotionId);
 
 		return rule;
 	}

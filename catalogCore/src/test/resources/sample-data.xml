@@ -50,6 +50,5 @@
         	<value description="clientdomain_name">test clientdomain_name 1</value>
         	<value description="slug">test slug 1</value>
         </row>
-	</table>
-
+	</table>       
 </dataset>
