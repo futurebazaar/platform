@@ -16,20 +16,16 @@ import com.fb.platform.payback.util.PointsUtil;
 
 public class EarnXPointsOnYDay implements PointsRule {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String offerDay;
 	private BigDecimal earnFactor;
 	private List<Long> excludedCategoryList = new ArrayList<Long>();
 	private BigDecimal earnRatio;
 	private DateTime validTill;
 	private DateTime validFrom;
-	private PointsUtil pointsUtil;
-	private String clientName;
-	
-	@Override
-	public void setPointsUtil(PointsUtil pointsUtil) {
-		this.pointsUtil = pointsUtil;
-	}
-	
 	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
@@ -46,8 +42,8 @@ public class EarnXPointsOnYDay implements PointsRule {
 		String startsOn = ruleConfig.getConfigItemValue(PointsRuleConfigConstants.VALID_FROM);
 		String endsOn = ruleConfig.getConfigItemValue(PointsRuleConfigConstants.VALID_TILL);
 		
-		this.validFrom = pointsUtil.getDateTimeFromString(startsOn, "yyyy-MM-dd");
-		this.validTill = pointsUtil.getDateTimeFromString(endsOn, "yyyy-MM-dd");
+		this.validFrom = PointsUtil.getDateTimeFromString(startsOn, "yyyy-MM-dd");
+		this.validTill = PointsUtil.getDateTimeFromString(endsOn, "yyyy-MM-dd");
 		
 	}
 	
@@ -71,14 +67,8 @@ public class EarnXPointsOnYDay implements PointsRule {
 	}
 
 	@Override
-	public boolean allowNext() {
+	public boolean allowNext(OrderRequest orderRequest) {
 		return false;
-	}
-
-
-	@Override
-	public void setClientName(String clientName) {
-		this.clientName = clientName;
 	}
 
 }

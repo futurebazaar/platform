@@ -86,7 +86,6 @@ public class PointsResource {
 			PointsRequest xmlPointsRequest = (PointsRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(pointsXml)));
 			com.fb.platform.payback.to.PointsRequest pointsHeaderRequest = new com.fb.platform.payback.to.PointsRequest();
 			pointsHeaderRequest.setTxnActionCode(xmlPointsRequest.getActionCode().name());
-			pointsHeaderRequest.setClientName(xmlPointsRequest.getClientName());
 			pointsHeaderRequest.setSessionToken(xmlPointsRequest.getSessionToken());
 			
 			com.fb.platform.payback.to.OrderRequest orderRequest = new com.fb.platform.payback.to.OrderRequest();
@@ -94,6 +93,7 @@ public class PointsResource {
 			orderRequest.setOrderTotal(xmlPointsRequest.getOrderRequest().getOrderTotal());
 			orderRequest.setLoyaltyCard(xmlPointsRequest.getOrderRequest().getLoyaltyCard());
 			orderRequest.setOrderId(xmlPointsRequest.getOrderRequest().getOrderId());
+			orderRequest.setClientName(xmlPointsRequest.getOrderRequest().getClientName());
 			XMLGregorianCalendar gregCal = xmlPointsRequest.getOrderRequest().getTimestamp();
 			orderRequest.setTxnTimestamp(new DateTime(gregCal.getYear(), gregCal.getMonth(), gregCal.getDay(), 
 					gregCal.getHour(), gregCal.getMinute()));
@@ -192,11 +192,11 @@ public class PointsResource {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			DisplayPointsRequest xmlDisplayPointsRequest = (DisplayPointsRequest) unmarshaller.unmarshal(new StreamSource(new StringReader(pointsXml)));
 			com.fb.platform.payback.to.PointsRequest pointsRequest = new com.fb.platform.payback.to.PointsRequest();
-			pointsRequest.setClientName(xmlDisplayPointsRequest.getClientName());
 			pointsRequest.setTxnActionCode(xmlDisplayPointsRequest.getActionCode().name());
 			
 			com.fb.platform.payback.to.OrderRequest orderRequest = new com.fb.platform.payback.to.OrderRequest();
 			orderRequest.setAmount(xmlDisplayPointsRequest.getOrderAmount());
+			orderRequest.setClientName(xmlDisplayPointsRequest.getClientName());
 			XMLGregorianCalendar gregCal = xmlDisplayPointsRequest.getTimestamp();
 			orderRequest.setTxnTimestamp(new DateTime(gregCal.getYear(), gregCal.getMonth(), gregCal.getDay(), 
 					gregCal.getHour(), gregCal.getMinute()));

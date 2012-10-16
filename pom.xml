@@ -370,7 +370,7 @@
     
     <modules>
     	<module>platformCommons</module>
-	<module>platformMailer</module>
+	    <module>platformMailer</module>
     	<module>platformCaching</module>
     	<module>catalogCommons</module>
         <module>catalogCore</module>

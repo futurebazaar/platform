@@ -15,20 +15,15 @@ import com.fb.platform.payback.to.OrderRequest;
 import com.fb.platform.payback.util.PointsUtil;
 
 public class EnterLoyaltyCardEarnXPoints implements PointsRule {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private BigDecimal earnRatio;
-	private PointsUtil pointsUtil;
 	private List<Long> excludedCategoryList = new ArrayList<Long>();
 	private DateTime validFrom;
 	private DateTime validTill;
-	private String clientName;
-	
-	private boolean isNextRuleApplicable = true;
-
-	
-	@Override
-	public void setPointsUtil(PointsUtil pointsUtil) {
-		this.pointsUtil = pointsUtil;
-	}
 	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
@@ -43,19 +38,19 @@ public class EnterLoyaltyCardEarnXPoints implements PointsRule {
 		String startsOn = ruleConfig.getConfigItemValue(PointsRuleConfigConstants.VALID_FROM);
 		String endsOn = ruleConfig.getConfigItemValue(PointsRuleConfigConstants.VALID_TILL);
 		
-		this.validFrom = pointsUtil.getDateTimeFromString(startsOn, "yyyy-MM-dd");
-		this.validTill = pointsUtil.getDateTimeFromString(endsOn, "yyyy-MM-dd");
+		this.validFrom = PointsUtil.getDateTimeFromString(startsOn, "yyyy-MM-dd");
+		this.validTill = PointsUtil.getDateTimeFromString(endsOn, "yyyy-MM-dd");
 	}
 
 	@Override
 	public boolean isApplicable(OrderRequest request, OrderItemRequest itemRequest) {
 		if(request.getTxnTimestamp().toDate().compareTo(validFrom.toDate()) <0 || request.getTxnTimestamp().toDate().compareTo(validTill.toDate()) > 0){
-			this.isNextRuleApplicable = false;
+			return false;
 		}
 		if (this.excludedCategoryList != null && !this.excludedCategoryList.isEmpty() && excludedCategoryList.contains(itemRequest.getCategoryId())){
 			return false;
 		}
-		return isNextRuleApplicable;
+		return true;
 	}
 
 	@Override
@@ -64,14 +59,11 @@ public class EnterLoyaltyCardEarnXPoints implements PointsRule {
 	}
 
 	@Override
-	public boolean allowNext() {
-		return isNextRuleApplicable;
-	}
-
-	@Override
-	public void setClientName(String clientName) {
-		this.clientName = clientName;
-		
+	public boolean allowNext(OrderRequest request) {
+		if(request.getTxnTimestamp().toDate().compareTo(validFrom.toDate()) <0 || request.getTxnTimestamp().toDate().compareTo(validTill.toDate()) > 0){
+			return false;
+		}
+		return true;
 	}
 
 }

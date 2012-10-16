@@ -629,6 +629,7 @@ CREATE TABLE payback_rule_config (
 	name VARCHAR(50),
 	value VARCHAR(100),
 	rule_id INTEGER ,
+    client_name VARCHAR(20),
 	PRIMARY KEY(id),
 	CONSTRAINT payback_rule_config_fk2 FOREIGN KEY (rule_id) REFERENCES rules(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -744,11 +745,11 @@ CREATE TABLE points_items (
     department_code INTEGER NOT NULL,
     department_name VARCHAR(50) NOT NULL,
     item_amount INTEGER NOT NULL,
-    txn_points DECIMAL(10, 2) DEFAULT 0,
+    txn_points DECIMAL(10, 4) DEFAULT 0,
     article_id VARCHAR(20) NOT NULL,
     order_item_id INTEGER NOT NULL,
-    earn_ratio DECIMAL(10, 2) DEFAULT '0.03',
-    burn_ratio DECIMAL(10, 2) DEFAULT '4',
+    earn_ratio DECIMAL(10, 4) DEFAULT '0.03',
+    burn_ratio DECIMAL(10, 4) DEFAULT '4',
     PRIMARY KEY (id),
     CONSTRAINT points_items_fk2 FOREIGN KEY (points_header_id) REFERENCES points_header(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

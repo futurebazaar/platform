@@ -5,7 +5,6 @@ public class PointsRequest {
 	
 	private String txnActionCode;
 	private OrderRequest orderRequest;
-	private String clientName;
 	private String sessionToken;
 	
 	public OrderRequest getOrderRequest() {
@@ -19,12 +18,6 @@ public class PointsRequest {
 	}
 	public void setTxnActionCode(String txnActionCode) {
 		this.txnActionCode = txnActionCode;
-	}
-	public String getClientName() {
-		return clientName.replaceAll(" ", "").toUpperCase();
-	}
-	public void setClientName(String clientName) {
-		this.clientName = clientName;
 	}
 	public String getSessionToken() {
 		return sessionToken;

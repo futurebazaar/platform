@@ -1,7 +1,6 @@
 package com.fb.platform.payback.service;
 
 
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +23,6 @@ public interface PointsService {
 
 	public  PointsRequest getPointsToBeDisplayed(PointsRequest request);
 
-	RollbackHeader rollbackTransaction(long headerId);
-	
-	//public PointsRequest rollBackTransaction(long headerId);
-
+	public RollbackHeader rollbackTransaction(long headerId);
 	
 }

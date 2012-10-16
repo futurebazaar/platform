@@ -2,8 +2,9 @@ package com.fb.platform.payback.util;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
-import java.math.BigDecimal;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -16,18 +17,17 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import com.fb.commons.util.MailSender;
-import com.fb.platform.payback.rule.PointsRuleConfigConstants;
 
-public class PointsUtil implements Serializable {
+public class PointsUtil {
 	
-	public String getPreviousDayDate() {
+	public static String getPreviousDayDate() {
 		DateTime datetime = new DateTime();
 		datetime = datetime.minusDays(1); 
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 		return fmt.print(datetime);
 	}
 	
-	public String convertDateToFormat(String settlementDate, String pattern) {
+	public static String convertDateToFormat(String settlementDate, String pattern) {
 		DateTimeFormatter format = DateTimeFormat.forPattern("yyyy-MM-dd");
 		DateTime datetime = format.parseDateTime(settlementDate);
 		format = DateTimeFormat.forPattern(pattern);
@@ -35,19 +35,19 @@ public class PointsUtil implements Serializable {
 		return newSettlementDate;
 	}
 	
-	public DateTime getDateTimeFromString(String date, String pattern) {
+	public static DateTime getDateTimeFromString(String date, String pattern) {
 		DateTimeFormatter format = DateTimeFormat.forPattern(pattern);
 		DateTime datetime = format.parseDateTime(date);
 		return datetime;
 	}
 	
-	public String convertDateToFormat(DateTime currentTime, String dateFormat) {
+	public static String convertDateToFormat(DateTime currentTime, String dateFormat) {
 		DateTimeFormatter format = DateTimeFormat.forPattern(dateFormat);
 		return format.print(currentTime);
 	}
 
-	public Properties getProperties(String fileName){
-		InputStream inStream = this.getClass().getClassLoader().getResourceAsStream(fileName);
+	public static Properties getProperties(String fileName){
+		InputStream inStream = PointsUtil.class.getClassLoader().getResourceAsStream(fileName);
 		Properties props = new Properties();
 		try {
 			props.load(inStream);
@@ -58,7 +58,7 @@ public class PointsUtil implements Serializable {
 		return props;
 	}
 
-	public void sendMail(String txnActionCode, String merchantId, String fileName, String fileContent, String type) {
+	public static void sendMail(String txnActionCode, String merchantId, String fileName, String fileContent, String type) {
 		try{
 			Properties props = getProperties("payback.properties");					
 			String host = props.getProperty("mailHost");
@@ -82,7 +82,7 @@ public class PointsUtil implements Serializable {
 		
 	}
 	
-	public boolean isValidLoyaltyCard(String cardNumber) {
+	public static boolean isValidLoyaltyCard(String cardNumber) {
 		if (cardNumber == null){
 			return false;
 		}
@@ -90,7 +90,7 @@ public class PointsUtil implements Serializable {
 	}
 	
 
-	public String getSequenceNumber() {
+	public static String getSequenceNumber() {
 		DateTime datetime = new DateTime();
 		int seconds = (datetime.getSecondOfDay()%999999) + 1;
 		String sequenceNumber = String.valueOf(seconds);
@@ -100,7 +100,7 @@ public class PointsUtil implements Serializable {
 		return sequenceNumber;
 	}
 	
-	public String getMapValue(String map, String key) {
+	public static String getMapValue(String map, String key) {
 		HashMap<String, String> generatedMap = new HashMap<String, String>();
 		StringTokenizer mapTokenizer = new StringTokenizer(map, ",");
 		while (mapTokenizer.hasMoreTokens()){
@@ -108,6 +108,13 @@ public class PointsUtil implements Serializable {
 			generatedMap.put(singleMap.split("=")[0], singleMap.split("=")[1]);
 		}
 		return generatedMap.get(key);
+	}
+	
+	public static String getStackTrace(Throwable throwable) {
+		  Writer writer = new StringWriter();
+		  PrintWriter printWriter = new PrintWriter(writer);
+		  throwable.printStackTrace(printWriter);
+		  return writer.toString();
 	}
 	
 }

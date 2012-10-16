@@ -21,7 +21,6 @@ import com.fb.platform.payback.rule.impl.BuyHeroDealEarnYPoints;
 import com.fb.platform.payback.to.OrderItemRequest;
 import com.fb.platform.payback.to.OrderRequest;
 import com.fb.platform.payback.to.PaymentRequest;
-import com.fb.platform.payback.util.PointsUtil;
 
 public class RulesTest extends BaseTestCase{
 
@@ -30,9 +29,6 @@ public class RulesTest extends BaseTestCase{
 		
 		@Autowired
 		private PointsRuleDao pointsRuleDao;
-		
-		@Autowired
-		private PointsUtil pointsUtil;
 		
 		@Autowired
 		private ListCacheAccess listCacheAccess;
@@ -88,11 +84,11 @@ public class RulesTest extends BaseTestCase{
 	public void buyHeroDeailEarnYPointsTest(){
 		
 		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.BUY_DOD_EARN_Y_POINTS, "FUTUREBAZAAR");
-		((BuyHeroDealEarnYPoints)rule).setPointsUtil(pointsUtil);
 		((BuyHeroDealEarnYPoints)rule).setListDao(listDao);
 		((BuyHeroDealEarnYPoints)rule).setListCacheAccess(listCacheAccess);
 		
 		BigDecimal txnPoints = BigDecimal.ZERO;
+		orderRequest.setClientName("futurebazaar");
 		for (OrderItemRequest itemRequest : orderRequest.getOrderItemRequest()){
 			if (rule.isApplicable(orderRequest, itemRequest)){
 				txnPoints = txnPoints.add(rule.execute(orderRequest, itemRequest));
@@ -153,13 +149,24 @@ public class RulesTest extends BaseTestCase{
 			}
 		}
 		
-		assertEquals(new BigDecimal(120).intValue(), txnPoints.intValue());
+		assertEquals(new BigDecimal(100).intValue(), txnPoints.intValue());
 	}
 	
 	@Test
 	public void purchaseOrderBurnXPoints(){
 		PointsRule rule = pointsRuleDao.loadBurnRule(BurnPointsRuleEnum.PURCHASE_ORDER_BURN_X_POINTS, "FUTUREBAZAAR");
 		BigDecimal txnPoints = BigDecimal.ZERO;
+		orderRequest.setTxnTimestamp(new DateTime(2012, 05, 25, 0, 0, 0));
+		for (OrderItemRequest itemRequest : orderRequest.getOrderItemRequest()){
+			if (rule.isApplicable(orderRequest, itemRequest)){
+				txnPoints = rule.execute(orderRequest, itemRequest);
+			}
+		}
+		
+		assertEquals(new BigDecimal(8000).intValue(), txnPoints.intValue());
+		
+		rule = pointsRuleDao.loadBurnRule(BurnPointsRuleEnum.PURCHASE_ORDER_BURN_X_POINTS, "BIGBAZAAR");
+		txnPoints = BigDecimal.ZERO;
 		orderRequest.setTxnTimestamp(new DateTime(2012, 05, 25, 0, 0, 0));
 		for (OrderItemRequest itemRequest : orderRequest.getOrderItemRequest()){
 			if (rule.isApplicable(orderRequest, itemRequest)){

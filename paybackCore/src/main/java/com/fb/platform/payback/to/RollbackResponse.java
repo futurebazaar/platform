@@ -3,6 +3,10 @@ package com.fb.platform.payback.to;
 import java.io.Serializable;
 
 public class RollbackResponse implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int deletedHeaderRows;
 	private int deletedItemRows;
 	private long headerId;

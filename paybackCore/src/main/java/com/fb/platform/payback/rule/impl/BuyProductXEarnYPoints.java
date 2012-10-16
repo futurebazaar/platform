@@ -16,6 +16,11 @@ import com.fb.platform.payback.util.PointsUtil;
 
 public class BuyProductXEarnYPoints implements PointsRule {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	//Multiple Category List
 	private List<Long> gvCategoryList = new ArrayList<Long>();
 	
@@ -23,16 +28,9 @@ public class BuyProductXEarnYPoints implements PointsRule {
 	private BigDecimal earnRatio;
 	private DateTime validFrom;
 	private DateTime validTill;
-	private PointsUtil pointsUtil;
-	private String clientName;
 	
 	//Identifies whether it is a gv or electronics or any other
 	private String categoryType;
-	
-	@Override
-	public void setPointsUtil(PointsUtil pointsUtil) {
-		this.pointsUtil = pointsUtil;
-	}
 	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
@@ -52,8 +50,8 @@ public class BuyProductXEarnYPoints implements PointsRule {
 		String startsOn = ruleConfig.getConfigItemValue(PointsRuleConfigConstants.VALID_FROM);
 		String endsOn = ruleConfig.getConfigItemValue(PointsRuleConfigConstants.VALID_TILL);
 
-		this.validFrom = pointsUtil.getDateTimeFromString(startsOn, "yyyy-MM-dd");
-		this.validTill = pointsUtil.getDateTimeFromString(endsOn, "yyyy-MM-dd");
+		this.validFrom = PointsUtil.getDateTimeFromString(startsOn, "yyyy-MM-dd");
+		this.validTill = PointsUtil.getDateTimeFromString(endsOn, "yyyy-MM-dd");
 		
 	}
 
@@ -74,19 +72,13 @@ public class BuyProductXEarnYPoints implements PointsRule {
 
 	@Override
 	public BigDecimal execute(OrderRequest request, OrderItemRequest itemRequest) {
-		BigDecimal earnFactor = new BigDecimal(pointsUtil.getMapValue(earnMap, categoryType));
+		BigDecimal earnFactor = new BigDecimal(PointsUtil.getMapValue(earnMap, categoryType));
 		return earnFactor.multiply(earnRatio.multiply(itemRequest.getAmount()));
 	}
 
 	@Override
-	public boolean allowNext() {
+	public boolean allowNext(OrderRequest orderRequest) {
 		return true;
-	}
-
-	@Override
-	public void setClientName(String clientName) {
-		this.clientName = clientName;
-		
 	}
 
 }

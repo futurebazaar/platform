@@ -19,7 +19,6 @@
      
      <bean id="pointsService" class="com.fb.platform.payback.service.impl.PointsServiceImpl">
         <property name="pointsDao" ref="pointsDao"></property>
-        <property name="pointsUtil" ref="pointsUtil"></property>
         <property name="ruleCacheAccess" ref="ruleCacheAccess"/>
         <property name="pointsRuleDao" ref="pointsRuleDao"></property>
     </bean>
@@ -30,21 +29,14 @@
     <!-- Add new Managers here -->
      
      <bean id="pointsManager" class="com.fb.platform.payback.service.impl.PointsManagerImpl">
-     	<property name="pointsUtil" ref="pointsUtil"></property>
         <property name="pointsService" ref="pointsService"></property>
     </bean>
     
      <!-- Add new Factory Beans here -->
     
     <bean id="pointsRuleFactory" class="com.fb.platform.payback.rule.impl.PointsRuleFactory">
-    	<property name="pointsUtil" ref="pointsUtil"></property>
     	<property name="listCacheAccess" ref="listCacheAccess"/>
     	<property name="listDao" ref="listDao"></property>
-    </bean>
-    
-    <!-- Add new Utilities here -->
-    
-    <bean id="pointsUtil" class="com.fb.platform.payback.util.PointsUtil">
     </bean>
     
     <!-- Add new Cache Beans here -->

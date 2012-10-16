@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 
 import com.fb.platform.payback.to.OrderItemRequest;
 import com.fb.platform.payback.to.OrderRequest;
-import com.fb.platform.payback.util.PointsUtil;
 
 public interface PointsRule extends Serializable {
 
@@ -15,10 +14,6 @@ public interface PointsRule extends Serializable {
 
 	BigDecimal execute(OrderRequest orderRequest, OrderItemRequest itemRequest);
 
-	public void setPointsUtil(PointsUtil pointsUtil);
-	
-	public void setClientName(String clientName);
-
-	boolean allowNext();
+	boolean allowNext(OrderRequest orderRequest);
 
 }

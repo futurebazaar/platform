@@ -7,18 +7,15 @@ import com.fb.platform.payback.rule.PointsRuleConfigConstants;
 import com.fb.platform.payback.rule.RuleConfiguration;
 import com.fb.platform.payback.to.OrderItemRequest;
 import com.fb.platform.payback.to.OrderRequest;
-import com.fb.platform.payback.util.PointsUtil;
 
 public class PurchaseOrderBurnXPoints implements PointsRule {
-	private BigDecimal burnRatio;
-	private PointsUtil pointsUtil;
-	private String clientName;
 	
-	@Override
-	public void setPointsUtil(PointsUtil pointsUtil) {
-		this.pointsUtil = pointsUtil;
-	}
-
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private BigDecimal burnRatio;
+	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
 		this.burnRatio = new BigDecimal(ruleConfig.getConfigItemValue(PointsRuleConfigConstants.BURN_RATIO));
@@ -39,14 +36,8 @@ public class PurchaseOrderBurnXPoints implements PointsRule {
 	}
 
 	@Override
-	public boolean allowNext() {
+	public boolean allowNext(OrderRequest orderRequest) {
 		return true;
-	}
-
-	@Override
-	public void setClientName(String clientName) {
-		this.clientName = clientName;
-		
 	}
 
 }

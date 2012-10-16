@@ -17,19 +17,17 @@ import com.fb.platform.payback.to.PaymentRequest;
 import com.fb.platform.payback.util.PointsUtil;
 
 public class EarnXPointsOnYPaymentMode implements PointsRule {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private BigDecimal earnRatio;
 	private BigDecimal earnFactor;
-	private PointsUtil pointsUtil;
 	private List<Long> includedCategoryList = new ArrayList<Long>();
 	private DateTime validFrom;
 	private DateTime validTill;
 	private String paymentMode;
-	private String clientName;
-	
-	@Override
-	public void setPointsUtil(PointsUtil pointsUtil) {
-		this.pointsUtil = pointsUtil;
-	}
 	
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
@@ -46,8 +44,8 @@ public class EarnXPointsOnYPaymentMode implements PointsRule {
 		String startsOn = ruleConfig.getConfigItemValue(PointsRuleConfigConstants.VALID_FROM);
 		String endsOn = ruleConfig.getConfigItemValue(PointsRuleConfigConstants.VALID_TILL);
 		
-		this.validFrom = pointsUtil.getDateTimeFromString(startsOn, "yyyy-MM-dd");
-		this.validTill = pointsUtil.getDateTimeFromString(endsOn, "yyyy-MM-dd");
+		this.validFrom = PointsUtil.getDateTimeFromString(startsOn, "yyyy-MM-dd");
+		this.validTill = PointsUtil.getDateTimeFromString(endsOn, "yyyy-MM-dd");
 	}
 
 	@Override
@@ -82,14 +80,8 @@ public class EarnXPointsOnYPaymentMode implements PointsRule {
 	}
 
 	@Override
-	public boolean allowNext() {
+	public boolean allowNext(OrderRequest orderRequest) {
 		return true;
-	}
-
-	@Override
-	public void setClientName(String clientName) {
-		this.clientName = clientName;
-		
 	}
 
 }

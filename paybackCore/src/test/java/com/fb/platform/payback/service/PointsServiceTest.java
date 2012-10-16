@@ -11,37 +11,26 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.fb.commons.PlatformException;
 import com.fb.commons.test.BaseTestCase;
-import com.fb.platform.payback.dao.PointsDao;
-import com.fb.platform.payback.model.PointsHeader;
 import com.fb.platform.payback.model.RollbackHeader;
-import com.fb.platform.payback.to.BurnActionCodesEnum;
-import com.fb.platform.payback.to.EarnActionCodesEnum;
 import com.fb.platform.payback.to.OrderItemRequest;
 import com.fb.platform.payback.to.OrderRequest;
 import com.fb.platform.payback.to.PaymentRequest;
 import com.fb.platform.payback.to.PointsRequest;
 import com.fb.platform.payback.to.PointsResponseCodeEnum;
-import com.sun.jersey.api.MessageException;
 
 public class PointsServiceTest extends BaseTestCase{
 	
 	@Autowired
 	private PointsService pointsService;
 	
-	@Autowired
-	private PointsDao pointsDao;
-	
-	private PointsHeader pointsHeader = new PointsHeader();
-	
 	@Before
 	public void insertTestData(){
 		PointsRequest pr = new PointsRequest();
 		pr.setTxnActionCode("PREALLOC_EARN");
-		pr.setClientName("Future Bazaar");
 		
 		OrderRequest request = setOrderRequest(new Long(1), "1234");
+		request.setClientName("futurebazaar");
 		request.setLoyaltyCard("1234123412341234");
 		request.getOrderItemRequest().add(setItemRequest(1, 2000));
 		pr.setOrderRequest(request);
@@ -94,9 +83,9 @@ public class PointsServiceTest extends BaseTestCase{
 		
 		PointsRequest pr = new PointsRequest();
 		pr.setTxnActionCode("PREALLOC_EARN");
-		pr.setClientName("Future Bazaar");
 		
 		OrderRequest request = setOrderRequest(new Long(2), "1234");
+		request.setClientName("futurebazaar");
 		request.setLoyaltyCard("1234123412341234");
 		pr.setOrderRequest(request);
 		assertEquals(PointsResponseCodeEnum.INVALID_POINTS, pointsService.storePoints(pr));
@@ -104,15 +93,26 @@ public class PointsServiceTest extends BaseTestCase{
 		request.getOrderItemRequest().add(setItemRequest(1, 2000));
 		pr.setOrderRequest(request);
 		assertEquals(PointsResponseCodeEnum.SUCCESS, pointsService.storePoints(pr));
+		
+		OrderRequest request1 = setOrderRequest(new Long(2), "1234");
+		request1.setClientName("bigbazaar");
+		request1.setOrderId(12345);
+		request1.setLoyaltyCard("1234123412341234");
+		pr.setOrderRequest(request1);
+		assertEquals(PointsResponseCodeEnum.INVALID_POINTS, pointsService.storePoints(pr));
+		
+		request1.getOrderItemRequest().add(setItemRequest(1, 2000));
+		pr.setOrderRequest(request1);
+		assertEquals(PointsResponseCodeEnum.SUCCESS, pointsService.storePoints(pr));
 	}
 	
 	@Test
 	public void storeEarnReversalPoints(){
 		PointsRequest pr = new PointsRequest();
 		pr.setTxnActionCode("EARN_REVERSAL");
-		pr.setClientName("Future Bazaar");
 		
 		OrderRequest request = setOrderRequest(new Long(1), "1234");
+		request.setClientName("futurebazaar");
 		request.setLoyaltyCard("1234567812345678");
 		
 		request.getOrderItemRequest().add(setItemRequest(1, 100));
@@ -125,9 +125,9 @@ public class PointsServiceTest extends BaseTestCase{
 	public void storeClientBasedEarnReversalPoints(){
 		PointsRequest pr = new PointsRequest();
 		pr.setTxnActionCode("EARN_REVERSAL");
-		pr.setClientName("Big Bazaar");
 		
 		OrderRequest request = setOrderRequest(new Long(1), "1234");
+		request.setClientName("bigbazaar");
 		request.setLoyaltyCard("1234567812345678");
 		
 		request.getOrderItemRequest().add(setItemRequest(1, 100));
@@ -141,10 +141,8 @@ public class PointsServiceTest extends BaseTestCase{
 		
 		PointsRequest pr = new PointsRequest();
 		pr.setTxnActionCode("BURN_REVERSAL");
-		pr.setClientName("Future Bazaar");
-		
 		OrderRequest request  = setOrderRequest(new Long(2), "1234");
-		
+		request.setClientName("futurebazaar");		
 		pr.setOrderRequest(request);
 		assertEquals(PointsResponseCodeEnum.SUCCESS, pointsService.storePoints(pr));
 		
@@ -153,9 +151,9 @@ public class PointsServiceTest extends BaseTestCase{
 	@Test
 	public void getPointsToBeDisplayed(){
 		PointsRequest pr = new PointsRequest();
-		pr.setClientName("FUTUREBAZAAR");
 		pr.setTxnActionCode("PREALLOC_EARN");
 		OrderRequest request = setOrderRequest(new Long(1), "1234");
+		request.setClientName("futurebazaar");
 		request.getOrderItemRequest().add(setItemRequest(1, 500));
 		request.getOrderItemRequest().add(setItemRequest(2, 639));
 		pr.setOrderRequest(request);
@@ -165,6 +163,7 @@ public class PointsServiceTest extends BaseTestCase{
 	
 		pr.setTxnActionCode("BURN_REVERSAL");
 		OrderRequest request1 = setOrderRequest(new Long(1), "1234");
+		request1.setClientName("futurebazaar");
 		pr.setOrderRequest(request1);
 		newRequest = pointsService.getPointsToBeDisplayed(pr);
 		assertEquals(8000, newRequest.getOrderRequest().getTxnPoints().intValue());
@@ -174,22 +173,23 @@ public class PointsServiceTest extends BaseTestCase{
 	@Test
 	public void getClientBasedDisplayPointsTest(){
 		PointsRequest pr = new PointsRequest();
-		pr.setClientName("BIGBAZAAR");
 		pr.setTxnActionCode("PREALLOC_EARN");
 		OrderRequest request = setOrderRequest(new Long(1), "1234");
+		request.setClientName("bigbazaar");
 		request.getOrderItemRequest().add(setItemRequest(1, 500));
 		request.getOrderItemRequest().add(setItemRequest(2, 639));
 		pr.setOrderRequest(request);
 		PointsRequest newRequest = pointsService.getPointsToBeDisplayed(pr);
-		assertEquals(34, newRequest.getOrderRequest().getTxnPoints().intValue());
-		assertEquals(34, newRequest.getOrderRequest().getTotalTxnPoints().intValue());
+		assertEquals(28, newRequest.getOrderRequest().getTxnPoints().intValue());
+		assertEquals(28, newRequest.getOrderRequest().getTotalTxnPoints().intValue());
 	
 		pr.setTxnActionCode("BURN_REVERSAL");
 		OrderRequest request1 = setOrderRequest(new Long(1), "1234");
+		request1.setClientName("bigbazaar");
 		pr.setOrderRequest(request1);
 		newRequest = pointsService.getPointsToBeDisplayed(pr);
-		assertEquals(0, newRequest.getOrderRequest().getTxnPoints().intValue());
-		assertEquals(0, newRequest.getOrderRequest().getPointsValue().intValue());
+		assertEquals(8000, newRequest.getOrderRequest().getTxnPoints().intValue());
+		assertEquals(2000, newRequest.getOrderRequest().getPointsValue().intValue());
 		
 	}
 	
@@ -229,9 +229,9 @@ public class PointsServiceTest extends BaseTestCase{
 	public void rollbackTransactionTest() {
 		PointsRequest pr = new PointsRequest();
 		pr.setTxnActionCode("PREALLOC_EARN");
-		pr.setClientName("Future Bazaar");
 		
 		OrderRequest request = setOrderRequest(new Long(2), "1234");
+		request.setClientName("futurebazaar");
 		request.setLoyaltyCard("1234123412341234");
 		pr.setOrderRequest(request);
 		assertEquals(PointsResponseCodeEnum.INVALID_POINTS, pointsService.storePoints(pr));

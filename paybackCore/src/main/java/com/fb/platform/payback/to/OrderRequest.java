@@ -22,6 +22,7 @@ public class OrderRequest {
 	private BigDecimal pointsValue = BigDecimal.ZERO;
 	private String paymentMode;
 	private List<PaymentRequest> paymentRequest = new ArrayList<PaymentRequest>();
+	private String clientName;
 	
 	public long getOrderId() {
 		return orderId;
@@ -110,5 +111,11 @@ public class OrderRequest {
 	}
 	public void setOrderTotal(BigDecimal orderTotal) {
 		this.orderTotal = orderTotal;
+	}
+	public String getClientName() {
+		return clientName.replaceAll(" ", "").toUpperCase();
+	}
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
 	}
 }

@@ -39,8 +39,7 @@ public class PointsRuleDaoJdbcImpl implements PointsRuleDao {
 	@Override
 	public PointsRule loadEarnRule(EarnPointsRuleEnum ruleName, String clientName) {
 		if (log.isDebugEnabled()) {
-			log.debug("Geting the payback rule details for the rule id : "
-					+ ruleName);
+			log.debug("Geting the payback rule details for the rule id : " + ruleName);
 		}
 		PointsRuleRowCallBackHandler rcbh = new PointsRuleRowCallBackHandler();
 		jdbcTemplate.query(LOAD_RULE_QUERY, rcbh, ruleName.name());

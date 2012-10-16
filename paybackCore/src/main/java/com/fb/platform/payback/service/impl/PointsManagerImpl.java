@@ -2,13 +2,14 @@ package com.fb.platform.payback.service.impl;
 
 import java.util.Properties;
 
+import javax.activity.InvalidActivityException;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.fb.commons.PlatformException;
 import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
 import com.fb.platform.payback.exception.InvalidReferenceId;
@@ -32,12 +33,7 @@ public class PointsManagerImpl implements PointsManager {
 
 	private static Log logger = LogFactory.getLog(PointsManagerImpl.class);
 
-	private PointsUtil pointsUtil;
 	private PointsService pointsService;
-
-	public void setPointsUtil(PointsUtil pointsUtil) {
-		this.pointsUtil = pointsUtil;
-	}
 
 	public void setPointsService(PointsService pointsService) {
 		this.pointsService = pointsService;
@@ -49,8 +45,7 @@ public class PointsManagerImpl implements PointsManager {
 	@Override
 	public PointsResponse getPointsReponse(PointsRequest request) {
 
-		PointsTxnClassificationCodeEnum actionCode = PointsTxnClassificationCodeEnum
-				.valueOf(request.getTxnActionCode());
+		PointsTxnClassificationCodeEnum actionCode = PointsTxnClassificationCodeEnum.valueOf(request.getTxnActionCode());
 		PointsResponseCodeEnum responseEnum = PointsResponseCodeEnum.FAILURE;
 		PointsResponse pointsResponse = new PointsResponse();
 		try {
@@ -59,8 +54,7 @@ public class PointsManagerImpl implements PointsManager {
 			}
 
 			// authenticate the session token and find out the userId
-			AuthenticationTO authentication = authenticationService
-					.authenticate(request.getSessionToken());
+			AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
 			if (authentication == null) {
 				throw new InvalidSession("Invalid Session Token");
 			}
@@ -73,17 +67,17 @@ public class PointsManagerImpl implements PointsManager {
 			pointsResponse.setTxnPoints(request.getOrderRequest().getTxnPoints().intValue());
 			pointsResponse.setPointsHeaderId(request.getOrderRequest().getPointsHeaderId());
 		} catch (PointsHeaderDoesNotExist e) {
-			logger.error(e.toString());
+			logger.error("No Header entry exists for order id: " + request.getOrderRequest().getOrderId() + "and action: " + request.getTxnActionCode(), e);
 			responseEnum = PointsResponseCodeEnum.HEADER_DOES_NOT_EXIST;
 		} catch (InvalidReferenceId e) {
-			logger.error(e.toString());
+			logger.error("Invalid reference id: " + request.getOrderRequest().getReferenceId() + "for order id: " + request.getOrderRequest().getOrderId() 
+					+ "and action: " + request.getTxnActionCode(), e);
 			responseEnum = PointsResponseCodeEnum.INVALID_REFERENCE_ID;
 		}catch (InvalidSession e) {
-			logger.error(e.toString());
+			logger.error("Invalid session: " + request.getSessionToken() + "and action: " + request.getTxnActionCode(), e);
 			responseEnum = PointsResponseCodeEnum.NO_SESSION;
 		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error(e.toString());
+			logger.error("Generic Exception for order id: " + request.getOrderRequest().getOrderId() + "and action: " + request.getTxnActionCode(), e);
 			responseEnum = PointsResponseCodeEnum.INTERNAL_ERROR;
 		}
 		logger.info("Store Points Status Code : " + responseEnum.name());
@@ -98,29 +92,23 @@ public class PointsManagerImpl implements PointsManager {
 	@Override
 	public String uploadEarnFilesOnSFTP() {
 		String failedCodes = "";
-		Properties props = pointsUtil.getProperties("payback.properties");
+		Properties props = PointsUtil.getProperties("payback.properties");
 		String[] clients = props.getProperty("CLIENTS").split(",");
 		for (String client : clients) {
-			String merchantId = props.getProperty(client + "_MERCHANT_ID");
-			for (EarnActionCodesEnum txnActionCode : EarnActionCodesEnum
-					.values()) {
+			String merchantId = props.getProperty(client + "_EARN_MERCHANT_ID");
+			for (EarnActionCodesEnum txnActionCode : EarnActionCodesEnum	.values()) {
 				try {
-					logger.info("Uploading " + txnActionCode.name()
-							+ " data for client : " + client
-							+ " and merchantId : " + merchantId);
-					String dataToUpload = pointsService.postEarnData(
-							txnActionCode, merchantId, client);
+					logger.info("Uploading " + txnActionCode.name()	+ " data for client : " + client  + " and merchantId : " + merchantId);
+					String dataToUpload = pointsService.postEarnData(txnActionCode, merchantId, client);
 					if (dataToUpload != null && !dataToUpload.equals("")) {
-						pointsUtil.sendMail(txnActionCode.name(), merchantId,
-								txnActionCode.toString() + ".txt",
-								dataToUpload, "EARN_POINTS");
+						PointsUtil.sendMail(txnActionCode.name(), merchantId, txnActionCode.toString() + ".txt", dataToUpload, "EARN_POINTS");
 					}
 				} catch (Exception e) {
-					logger.error(e.toString());
+					logger.error("Exception occured for client: " + client + " and action code: " + txnActionCode, e);
 					// send mail to check the exception
 					failedCodes += txnActionCode.name() + "; ";
-					pointsUtil.sendMail(txnActionCode.name(), merchantId,
-							"ERROR_OCCURRED" + ".txt", e.toString(), "ERROR");
+					String stackTrace = PointsUtil.getStackTrace(e);
+					PointsUtil.sendMail(txnActionCode.name(), merchantId, "ERROR_OCCURRED" + ".txt", stackTrace, "ERROR");
 
 				}
 
@@ -132,22 +120,18 @@ public class PointsManagerImpl implements PointsManager {
 	@Override
 	public String mailBurnData() {
 		String failedCodes = "";
-		Properties props = pointsUtil.getProperties("payback.properties");
+		Properties props = PointsUtil.getProperties("payback.properties");
 		String[] clients = props.getProperty("CLIENTS").split(",");
 		for (String client : clients) {
-			String merchantId = props.getProperty(client + "_MERCHANT_ID");
-			for (BurnActionCodesEnum txnActionCode : BurnActionCodesEnum
-					.values()) {
+			String merchantId = props.getProperty(client + "_BURN_MERCHANT_ID");
+			for (BurnActionCodesEnum txnActionCode : BurnActionCodesEnum.values()) {
 				try {
-					logger.info("Sending " + txnActionCode.name()
-							+ " Data for client: " + client
-							+ " and merchantID : " + merchantId);
+					logger.info("Sending " + txnActionCode.name() + " Data for client: " + client + " and merchantID : " + merchantId);
 					pointsService.mailBurnData(txnActionCode, merchantId);
 				} catch (Exception e) {
 					logger.error(e.toString());
 					failedCodes += txnActionCode.name() + "; ";
-					pointsUtil.sendMail(txnActionCode.name(), merchantId,
-							"ERROR_OCCURRED" + ".txt", e.toString(), "ERROR");
+					PointsUtil.sendMail(txnActionCode.name(), merchantId, "ERROR_OCCURRED" + ".txt", e.toString(), "ERROR");
 				}
 			}
 		}
@@ -161,8 +145,7 @@ public class PointsManagerImpl implements PointsManager {
 		}
 
 		// authenticate the session token and find out the userId
-		AuthenticationTO authentication = authenticationService
-				.authenticate(request.getSessionToken());
+		AuthenticationTO authentication = authenticationService.authenticate(request.getSessionToken());
 		if (authentication == null) {
 			return PointsResponseCodeEnum.NO_SESSION;
 		}

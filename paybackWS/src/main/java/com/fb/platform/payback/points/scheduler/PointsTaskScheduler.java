@@ -1,7 +1,5 @@
 package com.fb.platform.payback.points.scheduler;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +10,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.fb.platform.payback.service.PointsManager;
+import com.fb.platform.payback.util.PointsUtil;
 
 @Service
 public class PointsTaskScheduler {
@@ -25,15 +24,8 @@ public class PointsTaskScheduler {
 		@Scheduled(cron = "0 0 1 * * ?")
 		public void sendToPayback(){
 			String isMaster = "False";
-			InputStream inStream = this.getClass().getClassLoader().getResourceAsStream("payback.properties");
-			Properties props = new Properties();
-			try {
-				props.load(inStream);
-				isMaster = props.getProperty("isMaster");
-				inStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			Properties props = PointsUtil.getProperties("payback.properties");
+			isMaster = props.getProperty("isMaster");
 			
 			if (isMaster != null && isMaster.equals("True")){
 				logger.info("Cron Started");

@@ -16,19 +16,16 @@ import com.fb.platform.payback.util.PointsUtil;
 
 public class BuyWorthXEarnYBonusPoints implements PointsRule {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private List<Long> excludedCategoryList = new ArrayList<Long>();
 	private BigDecimal bonusPoints;
 	private BigDecimal minimumOrderValue;
 	private DateTime validFrom;
 	private DateTime validTill;
-	private PointsUtil pointsUtil;
-	private String clientName;
 	
-	@Override
-	public void setPointsUtil(PointsUtil pointsUtil) {
-		this.pointsUtil = pointsUtil;
-	}
-
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
 		this.bonusPoints = new BigDecimal(ruleConfig.getConfigItemValue(PointsRuleConfigConstants.BONUS_POINTS));
@@ -44,8 +41,8 @@ public class BuyWorthXEarnYBonusPoints implements PointsRule {
 		String startsOn = ruleConfig.getConfigItemValue(PointsRuleConfigConstants.VALID_FROM);
 		String endsOn = ruleConfig.getConfigItemValue(PointsRuleConfigConstants.VALID_TILL);
 		
-		this.validFrom = pointsUtil.getDateTimeFromString(startsOn, "yyyy-MM-dd");
-		this.validTill = pointsUtil.getDateTimeFromString(endsOn, "yyyy-MM-dd");
+		this.validFrom = PointsUtil.getDateTimeFromString(startsOn, "yyyy-MM-dd");
+		this.validTill = PointsUtil.getDateTimeFromString(endsOn, "yyyy-MM-dd");
 		
 	}
 	
@@ -67,14 +64,8 @@ public class BuyWorthXEarnYBonusPoints implements PointsRule {
 	}
 
 	@Override
-	public boolean allowNext() {
+	public boolean allowNext(OrderRequest orderRequest) {
 		return true;
-	}
-
-	@Override
-	public void setClientName(String clientName) {
-		this.clientName = clientName;
-		
 	}
 
 }

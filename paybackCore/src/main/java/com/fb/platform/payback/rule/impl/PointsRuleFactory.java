@@ -8,7 +8,6 @@ import com.fb.platform.payback.rule.BurnPointsRuleEnum;
 import com.fb.platform.payback.rule.PointsRule;
 import com.fb.platform.payback.rule.EarnPointsRuleEnum;
 import com.fb.platform.payback.rule.RuleConfiguration;
-import com.fb.platform.payback.util.PointsUtil;
 
 public class PointsRuleFactory {
 	
@@ -16,22 +15,16 @@ public class PointsRuleFactory {
 		private static ListDao listDao;
 		
 		public void setListDao(ListDao listDao){
-			this.listDao = listDao;
+			PointsRuleFactory.listDao = listDao;
 		}
 		
 		@Autowired
 		private static ListCacheAccess listCacheAccess;
 		
 		public void setListCacheAccess(ListCacheAccess listCacheAccess){
-			this.listCacheAccess = listCacheAccess;
+			PointsRuleFactory.listCacheAccess = listCacheAccess;
 		}
 		
-		@Autowired
-		private static PointsUtil pointsUtil;
-		
-		public void setPointsUtil(PointsUtil pointsUtil){
-			this.pointsUtil = pointsUtil;
-		}
 		
 		private static PointsRule getRule(EarnPointsRuleEnum ruleName){
 			PointsRule rule = null;
@@ -79,7 +72,6 @@ public class PointsRuleFactory {
 			
 				case PURCHASE_ORDER_BURN_X_POINTS:
 					rule = new PurchaseOrderBurnXPoints();
-					rule.setPointsUtil(pointsUtil);
 					rule.init(ruleConfig);
 					break;
 					
@@ -93,7 +85,6 @@ public class PointsRuleFactory {
 		
 		public static PointsRule createRule(EarnPointsRuleEnum ruleName, RuleConfiguration ruleConfig, String clientName){
 			PointsRule rule = getRule(ruleName);
-			rule.setPointsUtil(pointsUtil);
 			rule.init(ruleConfig);
 			return rule;
 		}

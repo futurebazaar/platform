@@ -16,7 +16,6 @@ import com.fb.platform.payback.dao.PointsRuleDao;
 import com.fb.platform.payback.rule.EarnPointsRuleEnum;
 import com.fb.platform.payback.rule.PointsRule;
 import com.fb.platform.payback.rule.impl.BuyHeroDealEarnYPoints;
-import com.fb.platform.payback.service.PointsService;
 import com.fb.platform.payback.to.OrderItemRequest;
 import com.fb.platform.payback.to.OrderRequest;
 import com.fb.platform.payback.util.PointsUtil;
@@ -35,18 +34,14 @@ public class CacheTest extends BaseTestCase{
 	@Autowired
 	private ListCacheAccess listCacheAccess;
 	
-	@Autowired
-	private PointsUtil pointsUtil;
-	
 	@Test
 	public void loyaltyCardRuleCacheAccessTest(){
 		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.ENTER_LOYALTY_CARD_EARN_X_POINTS, "FUTUREBAZAAR");
 		ruleCacheAccess.put(EarnPointsRuleEnum.ENTER_LOYALTY_CARD_EARN_X_POINTS.name(), rule);
 		PointsRule cacheRule =ruleCacheAccess.get(EarnPointsRuleEnum.ENTER_LOYALTY_CARD_EARN_X_POINTS.name());
-		assertTrue(cacheRule.allowNext());
-		 
 		OrderRequest orderRequest = new OrderRequest();
 		orderRequest.setTxnTimestamp(DateTime.now());
+		assertTrue(cacheRule.allowNext(orderRequest));
 		OrderItemRequest itemRequest = new OrderItemRequest();
 		itemRequest.setAmount(new BigDecimal(1000));
 		List<OrderItemRequest> orderItem = new ArrayList<OrderItemRequest>();
@@ -62,11 +57,11 @@ public class CacheTest extends BaseTestCase{
 		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.BUY_WORTH_X_EARN_Y_BONUS_POINTS, "FUTUREBAZAAR");
 		ruleCacheAccess.put(EarnPointsRuleEnum.BUY_WORTH_X_EARN_Y_BONUS_POINTS.name(), rule);
 		PointsRule cacheRule =ruleCacheAccess.get(EarnPointsRuleEnum.BUY_WORTH_X_EARN_Y_BONUS_POINTS.name());
-		assertTrue(cacheRule.allowNext());
 		 
 		OrderRequest orderRequest = new OrderRequest();
 		orderRequest.setTxnTimestamp(DateTime.now());
 		orderRequest.setAmount(new BigDecimal(3000));
+		assertTrue(cacheRule.allowNext(orderRequest));
 		OrderItemRequest itemRequest = new OrderItemRequest();
 		itemRequest.setAmount(new BigDecimal(1000));
 		List<OrderItemRequest> orderItem = new ArrayList<OrderItemRequest>();
@@ -82,11 +77,11 @@ public class CacheTest extends BaseTestCase{
 		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.EARN_X_POINTS_ON_Y_DAY, "FUTUREBAZAAR");
 		ruleCacheAccess.put(EarnPointsRuleEnum.EARN_X_POINTS_ON_Y_DAY.name(), rule);
 		PointsRule cacheRule =ruleCacheAccess.get(EarnPointsRuleEnum.EARN_X_POINTS_ON_Y_DAY.name());
-		assertFalse(cacheRule.allowNext());
 		 
 		OrderRequest orderRequest = new OrderRequest();
 		orderRequest.setTxnTimestamp(new DateTime(2012, 05, 25, 0, 0, 0));
 		orderRequest.setAmount(new BigDecimal(3000));
+		assertFalse(cacheRule.allowNext(orderRequest));
 		OrderItemRequest itemRequest = new OrderItemRequest();
 		itemRequest.setAmount(new BigDecimal(1000));
 		List<OrderItemRequest> orderItem = new ArrayList<OrderItemRequest>();
@@ -103,7 +98,7 @@ public class CacheTest extends BaseTestCase{
 		List<Long> dealId = listDao.getHeroDealSellerRateChart(dealTime);
 		assertEquals(new Long(1),  dealId.get(0));
 		
-		String bookingDate = pointsUtil.convertDateToFormat(dealTime, "yyyy-MM-dd");
+		String bookingDate = PointsUtil.convertDateToFormat(dealTime, "yyyy-MM-dd");
 		String key = PointsCacheConstants.HERO_DEAL +  "#" + bookingDate;
 		listCacheAccess.lock(key);
 		listCacheAccess.put(key, String.valueOf(dealId.get(0)));

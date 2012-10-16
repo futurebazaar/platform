@@ -350,7 +350,7 @@
 			<row>
         			<value name="id">31</value>
         			<value name="name">EARN_RATIO</value>
-        			<value name="value">0.03</value>
+        			<value name="value">0.025</value>
         			<value name="rule_id">1</value>
         			<value name="client_name">BIGBAZAAR</value>
         		</row>
@@ -369,6 +369,14 @@
 				<value name="rule_id">1</value>
 				<value name="client_name">BIGBAZAAR</value>
 			</row>
+			
+				<row>
+        			<value name="id">34</value>
+        			<value name="name">BURN_RATIO</value>
+        			<value name="value">4</value>
+        			<value name="rule_id">6</value>
+        			<value name="client_name">BIGBAZAAR</value>
+        		</row>
         	
 			</table>
 

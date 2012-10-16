@@ -4,6 +4,10 @@ import java.io.Serializable;
 
 public class RollbackHeader implements Serializable {
 
+		/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 		private int itemRowsDeleted;
 		private int headerRowsDeleted;
 		

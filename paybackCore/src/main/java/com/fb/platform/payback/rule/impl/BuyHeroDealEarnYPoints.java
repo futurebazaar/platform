@@ -23,14 +23,16 @@ import com.fb.platform.payback.util.PointsUtil;
 
 public class BuyHeroDealEarnYPoints implements PointsRule {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private BigDecimal earnFactor;
 	private BigDecimal earnRatio;
 	private DateTime validFrom;
 	private DateTime validTill;
 	private transient ListDao listDao;
 	private ListCacheAccess listCacheAccess;
-	private PointsUtil pointsUtil;
-	private String clientName;
 
 	private static Log logger = LogFactory.getLog(ListDaoJdbcImpl.class);
 	
@@ -42,41 +44,27 @@ public class BuyHeroDealEarnYPoints implements PointsRule {
 		this.listCacheAccess = listCacheAccess;
 	}
 
-	public void setPointsUtil(PointsUtil pointsUtil) {
-		this.pointsUtil = pointsUtil;
-	}
-
 	@Override
 	public void init(RuleConfiguration ruleConfig) {
 
-		this.earnFactor = new BigDecimal(
-				ruleConfig
-						.getConfigItemValue(PointsRuleConfigConstants.POINTS_FACTOR));
-		this.earnRatio = new BigDecimal(
-				ruleConfig
-						.getConfigItemValue(PointsRuleConfigConstants.EARN_RATIO));
+		this.earnFactor = new BigDecimal(ruleConfig.getConfigItemValue(PointsRuleConfigConstants.POINTS_FACTOR));
+		this.earnRatio = new BigDecimal(ruleConfig.getConfigItemValue(PointsRuleConfigConstants.EARN_RATIO));
 
-		String startsOn = ruleConfig
-				.getConfigItemValue(PointsRuleConfigConstants.VALID_FROM);
-		String endsOn = ruleConfig
-				.getConfigItemValue(PointsRuleConfigConstants.VALID_TILL);
+		String startsOn = ruleConfig.getConfigItemValue(PointsRuleConfigConstants.VALID_FROM);
+		String endsOn = ruleConfig.getConfigItemValue(PointsRuleConfigConstants.VALID_TILL);
 
-		this.validFrom = pointsUtil.getDateTimeFromString(startsOn,
-				"yyyy-MM-dd");
-		this.validTill = pointsUtil.getDateTimeFromString(endsOn, "yyyy-MM-dd");
+		this.validFrom = PointsUtil.getDateTimeFromString(startsOn, "yyyy-MM-dd");
+		this.validTill = PointsUtil.getDateTimeFromString(endsOn, "yyyy-MM-dd");
 
 	}
 
 	@Override
-	public boolean isApplicable(OrderRequest request,
-			OrderItemRequest itemRequest) {
-		if (request.getTxnTimestamp().toDate().compareTo(validFrom.toDate()) < 0
-				|| request.getTxnTimestamp().toDate()
-						.compareTo(validTill.toDate()) > 0) {
+	public boolean isApplicable(OrderRequest request, OrderItemRequest itemRequest) {
+		if (request.getTxnTimestamp().toDate().compareTo(validFrom.toDate()) < 0	|| request.getTxnTimestamp().toDate().compareTo(validTill.toDate()) > 0) {
 			return false;
 		}
 
-		if (!getHeroDealSellerRateChart(request.getTxnTimestamp(), this.clientName).contains(itemRequest.getSellerRateChartId())) {
+		if (!getHeroDealSellerRateChart(request.getTxnTimestamp(), request.getClientName()).contains(itemRequest.getSellerRateChartId())) {
 			return false;
 		}
 
@@ -85,8 +73,7 @@ public class BuyHeroDealEarnYPoints implements PointsRule {
 
 	private List<Long> getHeroDealSellerRateChart(DateTime orderDate, String clientName) {
 		List<Long> sellerRateChartId = new ArrayList<Long>();
-		String bookingDate = pointsUtil.convertDateToFormat(orderDate,
-				"yyyy-MM-dd");
+		String bookingDate = PointsUtil.convertDateToFormat(orderDate, "yyyy-MM-dd");
 		String key = PointsCacheConstants.HERO_DEAL + "#" + bookingDate + "#" + clientName;
 		String heroDeals = listCacheAccess.get(key);
 		if (heroDeals != null && heroDeals.equals("")){
@@ -97,8 +84,7 @@ public class BuyHeroDealEarnYPoints implements PointsRule {
 		} 
 		else {
 			try {
-				sellerRateChartId = listDao
-						.getHeroDealSellerRateChart(orderDate);
+				sellerRateChartId = listDao.getHeroDealSellerRateChart(orderDate);
 			} catch (DataAccessException e) {
 				return sellerRateChartId;
 			}
@@ -133,13 +119,8 @@ public class BuyHeroDealEarnYPoints implements PointsRule {
 	}
 
 	@Override
-	public boolean allowNext() {
+	public boolean allowNext(OrderRequest request) {
 		return true;
-	}
-
-	@Override
-	public void setClientName(String clientName) {
-		this.clientName = clientName;
 	}
 
 }

@@ -51,10 +51,10 @@ public class PointsManagerTest  extends BaseTestCase{
 		
 		PointsRequest pr = new PointsRequest();
 		pr.setTxnActionCode("PREALLOC_EARN");
-		pr.setClientName("Future Bazaar");
 		pr.setSessionToken(responseUser1.getSessionToken());
 		
 		OrderRequest request  = new OrderRequest();
+		request.setClientName("Future Bazaar");
 		request.setLoyaltyCard("1234567890123457");
 		request.setAmount(new BigDecimal(2001));
 		request.setOrderId(1);
@@ -95,10 +95,10 @@ public class PointsManagerTest  extends BaseTestCase{
 	public void storeEarnPointsInvalidActionCodeTest() {
 		PointsRequest pr = new PointsRequest();
 		pr.setTxnActionCode("TEST");
-		pr.setClientName("Future Bazaar");
 		pr.setSessionToken(responseUser1.getSessionToken());
 		
 		OrderRequest request  = setOrderRequest(new Long(2), null);
+		request.setClientName("Future Bazaar");
 		pr.setOrderRequest(request);
 		
 		pointsManager.getPointsReponse(pr);
@@ -108,9 +108,9 @@ public class PointsManagerTest  extends BaseTestCase{
 	public void storeEarnPointsTest(){
 		PointsRequest pr = new PointsRequest();
 		pr.setTxnActionCode("PREALLOC_EARN");
-		pr.setClientName("Future Bazaar");
 		
 		OrderRequest request  = setOrderRequest(new Long(2), null);
+		request.setClientName("Future Bazaar");
 		pr.setOrderRequest(request);
 		
 		pr.setOrderRequest(request);
@@ -147,13 +147,13 @@ public class PointsManagerTest  extends BaseTestCase{
 	@Test
 	public void storeEarnReversalPointsTest(){
 		PointsRequest pr = new PointsRequest();
-		pr.setClientName("Future Bazaar");
 		pr.setTxnActionCode("EARN_REVERSAL");
 		PointsResponse pointsResponse = pointsManager.getPointsReponse(pr);
 		assertEquals(PointsTxnClassificationCodeEnum.EARN_REVERSAL, pointsResponse.getActionCode());
 		assertEquals(PointsResponseCodeEnum.NO_SESSION, pointsResponse.getPointsResponseCodeEnum());
 		
 		OrderRequest request  = setOrderRequest(new Long(2), "1234");
+		request.setClientName("Future Bazaar");
 		pr.setOrderRequest(request);
 		
 		pointsResponse = pointsManager.getPointsReponse(pr);
@@ -184,10 +184,10 @@ public class PointsManagerTest  extends BaseTestCase{
 	public void storeBurnReversalPointsTest(){
 		PointsRequest pr = new PointsRequest();
 		pr.setTxnActionCode("BURN_REVERSAL");
-		pr.setClientName("Future Bazaar");
 		pr.setSessionToken(responseUser1.getSessionToken());
 		
 		OrderRequest request  = new OrderRequest();
+		request.setClientName("Future Bazaar");
 		request.setLoyaltyCard("");
 		request.setAmount(new BigDecimal(2001));
 		request.setOrderId(1);
@@ -206,10 +206,9 @@ public class PointsManagerTest  extends BaseTestCase{
 	@Test
 	public void getPointsToBeDisplayedTest() throws NoPermissionException{
 		PointsRequest pr = new PointsRequest();
-		pr.setClientName("FUTUREBAZAAR");
 		pr.setTxnActionCode("PREALLOC_EARN");
 		OrderRequest request = setOrderRequest(new Long(1), "1234");
-		
+		request.setClientName("Future Bazaar");		
 		pr.setOrderRequest(request);
 		PointsRequest newRequest = pointsManager.getPointsToBeDisplayed(pr);
 		assertEquals(342, newRequest.getOrderRequest().getTxnPoints().intValue());
@@ -296,10 +295,10 @@ public class PointsManagerTest  extends BaseTestCase{
 	public void rollbackTransactionTest() {
 		PointsRequest pr = new PointsRequest();
 		pr.setTxnActionCode("BURN_REVERSAL");
-		pr.setClientName("Future Bazaar");
 		pr.setSessionToken(responseUser1.getSessionToken());
 		
 		OrderRequest request  = new OrderRequest();
+		request.setClientName("Future Bazaar");
 		request.setLoyaltyCard("");
 		request.setAmount(new BigDecimal(2001));
 		request.setOrderId(1);
