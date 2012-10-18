@@ -856,6 +856,19 @@ CREATE TABLE wallets_refunds_debit_history
 -- CONSTRAINT wallets_refunds_debit_history_fk1 FOREIGN KEY (wallet_id) REFERENCES wallets_wallet(id), 
 -- CONSTRAINT wallets_refunds_debit_history_fk2 FOREIGN KEY (sub_transaction_id) REFERENCES wallets_sub_transaction(id),
 -- CONSTRAINT wallets_refunds_debit_history_fk3 FOREIGN KEY (refund_credit_id) REFERENCES wallets_refunds_credit_history(id),
+CREATE TABLE wallets_fill_xml
+(
+	id bigint NOT NULL AUTO_INCREMENT,
+	wallet_id bigint NOT NULL,
+	user_id bigint NOT NULL,
+	payment_mode VARCHAR(10) NOT NULL,
+	amount decimal(18,2) NOT NULL,
+	wallet_fill_xml longtext NOT NULL,
+	created_date DATETIME NOT NULL,
+	status bit NOT NULL DEFAULT 0,
+	PRIMARY KEY(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --  ***************WALLET RELATED TABLES END**************
 CREATE TABLE rules (
 	id INTEGER NOT NULL AUTO_INCREMENT,

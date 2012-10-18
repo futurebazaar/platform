@@ -35,5 +35,7 @@ public interface WalletTransactionDao {
 	Money getWalletRefundAmount(long walletId);
 
 	public boolean isRefundable(Wallet wallet, long refundId, Money amount);
+	
+	public void createFillWalletXML(long userId, long walletId,String paymentMode, long orderId, Money amount); 
 
 }

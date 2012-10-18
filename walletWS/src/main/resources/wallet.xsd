@@ -76,6 +76,7 @@
   <xs:element name="type" type="xs:string"/>
   <xs:element name="orderId" type="xs:long"/>
   <xs:element name="paymentId" type="xs:long"/>
+  <xs:element name="paymentMode" type="xs:string" nillable="true"/>
   <xs:element name="refundId" type="xs:long"/>
   <xs:element name="newRefundId" type="xs:long"/>
   <xs:element name="paymentReversalId" type="xs:long"/>
@@ -178,6 +179,8 @@
         <xs:element ref="tns:amount"/>
         <xs:element ref="tns:subWallet"/>
         <xs:element ref="tns:paymentId"/>
+        <xs:element ref="tns:orderId"/>
+        <xs:element ref="tns:paymentMode"/>
         <xs:element ref="tns:refundId"/>
         <xs:element ref="tns:giftCode"/>
         <xs:element ref="tns:expiryDate"/>

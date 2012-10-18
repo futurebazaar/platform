@@ -44,6 +44,7 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 	private JdbcTemplate jdbcTemplate;
 	private WalletDao walletDao;
 	private int refundExpiryDays;
+	private String fillWalletXml;
 	private Log log = LogFactory.getLog(WalletTransactionDaoImpl.class);
 
 	private final String INSERT_NEW_TRANSACTION  =  "Insert into wallets_transaction "
@@ -212,6 +213,10 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 	
 	private final String UPDATE_PAYMENT_REFUNDS = "update payments_refund set amount = ? ,modified_on = NOW() , status =? where id = ?";
 	
+	private final String INSERT_WALLET_FILL_XML = "Insert into wallets_fill_xml "
+			+ "(wallet_id,user_id,payment_mode,amount,wallet_fill_xml,created_date,status) values "
+			+ "(?,?,?,?,?,?,?)";
+	
 	@Override
 	public String insertTransaction(final WalletTransaction walletTransaction) {
 		try{
@@ -359,6 +364,10 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 	
 	public void setRefundExpiryDays(int refundExpiryDays) {
 		this.refundExpiryDays = refundExpiryDays;
+	}
+	
+	public void setFillWalletXml (String fillWalletXml){
+		this.fillWalletXml = fillWalletXml;
 	}
 	
 	private static class WalletSubTransactionMapper implements RowMapper<WalletSubTransaction>{
@@ -684,5 +693,17 @@ public class WalletTransactionDaoImpl implements WalletTransactionDao {
 		}
 		
 	}
-
+	@Override
+	public void createFillWalletXML(long userId, long walletId,
+			String paymentMode, long orderId, Money amount) {
+			String xmlString = fillWalletXml.replaceAll("$walletId", Long.toString(walletId))
+				.replaceAll("$userId", Long.toString(userId))
+				.replaceAll("$paymentMode", paymentMode)
+				.replaceAll("$date", DateTime.now().toString())
+				.replaceAll("$orderId", Long.toString(orderId))
+				.replaceAll("$userLogin", Long.toString(userId))
+				.replaceAll("$amount", amount.toString());			
+			jdbcTemplate.update(INSERT_WALLET_FILL_XML,new Object[] {walletId,userId,paymentMode,amount.getAmount(),xmlString,DateTime.now(),0});
+			System.out.println("insertef paramets :::::" + "walletId:::" +  walletId + "  userId:::" + userId + "  paymentMode::::" + paymentMode + "  amount::::"  + amount.getAmount() + "\n/n\n/nThe XML:::::" + xmlString);
+	}
 }

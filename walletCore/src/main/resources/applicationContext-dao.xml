@@ -28,6 +28,9 @@
 		<property name="jdbcTemplate" ref="jdbcTemplate"/>
 		<property name="refundExpiryDays">
         	<value>${refund.expiry.days}</value>
+        </property>
+        <property name="fillWalletXml">
+        	<value>${fill.wallet.xml}</value>
         </property>		
 	</bean>	
 </beans>

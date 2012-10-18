@@ -222,6 +222,14 @@ public class WalletManagerImpl implements WalletManager {
 			response.setTransactionId(transaction.getTransactionId());
 			response.setStatus(FillWalletStatusEnum.SUCCESS);
 			
+			//Added just to create a fill wallet xml in the database which can be send to SAP
+			if (SubWalletType.valueOf(fillWalletRequest.getSubWallet().toString()).equals(SubWalletType.CASH)){
+				if(fillWalletRequest.getOrderId() > 0 && fillWalletRequest.getPaymentMode() != null){
+					walletService.createFillWalletXml(fillWalletRequest.getUserId(), wallet.getId(), fillWalletRequest.getPaymentMode(), fillWalletRequest.getOrderId(), amount);
+				}
+			}
+			
+			
 		} catch (PlatformException pe) {
 			logger.error("fillWallet: Exception for user id " + fillWalletRequest.getUserId(), pe);
 			response.setStatus(FillWalletStatusEnum.FAILED_TRANSACTION);
