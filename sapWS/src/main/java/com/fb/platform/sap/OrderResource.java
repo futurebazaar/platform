@@ -55,6 +55,10 @@ public class OrderResource {
 	@Autowired
 	private PlatformClientHandler sapClientHandler = null;
 	
+	public void setSapClientHandler(PlatformClientHandler sapClientHandler) {
+		this.sapClientHandler = sapClientHandler;
+	}
+	
 	//JAXBContext class is thread safe and can be shared
 	private static final JAXBContext context = initContext();
 

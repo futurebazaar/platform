@@ -30,6 +30,8 @@
     </bean>
     
 	<!-- Connector beans -->
+	<!--<bean id="sapClientConnector" class="com.fb.platform.sap.client.connector.impl.SapClientConnector">
+	</bean>--> 
     <bean id="sapClientConnector" class="com.fb.platform.sap.client.mock.MockSapClientConnector">
 	</bean> 
 
