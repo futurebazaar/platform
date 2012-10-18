@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.fb.com/platform/sap/1.0.0" xmlns:sap="http://www.fb.com/platform/sap/1.0.0">
+  
+	<xs:element name="inventoryLevelRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="sap:plant"/>
+	      		<xs:element ref="sap:material"/>
+	      		<xs:element ref="sap:storageLocation"/>
+	      	</xs:sequence>
+	    </xs:complexType>
+	</xs:element>
+  
+  	<xs:element name="inventoryLevelResponse">
+    	<xs:complexType>
+      		<xs:sequence>
+      			<xs:element ref="sap:site"/>
+		      	<xs:element ref="sap:article"/>
+		      	<xs:element ref="sap:storageLocation"/>
+		      	<xs:element ref="sap:stockQuantity"/>
+		      	<xs:element ref="sap:unit"/>
+		    </xs:sequence>
+    	</xs:complexType>
+  	</xs:element>
+  
+  	<xs:element name="inventoryDashboardRequest">
+    	<xs:complexType>
+      		<xs:sequence>
+      			<xs:element ref="sap:plant"/>
+      			<xs:element ref="sap:article"/>
+      			<xs:element ref="sap:fromDateTime"/>
+      			<xs:element ref="sap:toDateTime"/>
+      		</xs:sequence>
+    	</xs:complexType>
+  	</xs:element>
+  	
+  	<xs:element name="inventoryDashboardResponse">
+    	<xs:complexType>
+      		<xs:sequence>
+      			<xs:element maxOccurs="unbounded" ref="sap:dashboard" />
+      		</xs:sequence>
+    	</xs:complexType>
+  	</xs:element>
+      			
+    <xs:element name="dashboard">
+    	<xs:complexType>
+      		<xs:sequence>
+		      	<xs:element ref="sap:idocNumber"/>
+		      	<xs:element ref="sap:creationDateTime"/>
+		      	<xs:element ref="sap:transactionCode"/>
+		      	<xs:element ref="sap:actualQuantity"/>
+		      	<xs:element ref="sap:transferQuantity"/>
+		      	<xs:element ref="sap:article"/>
+		      	<xs:element ref="sap:segmentNumber"/>
+		      	<xs:element ref="sap:poNumber"/>
+		      	<xs:element ref="sap:unit"/>
+		      	<xs:element ref="sap:supplyingSite"/>
+		      	<xs:element ref="sap:receivingSite"/>
+		      	<xs:element ref="sap:supplyingLocation"/>
+		      	<xs:element ref="sap:receivingLocation"/>
+		      	<xs:element ref="sap:movementType"/>
+		      	<xs:element ref="sap:articleDocument"/>
+		      	<xs:element ref="sap:cancelGR"/>
+      		</xs:sequence>
+    	</xs:complexType>
+  	</xs:element>
+  	
+  	<xs:element name="awbUpdateRequest">
+    	<xs:complexType>
+      		<xs:sequence>
+      			<xs:element ref="sap:deliveryNumber"/>
+      			<xs:element ref="sap:lspCode"/>
+      			<xs:element ref="sap:awb"/>
+      		</xs:sequence>
+    	</xs:complexType>
+  	</xs:element>
+  	
+  	<xs:element name="awbUpdateResponse">
+    	<xs:complexType>
+      		<xs:sequence>
+      			<xs:element ref="sap:message"/>
+      			<xs:element ref="sap:type"/>
+      		</xs:sequence>
+    	</xs:complexType>
+  	</xs:element>
+  	
+  	<xs:element name="walletRequest">
+    	<xs:complexType>
+      		<xs:sequence>
+      			<xs:element maxOccurs="unbounded" ref="sap:walletTransaction" />
+      		</xs:sequence>
+    	</xs:complexType>
+  	</xs:element>
+  	
+  	<xs:element name="walletTransaction">
+    	<xs:complexType>
+      		<xs:sequence>
+      			<xs:element ref="sap:transactionTimestamp"/>
+      			<xs:element ref="sap:name"/>
+      			<xs:element ref="sap:orderId"/>
+      			<xs:element ref="sap:loginId"/>
+      			<xs:element ref="sap:walletNumber"/>
+      			<xs:element ref="sap:paymentMode"/>
+      			<xs:element ref="sap:amount"/>
+      			<xs:element ref="sap:transactionType"/>
+      		</xs:sequence>
+    	</xs:complexType>
+  	</xs:element>
+  	
+  	<xs:element name="fromDateTime" type="xs:dateTime"/>
+  	<xs:element name="toDateTime" type="xs:dateTime"/>
+  	<xs:element name="idocNumber" type="xs:string"/>
+	<xs:element name="creationDateTime" type="xs:dateTime"/>
+	<xs:element name="transactionCode" type="xs:string"/>
+	<xs:element name="actualQuantity" type="xs:int"/>
+	<xs:element name="transferQuantity" type="xs:string"/>
+	<xs:element name="segmentNumber" type="xs:int"/>
+	<xs:element name="poNumber" type="xs:string"/>
+	<xs:element name="supplyingSite" type="xs:int"/>
+	<xs:element name="receivingSite" type="xs:int"/>
+	<xs:element name="supplyingLocation" type="xs:int"/>
+	<xs:element name="receivingLocation" type="xs:int"/>
+	<xs:element name="movementType" type="xs:string"/>
+	<xs:element name="articleDocument" type="xs:string"/>
+	<xs:element name="cancelGR" type="xs:string"/>
+	<xs:element name="plant" type="xs:string"/>
+	<xs:element name="material" type="xs:string"/>
+	<xs:element name="storageLocation" type="xs:int"/>
+	<xs:element name="site" type="xs:string"/>
+	<xs:element name="article" type="xs:string"/>
+	<xs:element name="stockQuantity" type="xs:decimal"/>
+	<xs:element name="unit" type="xs:string"/>  
+	<xs:element name="deliveryNumber" type="xs:string"/>
+	<xs:element name="lspCode" type="xs:string"/>
+	<xs:element name="awb" type="xs:string"/>
+	<xs:element name="message" type="xs:string"/>
+	<xs:element name="name" type="xs:string"/>
+  	<xs:element name="walletNumber" type="xs:int"/>
+  	<xs:element name="paymentMode" type="xs:string"/>
+  	<xs:element name="loginId" type="xs:string"/>
+  	<xs:element name="amount" type="xs:decimal"/>
+  	<xs:element name="transactionType" type="xs:string"/>
+  	<xs:element name="transactionTimestamp" type="xs:dateTime"/>
+  	<xs:element name="orderId" type="xs:string"/>
+  	<xs:element name="type" type="xs:string"/>
+  	
+</xs:schema>

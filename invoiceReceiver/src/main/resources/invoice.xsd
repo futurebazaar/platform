@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	targetNamespace="http://www.fb.com/platform/invoice/1.0.0" xmlns:invoice="http://www.fb.com/platform/invoice/1.0.0" 
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0" elementFormDefault="qualified">
+
+	<xs:element name="invoiceTO">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="invoice:sapMomTO"/>
+				<xs:element ref="invoice:invoiceHeaderTO"/>
+				<xs:element ref="invoice:invoicePartnerHeaderTO" maxOccurs="unbounded"/>
+				<xs:element ref="invoice:invoiceDocumentRefTO" maxOccurs="unbounded"/>
+				<xs:element ref="invoice:invoiceLineItemTO"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="sapMomTO">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="invoice:idocNumber"/>
+				<xs:element ref="invoice:refUID"/>
+				<xs:element ref="invoice:idoc"/>
+				<xs:element ref="invoice:segmentNumber"/>
+				<xs:element ref="invoice:poNumber"/>
+				<xs:element ref="invoice:canGr"/>
+				<xs:element ref="invoice:ackUID"/>
+				<xs:element ref="invoice:timestamp"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="idocNumber" type="xs:string"/>
+	<xs:element name="refUID" type="xs:string"/>
+	<xs:element name="idoc" type="xs:string"/>
+	<xs:element name="poNumber" type="xs:string"/>
+	<xs:element name="canGr" type="xs:string"/>
+	<xs:element name="segmentNumber" type="xs:int"/>
+	<xs:element name="ackUID" type="xs:long"/>
+	<xs:element name="timestamp" type="xs:date"/>
+	
+	<xs:element name="invoiceDocumentRefTO">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="invoice:qualifier"/>
+				<xs:element ref="invoice:idocDocumentNumber"/>
+				<xs:element ref="invoice:idocDate"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="idocDocumentNumber" type="xs:string"/>
+	<xs:element name="qualifier" type="xs:int"/>
+	<xs:element name="idocDate" type="xs:date"/>
+	
+	<xs:element name="invoiceHeaderTO">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="invoice:currency"/>
+				<xs:element ref="invoice:localCurrency"/>
+				<xs:element ref="invoice:exchangeRate"/>
+				<xs:element ref="invoice:paymentKey"/>
+				<xs:element ref="invoice:documentType"/>
+				<xs:element ref="invoice:documentNumber"/>
+				<xs:element ref="invoice:weightUnit"/>
+				<xs:element ref="invoice:invoiceType"/>
+				<xs:element ref="invoice:receiptNum"/>
+				<xs:element ref="invoice:billingCategory"/>
+				<xs:element ref="invoice:segment"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="currency" type="xs:string"/>
+	<xs:element name="localCurrency" type="xs:string"/>
+	<xs:element name="exchangeRate" type="xs:decimal"/>
+	<xs:element name="paymentKey" type="xs:string"/>
+	<xs:element name="documentType" type="xs:string"/>
+	<xs:element name="documentNumber" type="xs:string"/>
+	<xs:element name="weightUnit" type="xs:string"/>
+	<xs:element name="invoiceType" type="xs:string"/>
+	<xs:element name="receiptNum" type="xs:int"/>
+	<xs:element name="billingCategory" type="xs:string"/>
+	<xs:element name="segment" type="xs:int"/>
+	
+	<xs:element name="invoicePartnerHeaderTO">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="invoice:partnerFunction"/>
+				<xs:element ref="invoice:customerLocVendorNum"/>
+				<xs:element ref="invoice:addressTO"/>
+				<xs:element ref="invoice:languageKey"/>
+				<xs:element ref="invoice:region"/>
+				<xs:element ref="invoice:idocUserName"/>
+				<xs:element ref="invoice:idocOrgCode"/>
+				<xs:element ref="invoice:segment"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="partnerFunction" type="xs:string"/>
+	<xs:element name="customerLocVendorNum" type="xs:string"/>
+	<xs:element name="languageKey" type="xs:string"/>
+	<xs:element name="region" type="xs:string"/>
+	<xs:element name="idocUserName" type="xs:string"/>
+	<xs:element name="idocOrgCode" type="xs:string"/>
+	
+	<xs:element name="addressTO">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="invoice:firstName"/>
+				<xs:element ref="invoice:lastName"/>
+				<xs:element ref="invoice:middleName"/>
+				<xs:element ref="invoice:address"/>
+				<xs:element ref="invoice:city"/>
+				<xs:element ref="invoice:pincode"/>
+				<xs:element ref="invoice:state"/>
+				<xs:element ref="invoice:country"/>
+				<xs:element ref="invoice:primaryTelephone"/>
+				<xs:element ref="invoice:secondaryTelephone"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="firstName" type="xs:string"/>
+	<xs:element name="lastName" type="xs:string"/>
+	<xs:element name="middleName" type="xs:string"/>
+	<xs:element name="address" type="xs:string"/>
+	<xs:element name="city" type="xs:string"/>
+	<xs:element name="pincode" type="xs:string"/>
+	<xs:element name="state" type="xs:string"/>
+	<xs:element name="country" type="xs:string"/>
+	<xs:element name="primaryTelephone" type="xs:string"/>
+	<xs:element name="secondaryTelephone" type="xs:string"/>
+	
+	<xs:element name="invoiceLineItemTO">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="invoice:itemNumber"/>
+				<xs:element ref="invoice:quantity"/>
+				<xs:element ref="invoice:unitOfMeasurement"/>
+				<xs:element ref="invoice:weightUnit"/>
+				<xs:element ref="invoice:itemCategory"/>
+				<xs:element ref="invoice:plant"/>
+				<xs:element ref="invoice:lineItemIdentificationTO" maxOccurs="unbounded"/>
+				<xs:element ref="invoice:segment"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="itemNumber" type="xs:int"/>
+	<xs:element name="quantity" type="xs:decimal"/>
+	<xs:element name="unitOfMeasurement" type="xs:string"/>
+	<xs:element name="itemCategory" type="xs:string"/>
+	<xs:element name="plant" type="xs:string"/>
+	
+	<xs:element name="lineItemIdentificationTO">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="invoice:qualifier"/>
+				<xs:element ref="invoice:materialId"/>
+				<xs:element ref="invoice:idocShortText"/>
+				<xs:element ref="invoice:segment"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="materialId" type="xs:int"/>
+	<xs:element name="idocShortText" type="xs:string"/>
+	
+	<xs:annotation>
+  	<xs:appinfo>
+    	<jaxb:globalBindings>
+	      	<jaxb:javaType name="java.util.Date" xmlType="xs:date"
+	        	parseMethod="com.fb.platform.mom.invoice.util.DateAdapter.parseDate"
+	        	printMethod="com.fb.platform.mom.invoice.util.DateAdapter.printDate"
+	        />
+   		</jaxb:globalBindings>
+  	</xs:appinfo>
+  </xs:annotation>
+</xs:schema>

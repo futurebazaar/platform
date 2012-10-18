@@ -32,6 +32,9 @@ public class LauncherBootstrap {
 		ReceiverManager itemAckManager = (ReceiverManager) appContext.getBean("itemAckManager");
 		itemAckManager.start();
 		
+		ReceiverManager invoiceManager = (ReceiverManager) appContext.getBean("invoiceManager");
+		invoiceManager.start();
+		
 	}
 
 }

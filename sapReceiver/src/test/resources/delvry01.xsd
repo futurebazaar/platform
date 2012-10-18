@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="DELVRY01">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="IDOC"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="IDOC">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="EDI_DC40"/>
+        <xs:element ref="E1EDL20"/>
+      </xs:sequence>
+      <xs:attribute name="BEGIN" use="required" type="xs:int"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="EDI_DC40">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="TABNAM"/>
+        <xs:element ref="MANDT"/>
+        <xs:element ref="DOCNUM"/>
+        <xs:element ref="DOCREL"/>
+        <xs:element ref="STATUS"/>
+        <xs:element ref="DIRECT"/>
+        <xs:element ref="OUTMOD"/>
+        <xs:element ref="IDOCTYP"/>
+        <xs:element ref="MESTYP"/>
+        <xs:element ref="SNDPOR"/>
+        <xs:element ref="SNDPRT"/>
+        <xs:element ref="SNDPRN"/>
+        <xs:element ref="RCVPOR"/>
+        <xs:element ref="RCVPRT"/>
+        <xs:element ref="RCVPFC"/>
+        <xs:element ref="RCVPRN"/>
+        <xs:element ref="CREDAT"/>
+        <xs:element ref="CRETIM"/>
+        <xs:element ref="SERIAL"/>
+      </xs:sequence>
+      <xs:attribute name="SEGMENT" use="required" type="xs:int"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="TABNAM" type="xs:string"/>
+  <xs:element name="MANDT" type="xs:int"/>
+  <xs:element name="DOCNUM" type="xs:int"/>
+  <xs:element name="DOCREL" type="xs:int"/>
+  <xs:element name="STATUS" type="xs:int"/>
+  <xs:element name="DIRECT" type="xs:int"/>
+  <xs:element name="OUTMOD" type="xs:int"/>
+  <xs:element name="IDOCTYP" type="xs:string"/>
+  <xs:element name="MESTYP" type="xs:string"/>
+  <xs:element name="SNDPOR" type="xs:string"/>
+  <xs:element name="SNDPRT" type="xs:string"/>
+  <xs:element name="SNDPRN" type="xs:string"/>
+  <xs:element name="RCVPOR" type="xs:string"/>
+  <xs:element name="RCVPRT" type="xs:string"/>
+  <xs:element name="RCVPFC" type="xs:string"/>
+  <xs:element name="RCVPRN" type="xs:string"/>
+  <xs:element name="CREDAT" type="xs:int"/>
+  <xs:element name="CRETIM" type="xs:int"/>
+  <xs:element name="SERIAL" type="xs:int"/>
+  <xs:element name="E1EDL20">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="VBELN"/>
+        <xs:element ref="VSTEL"/>
+        <xs:element ref="VKORG"/>
+        <xs:element ref="LGNUM"/>
+        <xs:element ref="VSBED"/>
+        <xs:element ref="BTGEW"/>
+        <xs:element ref="NTGEW"/>
+        <xs:element ref="VOLUM"/>
+        <xs:element ref="ANZPK"/>
+        <xs:element ref="PODAT"/>
+        <xs:element ref="POTIM"/>
+        <xs:element ref="E1EDL21"/>
+        <xs:element ref="E1EDL18"/>
+        <xs:element ref="E1EDT13"/>
+        <xs:element maxOccurs="unbounded" ref="E1EDL24"/>
+      </xs:sequence>
+      <xs:attribute name="SEGMENT" use="required" type="xs:int"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="VBELN" type="xs:string"/>
+  <xs:element name="VSTEL" type="xs:int"/>
+  <xs:element name="VKORG" type="xs:int"/>
+  <xs:element name="LGNUM" type="xs:string"/>
+  <xs:element name="VSBED" type="xs:int"/>
+  <xs:element name="BTGEW" type="xs:decimal"/>
+  <xs:element name="ANZPK" type="xs:int"/>
+  <xs:element name="PODAT" type="xs:string"/>
+  <xs:element name="POTIM" type="xs:string"/>
+  <xs:element name="E1EDL21">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="LFART"/>
+        <xs:element ref="LPRIO"/>
+        <xs:element ref="TRAGR"/>
+        <xs:element ref="E1EDL23"/>
+      </xs:sequence>
+      <xs:attribute name="SEGMENT" use="required" type="xs:int"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="LFART" type="xs:string"/>
+  <xs:element name="LPRIO" type="xs:int"/>
+  <xs:element name="E1EDL23">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="LFART_BEZ"/>
+        <xs:element ref="TRAGR_BEZ"/>
+      </xs:sequence>
+      <xs:attribute name="SEGMENT" use="required" type="xs:int"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="LFART_BEZ" type="xs:string"/>
+  <xs:element name="TRAGR_BEZ" type="xs:string"/>
+  <xs:element name="E1EDL18">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="QUALF">
+          <xs:attribute name="SEGMENT" use="required" type="xs:int"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="E1EDT13">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="QUALF">
+          <xs:sequence>
+            <xs:element ref="NTANF"/>
+            <xs:element ref="NTANZ"/>
+            <xs:element ref="NTEND"/>
+            <xs:element ref="NTENZ"/>
+            <xs:element ref="ISDD"/>
+            <xs:element ref="ISDZ"/>
+            <xs:element ref="IEDD"/>
+            <xs:element ref="IEDZ"/>
+          </xs:sequence>
+          <xs:attribute name="SEGMENT" use="required" type="xs:int"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="NTANF" type="xs:string"/>
+  <xs:element name="NTANZ" type="xs:string"/>
+  <xs:element name="NTEND" type="xs:string"/>
+  <xs:element name="NTENZ" type="xs:string"/>
+  <xs:element name="ISDD" type="xs:string"/>
+  <xs:element name="ISDZ" type="xs:string"/>
+  <xs:element name="IEDD" type="xs:string"/>
+  <xs:element name="IEDZ" type="xs:string"/>
+  <xs:element name="E1EDL24">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="POSNR"/>
+        <xs:element ref="MATNR"/>
+        <xs:element ref="MATWA"/>
+        <xs:element ref="ARKTX"/>
+        <xs:element ref="MATKL"/>
+        <xs:element ref="WERKS"/>
+        <xs:element ref="LGORT"/>
+        <xs:element ref="LFIMG"/>
+        <xs:element ref="VRKME"/>
+        <xs:element ref="LGMNG"/>
+        <xs:element ref="MEINS"/>
+        <xs:element ref="NTGEW"/>
+        <xs:element ref="BRGEW"/>
+        <xs:element ref="GEWEI"/>
+        <xs:element ref="VOLUM"/>
+        <xs:element ref="LADGR"/>
+        <xs:element ref="TRAGR"/>
+        <xs:element ref="VTWEG"/>
+        <xs:element ref="SPART"/>
+        <xs:element ref="GRKOR"/>
+        <xs:element ref="EAN11"/>
+        <xs:element ref="POSEX"/>
+        <xs:element ref="VFDAT"/>
+        <xs:element ref="E1EDL43"/>
+      </xs:sequence>
+      <xs:attribute name="SEGMENT" use="required" type="xs:int"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MATNR" type="xs:string"/>
+  <xs:element name="MATWA" type="xs:string"/>
+  <xs:element name="ARKTX" type="xs:string"/>
+  <xs:element name="MATKL" type="xs:int"/>
+  <xs:element name="WERKS" type="xs:int"/>
+  <xs:element name="LGORT" type="xs:int"/>
+  <xs:element name="LFIMG" type="xs:decimal"/>
+  <xs:element name="VRKME" type="xs:string"/>
+  <xs:element name="LGMNG" type="xs:decimal"/>
+  <xs:element name="MEINS" type="xs:string"/>
+  <xs:element name="BRGEW" type="xs:decimal"/>
+  <xs:element name="GEWEI" type="xs:string"/>
+  <xs:element name="LADGR" type="xs:int"/>
+  <xs:element name="VTWEG" type="xs:int"/>
+  <xs:element name="SPART" type="xs:int"/>
+  <xs:element name="GRKOR" type="xs:int"/>
+  <xs:element name="EAN11" type="xs:string"/>
+  <xs:element name="POSEX" type="xs:int"/>
+  <xs:element name="VFDAT" type="xs:string"/>
+  <xs:element name="E1EDL43">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="QUALF">
+          <xs:sequence>
+            <xs:element ref="BELNR"/>
+            <xs:element ref="POSNR"/>
+            <xs:element ref="DATUM"/>
+          </xs:sequence>
+          <xs:attribute name="SEGMENT" use="required" type="xs:int"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="BELNR" type="xs:string"/>
+  <xs:element name="DATUM" type="xs:int"/>
+  <xs:element name="NTGEW" type="xs:decimal"/>
+  <xs:element name="VOLUM" type="xs:decimal"/>
+  <xs:element name="TRAGR" type="xs:int"/>
+  <xs:complexType name="QUALF">
+    <xs:sequence>
+      <xs:element ref="QUALF"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="QUALF" type="xs:string"/>
+  <xs:element name="POSNR" type="xs:int"/>
+</xs:schema>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.fb.com/platform/sap/1.0.0" xmlns:sap="http://www.fb.com/platform/sap/1.0.0">
+  
+  <xs:element name="orderXmlRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="sap:orderType"/>
+        <xs:element ref="sap:orderHeader"/>
+        <xs:element ref="sap:paymentHeader"/>
+        <xs:element ref="sap:shippingAddress"/>
+        <xs:element ref="sap:billingAddress"/>
+        <xs:element ref="sap:lineItems"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element type="xs:string" name="orderType"/>
+  
+  <xs:element name="orderHeader">
+  	<xs:complexType>
+      <xs:sequence>
+        <xs:element type="xs:string" name="referenceOrderId"/>
+	    <xs:element type="xs:string" name="creationDate"/>
+	    <xs:element type="xs:string" name="accountNumber"/>
+	    <xs:element type="xs:string" name="salesDocType"/>
+	    <xs:element type="xs:string" name="currency"/>
+	    <xs:element type="xs:decimal" name="discount"/>
+	    <xs:element type="xs:decimal" name="offerPrice"/>
+	    <xs:element type="xs:decimal" name="payableAmount"/>
+	    <xs:element type="xs:string" name="client"/>
+	    <xs:element type="xs:string" name="channel"/>
+	    <xs:element type="xs:string" name="loyaltyCardNumber"/>
+	    <xs:element type="xs:decimal" name="pointsEarn"/>
+	    <xs:element type="xs:decimal" name="pointsEarnValue"/>
+	    <xs:element type="xs:decimal" name="pointsBurn"/>
+	    <xs:element type="xs:decimal" name="pointsBurnValue"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+        
+  <xs:element name="paymentHeader">
+    <xs:complexType>
+      <xs:sequence>
+      	<xs:element maxOccurs="unbounded" ref="sap:paymentAttempt"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="paymentAttempt">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element type="xs:string" name="paymentMode"/>
+        <xs:element type="xs:string" name="gateway"/>
+        <xs:element type="xs:decimal" name="amount"/>
+        <xs:element type="xs:string" name="paymentTime"/>
+        <xs:element type="xs:string" name="merchantId"/>
+        <xs:element type="xs:string" name="transactionReferenceId"/>
+        <xs:element type="xs:string" name="pgTransactionReferenceId"/>
+        <xs:element type="xs:string" name="currency"/>
+        <xs:element type="xs:string" name="RRN"/>
+        <xs:element type="xs:string" name="bank"/>
+        <xs:element type="xs:string" name="authCode"/>
+        <xs:element type="xs:string" name="instrumentNumber"/>
+        <xs:element type="xs:string" name="validDate"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="shippingAddress">
+  	<xs:complexType>
+      <xs:sequence>
+	  	<xs:element type="xs:string" name="firstName"/>
+	    <xs:element type="xs:string" name="middleName"/>
+	    <xs:element type="xs:string" name="lastName"/>
+	    <xs:element type="xs:string" name="address1"/>
+	    <xs:element type="xs:string" name="Address2"/>
+	    <xs:element type="xs:string" name="city"/>
+	    <xs:element type="xs:string" name="state"/>
+	    <xs:element type="xs:string" name="country"/>
+	    <xs:element type="xs:string" name="pincode"/>
+	    <xs:element type="xs:string" name="telephone1"/>
+	    <xs:element type="xs:string" name="telephone2"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="billingAddress">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element type="xs:string" name="firstName"/>
+        <xs:element type="xs:string" name="middleName"/>
+        <xs:element type="xs:string" name="lastName"/>
+        <xs:element type="xs:string" name="address1"/>
+        <xs:element type="xs:string" name="address2"/>
+        <xs:element type="xs:string" name="city"/>
+        <xs:element type="xs:string" name="state"/>
+        <xs:element type="xs:string" name="country"/>
+        <xs:element type="xs:string" name="pincode"/>
+        <xs:element type="xs:string" name="telephone1"/>
+        <xs:element type="xs:string" name="telephone2"/>
+      </xs:sequence>
+   	</xs:complexType>
+  </xs:element>
+  
+  <xs:element name="lineItems">
+  	<xs:complexType>
+      <xs:sequence>
+      	<xs:element maxOccurs="unbounded" ref="sap:item"/>
+      </xs:sequence>
+   	</xs:complexType>
+  </xs:element>
+  
+  <xs:element name="item">
+  	<xs:complexType>
+      <xs:sequence>
+      	<xs:element type="xs:int" name="sapDocumentId"/>
+	    <xs:element type="xs:string" name="articleId"/>
+        <xs:element type="xs:string" name="itemDescription"/>
+        <xs:element type="xs:decimal" name="quantity"/>
+        <xs:element type="xs:string" name="requiredDeliveryDate"/>
+        <xs:element type="xs:string" name="salesUnit"/>
+        <xs:element type="xs:string" name="itemCategory"/>
+        <xs:element type="xs:string" name="vendor"/>
+        <xs:element type="xs:decimal" name="listPrice"/>
+        <xs:element type="xs:decimal" name="offerPrice"/>
+        <xs:element type="xs:decimal" name="amount"/>
+        <xs:element type="xs:decimal" name="discount"/>
+        <xs:element type="xs:decimal" name="couponDiscount"/>
+        <xs:element type="xs:decimal" name="nlc"/>
+        <xs:element type="xs:string" name="plant"/>
+        <xs:element type="xs:string" name="shippingMode"/>
+        <xs:element type="xs:string" name="lspCode"/>
+        <xs:element type="xs:decimal" name="shippingCharge"/>
+        <xs:element type="xs:string" name="reasonCode"/>
+        <xs:element type="xs:string" name="operation"/>
+        <xs:element type="xs:string" name="warrantyCategory"/>
+        <xs:element type="xs:string" name="GV"/>
+        <xs:element type="xs:decimal" name="warrantyPrice"/>
+        <xs:element ref="sap:shippingAddress"/>
+      </xs:sequence>
+   	</xs:complexType>
+  </xs:element>
+  
+  <xs:element name="sapOrderResponse">
+	<xs:complexType>
+	  <xs:sequence>
+	 	<xs:element type="xs:string" name="orderId"/>
+	 	<xs:element type="xs:string" name="returnOrderId"/>
+	  	<xs:element type="xs:string" name="message"/>
+	  	<xs:element type="xs:string" name="status"/>
+	  	<xs:element type="xs:string" name="type"/>
+      </xs:sequence>
+	</xs:complexType>
+  </xs:element>
+  
+</xs:schema>

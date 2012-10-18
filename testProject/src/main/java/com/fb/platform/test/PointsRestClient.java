@@ -30,7 +30,6 @@ import com.fb.platform.payback._1_0.PointsResponse;
 import com.fb.platform.payback._1_0.RollbackPointsRequest;
 import com.fb.platform.payback._1_0.RollbackPointsResponse;
 
-
 public class PointsRestClient {
 
 	private static String API_URL = "http://localhost:8080/";

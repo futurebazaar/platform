@@ -12,6 +12,7 @@ import com.fb.platform.promotion.admin.to.SearchCouponOrderBy;
 import com.fb.platform.promotion.admin.to.SearchCouponResultBO;
 import com.fb.platform.promotion.admin.to.SearchPromotionOrderBy;
 import com.fb.platform.promotion.admin.to.SortOrder;
+import com.fb.platform.promotion.model.GlobalPromotionUses;
 import com.fb.platform.promotion.model.coupon.CouponLimitsConfig;
 import com.fb.platform.promotion.model.coupon.CouponType;
 import com.fb.platform.promotion.model.scratchCard.ScratchCard;
@@ -83,6 +84,7 @@ public interface PromotionAdminService {
 	 */
 	@Transactional(propagation=Propagation.REQUIRED)
 	public void updatePromotion(PromotionTO promotionTO);
+	
 
 	/**
 	 * Create new coupons and stores them in the database. 
@@ -117,4 +119,8 @@ public interface PromotionAdminService {
 	public CouponTO viewCoupons(int couponId);
 	
 	public void renamePromotionName();
+	
+	@Transactional(propagation=Propagation.REQUIRED)
+	public GlobalPromotionUses getPromotionPerformance(int getpromotionId);
+
 }

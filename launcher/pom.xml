@@ -48,6 +48,11 @@
 			<artifactId>itemAckReceiver</artifactId>
 			<version>${platform.version}</version>
 	  	</dependency>
+	  	<dependency>
+	  		<groupId>com.fb</groupId>
+			<artifactId>invoiceReceiver</artifactId>
+			<version>${platform.version}</version>
+	  	</dependency>
 	</dependencies>
 	<build>
 		<defaultGoal>install</defaultGoal>

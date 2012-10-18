@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="INVOIC01">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="IDOC"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="IDOC">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="EDI_DC40"/>
+        <xs:element ref="E1EDK01"/>
+        <xs:element maxOccurs="unbounded" ref="E1EDKA1"/>
+        <xs:element maxOccurs="unbounded" ref="E1EDK02"/>
+        <xs:element ref="E1EDK14"/>
+        <xs:element ref="E1EDP01"/>
+      </xs:sequence>
+      <xs:attribute name="BEGIN" use="required" type="xs:int"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="EDI_DC40">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="TABNAM"/>
+        <xs:element ref="MANDT"/>
+        <xs:element ref="DOCNUM"/>
+        <xs:element ref="DOCREL"/>
+        <xs:element ref="STATUS"/>
+        <xs:element ref="DIRECT"/>
+        <xs:element ref="OUTMOD"/>
+        <xs:element ref="IDOCTYP"/>
+        <xs:element ref="MESTYP"/>
+        <xs:element ref="SNDPOR"/>
+        <xs:element ref="SNDPRT"/>
+        <xs:element ref="SNDPRN"/>
+        <xs:element ref="RCVPOR"/>
+        <xs:element ref="RCVPRT"/>
+        <xs:element ref="RCVPFC"/>
+        <xs:element ref="RCVPRN"/>
+        <xs:element ref="CREDAT"/>
+        <xs:element ref="CRETIM"/>
+        <xs:element ref="SERIAL"/>
+      </xs:sequence>
+      <xs:attribute name="SEGMENT" use="required" type="xs:int"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="TABNAM" type="xs:string"/>
+  <xs:element name="MANDT" type="xs:int"/>
+  <xs:element name="DOCNUM" type="xs:string"/>
+  <xs:element name="DOCREL" type="xs:int"/>
+  <xs:element name="STATUS" type="xs:int"/>
+  <xs:element name="DIRECT" type="xs:int"/>
+  <xs:element name="OUTMOD" type="xs:int"/>
+  <xs:element name="IDOCTYP" type="xs:string"/>
+  <xs:element name="MESTYP" type="xs:string"/>
+  <xs:element name="SNDPOR" type="xs:string"/>
+  <xs:element name="SNDPRT" type="xs:string"/>
+  <xs:element name="SNDPRN" type="xs:string"/>
+  <xs:element name="RCVPOR" type="xs:string"/>
+  <xs:element name="RCVPRT" type="xs:string"/>
+  <xs:element name="RCVPFC" type="xs:string"/>
+  <xs:element name="RCVPRN" type="xs:string"/>
+  <xs:element name="CREDAT" type="xs:int"/>
+  <xs:element name="CRETIM" type="xs:int"/>
+  <xs:element name="SERIAL" type="xs:int"/>
+  <xs:element name="E1EDK01">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CURCY"/>
+        <xs:element ref="HWAER"/>
+        <xs:element ref="WKURS"/>
+        <xs:element ref="ZTERM"/>
+        <xs:element ref="BSART"/>
+        <xs:element ref="BELNR"/>
+        <xs:element ref="GEWEI"/>
+        <xs:element ref="FKART_RL"/>
+        <xs:element ref="RECIPNT_NO"/>
+        <xs:element ref="FKTYP"/>
+      </xs:sequence>
+      <xs:attribute name="SEGMENT" use="required" type="xs:int"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CURCY" type="xs:string"/>
+  <xs:element name="HWAER" type="xs:string"/>
+  <xs:element name="WKURS" type="xs:decimal"/>
+  <xs:element name="ZTERM" type="xs:string"/>
+  <xs:element name="BSART" type="xs:string"/>
+  <xs:element name="FKART_RL" type="xs:string"/>
+  <xs:element name="RECIPNT_NO" type="xs:int"/>
+  <xs:element name="FKTYP" type="xs:string"/>
+  <xs:element name="E1EDKA1">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="PARVW"/>
+        <xs:choice>
+          <xs:element ref="LIFNR"/>
+          <xs:element ref="PARTN"/>
+        </xs:choice>
+        <xs:element ref="NAME1"/>
+        <xs:choice>
+          <xs:element ref="STRAS"/>
+          <xs:element ref="STRS2"/>
+        </xs:choice>
+        <xs:element ref="ORT01"/>
+        <xs:element ref="PSTLZ"/>
+        <xs:element ref="LAND1"/>
+        <xs:sequence minOccurs="0">
+          <xs:element ref="TELF1"/>
+          <xs:element ref="TELFX"/>
+          <xs:element ref="SPRAS"/>
+        </xs:sequence>
+        <xs:element ref="REGIO"/>
+        <xs:sequence minOccurs="0">
+          <xs:element ref="BNAME"/>
+          <xs:element ref="PAORG"/>
+        </xs:sequence>
+      </xs:sequence>
+      <xs:attribute name="SEGMENT" use="required" type="xs:int"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PARVW" type="xs:string"/>
+  <xs:element name="LIFNR" type="xs:string"/>
+  <xs:element name="PARTN" type="xs:string"/>
+  <xs:element name="NAME1" type="xs:string"/>
+  <xs:element name="STRAS" type="xs:string"/>
+  <xs:element name="STRS2" type="xs:string"/>
+  <xs:element name="ORT01" type="xs:string"/>
+  <xs:element name="PSTLZ" type="xs:string"/>
+  <xs:element name="LAND1" type="xs:string"/>
+  <xs:element name="TELF1" type="xs:string"/>
+  <xs:element name="TELFX" type="xs:string"/>
+  <xs:element name="SPRAS" type="xs:string"/>
+  <xs:element name="REGIO" type="xs:int"/>
+  <xs:element name="BNAME" type="xs:string"/>
+  <xs:element name="PAORG" type="xs:string"/>
+  <xs:element name="E1EDK02">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="QUALF"/>
+        <xs:element ref="BELNR"/>
+        <xs:element ref="DATUM"/>
+      </xs:sequence>
+      <xs:attribute name="SEGMENT" use="required" type="xs:int"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DATUM" type="xs:string"/>
+  <xs:element name="E1EDK14">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="QUALF"/>
+        <xs:element ref="ORGID"/>
+      </xs:sequence>
+      <xs:attribute name="SEGMENT" use="required" type="xs:int"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ORGID" type="xs:string"/>
+  <xs:element name="E1EDP01">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="POSEX"/>
+        <xs:element ref="MENGE"/>
+        <xs:element ref="MENEE"/>
+        <xs:element ref="GEWEI"/>
+        <xs:element ref="PSTYV"/>
+        <xs:element ref="WERKS"/>
+        <xs:element ref="E1EDP19" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="SEGMENT" use="required" type="xs:int"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="POSEX" type="xs:int"/>
+  <xs:element name="MENGE" type="xs:decimal"/>
+  <xs:element name="MENEE" type="xs:string"/>
+  <xs:element name="PSTYV" type="xs:string"/>
+  <xs:element name="WERKS" type="xs:string"/>
+  <xs:element name="E1EDP19">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="QUALF"/>
+        <xs:element ref="IDTNR"/>
+        <xs:element ref="KTEXT"/>
+      </xs:sequence>
+      <xs:attribute name="SEGMENT" use="required" type="xs:int"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="IDTNR" type="xs:int"/>
+  <xs:element name="KTEXT" type="xs:string"/>
+  <xs:element name="BELNR" type="xs:string"/>
+  <xs:element name="GEWEI" type="xs:string"/>
+  <xs:element name="QUALF" type="xs:int"/>
+</xs:schema>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.fb.com/platform/sap/1.0.0" xmlns:sap="http://www.fb.com/platform/sap/1.0.0">
+
+  <xs:element name="returnOrderRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="sap:returnOrderItems"/>
+        <xs:element ref="sap:returnHeader"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="returnOrderItems">
+  	<xs:complexType>
+      <xs:sequence>
+      	<xs:element maxOccurs="unbounded" ref="sap:returnItem"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="returnItem">
+  	<xs:complexType>
+      <xs:sequence>
+        <xs:element type="xs:decimal" name="quantityToReturn"/>
+        <xs:element type="xs:int" name="sapItemId"/>
+        <xs:element type="xs:int" name="storageLocation"/>
+        <xs:element type="xs:decimal" name="shippingCharge"/>
+        <xs:element type="xs:decimal" name="itemDiscount"/>
+        <xs:element type="xs:decimal" name="couponDiscount"/>
+        <xs:element type="xs:string" name="plant"/>
+        <xs:element type="xs:string" name="returnReason"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+        
+  <xs:element name="returnHeader">
+  	<xs:complexType>
+      <xs:sequence>
+	    <xs:element type="xs:string" name="originalOrderId"/>
+	    <xs:element type="xs:string" name="returnOrderId"/>
+	    <xs:element type="xs:string" name="loyaltyCardNumber"/>
+	    <xs:element type="xs:decimal" name="pointsEarn"/>
+	    <xs:element type="xs:decimal" name="pointsBurn"/>
+	    <xs:element type="xs:decimal" name="pointsEarnValue"/>
+	    <xs:element type="xs:decimal" name="pointsBurnValue"/>
+	  </xs:sequence>
+	</xs:complexType>
+  </xs:element>
+  
+</xs:schema>

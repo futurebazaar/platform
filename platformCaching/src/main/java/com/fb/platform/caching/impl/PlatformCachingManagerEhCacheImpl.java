@@ -5,17 +5,15 @@ package com.fb.platform.caching.impl;
 
 import java.io.InputStream;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 
-import com.fb.platform.caching.NamedCachesEnum;
-import com.fb.platform.caching.PlatformCachingManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import com.fb.platform.caching.NamedCachesEnum;
+import com.fb.platform.caching.PlatformCachingManager;
 
 /**
  * @author vinayak

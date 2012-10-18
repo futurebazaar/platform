@@ -44,5 +44,4 @@ public class InventoryManagerImpl implements ReceiverManager, InventoryManager {
 	public void setInventoryMessageReceiver(InventoryMessageReceiver inventoryMessageReceiver) {
 		this.inventoryMessageReceiver = inventoryMessageReceiver;
 	}
-
 }
