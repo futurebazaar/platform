@@ -56,57 +56,49 @@
                     <goal>shade</goal>
                   </goals>
                   <configuration>
-                    <transformers>
-                      <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                      <transformers>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                             <mainClass>com.fb.platform.scheduler.launcher.SchedulerBootstrap</mainClass>
-                      </transformer>
+                        </transformer>
 
-                      <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                        <resource>META-INF/spring.handlers</resource>
-                      </transformer>
-                      <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                        <resource>META-INF/spring.schemas</resource>
-                      </transformer>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                            <resource>META-INF/spring.handlers</resource>
+                        </transformer>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                            <resource>META-INF/spring.schemas</resource>
+                        </transformer>
                       
                     </transformers>
                   </configuration>
                 </execution>
               </executions>
             </plugin>
-<!--
-			<plugin>
-            	<artifactId>maven-assembly-plugin</artifactId>
-            	<version>2.3</version>
-            	<configuration>
-                	<archive>
-                    	<manifest>
-                            <mainClass>com.fb.platform.scheduler.launcher.PlatformScheduler</mainClass>
-                            <addClasspath>true</addClasspath>
-                    	</manifest>
-                	</archive>
-                	<descriptorRefs>
-                    	<descriptorRef>jar-with-dependencies</descriptorRef>
-                	</descriptorRefs>
-            	</configuration>
-         	</plugin>
--->
-            <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                    <executions>
-                        <execution>
-                            <phase>install</phase>
-                            <goals>
-                                <goal>copy-dependencies</goal>
-                                <goal>build-classpath</goal>
-                            </goals>
-                            <configuration>
-                                <outputDirectory>${project.build.directory}/dependency</outputDirectory>
-                                <useRepositoryLayout>true</useRepositoryLayout>
-                                <outputFile>${project.build.directory}/cp.txt</outputFile>
-                            </configuration>
-                        </execution>
-                    </executions>
-            </plugin>
+           <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                <execution>
+                <id>copy-resources</id>
+                <!-- here the phase you need -->
+                <phase>validate</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${basedir}/target/dependency</outputDirectory>
+                  <resources>          
+                    <resource>
+                        <directory>${basedir}</directory>
+                        <includes>
+                            <include>*.properties</include>
+                        </includes>
+                      <filtering>true</filtering>
+                    </resource>
+                  </resources>              
+                </configuration>            
+              </execution>
+            </executions>
+          </plugin> 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>dbunit-maven-plugin</artifactId>
