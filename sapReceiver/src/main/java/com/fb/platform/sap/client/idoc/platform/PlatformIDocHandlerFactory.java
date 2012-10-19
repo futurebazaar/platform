@@ -8,6 +8,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.platform.mom.manager.MomManager;
+import com.fb.platform.sap.client.idoc.platform.bigBazaar.delivery.DeliveryIdocHandler;
 import com.fb.platform.sap.client.idoc.platform.bigBazaar.invoice.InvoiceIdocHandler;
 import com.fb.platform.sap.client.idoc.platform.deliveryDelete.impl.DeliveryDeleteIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.impl.DefaultIDocHandler;
@@ -33,6 +34,8 @@ public class PlatformIDocHandlerFactory {
 	private ItemAckIDocHandler orderIDocHandler = null;
 	
 	private InvoiceIdocHandler invoiceIDocHandler = null;
+	
+	private DeliveryIdocHandler deliveryIDocHandler = null;
 
 	private DefaultIDocHandler defaultIDocHandler = null;
 
@@ -56,6 +59,9 @@ public class PlatformIDocHandlerFactory {
 		
 		invoiceIDocHandler = new InvoiceIdocHandler();
 		invoiceIDocHandler.init(momManager, ackUIDSequenceGenerator);
+		
+		deliveryIDocHandler = new DeliveryIdocHandler();
+		deliveryIDocHandler.init(momManager, ackUIDSequenceGenerator);
 
 		defaultIDocHandler = new DefaultIDocHandler();
 		defaultIDocHandler.init(momManager, ackUIDSequenceGenerator);
@@ -74,6 +80,8 @@ public class PlatformIDocHandlerFactory {
 			return orderIDocHandler;
 		} else if (idocType.equals(InvoiceIdocHandler.INVOICE_IDOC_TYPE)) {
 			return invoiceIDocHandler;
+		} else if (idocType.equals(DeliveryIdocHandler.DELIVERY_IDOC_TYPE)) {
+			return deliveryIDocHandler;
 		}
 		logger.error("No Handler is configured for idocType : " + idocType + ", returning default handler.");
 		return defaultIDocHandler;

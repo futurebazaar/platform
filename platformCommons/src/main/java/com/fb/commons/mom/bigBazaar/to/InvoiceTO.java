@@ -26,6 +26,7 @@ public class InvoiceTO implements Serializable {
 	private List<InvoicePartnerHeaderTO> invoicePartnerHeader = null;
 	private List<InvoiceDocumentRefTO> invoiceDocRef = null;
 	private InvoiceLineItemTO invoiceLineItem = null;
+	private InvoiceTypeEnum invoiceType;
 	
 	public SapMomTO getSapIdoc() {
 		return sapIdoc;
@@ -57,6 +58,12 @@ public class InvoiceTO implements Serializable {
 	public void setInvoiceLineItem(InvoiceLineItemTO invoiceLineItem) {
 		this.invoiceLineItem = invoiceLineItem;
 	}
+	public InvoiceTypeEnum getInvoiceType() {
+		return invoiceType;
+	}
+	public void setInvoiceType(InvoiceTypeEnum invoiceType) {
+		this.invoiceType = invoiceType;
+	}
 	
 	@Override
 	public String toString() {
@@ -66,6 +73,7 @@ public class InvoiceTO implements Serializable {
 			.append("invoicePartnerHeader", this.invoicePartnerHeader)
 			.append("invoiceDocRef", this.invoiceDocRef)
 			.append("invoiceLineItemTO", this.invoiceLineItem)
+			.append("invoiceType", this.invoiceType)
 			.toString();
 	}
 	

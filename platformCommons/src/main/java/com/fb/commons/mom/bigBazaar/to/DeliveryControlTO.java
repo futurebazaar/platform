@@ -21,6 +21,19 @@ public class DeliveryControlTO implements Serializable {
 	private String qualifier;
 	private int segment;
 	
+	public String getQualifier() {
+		return qualifier;
+	}
+	public void setQualifier(String qualifier) {
+		this.qualifier = qualifier;
+	}
+	public int getSegment() {
+		return segment;
+	}
+	public void setSegment(int segment) {
+		this.segment = segment;
+	}
+
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this)
@@ -28,5 +41,4 @@ public class DeliveryControlTO implements Serializable {
 			.append("segment", this.segment)
 			.toString();
 	}
-
 }

@@ -26,6 +26,7 @@ import com.fb.commons.mom.bigBazaar.to.InvoiceLineItemIdentificationTO;
 import com.fb.commons.mom.bigBazaar.to.InvoiceLineItemTO;
 import com.fb.commons.mom.bigBazaar.to.InvoicePartnerHeaderTO;
 import com.fb.commons.mom.bigBazaar.to.InvoiceTO;
+import com.fb.commons.mom.bigBazaar.to.InvoiceTypeEnum;
 import com.fb.commons.mom.to.AddressTO;
 import com.fb.commons.mom.to.CorruptMessageCause;
 import com.fb.commons.mom.to.CorruptMessageTO;
@@ -98,6 +99,7 @@ public class InvoiceIdocHandler implements PlatformIDocHandler {
 			sapIdoc.setIdoc(idocXml);
 			sapIdoc.setIdocNumber(invoiceIdoc.getIDOC().getEDIDC40().getDOCNUM());
 			
+			apiInvoice.setInvoiceType(InvoiceTypeEnum.getInstance(invoiceIdoc.getIDOC().getE1EDK14().getORGID()));
 			apiInvoice.setSapIdoc(sapIdoc);
 			apiInvoice.setInvoicePartnerHeader(getApiInvoicePartnerHeader(invoiceIdoc.getIDOC().getE1EDKA1()));
 			apiInvoice.setInvoiceHeader(getInvoiceHeader(invoiceIdoc.getIDOC().getE1EDK01()));
