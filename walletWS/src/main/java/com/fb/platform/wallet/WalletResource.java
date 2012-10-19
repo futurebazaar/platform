@@ -253,6 +253,8 @@ public class WalletResource {
 			apiFillWalletReq.setAmount(xmlFillWalletReq.getAmount());
 			apiFillWalletReq.setSubWallet(SubWalletEnum.valueOf(xmlFillWalletReq.getSubWallet().value()));
 			apiFillWalletReq.setPaymentId(xmlFillWalletReq.getPaymentId());
+			apiFillWalletReq.setPaymentMode(xmlFillWalletReq.getPaymentMode());
+			apiFillWalletReq.setOrderId(xmlFillWalletReq.getOrderId());
 			apiFillWalletReq.setRefundId(xmlFillWalletReq.getRefundId());
 			apiFillWalletReq.setGiftCode(xmlFillWalletReq.getGiftCode());
 			apiFillWalletReq.setExpiryDate(xmlFillWalletReq.getExpiryDate());

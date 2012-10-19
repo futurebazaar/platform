@@ -162,5 +162,14 @@ public interface WalletService {
 	 * @throws PlatformException When an unrecoverable error happens.
 	**/
 	public void resetWalletPassword(long userId, long clientId) throws WalletNotFoundException ,WalletInActiveException,PlatformException;;
+	/**
+	 * Create fill wallet xml to be send to SAP
+	 * @param userId : User Id of the for whom to debit the wallet.
+	 * @param walletId : Wallet Id for the user
+	 * @param paymentMode : Payment used for filling the wallet
+	 * @param orderId : order id of the order made to fill the wallet
+	 * @param amount : total money filled in the wallet
+	**/
+	public void createFillWalletXml(long userId,long walletId,String paymentMode,long orderId,Money amount);
 	
 }

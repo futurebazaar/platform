@@ -409,4 +409,10 @@ public class WalletServiceImpl implements WalletService {
 			throw new PlatformException("The password could not be reset at this time");
 		}		
 	}
+
+	@Override
+	public void createFillWalletXml(long userId, long walletId,
+			String paymentMode, long orderId, Money amount) {
+		walletTransactionDao.createFillWalletXML(userId, walletId, paymentMode, orderId, amount);		
+	}
 }

@@ -12,6 +12,8 @@ public class FillWalletRequest {
 	private SubWalletEnum subwallet;
 	private long paymentId;
 	private long refundId;
+	private long orderId;
+	private String paymentMode;
 	private String giftCode;
 	private DateTime expiryDate;
 	private boolean isEgv;
@@ -94,5 +96,22 @@ public class FillWalletRequest {
 	public void setIsEgv(boolean isEgv){
 		this.isEgv = isEgv;
 	}
+
+	public long getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(long orderId) {
+		this.orderId = orderId;
+	}
+
+	public String getPaymentMode() {
+		return paymentMode;
+	}
+
+	public void setPaymentMode(String paymentMode) {
+		this.paymentMode = paymentMode;
+	}
+	
 
 }

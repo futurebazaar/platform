@@ -231,7 +231,12 @@ public class WalletManagerImpl implements WalletManager {
 			response.setWalletId(transaction.getWallet().getId());
 			response.setTransactionId(transaction.getTransactionId());
 			response.setStatus(FillWalletStatusEnum.SUCCESS);
-			
+			//Added just to create a fill wallet xml in the database which can be send to SAP
+			if (SubWalletType.valueOf(fillWalletRequest.getSubWallet().toString()).equals(SubWalletType.CASH)){
+				if(fillWalletRequest.getOrderId() > 0 && fillWalletRequest.getPaymentMode() != null){
+					walletService.createFillWalletXml(fillWalletRequest.getUserId(), wallet.getId(), fillWalletRequest.getPaymentMode(), fillWalletRequest.getOrderId(), amount);
+				}
+			}
 		} catch (WalletInActiveException e) {
 			logger.info("fillWallet: inactive wallet " + fillWalletRequest.getUserId());
 			response.setStatus(FillWalletStatusEnum.INACTIVE_WALLET);
