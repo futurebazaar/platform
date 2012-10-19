@@ -24,10 +24,10 @@
     <!--<jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jdbc/colada"/>-->
 
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-        <property name="url" value="jdbc:mysql://localhost/platform"/>
-        <property name="username" value="root"/>
-        <property name="password" value="root"/>
+        <property name="driverClassName" value="${scheduler.jdbc.driverClassName}"/>
+        <property name="url" value="${scheduler.jdbc.url}"/>
+        <property name="username" value="${scheduler.jdbc.username}"/>
+        <property name="password" value="${scheduler.jdbc.password}"/>
         <property name="maxActive" value="100"/>
         <property name="maxIdle" value="30"/>
         <property name="maxWait" value="1000"/>

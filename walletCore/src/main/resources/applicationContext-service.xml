@@ -28,7 +28,7 @@
     
     
     <!-- Add new utility bean here -->
-    <bean id="walletPasswordSender" class="com.fb.platform.wallet.util.GenerateSendWalletPassword">
+    <bean id="walletPasswordSender" class="com.fb.platform.wallet.util.GenerateSendWalletPasswordImpl">
     	<property name="userAdminService" ref="userAdminService"></property>
 		<property name="mailSender" ref="mailSender"></property>
         <property name="smsSender" ref="smsSender"></property>

@@ -25,7 +25,6 @@ import com.fb.platform.wallet.service.exception.WalletCreationError;
 import com.fb.platform.wallet.service.exception.WalletNotFoundException;
 import com.fb.platform.wallet.util.Encrypt;
 import com.fb.platform.wallet.util.GenerateSendWalletPassword;
-import com.sun.org.apache.regexp.internal.RE;
 
 public class WalletDaoImpl implements WalletDao {
 	
@@ -102,7 +101,7 @@ public class WalletDaoImpl implements WalletDao {
 			long walletId = createNewWallet(passwordEncrypted);
 			if (walletId > 0){
 				jdbcTemplate.update(CREATE_USER_CLIENT_WALLET, new Object[]{userId,clientId,walletId});
-			    walletPasswordSender.sendWalletPassword(userId,randomPassword,false);
+				walletPasswordSender.sendWalletPassword(userId,randomPassword,false);
 			}else{
 				return load(userId, clientId, false);
 			}

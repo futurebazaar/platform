@@ -14,6 +14,7 @@ import com.sap.conn.idoc.IDocParseException;
 import com.sap.conn.idoc.IDocRepository;
 import com.sap.conn.idoc.IDocXMLProcessor;
 import com.sap.conn.idoc.jco.JCoIDoc;
+import com.sap.conn.jco.JCoContext;
 import com.sap.conn.jco.JCoDestination;
 import com.sap.conn.jco.JCoDestinationManager;
 import com.sap.conn.jco.JCoException;
@@ -72,6 +73,7 @@ public class SapClientConnector implements PlatformClientConnector {
     @Override
     public void sendIdoc(String xml) throws JCoException, IOException, IDocParseException{  
     	JCoDestination destination = connectSap();  
+    	JCoContext.begin(destination);
         IDocRepository iDocRepository = JCoIDoc.getIDocRepository(destination);
         String transactionID = destination.createTID();
         IDocFactory iDocFactory = JCoIDoc.getIDocFactory();
@@ -79,6 +81,7 @@ public class SapClientConnector implements PlatformClientConnector {
         IDocDocumentList iDocDocumentList = iDocXMLProcessor.parse(iDocRepository, xml);
         JCoIDoc.send(iDocDocumentList, IDocFactory.IDOC_VERSION_3, destination, transactionID);
         destination.confirmTID(transactionID);
+        JCoContext.end(destination);
     }
     
 }

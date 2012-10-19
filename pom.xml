@@ -441,6 +441,7 @@
 	    <module>sapWS</module>
 	    <module>platformScheduler</module>
     	<module>promotionWS</module>
+	    <module>testProject</module>
     </modules>
 
     <reporting>
