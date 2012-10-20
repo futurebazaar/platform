@@ -71,7 +71,7 @@ public class OrderSchedulerServiceImpl implements OrderSchedulerService {
 			message = sapMessage;
 		}
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("orderId", String.valueOf(orderXmlTO.getOrderId()));
+		map.put("orderId", String.valueOf(orderXmlTO.getReferenceOrderId()));
 		map.put("orderState", status);
 		map.put("orderDesc", message);
 		map.put("header", getHeader(orderXmlTO.getType()));
