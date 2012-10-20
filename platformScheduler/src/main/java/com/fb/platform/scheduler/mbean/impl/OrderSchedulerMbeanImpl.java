@@ -28,7 +28,7 @@ public class OrderSchedulerMbeanImpl implements PlatformSchedulerMbean, Notifica
 	private OrderSchedulerService orderSchedulerService;
 	private ScheduledThreadPoolExecutor scheduledThreadPoolExecutor;
 	
-	private static final long ORDER_SCHEDULER_DELAY = 1000;
+	private static final long ORDER_SCHEDULER_DELAY = 30000;
 	private long sequenceNumber = 1;
 
 	public void setOrderSchedulerService(OrderSchedulerService orderSchedulerService) {

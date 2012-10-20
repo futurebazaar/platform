@@ -121,7 +121,7 @@ public class OrderResource {
 		OrderHeaderTO orderHeaderTO = new OrderHeaderTO();
 		OrderHeader orderHeaderXml = orderXmlRequest.getOrderHeader();
 		orderHeaderTO.setAccountNumber(orderHeaderXml.getAccountNumber());
-		orderHeaderTO.setClient(orderHeaderXml.getClient());
+		orderHeaderTO.setClient(orderHeaderXml.getClient().trim().toUpperCase());
 		orderHeaderTO.setChannelType(orderHeaderXml.getChannel());
 		orderHeaderTO.setReferenceID(orderHeaderXml.getReferenceOrderId());
 		orderHeaderTO.setSalesDocType(orderHeaderXml.getSalesDocType());
