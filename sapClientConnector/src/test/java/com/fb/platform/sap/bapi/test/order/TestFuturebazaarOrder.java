@@ -27,7 +27,7 @@ public class TestFuturebazaarOrder extends BaseTestCase {
 	
 	private SapOrderRequestTO getBapiTO() {
 		SapOrderRequestTO bapiTO = new SapOrderRequestTO();
-		bapiTO.setOrderType(TinlaOrderType.NEW_ORDER);
+		bapiTO.setOrderType(TinlaOrderType.MOD_ORDER);
 		bapiTO.setOrderHeaderTO(getOrderTO());
 		bapiTO.setLineItemTO(getLineItemTO());
 		bapiTO.setBillingAddressTO(getAddressTO());
@@ -62,7 +62,7 @@ public class TestFuturebazaarOrder extends BaseTestCase {
 		orderHeaderTO.setCreatedOn(DateTime.now());
 		//orderHeaderTO.set
 		orderHeaderTO.setSalesDocType("ZATG");
-		orderHeaderTO.setReferenceID("5049999978");
+		orderHeaderTO.setReferenceID("5049999964");
 		orderHeaderTO.setReturnOrderID("6699999999");
 		orderHeaderTO.setLoyaltyCardNumber("1234123412341234");
 		orderHeaderTO.setPricingTO(getPricingTO());
@@ -79,6 +79,7 @@ public class TestFuturebazaarOrder extends BaseTestCase {
 		pricingTO.setPayableAmount(new BigDecimal("1100.00"));
 		pricingTO.setPointsEarn(new BigDecimal("40"));
 		pricingTO.setPointsEarnValue(new BigDecimal("10"));
+		pricingTO.setShippingAmount(new BigDecimal("50"));
 		return pricingTO;
 	}
 
@@ -88,13 +89,14 @@ public class TestFuturebazaarOrder extends BaseTestCase {
 		lineItemTO1.setPricingTO(getPricingTO());
 		lineItemTO1.setArticleID("000000000300000560");
 		lineItemTO1.setSapDocumentId(10);
-		lineItemTO1.setQuantity(new BigDecimal("5.00"));
+		lineItemTO1.setQuantity(new BigDecimal("3.00"));
 		lineItemTO1.setDescription("TEST ARTICLE");
 		lineItemTO1.setPlantId("2786");
 		lineItemTO1.setSalesUnit("EA");
 		lineItemTO1.setStorageLocation(10);
 		lineItemTO1.setLspCode("0000300413");
 		lineItemTO1.setAddressTO(getAddressTO());
+		lineItemTO1.setOperationCode("U");
 		lineItemTOList.add(lineItemTO1);
 		return lineItemTOList;
 	}
@@ -120,5 +122,13 @@ public class TestFuturebazaarOrder extends BaseTestCase {
 		SapOrderResponseTO responseTO = bh.processOrder(orderRequestTO);
 		assertEquals(orderRequestTO.getOrderHeaderTO().getReferenceID(), responseTO.getOrderId());
 		assertEquals("ID: TEST VALUE || TYPE: TEST VALUE || MESSAGE: FBG TEST MESSAGE", responseTO.getSapMessage().trim());
+	}
+	
+	public static void main(String[] args) {
+		TestFuturebazaarOrder to = new TestFuturebazaarOrder();
+		SapOrderRequestTO orderRequestTO = to.getBapiTO();
+		ApplicationContext context = new ClassPathXmlApplicationContext("test-applicationContext-service.xml");
+		PlatformClientHandler bh = (PlatformClientHandler) context.getBean("sapClientHandler");
+		SapOrderResponseTO responseTO = bh.processOrder(orderRequestTO);
 	}
 }

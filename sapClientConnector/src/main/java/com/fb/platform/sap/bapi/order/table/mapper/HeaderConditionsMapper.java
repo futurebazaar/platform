@@ -41,6 +41,9 @@ public class HeaderConditionsMapper {
 			orderConditionsINX.setValue(SapOrderConstants.OPERATION_FLAG, SapOrderConstants.INSERT_FLAG);
 			orderConditionsIN.setValue(SapOrderConstants.CURRENCY, SapOrderConfigFactory.getConfigValue(SapOrderConstants.CURRENCY, client, orderType));
 			orderConditionsINX.setValue(SapOrderConstants.CURRENCY, SapOrderConstants.COMMIT_FLAG);
+			if (orderType.equals(TinlaOrderType.MOD_ORDER)) {
+				orderConditionsINX.setValue(SapOrderConstants.OPERATION_FLAG, SapOrderConstants.UPDATE_FLAG);
+			}
 		}
 	}
 
