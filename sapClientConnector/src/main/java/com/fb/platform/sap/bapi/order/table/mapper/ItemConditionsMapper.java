@@ -14,7 +14,6 @@ import com.fb.platform.sap.client.commons.SapOrderConstants;
 import com.fb.platform.sap.client.commons.TinlaClient;
 import com.fb.platform.sap.bapi.factory.BapiPricingConditionFactory;
 import com.fb.platform.sap.bapi.factory.BapiTableFactory;
-import com.fb.platform.sap.bapi.factory.SapOrderConfigFactory;
 import com.fb.platform.sap.bapi.order.TinlaOrderType;
 import com.fb.platform.sap.bapi.order.table.BapiOrderTable;
 import com.fb.platform.sap.bapi.order.table.OrderTableType;
@@ -70,7 +69,7 @@ public class ItemConditionsMapper {
 		orderConditionIN.setValue(SapOrderConstants.ITEM_NUMBER, itemTO.getSapDocumentId());
 		orderConditionIN.setValue(SapOrderConstants.CONDITION_TYPE, conditionKeyValueMap.get(SapOrderConstants.CONDITION_TYPE));
 		orderConditionIN.setValue(SapOrderConstants.CONDITION_VALUE, conditionValue.toString());
-		orderConditionIN.setValue(SapOrderConstants.CURRENCY, SapOrderConfigFactory.getConfigValue(SapOrderConstants.CURRENCY, client, orderType));
+		orderConditionIN.setValue(SapOrderConstants.CURRENCY, SapOrderConstants.DEFAULT_CURRENCY);
 		if (!orderType.equals(TinlaOrderType.NEW_ORDER)) {
 			orderConditionIN.setValue(SapOrderConstants.CONDITION_STEP_NUMBER, conditionKeyValueMap.get(SapOrderConstants.CONDITION_STEP_NUMBER));
 			orderConditionIN.setValue(SapOrderConstants.CONDITION_COUNTER, conditionKeyValueMap.get(SapOrderConstants.CONDITION_COUNTER));
