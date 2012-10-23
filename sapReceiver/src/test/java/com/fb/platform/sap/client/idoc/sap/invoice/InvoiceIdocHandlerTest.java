@@ -64,7 +64,7 @@ public class InvoiceIdocHandlerTest extends BaseTestCase {
 	
 	@Test
 	public void processInvoiceIdoc() throws IOException ,Exception {
-		momManager.registerReceiver(PlatformDestinationEnum.INVOICE, testReceiver);
+		momManager.registerReceiver(PlatformDestinationEnum.INVOICE_BB, testReceiver);
 		
 		InputStream invoiceStream = InvoiceIdocHandlerTest.class.getClassLoader().getResourceAsStream("inv_create.xml");
 		InvoiceIdocHandler invoiceIDocHandler = (InvoiceIdocHandler) platformIDocHandlerFactory.getHandler(InvoiceIdocHandler.INVOICE_IDOC_TYPE);

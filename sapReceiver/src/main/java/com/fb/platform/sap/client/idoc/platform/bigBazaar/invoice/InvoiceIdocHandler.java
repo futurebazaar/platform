@@ -94,7 +94,7 @@ public class InvoiceIdocHandler implements PlatformIDocHandler {
 			
 			InvoiceTO apiInvoice = new InvoiceTO();
 			
-			SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.INVOICE));
+			SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.INVOICE_BB));
 			
 			sapIdoc.setIdoc(idocXml);
 			sapIdoc.setIdocNumber(invoiceIdoc.getIDOC().getEDIDC40().getDOCNUM());
@@ -107,7 +107,7 @@ public class InvoiceIdocHandler implements PlatformIDocHandler {
 			apiInvoice.setInvoiceDocRef(getDocumentHeaderRef(invoiceIdoc.getIDOC().getE1EDK02()));
 			
 			infoLog.info("Sending InvoiceTO to Invoice destination : " + apiInvoice.toString());
-			momManager.send(PlatformDestinationEnum.INVOICE, apiInvoice);
+			momManager.send(PlatformDestinationEnum.INVOICE_BB, apiInvoice);
 			
 		} catch (JAXBException e) {
 			CorruptMessageTO corruptMessage = new CorruptMessageTO();

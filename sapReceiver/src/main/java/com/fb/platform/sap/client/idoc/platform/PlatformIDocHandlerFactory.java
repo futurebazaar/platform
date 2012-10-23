@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.sap.client.idoc.platform.bigBazaar.delivery.DeliveryIdocHandler;
+import com.fb.platform.sap.client.idoc.platform.bigBazaar.deliveryDelete.DeliveryDeleteBBIdocHandler;
 import com.fb.platform.sap.client.idoc.platform.bigBazaar.invoice.InvoiceIdocHandler;
 import com.fb.platform.sap.client.idoc.platform.deliveryDelete.impl.DeliveryDeleteIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.impl.DefaultIDocHandler;
@@ -36,6 +37,8 @@ public class PlatformIDocHandlerFactory {
 	private InvoiceIdocHandler invoiceIDocHandler = null;
 	
 	private DeliveryIdocHandler deliveryIDocHandler = null;
+	
+	private DeliveryDeleteBBIdocHandler deliveryDeleteBBIdocHandler = null;
 
 	private DefaultIDocHandler defaultIDocHandler = null;
 
@@ -62,6 +65,9 @@ public class PlatformIDocHandlerFactory {
 		
 		deliveryIDocHandler = new DeliveryIdocHandler();
 		deliveryIDocHandler.init(momManager, ackUIDSequenceGenerator);
+		
+		deliveryDeleteBBIdocHandler = new DeliveryDeleteBBIdocHandler();
+		deliveryDeleteBBIdocHandler.init(momManager, ackUIDSequenceGenerator);
 
 		defaultIDocHandler = new DefaultIDocHandler();
 		defaultIDocHandler.init(momManager, ackUIDSequenceGenerator);
@@ -82,6 +88,8 @@ public class PlatformIDocHandlerFactory {
 			return invoiceIDocHandler;
 		} else if (idocType.equals(DeliveryIdocHandler.DELIVERY_IDOC_TYPE)) {
 			return deliveryIDocHandler;
+		} else if (idocType.equals(DeliveryDeleteBBIdocHandler.DELIVERY_DELETE_BB_IDOC_TYPE)) {
+			return deliveryDeleteBBIdocHandler;
 		}
 		logger.error("No Handler is configured for idocType : " + idocType + ", returning default handler.");
 		return defaultIDocHandler;

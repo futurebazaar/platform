@@ -164,8 +164,8 @@
   	<xs:appinfo>
     	<jaxb:globalBindings>
 	      	<jaxb:javaType name="java.util.Date" xmlType="xs:date"
-	        	parseMethod="com.fb.platform.mom.invoice.util.DateAdapter.parseDate"
-	        	printMethod="com.fb.platform.mom.invoice.util.DateAdapter.printDate"
+	        	parseMethod="com.fb.platform.mom.bigBazaar.invoice.util.DateAdapter.parseDate"
+	        	printMethod="com.fb.platform.mom.bigBazaar.invoice.util.DateAdapter.printDate"
 	        />
    		</jaxb:globalBindings>
   	</xs:appinfo>

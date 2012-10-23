@@ -217,7 +217,7 @@
 	</bean>
 	
 	<bean id="invoiceDestination" class="org.hornetq.api.jms.HornetQJMSClient" factory-method="createQueue">
-	   <constructor-arg index="0" value="invoice"/>
+	   <constructor-arg index="0" value="invoiceBB"/>
 	</bean>
 
 	<bean id="invoiceMessageListener" class="com.fb.platform.mom.receiver.bigBazaar.invoice.InvoiceMessageListener"></bean>
@@ -236,7 +236,7 @@
 	</bean>
 	
 	<bean id="deliveryDestination" class="org.hornetq.api.jms.HornetQJMSClient" factory-method="createQueue">
-	   <constructor-arg index="0" value="delivery"/>
+	   <constructor-arg index="0" value="deliveryBB"/>
 	</bean>
 
 	<bean id="deliveryMessageListener" class="com.fb.platform.mom.receiver.bigBazaar.delivery.DeliveryMessageListener"></bean>
@@ -252,6 +252,25 @@
 	<bean id="deliverySender" class="com.fb.platform.mom.receiver.bigBazaar.delivery.DeliverySenderImpl">
         <property name="jmsTemplate" ref="jmsTemplate"/>
         <property name="deliveryDestination" ref="deliveryDestination"/>
+	</bean>
+	
+	<bean id="deliveryDeleteBBDestination" class="org.hornetq.api.jms.HornetQJMSClient" factory-method="createQueue">
+	   <constructor-arg index="0" value="deliveryDeleteBB"/>
+	</bean>
+
+	<bean id="deliveryDeleteBBMessageListener" class="com.fb.platform.mom.receiver.bigBazaar.deliveryDelete.DeliveryDeleteBBMessageListener"></bean>
+	
+	<bean id="deliveryDeleteBBContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="userCredentialFactory"/>
+		<property name="destination" ref="deliveryDeleteBBDestination"/>
+		<property name="messageListener" ref="deliveryDeleteBBMessageListener" />
+		<property name="autoStartup" value="false"/>
+		<property name="sessionTransacted" value="true"/>
+	</bean>
+
+	<bean id="deliveryDeleteBBSender" class="com.fb.platform.mom.receiver.bigBazaar.deliveryDelete.DeliveryDeleteBBSenderImpl">
+        <property name="jmsTemplate" ref="jmsTemplate"/>
+        <property name="deliveryDeleteBBDestination" ref="deliveryDeleteBBDestination"/>
 	</bean>
 	
     <bean id="momManager" class="com.fb.platform.mom.manager.impl.MomManagerImpl">
@@ -278,6 +297,9 @@
         <property name="deliveryMessageListener" ref="deliveryMessageListener"/>
         <property name="deliverySender" ref="deliverySender"/>
         <property name="deliveryContainer" ref="deliveryContainer"/>
+        <property name="deliveryDeleteBBMessageListener" ref="deliveryDeleteBBMessageListener"/>
+        <property name="deliveryDeleteBBSender" ref="deliveryDeleteBBSender"/>
+        <property name="deliveryDeleteBBContainer" ref="deliveryDeleteBBContainer"/>
         <!-- <property name="orderMessageListener" ref="orderMessageListener"/>
         <property name="orderSender" ref="orderSender"/>
         <property name="orderContainer" ref="orderContainer"/> -->

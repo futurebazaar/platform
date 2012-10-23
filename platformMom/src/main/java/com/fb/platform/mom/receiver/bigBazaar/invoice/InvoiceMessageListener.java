@@ -27,7 +27,7 @@ public class InvoiceMessageListener extends AbstractPlatformListener implements 
 	
 	private static Log infoLog = LogFactory.getLog(InvoiceMessageListener.class);
 	
-	private static Log auditLog = LogFactory.getLog(LoggerConstants.INVOICE_AUDIT_LOG);
+	private static Log auditLog = LogFactory.getLog(LoggerConstants.INVOICE_BB_AUDIT_LOG);
 	
 	@Override
 	public void onMessage(Message message) {
@@ -45,7 +45,7 @@ public class InvoiceMessageListener extends AbstractPlatformListener implements 
 
 			infoLog.info("Received the Invoice Message from SAP. \n" + invoice.toString());
 
-			super.notify(invoice , PlatformDestinationEnum.INVOICE);
+			super.notify(invoice , PlatformDestinationEnum.INVOICE_BB);
 			
 			SapMomTO sapIdoc = invoice.getSapIdoc();
 			auditLog.info(sapIdoc.getAckUID() + "," + sapIdoc.getIdocNumber() + "," + sapIdoc.getTimestamp() + ",true");

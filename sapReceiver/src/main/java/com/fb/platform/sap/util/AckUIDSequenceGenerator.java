@@ -27,7 +27,9 @@ public class AckUIDSequenceGenerator {
 		sequencerMap.put(PlatformDestinationEnum.ITEM_ACK, new AtomicLong());
 		sequencerMap.put(PlatformDestinationEnum.DELIVERY_DELETE, new AtomicLong());
 		sequencerMap.put(PlatformDestinationEnum.CORRUPT_IDOCS, new AtomicLong());
-		sequencerMap.put(PlatformDestinationEnum.INVOICE, new AtomicLong());
+		sequencerMap.put(PlatformDestinationEnum.INVOICE_BB, new AtomicLong());
+		sequencerMap.put(PlatformDestinationEnum.DELIVERY_BB, new AtomicLong());
+		sequencerMap.put(PlatformDestinationEnum.DELIVERY_DELETE_BB, new AtomicLong());
 	}
 
 	public long getNextSequenceNumber(PlatformDestinationEnum destination) {

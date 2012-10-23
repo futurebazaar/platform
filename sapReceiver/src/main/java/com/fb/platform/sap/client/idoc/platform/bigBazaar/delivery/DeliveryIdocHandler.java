@@ -89,7 +89,7 @@ public class DeliveryIdocHandler implements PlatformIDocHandler {
 			DELVRY01 deliveryIdoc = (DELVRY01)unmarshaller.unmarshal(new StreamSource(new StringReader(idocXml)));
 			DeliveryTO apiDelivery = new DeliveryTO();
 			
-			SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.DELIVERY));
+			SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.DELIVERY_BB));
 			
 			sapIdoc.setIdoc(idocXml);
 			sapIdoc.setIdocNumber(deliveryIdoc.getIDOC().getEDIDC40().getDOCNUM());
@@ -98,7 +98,7 @@ public class DeliveryIdocHandler implements PlatformIDocHandler {
 			apiDelivery.setDeliveryHeaderTO(getAPIDeliveryHeader(deliveryIdoc.getIDOC().getE1EDL20()));
 			
 			infoLog.info("Sending deliveryTO to delivery destination : " + apiDelivery.toString());
-			momManager.send(PlatformDestinationEnum.DELIVERY, apiDelivery);
+			momManager.send(PlatformDestinationEnum.DELIVERY_BB, apiDelivery);
 		} catch (JAXBException e) {
 			CorruptMessageTO corruptMessage = new CorruptMessageTO();
 
@@ -108,7 +108,7 @@ public class DeliveryIdocHandler implements PlatformIDocHandler {
 			corruptMessage.setSapIdoc(sapIdoc);
 			corruptMessage.setCause(CorruptMessageCause.CORRUPT_IDOC);
 			momManager.send(PlatformDestinationEnum.CORRUPT_IDOCS, corruptMessage);
-			infoLog.error("Logged Unable to create Inventory Message for inventory idoc :\n" + sapIdoc.getIdoc(), e);
+			infoLog.error("Logged Unable to create delivery Message for delivery idoc :\n" + sapIdoc.getIdoc(), e);
 		} catch (Exception e) {
 			infoLog.error("Error in processing inventory idoc", e);
 			throw new PlatformException(e);
