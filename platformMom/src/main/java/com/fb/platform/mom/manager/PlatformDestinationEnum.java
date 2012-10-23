@@ -15,5 +15,6 @@ public enum PlatformDestinationEnum {
 	PREDLQ,
 	DELIVERY_DELETE,
 	ITEM_ACK,
-	INVOICE;
+	INVOICE,
+	DELIVERY;
 }

@@ -22,7 +22,7 @@ public class DeliveryTO implements Serializable {
 	
 	private SapMomTO sapIdoc;
 	private DeliveryHeaderTO deliveryHeaderTO;
-	private int begin;
+	
 	public SapMomTO getSapIdoc() {
 		return sapIdoc;
 	}
@@ -35,19 +35,12 @@ public class DeliveryTO implements Serializable {
 	public void setDeliveryHeaderTO(DeliveryHeaderTO deliveryHeaderTO) {
 		this.deliveryHeaderTO = deliveryHeaderTO;
 	}
-	public int getBegin() {
-		return begin;
-	}
-	public void setBegin(int begin) {
-		this.begin = begin;
-	}
 	
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this)
 		.append("sapIdoc", this.sapIdoc)
 		.append("deliveryHeaderTO", this.deliveryHeaderTO)
-		.append("begin", this.begin)
 		.toString();
 	}
 

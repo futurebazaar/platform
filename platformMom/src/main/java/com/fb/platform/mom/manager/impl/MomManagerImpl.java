@@ -13,6 +13,8 @@ import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
+import com.fb.platform.mom.receiver.bigBazaar.delivery.DeliveryMessageListener;
+import com.fb.platform.mom.receiver.bigBazaar.delivery.DeliverySender;
 import com.fb.platform.mom.receiver.bigBazaar.invoice.InvoiceMessageListener;
 import com.fb.platform.mom.receiver.bigBazaar.invoice.InvoiceSender;
 import com.fb.platform.mom.receiver.corrupt.CorruptMessageListener;
@@ -95,6 +97,15 @@ public class MomManagerImpl implements MomManager {
 	@Autowired
 	private DefaultMessageListenerContainer invoiceContainer = null;
 	
+	@Autowired
+	private DeliveryMessageListener deliveryMessageListener = null;
+
+	@Autowired
+	private DeliverySender deliverySender = null;
+
+	@Autowired
+	private DefaultMessageListenerContainer deliveryContainer = null;
+	
 	/* (non-Javadoc)
 	 * @see com.fb.platform.mom.manager.MomManager#send(com.fb.platform.mom.manager.PlatformDestinationEnum, java.lang.Object)
 	 */
@@ -120,6 +131,9 @@ public class MomManagerImpl implements MomManager {
 			break;
 		case INVOICE:
 			invoiceSender.sendMessage(message);
+			break;
+		case DELIVERY:
+			deliverySender.sendMessage(message);
 			break;
 		default:
 			throw new IllegalStateException("No sender is configured for the destination : " + destination);
@@ -174,6 +188,12 @@ public class MomManagerImpl implements MomManager {
 			invoiceMessageListener.addReceiver(receiver, destination);
 			if(!invoiceContainer.isRunning()) {
 				invoiceContainer.start();
+			}
+			break;
+		case DELIVERY:
+			deliveryMessageListener.addReceiver(receiver, destination);
+			if(!deliveryContainer.isRunning()) {
+				deliveryContainer.start();
 			}
 			break;
 		default:
@@ -260,5 +280,16 @@ public class MomManagerImpl implements MomManager {
 	public void setInvoiceContainer(DefaultMessageListenerContainer invoiceContainer) {
 		this.invoiceContainer = invoiceContainer;
 	}
-	
+
+	public void setDeliveryMessageListener(DeliveryMessageListener deliveryMessageListener) {
+		this.deliveryMessageListener = deliveryMessageListener;
+	}
+
+	public void setDeliverySender(DeliverySender deliverySender) {
+		this.deliverySender = deliverySender;
+	}
+
+	public void setDeliveryContainer(DefaultMessageListenerContainer deliveryContainer) {
+		this.deliveryContainer = deliveryContainer;
+	}
 }

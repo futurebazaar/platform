@@ -32,7 +32,7 @@ public class InvoiceManagerImpl implements ReceiverManager, InvoiceManager {
 	 */
 	@Override
 	public void start() {
-		infoLog.info("Registering the receiver InventoryManagerImpl.");
+		infoLog.info("Registering the receiver InvoiceManagerImpl.");
 		momManager.registerReceiver(PlatformDestinationEnum.INVOICE, invoiceMessageReceiver);
 
 	}
