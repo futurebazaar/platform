@@ -20,8 +20,8 @@ import com.fb.platform.sap.bapi.lsp.table.mapper.LspAwbResponseMapper;
 import com.fb.platform.sap.bapi.lsp.table.mapper.LspAwbUpdateMapper;
 import com.fb.platform.sap.bapi.order.BapiOrderTemplate;
 import com.fb.platform.sap.bapi.order.TinlaOrderType;
-import com.fb.platform.sap.bapi.order.table.mapper.HeaderConditionsMapper;
 import com.fb.platform.sap.bapi.order.table.mapper.HeaderMapper;
+import com.fb.platform.sap.bapi.order.table.mapper.HeaderConditionsMapper;
 import com.fb.platform.sap.bapi.order.table.mapper.HeaderPartnerMapper;
 import com.fb.platform.sap.bapi.order.table.mapper.ItemConditionsMapper;
 import com.fb.platform.sap.bapi.order.table.mapper.ItemMapper;
@@ -39,8 +39,8 @@ import com.fb.platform.sap.bapi.to.SapLspAwbUpdateResponseTO;
 import com.fb.platform.sap.bapi.to.SapOrderRequestTO;
 import com.fb.platform.sap.bapi.to.SapOrderResponseTO;
 import com.fb.platform.sap.client.commons.SapResponseStatus;
+import com.fb.platform.sap.client.commons.TinlaClient;
 import com.fb.platform.sap.client.connector.PlatformClientConnector;
-import com.fb.platform.sap.client.connector.impl.SapClientConnector;
 import com.fb.platform.sap.client.handler.PlatformClientHandler;
 import com.sap.conn.jco.JCoDestination;
 import com.sap.conn.jco.JCoException;
@@ -57,6 +57,7 @@ public class SapClientHandler implements PlatformClientHandler {
 		SapOrderResponseTO orderResponseTO = new SapOrderResponseTO();
 		orderResponseTO.setStatus(SapResponseStatus.ERROR);
 		TinlaOrderType orderType = orderRequestTO.getOrderType();
+		TinlaClient client = TinlaClient.valueOf(orderRequestTO.getOrderHeaderTO().getClient());
     	try {
     		BapiOrderTemplate template = PlatformBapiHandlerFactory.getTemplate(orderType, orderRequestTO.getOrderHeaderTO().getClient());
 			logger.info("Connected Bapi template : " + template + "for : " + orderType + " " + orderRequestTO.getOrderHeaderTO().getReferenceID());
@@ -70,10 +71,12 @@ public class SapClientHandler implements PlatformClientHandler {
 				HeaderConditionsMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderType);
 				ItemMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
 				ItemScheduleMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
-				if (orderType.equals(TinlaOrderType.NEW_ORDER)) {
+				if (!(orderType.equals(TinlaOrderType.MOD_ORDER) && client.equals(TinlaClient.BIGBAZAAR))) {
 					HeaderPartnerMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getDefaultShippingAddressTO(), orderRequestTO.getBillingAddressTO(), orderType);
+					ItemPartnerMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
+				}
+				if (orderType.equals(TinlaOrderType.NEW_ORDER)) {
 					PaymentMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getPaymentTO());
-					ItemPartnerMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO());
 				}
 			}
 			PointsMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO().getPricingTO(), orderRequestTO.getOrderHeaderTO().getLoyaltyCardNumber());
