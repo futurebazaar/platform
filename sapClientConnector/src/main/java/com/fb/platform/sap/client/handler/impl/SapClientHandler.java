@@ -39,6 +39,7 @@ import com.fb.platform.sap.bapi.to.SapLspAwbUpdateResponseTO;
 import com.fb.platform.sap.bapi.to.SapOrderRequestTO;
 import com.fb.platform.sap.bapi.to.SapOrderResponseTO;
 import com.fb.platform.sap.client.commons.SapResponseStatus;
+import com.fb.platform.sap.client.commons.SapUtils;
 import com.fb.platform.sap.client.commons.TinlaClient;
 import com.fb.platform.sap.client.connector.PlatformClientConnector;
 import com.fb.platform.sap.client.handler.PlatformClientHandler;
@@ -68,10 +69,11 @@ public class SapClientHandler implements PlatformClientHandler {
 				ItemMapper.setReturnItemDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
 			} else {
 				HeaderMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderType);
-				HeaderConditionsMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderType);
+				//Below condition is not used now
+				//HeaderConditionsMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderType);
 				ItemMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
 				ItemScheduleMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
-				if (!(orderType.equals(TinlaOrderType.MOD_ORDER) && client.equals(TinlaClient.BIGBAZAAR))) {
+				if (!(orderType.equals(TinlaOrderType.MOD_ORDER) && SapUtils.isBigBazaar(client))) {
 					HeaderPartnerMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getDefaultShippingAddressTO(), orderRequestTO.getBillingAddressTO(), orderType);
 					ItemPartnerMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
 				}

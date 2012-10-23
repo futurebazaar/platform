@@ -37,14 +37,15 @@ public class TestBigBazaarOrder extends BaseTestCase {
 		OrderHeaderTO orderHeaderTO = new OrderHeaderTO();
 		orderHeaderTO.setAccountNumber("G000001005");
 		orderHeaderTO.setChannelType("WEBSITE");
-		orderHeaderTO.setClient("BIGBAZAAR");
+		orderHeaderTO.setClient("SELLER");
 		orderHeaderTO.setCreatedOn(DateTime.now());
 		orderHeaderTO.setReason("I");
 		orderHeaderTO.setSalesChannel("true");
 		orderHeaderTO.setSubmittedOn(DateTime.now());
+		orderHeaderTO.setThirdPartyOrder("AKASH SELLER");
 		//orderHeaderTO.set
 		orderHeaderTO.setSalesDocType("ZFGB");
-		orderHeaderTO.setReferenceID("I000001013");
+		orderHeaderTO.setReferenceID("I000001018");
 		orderHeaderTO.setLoyaltyCardNumber("1234123412341234");
 		orderHeaderTO.setPricingTO(getPricingTO());
 		
@@ -60,52 +61,53 @@ public class TestBigBazaarOrder extends BaseTestCase {
 		pricingTO.setPayableAmount(new BigDecimal("1100.00"));
 		pricingTO.setPointsEarn(new BigDecimal("40"));
 		pricingTO.setPointsEarnValue(new BigDecimal("10"));
+		pricingTO.setShippingAmount(new BigDecimal("25"));
 		return pricingTO;
 	}
 
 	private List<LineItemTO> getLineItemTO() {
 		List<LineItemTO> lineItemTOList = new ArrayList<LineItemTO>();
-		LineItemTO lineItemTO1 = new LineItemTO();
-		lineItemTO1.setPricingTO(getPricingTO());
-		lineItemTO1.setArticleID("000000000100000105");
-		lineItemTO1.setSapDocumentId(10);
-		lineItemTO1.setQuantity(new BigDecimal("2.00"));
-		lineItemTO1.setDescription("TEST ARTICLE");
-		lineItemTO1.setPlantId("4608");
-		lineItemTO1.setSalesUnit("EA");
-		lineItemTO1.setStorageLocation(10);
-		lineItemTO1.setReasonCode("01");
-		lineItemTO1.setOperationCode("C");
-		lineItemTO1.setAddressTO(getAddressTO());
-		lineItemTOList.add(lineItemTO1);
+//		LineItemTO lineItemTO1 = new LineItemTO();
+//		lineItemTO1.setPricingTO(getPricingTO());
+//		lineItemTO1.setArticleID("000000000100389654");
+//		lineItemTO1.setSapDocumentId(10);
+//		lineItemTO1.setQuantity(new BigDecimal("3.00"));
+//		lineItemTO1.setDescription("TEST ARTICLE");
+//		lineItemTO1.setPlantId("4712");
+//		lineItemTO1.setSalesUnit("EA");
+//		lineItemTO1.setStorageLocation(10);
+//		lineItemTO1.setReasonCode("01");
+//		lineItemTO1.setOperationCode("C");
+//		lineItemTO1.setAddressTO(getAddressTO());
+//		lineItemTOList.add(lineItemTO1);
 		
-		LineItemTO lineItemTO2 = new LineItemTO();
-		lineItemTO2.setPricingTO(getPricingTO());
-		lineItemTO2.setArticleID("000000000100000002");
-		lineItemTO2.setSapDocumentId(20);
-		lineItemTO2.setQuantity(new BigDecimal("4.00"));
-		lineItemTO2.setDescription("TEST ARTICLE");
-		lineItemTO2.setPlantId("4608");
-		lineItemTO2.setSalesUnit("EA");
-		lineItemTO2.setStorageLocation(10);
-		lineItemTO2.setReasonCode("01");
-		lineItemTO2.setOperationCode("I");
-		lineItemTO2.setAddressTO(getAddressTO());
-		lineItemTOList.add(lineItemTO2);
-//		
-//		LineItemTO lineItemTO3 = new LineItemTO();
-//		lineItemTO3.setPricingTO(getPricingTO());
-//		lineItemTO3.setArticleID("000000000100000001");
-//		lineItemTO3.setSapDocumentId(30);
-//		lineItemTO3.setQuantity(new BigDecimal("4.00"));
-//		lineItemTO3.setDescription("TEST ARTICLE");
-//		lineItemTO3.setPlantId("4608");
-//		lineItemTO3.setSalesUnit("EA");
-//		lineItemTO3.setStorageLocation(10);
-//		lineItemTO3.setReasonCode("103");
-//		lineItemTO3.setOperationCode("I");
-//		lineItemTO3.setAddressTO(getAddressTO());
-//		lineItemTOList.add(lineItemTO3);
+//		LineItemTO lineItemTO2 = new LineItemTO();
+//		lineItemTO2.setPricingTO(getPricingTO());
+//		lineItemTO2.setArticleID("000000000100389651");
+//		lineItemTO2.setSapDocumentId(20);
+//		lineItemTO2.setQuantity(new BigDecimal("2.00"));
+//		lineItemTO2.setDescription("TEST ARTICLE");
+//		lineItemTO2.setPlantId("4712");
+//		lineItemTO2.setSalesUnit("EA");
+//		lineItemTO2.setStorageLocation(10);
+//		lineItemTO2.setReasonCode("01");
+//		lineItemTO2.setOperationCode("C");
+//		lineItemTO2.setAddressTO(getAddressTO());
+//		lineItemTOList.add(lineItemTO2);
+		
+		LineItemTO lineItemTO3 = new LineItemTO();
+		lineItemTO3.setPricingTO(getPricingTO());
+		lineItemTO3.setArticleID("000000000600006453");
+		lineItemTO3.setSapDocumentId(30);
+		lineItemTO3.setQuantity(new BigDecimal("2.00"));
+		lineItemTO3.setDescription("TEST ARTICLE");
+		lineItemTO3.setPlantId("8749");
+		lineItemTO3.setSalesUnit("EA");
+		lineItemTO3.setStorageLocation(10);
+		lineItemTO3.setReasonCode("103");
+		lineItemTO3.setOperationCode("I");
+		lineItemTO3.setAddressTO(getAddressTO());
+		lineItemTOList.add(lineItemTO3);
 		return lineItemTOList;
 	}
 	
@@ -131,5 +133,13 @@ public class TestBigBazaarOrder extends BaseTestCase {
 		SapOrderResponseTO responseTO = bh.processOrder(orderRequestTO);
 		assertEquals(orderRequestTO.getOrderHeaderTO().getReferenceID(), responseTO.getOrderId());
 		assertEquals("ID: TEST VALUE || TYPE: TEST VALUE || MESSAGE: FBG TEST MESSAGE", responseTO.getSapMessage().trim());
+	}
+	
+	public static void main(String[] args) {
+		TestBigBazaarOrder to = new TestBigBazaarOrder();
+		SapOrderRequestTO orderRequestTO = to.getBapiTO();
+		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-service.xml");
+		PlatformClientHandler bh = (PlatformClientHandler) context.getBean("sapClientHandler");
+		SapOrderResponseTO responseTO = bh.processOrder(orderRequestTO);
 	}
 }
