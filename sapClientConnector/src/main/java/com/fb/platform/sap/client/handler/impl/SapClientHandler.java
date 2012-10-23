@@ -21,6 +21,7 @@ import com.fb.platform.sap.bapi.lsp.table.mapper.LspAwbUpdateMapper;
 import com.fb.platform.sap.bapi.order.BapiOrderTemplate;
 import com.fb.platform.sap.bapi.order.TinlaOrderType;
 import com.fb.platform.sap.bapi.order.table.mapper.HeaderMapper;
+import com.fb.platform.sap.bapi.order.table.mapper.HeaderConditionsMapper;
 import com.fb.platform.sap.bapi.order.table.mapper.HeaderPartnerMapper;
 import com.fb.platform.sap.bapi.order.table.mapper.ItemConditionsMapper;
 import com.fb.platform.sap.bapi.order.table.mapper.ItemMapper;
@@ -67,13 +68,12 @@ public class SapClientHandler implements PlatformClientHandler {
 				ItemMapper.setReturnItemDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
 			} else {
 				HeaderMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderType);
-				//Below Condition is not used now
-				//HeaderConditionsMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderType);
+				HeaderConditionsMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderType);
 				ItemMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
 				ItemScheduleMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
 				if (!(orderType.equals(TinlaOrderType.MOD_ORDER) && client.equals(TinlaClient.BIGBAZAAR))) {
 					HeaderPartnerMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getDefaultShippingAddressTO(), orderRequestTO.getBillingAddressTO(), orderType);
-					ItemPartnerMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO());
+					ItemPartnerMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
 				}
 				if (orderType.equals(TinlaOrderType.NEW_ORDER)) {
 					PaymentMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getPaymentTO());

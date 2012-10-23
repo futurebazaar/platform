@@ -127,7 +127,7 @@ public class TestFuturebazaarOrder extends BaseTestCase {
 	public static void main(String[] args) {
 		TestFuturebazaarOrder to = new TestFuturebazaarOrder();
 		SapOrderRequestTO orderRequestTO = to.getBapiTO();
-		ApplicationContext context = new ClassPathXmlApplicationContext("test-applicationContext-service.xml");
+		ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-service.xml");
 		PlatformClientHandler bh = (PlatformClientHandler) context.getBean("sapClientHandler");
 		SapOrderResponseTO responseTO = bh.processOrder(orderRequestTO);
 	}

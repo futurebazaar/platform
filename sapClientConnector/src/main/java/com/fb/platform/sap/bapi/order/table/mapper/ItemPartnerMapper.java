@@ -11,6 +11,8 @@ import com.fb.commons.mom.to.LineItemTO;
 import com.fb.commons.mom.to.OrderHeaderTO;
 import com.fb.platform.sap.client.commons.SapOrderConstants;
 import com.fb.platform.sap.client.commons.TinlaClient;
+import com.fb.platform.sap.bapi.factory.BapiTableFactory;
+import com.fb.platform.sap.bapi.order.TinlaOrderType;
 import com.fb.platform.sap.bapi.order.table.BapiOrderTable;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoTable;
@@ -19,13 +21,13 @@ public class ItemPartnerMapper {
 	
 	private static Log logger = LogFactory.getLog(ItemPartnerMapper.class);
 	
-	public static void setDetails(JCoFunction bapiFunction, OrderHeaderTO orderHeaderTO, List<LineItemTO> lineItemTOList) {
+	public static void setDetails(JCoFunction bapiFunction, OrderHeaderTO orderHeaderTO, List<LineItemTO> lineItemTOList, TinlaOrderType orderType) {
 		// No item partner level details required in SAP for Big Bazaar and hence skipping
 		if (TinlaClient.valueOf(orderHeaderTO.getClient()).equals(TinlaClient.BIGBAZAAR)) {
 			return;
 		}
-		logger.info("Setting Item Condition details for : " + orderHeaderTO.getReferenceID());
-		JCoTable orderPartner = bapiFunction.getTableParameterList().getTable(BapiOrderTable.ORDER_PARTNERS.toString());
+		logger.info("Setting Item Partner details for : " + orderHeaderTO.getReferenceID());
+		JCoTable orderPartner = bapiFunction.getTableParameterList().getTable(BapiTableFactory.getPartnersTable(orderType, TinlaClient.valueOf(orderHeaderTO.getClient())).toString());
 		JCoTable orderText = bapiFunction.getTableParameterList().getTable(BapiOrderTable.ORDER_TEXT.toString());
 		for (LineItemTO itemTO : lineItemTOList) {
 			orderPartner.appendRow();
