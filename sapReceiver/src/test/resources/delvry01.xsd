@@ -44,7 +44,7 @@
   </xs:element>
   <xs:element name="TABNAM" type="xs:string"/>
   <xs:element name="MANDT" type="xs:int"/>
-  <xs:element name="DOCNUM" type="xs:int"/>
+  <xs:element name="DOCNUM" type="xs:string"/>
   <xs:element name="DOCREL" type="xs:int"/>
   <xs:element name="STATUS" type="xs:int"/>
   <xs:element name="DIRECT" type="xs:int"/>

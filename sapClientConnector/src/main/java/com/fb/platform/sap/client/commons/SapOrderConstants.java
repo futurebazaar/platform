@@ -62,6 +62,7 @@ public class SapOrderConstants {
 	public static final String TEXT_ID = "TEXT_ID";
 	public static final String TEXT_LINE = "TEXT_LINE";
 	public static final String PAYBACK_TEXT_ID = "Z006";
+	public static final String CHEQUE_TEXT_ID = "Z004";
 	public static final String FIRST_PARTNER_TEXT_ID = "Z001";
 	public static final String SECOND_PARTNER_TEXT_ID = "Z002";
 	public static final String THIRD_PARTNER_TEXT_ID = "Z003";
@@ -143,6 +144,9 @@ public class SapOrderConstants {
 	public static final String CONDITION_STEP_NUMBER = "COND_ST_NO";
 	public static final String CONDITION_COUNTER = "COND_COUNT";
 	public static final String DEFAULT_CONDITION_COUNTER = "01";
+	
+	public static final String BB_SHIPPING_CONDITION_TYPE = "ZFSH";
+	public static final String BB_SHIPPING_STEP_NUMBER = "780";
 	
 	//Condition Counter
 	public static final String MRP_STEP_NUMBER = "620";

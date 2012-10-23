@@ -62,8 +62,8 @@ public class ItemConditionsMapper {
 		}
 		logger.info("Setting : " +conditionType + " with value: " +  conditionValue + " for : " + orderType + " " + orderHeaderTO.getReferenceID());
 
-		Map<OrderTableType, BapiOrderTable> conditionTables = BapiTableFactory.getConditionTables(orderType, TinlaClient.valueOf(orderHeaderTO.getClient()));
-		Map<String, String> conditionKeyValueMap = BapiPricingConditionFactory.conditionValueMap(conditionType);
+		Map<OrderTableType, BapiOrderTable> conditionTables = BapiTableFactory.getConditionTables(orderType, client);
+		Map<String, String> conditionKeyValueMap = BapiPricingConditionFactory.conditionValueMap(conditionType, client);
 		JCoTable orderConditionIN= bapiFunction.getTableParameterList().getTable(conditionTables.get(OrderTableType.VALUE_TABLE).toString());
 		orderConditionIN.appendRow();
 		orderConditionIN.setValue(SapOrderConstants.ITEM_NUMBER, itemTO.getSapDocumentId());

@@ -88,7 +88,16 @@ public class InvoiceMessageReceiver implements PlatformMessageReceiver{
 	}
 
 	private void sendAck(InvoiceTO invoiceTO) {
-		String invoiceURL = prop.getProperty("receiver.invoice.url");
+		String invoiceURL = "";
+		
+		switch (invoiceTO.getInvoiceType()) {
+		case CREATE:
+			invoiceURL = prop.getProperty("receiver.invoice.create.url");
+			break;
+		case CANCEL:
+			invoiceURL = prop.getProperty("receiver.invoice.change.url");
+			break;
+		}
 		
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpPost httpPost = new HttpPost(invoiceURL);
@@ -105,8 +114,8 @@ public class InvoiceMessageReceiver implements PlatformMessageReceiver{
 		
 		try {
 			StringWriter outStringWriter = new StringWriter();
-			Marshaller marsheller = context.createMarshaller();
-			marsheller.marshal(xmlInvoiceTO, outStringWriter);
+			Marshaller marshaller = context.createMarshaller();
+			marshaller.marshal(xmlInvoiceTO, outStringWriter);
 	
 			String xmlResponse = outStringWriter.toString();
 			

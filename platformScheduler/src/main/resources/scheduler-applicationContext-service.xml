@@ -14,11 +14,17 @@
     <!-- Management Beans -->
     <bean id="orderSchedulerMbean" class="com.fb.platform.scheduler.mbean.impl.OrderSchedulerMbeanImpl">
         <property name="orderSchedulerService" ref="orderSchedulerService"/>
+    </bean>
+    <bean id="fillWalletSchedulerMbean" class="com.fb.platform.scheduler.mbean.impl.FillWalletSchedulerMbeanImpl">
+        <property name="fillWalletSchedulerService" ref="fillWalletSchedulerService"/>
     </bean> 
 
     <!-- Service Beans --> 
     <bean id="orderSchedulerService" class="com.fb.platform.scheduler.service.impl.OrderSchedulerServiceImpl">
         <property name="orderXmlDao" ref="orderXmlDao"></property>
+    </bean>
+  	<bean id="fillWalletSchedulerService" class="com.fb.platform.scheduler.service.impl.FillWalletSchedulerServiceImpl">
+        <property name="fillWalletXmlDao" ref="fillWalletXmlDao"></property>
     </bean>
     
 </beans>

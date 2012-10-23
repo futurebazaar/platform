@@ -235,6 +235,25 @@
         <property name="invoiceDestination" ref="invoiceDestination"/>
 	</bean>
 	
+	<bean id="deliveryDestination" class="org.hornetq.api.jms.HornetQJMSClient" factory-method="createQueue">
+	   <constructor-arg index="0" value="delivery"/>
+	</bean>
+
+	<bean id="deliveryMessageListener" class="com.fb.platform.mom.receiver.bigBazaar.delivery.DeliveryMessageListener"></bean>
+	
+	<bean id="deliveryContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="userCredentialFactory"/>
+		<property name="destination" ref="deliveryDestination"/>
+		<property name="messageListener" ref="deliveryMessageListener" />
+		<property name="autoStartup" value="false"/>
+		<property name="sessionTransacted" value="true"/>
+	</bean>
+
+	<bean id="deliverySender" class="com.fb.platform.mom.receiver.bigBazaar.delivery.DeliverySenderImpl">
+        <property name="jmsTemplate" ref="jmsTemplate"/>
+        <property name="deliveryDestination" ref="deliveryDestination"/>
+	</bean>
+	
     <bean id="momManager" class="com.fb.platform.mom.manager.impl.MomManagerImpl">
         <property name="inventoryListener" ref="inventoryListener"/>
         <property name="inventorySender" ref="inventorySender"/>
@@ -256,6 +275,9 @@
         <property name="invoiceMessageListener" ref="invoiceMessageListener"/>
         <property name="invoiceSender" ref="invoiceSender"/>
         <property name="invoiceContainer" ref="invoiceContainer"/>
+        <property name="deliveryMessageListener" ref="deliveryMessageListener"/>
+        <property name="deliverySender" ref="deliverySender"/>
+        <property name="deliveryContainer" ref="deliveryContainer"/>
         <!-- <property name="orderMessageListener" ref="orderMessageListener"/>
         <property name="orderSender" ref="orderSender"/>
         <property name="orderContainer" ref="orderContainer"/> -->

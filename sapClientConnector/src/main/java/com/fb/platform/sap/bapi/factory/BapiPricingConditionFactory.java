@@ -5,10 +5,12 @@ import java.util.Map;
 
 import com.fb.platform.sap.client.commons.ItemConditionsType;
 import com.fb.platform.sap.client.commons.SapOrderConstants;
+import com.fb.platform.sap.client.commons.SapUtils;
+import com.fb.platform.sap.client.commons.TinlaClient;
 
 public class BapiPricingConditionFactory {
 
-	public static Map<String, String> conditionValueMap(ItemConditionsType conditionType) {
+	public static Map<String, String> conditionValueMap(ItemConditionsType conditionType, TinlaClient client) {
 		Map<String, String> conditionValueMap = new HashMap<String, String>();
 		if (conditionType.equals(ItemConditionsType.COUPON_CONDITION_TYPE)) {
 			conditionValueMap.put(SapOrderConstants.CONDITION_STEP_NUMBER, SapOrderConstants.COUPON_STEP_NUMBER);
@@ -26,9 +28,14 @@ public class BapiPricingConditionFactory {
 			conditionValueMap.put(SapOrderConstants.CONDITION_TYPE, SapOrderConstants.ITZ_CONDITION_TYPE);
 		}
 		if (conditionType.equals(ItemConditionsType.SHIPPING_CONDITION_TYPE)) {
-			conditionValueMap.put(SapOrderConstants.CONDITION_STEP_NUMBER, SapOrderConstants.SHIPPING_STEP_NUMBER);
+			if (SapUtils.isBigBazaar(client)) {
+				conditionValueMap.put(SapOrderConstants.CONDITION_STEP_NUMBER, SapOrderConstants.BB_SHIPPING_STEP_NUMBER);
+				conditionValueMap.put(SapOrderConstants.CONDITION_TYPE, SapOrderConstants.BB_SHIPPING_CONDITION_TYPE);
+			} else {
+				conditionValueMap.put(SapOrderConstants.CONDITION_STEP_NUMBER, SapOrderConstants.SHIPPING_STEP_NUMBER);
+				conditionValueMap.put(SapOrderConstants.CONDITION_TYPE, SapOrderConstants.SHIPPING_CONDITION_TYPE);
+			}
 			conditionValueMap.put(SapOrderConstants.CONDITION_COUNTER, SapOrderConstants.DEFAULT_CONDITION_COUNTER);
-			conditionValueMap.put(SapOrderConstants.CONDITION_TYPE, SapOrderConstants.SHIPPING_CONDITION_TYPE);
 		}
 		if (conditionType.equals(ItemConditionsType.MRP_CONDITION_TYPE)) {
 			conditionValueMap.put(SapOrderConstants.CONDITION_STEP_NUMBER, SapOrderConstants.MRP_STEP_NUMBER);

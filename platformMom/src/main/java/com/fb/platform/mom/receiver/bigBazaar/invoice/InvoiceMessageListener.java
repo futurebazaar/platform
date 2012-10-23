@@ -31,7 +31,7 @@ public class InvoiceMessageListener extends AbstractPlatformListener implements 
 	
 	@Override
 	public void onMessage(Message message) {
-		infoLog.info("Received the message for the Inventor destination.");
+		infoLog.info("Received the message for the Invoice destination.");
 
 		try {
 			long uid = message.getLongProperty(LoggerConstants.UID);
@@ -50,10 +50,10 @@ public class InvoiceMessageListener extends AbstractPlatformListener implements 
 			SapMomTO sapIdoc = invoice.getSapIdoc();
 			auditLog.info(sapIdoc.getAckUID() + "," + sapIdoc.getIdocNumber() + "," + sapIdoc.getTimestamp() + ",true");
 		} catch (JMSException e) {
-			infoLog.error("Error in processing hornetQ inventory message.", e);
+			infoLog.error("Error in processing hornetQ invoice message.", e);
 			throw JmsUtils.convertJmsAccessException(e);
 		} catch (Exception e) {
-			infoLog.error("Error in processing hornetQ inventory message.", e);
+			infoLog.error("Error in processing hornetQ invoice message.", e);
 			throw new PlatformException(e);
 			
 		}

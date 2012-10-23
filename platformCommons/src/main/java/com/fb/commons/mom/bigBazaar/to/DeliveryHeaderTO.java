@@ -5,6 +5,8 @@ package com.fb.commons.mom.bigBazaar.to;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.joda.time.DateTime;
@@ -23,7 +25,7 @@ public class DeliveryHeaderTO implements Serializable {
 	private String salesDistributionDoc;
 	private int receivingPoint;
 	private int salesOrganization;
-	private int warehouseRef;
+	private String warehouseRef;
 	private int shippingConditions;
 	private BigDecimal totalWeight;
 	private BigDecimal netWeight;
@@ -33,7 +35,7 @@ public class DeliveryHeaderTO implements Serializable {
 	private DeliveryAdditionalHeaderTO deliveryAdditionalHeaderTO;
 	private DeliveryControlTO deliveryControlTO;
 	private DeliveryDeadlineTO deliveryDeadlineTO;
-	private DeliveryItemTO deliveryItemTO;
+	private List<DeliveryItemTO> deliveryItemList = new ArrayList<DeliveryItemTO>();
 	private int segment;
 	
 	public String getSalesDistributionDoc() {
@@ -54,10 +56,10 @@ public class DeliveryHeaderTO implements Serializable {
 	public void setSalesOrganization(int salesOrganization) {
 		this.salesOrganization = salesOrganization;
 	}
-	public int getWarehouseRef() {
+	public String getWarehouseRef() {
 		return warehouseRef;
 	}
-	public void setWarehouseRef(int warehouseRef) {
+	public void setWarehouseRef(String warehouseRef) {
 		this.warehouseRef = warehouseRef;
 	}
 	public int getShippingConditions() {
@@ -115,11 +117,11 @@ public class DeliveryHeaderTO implements Serializable {
 	public void setDeliveryDeadlineTO(DeliveryDeadlineTO deliveryDeadlineTO) {
 		this.deliveryDeadlineTO = deliveryDeadlineTO;
 	}
-	public DeliveryItemTO getDeliveryItemTO() {
-		return deliveryItemTO;
+	public List<DeliveryItemTO> getDeliveryItemList() {
+		return deliveryItemList;
 	}
-	public void setDeliveryItemTO(DeliveryItemTO deliveryItemTO) {
-		this.deliveryItemTO = deliveryItemTO;
+	public void setDeliveryItemList(List<DeliveryItemTO> deliveryItemList) {
+		this.deliveryItemList = deliveryItemList;
 	}
 	public int getSegment() {
 		return segment;
@@ -144,7 +146,7 @@ public class DeliveryHeaderTO implements Serializable {
 			.append("deliveryAdditionalHeaderTO", this.deliveryAdditionalHeaderTO)
 			.append("deliveryControlTO", this.deliveryControlTO)
 			.append("deliveryDeadlineTO", this.deliveryDeadlineTO)
-			.append("deliveryItemTO", this.deliveryItemTO)
+			.append("deliveryItemList", this.deliveryItemList)
 			.append("segment", this.segment)
 			.toString();
 	}

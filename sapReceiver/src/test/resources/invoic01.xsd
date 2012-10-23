@@ -48,7 +48,7 @@
   </xs:element>
   <xs:element name="TABNAM" type="xs:string"/>
   <xs:element name="MANDT" type="xs:int"/>
-  <xs:element name="DOCNUM" type="xs:string"/>
+  <xs:element name="DOCNUM" type="xs:int"/>
   <xs:element name="DOCREL" type="xs:int"/>
   <xs:element name="STATUS" type="xs:int"/>
   <xs:element name="DIRECT" type="xs:int"/>
@@ -71,9 +71,9 @@
         <xs:element ref="CURCY"/>
         <xs:element ref="HWAER"/>
         <xs:element ref="WKURS"/>
-        <xs:element ref="ZTERM"/>
         <xs:element ref="BSART"/>
         <xs:element ref="BELNR"/>
+        <xs:element ref="BRGEW"/>
         <xs:element ref="GEWEI"/>
         <xs:element ref="FKART_RL"/>
         <xs:element ref="RECIPNT_NO"/>
@@ -85,7 +85,6 @@
   <xs:element name="CURCY" type="xs:string"/>
   <xs:element name="HWAER" type="xs:string"/>
   <xs:element name="WKURS" type="xs:decimal"/>
-  <xs:element name="ZTERM" type="xs:string"/>
   <xs:element name="BSART" type="xs:string"/>
   <xs:element name="FKART_RL" type="xs:string"/>
   <xs:element name="RECIPNT_NO" type="xs:int"/>
@@ -121,20 +120,20 @@
     </xs:complexType>
   </xs:element>
   <xs:element name="PARVW" type="xs:string"/>
-  <xs:element name="LIFNR" type="xs:string"/>
-  <xs:element name="PARTN" type="xs:string"/>
+  <xs:element name="LIFNR" type="xs:int"/>
+  <xs:element name="PARTN" type="xs:int"/>
   <xs:element name="NAME1" type="xs:string"/>
   <xs:element name="STRAS" type="xs:string"/>
   <xs:element name="STRS2" type="xs:string"/>
   <xs:element name="ORT01" type="xs:string"/>
-  <xs:element name="PSTLZ" type="xs:string"/>
+  <xs:element name="PSTLZ" type="xs:int"/>
   <xs:element name="LAND1" type="xs:string"/>
   <xs:element name="TELF1" type="xs:string"/>
   <xs:element name="TELFX" type="xs:string"/>
   <xs:element name="SPRAS" type="xs:string"/>
   <xs:element name="REGIO" type="xs:int"/>
   <xs:element name="BNAME" type="xs:string"/>
-  <xs:element name="PAORG" type="xs:string"/>
+  <xs:element name="PAORG" type="xs:int"/>
   <xs:element name="E1EDK02">
     <xs:complexType>
       <xs:sequence>
@@ -145,7 +144,7 @@
       <xs:attribute name="SEGMENT" use="required" type="xs:int"/>
     </xs:complexType>
   </xs:element>
-  <xs:element name="DATUM" type="xs:string"/>
+  <xs:element name="DATUM" type="xs:int"/>
   <xs:element name="E1EDK14">
     <xs:complexType>
       <xs:sequence>
@@ -163,9 +162,10 @@
         <xs:element ref="MENGE"/>
         <xs:element ref="MENEE"/>
         <xs:element ref="GEWEI"/>
+        <xs:element ref="BRGEW"/>
         <xs:element ref="PSTYV"/>
         <xs:element ref="WERKS"/>
-        <xs:element ref="E1EDP19" maxOccurs="unbounded"/>
+        <xs:element ref="E1EDP19"/>
       </xs:sequence>
       <xs:attribute name="SEGMENT" use="required" type="xs:int"/>
     </xs:complexType>
@@ -174,7 +174,7 @@
   <xs:element name="MENGE" type="xs:decimal"/>
   <xs:element name="MENEE" type="xs:string"/>
   <xs:element name="PSTYV" type="xs:string"/>
-  <xs:element name="WERKS" type="xs:string"/>
+  <xs:element name="WERKS" type="xs:int"/>
   <xs:element name="E1EDP19">
     <xs:complexType>
       <xs:sequence>
@@ -187,7 +187,8 @@
   </xs:element>
   <xs:element name="IDTNR" type="xs:int"/>
   <xs:element name="KTEXT" type="xs:string"/>
-  <xs:element name="BELNR" type="xs:string"/>
+  <xs:element name="BELNR" type="xs:NMTOKEN"/>
+  <xs:element name="BRGEW" type="xs:decimal"/>
   <xs:element name="GEWEI" type="xs:string"/>
   <xs:element name="QUALF" type="xs:int"/>
 </xs:schema>
