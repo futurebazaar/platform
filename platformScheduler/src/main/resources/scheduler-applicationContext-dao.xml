@@ -16,4 +16,7 @@
 	<bean id="orderXmlDao" class="com.fb.platform.scheduler.dao.impl.OrderXmlDaoJdbcImpl">
 		<property name="jdbcTemplate" ref="jdbcTemplate"/>
 	</bean>
+	<bean id="fillWalletXmlDao" class="com.fb.platform.scheduler.dao.impl.FillWalletXmlDaoImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate"/>
+	</bean>
 </beans>
