@@ -67,9 +67,9 @@ public class ZBBDELHEADER {
     @XmlElement(name = "DELTCODE", required = true)
     protected String deltcode;
     @XmlElement(name = "DELDATE")
-    protected int deldate;
+    protected String deldate;
     @XmlElement(name = "DELTIME")
-    protected int deltime;
+    protected String deltime;
     @XmlElement(name = "ZBBDEL_ITEM", required = true)
     protected List<ZBBDELITEM> zbbdelitem;
     @XmlAttribute(name = "SEGMENT", required = true)
@@ -143,7 +143,7 @@ public class ZBBDELHEADER {
      * Gets the value of the deldate property.
      * 
      */
-    public int getDELDATE() {
+    public String getDELDATE() {
         return deldate;
     }
 
@@ -151,7 +151,7 @@ public class ZBBDELHEADER {
      * Sets the value of the deldate property.
      * 
      */
-    public void setDELDATE(int value) {
+    public void setDELDATE(String value) {
         this.deldate = value;
     }
 
@@ -159,7 +159,7 @@ public class ZBBDELHEADER {
      * Gets the value of the deltime property.
      * 
      */
-    public int getDELTIME() {
+    public String getDELTIME() {
         return deltime;
     }
 
@@ -167,7 +167,7 @@ public class ZBBDELHEADER {
      * Sets the value of the deltime property.
      * 
      */
-    public void setDELTIME(int value) {
+    public void setDELTIME(String value) {
         this.deltime = value;
     }
 

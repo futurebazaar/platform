@@ -18,25 +18,19 @@ import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 
 import com.fb.commons.PlatformException;
-import com.fb.commons.mom.bigBazaar.to.DeliveryAdditionalHeaderTO;
-import com.fb.commons.mom.bigBazaar.to.DeliveryControlTO;
-import com.fb.commons.mom.bigBazaar.to.DeliveryDeadlineTO;
+import com.fb.commons.mom.bigBazaar.to.DeliveryDeleteBBHeaderTO;
 import com.fb.commons.mom.bigBazaar.to.DeliveryDeleteBBTO;
-import com.fb.commons.mom.bigBazaar.to.DeliveryHeaderTO;
-import com.fb.commons.mom.bigBazaar.to.DeliveryItemTO;
+import com.fb.commons.mom.bigBazaar.to.DeliveryDeleteItemBBTO;
 import com.fb.commons.mom.to.CorruptMessageCause;
 import com.fb.commons.mom.to.CorruptMessageTO;
 import com.fb.commons.mom.to.SapMomTO;
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler;
-import com.fb.platform.sap.idoc.generated.delvry01.E1EDL18;
-import com.fb.platform.sap.idoc.generated.delvry01.E1EDL20;
-import com.fb.platform.sap.idoc.generated.delvry01.E1EDL21;
-import com.fb.platform.sap.idoc.generated.delvry01.E1EDL24;
-import com.fb.platform.sap.idoc.generated.delvry01.E1EDT13;
 import com.fb.platform.sap.idoc.generated.invoic01.ObjectFactory;
 import com.fb.platform.sap.idoc.generated.zbbdeld.ZBBDELD;
+import com.fb.platform.sap.idoc.generated.zbbdeld.ZBBDELHEADER;
+import com.fb.platform.sap.idoc.generated.zbbdeld.ZBBDELITEM;
 import com.fb.platform.sap.util.AckUIDSequenceGenerator;
 
 /**
@@ -95,7 +89,7 @@ public class DeliveryDeleteBBIdocHandler implements PlatformIDocHandler {
 			sapIdoc.setIdocNumber(deliveryDeleteIdoc.getIDOC().getEDIDC40().getDOCNUM());
 			
 			apiDeliveryDelete.setSapIdoc(sapIdoc);
-			//apiDeliveryDelete.setDeliveryHeaderTO(getAPIDeliveryHeader(deliveryDeleteIdoc.getIDOC().getEDIDC40()));
+			apiDeliveryDelete.setDeliveryDeleteHeader(apiDeliveryDeleteHeader(deliveryDeleteIdoc.getIDOC().getZBBDELHEADER()));
 			
 			infoLog.info("Sending DeliveryDeleteBBTO to delivery delete big bazaar destination : " + apiDeliveryDelete.toString());
 			momManager.send(PlatformDestinationEnum.DELIVERY_DELETE_BB, apiDeliveryDelete);
@@ -115,86 +109,34 @@ public class DeliveryDeleteBBIdocHandler implements PlatformIDocHandler {
 		}
 	}
 
-	private DeliveryHeaderTO getAPIDeliveryHeader(E1EDL20 xmlDeliveryHeader) {
-		DeliveryHeaderTO apiDeliveryHeader = new DeliveryHeaderTO();
-		
-		apiDeliveryHeader.setSalesDistributionDoc(xmlDeliveryHeader.getVBELN());
-		apiDeliveryHeader.setReceivingPoint(xmlDeliveryHeader.getVSTEL());
-		apiDeliveryHeader.setSalesOrganization(xmlDeliveryHeader.getVKORG());
-		apiDeliveryHeader.setWarehouseRef(xmlDeliveryHeader.getLGNUM());
-		apiDeliveryHeader.setShippingConditions(xmlDeliveryHeader.getVSBED());
-		apiDeliveryHeader.setTotalWeight(xmlDeliveryHeader.getBTGEW());
-		apiDeliveryHeader.setNetWeight(xmlDeliveryHeader.getNTGEW());
-		apiDeliveryHeader.setVolume(xmlDeliveryHeader.getVOLUM());
-		apiDeliveryHeader.setPackageCount(xmlDeliveryHeader.getANZPK());
-		apiDeliveryHeader.setDeliveryDate(getDateTime(xmlDeliveryHeader.getPODAT(), xmlDeliveryHeader.getPOTIM()));
-		apiDeliveryHeader.setDeliveryAdditionalHeaderTO(apiDeliveryAdditionalHeaderTO(xmlDeliveryHeader.getE1EDL21()));
-		apiDeliveryHeader.setDeliveryControlTO(apiDeliveryControlTO(xmlDeliveryHeader.getE1EDL18()));
-		apiDeliveryHeader.setDeliveryDeadlineTO(apiDeliveryDeadlineTO(xmlDeliveryHeader.getE1EDT13()));
-		apiDeliveryHeader.setDeliveryItemList(apiDeliveryItemList(xmlDeliveryHeader.getE1EDL24()));
-		apiDeliveryHeader.setSegment(xmlDeliveryHeader.getSEGMENT());
-		
-		return apiDeliveryHeader;
-	}
-
-	private List<DeliveryItemTO> apiDeliveryItemList(List<E1EDL24> xmlDeliveryItemList) {
-		List<DeliveryItemTO> apiDeliveryItemList = new ArrayList<DeliveryItemTO>();
-		
-		for(E1EDL24 xmlDeliveryItem : xmlDeliveryItemList) {
-			apiDeliveryItemList.add(apiDeliveryItemList(xmlDeliveryItem));
-		}
-		
-		return apiDeliveryItemList;
-	}
-
-	private DeliveryItemTO apiDeliveryItemList(E1EDL24 xmlDeliveryItem) {
-		DeliveryItemTO apiDeliveryItem = new DeliveryItemTO();
-		
-		apiDeliveryItem.setItemNumber(xmlDeliveryItem.getPOSNR());
-		apiDeliveryItem.setArticleNumber(xmlDeliveryItem.getMATNR());
-		apiDeliveryItem.setArticleEntered(xmlDeliveryItem.getMATWA());
-		apiDeliveryItem.setSalesDesc(xmlDeliveryItem.getARKTX());
-		apiDeliveryItem.setMaterialGroup(xmlDeliveryItem.getMATKL());
-		apiDeliveryItem.setPlant(xmlDeliveryItem.getWERKS());
-		apiDeliveryItem.setStorageLocation(xmlDeliveryItem.getLGORT());
-		apiDeliveryItem.setActualQuantity(xmlDeliveryItem.getLFIMG());
-		apiDeliveryItem.setSalesUnit(xmlDeliveryItem.getVRKME());
-		apiDeliveryItem.setActualQuantityStockUnit(xmlDeliveryItem.getLGMNG());
-		apiDeliveryItem.setUnitOfMeasurement(xmlDeliveryItem.getMEINS());
-		apiDeliveryItem.setNetWeight(xmlDeliveryItem.getNTGEW());
-		apiDeliveryItem.setGrossWeight(xmlDeliveryItem.getBRGEW());
-		apiDeliveryItem.setWeightUnit(xmlDeliveryItem.getGEWEI());
-		apiDeliveryItem.setVolume(xmlDeliveryItem.getVOLUM());
-		apiDeliveryItem.setLoadingGroup(xmlDeliveryItem.getLADGR());
-		apiDeliveryItem.setTransportationGroup(xmlDeliveryItem.getTRAGR());
-		apiDeliveryItem.setDistributionChannel(xmlDeliveryItem.getVTWEG());
-		apiDeliveryItem.setDivision(xmlDeliveryItem.getSPART());
-		apiDeliveryItem.setDeliveryGroup(xmlDeliveryItem.getGRKOR());
-		apiDeliveryItem.setInternationalArticleNumber(xmlDeliveryItem.getEAN11());
-		apiDeliveryItem.setExternalItemNumber(xmlDeliveryItem.getPOSEX());
-		apiDeliveryItem.setExpirationDate(getDateTime(xmlDeliveryItem.getVFDAT(), null));
-		apiDeliveryItem.setSegment(xmlDeliveryItem.getSEGMENT());
-		
-		
-		return apiDeliveryItem;
-	}
-
-	private DeliveryDeadlineTO apiDeliveryDeadlineTO(E1EDT13 xmlDeliveryDeadline) {
-		DeliveryDeadlineTO apiDeliveryDeadline = new DeliveryDeadlineTO();
-		
-		apiDeliveryDeadline.setQualifier(xmlDeliveryDeadline.getQUALF());
-		apiDeliveryDeadline.setSegment(xmlDeliveryDeadline.getSEGMENT());
-		if(StringUtils.isNotBlank(xmlDeliveryDeadline.getNTANF()) && xmlDeliveryDeadline.getNTANF().length() >= 8) {
-			
-		}
-		apiDeliveryDeadline.setActivityStartDate(getDateTime(xmlDeliveryDeadline.getNTANF(), xmlDeliveryDeadline.getNTANZ()));
-		apiDeliveryDeadline.setActivityFinishDate(getDateTime(xmlDeliveryDeadline.getNTEND(), xmlDeliveryDeadline.getNTENZ()));
-		apiDeliveryDeadline.setActualStartDate(getDateTime(xmlDeliveryDeadline.getISDD(), xmlDeliveryDeadline.getISDZ()));
-		apiDeliveryDeadline.setActualFinishDate(getDateTime(xmlDeliveryDeadline.getIEDD(), xmlDeliveryDeadline.getIEDZ()));
-		
-		return apiDeliveryDeadline;
-	}
 	
+	private DeliveryDeleteBBHeaderTO apiDeliveryDeleteHeader(ZBBDELHEADER xmlDeliveryDeleteHeader) {
+		DeliveryDeleteBBHeaderTO apiDeliveryDeleteHeader = new DeliveryDeleteBBHeaderTO();
+		
+		apiDeliveryDeleteHeader.setDeletedCode(xmlDeliveryDeleteHeader.getDELTCODE());
+		apiDeliveryDeleteHeader.setDelivery(xmlDeliveryDeleteHeader.getDELIVERY());
+		apiDeliveryDeleteHeader.setOrder(xmlDeliveryDeleteHeader.getORDER());
+		apiDeliveryDeleteHeader.setDeletedDate(getDateTime(xmlDeliveryDeleteHeader.getDELDATE(), xmlDeliveryDeleteHeader.getDELTIME()));
+		apiDeliveryDeleteHeader.setDeletedItems(apiDeletedItems(xmlDeliveryDeleteHeader.getZBBDELITEM()));
+		
+		return apiDeliveryDeleteHeader;
+	}
+
+	private List<DeliveryDeleteItemBBTO> apiDeletedItems(List<ZBBDELITEM> xmlDeletedItems) {
+		List<DeliveryDeleteItemBBTO> apiDeletedItems = new ArrayList<DeliveryDeleteItemBBTO>();
+		
+		for(ZBBDELITEM xmlDeletedItem : xmlDeletedItems) {
+			DeliveryDeleteItemBBTO apiDeletedItem = new DeliveryDeleteItemBBTO();
+			
+			apiDeletedItem.setItemNum(xmlDeletedItem.getPOSNR());
+			apiDeletedItem.setUser(xmlDeletedItem.getDELUSER());
+			
+			apiDeletedItems.add(apiDeletedItem);
+		}
+		
+		return apiDeletedItems;
+	}
+
 	private DateTime getDateTime(String date, String time) {
 		int year = 0;
 		int month = 0;
@@ -224,26 +166,4 @@ public class DeliveryDeleteBBIdocHandler implements PlatformIDocHandler {
 	private boolean isTimeValid(String time) {
 		return (StringUtils.isNotBlank(time) && time.length() >= 8);
 	}
-
-	private DeliveryControlTO apiDeliveryControlTO(E1EDL18 xmlDeliveryControl) {
-		DeliveryControlTO apiDeliveryControl = new DeliveryControlTO();
-		
-		apiDeliveryControl.setQualifier(xmlDeliveryControl.getQUALF());
-		apiDeliveryControl.setSegment(xmlDeliveryControl.getSEGMENT());
-		
-		return apiDeliveryControl;
-	}
-
-	private DeliveryAdditionalHeaderTO apiDeliveryAdditionalHeaderTO(E1EDL21 xmlDeliveryAdditionalHeader) {
-		DeliveryAdditionalHeaderTO apiDeliveryAdditionalHeader = new DeliveryAdditionalHeaderTO();
-		
-		apiDeliveryAdditionalHeader.setDeliveryType(xmlDeliveryAdditionalHeader.getLFART());
-		apiDeliveryAdditionalHeader.setDeliveryTypeDesc(xmlDeliveryAdditionalHeader.getE1EDL23().getLFARTBEZ());
-		apiDeliveryAdditionalHeader.setDeliveryPriority(xmlDeliveryAdditionalHeader.getLPRIO());
-		apiDeliveryAdditionalHeader.setTransportationGroup(xmlDeliveryAdditionalHeader.getTRAGR());
-		apiDeliveryAdditionalHeader.setTransportationGroupDesc(xmlDeliveryAdditionalHeader.getE1EDL23().getTRAGRBEZ());
-		
-		return apiDeliveryAdditionalHeader;
-	}
-
 }

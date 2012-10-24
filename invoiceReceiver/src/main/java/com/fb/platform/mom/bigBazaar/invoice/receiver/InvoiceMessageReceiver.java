@@ -30,11 +30,11 @@ import org.apache.http.message.BasicNameValuePair;
 import com.fb.commons.PlatformException;
 import com.fb.commons.mom.bigBazaar.to.InvoiceTO;
 import com.fb.commons.mom.to.SapMomTO;
-import com.fb.platform.invoice._1_0.AddressTO;
-import com.fb.platform.invoice._1_0.InvoiceDocumentRefTO;
-import com.fb.platform.invoice._1_0.InvoiceHeaderTO;
-import com.fb.platform.invoice._1_0.InvoiceLineItemTO;
-import com.fb.platform.invoice._1_0.InvoicePartnerHeaderTO;
+import com.fb.platform.bigbazaar.invoice._1_0.AddressTO;
+import com.fb.platform.bigbazaar.invoice._1_0.InvoiceDocumentRefTO;
+import com.fb.platform.bigbazaar.invoice._1_0.InvoiceHeaderTO;
+import com.fb.platform.bigbazaar.invoice._1_0.InvoiceLineItemTO;
+import com.fb.platform.bigbazaar.invoice._1_0.InvoicePartnerHeaderTO;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
 import com.fb.platform.mom.util.LoggerConstants;
 
@@ -67,7 +67,7 @@ public class InvoiceMessageReceiver implements PlatformMessageReceiver{
 	
 	private static JAXBContext initContext() {
 		try {
-			return JAXBContext.newInstance("com.fb.platform.promotion._1_0");
+			return JAXBContext.newInstance("com.fb.platform.bigBazaar.invoice._1_0");
 		} catch (JAXBException e) {
 			infoLog.error("Error Initializing the JAXBContext to bind the schema classes", e);
 			throw new PlatformException("Error Initializing the JAXBContext to bind the schema classes", e);
@@ -104,7 +104,7 @@ public class InvoiceMessageReceiver implements PlatformMessageReceiver{
 
 		List<NameValuePair> parameters = new ArrayList<NameValuePair>();
 		
-		com.fb.platform.invoice._1_0.InvoiceTO xmlInvoiceTO = new com.fb.platform.invoice._1_0.InvoiceTO();
+		com.fb.platform.bigbazaar.invoice._1_0.InvoiceTO xmlInvoiceTO = new com.fb.platform.bigbazaar.invoice._1_0.InvoiceTO();
 		
 		xmlInvoiceTO.setSapMomTO(xmlSapMomTO(invoiceTO.getSapIdoc()));
 		xmlInvoiceTO.setInvoiceHeaderTO(xmlInvoiceHeaderTO(invoiceTO.getInvoiceHeader()));
@@ -247,8 +247,8 @@ public class InvoiceMessageReceiver implements PlatformMessageReceiver{
 		return invoiceHeaderTO;
 	}
 
-	private com.fb.platform.invoice._1_0.SapMomTO xmlSapMomTO(SapMomTO sapIdoc) {
-		com.fb.platform.invoice._1_0.SapMomTO xmlSapMomTO = new com.fb.platform.invoice._1_0.SapMomTO();
+	private com.fb.platform.bigbazaar.invoice._1_0.SapMomTO xmlSapMomTO(SapMomTO sapIdoc) {
+		com.fb.platform.bigbazaar.invoice._1_0.SapMomTO xmlSapMomTO = new com.fb.platform.bigbazaar.invoice._1_0.SapMomTO();
 		
 		xmlSapMomTO.setAckUID(sapIdoc.getAckUID());
 		xmlSapMomTO.setCanGr(sapIdoc.getCanGr());

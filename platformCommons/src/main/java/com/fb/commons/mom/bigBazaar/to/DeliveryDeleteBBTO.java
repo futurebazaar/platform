@@ -21,6 +21,16 @@ public class DeliveryDeleteBBTO implements Serializable {
 	private static final long serialVersionUID = -5568266197502838574L;
 	
 	private SapMomTO sapIdoc;
+	private DeliveryDeleteBBHeaderTO deliveryDeleteHeader;
+	
+	public DeliveryDeleteBBHeaderTO getDeliveryDeleteHeader() {
+		return deliveryDeleteHeader;
+	}
+
+	public void setDeliveryDeleteHeader(
+			DeliveryDeleteBBHeaderTO deliveryDeleteHeader) {
+		this.deliveryDeleteHeader = deliveryDeleteHeader;
+	}
 
 	public SapMomTO getSapIdoc() {
 		return sapIdoc;
@@ -34,6 +44,7 @@ public class DeliveryDeleteBBTO implements Serializable {
 	public String toString() {
 		return new ToStringBuilder(this)
 		.append("sapIdoc", this.sapIdoc)
+		.append("deliveryDeleteHeader", this.deliveryDeleteHeader)
 		.toString();
 	}
 }

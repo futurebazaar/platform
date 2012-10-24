@@ -30,6 +30,8 @@ import org.apache.http.message.BasicNameValuePair;
 import com.fb.commons.PlatformException;
 import com.fb.commons.mom.bigBazaar.to.DeliveryDeleteBBTO;
 import com.fb.commons.mom.to.SapMomTO;
+import com.fb.platform.bigbazaar.deliverydelete._1_0.DeliveryDeleteBBHeaderTO;
+import com.fb.platform.bigbazaar.deliverydelete._1_0.DeliveryDeleteItemBBTO;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
 import com.fb.platform.mom.util.LoggerConstants;
 
@@ -41,7 +43,7 @@ public class DeliveryDeleteBBMessageReceiver implements PlatformMessageReceiver{
 	
 	private static Log infoLog = LogFactory.getLog(DeliveryDeleteBBMessageReceiver.class);
 	
-	private static Log auditLog = LogFactory.getLog(LoggerConstants.DELIVERY_BB_AUDIT_LOG);
+	private static Log auditLog = LogFactory.getLog(LoggerConstants.DELIVERY_DELETE_BB_AUDIT_LOG);
 	
 	private static Properties prop = initProperties();
 	
@@ -62,7 +64,7 @@ public class DeliveryDeleteBBMessageReceiver implements PlatformMessageReceiver{
 	
 	private static JAXBContext initContext() {
 		try {
-			return JAXBContext.newInstance("com.fb.platform.promotion._1_0");
+			return JAXBContext.newInstance("com.fb.platform.bigBazaar.deliveryDelete._1_0");
 		} catch (JAXBException e) {
 			infoLog.error("Error Initializing the JAXBContext to bind the schema classes", e);
 			throw new PlatformException("Error Initializing the JAXBContext to bind the schema classes", e);
@@ -83,22 +85,25 @@ public class DeliveryDeleteBBMessageReceiver implements PlatformMessageReceiver{
 	}
 
 	private void sendAck(DeliveryDeleteBBTO deliveryDeleteBB) {
-		String deliveryURL = prop.getProperty("receiver.bigBazaar.deliveryDelete.url");
+		String deliveryDeleteURL = prop.getProperty("receiver.bigBazaar.deliveryDelete.url");
 		
 		HttpClient httpClient = new DefaultHttpClient();
-		HttpPost httpPost = new HttpPost(deliveryURL);
+		HttpPost httpPost = new HttpPost(deliveryDeleteURL);
 
 		List<NameValuePair> parameters = new ArrayList<NameValuePair>();
 		
+		com.fb.platform.bigbazaar.deliverydelete._1_0.DeliveryDeleteBBTO xmlDeliveryDelete = new com.fb.platform.bigbazaar.deliverydelete._1_0.DeliveryDeleteBBTO();
+		xmlDeliveryDelete.setSapMomTO(xmlSapMomTO(deliveryDeleteBB.getSapIdoc()));
+		xmlDeliveryDelete.setDeliveryDeleteBBHeaderTO(xmlDeliveryDeleteHeader(deliveryDeleteBB.getDeliveryDeleteHeader()));
 		
 		try {
 			StringWriter outStringWriter = new StringWriter();
 			Marshaller marshaller = context.createMarshaller();
-			/*marshaller.marshal(xmldeliveryTO, outStringWriter);
+			marshaller.marshal(xmlDeliveryDelete, outStringWriter);
 	
 			String xmlResponse = outStringWriter.toString();
 			
-			parameters.add(new BasicNameValuePair("delivery", xmlResponse));*/
+			parameters.add(new BasicNameValuePair("deliveryDelete", xmlResponse));
 			parameters.add(new BasicNameValuePair("sender", "MOM"));
 			
 			UrlEncodedFormEntity entity;
@@ -107,28 +112,70 @@ public class DeliveryDeleteBBMessageReceiver implements PlatformMessageReceiver{
 			HttpResponse response = httpClient.execute(httpPost);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode != HttpStatus.SC_OK) {
-				//infoLog.error("delivery ack not delivered : " + deliveryTO.toString());
-				throw new PlatformException("delivery ack not delivered to tinla on URL : " + deliveryURL);
+				infoLog.error("delivery delete big bazaar ack not delivered : " + deliveryDeleteBB.toString());
+				throw new PlatformException("delivery delete big bazaar ack delivered to tinla on URL : " + deliveryDeleteURL);
 			}
-			//auditLog.info(deliveryTO.getSapIdoc().getAckUID() + "," + deliveryTO.getSapIdoc().getIdocNumber() + "," + deliveryTO.getSapIdoc().getTimestamp() + ",true");
+			auditLog.info(deliveryDeleteBB.getSapIdoc().getAckUID() + "," + deliveryDeleteBB.getSapIdoc().getIdocNumber() + "," + deliveryDeleteBB.getSapIdoc().getTimestamp() + ",true");
 			infoLog.info("delivery ack delivered to tinla. Status code : " + statusCode);
 		} catch (UnsupportedEncodingException e) {
-			infoLog.error("Error communicating with tinla on url : " + deliveryURL, e);
-			//infoLog.error("delivery ack not delivered : " + deliveryTO.toString());
-			throw new PlatformException("Error communicating with tinla on url : " + deliveryURL, e);
+			infoLog.error("Error communicating with tinla on url : " + deliveryDeleteURL, e);
+			infoLog.error("delivery delete big bazaar ack delivered : " + deliveryDeleteBB.toString());
+			throw new PlatformException("Error communicating with tinla on url : " + deliveryDeleteURL, e);
 		} catch (ClientProtocolException e) {
-			infoLog.error("Error communicating with tinla on url : " + deliveryURL, e);
-			//infoLog.error("delivery ack not delivered : " + deliveryTO.toString());
-			throw new PlatformException("Error communicating with tinla on url : " + deliveryURL, e);
+			infoLog.error("Error communicating with tinla on url : " + deliveryDeleteURL, e);
+			infoLog.error("delivery delete big bazaar ack delivered : " + deliveryDeleteBB.toString());
+			throw new PlatformException("Error communicating with tinla on url : " + deliveryDeleteURL, e);
 		} catch (IOException e) {
-			infoLog.error("Error communicating with tinla on url : " + deliveryURL, e);
-			//infoLog.error("delivery ack not delivered : " + deliveryTO.toString());
-			throw new PlatformException("Error communicating with tinla on url : " + deliveryURL, e);
+			infoLog.error("Error communicating with tinla on url : " + deliveryDeleteURL, e);
+			infoLog.error("delivery delete big bazaar ack delivered : " + deliveryDeleteBB.toString());
+			throw new PlatformException("Error communicating with tinla on url : " + deliveryDeleteURL, e);
 		} catch (JAXBException e) {
-			infoLog.error("Error communicating with tinla on url : " + deliveryURL + " , ", e);
-			//infoLog.error("delivery ack not delivered : " + deliveryTO.toString());
-			throw new PlatformException("Error communicating with tinla on url : " + deliveryURL, e);
+			infoLog.error("Error communicating with tinla on url : " + deliveryDeleteURL + " , ", e);
+			infoLog.error("delivery delete big bazaar ack delivered : " + deliveryDeleteBB.toString());
+			throw new PlatformException("Error communicating with tinla on url : " + deliveryDeleteURL, e);
 		}
+	}
+
+	private DeliveryDeleteBBHeaderTO xmlDeliveryDeleteHeader(com.fb.commons.mom.bigBazaar.to.DeliveryDeleteBBHeaderTO deliveryDeleteHeader) {
+		DeliveryDeleteBBHeaderTO xmlDeliveryDeleteBBHeader = new DeliveryDeleteBBHeaderTO();
+		
+		xmlDeliveryDeleteBBHeader.setDeletedCode(deliveryDeleteHeader.getDeletedCode());
+		xmlDeliveryDeleteBBHeader.setDelivery(deliveryDeleteHeader.getDelivery());
+		xmlDeliveryDeleteBBHeader.setOrder(deliveryDeleteHeader.getOrder());
+		xmlDeliveryDeleteBBHeader.setDeletedDate(deliveryDeleteHeader.getDeletedDate().toDate());
+		xmlDeliveryDeleteBBHeader.getDeliveryDeleteItemBBTO().addAll(xmlDeletedItems(deliveryDeleteHeader.getDeletedItems()));
+		
+		return xmlDeliveryDeleteBBHeader;
+	}
+
+	private List<DeliveryDeleteItemBBTO> xmlDeletedItems(List<com.fb.commons.mom.bigBazaar.to.DeliveryDeleteItemBBTO> deletedItems) {
+		List<DeliveryDeleteItemBBTO> xmlDeletedItemsList = new ArrayList<DeliveryDeleteItemBBTO>();
+		
+		for(com.fb.commons.mom.bigBazaar.to.DeliveryDeleteItemBBTO apiItem : deletedItems) {
+			DeliveryDeleteItemBBTO xmlItem = new DeliveryDeleteItemBBTO();
+			
+			xmlItem.setItemNum(apiItem.getItemNum());
+			xmlItem.setUser(apiItem.getUser());
+			
+			xmlDeletedItemsList.add(xmlItem);
+		}
+		
+		return xmlDeletedItemsList;
+	}
+
+	private com.fb.platform.bigbazaar.deliverydelete._1_0.SapMomTO xmlSapMomTO(SapMomTO sapIdoc) {
+		com.fb.platform.bigbazaar.deliverydelete._1_0.SapMomTO xmlSapMomTO = new com.fb.platform.bigbazaar.deliverydelete._1_0.SapMomTO();
+		
+		xmlSapMomTO.setAckUID(sapIdoc.getAckUID());
+		xmlSapMomTO.setCanGr(sapIdoc.getCanGr());
+		xmlSapMomTO.setIdoc(sapIdoc.getIdoc());
+		xmlSapMomTO.setIdocNumber(sapIdoc.getIdocNumber());
+		xmlSapMomTO.setPoNumber(sapIdoc.getPoNumber());
+		xmlSapMomTO.setRefUID(sapIdoc.getRefUID());
+		xmlSapMomTO.setSegmentNumber(sapIdoc.getSegmentNumber());
+		xmlSapMomTO.setTimestamp(sapIdoc.getTimestamp().toDate());
+		
+		return xmlSapMomTO;
 	}
 	
 }

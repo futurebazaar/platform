@@ -30,11 +30,11 @@ import org.apache.http.message.BasicNameValuePair;
 import com.fb.commons.PlatformException;
 import com.fb.commons.mom.bigBazaar.to.DeliveryTO;
 import com.fb.commons.mom.to.SapMomTO;
-import com.fb.platform.delivery._1_0.DeliveryAdditionalHeaderTO;
-import com.fb.platform.delivery._1_0.DeliveryControlTO;
-import com.fb.platform.delivery._1_0.DeliveryDeadlineTO;
-import com.fb.platform.delivery._1_0.DeliveryHeaderTO;
-import com.fb.platform.delivery._1_0.DeliveryItemTO;
+import com.fb.platform.bigbazaar.delivery._1_0.DeliveryAdditionalHeaderTO;
+import com.fb.platform.bigbazaar.delivery._1_0.DeliveryControlTO;
+import com.fb.platform.bigbazaar.delivery._1_0.DeliveryDeadlineTO;
+import com.fb.platform.bigbazaar.delivery._1_0.DeliveryHeaderTO;
+import com.fb.platform.bigbazaar.delivery._1_0.DeliveryItemTO;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
 import com.fb.platform.mom.util.LoggerConstants;
 
@@ -67,7 +67,7 @@ public class DeliveryMessageReceiver implements PlatformMessageReceiver{
 	
 	private static JAXBContext initContext() {
 		try {
-			return JAXBContext.newInstance("com.fb.platform.promotion._1_0");
+			return JAXBContext.newInstance("com.fb.platform.bigBaaar.delivery._1_0");
 		} catch (JAXBException e) {
 			infoLog.error("Error Initializing the JAXBContext to bind the schema classes", e);
 			throw new PlatformException("Error Initializing the JAXBContext to bind the schema classes", e);
@@ -95,7 +95,7 @@ public class DeliveryMessageReceiver implements PlatformMessageReceiver{
 
 		List<NameValuePair> parameters = new ArrayList<NameValuePair>();
 		
-		com.fb.platform.delivery._1_0.DeliveryTO xmldeliveryTO = new com.fb.platform.delivery._1_0.DeliveryTO();
+		com.fb.platform.bigbazaar.delivery._1_0.DeliveryTO xmldeliveryTO = new com.fb.platform.bigbazaar.delivery._1_0.DeliveryTO();
 		
 		xmldeliveryTO.setSapMomTO(xmlSapMomTO(deliveryTO.getSapIdoc()));
 		xmldeliveryTO.setDeliveryHeaderTO(xmlDeliveryHeaderTO(deliveryTO.getDeliveryHeaderTO()));
@@ -238,8 +238,8 @@ public class DeliveryMessageReceiver implements PlatformMessageReceiver{
 		return xmlDeliveryAdditionalHeader;
 	}
 
-	private com.fb.platform.delivery._1_0.SapMomTO xmlSapMomTO(SapMomTO sapIdoc) {
-		com.fb.platform.delivery._1_0.SapMomTO xmlSapMomTO = new com.fb.platform.delivery._1_0.SapMomTO();
+	private com.fb.platform.bigbazaar.delivery._1_0.SapMomTO xmlSapMomTO(SapMomTO sapIdoc) {
+		com.fb.platform.bigbazaar.delivery._1_0.SapMomTO xmlSapMomTO = new com.fb.platform.bigbazaar.delivery._1_0.SapMomTO();
 		
 		xmlSapMomTO.setAckUID(sapIdoc.getAckUID());
 		xmlSapMomTO.setCanGr(sapIdoc.getCanGr());
