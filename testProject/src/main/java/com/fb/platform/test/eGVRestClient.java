@@ -37,8 +37,6 @@ import com.fb.platform.egv._1_0.GetInfoRequest;
 import com.fb.platform.egv._1_0.GetInfoResponse;
 import com.fb.platform.egv._1_0.SendPinRequest;
 import com.fb.platform.egv._1_0.SendPinResponse;
-import com.fb.platform.egv._1_0.UseRequest;
-import com.fb.platform.egv._1_0.UseResponse;
 /**
  * @author keith
  * 
@@ -334,41 +332,47 @@ public class eGVRestClient {
 	}
 
 	private static void useGV(String sessionToken, String gvNumber, BigDecimal amount, int orderId) throws Exception {
-		HttpClient httpClient = new HttpClient();
-		String url = EGV_URL + "/use";
-		PostMethod postMethod = new PostMethod(url);
-
-		UseRequest useRequest = new UseRequest();
-		useRequest.setGiftVoucherNumber(Long.parseLong(gvNumber));
-		useRequest.setSessionToken(sessionToken);
-		useRequest.setAmount(amount);
-		useRequest.setOrderId(orderId);
-
-		JAXBContext context = JAXBContext.newInstance("com.fb.platform.egv._1_0");
-
-		Marshaller marshaller = context.createMarshaller();
-		StringWriter sw = new StringWriter();
-		marshaller.marshal(useRequest, sw);
-
-		System.out.println("\n================== Testing eGV Use Web Service Call ============ \n" + "The URL is : "
-				+ url);
-		System.out.println("\n\n Request  : \n   " + sw.toString());
-
-		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
-		postMethod.setRequestEntity(requestEntity);
-
-		int statusCode = httpClient.executeMethod(postMethod);
-		if (statusCode != HttpStatus.SC_OK) {
-			System.out.println("\n\nunable to execute the Web Service method : " + statusCode);
-			System.exit(1);
-		}
-		String responseString = postMethod.getResponseBodyAsString();
-		System.out.println("\n\nGot the Response : \n   " + responseString);
-		Unmarshaller unmarshaller = context.createUnmarshaller();
-		UseResponse response = (UseResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(responseString)));
-		System.out.println("Response Status " + response.getUseResponseStatus());
-
-		System.out.println("\n\n ============= Use Web Service Call Over =============== \n\n");
+		// HttpClient httpClient = new HttpClient();
+		// String url = EGV_URL + "/use";
+		// PostMethod postMethod = new PostMethod(url);
+		//
+		// UseRequest useRequest = new UseRequest();
+		// useRequest.setGiftVoucherNumber(Long.parseLong(gvNumber));
+		// useRequest.setSessionToken(sessionToken);
+		// useRequest.setAmount(amount);
+		// useRequest.setOrderId(orderId);
+		//
+		// JAXBContext context =
+		// JAXBContext.newInstance("com.fb.platform.egv._1_0");
+		//
+		// Marshaller marshaller = context.createMarshaller();
+		// StringWriter sw = new StringWriter();
+		// marshaller.marshal(useRequest, sw);
+		//
+		// System.out.println("\n================== Testing eGV Use Web Service Call ============ \n"
+		// + "The URL is : "
+		// + url);
+		// System.out.println("\n\n Request  : \n   " + sw.toString());
+		//
+		// StringRequestEntity requestEntity = new
+		// StringRequestEntity(sw.toString());
+		// postMethod.setRequestEntity(requestEntity);
+		//
+		// int statusCode = httpClient.executeMethod(postMethod);
+		// if (statusCode != HttpStatus.SC_OK) {
+		// System.out.println("\n\nunable to execute the Web Service method : "
+		// + statusCode);
+		// System.exit(1);
+		// }
+		// String responseString = postMethod.getResponseBodyAsString();
+		// System.out.println("\n\nGot the Response : \n   " + responseString);
+		// Unmarshaller unmarshaller = context.createUnmarshaller();
+		// UseResponse response = (UseResponse) unmarshaller.unmarshal(new
+		// StreamSource(new StringReader(responseString)));
+		// System.out.println("Response Status " +
+		// response.getUseResponseStatus());
+		//
+		// System.out.println("\n\n ============= Use Web Service Call Over =============== \n\n");
 	}
 
 	private static void activateGV(String sessionToken, String gvNumber, BigDecimal amount, DateTime validFrom,
