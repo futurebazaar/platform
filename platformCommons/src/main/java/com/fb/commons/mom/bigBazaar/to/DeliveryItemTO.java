@@ -20,6 +20,7 @@ public class DeliveryItemTO implements Serializable {
 	 */
 	private static final long serialVersionUID = -8248828851879676485L;
 	
+	private String orderNumber;
 	private int itemNumber;
 	private String articleNumber;
 	private String articleEntered;
@@ -189,10 +190,17 @@ public class DeliveryItemTO implements Serializable {
 	public void setSegment(int segment) {
 		this.segment = segment;
 	}
+	public String getOrderNumber() {
+		return orderNumber;
+	}
+	public void setOrderNumber(String orderNumber) {
+		this.orderNumber = orderNumber;
+	}
 
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this)
+			.append("orderNumber", this.orderNumber)
 			.append("itemNumber", this.itemNumber)
 			.append("articleNumber", this.articleNumber)
 			.append("articleEntered", this.articleEntered)

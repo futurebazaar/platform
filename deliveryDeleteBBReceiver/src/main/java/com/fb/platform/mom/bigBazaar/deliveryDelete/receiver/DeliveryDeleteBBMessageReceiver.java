@@ -140,8 +140,8 @@ public class DeliveryDeleteBBMessageReceiver implements PlatformMessageReceiver{
 		DeliveryDeleteBBHeaderTO xmlDeliveryDeleteBBHeader = new DeliveryDeleteBBHeaderTO();
 		
 		xmlDeliveryDeleteBBHeader.setDeletedCode(deliveryDeleteHeader.getDeletedCode());
-		xmlDeliveryDeleteBBHeader.setDelivery(deliveryDeleteHeader.getDelivery());
-		xmlDeliveryDeleteBBHeader.setOrder(deliveryDeleteHeader.getOrder());
+		xmlDeliveryDeleteBBHeader.setDeliveryNumber(deliveryDeleteHeader.getDeliveryNumber());
+		xmlDeliveryDeleteBBHeader.setOrderNumber(deliveryDeleteHeader.getOrderNumber());
 		xmlDeliveryDeleteBBHeader.setDeletedDate(deliveryDeleteHeader.getDeletedDate().toDate());
 		xmlDeliveryDeleteBBHeader.getDeliveryDeleteItemBBTO().addAll(xmlDeletedItems(deliveryDeleteHeader.getDeletedItems()));
 		

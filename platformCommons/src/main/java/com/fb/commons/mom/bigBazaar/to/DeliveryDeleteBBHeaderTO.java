@@ -20,23 +20,23 @@ public class DeliveryDeleteBBHeaderTO implements Serializable {
 	 */
 	private static final long serialVersionUID = -7917590473751536480L;
 	
-	private String order;
-	private int delivery;
+	private String orderNumber;
+	private int deliveryNumber;
 	private String deletedCode;
 	private DateTime deletedDate;
 	private List<DeliveryDeleteItemBBTO> deletedItems;
 	
-	public String getOrder() {
-		return order;
+	public String getOrderNumber() {
+		return orderNumber;
 	}
-	public void setOrder(String order) {
-		this.order = order;
+	public void setOrderNumber(String orderNumber) {
+		this.orderNumber = orderNumber;
 	}
-	public int getDelivery() {
-		return delivery;
+	public int getDeliveryNumber() {
+		return deliveryNumber;
 	}
-	public void setDelivery(int delivery) {
-		this.delivery = delivery;
+	public void setDeliveryNumber(int deliveryNumber) {
+		this.deliveryNumber = deliveryNumber;
 	}
 	public String getDeletedCode() {
 		return deletedCode;
@@ -60,8 +60,8 @@ public class DeliveryDeleteBBHeaderTO implements Serializable {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this)
-			.append("order", this.order)
-			.append("delivery", this.delivery)
+			.append("orderNumber", this.orderNumber)
+			.append("deliveryNumber", this.deliveryNumber)
 			.append("deletedCode", this.deletedCode)
 			.append("deletedDate", this.deletedDate)
 			.append("deletedItems", this.deletedItems)

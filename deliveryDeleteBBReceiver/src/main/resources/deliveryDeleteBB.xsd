@@ -38,8 +38,8 @@
 	<xs:element name="deliveryDeleteBBHeaderTO">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="deliveryDelete:order"/>
-				<xs:element ref="deliveryDelete:delivery"/>
+				<xs:element ref="deliveryDelete:orderNumber"/>
+				<xs:element ref="deliveryDelete:deliveryNumber"/>
 				<xs:element ref="deliveryDelete:deletedCode"/>
 				<xs:element ref="deliveryDelete:deletedDate"/>
 				<xs:element ref="deliveryDelete:deliveryDeleteItemBBTO" maxOccurs="unbounded"/>
@@ -47,8 +47,8 @@
 		</xs:complexType>
 	</xs:element>
 	
-	<xs:element name="order" type="xs:string"/>
-	<xs:element name="delivery" type="xs:int"/>
+	<xs:element name="orderNumber" type="xs:string"/>
+	<xs:element name="deliveryNumber" type="xs:int"/>
 	<xs:element name="deletedCode" type="xs:string"/>
 	<xs:element name="deletedDate" type="xs:date"/>
 	

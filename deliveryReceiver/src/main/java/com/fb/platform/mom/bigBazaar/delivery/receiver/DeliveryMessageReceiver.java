@@ -151,7 +151,7 @@ public class DeliveryMessageReceiver implements PlatformMessageReceiver{
 		xmlDeliveryHeader.setNetWeight(deliveryHeaderTO.getNetWeight());
 		xmlDeliveryHeader.setPackageCount(deliveryHeaderTO.getPackageCount());
 		xmlDeliveryHeader.setReceivingPoint(deliveryHeaderTO.getReceivingPoint());
-		xmlDeliveryHeader.setSalesDistributionDoc(deliveryHeaderTO.getSalesDistributionDoc());
+		xmlDeliveryHeader.setDeliveryNumber(deliveryHeaderTO.getDeliveryNumber());
 		xmlDeliveryHeader.setSalesOrganization(deliveryHeaderTO.getSalesOrganization());
 		xmlDeliveryHeader.setSegment(deliveryHeaderTO.getSegment());
 		xmlDeliveryHeader.setShippingConditions(deliveryHeaderTO.getShippingConditions());
@@ -186,6 +186,7 @@ public class DeliveryMessageReceiver implements PlatformMessageReceiver{
 		xmlDeliveryItem.setExternalItemNumber(deliveryItemTO.getExternalItemNumber());
 		xmlDeliveryItem.setGrossWeight(deliveryItemTO.getGrossWeight());
 		xmlDeliveryItem.setInternationalArticleNumber(deliveryItemTO.getInternationalArticleNumber());
+		xmlDeliveryItem.setOrderNumber(deliveryItemTO.getOrderNumber());
 		xmlDeliveryItem.setItemNumber(deliveryItemTO.getItemNumber());
 		xmlDeliveryItem.setLoadingGroup(deliveryItemTO.getLoadingGroup());
 		xmlDeliveryItem.setMaterialGroup(deliveryItemTO.getMaterialGroup());

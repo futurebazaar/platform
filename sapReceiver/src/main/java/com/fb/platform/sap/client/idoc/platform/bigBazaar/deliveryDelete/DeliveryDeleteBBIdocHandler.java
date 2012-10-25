@@ -114,8 +114,8 @@ public class DeliveryDeleteBBIdocHandler implements PlatformIDocHandler {
 		DeliveryDeleteBBHeaderTO apiDeliveryDeleteHeader = new DeliveryDeleteBBHeaderTO();
 		
 		apiDeliveryDeleteHeader.setDeletedCode(xmlDeliveryDeleteHeader.getDELTCODE());
-		apiDeliveryDeleteHeader.setDelivery(xmlDeliveryDeleteHeader.getDELIVERY());
-		apiDeliveryDeleteHeader.setOrder(xmlDeliveryDeleteHeader.getORDER());
+		apiDeliveryDeleteHeader.setDeliveryNumber(xmlDeliveryDeleteHeader.getDELIVERY());
+		apiDeliveryDeleteHeader.setOrderNumber(xmlDeliveryDeleteHeader.getORDER());
 		apiDeliveryDeleteHeader.setDeletedDate(getDateTime(xmlDeliveryDeleteHeader.getDELDATE(), xmlDeliveryDeleteHeader.getDELTIME()));
 		apiDeliveryDeleteHeader.setDeletedItems(apiDeletedItems(xmlDeliveryDeleteHeader.getZBBDELITEM()));
 		

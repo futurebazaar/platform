@@ -118,7 +118,7 @@ public class DeliveryIdocHandler implements PlatformIDocHandler {
 	private DeliveryHeaderTO getAPIDeliveryHeader(E1EDL20 xmlDeliveryHeader) {
 		DeliveryHeaderTO apiDeliveryHeader = new DeliveryHeaderTO();
 		
-		apiDeliveryHeader.setSalesDistributionDoc(xmlDeliveryHeader.getVBELN());
+		apiDeliveryHeader.setDeliveryNumber(xmlDeliveryHeader.getVBELN());
 		apiDeliveryHeader.setReceivingPoint(xmlDeliveryHeader.getVSTEL());
 		apiDeliveryHeader.setSalesOrganization(xmlDeliveryHeader.getVKORG());
 		apiDeliveryHeader.setWarehouseRef(xmlDeliveryHeader.getLGNUM());
@@ -150,6 +150,7 @@ public class DeliveryIdocHandler implements PlatformIDocHandler {
 	private DeliveryItemTO apiDeliveryItemList(E1EDL24 xmlDeliveryItem) {
 		DeliveryItemTO apiDeliveryItem = new DeliveryItemTO();
 		
+		apiDeliveryItem.setOrderNumber(xmlDeliveryItem.getE1EDL43().getBELNR());
 		apiDeliveryItem.setItemNumber(xmlDeliveryItem.getPOSNR());
 		apiDeliveryItem.setArticleNumber(xmlDeliveryItem.getMATNR());
 		apiDeliveryItem.setArticleEntered(xmlDeliveryItem.getMATWA());

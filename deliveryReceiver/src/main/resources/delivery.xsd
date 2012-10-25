@@ -37,7 +37,7 @@
 	<xs:element name="deliveryHeaderTO">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="delivery:salesDistributionDoc"/>
+				<xs:element ref="delivery:deliveryNumber"/>
 				<xs:element ref="delivery:receivingPoint"/>
 				<xs:element ref="delivery:salesOrganization"/>
 				<xs:element ref="delivery:warehouseRef"/>
@@ -56,7 +56,7 @@
 		</xs:complexType>
 	</xs:element>
 	
-	<xs:element name="salesDistributionDoc" type="xs:string"/>
+	<xs:element name="deliveryNumber" type="xs:string"/>
 	<xs:element name="receivingPoint" type="xs:int"/>
 	<xs:element name="salesOrganization" type="xs:int"/>
 	<xs:element name="warehouseRef" type="xs:string"/>
@@ -120,6 +120,7 @@
 	<xs:element name="deliveryItemTO">
 		<xs:complexType>
 			<xs:sequence>
+				<xs:element ref="delivery:orderNumber"/>
 				<xs:element ref="delivery:itemNumber"/>
 				<xs:element ref="delivery:articleNumber"/>
 				<xs:element ref="delivery:articleEntered"/>
@@ -148,6 +149,7 @@
 		</xs:complexType>
 	</xs:element>
 	
+	<xs:element name="orderNumber" type="xs:string"/>
 	<xs:element name="itemNumber" type="xs:int"/>
 	<xs:element name="articleNumber" type="xs:string"/>
 	<xs:element name="articleEntered" type="xs:string"/>
