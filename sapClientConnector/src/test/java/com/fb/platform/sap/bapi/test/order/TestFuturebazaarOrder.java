@@ -27,7 +27,7 @@ public class TestFuturebazaarOrder extends BaseTestCase {
 	
 	private SapOrderRequestTO getBapiTO() {
 		SapOrderRequestTO bapiTO = new SapOrderRequestTO();
-		bapiTO.setOrderType(TinlaOrderType.MOD_ORDER);
+		bapiTO.setOrderType(TinlaOrderType.NEW_ORDER);
 		bapiTO.setOrderHeaderTO(getOrderTO());
 		bapiTO.setLineItemTO(getLineItemTO());
 		bapiTO.setBillingAddressTO(getAddressTO());
@@ -62,7 +62,7 @@ public class TestFuturebazaarOrder extends BaseTestCase {
 		orderHeaderTO.setCreatedOn(DateTime.now());
 		//orderHeaderTO.set
 		orderHeaderTO.setSalesDocType("ZATG");
-		orderHeaderTO.setReferenceID("5049999964");
+		orderHeaderTO.setReferenceID("5049999962");
 		orderHeaderTO.setReturnOrderID("6699999999");
 		orderHeaderTO.setLoyaltyCardNumber("1234123412341234");
 		orderHeaderTO.setPricingTO(getPricingTO());
@@ -87,9 +87,9 @@ public class TestFuturebazaarOrder extends BaseTestCase {
 		List<LineItemTO> lineItemTOList = new ArrayList<LineItemTO>();
 		LineItemTO lineItemTO1 = new LineItemTO();
 		lineItemTO1.setPricingTO(getPricingTO());
-		lineItemTO1.setArticleID("000000000300000560");
+		lineItemTO1.setArticleID("000000000300293563");
 		lineItemTO1.setSapDocumentId(10);
-		lineItemTO1.setQuantity(new BigDecimal("3.00"));
+		lineItemTO1.setQuantity(new BigDecimal("1.00"));
 		lineItemTO1.setDescription("TEST ARTICLE");
 		lineItemTO1.setPlantId("2786");
 		lineItemTO1.setSalesUnit("EA");
@@ -98,6 +98,34 @@ public class TestFuturebazaarOrder extends BaseTestCase {
 		lineItemTO1.setAddressTO(getAddressTO());
 		lineItemTO1.setOperationCode("U");
 		lineItemTOList.add(lineItemTO1);
+		
+		LineItemTO lineItemTO2 = new LineItemTO();
+		lineItemTO2.setPricingTO(getPricingTO());
+		lineItemTO2.setArticleID("000000000102061836");
+		lineItemTO2.setSapDocumentId(20);
+		lineItemTO2.setQuantity(new BigDecimal("2.00"));
+		lineItemTO2.setDescription("TEST ARTICLE");
+		lineItemTO2.setPlantId("2786");
+		lineItemTO2.setSalesUnit("EA");
+		lineItemTO2.setStorageLocation(10);
+		lineItemTO2.setReasonCode("01");
+		lineItemTO2.setOperationCode("C");
+		lineItemTO2.setAddressTO(getAddressTO());
+		lineItemTOList.add(lineItemTO2);
+		
+		LineItemTO lineItemTO3 = new LineItemTO();
+		lineItemTO3.setPricingTO(getPricingTO());
+		lineItemTO3.setArticleID("000000000102061836");
+		lineItemTO3.setSapDocumentId(30);
+		lineItemTO3.setQuantity(new BigDecimal("4.00"));
+		lineItemTO3.setDescription("TEST ARTICLE");
+		lineItemTO3.setPlantId("2786");
+		lineItemTO3.setSalesUnit("EA");
+		lineItemTO3.setStorageLocation(10);
+		lineItemTO3.setReasonCode("103");
+		lineItemTO3.setOperationCode("I");
+		lineItemTO3.setAddressTO(getAddressTO());
+		lineItemTOList.add(lineItemTO3);
 		return lineItemTOList;
 	}
 	

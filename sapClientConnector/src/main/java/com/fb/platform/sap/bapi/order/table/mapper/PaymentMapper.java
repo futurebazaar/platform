@@ -24,7 +24,8 @@ public class PaymentMapper {
 			
 	public static void setDetails(JCoFunction bapiFunction, OrderHeaderTO orderHeaderTO, List<PaymentTO> paymentTOList) {
 		// No Payment conditions defined in SAP for Big Bazaar and hence skipping
-		if (TinlaClient.valueOf(orderHeaderTO.getClient()).equals(TinlaClient.BIGBAZAAR)) {
+		TinlaClient client = TinlaClient.valueOf(orderHeaderTO.getClient());
+		if (SapUtils.isBigBazaar(client)) {
 			return;
 		}
 		logger.info("Setting Item Condition details for : " + orderHeaderTO.getReferenceID());
@@ -33,13 +34,31 @@ public class PaymentMapper {
 			logger.info("Payment Detail for payment mode " + paymentMode + " is: " + paymentTO);
 			if (paymentMode.equalsIgnoreCase("cod")) { 
 				setCodDetails(bapiFunction, paymentMode, orderHeaderTO, paymentTO);
-			}
-			else {
+			} else if (paymentMode.equalsIgnoreCase("cheque")) { 
+				setChequeDetails(bapiFunction, paymentMode, orderHeaderTO, paymentTO);
+			} else {
 				setCardDetails(bapiFunction, paymentMode, orderHeaderTO,  paymentTO);
 			}
 		}
 	}
 	
+	private static void setChequeDetails(JCoFunction bapiFunction, String paymentMode, OrderHeaderTO orderHeaderTO, PaymentTO paymentTO) {
+		JCoTable orderText = bapiFunction.getTableParameterList().getTable(BapiOrderTable.ORDER_TEXT.toString());
+		orderText.appendRow();
+		orderText.setValue(SapOrderConstants.ITEM_NUMBER, SapOrderConstants.DEFAULT_ITEM_NUMER);
+		orderText.setValue(SapOrderConstants.TEXT_ID, SapOrderConstants.CHEQUE_TEXT_ID);
+		orderText.setValue(SapOrderConstants.LANGUAGE, SapOrderConstants.DEFAULT_LANGUAGE);
+		String chequeDetail = "Amount: " +  paymentTO.getPricingTO().getPayableAmount() +
+													"Auth ref code: " +  paymentTO.getAuthCode() +
+													"Bank: " +  paymentTO.getBank() +
+													"Cheque date: " + paymentTO.getValidTill() +
+													"Cheque No: " + paymentTO.getInstrumentNumber() +
+													"Currency: " + paymentTO.getPricingTO().getCurrency();
+													
+		orderText.setValue(SapOrderConstants.TEXT_LINE, chequeDetail);
+		
+	}
+
 	private static void setCardDetails(JCoFunction bapiFunction, String paymentMode, OrderHeaderTO orderHeaderTO, PaymentTO paymentTO) {
 		JCoTable orderCreditCard = bapiFunction.getTableParameterList().getTable(BapiOrderTable.ORDER_CCARD.toString());
 		orderCreditCard.appendRow();

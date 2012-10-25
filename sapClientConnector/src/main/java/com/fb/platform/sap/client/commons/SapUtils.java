@@ -27,5 +27,12 @@ public class SapUtils {
 			return null;
 		}
 	}
+	
+	public static boolean isBigBazaar(TinlaClient client) {
+		if (client.equals(TinlaClient.BIGBAZAAR) || client.equals(TinlaClient.SELLER)) {
+			return true;
+		}
+		return false;
+	}
 
 }
