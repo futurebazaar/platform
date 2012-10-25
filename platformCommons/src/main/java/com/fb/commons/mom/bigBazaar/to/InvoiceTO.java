@@ -24,8 +24,10 @@ public class InvoiceTO implements Serializable {
 	private SapMomTO sapIdoc = null;
 	private InvoiceHeaderTO invoiceHeader = null;
 	private List<InvoicePartnerHeaderTO> invoicePartnerHeader = null;
-	private List<InvoiceDocumentRefTO> invoiceDocRef = null;
-	private InvoiceLineItemTO invoiceLineItem = null;
+	private String orderNumber;
+	private String invoiceNumber;
+	private String deliveryNumber;
+	private List<InvoiceLineItemTO> invoiceLineItem = null;
 	private InvoiceTypeEnum invoiceType;
 	
 	public SapMomTO getSapIdoc() {
@@ -46,16 +48,10 @@ public class InvoiceTO implements Serializable {
 	public void setInvoicePartnerHeader(List<InvoicePartnerHeaderTO> invoicePartnerHeader) {
 		this.invoicePartnerHeader = invoicePartnerHeader;
 	}
-	public List<InvoiceDocumentRefTO> getInvoiceDocRef() {
-		return invoiceDocRef;
-	}
-	public void setInvoiceDocRef(List<InvoiceDocumentRefTO> invoiceDocRef) {
-		this.invoiceDocRef = invoiceDocRef;
-	}
-	public InvoiceLineItemTO getInvoiceLineItem() {
+	public List<InvoiceLineItemTO> getInvoiceLineItem() {
 		return invoiceLineItem;
 	}
-	public void setInvoiceLineItem(InvoiceLineItemTO invoiceLineItem) {
+	public void setInvoiceLineItem(List<InvoiceLineItemTO> invoiceLineItem) {
 		this.invoiceLineItem = invoiceLineItem;
 	}
 	public InvoiceTypeEnum getInvoiceType() {
@@ -64,14 +60,34 @@ public class InvoiceTO implements Serializable {
 	public void setInvoiceType(InvoiceTypeEnum invoiceType) {
 		this.invoiceType = invoiceType;
 	}
+	public String getOrderNumber() {
+		return orderNumber;
+	}
+	public void setOrderNumber(String orderNumber) {
+		this.orderNumber = orderNumber;
+	}
+	public String getInvoiceNumber() {
+		return invoiceNumber;
+	}
+	public void setInvoiceNumber(String invoiceNumber) {
+		this.invoiceNumber = invoiceNumber;
+	}
+	public String getDeliveryNumber() {
+		return deliveryNumber;
+	}
+	public void setDeliveryNumber(String deliveryNumber) {
+		this.deliveryNumber = deliveryNumber;
+	}
 	
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this)
 			.append("sapIdoc", this.sapIdoc)
+			.append("orderNumber", this.orderNumber)
+			.append("invoiceNumber", this.invoiceNumber)
+			.append("deliveryNumber", this.deliveryNumber)
 			.append("invoiceHeader", this.invoiceHeader)
 			.append("invoicePartnerHeader", this.invoicePartnerHeader)
-			.append("invoiceDocRef", this.invoiceDocRef)
 			.append("invoiceLineItemTO", this.invoiceLineItem)
 			.append("invoiceType", this.invoiceType)
 			.toString();

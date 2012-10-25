@@ -4,7 +4,6 @@
 package com.fb.platform.sap.client.idoc.sap.invoice;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +17,6 @@ import org.springframework.test.context.ContextConfiguration;
 
 import com.fb.commons.mom.bigBazaar.to.InvoiceHeaderTO;
 import com.fb.commons.mom.bigBazaar.to.InvoiceTO;
-import com.fb.commons.mom.to.MailTO;
 import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
@@ -90,7 +88,7 @@ public class InvoiceIdocHandlerTest extends BaseTestCase {
 				InvoiceHeaderTO invoiceHeader = invoiceTO.getInvoiceHeader();
 				assertEquals("INR", invoiceHeader.getCurrency());
 				assertEquals("L", invoiceHeader.getBillingCategory());
-				assertEquals("0155000090", invoiceHeader.getDocumentNumber());
+				assertEquals("0155000090", invoiceHeader.getInvoiceNumber());
 				assertEquals("INVO", invoiceHeader.getDocumentType());
 				assertEquals("INR", invoiceHeader.getLocalCurrency());
 				assertEquals(1, invoiceHeader.getExchangeRate().getAmount().intValue());

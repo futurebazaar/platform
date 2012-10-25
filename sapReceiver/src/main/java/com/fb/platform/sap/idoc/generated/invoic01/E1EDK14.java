@@ -51,7 +51,7 @@ import javax.xml.bind.annotation.XmlType;
 public class E1EDK14 {
 
     @XmlElement(name = "QUALF")
-    protected int qualf;
+    protected String qualf;
     @XmlElement(name = "ORGID", required = true)
     protected String orgid;
     @XmlAttribute(name = "SEGMENT", required = true)
@@ -61,7 +61,7 @@ public class E1EDK14 {
      * Gets the value of the qualf property.
      * 
      */
-    public int getQUALF() {
+    public String getQUALF() {
         return qualf;
     }
 
@@ -69,7 +69,7 @@ public class E1EDK14 {
      * Sets the value of the qualf property.
      * 
      */
-    public void setQUALF(int value) {
+    public void setQUALF(String value) {
         this.qualf = value;
     }
 

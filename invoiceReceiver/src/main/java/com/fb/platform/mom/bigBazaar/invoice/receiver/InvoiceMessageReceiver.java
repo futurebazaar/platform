@@ -31,7 +31,6 @@ import com.fb.commons.PlatformException;
 import com.fb.commons.mom.bigBazaar.to.InvoiceTO;
 import com.fb.commons.mom.to.SapMomTO;
 import com.fb.platform.bigbazaar.invoice._1_0.AddressTO;
-import com.fb.platform.bigbazaar.invoice._1_0.InvoiceDocumentRefTO;
 import com.fb.platform.bigbazaar.invoice._1_0.InvoiceHeaderTO;
 import com.fb.platform.bigbazaar.invoice._1_0.InvoiceLineItemTO;
 import com.fb.platform.bigbazaar.invoice._1_0.InvoicePartnerHeaderTO;
@@ -108,9 +107,11 @@ public class InvoiceMessageReceiver implements PlatformMessageReceiver{
 		
 		xmlInvoiceTO.setSapMomTO(xmlSapMomTO(invoiceTO.getSapIdoc()));
 		xmlInvoiceTO.setInvoiceHeaderTO(xmlInvoiceHeaderTO(invoiceTO.getInvoiceHeader()));
-		xmlInvoiceTO.setInvoiceLineItemTO(xmlInvoiceLineItemTO(invoiceTO.getInvoiceLineItem()));
+		xmlInvoiceTO.getInvoiceLineItemTO().addAll(xmlInvoiceLineItems(invoiceTO.getInvoiceLineItem()));
 		xmlInvoiceTO.getInvoicePartnerHeaderTO().addAll(xmlInvoicePartnerHeaderTOList(invoiceTO.getInvoicePartnerHeader()));
-		xmlInvoiceTO.getInvoiceDocumentRefTO().addAll(xmlInvoiceDocumentRefTOList(invoiceTO.getInvoiceDocRef()));
+		xmlInvoiceTO.setDeliveryNumber(xmlInvoiceTO.getDeliveryNumber());
+		xmlInvoiceTO.setInvoiceNumber(xmlInvoiceTO.getInvoiceNumber());
+		xmlInvoiceTO.setOrderNumber(xmlInvoiceTO.getOrderNumber());
 		
 		try {
 			StringWriter outStringWriter = new StringWriter();
@@ -150,26 +151,6 @@ public class InvoiceMessageReceiver implements PlatformMessageReceiver{
 			infoLog.error("Invoice ack not delivered : " + invoiceTO.toString());
 			throw new PlatformException("Error communicating with tinla on url : " + invoiceURL, e);
 		}
-	}
-
-	private List<InvoiceDocumentRefTO> xmlInvoiceDocumentRefTOList(List<com.fb.commons.mom.bigBazaar.to.InvoiceDocumentRefTO> invoiceDocRef) {
-		List<InvoiceDocumentRefTO> invoiceDocumentRefTOList = new ArrayList<InvoiceDocumentRefTO>();
-		
-		for(com.fb.commons.mom.bigBazaar.to.InvoiceDocumentRefTO invoiceDocumentRefTO : invoiceDocRef) {
-			invoiceDocumentRefTOList.add(xmlInvoiceDocumentRefTO(invoiceDocumentRefTO));
-		}
-		
-		return invoiceDocumentRefTOList;
-	}
-
-	private InvoiceDocumentRefTO xmlInvoiceDocumentRefTO(com.fb.commons.mom.bigBazaar.to.InvoiceDocumentRefTO invoiceDocumentRefTO) {
-		InvoiceDocumentRefTO xmlInvoiceDocumentRefTO = new InvoiceDocumentRefTO();
-		
-		xmlInvoiceDocumentRefTO.setIdocDate(invoiceDocumentRefTO.getIdocDate().toDate());
-		xmlInvoiceDocumentRefTO.setIdocDocumentNumber(invoiceDocumentRefTO.getIdocDocumentNumber());
-		xmlInvoiceDocumentRefTO.setQualifier(invoiceDocumentRefTO.getQualifier());
-		
-		return xmlInvoiceDocumentRefTO;
 	}
 
 	private List<InvoicePartnerHeaderTO> xmlInvoicePartnerHeaderTOList(List<com.fb.commons.mom.bigBazaar.to.InvoicePartnerHeaderTO> invoicePartnerHeader) {
@@ -214,6 +195,16 @@ public class InvoiceMessageReceiver implements PlatformMessageReceiver{
 		return addressTO;
 	}
 
+	private List<InvoiceLineItemTO> xmlInvoiceLineItems(List<com.fb.commons.mom.bigBazaar.to.InvoiceLineItemTO> apiInvoiceLineItems) {
+		List<InvoiceLineItemTO> xmlInvoiceLineItems = new ArrayList<InvoiceLineItemTO>();
+		
+		for(com.fb.commons.mom.bigBazaar.to.InvoiceLineItemTO apiLineItem : apiInvoiceLineItems) {
+			xmlInvoiceLineItems.add(xmlInvoiceLineItemTO(apiLineItem));
+		}
+		
+		return xmlInvoiceLineItems;
+	}
+	
 	private InvoiceLineItemTO xmlInvoiceLineItemTO(com.fb.commons.mom.bigBazaar.to.InvoiceLineItemTO invoiceLineItem) {
 		InvoiceLineItemTO invoiceLineItemTO = new InvoiceLineItemTO();
 		
@@ -234,7 +225,7 @@ public class InvoiceMessageReceiver implements PlatformMessageReceiver{
 		
 		invoiceHeaderTO.setBillingCategory(invoiceHeader.getBillingCategory());
 		invoiceHeaderTO.setCurrency(invoiceHeader.getCurrency());
-		invoiceHeaderTO.setDocumentNumber(invoiceHeader.getDocumentNumber());
+		invoiceHeaderTO.setInvoiceNumber(invoiceHeader.getInvoiceNumber());
 		invoiceHeaderTO.setDocumentType(invoiceHeader.getDocumentType());
 		invoiceHeaderTO.setExchangeRate(invoiceHeader.getExchangeRate().getAmount());
 		invoiceHeaderTO.setInvoiceType(invoiceHeader.getInvoiceType());

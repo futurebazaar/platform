@@ -25,7 +25,7 @@ public class InvoiceHeaderTO implements Serializable {
 	private Money exchangeRate;
 	private String paymentKey;
 	private String documentType;
-	private String documentNumber;
+	private String invoiceNumber;
 	private String weightUnit;
 	private String invoiceType;
 	private int receiptNum;
@@ -62,11 +62,11 @@ public class InvoiceHeaderTO implements Serializable {
 	public void setDocumentType(String documentType) {
 		this.documentType = documentType;
 	}
-	public String getDocumentNumber() {
-		return documentNumber;
+	public String getInvoiceNumber() {
+		return invoiceNumber;
 	}
-	public void setDocumentNumber(String documentNumber) {
-		this.documentNumber = documentNumber;
+	public void setInvoiceNumber(String invoiceNumber) {
+		this.invoiceNumber = invoiceNumber;
 	}
 	public String getWeightUnit() {
 		return weightUnit;
@@ -107,7 +107,7 @@ public class InvoiceHeaderTO implements Serializable {
 			.append("exchangeRate", this.exchangeRate)
 			.append("paymentKey", this.paymentKey)
 			.append("documentType", this.documentType)
-			.append("documentNumber", this.documentNumber)
+			.append("invoiceNumber", this.invoiceNumber)
 			.append("weightUnit", this.weightUnit)
 			.append("invoiceType", this.invoiceType)
 			.append("receiptNum", this.receiptNum)

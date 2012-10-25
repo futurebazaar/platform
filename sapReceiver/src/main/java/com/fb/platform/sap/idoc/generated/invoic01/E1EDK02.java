@@ -53,7 +53,7 @@ import javax.xml.bind.annotation.XmlType;
 public class E1EDK02 {
 
     @XmlElement(name = "QUALF")
-    protected int qualf;
+    protected String qualf;
     @XmlElement(name = "BELNR", required = true)
     protected String belnr;
     @XmlElement(name = "DATUM")
@@ -65,7 +65,7 @@ public class E1EDK02 {
      * Gets the value of the qualf property.
      * 
      */
-    public int getQUALF() {
+    public String getQUALF() {
         return qualf;
     }
 
@@ -73,7 +73,7 @@ public class E1EDK02 {
      * Sets the value of the qualf property.
      * 
      */
-    public void setQUALF(int value) {
+    public void setQUALF(String value) {
         this.qualf = value;
     }
 

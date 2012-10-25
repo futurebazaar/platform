@@ -71,7 +71,7 @@ public class IDOC {
     @XmlElement(name = "E1EDK14", required = true)
     protected E1EDK14 e1EDK14;
     @XmlElement(name = "E1EDP01", required = true)
-    protected E1EDP01 e1EDP01;
+    protected List<E1EDP01> e1EDP01;
     @XmlAttribute(name = "BEGIN", required = true)
     protected int begin;
 
@@ -213,20 +213,11 @@ public class IDOC {
      *     {@link E1EDP01 }
      *     
      */
-    public E1EDP01 getE1EDP01() {
+    public List<E1EDP01> getE1EDP01() {
+    	if (e1EDP01 == null) {
+    		e1EDP01 = new ArrayList<E1EDP01>();
+        }
         return e1EDP01;
-    }
-
-    /**
-     * Sets the value of the e1EDP01 property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link E1EDP01 }
-     *     
-     */
-    public void setE1EDP01(E1EDP01 value) {
-        this.e1EDP01 = value;
     }
 
     /**
