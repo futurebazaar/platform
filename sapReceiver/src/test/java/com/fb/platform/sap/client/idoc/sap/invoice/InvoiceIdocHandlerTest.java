@@ -8,6 +8,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
@@ -16,7 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
 import com.fb.commons.mom.bigBazaar.to.InvoiceHeaderTO;
+import com.fb.commons.mom.bigBazaar.to.InvoiceLineItemTO;
 import com.fb.commons.mom.bigBazaar.to.InvoiceTO;
+import com.fb.commons.mom.bigBazaar.to.InvoiceTypeEnum;
 import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
@@ -69,6 +72,11 @@ public class InvoiceIdocHandlerTest extends BaseTestCase {
 		StringWriter sw = new StringWriter();
 		IOUtils.copy(invoiceStream, sw);
 		invoiceIDocHandler.handle(sw.toString());
+		
+		invoiceStream = InvoiceIdocHandlerTest.class.getClassLoader().getResourceAsStream("inv_cancel.xml");
+		sw = new StringWriter();
+		IOUtils.copy(invoiceStream, sw);
+		invoiceIDocHandler.handle(sw.toString());
 	}
 	
 	private static class TestInvoiceReceiver implements PlatformMessageReceiver {
@@ -95,8 +103,46 @@ public class InvoiceIdocHandlerTest extends BaseTestCase {
 				assertEquals("0038", invoiceHeader.getPaymentKey());
 				assertEquals("KGM", invoiceHeader.getWeightUnit());
 				assertEquals("LR", invoiceHeader.getInvoiceType());
-				assertEquals("0005004700", invoiceHeader.getReceiptNum());
+				assertEquals(5004700, invoiceHeader.getReceiptNum());
+				assertEquals("0155000090", invoiceTO.getInvoiceNumber());
+				assertEquals("I000000533", invoiceTO.getOrderNumber());
+				assertEquals("0145000388", invoiceTO.getDeliveryNumber());
+				assertEquals(InvoiceTypeEnum.CREATE, invoiceTO.getInvoiceType());
+				List<InvoiceLineItemTO> invoiceLineItemList = invoiceTO.getInvoiceLineItem();
+				assertEquals(1, invoiceLineItemList.size());
+				InvoiceLineItemTO invoiceLineItem = invoiceLineItemList.get(0);
+				assertEquals(20, invoiceLineItem.getItemNumber());
+				assertEquals(1, invoiceLineItem.getQuantity().intValue());
+				assertEquals("EA", invoiceLineItem.getUnitOfMeasurement());
+				assertEquals("KGM", invoiceLineItem.getWeightUnit());
+				assertEquals("ZATN", invoiceLineItem.getItemCategory());
+				assertEquals("4608", invoiceLineItem.getPlant());
 			} else if (count == 2) {
+				assertEquals("0000040000686410", invoiceTO.getSapIdoc().getIdocNumber());
+				InvoiceHeaderTO invoiceHeader = invoiceTO.getInvoiceHeader();
+				assertEquals("INR", invoiceHeader.getCurrency());
+				assertEquals("L", invoiceHeader.getBillingCategory());
+				assertEquals("0197000005", invoiceHeader.getInvoiceNumber());
+				assertEquals("CRME", invoiceHeader.getDocumentType());
+				assertEquals("INR", invoiceHeader.getLocalCurrency());
+				assertEquals(1, invoiceHeader.getExchangeRate().getAmount().intValue());
+				assertEquals("0038", invoiceHeader.getPaymentKey());
+				assertEquals("KGM", invoiceHeader.getWeightUnit());
+				assertEquals("LR", invoiceHeader.getInvoiceType());
+				assertEquals(5004700, invoiceHeader.getReceiptNum());
+				assertEquals("0197000005", invoiceTO.getInvoiceNumber());
+				assertEquals("I000000533", invoiceTO.getOrderNumber());
+				assertEquals("0145000388", invoiceTO.getDeliveryNumber());
+				assertEquals(InvoiceTypeEnum.CANCEL, invoiceTO.getInvoiceType());
+				List<InvoiceLineItemTO> invoiceLineItemList = invoiceTO.getInvoiceLineItem();
+				assertEquals(1, invoiceLineItemList.size());
+				InvoiceLineItemTO invoiceLineItem = invoiceLineItemList.get(0);
+				assertEquals(20, invoiceLineItem.getItemNumber());
+				assertEquals(1, invoiceLineItem.getQuantity().intValue());
+				assertEquals("EA", invoiceLineItem.getUnitOfMeasurement());
+				assertEquals("KGM", invoiceLineItem.getWeightUnit());
+				assertEquals("ZATN", invoiceLineItem.getItemCategory());
+				assertEquals("4608", invoiceLineItem.getPlant());
 			} else if (count > 2) {
 				throw new IllegalArgumentException("Invalid message");
 			}

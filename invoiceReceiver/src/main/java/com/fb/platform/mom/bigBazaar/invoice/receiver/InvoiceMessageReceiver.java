@@ -135,20 +135,16 @@ public class InvoiceMessageReceiver implements PlatformMessageReceiver{
 			auditLog.info(invoiceTO.getSapIdoc().getAckUID() + "," + invoiceTO.getSapIdoc().getIdocNumber() + "," + invoiceTO.getSapIdoc().getTimestamp() + ",true");
 			infoLog.info("Invoice ack delivered to tinla. Status code : " + statusCode);
 		} catch (UnsupportedEncodingException e) {
-			infoLog.error("Error communicating with tinla on url : " + invoiceURL, e);
-			infoLog.error("Invoice ack not delivered : " + invoiceTO.toString());
+			infoLog.error("Invoice ack not delivered : " + invoiceURL + ", message : " + invoiceTO.toString(), e);
 			throw new PlatformException("Error communicating with tinla on url : " + invoiceURL, e);
 		} catch (ClientProtocolException e) {
-			infoLog.error("Error communicating with tinla on url : " + invoiceURL, e);
-			infoLog.error("Invoice ack not delivered : " + invoiceTO.toString());
+			infoLog.error("Invoice ack not delivered : " + invoiceURL + ", message : " + invoiceTO.toString(), e);
 			throw new PlatformException("Error communicating with tinla on url : " + invoiceURL, e);
 		} catch (IOException e) {
-			infoLog.error("Error communicating with tinla on url : " + invoiceURL, e);
-			infoLog.error("Invoice ack not delivered : " + invoiceTO.toString());
+			infoLog.error("Invoice ack not delivered : " + invoiceURL + ", message : " + invoiceTO.toString(), e);
 			throw new PlatformException("Error communicating with tinla on url : " + invoiceURL, e);
 		} catch (JAXBException e) {
-			infoLog.error("Error communicating with tinla on url : " + invoiceURL + " , ", e);
-			infoLog.error("Invoice ack not delivered : " + invoiceTO.toString());
+			infoLog.error("Invoice ack not delivered : " + invoiceURL + ", message : " + invoiceTO.toString(), e);
 			throw new PlatformException("Error communicating with tinla on url : " + invoiceURL, e);
 		}
 	}

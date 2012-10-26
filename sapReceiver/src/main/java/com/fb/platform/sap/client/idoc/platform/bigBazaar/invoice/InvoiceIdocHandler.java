@@ -64,8 +64,8 @@ public class InvoiceIdocHandler implements PlatformIDocHandler {
 			//TODO move from default package to inventory package somehow
 			return JAXBContext.newInstance(ObjectFactory.class);
 		} catch (JAXBException e) {
-			infoLog.error("Error Initializing the JAXBContext to bind the inventory idoc schema classes", e);
-			throw new PlatformException("Error Initializing the JAXBContext to bind the inventory idoc schema classes", e);
+			infoLog.error("Error Initializing the JAXBContext to bind the invoice idoc schema classes", e);
+			throw new PlatformException("Error Initializing the JAXBContext to bind the invoice idoc schema classes", e);
 		}
 	}
 
@@ -130,9 +130,9 @@ public class InvoiceIdocHandler implements PlatformIDocHandler {
 			corruptMessage.setSapIdoc(sapIdoc);
 			corruptMessage.setCause(CorruptMessageCause.CORRUPT_IDOC);
 			momManager.send(PlatformDestinationEnum.CORRUPT_IDOCS, corruptMessage);
-			infoLog.error("Logged Unable to create Inventory Message for inventory idoc :\n" + sapIdoc.getIdoc(), e);
+			infoLog.error("Logged Unable to create invoice Message for invoice idoc :\n" + sapIdoc.getIdoc(), e);
 		} catch (Exception e) {
-			infoLog.error("Error in processing inventory idoc", e);
+			infoLog.error("Error in processing invoice idoc", e);
 			throw new PlatformException(e);
 		}
 	}
