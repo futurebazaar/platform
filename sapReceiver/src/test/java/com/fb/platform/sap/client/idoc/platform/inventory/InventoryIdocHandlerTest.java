@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.fb.platform.sap.client.idoc.sap.deliveryInventory;
+package com.fb.platform.sap.client.idoc.platform.inventory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -9,7 +9,6 @@ import static org.junit.Assert.assertNotNull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.math.BigDecimal;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
@@ -17,7 +16,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
-import com.fb.commons.mom.to.DeliveryDeleteTO;
 import com.fb.commons.mom.to.InventoryTO;
 import com.fb.commons.mom.to.MailTO;
 import com.fb.commons.test.BaseTestCase;
@@ -25,8 +23,7 @@ import com.fb.platform.mom.manager.MomManager;
 import com.fb.platform.mom.manager.PlatformDestinationEnum;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandlerFactory;
-import com.fb.platform.sap.client.idoc.platform.deliveryDelete.impl.DeliveryDeleteIDocHandler;
-import com.fb.platform.sap.client.idoc.platform.inventory.impl.DeliveryInventoryIDocHandler;
+import com.fb.platform.sap.client.idoc.platform.inventory.impl.InventoryIDocHandler;
 
 /**
  * @author nehaga
@@ -49,7 +46,7 @@ import com.fb.platform.sap.client.idoc.platform.inventory.impl.DeliveryInventory
 				"classpath*:/*platformMom-applicationContext-service.xml",
 				"classpath:**/test-applicationContext*.xml"})
 
-public class DeliveryInventoryIdocHandlerTest extends BaseTestCase {
+public class InventoryIdocHandlerTest extends BaseTestCase {
 	
 	@Autowired
 	private MomManager momManager = null;
@@ -57,25 +54,40 @@ public class DeliveryInventoryIdocHandlerTest extends BaseTestCase {
 	@Autowired
 	private PlatformIDocHandlerFactory platformIDocHandlerFactory = null;
 	
-	private TestDeliveryInventoryReceiver testReceiver = null;
+	private TestInventoryReceiver testReceiver = null;
+	
+	private TestInventoryCorruptReceiver corruptTestReceiver = null;
+	
 	
 	@Before
 	public void init() {
-		testReceiver  = new TestDeliveryInventoryReceiver();
+		testReceiver  = new TestInventoryReceiver();
+		corruptTestReceiver = new TestInventoryCorruptReceiver();
 	}
 	
 	@Test
-	public void processDeliveryDeleteIdoc() throws IOException ,Exception {
+	public void processInventoryIdoc() throws IOException ,Exception {
 		momManager.registerReceiver(PlatformDestinationEnum.INVENTORY, testReceiver);
 		
-		InputStream deliveryInventoryStream = DeliveryInventoryIdocHandlerTest.class.getClassLoader().getResourceAsStream("ztinla_dlvry.xml");
-		DeliveryInventoryIDocHandler deliveryInventoryIDocHandler = (DeliveryInventoryIDocHandler) platformIDocHandlerFactory.getHandler(DeliveryInventoryIDocHandler.DELIVERY_INVENTORY_IDOC_TYPE);
+		InputStream inventoryStream = InventoryIdocHandlerTest.class.getClassLoader().getResourceAsStream("ztinla_idoctype.xml");
+		InventoryIDocHandler inventoryIDocHandler = (InventoryIDocHandler) platformIDocHandlerFactory.getHandler(InventoryIDocHandler.INVENTORY_IDOC_TYPE);
 		StringWriter sw = new StringWriter();
-		IOUtils.copy(deliveryInventoryStream, sw);
-		deliveryInventoryIDocHandler.handle(sw.toString());
+		IOUtils.copy(inventoryStream, sw);
+		inventoryIDocHandler.handle(sw.toString());
 	}
 	
-	private static class TestDeliveryInventoryReceiver implements PlatformMessageReceiver {
+	@Test
+	public void processCorruptInventoryIdoc() throws IOException ,Exception {
+		momManager.registerReceiver(PlatformDestinationEnum.CORRUPT_IDOCS, corruptTestReceiver);
+		
+		InputStream inventoryStream = InventoryIdocHandlerTest.class.getClassLoader().getResourceAsStream("zatgdeld.xml");
+		InventoryIDocHandler inventoryIDocHandler = (InventoryIDocHandler) platformIDocHandlerFactory.getHandler(InventoryIDocHandler.INVENTORY_IDOC_TYPE);
+		StringWriter sw = new StringWriter();
+		IOUtils.copy(inventoryStream, sw);
+		inventoryIDocHandler.handle(sw.toString());
+	}
+	
+	private static class TestInventoryReceiver implements PlatformMessageReceiver {
 
 		private static int count = 1;
 
@@ -84,7 +96,7 @@ public class DeliveryInventoryIdocHandlerTest extends BaseTestCase {
 		 */
 		@Override
 		public void handleMessage(Object message) {
-			System.out.println("TestDeliveryInventoryReceiver, received the delivery inventory message, count is : " + count + ", message is : " + message);
+			System.out.println("TestInventoryReceiver, received the inventory message, count is : " + count + ", message is : " + message);
 			InventoryTO inventoryTO = (InventoryTO) message;
 
 			if (count == 1) {
@@ -97,12 +109,25 @@ public class DeliveryInventoryIdocHandlerTest extends BaseTestCase {
 				assertEquals("2786", inventoryTO.getReceivingSite());
 				assertEquals("90", inventoryTO.getReceivingStorageLoc());
 				assertEquals("EA", inventoryTO.getSellingUnit());
-			} else if (count > 1) {
+			} else if (count > 2) {
 				throw new IllegalArgumentException("Invalid message");
 			}
 			
 			count++;
-			System.out.println("TestDeliveryInventoryReceiver Incremented count to : " + count);
+			System.out.println("TestInventoryReceiver Incremented count to : " + count);
+		}
+	}
+	
+	private static class TestInventoryCorruptReceiver implements PlatformMessageReceiver {
+
+		/* (non-Javadoc)
+		 * @see com.fb.platform.mom.manager.PlatformMessageReceiver#handleMessage(java.lang.Object)
+		 */
+		@Override
+		public void handleMessage(Object message) {
+			System.out.println("TestInventoryCorruptReceiver, received the corrupt inventory message, message is : " + message);
+			MailTO mailTo = (MailTO) message;
+			assertNotNull(mailTo);
 		}
 	}
 }

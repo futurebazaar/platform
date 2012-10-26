@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.fb.platform.sap.client.idoc.sap.itemAck;
+package com.fb.platform.sap.client.idoc.platform.itemAck;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

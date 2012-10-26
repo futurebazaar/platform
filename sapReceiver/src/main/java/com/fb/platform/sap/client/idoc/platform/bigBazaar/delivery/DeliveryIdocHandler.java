@@ -36,7 +36,7 @@ import com.fb.platform.sap.idoc.generated.delvry01.E1EDL20;
 import com.fb.platform.sap.idoc.generated.delvry01.E1EDL21;
 import com.fb.platform.sap.idoc.generated.delvry01.E1EDL24;
 import com.fb.platform.sap.idoc.generated.delvry01.E1EDT13;
-import com.fb.platform.sap.idoc.generated.invoic01.ObjectFactory;
+import com.fb.platform.sap.idoc.generated.delvry01.ObjectFactory;
 import com.fb.platform.sap.util.AckUIDSequenceGenerator;
 
 /**
@@ -203,27 +203,29 @@ public class DeliveryIdocHandler implements PlatformIDocHandler {
 		int hour = 0;
 		int min = 0;
 		int sec = 0;
+		DateTime dateObject = null;
 		
 		if(isDateValid(date)) {
 			year = Integer.valueOf(date.substring(0, 4));
 			month = Integer.valueOf(date.substring(4, 6));
-			month = Integer.valueOf(date.substring(6));
+			day = Integer.valueOf(date.substring(6));
 			if(isTimeValid(time)) {
 				hour = Integer.valueOf(time.substring(0, 2));
 				min = Integer.valueOf(time.substring(2, 4));
 				sec = Integer.valueOf(time.substring(4));
 			}
+			dateObject = new DateTime(year, month, day, hour, min, sec);
 		}
 		
-		return new DateTime(year, month, day, hour, min, sec);
+		return dateObject;
 	}
 	
 	private boolean isDateValid(String date) {
-		return (StringUtils.isNotBlank(date) && date.length() >= 8);
+		return (StringUtils.isNotBlank(date) && date.length() >= 8 && Integer.valueOf(date) > 10000101);
 	}
 	
 	private boolean isTimeValid(String time) {
-		return (StringUtils.isNotBlank(time) && time.length() >= 8);
+		return (StringUtils.isNotBlank(time) && time.length() >= 8 && Integer.valueOf(time) > 0);
 	}
 
 	private DeliveryControlTO apiDeliveryControlTO(E1EDL18 xmlDeliveryControl) {

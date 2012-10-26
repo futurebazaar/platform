@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.fb.platform.sap.client.idoc.sap.deliveryDelete;
+package com.fb.platform.sap.client.idoc.platform.deliveryDelete;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

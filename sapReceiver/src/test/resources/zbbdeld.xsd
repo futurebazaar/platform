@@ -58,7 +58,7 @@
   <xs:element name="RCVPRN" type="xs:string"/>
   <xs:element name="CREDAT" type="xs:int"/>
   <xs:element name="CRETIM" type="xs:int"/>
-  <xs:element name="SERIAL" type="xs:int"/>
+  <xs:element name="SERIAL" type="xs:string"/>
   <xs:element name="ZBBDEL_HEADER">
     <xs:complexType>
       <xs:sequence>

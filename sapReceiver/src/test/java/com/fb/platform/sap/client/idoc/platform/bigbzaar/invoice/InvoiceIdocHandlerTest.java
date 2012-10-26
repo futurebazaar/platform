@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.fb.platform.sap.client.idoc.sap.invoice;
+package com.fb.platform.sap.client.idoc.platform.bigbzaar.invoice;
 
 import static org.junit.Assert.assertEquals;
 
