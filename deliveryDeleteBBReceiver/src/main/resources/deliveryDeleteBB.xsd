@@ -48,7 +48,7 @@
 	</xs:element>
 	
 	<xs:element name="orderNumber" type="xs:string"/>
-	<xs:element name="deliveryNumber" type="xs:int"/>
+	<xs:element name="deliveryNumber" type="xs:string"/>
 	<xs:element name="deletedCode" type="xs:string"/>
 	<xs:element name="deletedDate" type="xs:date"/>
 	
