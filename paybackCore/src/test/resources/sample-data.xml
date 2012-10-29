@@ -325,7 +325,7 @@
 			<row>
 				<value name="id">31</value>
 				<value name="name">INCLUDED_CATEGORY_LIST</value>
-				<value name="value">479,2</value>
+				<value name="value">1234,479,1,2,3,5,6</value>
 				<value name="rule_id">8</value>
 			</row>
 			<row>
@@ -349,7 +349,7 @@
 			<row>
 				<value name="id">35</value>
 				<value name="name">CATEGORY_POINTS_FACTOR_MAP</value>
-				<value name="value">GV=2, ELEC=3</value>
+				<value name="value">GV=5, ELEC=3</value>
 				<value name="rule_id">8</value>
 			</row>
         	<row>
@@ -361,13 +361,13 @@
 			<row>
 				<value name="id">37</value>
 				<value name="name">GV</value>
-				<value name="value">479,2,3</value>
+				<value name="value">479,1,2,3</value>
 				<value name="rule_id">8</value>
 			</row>
 			<row>
 				<value name="id">38</value>
 				<value name="name">ELEC</value>
-				<value name="value">4,5,6</value>
+				<value name="value">1234,5,6</value>
 				<value name="rule_id">8</value>
 			</row>
 			</table>
