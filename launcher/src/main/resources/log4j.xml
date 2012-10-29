@@ -347,6 +347,10 @@
         <level value="INFO"/>
         <appender-ref ref="DELIVERY_BB_AUDIT_LOG"/>
     </logger>
+    <logger name="DELIVERY_DELETE_BB_AUDIT_LOG">
+        <level value="INFO"/>
+        <appender-ref ref="DELIVERY_DELETE_BB_AUDIT_LOG"/>
+    </logger>
     <logger name="DELIVERY_DELETE_RECEIVER_AUDIT_LOG">
         <level value="INFO"/>
         <appender-ref ref="DELIVERY_DELETE_RECEIVER_AUDIT_LOG"/>
@@ -366,6 +370,10 @@
     <logger name="DELIVERY_RECEIVER_BB_AUDIT_LOG">
         <level value="INFO"/>
         <appender-ref ref="DELIVERY_RECEIVER_BB_AUDIT_LOG"/>
+    </logger>
+    <logger name="DELIVERY_DELETE_RECEIVER_BB_AUDIT_LOG">
+        <level value="INFO"/>
+        <appender-ref ref="DELIVERY_DELETE_RECEIVER_BB_AUDIT_LOG"/>
     </logger>
     <logger name="LOGERROR">
         <level value="WARN"/>
