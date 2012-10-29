@@ -15,6 +15,8 @@ import com.fb.platform.mom.manager.PlatformDestinationEnum;
 import com.fb.platform.mom.manager.PlatformMessageReceiver;
 import com.fb.platform.mom.receiver.bigBazaar.delivery.DeliveryMessageListener;
 import com.fb.platform.mom.receiver.bigBazaar.delivery.DeliverySender;
+import com.fb.platform.mom.receiver.bigBazaar.deliveryDelete.DeliveryDeleteBBMessageListener;
+import com.fb.platform.mom.receiver.bigBazaar.deliveryDelete.DeliveryDeleteBBSender;
 import com.fb.platform.mom.receiver.bigBazaar.invoice.InvoiceMessageListener;
 import com.fb.platform.mom.receiver.bigBazaar.invoice.InvoiceSender;
 import com.fb.platform.mom.receiver.corrupt.CorruptMessageListener;
@@ -106,6 +108,15 @@ public class MomManagerImpl implements MomManager {
 	@Autowired
 	private DefaultMessageListenerContainer deliveryContainer = null;
 	
+	@Autowired
+	private DeliveryDeleteBBMessageListener deliveryDeleteBBMessageListener = null;
+
+	@Autowired
+	private DeliveryDeleteBBSender deliveryDeleteBBSender = null;
+
+	@Autowired
+	private DefaultMessageListenerContainer deliveryDeleteBBContainer = null;
+	
 	/* (non-Javadoc)
 	 * @see com.fb.platform.mom.manager.MomManager#send(com.fb.platform.mom.manager.PlatformDestinationEnum, java.lang.Object)
 	 */
@@ -129,11 +140,14 @@ public class MomManagerImpl implements MomManager {
 		case ITEM_ACK:
 			itemAckSender.sendMessage(message);
 			break;
-		case INVOICE:
+		case INVOICE_BB:
 			invoiceSender.sendMessage(message);
 			break;
-		case DELIVERY:
+		case DELIVERY_BB:
 			deliverySender.sendMessage(message);
+			break;
+		case DELIVERY_DELETE_BB:
+			deliveryDeleteBBSender.sendMessage(message);
 			break;
 		default:
 			throw new IllegalStateException("No sender is configured for the destination : " + destination);
@@ -184,16 +198,22 @@ public class MomManagerImpl implements MomManager {
 				itemAckContainer.start();
 			}
 			break;
-		case INVOICE:
+		case INVOICE_BB:
 			invoiceMessageListener.addReceiver(receiver, destination);
 			if(!invoiceContainer.isRunning()) {
 				invoiceContainer.start();
 			}
 			break;
-		case DELIVERY:
+		case DELIVERY_BB:
 			deliveryMessageListener.addReceiver(receiver, destination);
 			if(!deliveryContainer.isRunning()) {
 				deliveryContainer.start();
+			}
+			break;
+		case DELIVERY_DELETE_BB:
+			deliveryDeleteBBMessageListener.addReceiver(receiver, destination);
+			if(!deliveryDeleteBBContainer.isRunning()) {
+				deliveryDeleteBBContainer.start();
 			}
 			break;
 		default:
@@ -291,5 +311,17 @@ public class MomManagerImpl implements MomManager {
 
 	public void setDeliveryContainer(DefaultMessageListenerContainer deliveryContainer) {
 		this.deliveryContainer = deliveryContainer;
+	}
+	
+	public void setDeliveryDeleteBBMessageListener(DeliveryDeleteBBMessageListener deliveryDeleteBBMessageListener) {
+		this.deliveryDeleteBBMessageListener = deliveryDeleteBBMessageListener;
+	}
+
+	public void setDeliveryDeleteBBSender(DeliveryDeleteBBSender deliveryDeleteBBSender) {
+		this.deliveryDeleteBBSender = deliveryDeleteBBSender;
+	}
+
+	public void setDeliveryDeleteBBContainer(DefaultMessageListenerContainer deliveryDeleteBBContainer) {
+		this.deliveryDeleteBBContainer = deliveryDeleteBBContainer;
 	}
 }

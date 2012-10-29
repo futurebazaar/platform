@@ -36,7 +36,7 @@ import com.fb.platform.sap.idoc.generated.delvry01.E1EDL20;
 import com.fb.platform.sap.idoc.generated.delvry01.E1EDL21;
 import com.fb.platform.sap.idoc.generated.delvry01.E1EDL24;
 import com.fb.platform.sap.idoc.generated.delvry01.E1EDT13;
-import com.fb.platform.sap.idoc.generated.invoic01.ObjectFactory;
+import com.fb.platform.sap.idoc.generated.delvry01.ObjectFactory;
 import com.fb.platform.sap.util.AckUIDSequenceGenerator;
 
 /**
@@ -89,7 +89,7 @@ public class DeliveryIdocHandler implements PlatformIDocHandler {
 			DELVRY01 deliveryIdoc = (DELVRY01)unmarshaller.unmarshal(new StreamSource(new StringReader(idocXml)));
 			DeliveryTO apiDelivery = new DeliveryTO();
 			
-			SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.DELIVERY));
+			SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.DELIVERY_BB));
 			
 			sapIdoc.setIdoc(idocXml);
 			sapIdoc.setIdocNumber(deliveryIdoc.getIDOC().getEDIDC40().getDOCNUM());
@@ -98,7 +98,7 @@ public class DeliveryIdocHandler implements PlatformIDocHandler {
 			apiDelivery.setDeliveryHeaderTO(getAPIDeliveryHeader(deliveryIdoc.getIDOC().getE1EDL20()));
 			
 			infoLog.info("Sending deliveryTO to delivery destination : " + apiDelivery.toString());
-			momManager.send(PlatformDestinationEnum.DELIVERY, apiDelivery);
+			momManager.send(PlatformDestinationEnum.DELIVERY_BB, apiDelivery);
 		} catch (JAXBException e) {
 			CorruptMessageTO corruptMessage = new CorruptMessageTO();
 
@@ -108,7 +108,7 @@ public class DeliveryIdocHandler implements PlatformIDocHandler {
 			corruptMessage.setSapIdoc(sapIdoc);
 			corruptMessage.setCause(CorruptMessageCause.CORRUPT_IDOC);
 			momManager.send(PlatformDestinationEnum.CORRUPT_IDOCS, corruptMessage);
-			infoLog.error("Logged Unable to create Inventory Message for inventory idoc :\n" + sapIdoc.getIdoc(), e);
+			infoLog.error("Logged Unable to create delivery Message for delivery idoc :\n" + sapIdoc.getIdoc(), e);
 		} catch (Exception e) {
 			infoLog.error("Error in processing inventory idoc", e);
 			throw new PlatformException(e);
@@ -118,7 +118,7 @@ public class DeliveryIdocHandler implements PlatformIDocHandler {
 	private DeliveryHeaderTO getAPIDeliveryHeader(E1EDL20 xmlDeliveryHeader) {
 		DeliveryHeaderTO apiDeliveryHeader = new DeliveryHeaderTO();
 		
-		apiDeliveryHeader.setSalesDistributionDoc(xmlDeliveryHeader.getVBELN());
+		apiDeliveryHeader.setDeliveryNumber(xmlDeliveryHeader.getVBELN());
 		apiDeliveryHeader.setReceivingPoint(xmlDeliveryHeader.getVSTEL());
 		apiDeliveryHeader.setSalesOrganization(xmlDeliveryHeader.getVKORG());
 		apiDeliveryHeader.setWarehouseRef(xmlDeliveryHeader.getLGNUM());
@@ -150,6 +150,7 @@ public class DeliveryIdocHandler implements PlatformIDocHandler {
 	private DeliveryItemTO apiDeliveryItemList(E1EDL24 xmlDeliveryItem) {
 		DeliveryItemTO apiDeliveryItem = new DeliveryItemTO();
 		
+		apiDeliveryItem.setOrderNumber(xmlDeliveryItem.getE1EDL43().getBELNR());
 		apiDeliveryItem.setItemNumber(xmlDeliveryItem.getPOSNR());
 		apiDeliveryItem.setArticleNumber(xmlDeliveryItem.getMATNR());
 		apiDeliveryItem.setArticleEntered(xmlDeliveryItem.getMATWA());
@@ -202,27 +203,29 @@ public class DeliveryIdocHandler implements PlatformIDocHandler {
 		int hour = 0;
 		int min = 0;
 		int sec = 0;
+		DateTime dateObject = null;
 		
 		if(isDateValid(date)) {
 			year = Integer.valueOf(date.substring(0, 4));
 			month = Integer.valueOf(date.substring(4, 6));
-			month = Integer.valueOf(date.substring(6));
+			day = Integer.valueOf(date.substring(6));
 			if(isTimeValid(time)) {
 				hour = Integer.valueOf(time.substring(0, 2));
 				min = Integer.valueOf(time.substring(2, 4));
 				sec = Integer.valueOf(time.substring(4));
 			}
+			dateObject = new DateTime(year, month, day, hour, min, sec);
 		}
 		
-		return new DateTime(year, month, day, hour, min, sec);
+		return dateObject;
 	}
 	
 	private boolean isDateValid(String date) {
-		return (StringUtils.isNotBlank(date) && date.length() >= 8);
+		return (StringUtils.isNotBlank(date) && date.length() >= 8 && Integer.valueOf(date) > 10000101);
 	}
 	
 	private boolean isTimeValid(String time) {
-		return (StringUtils.isNotBlank(time) && time.length() >= 8);
+		return (StringUtils.isNotBlank(time) && time.length() >= 8 && Integer.valueOf(time) > 0);
 	}
 
 	private DeliveryControlTO apiDeliveryControlTO(E1EDL18 xmlDeliveryControl) {

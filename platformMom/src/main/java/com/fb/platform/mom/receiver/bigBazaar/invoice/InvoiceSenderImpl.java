@@ -28,7 +28,7 @@ public class InvoiceSenderImpl implements InvoiceSender {
 	
 	private static Log infoLog = LogFactory.getLog(InvoiceSenderImpl.class);
 	
-	private static Log auditLog = LogFactory.getLog(LoggerConstants.INVOICE_AUDIT_LOG);
+	private static Log auditLog = LogFactory.getLog(LoggerConstants.INVOICE_BB_AUDIT_LOG);
 
 	private JmsTemplate jmsTemplate;
 

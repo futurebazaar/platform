@@ -16,9 +16,9 @@
     <context:component-scan base-package="com.fb.platform.promotion.cache"></context:component-scan>
 
     <!-- Add new services here -->
-    <bean id="deliveryMessageReceiver" class="com.fb.platform.mom.delivery.receiver.DeliveryMessageReceiver"/>
+    <bean id="deliveryMessageReceiver" class="com.fb.platform.mom.bigBazaar.delivery.receiver.DeliveryMessageReceiver"/>
     
-    <bean id="deliveryManager" class="com.fb.platform.mom.delivery.manager.impl.DeliveryManagerImpl">
+    <bean id="deliveryManager" class="com.fb.platform.mom.bigBazaar.delivery.manager.impl.DeliveryManagerImpl">
     	<property name="messageReceiver" ref="deliveryMessageReceiver"/>
     	<property name="momManager" ref="momManager"/>
     </bean>

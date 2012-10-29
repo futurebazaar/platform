@@ -88,12 +88,16 @@
       <entry name="/queue/corrupt"/>
    </queue>
    
-   <queue name="invoice">
-      <entry name="/queue/invoice"/>
+   <queue name="invoiceBB">
+      <entry name="/queue/invoiceBB"/>
    </queue>
    
-   <queue name="delivery">
-      <entry name="/queue/delivery"/>
+   <queue name="deliveryBB">
+      <entry name="/queue/deliveryBB"/>
+   </queue>
+   
+   <queue name="deliveryDeleteBB">
+      <entry name="/queue/deliveryDeleteBB"/>
    </queue>
 
 </configuration>

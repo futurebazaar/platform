@@ -22,7 +22,7 @@ public class DeliveryHeaderTO implements Serializable {
 	 */
 	private static final long serialVersionUID = 6954423720123120313L;
 	
-	private String salesDistributionDoc;
+	private String deliveryNumber;
 	private int receivingPoint;
 	private int salesOrganization;
 	private String warehouseRef;
@@ -38,11 +38,11 @@ public class DeliveryHeaderTO implements Serializable {
 	private List<DeliveryItemTO> deliveryItemList = new ArrayList<DeliveryItemTO>();
 	private int segment;
 	
-	public String getSalesDistributionDoc() {
-		return salesDistributionDoc;
+	public String getDeliveryNumber() {
+		return deliveryNumber;
 	}
-	public void setSalesDistributionDoc(String salesDistributionDoc) {
-		this.salesDistributionDoc = salesDistributionDoc;
+	public void setDeliveryNumber(String deliveryNumber) {
+		this.deliveryNumber = deliveryNumber;
 	}
 	public int getReceivingPoint() {
 		return receivingPoint;
@@ -133,7 +133,7 @@ public class DeliveryHeaderTO implements Serializable {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this)
-			.append("salesDistributionDoc", this.salesDistributionDoc)
+			.append("deliveryNumber", this.deliveryNumber)
 			.append("receivingPoint", this.receivingPoint)
 			.append("salesOrganization", this.salesOrganization)
 			.append("warehouseRef", this.warehouseRef)

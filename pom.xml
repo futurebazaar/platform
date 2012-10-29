@@ -420,6 +420,7 @@
         <module>userWS</module>
         <module>authenticationCore</module>
         <module>promotionCore</module>
+    	<module>promotionWS</module>
     	<module>fulfilmentCore</module>
     	<module>fulfilmentWS</module>
     	<module>promotionAdminWS</module>
@@ -432,16 +433,16 @@
         <module>deliveryDeleteReceiver</module>
         <module>itemAckReceiver</module>
         <module>invoiceReceiver</module>
+        <module>deliveryReceiver</module>
+        <module>deliveryDeleteBBReceiver</module>
         <module>launcher</module>
-        <module>eGVCore</module>
+	<module>sapClientConnector</module>
+	<module>platformScheduler</module>
+	<module>sapWS</module>
+	<module>eGVCore</module>
     	<module>eGVWS</module>
         <module>walletCore</module>
         <module>walletWS</module>
-	    <module>sapClientConnector</module>
-	    <module>sapWS</module>
-	    <module>platformScheduler</module>
-    	<module>promotionWS</module>
-	    <module>testProject</module>
     </modules>
 
     <reporting>
@@ -499,6 +500,7 @@
         <wiser.version>1.0.3</wiser.version>
 
         <!-- WebTest dependency versions  -->
+
         <javamail.version>1.4</javamail.version>
         <oro.version>2.0.8</oro.version>
         <webtest.version>1454</webtest.version>

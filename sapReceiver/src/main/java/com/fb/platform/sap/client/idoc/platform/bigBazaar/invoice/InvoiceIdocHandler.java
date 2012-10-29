@@ -14,14 +14,12 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.joda.time.DateTime;
 
 import com.fb.commons.PlatformException;
-import com.fb.commons.mom.bigBazaar.to.InvoiceDocumentRefTO;
 import com.fb.commons.mom.bigBazaar.to.InvoiceHeaderTO;
+import com.fb.commons.mom.bigBazaar.to.InvoiceItemIdentificationEnum;
 import com.fb.commons.mom.bigBazaar.to.InvoiceLineItemIdentificationTO;
 import com.fb.commons.mom.bigBazaar.to.InvoiceLineItemTO;
 import com.fb.commons.mom.bigBazaar.to.InvoicePartnerHeaderTO;
@@ -66,8 +64,8 @@ public class InvoiceIdocHandler implements PlatformIDocHandler {
 			//TODO move from default package to inventory package somehow
 			return JAXBContext.newInstance(ObjectFactory.class);
 		} catch (JAXBException e) {
-			infoLog.error("Error Initializing the JAXBContext to bind the inventory idoc schema classes", e);
-			throw new PlatformException("Error Initializing the JAXBContext to bind the inventory idoc schema classes", e);
+			infoLog.error("Error Initializing the JAXBContext to bind the invoice idoc schema classes", e);
+			throw new PlatformException("Error Initializing the JAXBContext to bind the invoice idoc schema classes", e);
 		}
 	}
 
@@ -94,7 +92,7 @@ public class InvoiceIdocHandler implements PlatformIDocHandler {
 			
 			InvoiceTO apiInvoice = new InvoiceTO();
 			
-			SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.INVOICE));
+			SapMomTO sapIdoc = new SapMomTO(ackUIDSequenceGenerator.getNextSequenceNumber(PlatformDestinationEnum.INVOICE_BB));
 			
 			sapIdoc.setIdoc(idocXml);
 			sapIdoc.setIdocNumber(invoiceIdoc.getIDOC().getEDIDC40().getDOCNUM());
@@ -103,11 +101,25 @@ public class InvoiceIdocHandler implements PlatformIDocHandler {
 			apiInvoice.setSapIdoc(sapIdoc);
 			apiInvoice.setInvoicePartnerHeader(getApiInvoicePartnerHeader(invoiceIdoc.getIDOC().getE1EDKA1()));
 			apiInvoice.setInvoiceHeader(getInvoiceHeader(invoiceIdoc.getIDOC().getE1EDK01()));
-			apiInvoice.setInvoiceLineItem(getInvoiceLineItem(invoiceIdoc.getIDOC().getE1EDP01()));
-			apiInvoice.setInvoiceDocRef(getDocumentHeaderRef(invoiceIdoc.getIDOC().getE1EDK02()));
+			apiInvoice.setInvoiceLineItem(getInvoiceLineItemList(invoiceIdoc.getIDOC().getE1EDP01()));
+			
+			for(E1EDK02 invoiceItem : invoiceIdoc.getIDOC().getE1EDK02()) {
+				InvoiceItemIdentificationEnum invoiceIdentification = InvoiceItemIdentificationEnum.getInstance(invoiceItem.getQUALF());
+				switch (invoiceIdentification) {
+				case ORDER:
+					apiInvoice.setOrderNumber(invoiceItem.getBELNR());
+					break;
+				case INVOICE:
+					apiInvoice.setInvoiceNumber(invoiceItem.getBELNR());
+					break;
+				case DELIVERY:
+					apiInvoice.setDeliveryNumber(invoiceItem.getBELNR());
+					break;
+				}
+			}
 			
 			infoLog.info("Sending InvoiceTO to Invoice destination : " + apiInvoice.toString());
-			momManager.send(PlatformDestinationEnum.INVOICE, apiInvoice);
+			momManager.send(PlatformDestinationEnum.INVOICE_BB, apiInvoice);
 			
 		} catch (JAXBException e) {
 			CorruptMessageTO corruptMessage = new CorruptMessageTO();
@@ -118,13 +130,23 @@ public class InvoiceIdocHandler implements PlatformIDocHandler {
 			corruptMessage.setSapIdoc(sapIdoc);
 			corruptMessage.setCause(CorruptMessageCause.CORRUPT_IDOC);
 			momManager.send(PlatformDestinationEnum.CORRUPT_IDOCS, corruptMessage);
-			infoLog.error("Logged Unable to create Inventory Message for inventory idoc :\n" + sapIdoc.getIdoc(), e);
+			infoLog.error("Logged Unable to create invoice Message for invoice idoc :\n" + sapIdoc.getIdoc(), e);
 		} catch (Exception e) {
-			infoLog.error("Error in processing inventory idoc", e);
+			infoLog.error("Error in processing invoice idoc", e);
 			throw new PlatformException(e);
 		}
 	}
 	
+	private List<InvoiceLineItemTO> getInvoiceLineItemList(List<E1EDP01> xmlInvoiceLineItems) {
+		List<InvoiceLineItemTO> apiInvoiceLineItems = new ArrayList<InvoiceLineItemTO>();
+		
+		for(E1EDP01 xmlLineItem : xmlInvoiceLineItems) {
+			apiInvoiceLineItems.add(getInvoiceLineItem(xmlLineItem));
+		}
+		
+		return apiInvoiceLineItems;
+	}
+
 	private List<InvoicePartnerHeaderTO> getApiInvoicePartnerHeader(List<E1EDKA1> idocInvoicePartnerHeader) {
 		List<InvoicePartnerHeaderTO> invoicePartnerHeaderList = new ArrayList<InvoicePartnerHeaderTO>();
 		
@@ -158,7 +180,7 @@ public class InvoiceIdocHandler implements PlatformIDocHandler {
 		
 		apiInvoiceHeader.setCurrency(invoiceHeader.getCURCY());
 		apiInvoiceHeader.setBillingCategory(invoiceHeader.getFKTYP());
-		apiInvoiceHeader.setDocumentNumber(invoiceHeader.getBELNR());
+		apiInvoiceHeader.setInvoiceNumber(invoiceHeader.getBELNR());
 		apiInvoiceHeader.setDocumentType(invoiceHeader.getBSART());
 		
 		BigDecimal exchangeRate = invoiceHeader.getWKURS().round(new MathContext(2));
@@ -196,28 +218,5 @@ public class InvoiceIdocHandler implements PlatformIDocHandler {
 		
 		apiInvoiceLineItem.setLineItemIdentificationTO(apilineItemIdentification);
 		return apiInvoiceLineItem;
-	}
-	
-	private List<InvoiceDocumentRefTO> getDocumentHeaderRef(List<E1EDK02> documentRefList) {
-		List<InvoiceDocumentRefTO> apiDocumentRefList = new ArrayList<InvoiceDocumentRefTO>();
-		int year;
-		int month;
-		int day;
-		for(E1EDK02 documentRef : documentRefList) {
-			InvoiceDocumentRefTO apiDocumentRef = new InvoiceDocumentRefTO();
-			
-			apiDocumentRef.setIdocDocumentNumber(documentRef.getBELNR());
-			apiDocumentRef.setQualifier(documentRef.getQUALF());
-			
-			if(StringUtils.isNotBlank(documentRef.getDATUM()) && documentRef.getDATUM().length() == 8) {
-				year = Integer.valueOf(documentRef.getDATUM().substring(0, 4));
-				month = Integer.valueOf(documentRef.getDATUM().substring(4, 6));
-				day = Integer.valueOf(documentRef.getDATUM().substring(6));
-				apiDocumentRef.setIdocDate(new DateTime(year, month, day, 0, 0));
-			}
-			
-			apiDocumentRefList.add(apiDocumentRef);
-		}
-		return apiDocumentRefList;
 	}
 }

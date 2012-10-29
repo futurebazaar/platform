@@ -15,7 +15,7 @@
         <xs:element maxOccurs="unbounded" ref="E1EDKA1"/>
         <xs:element maxOccurs="unbounded" ref="E1EDK02"/>
         <xs:element ref="E1EDK14"/>
-        <xs:element ref="E1EDP01"/>
+        <xs:element ref="E1EDP01"  maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attribute name="BEGIN" use="required" type="xs:int"/>
     </xs:complexType>
@@ -190,5 +190,5 @@
   <xs:element name="BELNR" type="xs:NMTOKEN"/>
   <xs:element name="BRGEW" type="xs:decimal"/>
   <xs:element name="GEWEI" type="xs:string"/>
-  <xs:element name="QUALF" type="xs:int"/>
+  <xs:element name="QUALF" type="xs:string"/>
 </xs:schema>

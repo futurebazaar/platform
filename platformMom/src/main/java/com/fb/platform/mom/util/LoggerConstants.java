@@ -21,13 +21,17 @@ public class LoggerConstants {
 	
 	public static final String ITEM_ACK_RECEIVER_AUDIT_LOG = "ITEM_ACK_RECEIVER_AUDIT_LOG";
 	
-	public static final String INVOICE_AUDIT_LOG = "INVOICE_AUDIT_LOG";
+	public static final String INVOICE_BB_AUDIT_LOG = "INVOICE_BB_AUDIT_LOG";
 	
-	public static final String DELIVERY_AUDIT_LOG = "DELIVERY_AUDIT_LOG";
+	public static final String DELIVERY_BB_AUDIT_LOG = "DELIVERY_BB_AUDIT_LOG";
 	
-	public static final String INVOICE_RECEIVER_AUDIT_LOG = "INVOICE_RECEIVER_AUDIT_LOG";
+	public static final String DELIVERY_DELETE_BB_AUDIT_LOG = "DELIVERY_DELETE_BB_AUDIT_LOG";
 	
-	public static final String DELIVERY_RECEIVER_AUDIT_LOG = "DELIVERY_RECEIVER_AUDIT_LOG";
+	public static final String INVOICE_RECEIVER_BB_AUDIT_LOG = "INVOICE_RECEIVER_BB_AUDIT_LOG";
+	
+	public static final String DELIVERY_RECEIVER_BB_AUDIT_LOG = "DELIVERY_RECEIVER_BB_AUDIT_LOG";
+	
+	public static final String DELIVERY_DELETE_RECEIVER_BB_AUDIT_LOG = "DELIVERY_DELETE_RECEIVER_BB_AUDIT_LOG";
 	
 	public static final String UID = "UID";
 	

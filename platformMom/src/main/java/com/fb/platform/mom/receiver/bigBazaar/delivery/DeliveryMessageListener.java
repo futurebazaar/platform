@@ -27,7 +27,7 @@ public class DeliveryMessageListener extends AbstractPlatformListener implements
 	
 	private static Log infoLog = LogFactory.getLog(DeliveryMessageListener.class);
 	
-	private static Log auditLog = LogFactory.getLog(LoggerConstants.DELIVERY_AUDIT_LOG);
+	private static Log auditLog = LogFactory.getLog(LoggerConstants.DELIVERY_BB_AUDIT_LOG);
 	
 	@Override
 	public void onMessage(Message message) {
@@ -45,7 +45,7 @@ public class DeliveryMessageListener extends AbstractPlatformListener implements
 
 			infoLog.info("Received the delivery Message from SAP. \n" + delivery.toString());
 
-			super.notify(delivery , PlatformDestinationEnum.DELIVERY);
+			super.notify(delivery , PlatformDestinationEnum.DELIVERY_BB);
 			
 			SapMomTO sapIdoc = delivery.getSapIdoc();
 			auditLog.info(sapIdoc.getAckUID() + "," + sapIdoc.getIdocNumber() + "," + sapIdoc.getTimestamp() + ",true");

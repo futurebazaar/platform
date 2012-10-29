@@ -73,9 +73,9 @@
 	                <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] %c:%L - %m%n" />
 	        </layout>
 	</appender>
-	<appender name="INVOICE_LOG" class="org.apache.log4j.DailyRollingFileAppender">
+	<appender name="INVOICE_BB_LOG" class="org.apache.log4j.DailyRollingFileAppender">
 	        <!-- The active file to log to -->
-	        <param name="file" value="/var/log/tomcat6/launcher/invoice/system.log" />
+	        <param name="file" value="/var/log/tomcat6/launcher/invoiceBB/system.log" />
 	        <param name="append" value="true" />
 	        <param name="encoding" value="UTF-8" />
 	        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
@@ -85,9 +85,21 @@
 	                <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] %c:%L - %m%n" />
 	        </layout>
 	</appender>
-	<appender name="DELIVERY_LOG" class="org.apache.log4j.DailyRollingFileAppender">
+	<appender name="DELIVERY_BB_LOG" class="org.apache.log4j.DailyRollingFileAppender">
 	        <!-- The active file to log to -->
-	        <param name="file" value="/var/log/tomcat6/launcher/delivery/system.log" />
+	        <param name="file" value="/var/log/tomcat6/launcher/deliveryBB/system.log" />
+	        <param name="append" value="true" />
+	        <param name="encoding" value="UTF-8" />
+	        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+	
+	        <layout class="org.apache.log4j.PatternLayout">
+	                <!-- The log message pattern -->
+	                <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] %c:%L - %m%n" />
+	        </layout>
+	</appender>
+	<appender name="DELIVERY_DELETE_BB_LOG" class="org.apache.log4j.DailyRollingFileAppender">
+	        <!-- The active file to log to -->
+	        <param name="file" value="/var/log/tomcat6/launcher/deliveryDeleteBB/system.log" />
 	        <param name="append" value="true" />
 	        <param name="encoding" value="UTF-8" />
 	        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
@@ -134,9 +146,9 @@
 	                <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] %c:%L - %m%n" />
 	        </layout>
 	</appender>
-	<appender name="INVOICE_AUDIT_LOG" class="org.apache.log4j.DailyRollingFileAppender">
+	<appender name="INVOICE_BB_AUDIT_LOG" class="org.apache.log4j.DailyRollingFileAppender">
 	        <!-- The active file to log to -->
-	        <param name="file" value="/var/log/tomcat6/launcher/audit/invoice.log" />
+	        <param name="file" value="/var/log/tomcat6/launcher/audit/invoiceBB.log" />
 	        <param name="append" value="true" />
 	        <param name="encoding" value="UTF-8" />
 	        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
@@ -146,9 +158,21 @@
 	                <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] %c:%L - %m%n" />
 	        </layout>
 	</appender>
-	<appender name="DELIVERY_AUDIT_LOG" class="org.apache.log4j.DailyRollingFileAppender">
+	<appender name="DELIVERY_BB_AUDIT_LOG" class="org.apache.log4j.DailyRollingFileAppender">
 	        <!-- The active file to log to -->
-	        <param name="file" value="/var/log/tomcat6/launcher/audit/delivery.log" />
+	        <param name="file" value="/var/log/tomcat6/launcher/audit/deliveryBB.log" />
+	        <param name="append" value="true" />
+	        <param name="encoding" value="UTF-8" />
+	        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+	
+	        <layout class="org.apache.log4j.PatternLayout">
+	                <!-- The log message pattern -->
+	                <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] %c:%L - %m%n" />
+	        </layout>
+	</appender>
+	<appender name="DELIVERY_DELETE_BB_AUDIT_LOG" class="org.apache.log4j.DailyRollingFileAppender">
+	        <!-- The active file to log to -->
+	        <param name="file" value="/var/log/tomcat6/launcher/audit/deliveryDeleteBB.log" />
 	        <param name="append" value="true" />
 	        <param name="encoding" value="UTF-8" />
 	        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
@@ -195,9 +219,9 @@
 	                <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] %c:%L - %m%n" />
 	        </layout>
 	</appender>
-	<appender name="INVOICE_RECEIVER_AUDIT_LOG" class="org.apache.log4j.DailyRollingFileAppender">
+	<appender name="INVOICE_RECEIVER_BB_AUDIT_LOG" class="org.apache.log4j.DailyRollingFileAppender">
 	        <!-- The active file to log to -->
-	        <param name="file" value="/var/log/tomcat6/launcher/audit/invoiceReceiver.log" />
+	        <param name="file" value="/var/log/tomcat6/launcher/audit/invoiceReceiverBB.log" />
 	        <param name="append" value="true" />
 	        <param name="encoding" value="UTF-8" />
 	        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
@@ -207,9 +231,21 @@
 	                <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] %c:%L - %m%n" />
 	        </layout>
 	</appender>
-	<appender name="DELIVERY_RECEIVER_AUDIT_LOG" class="org.apache.log4j.DailyRollingFileAppender">
+	<appender name="DELIVERY_RECEIVER_BB_AUDIT_LOG" class="org.apache.log4j.DailyRollingFileAppender">
 	        <!-- The active file to log to -->
-	        <param name="file" value="/var/log/tomcat6/launcher/audit/deliveryReceiver.log" />
+	        <param name="file" value="/var/log/tomcat6/launcher/audit/deliveryReceiverBB.log" />
+	        <param name="append" value="true" />
+	        <param name="encoding" value="UTF-8" />
+	        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+	
+	        <layout class="org.apache.log4j.PatternLayout">
+	                <!-- The log message pattern -->
+	                <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] %c:%L - %m%n" />
+	        </layout>
+	</appender>
+	<appender name="DELIVERY_DELETE_RECEIVER_BB_AUDIT_LOG" class="org.apache.log4j.DailyRollingFileAppender">
+	        <!-- The active file to log to -->
+	        <param name="file" value="/var/log/tomcat6/launcher/audit/deliveryDeleteReceiverBB.log" />
 	        <param name="append" value="true" />
 	        <param name="encoding" value="UTF-8" />
 	        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
@@ -267,21 +303,29 @@
         <level value="INFO"/>
         <appender-ref ref="ITEM_ACK_LOG"/>
     </logger>
-    <logger name="com.fb.platform.mom.receiver.invoice">
+    <logger name="com.fb.platform.mom.receiver.bigBazaar.invoice">
         <level value="INFO"/>
-        <appender-ref ref="INVOICE_LOG"/>
+        <appender-ref ref="INVOICE_BB_LOG"/>
     </logger>
-    <logger name="com.fb.platform.mom.invoice">
+    <logger name="com.fb.platform.mom.bigBazaar.invoice">
         <level value="INFO"/>
-        <appender-ref ref="INVOICE_LOG"/>
+        <appender-ref ref="INVOICE_BB_LOG"/>
     </logger>
-    <logger name="com.fb.platform.mom.receiver.delivery">
+    <logger name="com.fb.platform.mom.receiver.bigBazaar.delivery">
         <level value="INFO"/>
-        <appender-ref ref="DELIVERY_LOG"/>
+        <appender-ref ref="DELIVERY_BB_LOG"/>
     </logger>
-    <logger name="com.fb.platform.mom.delivery">
+    <logger name="com.fb.platform.mom.bigBazaar.delivery">
         <level value="INFO"/>
-        <appender-ref ref="DELIVERY_LOG"/>
+        <appender-ref ref="DELIVERY_BB_LOG"/>
+    </logger>
+    <logger name="com.fb.platform.mom.receiver.bigBazaar.deliveryDelete">
+        <level value="INFO"/>
+        <appender-ref ref="DELIVERY_DELETE_BB_LOG"/>
+    </logger>
+    <logger name="com.fb.platform.mom.bigBazaar.deliveryDelete">
+        <level value="INFO"/>
+        <appender-ref ref="DELIVERY_DELETE_BB_LOG"/>
     </logger>
     <logger name="DELIVERY_DELETE_AUDIT_LOG">
         <level value="INFO"/>
@@ -295,13 +339,17 @@
         <level value="INFO"/>
         <appender-ref ref="ITEM_ACK_AUDIT_LOG"/>
     </logger>
-    <logger name="INVOICE_AUDIT_LOG">
+    <logger name="INVOICE_BB_AUDIT_LOG">
         <level value="INFO"/>
-        <appender-ref ref="INVOICE_AUDIT_LOG"/>
+        <appender-ref ref="INVOICE_BB_AUDIT_LOG"/>
     </logger>
-    <logger name="DELIVERY_AUDIT_LOG">
+    <logger name="DELIVERY_BB_AUDIT_LOG">
         <level value="INFO"/>
-        <appender-ref ref="DELIVERY_AUDIT_LOG"/>
+        <appender-ref ref="DELIVERY_BB_AUDIT_LOG"/>
+    </logger>
+    <logger name="DELIVERY_DELETE_BB_AUDIT_LOG">
+        <level value="INFO"/>
+        <appender-ref ref="DELIVERY_DELETE_BB_AUDIT_LOG"/>
     </logger>
     <logger name="DELIVERY_DELETE_RECEIVER_AUDIT_LOG">
         <level value="INFO"/>
@@ -315,13 +363,17 @@
         <level value="INFO"/>
         <appender-ref ref="ITEM_ACK_RECEIVER_AUDIT_LOG"/>
     </logger>
-    <logger name="INVOICE_RECEIVER_AUDIT_LOG">
+    <logger name="INVOICE_RECEIVER_BB_AUDIT_LOG">
         <level value="INFO"/>
-        <appender-ref ref="INVOICE_RECEIVER_AUDIT_LOG"/>
+        <appender-ref ref="INVOICE_RECEIVER_BB_AUDIT_LOG"/>
     </logger>
-    <logger name="DELIVERY_RECEIVER_AUDIT_LOG">
+    <logger name="DELIVERY_RECEIVER_BB_AUDIT_LOG">
         <level value="INFO"/>
-        <appender-ref ref="DELIVERY_RECEIVER_AUDIT_LOG"/>
+        <appender-ref ref="DELIVERY_RECEIVER_BB_AUDIT_LOG"/>
+    </logger>
+    <logger name="DELIVERY_DELETE_RECEIVER_BB_AUDIT_LOG">
+        <level value="INFO"/>
+        <appender-ref ref="DELIVERY_DELETE_RECEIVER_BB_AUDIT_LOG"/>
     </logger>
     <logger name="LOGERROR">
         <level value="WARN"/>

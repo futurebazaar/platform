@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-	targetNamespace="http://www.fb.com/platform/delivery/1.0.0" xmlns:delivery="http://www.fb.com/platform/delivery/1.0.0" 
+	targetNamespace="http://www.fb.com/platform/bigBazaar/delivery/1.0.0" xmlns:delivery="http://www.fb.com/platform/bigBazaar/delivery/1.0.0" 
 	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0" elementFormDefault="qualified">
 
 	<xs:element name="deliveryTO">
@@ -37,7 +37,7 @@
 	<xs:element name="deliveryHeaderTO">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="delivery:salesDistributionDoc"/>
+				<xs:element ref="delivery:deliveryNumber"/>
 				<xs:element ref="delivery:receivingPoint"/>
 				<xs:element ref="delivery:salesOrganization"/>
 				<xs:element ref="delivery:warehouseRef"/>
@@ -56,7 +56,7 @@
 		</xs:complexType>
 	</xs:element>
 	
-	<xs:element name="salesDistributionDoc" type="xs:string"/>
+	<xs:element name="deliveryNumber" type="xs:string"/>
 	<xs:element name="receivingPoint" type="xs:int"/>
 	<xs:element name="salesOrganization" type="xs:int"/>
 	<xs:element name="warehouseRef" type="xs:string"/>
@@ -120,6 +120,7 @@
 	<xs:element name="deliveryItemTO">
 		<xs:complexType>
 			<xs:sequence>
+				<xs:element ref="delivery:orderNumber"/>
 				<xs:element ref="delivery:itemNumber"/>
 				<xs:element ref="delivery:articleNumber"/>
 				<xs:element ref="delivery:articleEntered"/>
@@ -148,6 +149,7 @@
 		</xs:complexType>
 	</xs:element>
 	
+	<xs:element name="orderNumber" type="xs:string"/>
 	<xs:element name="itemNumber" type="xs:int"/>
 	<xs:element name="articleNumber" type="xs:string"/>
 	<xs:element name="articleEntered" type="xs:string"/>
@@ -173,8 +175,8 @@
   	<xs:appinfo>
     	<jaxb:globalBindings>
 	      	<jaxb:javaType name="java.util.Date" xmlType="xs:date"
-	        	parseMethod="com.fb.platform.mom.delivery.util.DateAdapter.parseDate"
-	        	printMethod="com.fb.platform.mom.delivery.util.DateAdapter.printDate"
+	        	parseMethod="com.fb.platform.mom.bigBazaar.delivery.util.DateAdapter.parseDate"
+	        	printMethod="com.fb.platform.mom.bigBazaar.delivery.util.DateAdapter.printDate"
 	        />
    		</jaxb:globalBindings>
   	</xs:appinfo>

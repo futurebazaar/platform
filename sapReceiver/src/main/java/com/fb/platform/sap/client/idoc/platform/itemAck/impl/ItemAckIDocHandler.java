@@ -86,7 +86,7 @@ public class ItemAckIDocHandler implements PlatformIDocHandler {
 				sapIdoc.setIdocNumber(orderIdoc.getIDOC().getEDIDC40().getDOCNUM());
 				orderItem.setSapIdoc(sapIdoc);
 
-				infoLog.info("*Sending ItemTO to item ack destination : " + orderItem.toString());
+				infoLog.info("Sending ItemTO to item ack destination : " + orderItem.toString());
 				momManager.send(PlatformDestinationEnum.ITEM_ACK, orderItem);
 			}
 		} catch (JAXBException e) {

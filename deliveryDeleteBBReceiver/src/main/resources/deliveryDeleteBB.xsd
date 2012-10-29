@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	targetNamespace="http://www.fb.com/platform/bigBazaar/deliveryDelete/1.0.0" xmlns:deliveryDelete="http://www.fb.com/platform/bigBazaar/deliveryDelete/1.0.0" 
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0" elementFormDefault="qualified">
+	
+	<xs:element name="deliveryDeleteBBTO">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="deliveryDelete:sapMomTO"/>
+				<xs:element ref="deliveryDelete:deliveryDeleteBBHeaderTO"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="sapMomTO">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="deliveryDelete:idocNumber"/>
+				<xs:element ref="deliveryDelete:refUID"/>
+				<xs:element ref="deliveryDelete:idoc"/>
+				<xs:element ref="deliveryDelete:segmentNumber"/>
+				<xs:element ref="deliveryDelete:poNumber"/>
+				<xs:element ref="deliveryDelete:canGr"/>
+				<xs:element ref="deliveryDelete:ackUID"/>
+				<xs:element ref="deliveryDelete:timestamp"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="idocNumber" type="xs:string"/>
+	<xs:element name="refUID" type="xs:string"/>
+	<xs:element name="idoc" type="xs:string"/>
+	<xs:element name="poNumber" type="xs:string"/>
+	<xs:element name="canGr" type="xs:string"/>
+	<xs:element name="segmentNumber" type="xs:int"/>
+	<xs:element name="ackUID" type="xs:long"/>
+	<xs:element name="timestamp" type="xs:date"/>
+	
+	<xs:element name="deliveryDeleteBBHeaderTO">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="deliveryDelete:orderNumber"/>
+				<xs:element ref="deliveryDelete:deliveryNumber"/>
+				<xs:element ref="deliveryDelete:deletedCode"/>
+				<xs:element ref="deliveryDelete:deletedDate"/>
+				<xs:element ref="deliveryDelete:deliveryDeleteItemBBTO" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="orderNumber" type="xs:string"/>
+	<xs:element name="deliveryNumber" type="xs:int"/>
+	<xs:element name="deletedCode" type="xs:string"/>
+	<xs:element name="deletedDate" type="xs:date"/>
+	
+	<xs:element name="deliveryDeleteItemBBTO">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="deliveryDelete:itemNum"/>
+				<xs:element ref="deliveryDelete:user"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="itemNum" type="xs:int"/>
+	<xs:element name="user" type="xs:string"/>
+	
+	<xs:annotation>
+  	<xs:appinfo>
+    	<jaxb:globalBindings>
+	      	<jaxb:javaType name="java.util.Date" xmlType="xs:date"
+	        	parseMethod="com.fb.platform.mom.bigBazaar.deliveryDelete.util.DateAdapter.parseDate"
+	        	printMethod="com.fb.platform.mom.bigBazaar.deliveryDelete.util.DateAdapter.printDate"
+	        />
+   		</jaxb:globalBindings>
+  	</xs:appinfo>
+  </xs:annotation>
+</xs:schema>

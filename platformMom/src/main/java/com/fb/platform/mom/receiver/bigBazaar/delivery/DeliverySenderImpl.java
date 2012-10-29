@@ -28,7 +28,7 @@ public class DeliverySenderImpl implements DeliverySender {
 	
 	private static Log infoLog = LogFactory.getLog(DeliverySenderImpl.class);
 	
-	private static Log auditLog = LogFactory.getLog(LoggerConstants.DELIVERY_AUDIT_LOG);
+	private static Log auditLog = LogFactory.getLog(LoggerConstants.DELIVERY_BB_AUDIT_LOG);
 
 	private JmsTemplate jmsTemplate;
 

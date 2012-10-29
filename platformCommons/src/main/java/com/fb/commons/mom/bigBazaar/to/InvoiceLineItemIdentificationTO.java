@@ -17,15 +17,15 @@ public class InvoiceLineItemIdentificationTO implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -6653936794927748517L;
-	private int qualifier;
+	private String qualifier;
 	private int materialId;
 	private String idocShortText;
 	private int segment;
 	
-	public int getQualifier() {
+	public String getQualifier() {
 		return qualifier;
 	}
-	public void setQualifier(int qualifier) {
+	public void setQualifier(String qualifier) {
 		this.qualifier = qualifier;
 	}
 	public int getMaterialId() {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-	targetNamespace="http://www.fb.com/platform/invoice/1.0.0" xmlns:invoice="http://www.fb.com/platform/invoice/1.0.0" 
+	targetNamespace="http://www.fb.com/platform/bigBazaar/invoice/1.0.0" xmlns:invoice="http://www.fb.com/platform/bigBazaar/invoice/1.0.0" 
 	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0" elementFormDefault="qualified">
 
 	<xs:element name="invoiceTO">
@@ -9,8 +9,10 @@
 				<xs:element ref="invoice:sapMomTO"/>
 				<xs:element ref="invoice:invoiceHeaderTO"/>
 				<xs:element ref="invoice:invoicePartnerHeaderTO" maxOccurs="unbounded"/>
-				<xs:element ref="invoice:invoiceDocumentRefTO" maxOccurs="unbounded"/>
-				<xs:element ref="invoice:invoiceLineItemTO"/>
+				<xs:element ref="invoice:invoiceLineItemTO" maxOccurs="unbounded"/>
+				<xs:element ref="invoice:invoiceNumber"/>
+				<xs:element ref="invoice:orderNumber"/>
+				<xs:element ref="invoice:deliveryNumber"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -37,15 +39,6 @@
 	<xs:element name="ackUID" type="xs:long"/>
 	<xs:element name="timestamp" type="xs:date"/>
 	
-	<xs:element name="invoiceDocumentRefTO">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="invoice:qualifier"/>
-				<xs:element ref="invoice:idocDocumentNumber"/>
-				<xs:element ref="invoice:idocDate"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
 	<xs:element name="idocDocumentNumber" type="xs:string"/>
 	<xs:element name="qualifier" type="xs:int"/>
 	<xs:element name="idocDate" type="xs:date"/>
@@ -58,7 +51,7 @@
 				<xs:element ref="invoice:exchangeRate"/>
 				<xs:element ref="invoice:paymentKey"/>
 				<xs:element ref="invoice:documentType"/>
-				<xs:element ref="invoice:documentNumber"/>
+				<xs:element ref="invoice:invoiceNumber"/>
 				<xs:element ref="invoice:weightUnit"/>
 				<xs:element ref="invoice:invoiceType"/>
 				<xs:element ref="invoice:receiptNum"/>
@@ -72,7 +65,9 @@
 	<xs:element name="exchangeRate" type="xs:decimal"/>
 	<xs:element name="paymentKey" type="xs:string"/>
 	<xs:element name="documentType" type="xs:string"/>
-	<xs:element name="documentNumber" type="xs:string"/>
+	<xs:element name="invoiceNumber" type="xs:string"/>
+	<xs:element name="deliveryNumber" type="xs:string"/>
+	<xs:element name="orderNumber" type="xs:string"/>
 	<xs:element name="weightUnit" type="xs:string"/>
 	<xs:element name="invoiceType" type="xs:string"/>
 	<xs:element name="receiptNum" type="xs:int"/>
@@ -164,8 +159,8 @@
   	<xs:appinfo>
     	<jaxb:globalBindings>
 	      	<jaxb:javaType name="java.util.Date" xmlType="xs:date"
-	        	parseMethod="com.fb.platform.mom.invoice.util.DateAdapter.parseDate"
-	        	printMethod="com.fb.platform.mom.invoice.util.DateAdapter.printDate"
+	        	parseMethod="com.fb.platform.mom.bigBazaar.invoice.util.DateAdapter.parseDate"
+	        	printMethod="com.fb.platform.mom.bigBazaar.invoice.util.DateAdapter.printDate"
 	        />
    		</jaxb:globalBindings>
   	</xs:appinfo>
