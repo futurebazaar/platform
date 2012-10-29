@@ -17,7 +17,7 @@
 			<xs:sequence>
 				<xs:element ref="deliveryDelete:idocNumber"/>
 				<xs:element ref="deliveryDelete:refUID"/>
-				<xs:element ref="deliveryDelete:idoc"/>
+				<!-- <xs:element ref="deliveryDelete:idoc"/> -->
 				<xs:element ref="deliveryDelete:segmentNumber"/>
 				<xs:element ref="deliveryDelete:poNumber"/>
 				<xs:element ref="deliveryDelete:canGr"/>
