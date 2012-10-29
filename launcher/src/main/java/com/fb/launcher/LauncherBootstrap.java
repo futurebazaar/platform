@@ -35,6 +35,12 @@ public class LauncherBootstrap {
 		ReceiverManager invoiceManager = (ReceiverManager) appContext.getBean("invoiceManager");
 		invoiceManager.start();
 		
+		ReceiverManager deliveryManager = (ReceiverManager) appContext.getBean("deliveryManager");
+		deliveryManager.start();
+		
+		ReceiverManager deliveryDeleteBBManager = (ReceiverManager) appContext.getBean("deliveryDeleteBBManager");
+		deliveryDeleteBBManager.start();
+		
 	}
 
 }
