@@ -25,7 +25,7 @@ public class DeliveryDeleteBBManagerImpl implements ReceiverManager, DeliveryDel
 	private MomManager momManager;
 	
 	@Autowired
-	private DeliveryDeleteBBMessageReceiver deliveryMessageReceiver;
+	private DeliveryDeleteBBMessageReceiver deliveryDeleteMessageReceiver;
 	
 	/* (non-Javadoc)
 	 * @see com.fb.launcher.receiver.ReceiverManager#start()
@@ -33,7 +33,7 @@ public class DeliveryDeleteBBManagerImpl implements ReceiverManager, DeliveryDel
 	@Override
 	public void start() {
 		infoLog.info("Registering the receiver DeliveryManagerImpl.");
-		momManager.registerReceiver(PlatformDestinationEnum.DELIVERY_BB, deliveryMessageReceiver);
+		momManager.registerReceiver(PlatformDestinationEnum.DELIVERY_BB, deliveryDeleteMessageReceiver);
 
 	}
 	
@@ -41,7 +41,7 @@ public class DeliveryDeleteBBManagerImpl implements ReceiverManager, DeliveryDel
 		this.momManager = momManager;
 	}
 
-	public void setdeliveryMessageReceiver(DeliveryDeleteBBMessageReceiver deliveryMessageReceiver) {
-		this.deliveryMessageReceiver = deliveryMessageReceiver;
+	public void setDeliveryDeleteMessageReceiver(DeliveryDeleteBBMessageReceiver deliveryDeleteMessageReceiver) {
+		this.deliveryDeleteMessageReceiver = deliveryDeleteMessageReceiver;
 	}
 }

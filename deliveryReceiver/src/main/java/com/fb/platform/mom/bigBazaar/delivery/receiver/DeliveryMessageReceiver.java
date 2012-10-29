@@ -68,7 +68,7 @@ public class DeliveryMessageReceiver implements PlatformMessageReceiver{
 	
 	private static JAXBContext initContext() {
 		try {
-			return JAXBContext.newInstance("com.fb.platform.bigBaaar.delivery._1_0");
+			return JAXBContext.newInstance("com.fb.platform.bigbazaar.delivery._1_0");
 		} catch (JAXBException e) {
 			infoLog.error("Error Initializing the JAXBContext to bind the schema classes", e);
 			throw new PlatformException("Error Initializing the JAXBContext to bind the schema classes", e);
