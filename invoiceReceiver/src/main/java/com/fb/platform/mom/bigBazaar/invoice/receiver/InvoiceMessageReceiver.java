@@ -112,6 +112,7 @@ public class InvoiceMessageReceiver implements PlatformMessageReceiver{
 		xmlInvoiceTO.getInvoicePartnerHeaderTO().addAll(xmlInvoicePartnerHeaderTOList(invoiceTO.getInvoicePartnerHeader()));
 		xmlInvoiceTO.setDeliveryNumber(xmlInvoiceTO.getDeliveryNumber());
 		xmlInvoiceTO.setInvoiceNumber(xmlInvoiceTO.getInvoiceNumber());
+		xmlInvoiceTO.setInvoiceDate(xmlInvoiceTO.getInvoiceDate());
 		xmlInvoiceTO.setOrderNumber(xmlInvoiceTO.getOrderNumber());
 		
 		try {

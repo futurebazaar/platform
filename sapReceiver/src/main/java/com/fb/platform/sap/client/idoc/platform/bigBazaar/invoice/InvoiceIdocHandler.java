@@ -14,8 +14,10 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTime;
 
 import com.fb.commons.PlatformException;
 import com.fb.commons.mom.bigBazaar.to.InvoiceHeaderTO;
@@ -111,6 +113,7 @@ public class InvoiceIdocHandler implements PlatformIDocHandler {
 					break;
 				case INVOICE:
 					apiInvoice.setInvoiceNumber(invoiceItem.getBELNR());
+					apiInvoice.setInvoiceDate(getDate(invoiceItem.getDATUM()));
 					break;
 				case DELIVERY:
 					apiInvoice.setDeliveryNumber(invoiceItem.getBELNR());
@@ -218,5 +221,24 @@ public class InvoiceIdocHandler implements PlatformIDocHandler {
 		
 		apiInvoiceLineItem.setLineItemIdentificationTO(apilineItemIdentification);
 		return apiInvoiceLineItem;
+	}
+	
+	private DateTime getDate(String date) {
+		int year = 0;
+		int month = 0;
+		int day = 0;
+		DateTime dateObject = null;
+		
+		if(isDateValid(date)) {
+			year = Integer.valueOf(date.substring(0, 4));
+			month = Integer.valueOf(date.substring(4, 6));
+			day = Integer.valueOf(date.substring(6));
+			dateObject = new DateTime(year, month, day, 0, 0, 0);
+		}
+		return dateObject;
+	}
+	
+	private boolean isDateValid(String date) {
+		return (StringUtils.isNotBlank(date) && date.length() >= 8 && Integer.valueOf(date) > 10000101);
 	}
 }
