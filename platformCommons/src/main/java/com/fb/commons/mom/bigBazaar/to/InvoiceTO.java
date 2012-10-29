@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.joda.time.DateTime;
 
 import com.fb.commons.mom.to.SapMomTO;
 
@@ -26,6 +27,7 @@ public class InvoiceTO implements Serializable {
 	private List<InvoicePartnerHeaderTO> invoicePartnerHeader = null;
 	private String orderNumber;
 	private String invoiceNumber;
+	private DateTime invoiceDate;
 	private String deliveryNumber;
 	private List<InvoiceLineItemTO> invoiceLineItem = null;
 	private InvoiceTypeEnum invoiceType;
@@ -78,6 +80,12 @@ public class InvoiceTO implements Serializable {
 	public void setDeliveryNumber(String deliveryNumber) {
 		this.deliveryNumber = deliveryNumber;
 	}
+	public DateTime getInvoiceDate() {
+		return invoiceDate;
+	}
+	public void setInvoiceDate(DateTime invoiceDate) {
+		this.invoiceDate = invoiceDate;
+	}
 	
 	@Override
 	public String toString() {
@@ -85,6 +93,7 @@ public class InvoiceTO implements Serializable {
 			.append("sapIdoc", this.sapIdoc)
 			.append("orderNumber", this.orderNumber)
 			.append("invoiceNumber", this.invoiceNumber)
+			.append("invoiceDate", this.invoiceDate)
 			.append("deliveryNumber", this.deliveryNumber)
 			.append("invoiceHeader", this.invoiceHeader)
 			.append("invoicePartnerHeader", this.invoicePartnerHeader)

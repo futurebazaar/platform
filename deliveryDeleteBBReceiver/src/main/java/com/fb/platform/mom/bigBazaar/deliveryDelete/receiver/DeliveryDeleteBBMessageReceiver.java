@@ -176,7 +176,7 @@ public class DeliveryDeleteBBMessageReceiver implements PlatformMessageReceiver{
 		
 		xmlSapMomTO.setAckUID(sapIdoc.getAckUID());
 		xmlSapMomTO.setCanGr(sapIdoc.getCanGr());
-		xmlSapMomTO.setIdoc(sapIdoc.getIdoc());
+		//xmlSapMomTO.setIdoc(sapIdoc.getIdoc());
 		xmlSapMomTO.setIdocNumber(sapIdoc.getIdocNumber());
 		xmlSapMomTO.setPoNumber(sapIdoc.getPoNumber());
 		xmlSapMomTO.setRefUID(sapIdoc.getRefUID());

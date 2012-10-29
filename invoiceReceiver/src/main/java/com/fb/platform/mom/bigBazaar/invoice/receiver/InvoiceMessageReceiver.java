@@ -92,10 +92,10 @@ public class InvoiceMessageReceiver implements PlatformMessageReceiver{
 		
 		switch (invoiceTO.getInvoiceType()) {
 		case CREATE:
-			invoiceURL = prop.getProperty("receiver.invoice.create.url");
+			invoiceURL = prop.getProperty("receiver.bigBazaar.invoice.create.url");
 			break;
 		case CANCEL:
-			invoiceURL = prop.getProperty("receiver.invoice.change.url");
+			invoiceURL = prop.getProperty("receiver.bigBazaar.invoice.change.url");
 			break;
 		}
 		
@@ -112,6 +112,7 @@ public class InvoiceMessageReceiver implements PlatformMessageReceiver{
 		xmlInvoiceTO.getInvoicePartnerHeaderTO().addAll(xmlInvoicePartnerHeaderTOList(invoiceTO.getInvoicePartnerHeader()));
 		xmlInvoiceTO.setDeliveryNumber(xmlInvoiceTO.getDeliveryNumber());
 		xmlInvoiceTO.setInvoiceNumber(xmlInvoiceTO.getInvoiceNumber());
+		xmlInvoiceTO.setInvoiceDate(xmlInvoiceTO.getInvoiceDate());
 		xmlInvoiceTO.setOrderNumber(xmlInvoiceTO.getOrderNumber());
 		
 		try {
@@ -247,7 +248,7 @@ public class InvoiceMessageReceiver implements PlatformMessageReceiver{
 		
 		xmlSapMomTO.setAckUID(sapIdoc.getAckUID());
 		xmlSapMomTO.setCanGr(sapIdoc.getCanGr());
-		xmlSapMomTO.setIdoc(sapIdoc.getIdoc());
+		//xmlSapMomTO.setIdoc(sapIdoc.getIdoc());
 		xmlSapMomTO.setIdocNumber(sapIdoc.getIdocNumber());
 		xmlSapMomTO.setPoNumber(sapIdoc.getPoNumber());
 		xmlSapMomTO.setRefUID(sapIdoc.getRefUID());

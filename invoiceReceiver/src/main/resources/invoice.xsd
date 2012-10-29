@@ -11,6 +11,7 @@
 				<xs:element ref="invoice:invoicePartnerHeaderTO" maxOccurs="unbounded"/>
 				<xs:element ref="invoice:invoiceLineItemTO" maxOccurs="unbounded"/>
 				<xs:element ref="invoice:invoiceNumber"/>
+				<xs:element ref="invoice:invoiceDate"/>
 				<xs:element ref="invoice:orderNumber"/>
 				<xs:element ref="invoice:deliveryNumber"/>
 			</xs:sequence>
@@ -21,7 +22,7 @@
 			<xs:sequence>
 				<xs:element ref="invoice:idocNumber"/>
 				<xs:element ref="invoice:refUID"/>
-				<xs:element ref="invoice:idoc"/>
+				<!-- <xs:element ref="invoice:idoc"/> -->
 				<xs:element ref="invoice:segmentNumber"/>
 				<xs:element ref="invoice:poNumber"/>
 				<xs:element ref="invoice:canGr"/>
@@ -66,6 +67,7 @@
 	<xs:element name="paymentKey" type="xs:string"/>
 	<xs:element name="documentType" type="xs:string"/>
 	<xs:element name="invoiceNumber" type="xs:string"/>
+	<xs:element name="invoiceDate" type="xs:date"/>
 	<xs:element name="deliveryNumber" type="xs:string"/>
 	<xs:element name="orderNumber" type="xs:string"/>
 	<xs:element name="weightUnit" type="xs:string"/>
