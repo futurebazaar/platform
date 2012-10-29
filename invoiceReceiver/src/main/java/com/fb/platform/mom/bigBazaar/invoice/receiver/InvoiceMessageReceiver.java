@@ -92,10 +92,10 @@ public class InvoiceMessageReceiver implements PlatformMessageReceiver{
 		
 		switch (invoiceTO.getInvoiceType()) {
 		case CREATE:
-			invoiceURL = prop.getProperty("receiver.invoice.create.url");
+			invoiceURL = prop.getProperty("receiver.bigBazaar.invoice.create.url");
 			break;
 		case CANCEL:
-			invoiceURL = prop.getProperty("receiver.invoice.change.url");
+			invoiceURL = prop.getProperty("receiver.bigBazaar.invoice.change.url");
 			break;
 		}
 		
