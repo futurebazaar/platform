@@ -62,7 +62,7 @@ public class DeliveryDeleteIDocHandler implements PlatformIDocHandler {
 		try {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			
-			infoLog.info("received idoc : " + idocXml);
+			//infoLog.info("received idoc : " + idocXml);
 
 			ZATGDELD deliveryDelIdoc = (ZATGDELD)unmarshaller.unmarshal(new StreamSource(new StringReader(idocXml)));
 			

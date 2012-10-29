@@ -15,6 +15,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -109,6 +110,13 @@ public class DeliveryMessageReceiver implements PlatformMessageReceiver{
 			
 			parameters.add(new BasicNameValuePair("delivery", xmlResponse));
 			parameters.add(new BasicNameValuePair("sender", "MOM"));
+			
+			ToStringBuilder postParams = new ToStringBuilder(parameters);
+			
+			for (NameValuePair param : parameters) {
+				postParams.append(param.getName(), param.getValue());
+			}
+			infoLog.info("Delivery post params : " + postParams.toString());
 			
 			UrlEncodedFormEntity entity;
 			entity = new UrlEncodedFormEntity(parameters, "UTF-8");
