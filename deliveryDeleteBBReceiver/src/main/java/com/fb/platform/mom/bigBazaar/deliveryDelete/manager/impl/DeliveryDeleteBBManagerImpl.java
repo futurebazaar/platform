@@ -32,8 +32,8 @@ public class DeliveryDeleteBBManagerImpl implements ReceiverManager, DeliveryDel
 	 */
 	@Override
 	public void start() {
-		infoLog.info("Registering the receiver DeliveryManagerImpl.");
-		momManager.registerReceiver(PlatformDestinationEnum.DELIVERY_BB, deliveryDeleteMessageReceiver);
+		infoLog.info("Registering the receiver DeliveryDeleteBBManagerImpl.");
+		momManager.registerReceiver(PlatformDestinationEnum.DELIVERY_DELETE_BB, deliveryDeleteMessageReceiver);
 
 	}
 	
