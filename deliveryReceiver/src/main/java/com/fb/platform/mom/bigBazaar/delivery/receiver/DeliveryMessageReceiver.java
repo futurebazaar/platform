@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -27,6 +28,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.joda.time.DateTime;
 
 import com.fb.commons.PlatformException;
 import com.fb.commons.mom.bigBazaar.to.DeliveryTO;
@@ -153,7 +155,7 @@ public class DeliveryMessageReceiver implements PlatformMessageReceiver{
 		
 		xmlDeliveryHeader.setDeliveryAdditionalHeaderTO(xmlDeliveryAdditionalHeaderTO(deliveryHeaderTO.getDeliveryAdditionalHeaderTO()));
 		xmlDeliveryHeader.setDeliveryControlTO(xmlDeliveryControlTO(deliveryHeaderTO.getDeliveryControlTO()));
-		xmlDeliveryHeader.setDeliveryDate(deliveryHeaderTO.getDeliveryDate().toDate());
+		xmlDeliveryHeader.setDeliveryDate(getDate(deliveryHeaderTO.getDeliveryDate()));
 		xmlDeliveryHeader.setDeliveryDeadlineTO(xmlDeliveryDeadlineTO(deliveryHeaderTO.getDeliveryDeadlineTO()));
 		xmlDeliveryHeader.getDeliveryItemTO().addAll(xmlDeliveryItemTO(deliveryHeaderTO.getDeliveryItemList()));
 		xmlDeliveryHeader.setNetWeight(deliveryHeaderTO.getNetWeight());
@@ -190,7 +192,7 @@ public class DeliveryMessageReceiver implements PlatformMessageReceiver{
 		xmlDeliveryItem.setDeliveryGroup(deliveryItemTO.getDeliveryGroup());
 		xmlDeliveryItem.setDistributionChannel(deliveryItemTO.getDistributionChannel());
 		xmlDeliveryItem.setDivision(deliveryItemTO.getDivision());
-		xmlDeliveryItem.setExpirationDate(deliveryItemTO.getExpirationDate().toDate());
+		xmlDeliveryItem.setExpirationDate(getDate(deliveryItemTO.getExpirationDate()));
 		xmlDeliveryItem.setExternalItemNumber(deliveryItemTO.getExternalItemNumber());
 		xmlDeliveryItem.setGrossWeight(deliveryItemTO.getGrossWeight());
 		xmlDeliveryItem.setInternationalArticleNumber(deliveryItemTO.getInternationalArticleNumber());
@@ -215,14 +217,21 @@ public class DeliveryMessageReceiver implements PlatformMessageReceiver{
 	private DeliveryDeadlineTO xmlDeliveryDeadlineTO(com.fb.commons.mom.bigBazaar.to.DeliveryDeadlineTO deliveryDeadlineTO) {
 		DeliveryDeadlineTO xmlDeliveryDeadline = new DeliveryDeadlineTO();
 		
-		xmlDeliveryDeadline.setActivityFinishDate(deliveryDeadlineTO.getActivityFinishDate().toDate());
-		xmlDeliveryDeadline.setActivityStartDate(deliveryDeadlineTO.getActivityStartDate().toDate());
-		xmlDeliveryDeadline.setActualFinishDate(deliveryDeadlineTO.getActualFinishDate().toDate());
-		xmlDeliveryDeadline.setActualStartDate(deliveryDeadlineTO.getActualStartDate().toDate());
+		xmlDeliveryDeadline.setActivityFinishDate(getDate(deliveryDeadlineTO.getActivityFinishDate()));
+		xmlDeliveryDeadline.setActivityStartDate(getDate(deliveryDeadlineTO.getActivityStartDate()));
+		xmlDeliveryDeadline.setActualFinishDate(getDate(deliveryDeadlineTO.getActualFinishDate()));
+		xmlDeliveryDeadline.setActualStartDate(getDate(deliveryDeadlineTO.getActualStartDate()));
 		xmlDeliveryDeadline.setQualifier(deliveryDeadlineTO.getQualifier());
 		xmlDeliveryDeadline.setSegment(deliveryDeadlineTO.getSegment());
 		
 		return xmlDeliveryDeadline;
+	}
+	
+	private Date getDate(DateTime dateObj) {
+		if(dateObj != null) {
+			return dateObj.toDate();
+		}
+		return null;
 	}
 
 	private DeliveryControlTO xmlDeliveryControlTO(com.fb.commons.mom.bigBazaar.to.DeliveryControlTO deliveryControlTO) {
@@ -257,7 +266,7 @@ public class DeliveryMessageReceiver implements PlatformMessageReceiver{
 		xmlSapMomTO.setPoNumber(sapIdoc.getPoNumber());
 		xmlSapMomTO.setRefUID(sapIdoc.getRefUID());
 		xmlSapMomTO.setSegmentNumber(sapIdoc.getSegmentNumber());
-		xmlSapMomTO.setTimestamp(sapIdoc.getTimestamp().toDate());
+		xmlSapMomTO.setTimestamp(getDate(sapIdoc.getTimestamp()));
 		
 		return xmlSapMomTO;
 	}
