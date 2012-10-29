@@ -15,6 +15,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -44,6 +45,7 @@ private static Log logger = LogFactory.getLog(LspResource.class);
 		}
 	}
 	
+	@Autowired
 	private PlatformClientHandler sapClientHandler = null;
 	
 	@Path("/assignAWB")
@@ -74,10 +76,6 @@ private static Log logger = LogFactory.getLog(LspResource.class);
 			logger.error("Error in the Sap Inventory Dashboard call.", e);
 			return "error";
 		}
-	}
-	
-	public void setSapClientHandler(PlatformClientHandler sapClientHandler) {
-		this.sapClientHandler = sapClientHandler;
 	}
 	
 }

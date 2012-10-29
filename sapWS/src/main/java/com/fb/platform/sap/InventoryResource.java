@@ -21,6 +21,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -60,6 +61,7 @@ public class InventoryResource {
 		}
 	}
 	
+	@Autowired
 	private PlatformClientHandler sapClientHandler = null;
 	
 	@Path("/stock")
@@ -159,9 +161,4 @@ public class InventoryResource {
 				gregCal.getHour(), gregCal.getMinute())));
 		return sapInventoryDashboardRequestTO;
 	}
-
-	public void setSapClientHandler(PlatformClientHandler sapClientHandler) {
-		this.sapClientHandler = sapClientHandler;
-	}
-	
 }
