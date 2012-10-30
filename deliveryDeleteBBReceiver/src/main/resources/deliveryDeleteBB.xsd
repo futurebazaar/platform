@@ -55,13 +55,13 @@
 	<xs:element name="deliveryDeleteItemBBTO">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="deliveryDelete:itemNum"/>
+				<xs:element ref="deliveryDelete:itemNumber"/>
 				<xs:element ref="deliveryDelete:user"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	
-	<xs:element name="itemNum" type="xs:int"/>
+	<xs:element name="itemNumber" type="xs:int"/>
 	<xs:element name="user" type="xs:string"/>
 	
 	<xs:annotation>

@@ -162,7 +162,7 @@ public class DeliveryDeleteBBMessageReceiver implements PlatformMessageReceiver{
 		for(com.fb.commons.mom.bigBazaar.to.DeliveryDeleteItemBBTO apiItem : deletedItems) {
 			DeliveryDeleteItemBBTO xmlItem = new DeliveryDeleteItemBBTO();
 			
-			xmlItem.setItemNum(apiItem.getItemNum());
+			xmlItem.setItemNumber(apiItem.getItemNumber());
 			xmlItem.setUser(apiItem.getUser());
 			
 			xmlDeletedItemsList.add(xmlItem);
