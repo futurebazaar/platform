@@ -17,14 +17,14 @@ public class DeliveryDeleteItemBBTO implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 3613892073448595007L;
-	private int itemNum;
+	private int itemNumber;
 	private String user;
 	
-	public int getItemNum() {
-		return itemNum;
+	public int getItemNumber() {
+		return itemNumber;
 	}
-	public void setItemNum(int itemNum) {
-		this.itemNum = itemNum;
+	public void setItemNumber(int itemNumber) {
+		this.itemNumber = itemNumber;
 	}
 	public String getUser() {
 		return user;
@@ -36,7 +36,7 @@ public class DeliveryDeleteItemBBTO implements Serializable {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this)
-			.append("itemNum", this.itemNum)
+			.append("itemNumber", this.itemNumber)
 			.append("user", this.user)
 			.toString();
 	}

@@ -63,7 +63,7 @@ public class ZBBDELHEADER {
     @XmlElement(name = "ORDER", required = true)
     protected String order;
     @XmlElement(name = "DELIVERY")
-    protected int delivery;
+    protected String delivery;
     @XmlElement(name = "DELTCODE", required = true)
     protected String deltcode;
     @XmlElement(name = "DELDATE")
@@ -103,7 +103,7 @@ public class ZBBDELHEADER {
      * Gets the value of the delivery property.
      * 
      */
-    public int getDELIVERY() {
+    public String getDELIVERY() {
         return delivery;
     }
 
@@ -111,7 +111,7 @@ public class ZBBDELHEADER {
      * Sets the value of the delivery property.
      * 
      */
-    public void setDELIVERY(int value) {
+    public void setDELIVERY(String value) {
         this.delivery = value;
     }
 

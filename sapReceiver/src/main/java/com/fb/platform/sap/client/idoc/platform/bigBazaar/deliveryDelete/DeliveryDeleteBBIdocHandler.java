@@ -128,7 +128,7 @@ public class DeliveryDeleteBBIdocHandler implements PlatformIDocHandler {
 		for(ZBBDELITEM xmlDeletedItem : xmlDeletedItems) {
 			DeliveryDeleteItemBBTO apiDeletedItem = new DeliveryDeleteItemBBTO();
 			
-			apiDeletedItem.setItemNum(xmlDeletedItem.getPOSNR());
+			apiDeletedItem.setItemNumber(xmlDeletedItem.getPOSNR());
 			apiDeletedItem.setUser(xmlDeletedItem.getDELUSER());
 			
 			apiDeletedItems.add(apiDeletedItem);

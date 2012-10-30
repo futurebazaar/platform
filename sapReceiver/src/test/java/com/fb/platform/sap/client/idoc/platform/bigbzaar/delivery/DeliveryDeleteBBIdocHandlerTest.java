@@ -94,12 +94,12 @@ public class DeliveryDeleteBBIdocHandlerTest extends BaseTestCase {
 				
 				DeliveryDeleteItemBBTO item1 = deliveryDeleteBBHeader.getDeletedItems().get(0);
 				
-				assertEquals(10, item1.getItemNum());
+				assertEquals(10, item1.getItemNumber());
 				assertEquals("ABHISHEKG", item1.getUser());
 				
 				DeliveryDeleteItemBBTO item2 = deliveryDeleteBBHeader.getDeletedItems().get(1);
 				
-				assertEquals(20, item2.getItemNum());
+				assertEquals(20, item2.getItemNumber());
 				assertEquals("ABHISHEKG", item2.getUser());
 			} else if (count > 1) {
 				throw new IllegalArgumentException("Invalid message");

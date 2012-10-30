@@ -110,10 +110,10 @@ public class InvoiceMessageReceiver implements PlatformMessageReceiver{
 		xmlInvoiceTO.setInvoiceHeaderTO(xmlInvoiceHeaderTO(invoiceTO.getInvoiceHeader()));
 		xmlInvoiceTO.getInvoiceLineItemTO().addAll(xmlInvoiceLineItems(invoiceTO.getInvoiceLineItem()));
 		xmlInvoiceTO.getInvoicePartnerHeaderTO().addAll(xmlInvoicePartnerHeaderTOList(invoiceTO.getInvoicePartnerHeader()));
-		xmlInvoiceTO.setDeliveryNumber(xmlInvoiceTO.getDeliveryNumber());
-		xmlInvoiceTO.setInvoiceNumber(xmlInvoiceTO.getInvoiceNumber());
-		xmlInvoiceTO.setInvoiceDate(xmlInvoiceTO.getInvoiceDate());
-		xmlInvoiceTO.setOrderNumber(xmlInvoiceTO.getOrderNumber());
+		xmlInvoiceTO.setDeliveryNumber(invoiceTO.getDeliveryNumber());
+		xmlInvoiceTO.setInvoiceNumber(invoiceTO.getInvoiceNumber());
+		xmlInvoiceTO.setInvoiceDate(invoiceTO.getInvoiceDate().toDate());
+		xmlInvoiceTO.setOrderNumber(invoiceTO.getOrderNumber());
 		
 		try {
 			StringWriter outStringWriter = new StringWriter();

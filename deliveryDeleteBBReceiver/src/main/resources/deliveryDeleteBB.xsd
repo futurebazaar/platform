@@ -48,20 +48,20 @@
 	</xs:element>
 	
 	<xs:element name="orderNumber" type="xs:string"/>
-	<xs:element name="deliveryNumber" type="xs:int"/>
+	<xs:element name="deliveryNumber" type="xs:string"/>
 	<xs:element name="deletedCode" type="xs:string"/>
 	<xs:element name="deletedDate" type="xs:date"/>
 	
 	<xs:element name="deliveryDeleteItemBBTO">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="deliveryDelete:itemNum"/>
+				<xs:element ref="deliveryDelete:itemNumber"/>
 				<xs:element ref="deliveryDelete:user"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 	
-	<xs:element name="itemNum" type="xs:int"/>
+	<xs:element name="itemNumber" type="xs:int"/>
 	<xs:element name="user" type="xs:string"/>
 	
 	<xs:annotation>

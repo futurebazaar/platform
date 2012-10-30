@@ -73,7 +73,7 @@
     </xs:complexType>
   </xs:element>
   <xs:element name="ORDER" type="xs:string"/>
-  <xs:element name="DELIVERY" type="xs:int"/>
+  <xs:element name="DELIVERY" type="xs:string"/>
   <xs:element name="DELTCODE" type="xs:string"/>
   <xs:element name="DELDATE" type="xs:string"/>
   <xs:element name="DELTIME" type="xs:string"/>

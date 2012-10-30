@@ -21,7 +21,7 @@ public class DeliveryDeleteBBHeaderTO implements Serializable {
 	private static final long serialVersionUID = -7917590473751536480L;
 	
 	private String orderNumber;
-	private int deliveryNumber;
+	private String deliveryNumber;
 	private String deletedCode;
 	private DateTime deletedDate;
 	private List<DeliveryDeleteItemBBTO> deletedItems;
@@ -32,10 +32,10 @@ public class DeliveryDeleteBBHeaderTO implements Serializable {
 	public void setOrderNumber(String orderNumber) {
 		this.orderNumber = orderNumber;
 	}
-	public int getDeliveryNumber() {
+	public String getDeliveryNumber() {
 		return deliveryNumber;
 	}
-	public void setDeliveryNumber(int deliveryNumber) {
+	public void setDeliveryNumber(String deliveryNumber) {
 		this.deliveryNumber = deliveryNumber;
 	}
 	public String getDeletedCode() {

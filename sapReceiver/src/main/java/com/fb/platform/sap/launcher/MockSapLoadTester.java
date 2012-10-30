@@ -19,6 +19,9 @@ import org.terracotta.agent.repkg.de.schlichtherle.io.FileInputStream;
 import com.fb.commons.PlatformException;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.PlatformIDocHandlerFactory;
+import com.fb.platform.sap.client.idoc.platform.bigBazaar.delivery.DeliveryIdocHandler;
+import com.fb.platform.sap.client.idoc.platform.bigBazaar.deliveryDelete.DeliveryDeleteBBIdocHandler;
+import com.fb.platform.sap.client.idoc.platform.bigBazaar.invoice.InvoiceIdocHandler;
 import com.fb.platform.sap.client.idoc.platform.deliveryDelete.impl.DeliveryDeleteIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.inventory.impl.DeliveryInventoryIDocHandler;
 import com.fb.platform.sap.client.idoc.platform.inventory.impl.InventoryIDocHandler;
@@ -59,11 +62,68 @@ public class MockSapLoadTester {
 			sendDeliveryInventoryIdoc(idocFactory.getHandler(DeliveryInventoryIDocHandler.DELIVERY_INVENTORY_IDOC_TYPE));
 			sendDeliveryDeleteIdoc(idocFactory.getHandler(DeliveryDeleteIDocHandler.DELIVERY_DELETE));
 			sendItemAckIdoc(idocFactory.getHandler(ItemAckIDocHandler.ITEM_ACK_IDOC_TYPE));
+			sendBBInvoice(idocFactory.getHandler(InvoiceIdocHandler.INVOICE_IDOC_TYPE));
+			sendBBDelivery(idocFactory.getHandler(DeliveryIdocHandler.DELIVERY_IDOC_TYPE));
+			sendBBDeliveryDelete(idocFactory.getHandler(DeliveryDeleteBBIdocHandler.DELIVERY_DELETE_BB_IDOC_TYPE));
 			Thread.sleep(5000);
 		}
 
 	}
 	
+	private static void sendBBDeliveryDelete(PlatformIDocHandler handler) {
+		try {
+			StringWriter sw ;
+			InputStream inputStream ;
+			String path = prop.getProperty("sap.load.bigBazaar.deliveryDelete.path");
+			System.out.println("BB deliveryDelete idoc path : " + path);
+			File inventoryDir = new File(path);
+			for (File idoc : inventoryDir.listFiles()) {
+				inputStream = new FileInputStream(idoc);
+				sw = new StringWriter();
+				IOUtils.copy(inputStream, sw);
+				handler.handle(sw.toString());
+			}
+		} catch (Exception e) {
+			logger.error("Error in sendBBDeliveryDelete : ", e);
+		}
+	}
+
+	private static void sendBBDelivery(PlatformIDocHandler handler) {
+		try {
+			StringWriter sw ;
+			InputStream inputStream ;
+			String path = prop.getProperty("sap.load.bigBazaar.delivery.path");
+			System.out.println("BB delivery idoc path : " + path);
+			File inventoryDir = new File(path);
+			for (File idoc : inventoryDir.listFiles()) {
+				inputStream = new FileInputStream(idoc);
+				sw = new StringWriter();
+				IOUtils.copy(inputStream, sw);
+				handler.handle(sw.toString());
+			}
+		} catch (Exception e) {
+			logger.error("Error in sendBBDelivery : ", e);
+		}
+	}
+
+	private static void sendBBInvoice(PlatformIDocHandler handler) {
+		try {
+			StringWriter sw ;
+			InputStream inputStream ;
+			String path = prop.getProperty("sap.load.bigBazaar.invoice.path");
+			System.out.println("BB Invoice idoc path : " + path);
+			File inventoryDir = new File(path);
+			for (File idoc : inventoryDir.listFiles()) {
+				inputStream = new FileInputStream(idoc);
+				sw = new StringWriter();
+				IOUtils.copy(inputStream, sw);
+				handler.handle(sw.toString());
+			}
+		} catch (Exception e) {
+			logger.error("Error in sendBBInvoice : ", e);
+		}
+	}
+
 	private static void sendInventoryIdoc(PlatformIDocHandler inventoryIDocHandler) {
 		try {
 			StringWriter sw ;

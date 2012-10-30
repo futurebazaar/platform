@@ -74,7 +74,7 @@
 	</appender>
 	<appender name="INVOICE_BB_LOG" class="org.apache.log4j.DailyRollingFileAppender">
 	        <!-- The active file to log to -->
-	        <param name="file" value="/var/log/tomcat6/sapReceiver/invoice/system.log" />
+	        <param name="file" value="/var/log/tomcat6/sapReceiver/invoiceBB/system.log" />
 	        <param name="append" value="true" />
 	        <param name="encoding" value="UTF-8" />
 	        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
@@ -84,9 +84,9 @@
 	                <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] %c:%L - %m%n" />
 	        </layout>
 	</appender>
-	<appender name="DELIVERY_BB_LOG" class="org.apache.log4j.DailyRollingFileAppender">
+	<appender name="BIGBAZAAR_DELIVERY_LOG" class="org.apache.log4j.DailyRollingFileAppender">
 	        <!-- The active file to log to -->
-	        <param name="file" value="/var/log/tomcat6/sapReceiver/delivery/system.log" />
+	        <param name="file" value="/var/log/tomcat6/sapReceiver/deliveryBB/system.log" />
 	        <param name="append" value="true" />
 	        <param name="encoding" value="UTF-8" />
 	        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
@@ -98,7 +98,7 @@
 	</appender>
 	<appender name="DELIVERY_DELETE_BB_LOG" class="org.apache.log4j.DailyRollingFileAppender">
 	        <!-- The active file to log to -->
-	        <param name="file" value="/var/log/tomcat6/sapReceiver/deliveryDelete/system.log" />
+	        <param name="file" value="/var/log/tomcat6/sapReceiver/deliveryDeleteBB/system.log" />
 	        <param name="append" value="true" />
 	        <param name="encoding" value="UTF-8" />
 	        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
@@ -229,27 +229,27 @@
         <level value="INFO"/>
         <appender-ref ref="ITEM_ACK_LOG"/>
     </logger>
-    <logger name="com.fb.platform.sap.client.idoc.platform.bigbazaar.invoice">
+    <logger name="com.fb.platform.sap.client.idoc.platform.bigBazaar.invoice">
         <level value="INFO"/>
         <appender-ref ref="INVOICE_BB_LOG"/>
     </logger>
-    <logger name="com.fb.platform.mom.receiver.bigbazaar.invoice">
+    <logger name="com.fb.platform.mom.receiver.bigBazaar.invoice">
         <level value="INFO"/>
         <appender-ref ref="INVOICE_BB_LOG"/>
     </logger>
-    <logger name="com.fb.platform.sap.client.idoc.platform.bigbazaar.delivery">
+    <logger name="com.fb.platform.sap.client.idoc.platform.bigBazaar.delivery">
         <level value="INFO"/>
-        <appender-ref ref="DELIVERY_BB_LOG"/>
+        <appender-ref ref="BIGBAZAAR_DELIVERY_LOG"/>
     </logger>
-    <logger name="com.fb.platform.mom.receiver.bigbazaar.delivery">
+    <logger name="com.fb.platform.mom.receiver.bigBazaar.delivery">
         <level value="INFO"/>
-        <appender-ref ref="DELIVERY_BB_LOG"/>
+        <appender-ref ref="BIGBAZAAR_DELIVERY_LOG"/>
     </logger>
-    <logger name="com.fb.platform.sap.client.idoc.platform.bigbazaar.deliveryDelete">
+    <logger name="com.fb.platform.sap.client.idoc.platform.bigBazaar.deliveryDelete">
         <level value="INFO"/>
         <appender-ref ref="DELIVERY_DELETE_BB_LOG"/>
     </logger>
-    <logger name="com.fb.platform.mom.receiver.bigbazaar.delivery">
+    <logger name="com.fb.platform.mom.receiver.bigBazaar.delivery">
         <level value="INFO"/>
         <appender-ref ref="DELIVERY_DELETE_BB_LOG"/>
     </logger>
