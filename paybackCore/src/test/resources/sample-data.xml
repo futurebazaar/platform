@@ -123,6 +123,11 @@
 				<value name="id">7</value>
 				<value name="name">EARN_X_POINTS_ON_Y_PAYMENT_MODE</value>
 			</row>
+			
+			<row>
+				<value name="id">8</value>
+				<value name="name">EARN_X_POINTS_ON_Y_CATEGORY_FOR_Z_PAYMENT_MODE</value>
+			</row>
 	
 		</table>
         	
@@ -317,7 +322,54 @@
 				<value name="value">payback</value>
 				<value name="rule_id">7</value>
 			</row>
-        	
+			<row>
+				<value name="id">31</value>
+				<value name="name">INCLUDED_CATEGORY_LIST</value>
+				<value name="value">1234,479,1,2,3,5,6</value>
+				<value name="rule_id">8</value>
+			</row>
+			<row>
+    			<value name="id">32</value>
+    			<value name="name">EARN_RATIO</value>
+    			<value name="value">0.03</value>
+    			<value name="rule_id">8</value>
+    		</row>
+    		<row>
+				<value name="id">33</value>
+				<value name="name">VALID_FROM</value>
+				<value name="value">2012-05-22</value>
+				<value name="rule_id">8</value>
+			</row>			
+			<row>
+				<value name="id">34</value>
+				<value name="name">VALID_TILL</value>
+				<value name="value">9999-12-31</value>
+				<value name="rule_id">8</value>
+			</row>
+			<row>
+				<value name="id">35</value>
+				<value name="name">CATEGORY_POINTS_FACTOR_MAP</value>
+				<value name="value">GV=5, ELEC=3</value>
+				<value name="rule_id">8</value>
+			</row>
+        	<row>
+				<value name="id">36</value>
+				<value name="name">CATEGORY_PAYMENT_MODE_MAP</value>
+				<value name="value">GV=payback</value>
+				<value name="rule_id">8</value>
+			</row>
+			<row>
+				<value name="id">37</value>
+				<value name="name">GV</value>
+				<value name="value">479,1,2,3</value>
+				<value name="rule_id">8</value>
+			</row>
+			<row>
+				<value name="id">38</value>
+				<value name="name">ELEC</value>
+				<value name="value">1234,5,6</value>
+				<value name="rule_id">8</value>
+			</row>
 			</table>
 
 </dataset>

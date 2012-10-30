@@ -19,6 +19,7 @@ import com.fb.platform.payback.rule.impl.BuyHeroDealEarnYPoints;
 import com.fb.platform.payback.service.PointsService;
 import com.fb.platform.payback.to.OrderItemRequest;
 import com.fb.platform.payback.to.OrderRequest;
+import com.fb.platform.payback.to.PaymentRequest;
 import com.fb.platform.payback.util.PointsUtil;
 
 public class CacheTest extends BaseTestCase{
@@ -109,6 +110,43 @@ public class CacheTest extends BaseTestCase{
 		listCacheAccess.unlock(key);
 		assertEquals("1",  listCacheAccess.get(key));
 		
+	}
+	
+	@Test
+	public void earnCategoryPaymentModeRuleCacheTest(){
+		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.EARN_X_POINTS_ON_Y_CATEGORY_FOR_Z_PAYMENT_MODE);
+		ruleCacheAccess.put(EarnPointsRuleEnum.EARN_X_POINTS_ON_Y_CATEGORY_FOR_Z_PAYMENT_MODE.name(), rule);
+		PointsRule cacheRule = ruleCacheAccess.get(EarnPointsRuleEnum.EARN_X_POINTS_ON_Y_CATEGORY_FOR_Z_PAYMENT_MODE.name());
+		assertTrue(cacheRule.allowNext(null, null));
+		 
+		OrderRequest orderRequest = new OrderRequest();
+		orderRequest.setTxnTimestamp(DateTime.now());
+		orderRequest.setAmount(new BigDecimal(3000));
+
+		List<PaymentRequest> paymentRequest = new ArrayList<PaymentRequest>();
+		PaymentRequest payment = new PaymentRequest();
+		payment.setAmount(new BigDecimal(2000));
+		payment.setPaymentMode("payback");
+		paymentRequest.add(payment);
+		orderRequest.setPaymentRequest(paymentRequest);
+
+		List<OrderItemRequest> orderItem = new ArrayList<OrderItemRequest>();
+		OrderItemRequest itemRequest1 = new OrderItemRequest();
+		itemRequest1.setAmount(new BigDecimal(1000));
+		itemRequest1.setCategoryId(1234);
+		orderItem.add(itemRequest1);
+		
+		OrderItemRequest itemRequest2 = new OrderItemRequest();
+		itemRequest2.setAmount(new BigDecimal(1000));
+		itemRequest2.setCategoryId(1);
+		orderItem.add(itemRequest2);		
+		orderRequest.setOrderItemRequest(orderItem);
+
+		assertTrue(cacheRule.isApplicable(orderRequest, itemRequest1));
+		assertEquals(90, cacheRule.execute(orderRequest, itemRequest1).intValue());
+		
+		assertTrue(cacheRule.isApplicable(orderRequest, itemRequest2));
+		assertEquals(150, cacheRule.execute(orderRequest, itemRequest2).intValue());
 	}
 	
 	@Test

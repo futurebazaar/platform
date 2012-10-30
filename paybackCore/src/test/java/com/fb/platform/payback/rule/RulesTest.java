@@ -185,4 +185,16 @@ public class RulesTest extends BaseTestCase{
 		assertEquals(new BigDecimal(600).intValue(), txnPoints.intValue());
 	}
 	
+	@Test
+	public void earnXPointsOnYCategoryForZPaymentMode(){
+		PointsRule rule = pointsRuleDao.loadEarnRule(EarnPointsRuleEnum.EARN_X_POINTS_ON_Y_CATEGORY_FOR_Z_PAYMENT_MODE);
+		BigDecimal txnPoints = BigDecimal.ZERO;
+		orderRequest.setTxnTimestamp(new DateTime(2012, 05, 25, 0, 0, 0));
+		for (OrderItemRequest itemRequest : orderRequest.getOrderItemRequest()){
+			if (rule.isApplicable(orderRequest, itemRequest)){
+				txnPoints = txnPoints.add(rule.execute(orderRequest, itemRequest));
+			}
+		}
+		assertEquals(new BigDecimal(480).intValue(), txnPoints.intValue());
+	}
 }
