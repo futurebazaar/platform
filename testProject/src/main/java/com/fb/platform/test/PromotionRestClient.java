@@ -37,6 +37,7 @@ public class PromotionRestClient {
 		String sessionToken = RestClient.login();
 
 		createClearanceDiscountPromotion(sessionToken);
+		createClearancePercentOffDiscountPromotion(sessionToken);
 		getAllPromotionRuleList(sessionToken);
 		//BigDecimal discValue = applyCoupon(sessionToken);
 		//System.out.println(discValue);
@@ -91,6 +92,54 @@ public class PromotionRestClient {
 		}
 		String xmlStr = postMethod.getResponseBodyAsString();
 		System.out.println("Got the createClearanceDiscountPromotion Response : \n\n" + xmlStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		CreatePromotionResponse xmlResponse = (CreatePromotionResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(xmlStr)));
+		System.out.println(xmlResponse.getCreatePromotionEnum().toString());
+	}
+
+	private static void createClearancePercentOffDiscountPromotion(String sessionToken) throws Exception {
+		HttpClient httpClient = new HttpClient();
+
+		PostMethod postMethod = new PostMethod(RestClient.url + "promotionAdminWS/promotionAdmin/promotion/create");
+
+		CreatePromotionRequest xmlRequest = new CreatePromotionRequest();
+		xmlRequest.setSessionToken(sessionToken);
+
+		CreatePromotionTO promotion = new CreatePromotionTO();
+		promotion.setRuleName("DISCOUNT_ON_CLEARANCE_PRODUCT_PERCENT_OFF");
+		promotion.setIsActive(true);
+		promotion.setMaxAmount(new BigDecimal("-1"));
+		promotion.setMaxAmountPerUser(new BigDecimal("-1"));
+		promotion.setMaxUses(-1);
+		promotion.setMaxUsesPerUser(-1);
+		promotion.setPromotionName("Clearance Percent Off" + System.currentTimeMillis());
+
+		RuleConfigItemTO percentOffDiscountOffConfig = new RuleConfigItemTO();
+		percentOffDiscountOffConfig.setRuleConfigName("DISCOUNT_PERCENTAGE");
+		percentOffDiscountOffConfig.setRuleConfigValue("25");
+		promotion.getRuleConfigItemTO().add(percentOffDiscountOffConfig);
+
+		xmlRequest.setCreatePromotionTO(promotion);
+
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
+
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(xmlRequest, sw);
+		
+		System.out.println("\n" + RestClient.url + "promotionAdminWS/promotionAdmin/promotion/create");
+		System.out.println("\n createClearancePercentOffDiscountPromotion : \n" + sw.toString());
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		postMethod.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(postMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the createClearancePercentOffDiscountPromotion method : " + statusCode);
+			System.exit(1);
+		}
+		String xmlStr = postMethod.getResponseBodyAsString();
+		System.out.println("Got the createClearancePercentOffDiscountPromotion Response : \n\n" + xmlStr);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		CreatePromotionResponse xmlResponse = (CreatePromotionResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(xmlStr)));
 		System.out.println(xmlResponse.getCreatePromotionEnum().toString());
