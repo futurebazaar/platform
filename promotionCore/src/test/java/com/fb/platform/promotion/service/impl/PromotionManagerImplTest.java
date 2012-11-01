@@ -412,7 +412,64 @@ public class PromotionManagerImplTest extends BaseTestCase{
 		assertTrue(couponResponse.getPromoDescription().equals("Rs 250 Off on 500 Rs order of clearance products"));
 		assertEquals(couponResponse.getStatusMessage(), ApplyCouponResponseStatusEnum.SUCCESS.getMesage());
 	}
-	
+
+	@Test
+	public void applyPercentOffDiscountOnClearanceCoupon() {
+		Product p1 = new Product();
+		p1.setPrice(new BigDecimal(2000));
+		p1.setProductId(100);//clearance product
+
+		//Create OrderItems
+		OrderItem oItem1 = new OrderItem();
+		oItem1.setQuantity(3);
+		oItem1.setProduct(p1);
+
+		Product p2 = new Product();
+		p2.setPrice(new BigDecimal(500));
+		p2.setProductId(200);//clearance product
+
+		//Create OrderItems
+		OrderItem oItem2 = new OrderItem();
+		oItem2.setQuantity(2);
+		oItem2.setProduct(p2);
+
+		//non clearance product
+		Product p3 = new Product();
+		p3.setPrice(new BigDecimal(1000));
+		p3.setProductId(200000);//not a clearance product
+
+		//Create OrderItems
+		OrderItem oItem3 = new OrderItem();
+		oItem3.setQuantity(1);
+		oItem3.setProduct(p3);
+		
+
+		//Create OrderReq
+		OrderRequest orderReq1 = new OrderRequest();
+		orderReq1.setOrderId(1);
+		List<OrderItem> oList1 = new ArrayList<OrderItem>();
+		oList1.add(oItem1);
+		oList1.add(oItem2);
+		oList1.add(oItem3);
+		orderReq1.setOrderItems(oList1);
+
+		ApplyCouponRequest couponRequest = new ApplyCouponRequest();
+		couponRequest.setOrderReq(orderReq1);
+		couponRequest.setCouponCode("Loot25");
+		couponRequest.setSessionToken(responseUser1.getSessionToken());
+		couponRequest.setIsOrderCommitted(false);
+		
+		ApplyCouponResponse couponResponse = promotionManager.applyCoupon(couponRequest);
+		
+		assertNotNull(couponResponse);
+		assertEquals(couponResponse.getCouponStatus(), ApplyCouponResponseStatusEnum.SUCCESS);
+		assertNotNull(couponResponse.getSessionToken());
+		assertEquals(0, new BigDecimal(1750).compareTo(couponResponse.getOrderDiscount().getOrderDiscountValue()));
+		assertTrue((couponResponse.getPromoName()).equals("Clearance Percent Off Discount promotion"));
+		assertTrue(couponResponse.getPromoDescription().equals("25 percent off on clearance products"));
+		assertEquals(couponResponse.getStatusMessage(), ApplyCouponResponseStatusEnum.SUCCESS.getMesage());
+	}
+
 	@Test
 	public void productPercentOff() {
 		ApplyCouponRequest request = new ApplyCouponRequest();

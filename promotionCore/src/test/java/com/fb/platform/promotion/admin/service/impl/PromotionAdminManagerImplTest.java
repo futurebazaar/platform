@@ -107,6 +107,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		add(RulesEnum.MONTHLY_DISCOUNT_RS_OFF);
 		add(RulesEnum.CATEGORY_BASED_VARIABLE_PERCENT_OFF);
 		add(RulesEnum.DISCOUNT_ON_CLEARANCE_PRODUCT);
+		add(RulesEnum.DISCOUNT_ON_CLEARANCE_PRODUCT_PERCENT_OFF);
 	}};
 	
 	@Before
@@ -153,7 +154,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 				fetchRuleResponse.getFetchRulesEnum());
 		assertNotNull(fetchRuleResponse.getSessionToken());
 		assertNotNull(fetchRuleResponse.getRulesList());
-		assertEquals(9, fetchRuleResponse.getRulesList().size());
+		assertEquals(10, fetchRuleResponse.getRulesList().size());
 		assertNotNull(fetchRuleResponse.getSessionToken());
 		for (RuleConfigDescriptor ruleConfig : fetchRuleResponse.getRulesList()) {
 			assertTrue(ruleList.contains(ruleConfig.getRulesEnum()));
@@ -1024,7 +1025,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		
 		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
-		assertEquals(22, searchPromotionResponse.getTotalCount());
+		assertEquals(23, searchPromotionResponse.getTotalCount());
 		assertEquals(2, searchPromotionResponse.getPromotionsList().size());
 
 		int count = 0;
@@ -1189,7 +1190,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
 		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
-		assertEquals(30, searchPromotionResponse.getTotalCount());
+		assertEquals(31, searchPromotionResponse.getTotalCount());
 		assertEquals(10, searchPromotionResponse.getPromotionsList().size());
 	}
 
