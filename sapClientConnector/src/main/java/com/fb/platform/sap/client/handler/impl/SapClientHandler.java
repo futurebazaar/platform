@@ -68,7 +68,7 @@ public class SapClientHandler implements PlatformClientHandler {
 				HeaderMapper.setReturnDetails(bapiFunction,  orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
 				ItemMapper.setReturnItemDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
 			} else {
-				HeaderMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderType);
+				HeaderMapper.setDetails(bapiFunction, orderRequestTO, orderRequestTO.getOrderHeaderTO(), orderType);
 				//Below condition is not used now
 				//HeaderConditionsMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderType);
 				ItemMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);

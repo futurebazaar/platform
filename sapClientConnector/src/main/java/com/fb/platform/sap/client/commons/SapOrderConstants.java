@@ -126,6 +126,7 @@ public class SapOrderConstants {
 	public static final String REFERENCE_DOCUMENT_CATEGORY = "REFDOC_CAT";
 	public static final String REFERENCE_DOCUMENT = "REF_DOC";
 	public static final String ORDER_REASON = "ORD_REASON";
+	public static final String HEADER_PLANT = "SALES_OFF";
 	
 	//Sap Condition Types
 	public static final String CONDITION_TYPE = "COND_TYPE";
