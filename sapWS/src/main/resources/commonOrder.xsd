@@ -20,6 +20,7 @@
   	<xs:complexType>
       <xs:sequence>
         <xs:element type="xs:string" name="referenceOrderId"/>
+        <xs:element type="xs:string" name="thirdPartyOrder"/>
 	    <xs:element type="xs:string" name="creationDate"/>
 	    <xs:element type="xs:string" name="accountNumber"/>
 	    <xs:element type="xs:string" name="salesDocType"/>
