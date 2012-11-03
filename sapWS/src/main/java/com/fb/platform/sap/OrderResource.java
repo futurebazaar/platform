@@ -127,6 +127,7 @@ public class OrderResource {
 		orderHeaderTO.setSalesDocType(orderHeaderXml.getSalesDocType());
 		orderHeaderTO.setCreatedOn(SapUtils.getDateTimeFromString(orderHeaderXml.getCreationDate(), "yyyyMMdd"));
 		orderHeaderTO.setLoyaltyCardNumber(orderHeaderXml.getLoyaltyCardNumber());
+		orderHeaderTO.setThirdPartyOrder(orderHeaderXml.getThirdPartyOrder());
 		
 		PricingTO pricingTO = new PricingTO();
 		pricingTO.setCouponDiscount(orderHeaderXml.getDiscount());
