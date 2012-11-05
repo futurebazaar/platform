@@ -37,6 +37,7 @@ import com.fb.platform.promotion.product.to.RefreshAutoPromotionResponse;
 import com.fb.platform.promotion.product.to.RefreshAutoPromotionResponseStatusEnum;
 import com.fb.platform.promotion.service.AutoPromotionManager;
 import com.fb.platform.promotion.service.PromotionService;
+import com.fb.platform.promotion.to.ConfigResultApplyStatusEnum;
 
 /**
  * @author vinayak
@@ -113,8 +114,8 @@ public class AutoPromotionManagerImpl implements AutoPromotionManager {
 					}
 					continue;
 				}
-				boolean applied = autoPromotion.apply(request.getOrderReq(), orderResponse);
-				if (applied) {
+				ConfigResultApplyStatusEnum applied = autoPromotion.apply(request.getOrderReq(), orderResponse);
+				if (applied != ConfigResultApplyStatusEnum.ERROR) {
 					appliedPromotionStatuses.put(promotionId, true);
 					response.getAppliedPromotions().add(autoPromotion);
 				} else if (modification) {

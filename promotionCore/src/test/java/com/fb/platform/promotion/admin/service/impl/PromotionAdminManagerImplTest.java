@@ -1021,7 +1021,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		
 		searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
-		assertEquals(22, searchPromotionResponse.getTotalCount());
+		assertEquals(24, searchPromotionResponse.getTotalCount());
 		assertEquals(2, searchPromotionResponse.getPromotionsList().size());
 
 		int count = 0;
@@ -1186,7 +1186,7 @@ public class PromotionAdminManagerImplTest extends BaseTestCase {
 		searchPromotionRequest.setSessionToken(responseUser.getSessionToken());
 		SearchPromotionResponse searchPromotionResponse = promotionAdminManager.searchPromotion(searchPromotionRequest);
 		assertEquals(SearchPromotionEnum.SUCCESS, searchPromotionResponse.getSearchPromotionEnum());
-		assertEquals(30, searchPromotionResponse.getTotalCount());
+		assertEquals(32, searchPromotionResponse.getTotalCount());
 		assertEquals(10, searchPromotionResponse.getPromotionsList().size());
 	}
 

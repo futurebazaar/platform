@@ -21,6 +21,7 @@ public class OrderRequest implements Serializable {
 	private List<OrderItem> orderItems = new ArrayList<OrderItem>();
 	private int clientId = 0;
 	private int noOfTimesInMonth = 0;
+	private Money totalPrice;
 	
 	public int getOrderId() {
 		return orderId;
@@ -199,5 +200,11 @@ public class OrderRequest implements Serializable {
 		for (OrderItem orderItem : orderItems) {
 			orderItem.getProduct().setDiscountedPrice(null);
 		}
+	}
+	public Money getTotalPrice() {
+		return totalPrice;
+	}
+	public void setTotalPrice(Money totalPrice) {
+		this.totalPrice = totalPrice;
 	}
 }

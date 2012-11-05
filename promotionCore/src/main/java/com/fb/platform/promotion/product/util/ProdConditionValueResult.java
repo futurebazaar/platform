@@ -15,7 +15,10 @@ import com.fb.platform.promotion.product.model.OfferType;
 import com.fb.platform.promotion.product.model.Result;
 import com.fb.platform.promotion.product.model.condition.ProductCondition;
 import com.fb.platform.promotion.product.model.result.ValueChangeResult;
+import com.fb.platform.promotion.to.ConfigResultApplyStatusEnum;
 import com.fb.platform.promotion.to.OrderItem;
+import com.fb.platform.promotion.to.OrderItemPromotionApplicationEnum;
+import com.fb.platform.promotion.to.OrderItemPromotionStatus;
 import com.fb.platform.promotion.to.OrderRequest;
 
 /**
@@ -43,20 +46,32 @@ public class ProdConditionValueResult implements ConditionResultProcessor {
 	}
 
 	@Override
-	public boolean process(OrderRequest orderRequest) {
+	public ConfigResultApplyStatusEnum process(OrderRequest orderRequest) {
 		List<OrderItem> matchingItems = findMatchingOrderItems(orderRequest);
 		if (matchingItems.size() == 0) {
-			return false;
+			return ConfigResultApplyStatusEnum.ERROR;
 		}
 
 		int matchingQuantity = findMatchingQuantity(matchingItems);
 		if (matchingQuantity < productCondition.getQuantity()) {
-			return false;
+			return ConfigResultApplyStatusEnum.ERROR;
 		}
 
-		Money totalPrice = getTotalPrice(matchingItems, matchingQuantity);
+		Money totalPrice = getTotalPrice(matchingItems, matchingQuantity, orderRequest.getOrderItems());
+		orderRequest.setTotalPrice(totalPrice);
 		distributeTotalPriceAccrossOrderItems(matchingItems, totalPrice, matchingQuantity);
-		return true;
+		return isProcessSuccessful(orderRequest.getOrderItems());
+	}
+	
+	private ConfigResultApplyStatusEnum isProcessSuccessful(List<OrderItem> orderItems) {
+		ConfigResultApplyStatusEnum configResultApplyStatus = ConfigResultApplyStatusEnum.SUCESS;
+		for (OrderItem orderItem : orderItems) {
+			if(orderItem.getOrderItemPromotionStatus().getOrderItemPromotionApplication() != OrderItemPromotionApplicationEnum.SUCCESS) {
+				configResultApplyStatus = ConfigResultApplyStatusEnum.PARTIAL;
+				break;
+			}
+		}
+		return configResultApplyStatus;
 	}
 
 	private void distributeTotalPriceAccrossOrderItems(List<OrderItem> matchingItems, Money totalPrice, int matchingQuantity) {
@@ -68,7 +83,7 @@ public class ProdConditionValueResult implements ConditionResultProcessor {
 		OrderItemPriceDistributor.distributeOnMrp(matchingItems, totalPrice);
 	}
 
-	private Money getTotalPrice(List<OrderItem> matchingItems, int matchingQuantity) {
+	private Money getTotalPrice(List<OrderItem> matchingItems, int matchingQuantity, List<OrderItem> orderItems) {
 		Money finalOrderItemPrice = new Money(BigDecimal.ZERO);
 
 		int remainder = matchingQuantity % productCondition.getQuantity();
@@ -77,11 +92,23 @@ public class ProdConditionValueResult implements ConditionResultProcessor {
 		OfferType offerType = valueChangeResult.getOfferType();
 		if (offerType == OfferType.FIXED_PRICE) {
 			finalOrderItemPrice = valueChangeResult.getOfferValue().times(multiples);
-			if (remainder > 0) {
+			/*if (remainder > 0) {
 				List<Money> highetOfferPrices = findHighestOfferPricesForReminder(matchingItems, remainder);
 				for (Money offerPrice : highetOfferPrices) {
 					finalOrderItemPrice = finalOrderItemPrice.plus(offerPrice);
 				}
+			}*/
+			for (OrderItem matchItem : matchingItems) {
+				if(remainder != 0) {
+					matchItem.getOrderItemPromotionStatus().setRemainingQuantity(remainder);
+					matchItem.getOrderItemPromotionStatus().setAppliedQuantity(multiples * productCondition.getQuantity());
+					matchItem.getOrderItemPromotionStatus().setOrderItemPromotionApplication(OrderItemPromotionApplicationEnum.PARTIAL);
+				} else {
+					matchItem.getOrderItemPromotionStatus().setRemainingQuantity(0);
+					matchItem.getOrderItemPromotionStatus().setAppliedQuantity(multiples * productCondition.getQuantity());
+					matchItem.getOrderItemPromotionStatus().setOrderItemPromotionApplication(OrderItemPromotionApplicationEnum.SUCCESS);
+				}
+				
 			}
 		} else if (offerType == OfferType.FIXED_OFF) {
 			for (int i = 0; i < matchingQuantity - remainder; i++) {
@@ -93,6 +120,8 @@ public class ProdConditionValueResult implements ConditionResultProcessor {
 					finalOrderItemPrice = finalOrderItemPrice.plus(offerPrice);
 				}
 			}
+			setPromotionSuccessStatus(matchingItems);
+			
 			Money totalOffMoney = valueChangeResult.getOfferValue().times(multiples);
 			finalOrderItemPrice = finalOrderItemPrice.minus(totalOffMoney);
 		} else if (offerType == OfferType.PERCENT_OFF) {
@@ -107,12 +136,22 @@ public class ProdConditionValueResult implements ConditionResultProcessor {
 				Money discountedProductPrice = productPrice.minus(priceOff);
 				Money orderItemDiscountedPrice = discountedProductPrice.times(matchingItem.getQuantity());
 				finalOrderItemPrice = finalOrderItemPrice.plus(orderItemDiscountedPrice);
+				
+				setPromotionSuccessStatus(matchingItems);
 			}
 		}
 		
 		BigDecimal amount = finalOrderItemPrice.getAmount().setScale(0,  RoundingMode.FLOOR);	//Rounding off to the maximize discount
 		finalOrderItemPrice = new Money(amount);
 		return finalOrderItemPrice;
+	}
+	
+	private void setPromotionSuccessStatus(List<OrderItem> orderItems) {
+		for (OrderItem orderItem : orderItems) {
+			orderItem.getOrderItemPromotionStatus().setOrderItemPromotionApplication(OrderItemPromotionApplicationEnum.SUCCESS);
+			orderItem.getOrderItemPromotionStatus().setRemainingQuantity(0);
+			orderItem.getOrderItemPromotionStatus().setAppliedQuantity(orderItem.getQuantity());
+		}
 	}
 
 	private List<Money> findHighestOfferPricesForReminder(List<OrderItem> matchingItems, int reminder) {
@@ -131,10 +170,10 @@ public class ProdConditionValueResult implements ConditionResultProcessor {
 		return quantity;
 	}
 
-	private List<OrderItem> findMatchingOrderItems(OrderRequest orderRequest) {
+	public List<OrderItem> findMatchingOrderItems(OrderRequest orderRequest) {
 		List<OrderItem> items = new ArrayList<OrderItem>();
 		for (OrderItem orderItem : orderRequest.getOrderItems()) {
-			if (orderItem.isPromotionProcessed()) {
+			if (orderItem.getOrderItemPromotionStatus().getOrderItemPromotionApplication() == OrderItemPromotionApplicationEnum.SUCCESS) {
 				continue;
 			}
 			if (productCondition.isApplicableOn(orderItem.getProduct().getProductId())) {

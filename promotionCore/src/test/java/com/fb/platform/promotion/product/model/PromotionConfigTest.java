@@ -22,6 +22,7 @@ import com.fb.platform.promotion.product.util.ConditionResultProcessor;
 import com.fb.platform.promotion.product.util.ConditionResultProcessorFactory;
 import com.fb.platform.promotion.product.util.ProdConditionValueResult;
 import com.fb.platform.promotion.product.util.SameProdConditionProdResult;
+import com.fb.platform.promotion.to.ConfigResultApplyStatusEnum;
 import com.fb.platform.promotion.to.OrderItem;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.Product;
@@ -109,8 +110,9 @@ public class PromotionConfigTest extends BaseTestCase {
 
 		PromotionConfig config = autoPromotion.getPromotionConfig();
 
-		boolean applied = config.apply(orderReq1);
-		assertTrue(applied);
+		ConfigResultApplyStatusEnum applied = config.apply(orderReq1);
+		assertNotNull(applied);
+		assertEquals(ConfigResultApplyStatusEnum.SUCESS, applied);
 		for (OrderItem orderItem : orderReq1.getOrderItems()) {
 			if (orderItem.getProduct().getProductId() == oItem1.getProduct().getProductId()) 
 				assertEquals(new BigDecimal("205"), orderItem.getTotalDiscount());
@@ -144,8 +146,9 @@ public class PromotionConfigTest extends BaseTestCase {
 
 		PromotionConfig config = autoPromotion.getPromotionConfig();
 
-		boolean applied = config.apply(orderReq1);
-		assertTrue(applied);
+		ConfigResultApplyStatusEnum applied = config.apply(orderReq1);
+		assertNotNull(applied);
+		assertEquals(ConfigResultApplyStatusEnum.SUCESS, applied);
 		for (OrderItem orderItem : orderReq1.getOrderItems()) { 
 			assertEquals(new BigDecimal("12"), orderItem.getTotalDiscount());
 		}
@@ -159,8 +162,9 @@ public class PromotionConfigTest extends BaseTestCase {
 
 		PromotionConfig config = autoPromotion.getPromotionConfig();
 
-		boolean applied = config.apply(getSampleOrderRequest());
-		assertTrue(applied);
+		ConfigResultApplyStatusEnum applied = config.apply(getSampleOrderRequest());
+		assertNotNull(applied);
+		assertEquals(ConfigResultApplyStatusEnum.SUCESS, applied);
 	}
 
 	@Test
@@ -189,10 +193,12 @@ public class PromotionConfigTest extends BaseTestCase {
 
 		PromotionConfig config = autoPromotion.getPromotionConfig();
 
-		boolean applied = config.apply(orderReq1);
-		assertTrue(applied);
+		ConfigResultApplyStatusEnum applied = config.apply(orderReq1);
+		assertNotNull(applied);
+		assertEquals(ConfigResultApplyStatusEnum.SUCESS, applied);
+		
 		for (OrderItem orderItem : orderReq1.getOrderItems()) {
-			assertEquals(new BigDecimal("101"), orderItem.getTotalDiscount());
+			assertEquals(new BigDecimal("801"), orderItem.getTotalDiscount());
 		}
 	}
 

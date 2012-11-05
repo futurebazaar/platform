@@ -4,15 +4,14 @@
 package com.fb.platform.promotion.product.util;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.lang.Math;
 
 import com.fb.commons.to.Money;
 import com.fb.platform.promotion.to.OrderItem;
+import com.fb.platform.promotion.to.OrderItemPromotionApplicationEnum;
 
 /**
  * @author vinayak
@@ -21,6 +20,9 @@ import com.fb.platform.promotion.to.OrderItem;
 public class OrderItemPriceDistributor {
 
 	public static void distributeOnMrp(List<OrderItem> orderItems, Money totalPrice) {
+		
+		//updateTotalPrice(orderItems, totalPrice);
+		
 		Map<BigDecimal, PriceQuantity> priceQuantityMap = new HashMap<BigDecimal, OrderItemPriceDistributor.PriceQuantity>();
 
 		for (OrderItem orderItem : orderItems) {
@@ -62,6 +64,18 @@ public class OrderItemPriceDistributor {
 			keyCount--;
 		}
 
+	}
+	
+	public static void updateTotalPrice(List<OrderItem> orderItems, Money totalPrice) {
+		for(OrderItem orderItem : orderItems) {
+			if(OrderItemPromotionApplicationEnum.PARTIAL == orderItem.getOrderItemPromotionStatus().getOrderItemPromotionApplication()) {
+				totalPrice.plus(new Money(orderItem.getPrice()).times(orderItem.getOrderItemPromotionStatus().getRemainingQuantity()));
+				orderItem.getOrderItemPromotionStatus().setOrderItemPromotionApplication(OrderItemPromotionApplicationEnum.SUCCESS);
+			/*} else if (OrderItemPromotionApplicationEnum.NOT_APPLIED == orderItem.getOrderItemPromotionStatus().getOrderItemPromotionApplication()) {
+				totalPrice.plus(new Money(orderItem.getPrice()));
+				orderItem.getOrderItemPromotionStatus().setOrderItemPromotionApplication(OrderItemPromotionApplicationEnum.SUCCESS);*/
+			}
+		}
 	}
 
 	private static class PriceQuantity {
@@ -109,7 +123,13 @@ public class OrderItemPriceDistributor {
 				else
 					itemShare = Math.ceil((orderItem.getQuantity() / this.getQuantity()) * totalItemShare);
 				orderItem.setTotalDiscount(orderItem.getPrice().subtract(new BigDecimal(itemShare)));
-				orderItem.setPromotionProcessed(true);
+				//orderItem.getOrderItemPromotionStatus().setOrderItemPromotionApplication(OrderItemPromotionApplicationEnum.SUCCESS);
+				if(orderItem.getOrderItemPromotionStatus().getRemainingQuantity() > 0) {
+					orderItem.getOrderItemPromotionStatus().setOrderItemPromotionApplication(OrderItemPromotionApplicationEnum.PARTIAL);
+				} else if (orderItem.getOrderItemPromotionStatus().getOrderItemPromotionApplication() != OrderItemPromotionApplicationEnum.NOT_APPLIED && orderItem.getOrderItemPromotionStatus().getRemainingQuantity() == 0){
+					orderItem.getOrderItemPromotionStatus().setOrderItemPromotionApplication(OrderItemPromotionApplicationEnum.SUCCESS);
+				}
+				//orderItem.setPromotionProcessed(true);
 				remItemShare -= itemShare;
 				itemCount--;
 			}
