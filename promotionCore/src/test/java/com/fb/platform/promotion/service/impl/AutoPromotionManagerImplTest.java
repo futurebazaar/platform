@@ -3,10 +3,10 @@
  */
 package com.fb.platform.promotion.service.impl;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -17,8 +17,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fb.commons.test.BaseTestCase;
-import com.fb.platform.auth.AuthenticationService;
-import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.product.model.promotion.AutoPromotion;
 import com.fb.platform.promotion.product.to.ApplyAutoPromotionRequest;
 import com.fb.platform.promotion.product.to.ApplyAutoPromotionResponse;
@@ -27,9 +25,8 @@ import com.fb.platform.promotion.product.to.CommitAutoPromotionRequest;
 import com.fb.platform.promotion.product.to.CommitAutoPromotionResponse;
 import com.fb.platform.promotion.product.to.CommitAutoPromotionResponseStatusEnum;
 import com.fb.platform.promotion.service.AutoPromotionManager;
-import com.fb.platform.promotion.service.PromotionManager;
-import com.fb.platform.promotion.service.PromotionService;
 import com.fb.platform.promotion.to.OrderItem;
+import com.fb.platform.promotion.to.OrderItemPromotionApplicationEnum;
 import com.fb.platform.promotion.to.OrderRequest;
 import com.fb.platform.promotion.to.Product;
 import com.fb.platform.user.manager.interfaces.UserManager;
@@ -139,6 +136,10 @@ public class AutoPromotionManagerImplTest extends BaseTestCase {
 		assertEquals(8000, appliedPromotions.get(0).getId());
 		assertEquals(8100, appliedPromotions.get(1).getId());
 		assertNotNull(response.getOrderDiscount());
+		
+		for(OrderItem orderItem : response.getOrderDiscount().getOrderRequest().getOrderItems()) {
+			assertEquals(OrderItemPromotionApplicationEnum.SUCCESS, orderItem.getOrderItemPromotionStatus().getOrderItemPromotionApplication());
+		}
 	}
 
 	@Test
@@ -208,6 +209,11 @@ public class AutoPromotionManagerImplTest extends BaseTestCase {
 		assertEquals(1, appliedPromotions.size());
 		assertEquals(8100, appliedPromotions.get(0).getId());
 		assertNotNull(response.getOrderDiscount());
+		
+		for(int i=0 ; i<2 ; i++) {
+			OrderItem orderItem = orderReq1.getOrderItems().get(i);
+			assertEquals(OrderItemPromotionApplicationEnum.SUCCESS, orderItem.getOrderItemPromotionStatus().getOrderItemPromotionApplication());
+		}
 	}
 
 	@Test
@@ -289,6 +295,7 @@ public class AutoPromotionManagerImplTest extends BaseTestCase {
 		assertEquals(ApplyAutoPromotionResponseStatusEnum.SUCCESS, response.getApplyAutoPromotionStatus());
 		assertNotNull(response.getAppliedPromotions());
 		assertNotNull(response.getOrderDiscount());
+		
 	}
 
 	@Test
@@ -335,6 +342,10 @@ public class AutoPromotionManagerImplTest extends BaseTestCase {
 		assertEquals(1, response.getAppliedPromotionStatuses().size());
 		assertTrue(response.getAppliedPromotionStatuses().get(8100).booleanValue());
 		assertNotNull(response.getOrderDiscount());
+		
+		for(OrderItem orderItem : response.getOrderDiscount().getOrderRequest().getOrderItems()) {
+			assertEquals(OrderItemPromotionApplicationEnum.SUCCESS, orderItem.getOrderItemPromotionStatus().getOrderItemPromotionApplication());
+		}
 	}
 	
 	@Test
@@ -389,6 +400,10 @@ public class AutoPromotionManagerImplTest extends BaseTestCase {
 		assertEquals(1, appliedPromotions.size());
 		assertEquals(8200, appliedPromotions.get(0).getId());
 		assertNotNull(response.getOrderDiscount());
+		
+		for(OrderItem orderItem : response.getOrderDiscount().getOrderRequest().getOrderItems()) {
+			assertEquals(OrderItemPromotionApplicationEnum.SUCCESS, orderItem.getOrderItemPromotionStatus().getOrderItemPromotionApplication());
+		}
 	}
 
 	@Test
@@ -433,5 +448,164 @@ public class AutoPromotionManagerImplTest extends BaseTestCase {
 		assertEquals(1, appliedPromotions.size());
 		assertEquals(8200, appliedPromotions.get(0).getId());
 		assertNotNull(response.getOrderDiscount());
+		for(OrderItem orderItem : response.getOrderDiscount().getOrderRequest().getOrderItems()) {
+			assertEquals(OrderItemPromotionApplicationEnum.SUCCESS, orderItem.getOrderItemPromotionStatus().getOrderItemPromotionApplication());
+		}
 	}
+	
+	@Test
+	public void applyBigBazaarbuy1atX2atY3atZ() {
+		/*buy1atX_2atY_3atZ
+		 * product id 300410412
+		 * 1 @ 45
+		 * 2 @ 85
+		 * 3 @ 125
+		 */
+		Product p1 = new Product();
+		p1.setPrice(new BigDecimal(50));
+		p1.setMrpPrice(new BigDecimal(60));
+		p1.setProductId(300410412);
+		
+		OrderItem oItem1 = new OrderItem();
+		oItem1.setQuantity(1);
+		oItem1.setProduct(p1);
+		
+		OrderRequest orderReq1 = new OrderRequest();
+		orderReq1.setOrderId(1);
+		List<OrderItem> oList1 = new ArrayList<OrderItem>();
+		oList1.add(oItem1);
+		orderReq1.setOrderItems(oList1);
+		
+		ApplyAutoPromotionRequest request = new ApplyAutoPromotionRequest();
+		request.setOrderReq(orderReq1);
+
+		ApplyAutoPromotionResponse response = autoPromotionManager.apply(request);
+
+		assertNotNull(response);
+		assertEquals(ApplyAutoPromotionResponseStatusEnum.SUCCESS, response.getApplyAutoPromotionStatus());
+		assertNotNull(response.getAppliedPromotions());
+		List<AutoPromotion> appliedPromotions = response.getAppliedPromotions();
+		assertEquals(1, appliedPromotions.size());
+		assertEquals(10000, appliedPromotions.get(0).getId());
+		assertNotNull(response.getOrderDiscount());
+		assertEquals(5, response.getOrderDiscount().getOrderRequest().getOrderItems().get(0).getTotalDiscount().intValue());
+		
+		oItem1 = new OrderItem();
+		oItem1.setQuantity(2);
+		oItem1.setProduct(p1);
+		
+		orderReq1 = new OrderRequest();
+		orderReq1.setOrderId(1);
+		oList1 = new ArrayList<OrderItem>();
+		oList1.add(oItem1);
+		orderReq1.setOrderItems(oList1);
+		
+		request = new ApplyAutoPromotionRequest();
+		request.setOrderReq(orderReq1);
+		
+		response = autoPromotionManager.apply(request);
+
+		assertNotNull(response);
+		assertEquals(ApplyAutoPromotionResponseStatusEnum.SUCCESS, response.getApplyAutoPromotionStatus());
+		assertNotNull(response.getAppliedPromotions());
+		appliedPromotions = response.getAppliedPromotions();
+		assertEquals(1, appliedPromotions.size());
+		assertEquals(10000, appliedPromotions.get(0).getId());
+		assertNotNull(response.getOrderDiscount());
+		assertEquals(15, response.getOrderDiscount().getOrderRequest().getOrderItems().get(0).getTotalDiscount().intValue());
+		
+		oItem1 = new OrderItem();
+		oItem1.setQuantity(3);
+		oItem1.setProduct(p1);
+		
+		orderReq1 = new OrderRequest();
+		orderReq1.setOrderId(1);
+		oList1 = new ArrayList<OrderItem>();
+		oList1.add(oItem1);
+		orderReq1.setOrderItems(oList1);
+		
+		request = new ApplyAutoPromotionRequest();
+		request.setOrderReq(orderReq1);
+		
+		response = autoPromotionManager.apply(request);
+
+		assertNotNull(response);
+		assertEquals(ApplyAutoPromotionResponseStatusEnum.SUCCESS, response.getApplyAutoPromotionStatus());
+		assertNotNull(response.getAppliedPromotions());
+		appliedPromotions = response.getAppliedPromotions();
+		assertEquals(1, appliedPromotions.size());
+		assertEquals(10000, appliedPromotions.get(0).getId());
+		assertNotNull(response.getOrderDiscount());
+		assertEquals(25, response.getOrderDiscount().getOrderRequest().getOrderItems().get(0).getTotalDiscount().intValue());
+		
+		oItem1 = new OrderItem();
+		oItem1.setQuantity(4);
+		oItem1.setProduct(p1);
+		
+		orderReq1 = new OrderRequest();
+		orderReq1.setOrderId(1);
+		oList1 = new ArrayList<OrderItem>();
+		oList1.add(oItem1);
+		orderReq1.setOrderItems(oList1);
+		
+		request = new ApplyAutoPromotionRequest();
+		request.setOrderReq(orderReq1);
+		
+		response = autoPromotionManager.apply(request);
+
+		assertNotNull(response);
+		assertEquals(ApplyAutoPromotionResponseStatusEnum.SUCCESS, response.getApplyAutoPromotionStatus());
+		assertNotNull(response.getAppliedPromotions());
+		appliedPromotions = response.getAppliedPromotions();
+		assertEquals(1, appliedPromotions.size());
+		assertEquals(10000, appliedPromotions.get(0).getId());
+		assertNotNull(response.getOrderDiscount());
+		assertEquals(30, response.getOrderDiscount().getOrderRequest().getOrderItems().get(0).getTotalDiscount().intValue());
+	}
+	
+	/*@Test
+	public void applyBigBazaarXandYatZpriceOffer3() {*/
+		/*buyXandYatZpriceOffer3
+		 * product id 300169162 and 300276633 at 220
+		 */
+		/*Product p1 = new Product();
+		p1.setPrice(new BigDecimal(150));
+		p1.setMrpPrice(new BigDecimal(160));
+		p1.setProductId(300169162);
+		
+		Product p2 = new Product();
+		p2.setPrice(new BigDecimal(200));
+		p2.setMrpPrice(new BigDecimal(220));
+		p2.setProductId(300276633);
+		
+		OrderItem oItem1 = new OrderItem();
+		oItem1.setQuantity(1);
+		oItem1.setProduct(p1);
+		
+		OrderItem oItem2 = new OrderItem();
+		oItem2.setQuantity(1);
+		oItem2.setProduct(p2);
+		
+		OrderRequest orderReq1 = new OrderRequest();
+		orderReq1.setOrderId(1);
+		List<OrderItem> oList1 = new ArrayList<OrderItem>();
+		oList1.add(oItem1);
+		oList1.add(oItem2);
+		orderReq1.setOrderItems(oList1);
+		
+		ApplyAutoPromotionRequest request = new ApplyAutoPromotionRequest();
+		request.setOrderReq(orderReq1);
+
+		ApplyAutoPromotionResponse response = autoPromotionManager.apply(request);*/
+
+//		assertNotNull(response);
+//		assertEquals(ApplyAutoPromotionResponseStatusEnum.SUCCESS, response.getApplyAutoPromotionStatus());
+//		assertNotNull(response.getAppliedPromotions());
+//		List<AutoPromotion> appliedPromotions = response.getAppliedPromotions();
+//		assertEquals(1, appliedPromotions.size());
+//		assertEquals(10100, appliedPromotions.get(0).getId());
+//		assertNotNull(response.getOrderDiscount());
+//		int discount = response.getOrderDiscount().getOrderRequest().getOrderItems().get(0).getTotalDiscount().intValue() + response.getOrderDiscount().getOrderRequest().getOrderItems().get(1).getTotalDiscount().intValue();
+//		assertEquals(130, discount);
+//	}
 }
