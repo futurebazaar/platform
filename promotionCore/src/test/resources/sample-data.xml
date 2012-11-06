@@ -464,7 +464,7 @@
                         <value name="valid_from">2012-10-30 00:00:00</value>
                         <value name="valid_till">2015-11-04 00:00:00</value>
                         <value name="name">1 @45 Off,2 @85 Off.3 and more @125 Off</value>
-                        <value name="description">Big Bazaar</value>
+                        <value name="description">1 @45 Off,2 @85 Off.3 and more @125 Off Big Bazaar</value>
                         <value name="is_coupon">0</value>
                         <value name="is_active">1</value>
                         <value name="rule_id">-11</value>
@@ -475,8 +475,32 @@
                         <null/>
                         <value name="valid_from">2012-10-30 00:00:00</value>
                         <value name="valid_till">2015-11-04 00:00:00</value>
-                        <value name="name">QA BUY 300169162 and 300276633 at 220</value>
-                        <value name="description">Big Bazaar</value>
+                        <value name="name">buy 1 get 1 free</value>
+                        <value name="description">buy 1 get 1 free Big Bazaar</value>
+                        <value name="is_coupon">0</value>
+                        <value name="is_active">1</value>
+                        <value name="rule_id">-11</value>
+        	</row>
+        	<row>
+                        <value name="id">10200</value>
+                        <null/>
+                        <null/>
+                        <value name="valid_from">2012-10-30 00:00:00</value>
+                        <value name="valid_till">2015-11-04 00:00:00</value>
+                        <value name="name">buy 1 get another free</value>
+                        <value name="description">buy 1 get another free Big Bazaar</value>
+                        <value name="is_coupon">0</value>
+                        <value name="is_active">1</value>
+                        <value name="rule_id">-11</value>
+        	</row>
+        	<row>
+                        <value name="id">10300</value>
+                        <null/>
+                        <null/>
+                        <value name="valid_from">2012-10-30 00:00:00</value>
+                        <value name="valid_till">2015-11-04 00:00:00</value>
+                        <value name="name">buy products 300169162 and get 300276633 for 220</value>
+                        <value name="description">buy products 300169162 and get 300276633 for 220</value>
                         <value name="is_coupon">0</value>
                         <value name="is_active">1</value>
                         <value name="rule_id">-11</value>
@@ -764,6 +788,22 @@
                 <row>
                         <value name="id">10100</value>
                         <value name="promotion_id">10100</value>
+                        <value name="max_uses">-1</value>
+                        <value name="max_amount">-1</value>
+                        <value name="max_uses_per_user">1</value>
+                        <value name="max_amount_per_user">-1</value>
+                </row>
+                <row>
+                        <value name="id">10200</value>
+                        <value name="promotion_id">10200</value>
+                        <value name="max_uses">-1</value>
+                        <value name="max_amount">-1</value>
+                        <value name="max_uses_per_user">1</value>
+                        <value name="max_amount_per_user">-1</value>
+                </row>
+                <row>
+                        <value name="id">10300</value>
+                        <value name="promotion_id">10300</value>
                         <value name="max_uses">-1</value>
                         <value name="max_amount">-1</value>
                         <value name="max_uses_per_user">1</value>
@@ -2533,7 +2573,11 @@
 		</row>
 		<row>
 			<value name="id">10200</value>
-			<value name="promotion_id">10100</value>
+			<value name="promotion_id">10200</value>
+		</row>
+		<row>
+			<value name="id">10300</value>
+			<value name="promotion_id">10300</value>
 		</row>
 	</table>
        
@@ -2724,12 +2768,12 @@
 			<value name="condition_type">PRODUCT</value>
 			<value name="quantity">1</value>
 			<null/>
-			<value name="product_ids">300169162</value>
+			<value name="product_ids">300466041</value>
 			<null/>
 			<null/>
 			<null/>
 			<null/>
-			<value name="join_type">AND</value>
+			<null/>
 		</row>
 		<row>
 			<value name="id">10200</value>
@@ -2737,7 +2781,20 @@
 			<value name="condition_type">PRODUCT</value>
 			<value name="quantity">1</value>
 			<null/>
-			<value name="product_ids">300276633</value>
+			<value name="product_ids">300138397</value>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+			<null/>
+		</row>
+		<row>
+			<value name="id">10300</value>
+			<value name="promotion_config_module_id">10300</value>
+			<value name="condition_type">PRODUCT</value>
+			<value name="quantity">1</value>
+			<null/>
+			<value name="product_ids">300169162</value>
 			<null/>
 			<null/>
 			<null/>
@@ -2916,9 +2973,33 @@
 		<row>
 			<value name="id">10100</value>
 			<value name="promotion_config_module_id">10100</value>
+			<value name="result_type">PRODUCT</value>
+			<value name="quantity">1</value>
+			<value name="product_ids">300466041</value>
+			<null/>
+			<null/>
+			<value name="offer_type">PERCENT_OFF</value>
+			<value name="offer_value">100</value>
+			<null/>
+		</row>
+		<row>
+			<value name="id">10200</value>
+			<value name="promotion_config_module_id">10200</value>
+			<value name="result_type">PRODUCT</value>
+			<value name="quantity">1</value>
+			<value name="product_ids">300942704</value>
+			<null/>
+			<null/>
+			<value name="offer_type">PERCENT_OFF</value>
+			<value name="offer_value">100</value>
+			<null/>
+		</row>
+		<row>
+			<value name="id">10300</value>
+			<value name="promotion_config_module_id">10300</value>
 			<value name="result_type">VALUE</value>
-			<null/>
-			<null/>
+			<value name="quantity">1</value>
+			<value name="product_ids">300276633</value>
 			<null/>
 			<null/>
 			<value name="offer_type">FIXED_PRICE</value>
