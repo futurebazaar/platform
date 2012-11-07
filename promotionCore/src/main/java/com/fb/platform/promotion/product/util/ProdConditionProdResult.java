@@ -27,13 +27,13 @@ import com.fb.platform.promotion.to.OrderRequest;
  * @author vinayak
  *
  */
-public class SameProdConditionProdResult implements ConditionResultProcessor {
+public class ProdConditionProdResult implements ConditionResultProcessor {
 
 	private ConfigModule configModule = null;
 	private ProductCondition productCondition = null;
 	private ProductResult productResult = null;
 
-	public SameProdConditionProdResult(ConfigModule configModule) {
+	public ProdConditionProdResult(ConfigModule configModule) {
 		this.configModule = configModule;
 		for (Condition condition : this.configModule.getConditions().getConditions()) {
 			if (condition instanceof ProductCondition) {
@@ -47,66 +47,61 @@ public class SameProdConditionProdResult implements ConditionResultProcessor {
 		}
 	}
 
+
 	/* (non-Javadoc)
 	 * @see com.fb.platform.promotion.product.util.ConditionResultProcessor#process(com.fb.platform.promotion.to.OrderRequest)
 	 */
 	@Override
 	public ConfigResultApplyStatusEnum process(OrderRequest orderRequest) {
-		List<OrderItem> matchingItems = findMatchingOrderItems(orderRequest);
+		List<OrderItem> matchingConditionItems = findMatchingConditionOrderItems(orderRequest);
 
-		if (matchingItems.size() == 0) {
+		if (matchingConditionItems.size() == 0) {
 			return ConfigResultApplyStatusEnum.ERROR;
 		}
 
-		int matchingQuantity = findMatchingQuantity(matchingItems);
-
-		int conditionQuantity = productCondition.getQuantity();
-		int resultQuantity = productResult.getQuantity();
-
-		if (matchingQuantity < conditionQuantity + resultQuantity) {
-			//not enough quantity
+		int matchingConditionQuantity = findMatchingQuantity(matchingConditionItems);
+		if (matchingConditionQuantity < productCondition.getQuantity()) {
 			return ConfigResultApplyStatusEnum.ERROR;
 		}
-		//sort the order items descending by mrp
-		List<OrderItem> sortedMatchingItems = new ArrayList<OrderItem>(matchingItems);
-		sortDescByMrp(sortedMatchingItems);
-		
-		List<ProductItem> productItems = createProductItems(sortedMatchingItems);
 
-		int numberOfCondResultGroups = matchingQuantity / (conditionQuantity + resultQuantity);
-		int numberOfCondtionItems = numberOfCondResultGroups * conditionQuantity;
-		int numberOfResultItems = numberOfCondResultGroups * resultQuantity;
-		int numberOfOfferPriceItems = matchingQuantity % (conditionQuantity + resultQuantity);
+		List<OrderItem> matchingResultItems = findMatchingResultOrderItems(orderRequest);
 
-		List<ProductItem> conditionProdItems = findConditionProductItems(productItems, numberOfCondtionItems);
-		List<ProductItem> resultProdItems = findResultProductItems(productItems, numberOfResultItems);
-		List<ProductItem> offerPriceProdItems = findOfferPriceItems(productItems, numberOfCondtionItems, numberOfOfferPriceItems);
+		if (matchingResultItems.size() == 0) {
+			//the user did not buy the discounted product even when user was entitled to it. what can i do? his choice :-)
+			//should we automatically add it to the order if it is free? something for business to answer LATER ;-)
+			return ConfigResultApplyStatusEnum.SUCESS;
+		}
 
-		Money totalPriceForMatchingItems = calculateTotalPrice(conditionProdItems, resultProdItems, offerPriceProdItems);
-		
+		//int matchingResultQuantity = findMatchingQuantity(matchingResultItems); 
+
+		//this will be the number of discounted result items we can have
+		int conditionGroups = matchingConditionQuantity / productCondition.getQuantity();
+		int applicableResultQuantity = productResult.getQuantity() * conditionGroups;
+
+		//sort the result order items by mrp
+		List<OrderItem> sortedMatchingResultItems = new ArrayList<OrderItem>(matchingResultItems);
+		sortDescByMrp(sortedMatchingResultItems);
+
+		List<ProductItem> productItems = createProductItems(sortedMatchingResultItems);
+
+		List<ProductItem> applicableResultItems = findApplicableResultProductItems(productItems, applicableResultQuantity);
+		List<ProductItem> offerPriceResultItems = productItems.subList(applicableResultQuantity, productItems.size());
+
+		List<ProductItem> conditionProdItems = createProductItems(matchingConditionItems);
+		Money totalPriceForMatchingItems = calculateTotalPrice(conditionProdItems, applicableResultItems, offerPriceResultItems);
+
+		List<OrderItem> matchingItems = new ArrayList<OrderItem>();
+		matchingItems.addAll(matchingConditionItems);
+		matchingItems.addAll(matchingResultItems);
+
 		updatePromotionStatus(matchingItems);
 		orderRequest.setTotalPrice(totalPriceForMatchingItems);
 
 		distributePriceOnMatchingItems(matchingItems, totalPriceForMatchingItems);
 
 		return isProcessSuccessful(orderRequest.getOrderItems());
-		////////
-		/*
-		List<OrderItem> matchingResultItems = findResultsOrderItems(orderRequest);
-		if (matchingResultItems.size() == 0) {
-			//nothing to do, thank you
-			return false;
-		}
-
-		//sort the order items descending by mrp
-		//sortDescByMrp(matchingConditionItems);
-		sortDescByMrp(matchingResultItems);
-
-		int conditionsToProcess = matchingQuantity / productCondition.getQuantity();
-		//List<OrderItem> orderItemForConditions = matchingConditionItems.subList(0, conditionsToProcess);
-		return false;*/
 	}
-	
+
 	private void updatePromotionStatus(List<OrderItem> orderItems) {
 		for (OrderItem orderItem : orderItems) {
 			orderItem.getOrderItemPromotionStatus().setOrderItemPromotionApplication(OrderItemPromotionApplicationEnum.SUCCESS);
@@ -177,23 +172,6 @@ public class SameProdConditionProdResult implements ConditionResultProcessor {
 		return resultPrice;
 	}
 	
-	private List<ProductItem> findOfferPriceItems(List<ProductItem> productItems, int numberOfCondtionItems, int numberOfOfferPriceItems) {
-		return productItems.subList(numberOfCondtionItems, numberOfCondtionItems + numberOfOfferPriceItems);
-	}
-
-	private List<ProductItem> findResultProductItems(List<ProductItem> productItems, int numberOfResultItems) {
-		List<ProductItem> resultItems = new ArrayList<ProductItem>();
-		for (int i = 0; i < numberOfResultItems; i++) {
-			//add results from the end of the list
-			ProductItem resultItem = productItems.get(productItems.size() - 1 - i);
-			resultItems.add(resultItem);
-		}
-		return resultItems;
-	}
-
-	private List<ProductItem> findConditionProductItems(List<ProductItem> productItems, int numberOfCondtionItems) {
-		return productItems.subList(0, numberOfCondtionItems);
-	}
 
 	private List<ProductItem> createProductItems(List<OrderItem> matchingItems) {
 		List<ProductItem> productItems = new ArrayList<ProductItem>();
@@ -207,34 +185,16 @@ public class SameProdConditionProdResult implements ConditionResultProcessor {
 		return productItems;
 	}
 
-	/*private List<OrderItem> findResultsOrderItems(OrderRequest orderRequest) {
-		List<OrderItem> resultItems = new ArrayList<OrderItem>();
-		for (OrderItem orderItem : orderRequest.getOrderItems()) {
-			if (orderItem.isPromotionProcessed()) {
-				continue;
-			}
-			if (productResult.isApplicableOn(orderItem.getProduct().getProductId())) {
-				resultItems.add(orderItem);
-			}
+	private List<ProductItem> findApplicableResultProductItems(List<ProductItem> matchingResultItems, int applicableResultQuantity) {
+		if (matchingResultItems.size() <= applicableResultQuantity) {
+			return matchingResultItems;
 		}
-		return resultItems;
-	}*/
 
-	private void sortDescByMrp(List<OrderItem> matchingItems) {
-        Comparator<OrderItem> orderItemComparator = new OrderItemMRPComparator();
-
-        Collections.sort(matchingItems, orderItemComparator);
+		return matchingResultItems.subList(0, applicableResultQuantity);
 	}
 
-	private int findMatchingQuantity(List<OrderItem> matchingItems) {
-		int quantity = 0;
-		for (OrderItem orderItem : matchingItems) {
-			quantity += orderItem.getQuantity();
-		}
-		return quantity;
-	}
 
-	public List<OrderItem> findMatchingOrderItems(OrderRequest orderRequest) {
+	private List<OrderItem> findMatchingConditionOrderItems(OrderRequest orderRequest) {
 		List<OrderItem> items = new ArrayList<OrderItem>();
 		for (OrderItem orderItem : orderRequest.getOrderItems()) {
 			if (orderItem.getOrderItemPromotionStatus().getOrderItemPromotionApplication() == OrderItemPromotionApplicationEnum.SUCCESS) {
@@ -247,4 +207,30 @@ public class SameProdConditionProdResult implements ConditionResultProcessor {
 		return items;
 	}
 
+	private List<OrderItem> findMatchingResultOrderItems(OrderRequest orderRequest) {
+		List<OrderItem> items = new ArrayList<OrderItem>();
+		for (OrderItem orderItem : orderRequest.getOrderItems()) {
+			if (orderItem.getOrderItemPromotionStatus().getOrderItemPromotionApplication() == OrderItemPromotionApplicationEnum.SUCCESS) {
+				continue;
+			}
+			if (productResult.isApplicableOn(orderItem.getProduct().getProductId())) {
+				items.add(orderItem);
+			}
+		}
+		return items;
+	}
+
+	private int findMatchingQuantity(List<OrderItem> matchingItems) {
+		int quantity = 0;
+		for (OrderItem orderItem : matchingItems) {
+			quantity += orderItem.getQuantity();
+		}
+		return quantity;
+	}
+
+	private void sortDescByMrp(List<OrderItem> matchingItems) {
+        Comparator<OrderItem> orderItemComparator = new OrderItemMRPComparator();
+
+        Collections.sort(matchingItems, orderItemComparator);
+	}
 }

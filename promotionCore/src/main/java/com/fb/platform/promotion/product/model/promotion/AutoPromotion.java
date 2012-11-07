@@ -7,6 +7,7 @@ import com.fb.platform.promotion.model.OrderDiscount;
 import com.fb.platform.promotion.model.Promotion;
 import com.fb.platform.promotion.product.model.PromotionConfig;
 import com.fb.platform.promotion.rule.product.Rule;
+import com.fb.platform.promotion.to.ConfigResultApplyStatusEnum;
 import com.fb.platform.promotion.to.OrderItem;
 import com.fb.platform.promotion.to.OrderRequest;
 
@@ -55,9 +56,9 @@ public class AutoPromotion extends Promotion {
 		return null;
 	}
 
-	public boolean apply(OrderRequest orderRequest, OrderDiscount orderResponse) {
-		boolean applied = promotionConfig.apply(orderRequest);
-		if (applied) {
+	public ConfigResultApplyStatusEnum apply(OrderRequest orderRequest, OrderDiscount orderResponse) {
+		ConfigResultApplyStatusEnum applied = promotionConfig.apply(orderRequest);
+		if (ConfigResultApplyStatusEnum.ERROR != applied) {
 			orderResponse.promotionApplied(super.id);
 		}
 		return applied;

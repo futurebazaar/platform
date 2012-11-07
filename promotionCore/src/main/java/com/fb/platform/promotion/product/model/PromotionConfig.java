@@ -9,6 +9,10 @@ import java.util.List;
 
 import com.fb.platform.promotion.product.util.ConditionResultProcessor;
 import com.fb.platform.promotion.product.util.ConditionResultProcessorFactory;
+import com.fb.platform.promotion.product.util.OrderItemPriceDistributor;
+import com.fb.platform.promotion.to.ConfigResultApplyStatusEnum;
+import com.fb.platform.promotion.to.OrderItem;
+import com.fb.platform.promotion.to.OrderItemPromotionApplicationEnum;
 import com.fb.platform.promotion.to.OrderRequest;
 
 /**
@@ -71,16 +75,32 @@ public class PromotionConfig {
 		this.promotionId = promotionId;
 	}
 
-	public boolean apply(OrderRequest orderRequest) {
-		boolean processed = false;
+	public ConfigResultApplyStatusEnum apply(OrderRequest orderRequest) {
+		ConfigResultApplyStatusEnum processed = null;
 		for (ConfigModule configModule : modules) {
 			ConditionResultProcessor processor = ConditionResultProcessorFactory.get(configModule);
 			processed = processor.process(orderRequest);
-			if (processed) {
+			if (ConfigResultApplyStatusEnum.SUCESS == processed) {
 				break;
 			}
 		}
-		return processed;
+		if(processed != ConfigResultApplyStatusEnum.ERROR) {
+			OrderItemPriceDistributor.updateTotalPrice(orderRequest);
+		} else {
+			return ConfigResultApplyStatusEnum.ERROR;
+		}
+		return isProcessSuccessful(orderRequest.getOrderItems());
+	}
+	
+	private ConfigResultApplyStatusEnum isProcessSuccessful(List<OrderItem> orderItems) {
+		ConfigResultApplyStatusEnum configResultApplyStatus = ConfigResultApplyStatusEnum.SUCESS;
+		for (OrderItem orderItem : orderItems) {
+			if(orderItem.getOrderItemPromotionStatus().getOrderItemPromotionApplication() != OrderItemPromotionApplicationEnum.SUCCESS) {
+				configResultApplyStatus = ConfigResultApplyStatusEnum.PARTIAL;
+				break;
+			}
+		}
+		return configResultApplyStatus;
 	}
 
 }
