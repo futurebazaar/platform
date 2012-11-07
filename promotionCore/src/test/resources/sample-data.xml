@@ -2997,7 +2997,7 @@
 		<row>
 			<value name="id">10300</value>
 			<value name="promotion_config_module_id">10300</value>
-			<value name="result_type">VALUE</value>
+			<value name="result_type">PRODUCT</value>
 			<value name="quantity">1</value>
 			<value name="product_ids">300276633</value>
 			<null/>

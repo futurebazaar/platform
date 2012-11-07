@@ -198,7 +198,7 @@ public class PromotionConfigTest extends BaseTestCase {
 		assertEquals(ConfigResultApplyStatusEnum.SUCESS, applied);
 		
 		for (OrderItem orderItem : orderReq1.getOrderItems()) {
-			assertEquals(new BigDecimal("801"), orderItem.getTotalDiscount());
+			assertEquals(new BigDecimal("1101"), orderItem.getTotalDiscount());
 		}
 	}
 

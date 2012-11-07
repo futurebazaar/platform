@@ -39,6 +39,9 @@ public class OrderItem {
 	public BigDecimal getPrice() {
 		return (product.getPrice()).multiply(new BigDecimal(quantity));
 	}
+	public BigDecimal getMrpPrice() {
+		return (product.getMrpPrice()).multiply(new BigDecimal(quantity));
+	}
 	
 	public boolean isOrderItemInCategory(List<Integer> categories){
 		return product.isProductOfCategory(categories);

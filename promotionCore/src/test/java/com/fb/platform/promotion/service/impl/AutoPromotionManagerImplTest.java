@@ -488,7 +488,7 @@ public class AutoPromotionManagerImplTest extends BaseTestCase {
 		assertEquals(1, appliedPromotions.size());
 		assertEquals(10000, appliedPromotions.get(0).getId());
 		assertNotNull(response.getOrderDiscount());
-		assertEquals(5, response.getOrderDiscount().getOrderRequest().getOrderItems().get(0).getTotalDiscount().intValue());
+		assertEquals(15, response.getOrderDiscount().getOrderRequest().getOrderItems().get(0).getTotalDiscount().intValue());
 		
 		oItem1 = new OrderItem();
 		oItem1.setQuantity(2);
@@ -512,7 +512,7 @@ public class AutoPromotionManagerImplTest extends BaseTestCase {
 		assertEquals(1, appliedPromotions.size());
 		assertEquals(10000, appliedPromotions.get(0).getId());
 		assertNotNull(response.getOrderDiscount());
-		assertEquals(15, response.getOrderDiscount().getOrderRequest().getOrderItems().get(0).getTotalDiscount().intValue());
+		assertEquals(35, response.getOrderDiscount().getOrderRequest().getOrderItems().get(0).getTotalDiscount().intValue());
 		
 		oItem1 = new OrderItem();
 		oItem1.setQuantity(3);
@@ -536,7 +536,7 @@ public class AutoPromotionManagerImplTest extends BaseTestCase {
 		assertEquals(1, appliedPromotions.size());
 		assertEquals(10000, appliedPromotions.get(0).getId());
 		assertNotNull(response.getOrderDiscount());
-		assertEquals(25, response.getOrderDiscount().getOrderRequest().getOrderItems().get(0).getTotalDiscount().intValue());
+		assertEquals(55, response.getOrderDiscount().getOrderRequest().getOrderItems().get(0).getTotalDiscount().intValue());
 		
 		oItem1 = new OrderItem();
 		oItem1.setQuantity(4);
@@ -560,13 +560,19 @@ public class AutoPromotionManagerImplTest extends BaseTestCase {
 		assertEquals(1, appliedPromotions.size());
 		assertEquals(10000, appliedPromotions.get(0).getId());
 		assertNotNull(response.getOrderDiscount());
-		assertEquals(30, response.getOrderDiscount().getOrderRequest().getOrderItems().get(0).getTotalDiscount().intValue());
+		assertEquals(70, response.getOrderDiscount().getOrderRequest().getOrderItems().get(0).getTotalDiscount().intValue());
 	}
 	
 	@Test
 	public void applyBigBazaarXandYatPriceOffer3() {
 		/*buyXandYatZpriceOffer3
 		 * product id 300169162 and 300276633 at 220
+		 * so, we should get product 1 at mrp of 160 & product 2 at 220 on mrp of 250. 
+		 * user should get a discount of rs 30. (250 - 220)
+		 * this discount should be distributed across these two products. 
+		 * so product 1's ratio of discount would be 160/(160+250) = 0.3902
+		 * so product 1's discount will be 30 * 0.3902 = 11
+		 * and product 2's discount will be 30 - 11 = 19.
 		 */
 		Product p1 = new Product();
 		p1.setPrice(new BigDecimal(150));
@@ -605,6 +611,7 @@ public class AutoPromotionManagerImplTest extends BaseTestCase {
 		assertEquals(1, appliedPromotions.size());
 		assertEquals(10300, appliedPromotions.get(0).getId());
 		assertNotNull(response.getOrderDiscount());
+		assertEquals(380, response.getOrderDiscount().getOrderRequest().getTotalPrice().getAmount().intValue());
 		//int discount = response.getOrderDiscount().getOrderRequest().getOrderItems().get(0).getTotalDiscount().intValue() + response.getOrderDiscount().getOrderRequest().getOrderItems().get(1).getTotalDiscount().intValue();
 		//assertEquals(130, discount);
 	}
@@ -643,7 +650,7 @@ public class AutoPromotionManagerImplTest extends BaseTestCase {
 		assertTrue(response.getAppliedPromotionStatuses().get(10100).booleanValue());
 		assertNotNull(response.getOrderDiscount());
 		assertEquals(1200, response.getOrderDiscount().getOrderRequest().getTotalPrice().getAmount().intValue());
-		assertEquals(200, response.getOrderDiscount().getOrderRequest().getTotalPrice().getAmount().intValue());
+		assertEquals(1200, response.getOrderDiscount().getOrderRequest().getOrderItems().get(0).getTotalDiscount().intValue());
 		
 		for(OrderItem orderItem : response.getOrderDiscount().getOrderRequest().getOrderItems()) {
 			assertEquals(OrderItemPromotionApplicationEnum.SUCCESS, orderItem.getOrderItemPromotionStatus().getOrderItemPromotionApplication());

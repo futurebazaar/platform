@@ -85,7 +85,7 @@ public class PromotionConfig {
 			}
 		}
 		if(processed != ConfigResultApplyStatusEnum.ERROR) {
-			OrderItemPriceDistributor.updateTotalPrice(orderRequest.getOrderItems(), orderRequest.getTotalPrice());
+			OrderItemPriceDistributor.updateTotalPrice(orderRequest);
 		} else {
 			return ConfigResultApplyStatusEnum.ERROR;
 		}

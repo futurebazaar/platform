@@ -101,7 +101,7 @@ public class ProdConditionValueResult implements ConditionResultProcessor {
 			for (OrderItem matchItem : matchingItems) {
 				if(remainder != 0) {
 					matchItem.getOrderItemPromotionStatus().setRemainingQuantity(remainder);
-					matchItem.getOrderItemPromotionStatus().setAppliedQuantity(multiples * productCondition.getQuantity());
+					matchItem.getOrderItemPromotionStatus().setAppliedQuantity(matchingQuantity - remainder);
 					matchItem.getOrderItemPromotionStatus().setOrderItemPromotionApplication(OrderItemPromotionApplicationEnum.PARTIAL);
 				} else {
 					matchItem.getOrderItemPromotionStatus().setRemainingQuantity(0);
