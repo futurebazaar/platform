@@ -21,7 +21,6 @@ import com.fb.platform.sap.bapi.lsp.table.mapper.LspAwbUpdateMapper;
 import com.fb.platform.sap.bapi.order.BapiOrderTemplate;
 import com.fb.platform.sap.bapi.order.TinlaOrderType;
 import com.fb.platform.sap.bapi.order.table.mapper.HeaderMapper;
-import com.fb.platform.sap.bapi.order.table.mapper.HeaderConditionsMapper;
 import com.fb.platform.sap.bapi.order.table.mapper.HeaderPartnerMapper;
 import com.fb.platform.sap.bapi.order.table.mapper.ItemConditionsMapper;
 import com.fb.platform.sap.bapi.order.table.mapper.ItemMapper;
@@ -65,7 +64,7 @@ public class SapClientHandler implements PlatformClientHandler {
 			JCoDestination destination = sapClientConnector.connectSap();
 			JCoFunction bapiFunction = destination.getRepository().getFunctionTemplate(template.toString()).getFunction(); 
 			if (orderType.equals(TinlaOrderType.RET_ORDER)) {
-				HeaderMapper.setReturnDetails(bapiFunction,  orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
+				HeaderMapper.setReturnDetails(bapiFunction,  orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType, client);
 				ItemMapper.setReturnItemDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
 			} else {
 				HeaderMapper.setDetails(bapiFunction, orderRequestTO, orderRequestTO.getOrderHeaderTO(), orderType);

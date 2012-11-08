@@ -92,12 +92,18 @@ public class HeaderMapper {
 		
 	}
 	
-	public static void setReturnDetails(JCoFunction bapiFunction, OrderHeaderTO orderHeaderTO, List<LineItemTO> lineItemTOList, TinlaOrderType orderType) {
+	public static void setReturnDetails(JCoFunction bapiFunction, OrderHeaderTO orderHeaderTO, List<LineItemTO> lineItemTOList, TinlaOrderType orderType, TinlaClient client) {
 		logger.info("Setting Header Return details for : " + orderType + " " + orderHeaderTO.getReferenceID());
 		logger.info("Header Return details are : " + orderHeaderTO);
-		bapiFunction.getImportParameterList().setValue(BapiTableFactory.getSalesDocument(orderType, TinlaClient.valueOf(orderHeaderTO.getClient())), orderHeaderTO.getReturnOrderID());
-		bapiFunction.getImportParameterList().setValue(SapOrderConstants.DOCUMENT_TYPE, SapOrderConstants.RETURN_ORDER_TYPE);
-		bapiFunction.getImportParameterList().setValue(SapOrderConstants.REFERENCE_DOCUMENT, orderHeaderTO.getReferenceID());
+		bapiFunction.getImportParameterList().setValue(SapOrderConstants.DOCUMENT_TYPE, orderHeaderTO.getSalesDocType());
+		if (SapUtils.isBigBazaar(client)) {
+			bapiFunction.getImportParameterList().setValue(SapOrderConstants.RETURN_REFERENCE, orderHeaderTO.getReferenceID());
+			bapiFunction.getImportParameterList().setValue(SapOrderConstants.RETURN_ORDER, orderHeaderTO.getReturnOrderID());
+		}
+		else {
+			bapiFunction.getImportParameterList().setValue(BapiTableFactory.getSalesDocument(orderType, TinlaClient.valueOf(orderHeaderTO.getClient())), orderHeaderTO.getReturnOrderID());
+			bapiFunction.getImportParameterList().setValue(SapOrderConstants.REFERENCE_DOCUMENT, orderHeaderTO.getReferenceID());
+		}
 		bapiFunction.getImportParameterList().setValue(SapOrderConstants.ORDER_REASON, lineItemTOList.get(0).getReasonCode());
 		
 	}

@@ -116,6 +116,8 @@ public class SapOrderConstants {
 	//Header Constants
 	public static final String INPUT_SALES_DOCUMENT = "SALESDOCUMENTIN";	
 	public static final String SALES_DOCUMENT = "SALESDOCUMENT";
+	public static final String RETURN_REFERENCE= "REFERENCE";
+	public static final String RETURN_ORDER= "RETURNORDER";
 	public static final String CHANNEL_TYPE = "NAME";
 	public static final String CLIENT_NAME = "NAME";
 	public static final String THIRD_PARTY_ORDER = "PURCH_NO_C";
@@ -179,6 +181,7 @@ public class SapOrderConstants {
 	//Sap Delivery Constants
 	public static final String STORAGE_LOCATION = "STORE_LOC";
 	public static final String SALES_UNIT = "SALES_UNIT";
+	public static final String RETURN_UNIT = "UNIT";
 	public static final String SHIPMENT_TYPE = "SHIP_TYPE";
 	public static final String BLOCK_DELIVERY = "DELV_BLOCK";
 	public static final String DELIVERY_PRIORITY = "DLV_PRIO";

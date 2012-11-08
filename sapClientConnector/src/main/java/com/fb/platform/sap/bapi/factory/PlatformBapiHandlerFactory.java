@@ -16,6 +16,9 @@ public class PlatformBapiHandlerFactory {
 				}
 				return BapiOrderTemplate.ZATG_BAPI_SO_FB_FECIL_CHNG_NEW;
 			case RET_ORDER:
+				if (SapUtils.isBigBazaar(TinlaClient.valueOf(client))) {
+					return BapiOrderTemplate.ZBB_SALESORDER_RETURN;
+				}
 				return BapiOrderTemplate.ZCUST_RETURN_ORDER_CREATE;
 			case NEW_ORDER:
 				if (SapUtils.isBigBazaar(TinlaClient.valueOf(client))) {

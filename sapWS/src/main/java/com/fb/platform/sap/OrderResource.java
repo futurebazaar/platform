@@ -248,7 +248,8 @@ public class OrderResource {
 			OrderHeaderTO orderHeaderTO = new OrderHeaderTO();
 			orderHeaderTO.setReferenceID(returnHeader.getOriginalOrderId());
 			orderHeaderTO.setReturnOrderID(returnHeader.getReturnOrderId());
-			orderHeaderTO.setClient("FUTUREBAZAAR");
+			orderHeaderTO.setSalesDocType(returnHeader.getSalesDocType());
+			orderHeaderTO.setClient(returnHeader.getClient());
 			orderHeaderTO.setLoyaltyCardNumber(returnHeader.getLoyaltyCardNumber());
 			
 			PricingTO headerPricingTO = new PricingTO();
@@ -268,6 +269,7 @@ public class OrderResource {
 				lineItemTO.setStorageLocation(returnItem.getStorageLocation());
 				lineItemTO.setReasonCode(returnItem.getReturnReason());
 				lineItemTO.setPlantId(returnItem.getPlant());
+				lineItemTO.setSalesUnit(returnItem.getSalesUnit());
 				PricingTO itemPricingTO = new PricingTO();
 				itemPricingTO.setCouponDiscount(returnItem.getCouponDiscount());
 				itemPricingTO.setExtraDiscount(returnItem.getItemDiscount());
