@@ -67,7 +67,7 @@ public class HeaderMapper {
 		orderHeaderIN.setValue(SapOrderConstants.HEADER_LSP, SapOrderConfigFactory.getConfigValue(SapOrderConstants.HEADER_LSP,  client, TinlaOrderType.NEW_ORDER));
 		orderHeaderINX.setValue(SapOrderConstants.HEADER_LSP, SapOrderConstants.COMMIT_FLAG);
 		// setting default paymentTerms
-		if (SapUtils.isBigBazaar(client) || SapOrderConstants.COD_ACCOUNT_NUMBER.equals(orderHeaderTO.getAccountNumber())) {
+		if (client.equals(TinlaClient.BIGBAZAAR) || SapOrderConstants.COD_ACCOUNT_NUMBER.equals(orderHeaderTO.getAccountNumber())) {
 			orderHeaderIN.setValue(SapOrderConstants.PAYMENT_TERM, SapOrderConstants.COD_PAYMENT_TERM);
 		} else {
 			orderHeaderIN.setValue(SapOrderConstants.PAYMENT_TERM, SapOrderConstants.DEFAULT_PAYMENT_TERM);
