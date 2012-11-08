@@ -100,7 +100,7 @@ public class ItemMapper {
 	
 	public static void setReturnItemDetails(JCoFunction bapiFunction, OrderHeaderTO orderHeaderTO, List<LineItemTO> LineItemTOList, TinlaOrderType orderType) {
 		logger.info("Setting Item Condition details for : " + orderType + " " + orderHeaderTO.getReferenceID());
-		JCoTable returnItem = bapiFunction.getTableParameterList().getTable(BapiOrderTable.RETURN_ITEM.toString());
+		JCoTable returnItem = bapiFunction.getTableParameterList().getTable(BapiTableFactory.getReturnItemTables(orderType, TinlaClient.valueOf(orderHeaderTO.getClient())).toString());
 		for (LineItemTO itemTO : LineItemTOList) {
 			logger.info("Item : " + itemTO);
 			returnItem.appendRow();
@@ -108,6 +108,9 @@ public class ItemMapper {
 			returnItem.setValue(SapOrderConstants.QUANTITY, itemTO.getQuantity().toString());
 			returnItem.setValue(SapConstants.PLANT, itemTO.getPlantId());
 			returnItem.setValue(SapOrderConstants.STORAGE_LOCATION, itemTO.getStorageLocation());
+			if (!TinlaClient.valueOf(orderHeaderTO.getClient()).equals(TinlaClient.FUTUREBAZAAR)) {
+				returnItem.setValue(SapOrderConstants.RETURN_UNIT, itemTO.getSalesUnit());
+			}
 		}
 	}
 

@@ -67,6 +67,7 @@ public class SapClientConnector implements PlatformClientConnector {
             logger.info("Environment already registered. Skipping the registration...");
         }
         JCoDestination destination = JCoDestinationManager.getDestination(bapiProperties.getProperty(DestinationDataProvider.JCO_DEST));
+        System.out.println(destination.getAttributes());
         return destination;
     }
     

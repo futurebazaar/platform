@@ -8,7 +8,8 @@ public enum BapiOrderTemplate {
 	
 	//Big Bazaar bapi
 	ZBAPI_SALESORDER_CREATEFROMDAT,
-	ZBAPI_SALESORDER_CHANGEFROMDAT;
+	ZBAPI_SALESORDER_CHANGEFROMDAT,
+	ZBB_SALESORDER_RETURN;
 	
 	@Override
 	public String toString() {
