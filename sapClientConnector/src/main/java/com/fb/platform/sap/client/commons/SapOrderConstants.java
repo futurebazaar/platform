@@ -149,7 +149,7 @@ public class SapOrderConstants {
 	public static final String DEFAULT_CONDITION_COUNTER = "01";
 	
 	public static final String BB_SHIPPING_CONDITION_TYPE = "ZFSH";
-	public static final String BB_SHIPPING_STEP_NUMBER = "780";
+	public static final String BB_SHIPPING_STEP_NUMBER = "133";
 	
 	//Condition Counter
 	public static final String MRP_STEP_NUMBER = "620";
