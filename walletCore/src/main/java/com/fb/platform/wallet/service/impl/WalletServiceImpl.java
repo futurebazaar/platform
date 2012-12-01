@@ -1,7 +1,6 @@
 package com.fb.platform.wallet.service.impl;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -14,10 +13,8 @@ import com.fb.commons.to.Money;
 import com.fb.platform.wallet.dao.WalletDao;
 import com.fb.platform.wallet.dao.WalletTransactionDao;
 import com.fb.platform.wallet.model.SubWalletType;
-import com.fb.platform.wallet.model.TransactionType;
 import com.fb.platform.wallet.model.Wallet;
 import com.fb.platform.wallet.model.WalletGifts;
-import com.fb.platform.wallet.model.WalletSubTransaction;
 import com.fb.platform.wallet.to.WalletTransaction;
 import com.fb.platform.wallet.to.WalletTransactionResultSet;
 import com.fb.platform.wallet.util.Encrypt;

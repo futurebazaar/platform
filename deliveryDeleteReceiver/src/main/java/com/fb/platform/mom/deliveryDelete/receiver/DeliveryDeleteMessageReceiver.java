@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -102,6 +103,13 @@ public class DeliveryDeleteMessageReceiver implements PlatformMessageReceiver {
 			parameters.add(new BasicNameValuePair("idocnumber", deliveryDeleteTO.getSapIdoc().getIdocNumber()));
 		}
 		parameters.add(new BasicNameValuePair("sender", "MOM"));
+		
+		ToStringBuilder postParams = new ToStringBuilder(parameters);
+		
+		for (NameValuePair param : parameters) {
+			postParams.append(param.getName(), param.getValue());
+		}
+		infoLog.info("DeliveryDelete post params : " + postParams.toString());
 
 		UrlEncodedFormEntity entity;
 		try {

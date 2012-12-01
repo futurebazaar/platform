@@ -64,6 +64,8 @@ import com.fb.platform.promotion.admin._1_0.CreatePromotionResponse;
 import com.fb.platform.promotion.admin._1_0.CreatePromotionTO;
 import com.fb.platform.promotion.admin._1_0.FetchRuleRequest;
 import com.fb.platform.promotion.admin._1_0.FetchRuleResponse;
+import com.fb.platform.promotion.admin._1_0.GetPromotionUsageRequest;
+import com.fb.platform.promotion.admin._1_0.GetPromotionUsageResponse;
 import com.fb.platform.promotion.admin._1_0.PromotionTO;
 import com.fb.platform.promotion.admin._1_0.RuleConfigItemTO;
 import com.fb.platform.promotion.admin._1_0.SearchCouponOrderBy;
@@ -87,7 +89,7 @@ public class RestClient {
 	
 	private static String QAURL = "http://10.0.102.21:8082/";
 	
-	private static String localhost = "http://localhost:8080/";
+	private static String localhost = "http://localhost:9082/";
 	
 	public static String url = localhost;
 
@@ -116,6 +118,7 @@ public class RestClient {
 		createCoupon(sessionToken);
 		searchScratchCard(sessionToken,"BB000UGDC");
 		applyAutoPromotion(sessionToken);
+		getPromotionPerformance(sessionToken);
 		logout(sessionToken);
 	}
 
@@ -205,7 +208,7 @@ public class RestClient {
 		orderRequest.setClientId(5);
 		OrderItem orderItem = new OrderItem();
 		orderItem.setQuantity(2);
-		orderItem.setDiscountValue(BigDecimal.ZERO);
+		//orderItem.setDiscountValue(BigDecimal.ZERO);
 		
 		Product product = new Product();
 		product.setPrice(new BigDecimal("2000"));
@@ -1079,5 +1082,36 @@ public class RestClient {
 		for(Promotion promo : xmlResponse.getPromotion()) {
 			System.out.println("promo id : " + promo.getPromotionId());
 		}
+	}
+	
+	private static void getPromotionPerformance(String sessionToken) throws Exception {
+		HttpClient httpClient = new HttpClient();
+		PostMethod PromotionPerformanceMethod = new PostMethod(url + "promotionAdminWS/promotionAdmin/performance");
+		GetPromotionUsageRequest PromotionUsageRequest = new GetPromotionUsageRequest();
+		PromotionUsageRequest.setSessionToken(sessionToken);
+		PromotionUsageRequest.setPromotionId(-5002);
+		
+		JAXBContext context = JAXBContext.newInstance("com.fb.platform.promotion.admin._1_0");
+		
+		Marshaller marshaller = context.createMarshaller();
+		StringWriter sw = new StringWriter();
+		marshaller.marshal(PromotionUsageRequest, sw);
+		
+		System.out.println("\n" + url + "promotionAdminWS/promotionAdmin/performance");
+		System.out.println("\n\nPromotionUsageRequest : \n" + sw.toString());
+
+		StringRequestEntity requestEntity = new StringRequestEntity(sw.toString());
+		PromotionPerformanceMethod.setRequestEntity(requestEntity);
+
+		int statusCode = httpClient.executeMethod(PromotionPerformanceMethod);
+		if (statusCode != HttpStatus.SC_OK) {
+			System.out.println("unable to execute the  promotion performance : " + statusCode);
+			return;
+		}
+		String PromotionPerformamceResponseStr = PromotionPerformanceMethod.getResponseBodyAsString();
+		System.out.println("Got the promotion performance Response : \n\n" + PromotionPerformamceResponseStr);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		GetPromotionUsageResponse PromotionPerformanceResponse = (GetPromotionUsageResponse) unmarshaller.unmarshal(new StreamSource(new StringReader(PromotionPerformamceResponseStr)));
+		System.out.println(PromotionPerformanceResponse.getGetPromotionUsageEnum().toString());
 	}
 }

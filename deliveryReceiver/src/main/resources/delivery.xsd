@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	targetNamespace="http://www.fb.com/platform/bigbazaar/delivery/1.0.0" xmlns:delivery="http://www.fb.com/platform/bigbazaar/delivery/1.0.0" 
+	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0" elementFormDefault="qualified">
+
+	<xs:element name="deliveryTO">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="delivery:sapMomTO"/>
+				<xs:element ref="delivery:deliveryHeaderTO"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="sapMomTO">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="delivery:idocNumber"/>
+				<xs:element ref="delivery:refUID"/>
+				<!-- <xs:element ref="delivery:idoc"/> -->
+				<xs:element ref="delivery:segmentNumber"/>
+				<xs:element ref="delivery:poNumber"/>
+				<xs:element ref="delivery:canGr"/>
+				<xs:element ref="delivery:ackUID"/>
+				<xs:element ref="delivery:timestamp"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="idocNumber" type="xs:string"/>
+	<xs:element name="refUID" type="xs:string"/>
+	<xs:element name="idoc" type="xs:string"/>
+	<xs:element name="poNumber" type="xs:string"/>
+	<xs:element name="canGr" type="xs:string"/>
+	<xs:element name="segmentNumber" type="xs:int"/>
+	<xs:element name="ackUID" type="xs:long"/>
+	<xs:element name="timestamp" type="xs:date"/>
+	
+	<xs:element name="deliveryHeaderTO">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="delivery:deliveryNumber"/>
+				<xs:element ref="delivery:receivingPoint"/>
+				<xs:element ref="delivery:salesOrganization"/>
+				<xs:element ref="delivery:warehouseRef"/>
+				<xs:element ref="delivery:shippingConditions"/>
+				<xs:element ref="delivery:totalWeight"/>
+				<xs:element ref="delivery:netWeight"/>
+				<xs:element ref="delivery:volume"/>
+				<xs:element ref="delivery:packageCount"/>
+				<xs:element ref="delivery:deliveryDate"/>
+				<xs:element ref="delivery:deliveryAdditionalHeaderTO"/>
+				<xs:element ref="delivery:deliveryControlTO"/>
+				<xs:element ref="delivery:deliveryDeadlineTO"/>
+				<xs:element ref="delivery:deliveryItemTO" maxOccurs="unbounded"/>
+				<xs:element ref="delivery:segment"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="deliveryNumber" type="xs:string"/>
+	<xs:element name="receivingPoint" type="xs:int"/>
+	<xs:element name="salesOrganization" type="xs:int"/>
+	<xs:element name="warehouseRef" type="xs:string"/>
+	<xs:element name="shippingConditions" type="xs:int"/>
+	<xs:element name="totalWeight" type="xs:decimal"/>
+	<xs:element name="netWeight" type="xs:decimal"/>
+	<xs:element name="volume" type="xs:decimal"/>
+	<xs:element name="packageCount" type="xs:int"/>
+	<xs:element name="deliveryDate" type="xs:date"/>
+	<xs:element name="segment" type="xs:int"/>
+	
+	<xs:element name="deliveryAdditionalHeaderTO">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="delivery:deliveryType"/>
+				<xs:element ref="delivery:deliveryTypeDesc"/>
+				<xs:element ref="delivery:deliveryPriority"/>
+				<xs:element ref="delivery:transportationGroup"/>
+				<xs:element ref="delivery:transportationGroupDesc"/>
+				<xs:element ref="delivery:segment"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="deliveryType" type="xs:string"/>
+	<xs:element name="deliveryTypeDesc" type="xs:string"/>
+	<xs:element name="deliveryPriority" type="xs:int"/>
+	<xs:element name="transportationGroup" type="xs:int"/>
+	<xs:element name="transportationGroupDesc" type="xs:string"/>
+	
+	<xs:element name="deliveryControlTO">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="delivery:qualifier"/>
+				<xs:element ref="delivery:segment"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="qualifier" type="xs:string"/>
+	
+	<xs:element name="deliveryDeadlineTO">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="delivery:qualifier"/>
+				<xs:element ref="delivery:activityStartDate"/>
+				<xs:element ref="delivery:activityFinishDate"/>
+				<xs:element ref="delivery:actualStartDate"/>
+				<xs:element ref="delivery:actualFinishDate"/>
+				<xs:element ref="delivery:segment"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="activityStartDate" type="xs:date"/>
+	<xs:element name="activityFinishDate" type="xs:date"/>
+	<xs:element name="actualStartDate" type="xs:date"/>
+	<xs:element name="actualFinishDate" type="xs:date"/>
+	
+	
+	<xs:element name="deliveryItemTO">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="delivery:orderNumber"/>
+				<xs:element ref="delivery:itemNumber"/>
+				<xs:element ref="delivery:articleNumber"/>
+				<xs:element ref="delivery:articleEntered"/>
+				<xs:element ref="delivery:salesDesc"/>
+				<xs:element ref="delivery:materialGroup"/>
+				<xs:element ref="delivery:plant"/>
+				<xs:element ref="delivery:storageLocation"/>
+				<xs:element ref="delivery:actualQuantity"/>
+				<xs:element ref="delivery:salesUnit"/>
+				<xs:element ref="delivery:actualQuantityStockUnit"/>
+				<xs:element ref="delivery:unitOfMeasurement"/>
+				<xs:element ref="delivery:netWeight"/>
+				<xs:element ref="delivery:grossWeight"/>
+				<xs:element ref="delivery:weightUnit"/>
+				<xs:element ref="delivery:volume"/>
+				<xs:element ref="delivery:loadingGroup"/>
+				<xs:element ref="delivery:transportationGroup"/>
+				<xs:element ref="delivery:distributionChannel"/>
+				<xs:element ref="delivery:division"/>
+				<xs:element ref="delivery:deliveryGroup"/>
+				<xs:element ref="delivery:internationalArticleNumber"/>
+				<xs:element ref="delivery:externalItemNumber"/>
+				<xs:element ref="delivery:expirationDate"/>
+				<xs:element ref="delivery:segment"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="orderNumber" type="xs:string"/>
+	<xs:element name="itemNumber" type="xs:int"/>
+	<xs:element name="articleNumber" type="xs:string"/>
+	<xs:element name="articleEntered" type="xs:string"/>
+	<xs:element name="salesDesc" type="xs:string"/>
+	<xs:element name="materialGroup" type="xs:int"/>
+	<xs:element name="plant" type="xs:int"/>
+	<xs:element name="storageLocation" type="xs:int"/>
+	<xs:element name="actualQuantity" type="xs:decimal"/>
+	<xs:element name="salesUnit" type="xs:string"/>
+	<xs:element name="actualQuantityStockUnit" type="xs:decimal"/>
+	<xs:element name="unitOfMeasurement" type="xs:string"/>
+	<xs:element name="grossWeight" type="xs:decimal"/>
+	<xs:element name="weightUnit" type="xs:string"/>
+	<xs:element name="loadingGroup" type="xs:int"/>
+	<xs:element name="distributionChannel" type="xs:int"/>
+	<xs:element name="division" type="xs:int"/>
+	<xs:element name="deliveryGroup" type="xs:int"/>
+	<xs:element name="internationalArticleNumber" type="xs:string"/>
+	<xs:element name="externalItemNumber" type="xs:int"/>
+	<xs:element name="expirationDate" type="xs:date"/>
+	
+	<xs:annotation>
+  	<xs:appinfo>
+    	<jaxb:globalBindings>
+	      	<jaxb:javaType name="java.util.Date" xmlType="xs:date"
+	        	parseMethod="com.fb.platform.mom.bigBazaar.delivery.util.DateAdapter.parseDate"
+	        	printMethod="com.fb.platform.mom.bigBazaar.delivery.util.DateAdapter.printDate"
+	        />
+   		</jaxb:globalBindings>
+  	</xs:appinfo>
+  </xs:annotation>
+</xs:schema>

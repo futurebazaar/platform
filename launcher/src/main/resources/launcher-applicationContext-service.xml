@@ -62,5 +62,26 @@
     	<property name="itemAckMessageReceiver" ref="itemAckMessageReceiver"/>
     	<property name="momManager" ref="momManager"></property>
     </bean>
+    
+    <bean id="invoiceMessageReceiver" class="com.fb.platform.mom.bigBazaar.invoice.receiver.InvoiceMessageReceiver"/>
+    
+    <bean id="invoiceManager" class="com.fb.platform.mom.bigBazaar.invoice.manager.impl.InvoiceManagerImpl">
+    	<property name="invoiceMessageReceiver" ref="invoiceMessageReceiver"/>
+    	<property name="momManager" ref="momManager"/>
+    </bean>
+    
+    <bean id="deliveryMessageReceiver" class="com.fb.platform.mom.bigBazaar.delivery.receiver.DeliveryMessageReceiver"/>
+    
+    <bean id="deliveryManager" class="com.fb.platform.mom.bigBazaar.delivery.manager.impl.DeliveryManagerImpl">
+    	<property name="deliveryMessageReceiver" ref="deliveryMessageReceiver"/>
+    	<property name="momManager" ref="momManager"/>
+    </bean>
+    
+    <bean id="deliveryDeleteBBMessageReceiver" class="com.fb.platform.mom.bigBazaar.deliveryDelete.receiver.DeliveryDeleteBBMessageReceiver"/>
+    
+    <bean id="deliveryDeleteBBManager" class="com.fb.platform.mom.bigBazaar.deliveryDelete.manager.impl.DeliveryDeleteBBManagerImpl">
+    	<property name="deliveryDeleteMessageReceiver" ref="deliveryDeleteBBMessageReceiver"/>
+    	<property name="momManager" ref="momManager"/>
+    </bean>
 	
 </beans>

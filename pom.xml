@@ -144,6 +144,23 @@
    <enabled>true</enabled>
   </snapshots>
  </repository>
+ 
+    <repository> 
+        <id>jboss-public-repository-group</id> 
+        <url>http://maven.futurebazaar.com/nexus/content/repositories/jboss-public-repository-group/</url> 
+        <snapshots> 
+            <enabled>false</enabled> 
+        </snapshots> 
+    </repository> 
+
+    <repository> 
+        <id>jboss-deprecated</id> 
+        <url>https://repository.jboss.org/nexus/content/repositories/deprecated</url> 
+        <snapshots> 
+            <enabled>false</enabled> 
+        </snapshots> 
+    </repository> 
+
 </repositories>
 
 <!-- download plugins from this repo -->
@@ -186,21 +203,28 @@
             <artifactId>commons-dbcp</artifactId>
             <version>${commons.dbcp.version}</version>
         </dependency>
-		<!--<dependency>
+<!--
+		<dependency>
 		    <groupId>commons-httpclient</groupId>
 		    <artifactId>commons-httpclient</artifactId>
 		    <version>3.0.1</version>
-		</dependency>-->
-	<dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.2</version>
-	</dependency>
+		</dependency>
+-->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.2</version>
+		</dependency>
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>${commons.lang.version}</version>
         </dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${commons.io.version}</version>
+		</dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
@@ -280,11 +304,11 @@
 			        <groupId>org.springframework</groupId>
 			        <artifactId>spring-context</artifactId>
 			    </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-aop</artifactId>
-                </exclusion>
-            </exclusions>
+			    <exclusion>
+			        <groupId>org.springframework</groupId>
+			        <artifactId>spring-aop</artifactId>
+			    </exclusion>
+			</exclusions>
         </dependency>
 		<dependency>
 			<groupId>joda-time</groupId>
@@ -341,6 +365,12 @@
 		    <groupId>org.springframework.security</groupId>
 		    <artifactId>spring-security-core</artifactId>
 		    <version>${spring.security.version}</version>
+		    <exclusions>
+		    	<exclusion>
+		    		<groupId>org.springframework</groupId>
+		    		<artifactId>spring-expression</artifactId>
+		    	</exclusion>
+		    </exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -384,18 +414,16 @@
     
     <modules>
     	<module>platformCommons</module>
-	<module>platformMailer</module>
+    	<module>platformMailer</module>
     	<module>platformCaching</module>
-    	<module>catalogCommons</module>
-        <module>catalogCore</module>
         <module>userCore</module>
         <module>userWS</module>
         <module>authenticationCore</module>
-	<module>fulfilmentCore</module>
-	<module>fulfilmentWS</module>
-	<module>promotionCore</module>
-	<module>promotionAdminWS</module>
-	<module>promotionWS</module>
+        <module>promotionCore</module>
+    	<module>promotionWS</module>
+    	<module>fulfilmentCore</module>
+    	<module>fulfilmentWS</module>
+    	<module>promotionAdminWS</module>
         <module>paybackCore</module>
         <module>paybackWS</module>
     	<module>platformMom</module>
@@ -404,12 +432,17 @@
         <module>inventoryReceiver</module>
         <module>deliveryDeleteReceiver</module>
         <module>itemAckReceiver</module>
+        <module>invoiceReceiver</module>
+        <module>deliveryReceiver</module>
+        <module>deliveryDeleteBBReceiver</module>
         <module>launcher</module>
-	<module>testProject</module>
+	<module>sapClientConnector</module>
+	<module>platformScheduler</module>
+	<module>sapWS</module>
 	<module>eGVCore</module>
-	<module>eGVWS</module>
-	<module>walletCore</module>
-	<module>walletWS</module>
+    	<module>eGVWS</module>
+        <module>walletCore</module>
+        <module>walletWS</module>
     </modules>
 
     <reporting>
@@ -445,8 +478,8 @@
     </reporting>
 
     <properties>
+    	<platform.version>1.0-SNAPSHOT</platform.version>
         <dao.framework>jdbc</dao.framework>
-        <platform.version>1.3.7</platform.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.version>4.8.2</junit.version>
 		<spring.version>3.0.5.RELEASE</spring.version>
@@ -467,6 +500,7 @@
         <wiser.version>1.0.3</wiser.version>
 
         <!-- WebTest dependency versions  -->
+
         <javamail.version>1.4</javamail.version>
         <oro.version>2.0.8</oro.version>
         <webtest.version>1454</webtest.version>

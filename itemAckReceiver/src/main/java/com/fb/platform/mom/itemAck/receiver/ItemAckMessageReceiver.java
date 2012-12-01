@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -92,12 +93,14 @@ public class ItemAckMessageReceiver implements PlatformMessageReceiver {
 		HttpPost httpPost = new HttpPost(orderURL);
 
 		List<NameValuePair> parameters = new ItemAckParameterFactory().getParameters(itemAck);
+		parameters.add(new BasicNameValuePair("sender", "MOM"));
+		
+		ToStringBuilder postParams = new ToStringBuilder(parameters);
 		
 		for (NameValuePair param : parameters) {
-			infoLog.info(param.getName() + "********" + param.getValue());
+			postParams.append(param.getName(), param.getValue());
 		}
-		
-		parameters.add(new BasicNameValuePair("sender", "MOM"));
+		infoLog.info("ItemAck post params : " + postParams.toString());
 
 		UrlEncodedFormEntity entity;
 		try {
