@@ -72,6 +72,7 @@ public class SapOrderConstants {
 	public static final String DEFAULT_ACCOUNT_NUMBER = "21000000103";
 	public static final String COD_ACCOUNT_NUMBER = "21000000104";
 	public static final String CUSTOMER_GROUP = "CUST_GROUP";
+	public static final String ITEM_DESC_TEXT_ID = "0001";
 	
 	public static final String FB_CUSTOMER_GROUP = "Z3";	
 	public static final String BB_CUSTOMER_GROUP = "";
