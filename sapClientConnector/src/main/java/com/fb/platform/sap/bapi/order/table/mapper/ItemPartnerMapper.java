@@ -47,6 +47,7 @@ public class ItemPartnerMapper {
 			orderPartner.setValue(SapOrderConstants.PINCODE, addressTO.getPincode());
 			orderPartner.setValue(SapOrderConstants.PRIMARY_PHONE, addressTO.getPrimaryTelephone());
 			orderPartner.setValue(SapOrderConstants.FAX_NUMBER, addressTO.getSecondaryTelephone());
+			orderText.setValue(SapOrderConstants.ITEM_NUMBER, itemTO.getSapDocumentId());
 			orderText.setValue(SapOrderConstants.TEXT_LINE, addressTO.getAddress());
 			orderText.setValue(SapOrderConstants.TEXT_ID, SapOrderConstants.FIRST_PARTNER_TEXT_ID);
 			orderText.setValue(SapOrderConstants.LANGUAGE, SapOrderConstants.DEFAULT_LANGUAGE);
@@ -69,6 +70,7 @@ public class ItemPartnerMapper {
 			}
 			if (!StringUtils.isBlank(itemTO.getPayToOthers())) {
 				logger.info("Setting pay to others: " + itemTO.getPayToOthers() + " for : " + orderHeaderTO.getReferenceID());
+				orderText.setValue(SapOrderConstants.ITEM_NUMBER, itemTO.getSapDocumentId());
 				orderPartner.setValue(SapOrderConstants.ITEM_NUMBER, itemTO.getSapDocumentId());
 				orderText.setValue(SapOrderConstants.TEXT_ID, SapOrderConstants.THIRD_PARTNER_TEXT_ID);
 				orderPartner.setValue( SapOrderConstants.LANGUAGE, SapOrderConstants.DEFAULT_LANGUAGE);
