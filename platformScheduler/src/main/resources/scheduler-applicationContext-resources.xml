@@ -28,9 +28,11 @@
         <property name="url" value="${scheduler.jdbc.url}"/>
         <property name="username" value="${scheduler.jdbc.username}"/>
         <property name="password" value="${scheduler.jdbc.password}"/>
-        <property name="maxActive" value="100"/>
+        <property name="maxActive" value="101"/>
         <property name="maxIdle" value="30"/>
         <property name="maxWait" value="1000"/>
+        <property name="validationQuery" value="SELECT 1"/>
+        <property name="testOnBorrow" value="true"/>
         <property name="defaultAutoCommit" value="true"/>
         <property name="removeAbandoned" value="true"/>
         <property name="removeAbandonedTimeout" value="60"/>
