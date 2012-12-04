@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public interface OrderSchedulerService {
 
-	@Transactional(propagation=Propagation.REQUIRED)
 	public void postXmlsTOBapi();
 
 }
