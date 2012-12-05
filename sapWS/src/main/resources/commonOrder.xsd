@@ -55,8 +55,8 @@
         <xs:element type="xs:decimal" name="amount"/>
         <xs:element type="xs:string" name="paymentTime"/>
         <xs:element type="xs:string" name="merchantId"/>
-        <xs:element type="xs:string" name="transactionReferenceId"/>
-        <xs:element type="xs:string" name="pgTransactionReferenceId"/>
+        <xs:element type="xs:string" name="transactionId"/>
+        <xs:element type="xs:string" name="pgTransactionId"/>
         <xs:element type="xs:string" name="currency"/>
         <xs:element type="xs:string" name="RRN"/>
         <xs:element type="xs:string" name="bank"/>
