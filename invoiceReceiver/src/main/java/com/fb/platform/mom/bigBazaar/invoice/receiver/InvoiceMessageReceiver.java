@@ -46,7 +46,7 @@ public class InvoiceMessageReceiver implements PlatformMessageReceiver{
 	
 	private static Log infoLog = LogFactory.getLog(InvoiceMessageReceiver.class);
 	
-	private static Log auditLog = LogFactory.getLog(LoggerConstants.INVOICE_BB_AUDIT_LOG);
+	private static Log auditLog = LogFactory.getLog(LoggerConstants.INVOICE_RECEIVER_BB_AUDIT_LOG);
 	
 	private static Properties prop = initProperties();
 	

@@ -154,12 +154,13 @@ public class OrderResource {
 			paymentTO.setMerchantID(paymentAttempt.getMerchantId());
 			paymentTO.setPaymentGateway(paymentAttempt.getGateway());
 			paymentTO.setPaymentMode(paymentAttempt.getPaymentMode());
-			paymentTO.setPgTransactionID(paymentAttempt.getPgTransactionReferenceId());
-			paymentTO.setTransactionID(paymentAttempt.getTransactionReferenceId());
+			paymentTO.setPgTransactionID(paymentAttempt.getPgTransactionId());
+			paymentTO.setTransactionID(paymentAttempt.getTransactionId());
 			paymentTO.setRRN(paymentAttempt.getRRN());
 			paymentTO.setValidTill(SapUtils.getDateTimeFromString(paymentAttempt.getValidDate(), "yyyyMMdd"));
 			PricingTO pricingTO = new PricingTO();
 			pricingTO.setPayableAmount(paymentAttempt.getAmount());
+			pricingTO.setCurrency(paymentAttempt.getCurrency());
 			paymentTO.setPricingTO(pricingTO);
 			paymentTOList.add(paymentTO);
 		}

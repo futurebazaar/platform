@@ -44,7 +44,7 @@ public class DeliveryDeleteBBMessageReceiver implements PlatformMessageReceiver{
 	
 	private static Log infoLog = LogFactory.getLog(DeliveryDeleteBBMessageReceiver.class);
 	
-	private static Log auditLog = LogFactory.getLog(LoggerConstants.DELIVERY_DELETE_BB_AUDIT_LOG);
+	private static Log auditLog = LogFactory.getLog(LoggerConstants.DELIVERY_DELETE_RECEIVER_BB_AUDIT_LOG);
 	
 	private static Properties prop = initProperties();
 	
