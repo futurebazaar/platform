@@ -30,13 +30,15 @@ public class ItemMapper {
 		Map<OrderTableType, BapiOrderTable> conditionTables = BapiTableFactory.getItemTables(orderType, TinlaClient.valueOf(orderHeaderTO.getClient()));
 		JCoTable orderItemIN= bapiFunction.getTableParameterList().getTable(conditionTables.get(OrderTableType.VALUE_TABLE).toString());
 		JCoTable orderItemINX = bapiFunction.getTableParameterList().getTable(conditionTables.get(OrderTableType.COMMIT_TABLE).toString());
+		JCoTable orderText = bapiFunction.getTableParameterList().getTable(BapiOrderTable.ORDER_TEXT.toString());
 		for (LineItemTO itemTO : LineItemTOList) {
 			logger.info("Item : " + itemTO);
 			orderItemIN.appendRow();
 			orderItemINX.appendRow();
+			orderText.appendRow();
 			// Set New Order conditions
 			if (orderType.equals(TinlaOrderType.NEW_ORDER)) {
-				setNewOrderDetails(itemTO, orderHeaderTO, orderItemIN, orderItemINX);
+				setNewOrderDetails(itemTO, orderHeaderTO, orderItemIN, orderItemINX, orderText);
 			} else {
 				//set modification and Cancellation Conditions
 				setUpdateOrderDetails(bapiFunction, itemTO, orderHeaderTO, orderItemIN, orderItemINX, orderType);
@@ -62,7 +64,7 @@ public class ItemMapper {
 		orderItemINX.setValue(SapOrderConstants.OPERATION_FLAG, operationCode);
 	}
 
-	private static void setNewOrderDetails(LineItemTO itemTO, OrderHeaderTO orderHeaderTO, JCoTable orderItemIN, JCoTable orderItemINX) {
+	private static void setNewOrderDetails(LineItemTO itemTO, OrderHeaderTO orderHeaderTO, JCoTable orderItemIN, JCoTable orderItemINX, JCoTable orderText) {
 		TinlaClient client = TinlaClient.valueOf(orderHeaderTO.getClient());
 		orderItemIN.setValue(SapOrderConstants.ITEM_CATEGORY, SapOrderConfigFactory.getConfigValue(SapOrderConstants.ITEM_CATEGORY,  client, TinlaOrderType.NEW_ORDER));
 		if (!StringUtils.isBlank(itemTO.getItemCategory())) {
@@ -75,6 +77,10 @@ public class ItemMapper {
 		orderItemINX.setValue(SapOrderConstants.COMP_QUANT, SapOrderConstants.COMMIT_FLAG);
 		orderItemINX.setValue(SapOrderConstants.REFERENCE_FIELD, SapOrderConstants.COMMIT_FLAG);
 		orderItemINX.setValue(SapOrderConstants.DELIVERY_PRIORITY, SapOrderConstants.COMMIT_FLAG);
+		orderText.setValue(SapOrderConstants.ITEM_NUMBER, itemTO.getSapDocumentId());
+		orderText.setValue(SapOrderConstants.TEXT_LINE, itemTO.getDescription());
+		orderText.setValue(SapOrderConstants.TEXT_ID, SapOrderConstants.ITEM_DESC_TEXT_ID);
+		orderText.setValue(SapOrderConstants.LANGUAGE, SapOrderConstants.DEFAULT_LANGUAGE);
 		orderItemINX.setValue(SapOrderConstants.OPERATION_FLAG, SapOrderConstants.INSERT_FLAG);		
 	}
 
