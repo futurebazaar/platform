@@ -72,6 +72,7 @@ public class SapOrderConstants {
 	public static final String DEFAULT_ACCOUNT_NUMBER = "21000000103";
 	public static final String COD_ACCOUNT_NUMBER = "21000000104";
 	public static final String CUSTOMER_GROUP = "CUST_GROUP";
+	public static final String ITEM_DESC_TEXT_ID = "0001";
 	
 	public static final String FB_CUSTOMER_GROUP = "Z3";	
 	public static final String BB_CUSTOMER_GROUP = "";
@@ -116,6 +117,8 @@ public class SapOrderConstants {
 	//Header Constants
 	public static final String INPUT_SALES_DOCUMENT = "SALESDOCUMENTIN";	
 	public static final String SALES_DOCUMENT = "SALESDOCUMENT";
+	public static final String RETURN_REFERENCE= "REFERENCE";
+	public static final String RETURN_ORDER= "RETURNORDER";
 	public static final String CHANNEL_TYPE = "NAME";
 	public static final String CLIENT_NAME = "NAME";
 	public static final String THIRD_PARTY_ORDER = "PURCH_NO_C";
@@ -126,6 +129,7 @@ public class SapOrderConstants {
 	public static final String REFERENCE_DOCUMENT_CATEGORY = "REFDOC_CAT";
 	public static final String REFERENCE_DOCUMENT = "REF_DOC";
 	public static final String ORDER_REASON = "ORD_REASON";
+	public static final String HEADER_PLANT = "SALES_OFF";
 	
 	//Sap Condition Types
 	public static final String CONDITION_TYPE = "COND_TYPE";
@@ -146,7 +150,7 @@ public class SapOrderConstants {
 	public static final String DEFAULT_CONDITION_COUNTER = "01";
 	
 	public static final String BB_SHIPPING_CONDITION_TYPE = "ZFSH";
-	public static final String BB_SHIPPING_STEP_NUMBER = "780";
+	public static final String BB_SHIPPING_STEP_NUMBER = "133";
 	
 	//Condition Counter
 	public static final String MRP_STEP_NUMBER = "620";
@@ -178,6 +182,7 @@ public class SapOrderConstants {
 	//Sap Delivery Constants
 	public static final String STORAGE_LOCATION = "STORE_LOC";
 	public static final String SALES_UNIT = "SALES_UNIT";
+	public static final String RETURN_UNIT = "UNIT";
 	public static final String SHIPMENT_TYPE = "SHIP_TYPE";
 	public static final String BLOCK_DELIVERY = "DELV_BLOCK";
 	public static final String DELIVERY_PRIORITY = "DLV_PRIO";

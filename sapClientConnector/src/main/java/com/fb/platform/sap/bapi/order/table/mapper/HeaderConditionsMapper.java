@@ -28,7 +28,7 @@ public class HeaderConditionsMapper {
 		JCoTable orderConditionsINX = bapiFunction.getTableParameterList().getTable(conditionTables.get(OrderTableType.COMMIT_TABLE).toString());
 		TinlaClient client = TinlaClient.valueOf(orderHeaderTO.getClient());
 		BigDecimal discount = orderHeaderTO.getPricingTO().getCouponDiscount();
-		if (discount != null && discount.compareTo(BigDecimal.ZERO) > 0) {
+		if (discount != null && discount.compareTo(BigDecimal.ZERO) > 0 && !orderType.equals(TinlaOrderType.RET_ORDER)) {
 			logger.info("Setting Header Coupon Discount : " +  orderHeaderTO.getPricingTO().getCouponDiscount() + " for : " + orderType + " " + orderHeaderTO.getReferenceID());
 			orderConditionsIN.appendRow();
 			orderConditionsINX.appendRow();

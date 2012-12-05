@@ -11,6 +11,7 @@ import com.fb.platform.sap.bapi.factory.BapiTableFactory;
 import com.fb.platform.sap.bapi.factory.SapOrderConfigFactory;
 import com.fb.platform.sap.bapi.order.TinlaOrderType;
 import com.fb.platform.sap.bapi.order.table.BapiOrderTable;
+import com.fb.platform.sap.bapi.to.SapOrderRequestTO;
 import com.fb.platform.sap.client.commons.SapConstants;
 import com.fb.platform.sap.client.commons.SapOrderConstants;
 import com.fb.platform.sap.client.commons.SapUtils;
@@ -22,7 +23,7 @@ public class HeaderMapper {
 	
 	private static Log logger = LogFactory.getLog(HeaderMapper.class);
 	
-	public static void setDetails(JCoFunction bapiFunction, OrderHeaderTO orderHeaderTO, TinlaOrderType orderType) {
+	public static void setDetails(JCoFunction bapiFunction, SapOrderRequestTO orderRequestTO, OrderHeaderTO orderHeaderTO, TinlaOrderType orderType) {
 		logger.info("Setting Header details for : " + orderType + " " + orderHeaderTO.getReferenceID());
 		logger.info("Header details are : " + orderHeaderTO);
 		JCoStructure orderHeaderIN = bapiFunction.getImportParameterList().getStructure(BapiOrderTable.ORDER_HEADER_IN.toString());
@@ -31,7 +32,7 @@ public class HeaderMapper {
 		// common conditions
 		setCommonDetails(bapiFunction, orderHeaderTO, orderHeaderIN, orderHeaderINX, billDate, orderType);
 		if (orderType.equals(TinlaOrderType.NEW_ORDER)) {
-			setNewOrderDetails(orderHeaderTO, orderHeaderIN, orderHeaderINX, billDate);
+			setNewOrderDetails(orderRequestTO, orderHeaderTO, orderHeaderIN, orderHeaderINX, billDate);
 		} else {
 			setUpdateOrderDetails(orderHeaderTO, orderHeaderIN, orderHeaderINX, billDate);
 		}
@@ -41,7 +42,7 @@ public class HeaderMapper {
 		orderHeaderINX.setValue( SapOrderConstants.OPERATION_FLAG, SapOrderConstants.UPDATE_FLAG);
 	}
 
-	private static void setNewOrderDetails(OrderHeaderTO orderHeaderTO, JCoStructure orderHeaderIN, JCoStructure orderHeaderINX, String billDate) {
+	private static void setNewOrderDetails(SapOrderRequestTO orderRequestTO, OrderHeaderTO orderHeaderTO, JCoStructure orderHeaderIN, JCoStructure orderHeaderINX, String billDate) {
 		TinlaClient client = TinlaClient.valueOf(orderHeaderTO.getClient());
 		orderHeaderIN.setValue(SapOrderConstants.REFERENCE_DOCUMENT_CATEGORY, SapOrderConstants.REFERENCE_DOCUMENT_FLAG);
 		orderHeaderINX.setValue(SapOrderConstants.REFERENCE_DOCUMENT_CATEGORY, SapOrderConstants.COMMIT_FLAG);
@@ -66,10 +67,15 @@ public class HeaderMapper {
 		orderHeaderIN.setValue(SapOrderConstants.HEADER_LSP, SapOrderConfigFactory.getConfigValue(SapOrderConstants.HEADER_LSP,  client, TinlaOrderType.NEW_ORDER));
 		orderHeaderINX.setValue(SapOrderConstants.HEADER_LSP, SapOrderConstants.COMMIT_FLAG);
 		// setting default paymentTerms
-		if (SapUtils.isBigBazaar(client) || SapOrderConstants.COD_ACCOUNT_NUMBER.equals(orderHeaderTO.getAccountNumber())) {
+		if (client.equals(TinlaClient.BIGBAZAAR) || SapOrderConstants.COD_ACCOUNT_NUMBER.equals(orderHeaderTO.getAccountNumber())) {
 			orderHeaderIN.setValue(SapOrderConstants.PAYMENT_TERM, SapOrderConstants.COD_PAYMENT_TERM);
 		} else {
 			orderHeaderIN.setValue(SapOrderConstants.PAYMENT_TERM, SapOrderConstants.DEFAULT_PAYMENT_TERM);
+		}
+		if (SapUtils.isBigBazaar(client)) {
+			String plantId = orderRequestTO.getLineItemTO().get(0).getPlantId();
+			orderHeaderIN.setValue(SapOrderConstants.HEADER_PLANT, plantId);
+			orderHeaderINX.setValue(SapOrderConstants.HEADER_PLANT, SapOrderConstants.COMMIT_FLAG);
 		}
 		orderHeaderINX.setValue(SapOrderConstants.PAYMENT_TERM, SapOrderConstants.COMMIT_FLAG);
 		orderHeaderINX.setValue(SapOrderConstants.OPERATION_FLAG, SapOrderConstants.INSERT_FLAG);
@@ -77,7 +83,8 @@ public class HeaderMapper {
 	}
 
 	private static void setCommonDetails(JCoFunction bapiFunction, OrderHeaderTO orderHeaderTO, JCoStructure orderHeaderIN, JCoStructure orderHeaderINX, String billDate, TinlaOrderType orderType) {
-		bapiFunction.getImportParameterList().setValue(BapiTableFactory.getSalesDocument(orderType, TinlaClient.valueOf(orderHeaderTO.getClient())), orderHeaderTO.getReferenceID());
+		TinlaClient client = TinlaClient.valueOf(orderHeaderTO.getClient());
+		bapiFunction.getImportParameterList().setValue(BapiTableFactory.getSalesDocument(orderType, client), orderHeaderTO.getReferenceID());
 		orderHeaderIN.setValue(SapOrderConstants.DOCUMENT_DATE, billDate);
 		orderHeaderINX.setValue(SapOrderConstants.DOCUMENT_DATE, SapOrderConstants.COMMIT_FLAG);
 		orderHeaderIN.setValue(SapOrderConstants.REQUIRED_DATE, billDate);
@@ -85,12 +92,18 @@ public class HeaderMapper {
 		
 	}
 	
-	public static void setReturnDetails(JCoFunction bapiFunction, OrderHeaderTO orderHeaderTO, List<LineItemTO> lineItemTOList, TinlaOrderType orderType) {
+	public static void setReturnDetails(JCoFunction bapiFunction, OrderHeaderTO orderHeaderTO, List<LineItemTO> lineItemTOList, TinlaOrderType orderType, TinlaClient client) {
 		logger.info("Setting Header Return details for : " + orderType + " " + orderHeaderTO.getReferenceID());
 		logger.info("Header Return details are : " + orderHeaderTO);
-		bapiFunction.getImportParameterList().setValue(BapiTableFactory.getSalesDocument(orderType, TinlaClient.valueOf(orderHeaderTO.getClient())), orderHeaderTO.getReturnOrderID());
-		bapiFunction.getImportParameterList().setValue(SapOrderConstants.DOCUMENT_TYPE, SapOrderConstants.RETURN_ORDER_TYPE);
-		bapiFunction.getImportParameterList().setValue(SapOrderConstants.REFERENCE_DOCUMENT, orderHeaderTO.getReferenceID());
+		bapiFunction.getImportParameterList().setValue(SapOrderConstants.DOCUMENT_TYPE, orderHeaderTO.getSalesDocType());
+		if (SapUtils.isBigBazaar(client)) {
+			bapiFunction.getImportParameterList().setValue(SapOrderConstants.RETURN_REFERENCE, orderHeaderTO.getReferenceID());
+			bapiFunction.getImportParameterList().setValue(SapOrderConstants.RETURN_ORDER, orderHeaderTO.getReturnOrderID());
+		}
+		else {
+			bapiFunction.getImportParameterList().setValue(BapiTableFactory.getSalesDocument(orderType, TinlaClient.valueOf(orderHeaderTO.getClient())), orderHeaderTO.getReturnOrderID());
+			bapiFunction.getImportParameterList().setValue(SapOrderConstants.REFERENCE_DOCUMENT, orderHeaderTO.getReferenceID());
+		}
 		bapiFunction.getImportParameterList().setValue(SapOrderConstants.ORDER_REASON, lineItemTOList.get(0).getReasonCode());
 		
 	}
