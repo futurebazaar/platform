@@ -73,8 +73,8 @@ public class SapClientHandler implements PlatformClientHandler {
 				ItemMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
 				ItemScheduleMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
 				if (!(orderType.equals(TinlaOrderType.MOD_ORDER) && SapUtils.isBigBazaar(client))) {
-					HeaderPartnerMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getDefaultShippingAddressTO(), orderRequestTO.getBillingAddressTO(), orderType);
 					ItemPartnerMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
+					HeaderPartnerMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getDefaultShippingAddressTO(), orderRequestTO.getBillingAddressTO(), orderType);
 				}
 				if (orderType.equals(TinlaOrderType.NEW_ORDER)) {
 					PaymentMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getPaymentTO());

@@ -102,6 +102,9 @@ public class ItemMapper {
 		orderItemINX.setValue(SapOrderConstants.STORAGE_LOCATION, SapOrderConstants.COMMIT_FLAG);
 		orderItemIN.setValue(SapOrderConstants.SALES_UNIT, itemTO.getSalesUnit());
 		orderItemINX.setValue(SapOrderConstants.SALES_UNIT, SapOrderConstants.COMMIT_FLAG);
+		orderItemIN.setValue(SapOrderConstants.SHIPMENT_TYPE, itemTO.getShippingMode());
+		orderItemINX.setValue(SapOrderConstants.SHIPMENT_TYPE, SapOrderConstants.COMMIT_FLAG);
+		orderItemINX.setValue(SapOrderConstants.SALES_UNIT, SapOrderConstants.COMMIT_FLAG);
 	}
 	
 	public static void setReturnItemDetails(JCoFunction bapiFunction, OrderHeaderTO orderHeaderTO, List<LineItemTO> LineItemTOList, TinlaOrderType orderType) {

@@ -18,7 +18,6 @@ import com.fb.commons.mom.to.PaymentTO;
 import com.fb.commons.mom.to.PricingTO;
 import com.fb.commons.test.BaseTestCase;
 import com.fb.platform.sap.bapi.order.TinlaOrderType;
-import com.fb.platform.sap.bapi.to.SapInventoryLevelResponseTO;
 import com.fb.platform.sap.bapi.to.SapOrderRequestTO;
 import com.fb.platform.sap.bapi.to.SapOrderResponseTO;
 import com.fb.platform.sap.client.handler.PlatformClientHandler;
@@ -38,13 +37,27 @@ public class TestFuturebazaarOrder extends BaseTestCase {
 	
 	private List<PaymentTO> getPaymentTO() {
 		List<PaymentTO> paymentTOList = new ArrayList<PaymentTO>();
+		PaymentTO paymentTO1 = new PaymentTO();
+		paymentTO1.setAuthCode("1234");
+		paymentTO1.setBank("WALL");
+		paymentTO1.setInstrumentNumber("13456");
+		paymentTO1.setMerchantID("1982");
+		paymentTO1.setPaymentGateway("WALL");
+		paymentTO1.setPaymentMode("ewallet");
+		paymentTO1.setPaymentTime(DateTime.now());
+		paymentTO1.setPgTransactionID("2233445");
+		paymentTO1.setPricingTO(getPricingTO());
+		paymentTO1.setTransactionID("50512358");
+		paymentTO1.setValidTill(DateTime.now().plusMonths(4));
+		paymentTOList.add(paymentTO1);
+		
 		PaymentTO paymentTO2 = new PaymentTO();
 		paymentTO2.setAuthCode("1234");
 		paymentTO2.setBank("ICICI");
 		paymentTO2.setInstrumentNumber("123456");
 		paymentTO2.setMerchantID("1982");
 		paymentTO2.setPaymentGateway("ICI3");
-		paymentTO2.setPaymentMode("cheque");
+		paymentTO2.setPaymentMode("credit-card");
 		paymentTO2.setPaymentTime(DateTime.now());
 		paymentTO2.setPgTransactionID("223344");
 		paymentTO2.setPricingTO(getPricingTO());
@@ -62,7 +75,7 @@ public class TestFuturebazaarOrder extends BaseTestCase {
 		orderHeaderTO.setCreatedOn(DateTime.now());
 		//orderHeaderTO.set
 		orderHeaderTO.setSalesDocType("ZATG");
-		orderHeaderTO.setReferenceID("5049999962");
+		orderHeaderTO.setReferenceID("5049999913");
 		orderHeaderTO.setReturnOrderID("6699999999");
 		orderHeaderTO.setLoyaltyCardNumber("1234123412341234");
 		orderHeaderTO.setPricingTO(getPricingTO());
@@ -73,12 +86,9 @@ public class TestFuturebazaarOrder extends BaseTestCase {
 	private PricingTO getPricingTO() {
 		PricingTO pricingTO = new PricingTO();
 		pricingTO.setCurrency("INR");
-		pricingTO.setListPrice(new BigDecimal("1200.00"));
-		pricingTO.setOfferPrice(new BigDecimal("1100.00"));
-		pricingTO.setCouponDiscount(new BigDecimal("50"));
-		pricingTO.setPayableAmount(new BigDecimal("1100.00"));
-		pricingTO.setPointsEarn(new BigDecimal("40"));
-		pricingTO.setPointsEarnValue(new BigDecimal("10"));
+		pricingTO.setListPrice(new BigDecimal("799.00"));
+		pricingTO.setOfferPrice(new BigDecimal("100.00"));
+		pricingTO.setPayableAmount(new BigDecimal("150.00"));
 		pricingTO.setShippingAmount(new BigDecimal("50"));
 		return pricingTO;
 	}
@@ -87,57 +97,31 @@ public class TestFuturebazaarOrder extends BaseTestCase {
 		List<LineItemTO> lineItemTOList = new ArrayList<LineItemTO>();
 		LineItemTO lineItemTO1 = new LineItemTO();
 		lineItemTO1.setPricingTO(getPricingTO());
-		lineItemTO1.setArticleID("000000000300293563");
+		lineItemTO1.setArticleID("000000000300548303");
 		lineItemTO1.setSapDocumentId(10);
 		lineItemTO1.setQuantity(new BigDecimal("1.00"));
 		lineItemTO1.setDescription("TEST ARTICLE");
 		lineItemTO1.setPlantId("2786");
 		lineItemTO1.setSalesUnit("EA");
+		lineItemTO1.setShippingMode("FA");
 		lineItemTO1.setStorageLocation(10);
 		lineItemTO1.setLspCode("0000300413");
 		lineItemTO1.setAddressTO(getAddressTO());
 		lineItemTO1.setOperationCode("U");
 		lineItemTOList.add(lineItemTO1);
 		
-		LineItemTO lineItemTO2 = new LineItemTO();
-		lineItemTO2.setPricingTO(getPricingTO());
-		lineItemTO2.setArticleID("000000000102061836");
-		lineItemTO2.setSapDocumentId(20);
-		lineItemTO2.setQuantity(new BigDecimal("2.00"));
-		lineItemTO2.setDescription("TEST ARTICLE");
-		lineItemTO2.setPlantId("2786");
-		lineItemTO2.setSalesUnit("EA");
-		lineItemTO2.setStorageLocation(10);
-		lineItemTO2.setReasonCode("01");
-		lineItemTO2.setOperationCode("C");
-		lineItemTO2.setAddressTO(getAddressTO());
-		lineItemTOList.add(lineItemTO2);
-		
-		LineItemTO lineItemTO3 = new LineItemTO();
-		lineItemTO3.setPricingTO(getPricingTO());
-		lineItemTO3.setArticleID("000000000102061836");
-		lineItemTO3.setSapDocumentId(30);
-		lineItemTO3.setQuantity(new BigDecimal("4.00"));
-		lineItemTO3.setDescription("TEST ARTICLE");
-		lineItemTO3.setPlantId("2786");
-		lineItemTO3.setSalesUnit("EA");
-		lineItemTO3.setStorageLocation(10);
-		lineItemTO3.setReasonCode("103");
-		lineItemTO3.setOperationCode("I");
-		lineItemTO3.setAddressTO(getAddressTO());
-		lineItemTOList.add(lineItemTO3);
 		return lineItemTOList;
 	}
 	
 	private AddressTO getAddressTO() {
 		AddressTO addressTO = new AddressTO();
 		addressTO.setCity("MUMBAI");
-		addressTO.setFirstName("ANUBHAV");
-		addressTO.setLastName("JAIN");
+		addressTO.setFirstName("ANUB");
+		addressTO.setLastName("JA");
 		addressTO.setPincode("400060");
 		addressTO.setPrimaryTelephone("01234567890");
 		addressTO.setState("13");
-		addressTO.setAddress("TEST ORDER");
+		addressTO.setAddress("TEST ORDER MODIFICATION");
 		addressTO.setCountry("IN");
 		return addressTO;
 	}

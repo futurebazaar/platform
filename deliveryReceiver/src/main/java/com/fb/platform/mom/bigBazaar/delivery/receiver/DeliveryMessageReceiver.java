@@ -16,6 +16,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -49,7 +50,7 @@ public class DeliveryMessageReceiver implements PlatformMessageReceiver{
 	
 	private static Log infoLog = LogFactory.getLog(DeliveryMessageReceiver.class);
 	
-	private static Log auditLog = LogFactory.getLog(LoggerConstants.DELIVERY_BB_AUDIT_LOG);
+	private static Log auditLog = LogFactory.getLog(LoggerConstants.DELIVERY_RECEIVER_BB_AUDIT_LOG);
 	
 	private static Properties prop = initProperties();
 	
@@ -127,6 +128,8 @@ public class DeliveryMessageReceiver implements PlatformMessageReceiver{
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode != HttpStatus.SC_OK) {
 				infoLog.error("delivery ack not delivered : " + deliveryTO.toString());
+				//String errorCause = IOUtils.toString(response.getEntity().getContent(), response.getEntity().getContentEncoding().getValue());
+				//auditLog.error(deliveryTO.getSapIdoc().getAckUID() + "," + deliveryTO.getSapIdoc().getIdocNumber() + "," + deliveryTO.getSapIdoc().getTimestamp() + "," + errorCause);
 				throw new PlatformException("delivery ack not delivered to tinla on URL : " + deliveryURL);
 			}
 			auditLog.info(deliveryTO.getSapIdoc().getAckUID() + "," + deliveryTO.getSapIdoc().getIdocNumber() + "," + deliveryTO.getSapIdoc().getTimestamp() + ",true");
