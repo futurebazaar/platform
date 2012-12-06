@@ -75,7 +75,7 @@ public class TestFuturebazaarOrder extends BaseTestCase {
 		orderHeaderTO.setCreatedOn(DateTime.now());
 		//orderHeaderTO.set
 		orderHeaderTO.setSalesDocType("ZATG");
-		orderHeaderTO.setReferenceID("5049999915");
+		orderHeaderTO.setReferenceID("5049999913");
 		orderHeaderTO.setReturnOrderID("6699999999");
 		orderHeaderTO.setLoyaltyCardNumber("1234123412341234");
 		orderHeaderTO.setPricingTO(getPricingTO());
@@ -103,6 +103,7 @@ public class TestFuturebazaarOrder extends BaseTestCase {
 		lineItemTO1.setDescription("TEST ARTICLE");
 		lineItemTO1.setPlantId("2786");
 		lineItemTO1.setSalesUnit("EA");
+		lineItemTO1.setShippingMode("FA");
 		lineItemTO1.setStorageLocation(10);
 		lineItemTO1.setLspCode("0000300413");
 		lineItemTO1.setAddressTO(getAddressTO());
