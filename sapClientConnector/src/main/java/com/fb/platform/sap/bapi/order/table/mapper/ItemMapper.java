@@ -38,7 +38,7 @@ public class ItemMapper {
 			orderText.appendRow();
 			// Set New Order conditions
 			if (orderType.equals(TinlaOrderType.NEW_ORDER)) {
-				setNewOrderDetails(itemTO, orderHeaderTO, orderItemIN, orderItemINX, orderText);
+				setNewOrderDetails(bapiFunction, itemTO, orderHeaderTO, orderItemIN, orderItemINX, orderText);
 			} else {
 				//set modification and Cancellation Conditions
 				setUpdateOrderDetails(bapiFunction, itemTO, orderHeaderTO, orderItemIN, orderItemINX, orderType);
@@ -64,11 +64,14 @@ public class ItemMapper {
 		orderItemINX.setValue(SapOrderConstants.OPERATION_FLAG, operationCode);
 	}
 
-	private static void setNewOrderDetails(LineItemTO itemTO, OrderHeaderTO orderHeaderTO, JCoTable orderItemIN, JCoTable orderItemINX, JCoTable orderText) {
+	private static void setNewOrderDetails(JCoFunction bapiFunction, LineItemTO itemTO, OrderHeaderTO orderHeaderTO, JCoTable orderItemIN, JCoTable orderItemINX, JCoTable orderText) {
 		TinlaClient client = TinlaClient.valueOf(orderHeaderTO.getClient());
-		orderItemIN.setValue(SapOrderConstants.ITEM_CATEGORY, SapOrderConfigFactory.getConfigValue(SapOrderConstants.ITEM_CATEGORY,  client, TinlaOrderType.NEW_ORDER));
+		orderItemIN.setValue(SapOrderConstants.ITEM_CATEGORY, SapOrderConfigFactory.getConfigValue(SapOrderConstants.ITEM_CATEGORY,  client, TinlaOrderType.NEW_ORDER, orderHeaderTO));
 		if (!StringUtils.isBlank(itemTO.getItemCategory())) {
 			orderItemIN.setValue(SapOrderConstants.ITEM_CATEGORY, itemTO.getItemCategory());
+			if (SapOrderConstants.GV_ITEM_CATEGORY.equals(itemTO.getItemCategory())) {
+				setGVTextDetails(bapiFunction, itemTO);
+			}
 		}
 		orderItemINX.setValue(SapOrderConstants.ITEM_CATEGORY, SapOrderConstants.COMMIT_FLAG);
 		orderItemIN.setValue(SapOrderConstants.DESCRIPTION, itemTO.getDescription());
@@ -82,6 +85,15 @@ public class ItemMapper {
 		orderText.setValue(SapOrderConstants.TEXT_ID, SapOrderConstants.ITEM_DESC_TEXT_ID);
 		orderText.setValue(SapOrderConstants.LANGUAGE, SapOrderConstants.DEFAULT_LANGUAGE);
 		orderItemINX.setValue(SapOrderConstants.OPERATION_FLAG, SapOrderConstants.INSERT_FLAG);		
+	}
+
+	private static void setGVTextDetails(JCoFunction bapiFunction, LineItemTO itemTO) {
+		JCoTable orderText = bapiFunction.getTableParameterList().getTable(BapiOrderTable.ORDER_TEXT.toString());
+		orderText.appendRow();
+		orderText.setValue(SapOrderConstants.ITEM_NUMBER, itemTO.getSapDocumentId());
+		orderText.setValue(SapOrderConstants.TEXT_LINE, itemTO.getGiftVoucherDetails());
+		orderText.setValue(SapOrderConstants.TEXT_ID, SapOrderConstants.THIRD_PARTNER_TEXT_ID);
+		orderText.setValue(SapOrderConstants.LANGUAGE, SapOrderConstants.DEFAULT_LANGUAGE);
 	}
 
 	private static void setCommonDetails(LineItemTO itemTO, 	OrderHeaderTO orderHeaderTO, JCoTable orderItemIN, JCoTable orderItemINX) {
@@ -98,8 +110,11 @@ public class ItemMapper {
 		orderItemINX.setValue(SapOrderConstants.RELATIONSHIP_ARTICLE_ID, SapOrderConstants.COMMIT_FLAG);
 		orderItemIN.setValue( SapConstants.PLANT, itemTO.getPlantId());
 		orderItemINX.setValue(SapConstants.PLANT, SapOrderConstants.COMMIT_FLAG);
-		orderItemIN.setValue(SapOrderConstants.STORAGE_LOCATION, itemTO.getStorageLocation());
-		orderItemINX.setValue(SapOrderConstants.STORAGE_LOCATION, SapOrderConstants.COMMIT_FLAG);
+		
+		if (!SapOrderConstants.GV_ITEM_CATEGORY.equals(itemTO.getItemCategory())) {
+			orderItemIN.setValue(SapOrderConstants.STORAGE_LOCATION, itemTO.getStorageLocation());
+			orderItemINX.setValue(SapOrderConstants.STORAGE_LOCATION, SapOrderConstants.COMMIT_FLAG);
+		}
 		orderItemIN.setValue(SapOrderConstants.SALES_UNIT, itemTO.getSalesUnit());
 		orderItemINX.setValue(SapOrderConstants.SALES_UNIT, SapOrderConstants.COMMIT_FLAG);
 		orderItemIN.setValue(SapOrderConstants.SHIPMENT_TYPE, itemTO.getShippingMode());
