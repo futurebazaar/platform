@@ -382,7 +382,7 @@ public class PointsServiceImpl implements PointsService {
 			pointsDao.updateStatus(txnActionCode.name(), settlementDate,
 					merchantId);
 			pointsUtil.sendMail(txnActionCode.name(), merchantId, fileName,
-					fileBody, "POINTS");
+					fileBody, "BURN_POINTS");
 		}
 		return fileBody;
 	}
