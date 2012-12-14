@@ -61,7 +61,7 @@
         <xs:element type="xs:string" name="RRN"/>
         <xs:element type="xs:string" name="bank"/>
         <xs:element type="xs:string" name="authCode"/>
-        <xs:element type="xs:string" name="instrumentNumber"/>
+        <xs:element type="xs:string" name="instrumentNo"/>
         <xs:element type="xs:string" name="validDate"/>
       </xs:sequence>
     </xs:complexType>

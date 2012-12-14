@@ -67,6 +67,9 @@ public class PaymentMapper {
 		String instrumentNo = DEFAULT_CREDIT_CARD;
 		if (StringUtils.isNotBlank(paymentTO.getInstrumentNumber())) {
 			instrumentNo = paymentTO.getInstrumentNumber();
+		} 
+		if (paymentTO.getPaymentMode().equals("egv")) {
+			instrumentNo = paymentTO.getPgTransactionID();
 		}
 		orderCreditCard.setValue(SapOrderConstants.INSTRUMENT_NO, instrumentNo);
 		if (paymentTO.getValidTill() != null) {

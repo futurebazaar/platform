@@ -66,11 +66,22 @@ public class ItemMapper {
 
 	private static void setNewOrderDetails(JCoFunction bapiFunction, LineItemTO itemTO, OrderHeaderTO orderHeaderTO, JCoTable orderItemIN, JCoTable orderItemINX, JCoTable orderText) {
 		TinlaClient client = TinlaClient.valueOf(orderHeaderTO.getClient());
+		
+		orderText.setValue(SapOrderConstants.ITEM_NUMBER, itemTO.getSapDocumentId());
+		orderText.setValue(SapOrderConstants.TEXT_LINE, itemTO.getDescription());
+		orderText.setValue(SapOrderConstants.TEXT_ID, SapOrderConstants.ITEM_DESC_TEXT_ID);
+		orderText.setValue(SapOrderConstants.LANGUAGE, SapOrderConstants.DEFAULT_LANGUAGE);
+		
 		orderItemIN.setValue(SapOrderConstants.ITEM_CATEGORY, SapOrderConfigFactory.getConfigValue(SapOrderConstants.ITEM_CATEGORY,  client, TinlaOrderType.NEW_ORDER, orderHeaderTO));
 		if (!StringUtils.isBlank(itemTO.getItemCategory())) {
 			orderItemIN.setValue(SapOrderConstants.ITEM_CATEGORY, itemTO.getItemCategory());
 			if (SapOrderConstants.GV_ITEM_CATEGORY.equals(itemTO.getItemCategory())) {
-				setGVTextDetails(bapiFunction, itemTO);
+				orderText.appendRow();
+				logger.info("Setting GV Text Details: " + itemTO.getGiftVoucherDetails());
+				orderText.setValue(SapOrderConstants.ITEM_NUMBER, itemTO.getSapDocumentId());
+				orderText.setValue(SapOrderConstants.TEXT_LINE, itemTO.getGiftVoucherDetails());
+				orderText.setValue(SapOrderConstants.TEXT_ID, SapOrderConstants.THIRD_PARTNER_TEXT_ID);
+				orderText.setValue(SapOrderConstants.LANGUAGE, SapOrderConstants.DEFAULT_LANGUAGE);
 			}
 		}
 		orderItemINX.setValue(SapOrderConstants.ITEM_CATEGORY, SapOrderConstants.COMMIT_FLAG);
@@ -80,20 +91,7 @@ public class ItemMapper {
 		orderItemINX.setValue(SapOrderConstants.COMP_QUANT, SapOrderConstants.COMMIT_FLAG);
 		orderItemINX.setValue(SapOrderConstants.REFERENCE_FIELD, SapOrderConstants.COMMIT_FLAG);
 		orderItemINX.setValue(SapOrderConstants.DELIVERY_PRIORITY, SapOrderConstants.COMMIT_FLAG);
-		orderText.setValue(SapOrderConstants.ITEM_NUMBER, itemTO.getSapDocumentId());
-		orderText.setValue(SapOrderConstants.TEXT_LINE, itemTO.getDescription());
-		orderText.setValue(SapOrderConstants.TEXT_ID, SapOrderConstants.ITEM_DESC_TEXT_ID);
-		orderText.setValue(SapOrderConstants.LANGUAGE, SapOrderConstants.DEFAULT_LANGUAGE);
-		orderItemINX.setValue(SapOrderConstants.OPERATION_FLAG, SapOrderConstants.INSERT_FLAG);		
-	}
-
-	private static void setGVTextDetails(JCoFunction bapiFunction, LineItemTO itemTO) {
-		JCoTable orderText = bapiFunction.getTableParameterList().getTable(BapiOrderTable.ORDER_TEXT.toString());
-		orderText.appendRow();
-		orderText.setValue(SapOrderConstants.ITEM_NUMBER, itemTO.getSapDocumentId());
-		orderText.setValue(SapOrderConstants.TEXT_LINE, itemTO.getGiftVoucherDetails());
-		orderText.setValue(SapOrderConstants.TEXT_ID, SapOrderConstants.THIRD_PARTNER_TEXT_ID);
-		orderText.setValue(SapOrderConstants.LANGUAGE, SapOrderConstants.DEFAULT_LANGUAGE);
+		orderItemINX.setValue(SapOrderConstants.OPERATION_FLAG, SapOrderConstants.INSERT_FLAG);
 	}
 
 	private static void setCommonDetails(LineItemTO itemTO, 	OrderHeaderTO orderHeaderTO, JCoTable orderItemIN, JCoTable orderItemINX) {
@@ -120,6 +118,10 @@ public class ItemMapper {
 		orderItemIN.setValue(SapOrderConstants.SHIPMENT_TYPE, itemTO.getShippingMode());
 		orderItemINX.setValue(SapOrderConstants.SHIPMENT_TYPE, SapOrderConstants.COMMIT_FLAG);
 		orderItemINX.setValue(SapOrderConstants.SALES_UNIT, SapOrderConstants.COMMIT_FLAG);
+		orderItemIN.setValue(SapOrderConstants.HEADER_LSP, "");
+		orderItemINX.setValue(SapOrderConstants.HEADER_LSP, SapOrderConstants.COMMIT_FLAG);
+		orderItemIN.setValue(SapOrderConstants.REFERENCE_FIELD, orderHeaderTO.getClient());
+		orderItemINX.setValue(SapOrderConstants.REFERENCE_FIELD, SapOrderConstants.COMMIT_FLAG);
 	}
 	
 	public static void setReturnItemDetails(JCoFunction bapiFunction, OrderHeaderTO orderHeaderTO, List<LineItemTO> LineItemTOList, TinlaOrderType orderType) {
