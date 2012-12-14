@@ -150,7 +150,7 @@ public class OrderResource {
 			PaymentTO paymentTO = new PaymentTO();
 			paymentTO.setAuthCode(paymentAttempt.getAuthCode());
 			paymentTO.setBank(paymentAttempt.getBank());
-			paymentTO.setInstrumentNumber(paymentAttempt.getInstrumentNumber());
+			paymentTO.setInstrumentNumber(paymentAttempt.getInstrumentNo());
 			paymentTO.setMerchantID(paymentAttempt.getMerchantId());
 			paymentTO.setPaymentGateway(paymentAttempt.getGateway());
 			paymentTO.setPaymentMode(paymentAttempt.getPaymentMode());

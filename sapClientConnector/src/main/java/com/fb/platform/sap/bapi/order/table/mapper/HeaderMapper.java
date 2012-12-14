@@ -61,11 +61,11 @@ public class HeaderMapper {
 		orderHeaderIN.setValue(SapOrderConstants.CUSTOMER_GROUP, SapOrderConfigFactory.getConfigValue(SapOrderConstants.CUSTOMER_GROUP,  client, TinlaOrderType.NEW_ORDER, orderHeaderTO));
 		orderHeaderINX.setValue(SapOrderConstants.CUSTOMER_GROUP, SapOrderConstants.COMMIT_FLAG);
 		orderHeaderIN.setValue(SapOrderConstants.CHANNEL_TYPE, orderHeaderTO.getChannelType());
+		orderHeaderIN.setValue(SapOrderConstants.HEADER_LSP, SapOrderConfigFactory.getConfigValue(SapOrderConstants.HEADER_LSP,  client, TinlaOrderType.NEW_ORDER, orderHeaderTO));
+		orderHeaderINX.setValue(SapOrderConstants.HEADER_LSP, SapOrderConstants.COMMIT_FLAG);
 		orderHeaderINX.setValue(SapOrderConstants.CLIENT_NAME, SapOrderConstants.COMMIT_FLAG);
 		orderHeaderIN.setValue(SapOrderConstants.REFERENCE_FIELD, orderHeaderTO.getClient());
 		orderHeaderINX.setValue(SapOrderConstants.REFERENCE_FIELD, SapOrderConstants.COMMIT_FLAG);
-		orderHeaderIN.setValue(SapOrderConstants.HEADER_LSP, SapOrderConfigFactory.getConfigValue(SapOrderConstants.HEADER_LSP,  client, TinlaOrderType.NEW_ORDER, orderHeaderTO));
-		orderHeaderINX.setValue(SapOrderConstants.HEADER_LSP, SapOrderConstants.COMMIT_FLAG);
 		// setting default paymentTerms
 		if (client.equals(TinlaClient.BIGBAZAAR) || SapOrderConstants.COD_ACCOUNT_NUMBER.equals(orderHeaderTO.getAccountNumber())) {
 			orderHeaderIN.setValue(SapOrderConstants.PAYMENT_TERM, SapOrderConstants.COD_PAYMENT_TERM);
