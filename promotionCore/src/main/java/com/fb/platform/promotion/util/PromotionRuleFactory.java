@@ -20,6 +20,7 @@ import com.fb.platform.promotion.rule.impl.BuyXBrandGetYRsOffOnZProductRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyXGetYFreeRuleImpl;
 import com.fb.platform.promotion.rule.impl.BuyXQuantityGetVariablePercentOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.CategoryBasedVariablePercentOffRuleImpl;
+import com.fb.platform.promotion.rule.impl.DiscountOnClearanceProductPercentOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.DiscountOnClearanceProductsRuleImpl;
 import com.fb.platform.promotion.rule.impl.FirstPurchaseBuyWorthXGetYRsOffRuleImpl;
 import com.fb.platform.promotion.rule.impl.MonthlyDiscountRsOffRuleImpl;
@@ -93,6 +94,10 @@ public class PromotionRuleFactory {
 		case DISCOUNT_ON_CLEARANCE_PRODUCT:
 			rule = new DiscountOnClearanceProductsRuleImpl();
 			((DiscountOnClearanceProductsRuleImpl)rule).setProductDao(productDao);
+			break;
+		case DISCOUNT_ON_CLEARANCE_PRODUCT_PERCENT_OFF:
+			rule = new DiscountOnClearanceProductPercentOffRuleImpl();
+			((DiscountOnClearanceProductPercentOffRuleImpl)rule).setProductDao(productDao);
 			break;
 		default:
 			throw new IllegalArgumentException("Unkown RulesEnum object found : " + ruleName);

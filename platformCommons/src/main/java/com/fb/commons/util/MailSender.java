@@ -55,15 +55,15 @@ public class MailSender {
 	}
 	
 	public void setTO(String to) throws AddressException, MessagingException{
-		this.message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+		this.message.addRecipients(Message.RecipientType.TO, to);
 	}
 	
 	public void setCC(String cc) throws AddressException, MessagingException{
-		this.message.addRecipient(Message.RecipientType.CC, new InternetAddress(cc));
+		this.message.addRecipients(Message.RecipientType.CC,  cc);
 	}
 	
 	public void setBCC(String bcc) throws AddressException, MessagingException{
-		this.message.addRecipient(Message.RecipientType.BCC, new InternetAddress(bcc));
+		this.message.addRecipients(Message.RecipientType.BCC, bcc);
 	}
 	
 	public void setSubject(String subject) throws MessagingException{

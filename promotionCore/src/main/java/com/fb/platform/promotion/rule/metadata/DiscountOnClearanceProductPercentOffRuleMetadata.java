@@ -12,10 +12,9 @@ import com.fb.platform.promotion.rule.config.RuleConfigDescriptorEnum;
  * @author vinayak
  *
  */
-public class DiscountOnClearanceProductsRuleMetadata extends RuleConfigMetadata {
+public class DiscountOnClearanceProductPercentOffRuleMetadata extends RuleConfigMetadata {
 
-	public DiscountOnClearanceProductsRuleMetadata() {
-
+	public DiscountOnClearanceProductPercentOffRuleMetadata() {
 		List<RuleConfigItemMetadata> ruleConfigItemMetadata = new ArrayList<RuleConfigItemMetadata>();
 		
 		ruleConfigItemMetadata.add(new RuleConfigItemMetadata(RuleConfigDescriptorEnum.CLIENT_LIST, false));
@@ -23,9 +22,9 @@ public class DiscountOnClearanceProductsRuleMetadata extends RuleConfigMetadata 
 		ruleConfigItemMetadata.add(new RuleConfigItemMetadata(RuleConfigDescriptorEnum.CATEGORY_EXCLUDE_LIST, false));
 		ruleConfigItemMetadata.add(new RuleConfigItemMetadata(RuleConfigDescriptorEnum.BRAND_LIST, false));
 		ruleConfigItemMetadata.add(new RuleConfigItemMetadata(RuleConfigDescriptorEnum.MIN_ORDER_VALUE, false));
-		ruleConfigItemMetadata.add(new RuleConfigItemMetadata(RuleConfigDescriptorEnum.FIXED_DISCOUNT_RS_OFF, true));
+		ruleConfigItemMetadata.add(new RuleConfigItemMetadata(RuleConfigDescriptorEnum.DISCOUNT_PERCENTAGE, true));
 		
 		this.setRuleConfigItemMetadata(ruleConfigItemMetadata);
-		
+
 	}
 }
