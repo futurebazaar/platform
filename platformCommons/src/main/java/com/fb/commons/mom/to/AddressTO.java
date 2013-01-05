@@ -24,7 +24,9 @@ public class AddressTO implements Serializable{
 		return firstName;
 	}
 	public String getAddress() {
-		return address.replaceAll("\r\n", "");
+		address = address.replaceAll("\r", "");
+		address = address.replaceAll("\n", "");
+		return address;
 	}
 	public void setAddress(String address) {
 		this.address = address;

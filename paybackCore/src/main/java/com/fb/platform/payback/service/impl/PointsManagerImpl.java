@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.fb.commons.PlatformException;
 import com.fb.platform.auth.AuthenticationService;
 import com.fb.platform.auth.AuthenticationTO;
 import com.fb.platform.payback.exception.InvalidReferenceId;
@@ -109,7 +108,7 @@ public class PointsManagerImpl implements PointsManager {
 					if (dataToUpload != null && !dataToUpload.equals("")) {
 						pointsUtil.sendMail(txnActionCode.name(), merchantId,
 								txnActionCode.toString() + ".txt",
-								dataToUpload, "POINTS");
+								dataToUpload, "EARN_POINTS");
 					}
 				} catch (Exception e) {
 					logger.error(e.toString());
