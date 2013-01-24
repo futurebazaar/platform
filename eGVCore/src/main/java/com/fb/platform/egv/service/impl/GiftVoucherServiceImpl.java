@@ -287,14 +287,21 @@ public class GiftVoucherServiceImpl implements GiftVoucherService {
 
 		try {
 			eGV = giftVoucherDao.load(giftVoucherNumber);
-			String gvPin = RandomGenerator.integerRandomGenerator(GV_PIN_LENGTH);
-			giftVoucherDao.updateGiftVoucher(giftVoucherNumber, GiftVoucherPinUtil.getEncryptedPassword(gvPin),
-					eGV.getEmail(), eGV.getUserId(), amount, GiftVoucherStatusEnum.CONFIRMED, eGV.getOrderItemId(),
-					eGV.getMobile(), (validFrom == null) ? eGV.getValidFrom() : validFrom,
-					(validTill == null) ? eGV.getValidTill() : validTill);
+			if(!eGV.isUsed()){
+				String gvPin = RandomGenerator.integerRandomGenerator(GV_PIN_LENGTH);
+				giftVoucherDao.updateGiftVoucher(giftVoucherNumber, GiftVoucherPinUtil.getEncryptedPassword(gvPin),
+						eGV.getEmail(), eGV.getUserId(), amount, GiftVoucherStatusEnum.CONFIRMED, eGV.getOrderItemId(),
+						eGV.getMobile(), (validFrom == null) ? eGV.getValidFrom() : validFrom,
+						(validTill == null) ? eGV.getValidTill() : validTill);
+	
+				return eGV;
+			}else{
+				throw new GiftVoucherAlreadyUsedException();
+			}
 
-			return eGV;
-
+		} catch (GiftVoucherAlreadyUsedException e) {
+			logger.info("Gift Voucher is already used :  " + giftVoucherNumber);
+			throw new GiftVoucherAlreadyUsedException("Gift Voucher is already used :  " + giftVoucherNumber, e);
 		} catch (GiftVoucherNotFoundException e) {
 			logger.info("No Such Gift Voucher Exists :  " + giftVoucherNumber);
 			throw new GiftVoucherNotFoundException("No Such Gift Voucher Exists :  " + giftVoucherNumber, e);

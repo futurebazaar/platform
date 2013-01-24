@@ -14,6 +14,7 @@ public enum ActivateResponseStatusEnum implements Serializable{
 	NO_SESSION,
 	INTERNAL_ERROR,
 	SUCCESS,
-	INVALID_GIFT_VOUCHER_NUMBER;
+	INVALID_GIFT_VOUCHER_NUMBER,
+	GIFT_VOUCHER_ALREADY_USED;
 
 }
