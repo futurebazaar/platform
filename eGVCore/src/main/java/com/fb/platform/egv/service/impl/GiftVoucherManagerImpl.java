@@ -368,6 +368,8 @@ public class GiftVoucherManagerImpl implements GiftVoucherManager {
 			response.setNumber(Long.parseLong(eGV.getNumber()));
 			response.setResponseStatus(ActivateResponseStatusEnum.SUCCESS);
 
+		} catch (GiftVoucherAlreadyUsedException e) {
+			response.setResponseStatus(ActivateResponseStatusEnum.GIFT_VOUCHER_ALREADY_USED);
 		} catch (GiftVoucherNotFoundException e) {
 			response.setResponseStatus(ActivateResponseStatusEnum.INVALID_GIFT_VOUCHER_NUMBER);
 		} catch (PlatformException e) {

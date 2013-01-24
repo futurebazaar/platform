@@ -282,6 +282,7 @@
       <xs:enumeration value="SUCCESS"/>
       <xs:enumeration value="NO_SESSION"/>
       <xs:enumeration value="INVALID_GIFT_VOUCHER_NUMBER"/>
+      <xs:enumeration value="GIFT_VOUCHER_ALREADY_USED"/>
       <xs:enumeration value="USER_NOT_AUTHORIZED"/>
       <xs:enumeration value="INTERNAL_ERROR"/>
     </xs:restriction>
