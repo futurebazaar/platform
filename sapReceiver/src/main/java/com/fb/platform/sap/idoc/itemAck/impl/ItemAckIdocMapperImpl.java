@@ -102,8 +102,8 @@ public class ItemAckIdocMapperImpl implements ItemAckIdocMapper {
 			itemAck.setCreatedDate(new DateTime(year, month, day, 0, 0));
 		}
 		
-		if(hasValueChanged(itemAck.getSkuID(), sapItemAck.getMATNR())) {
-			itemAck.setSkuID(sapItemAck.getMATNR());
+		if(hasValueChanged(itemAck.getSkuID(), Integer.toString(sapItemAck.getMATERIAL()))) {
+			itemAck.setSkuID(Integer.toString(sapItemAck.getMATERIAL()));
 		}
 		
 		if(hasValueChanged(itemAck.getLspUpdateDesc(), sapItemAck.getLSPUPDDESCR())) {
