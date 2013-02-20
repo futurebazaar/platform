@@ -78,6 +78,7 @@ public class InventoryResource {
 			sapInventoryLevelRequestTO.setMaterial(inventoryLevelRequest.getMaterial());
 			sapInventoryLevelRequestTO.setPlant(inventoryLevelRequest.getPlant());
 			sapInventoryLevelRequestTO.setStorageLocation(inventoryLevelRequest.getStorageLocation());
+			sapInventoryLevelRequestTO.setClient(inventoryLevelRequest.getClient());
 			SapInventoryLevelResponseTO sapInventoryLevelResponseTO = sapClientHandler.processInventoryLevel(sapInventoryLevelRequestTO);
 			InventoryLevelResponse inventoryLevelResponse = new InventoryLevelResponse();
 			inventoryLevelResponse.setArticle(sapInventoryLevelResponseTO.getArticle());
@@ -159,6 +160,7 @@ public class InventoryResource {
 		gregCal = inventoryDashboardRequest.getToDateTime();
 		sapInventoryDashboardRequestTO.setToDateTime(new DateTime(new DateTime(gregCal.getYear(), gregCal.getMonth(), gregCal.getDay(), 
 				gregCal.getHour(), gregCal.getMinute())));
+		sapInventoryDashboardRequestTO.setClient(inventoryDashboardRequest.getClient());
 		return sapInventoryDashboardRequestTO;
 	}
 }

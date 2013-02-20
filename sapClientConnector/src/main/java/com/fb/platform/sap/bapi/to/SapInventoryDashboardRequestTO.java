@@ -8,6 +8,7 @@ public class SapInventoryDashboardRequestTO {
 	private String plant;
 	private DateTime fromDateTime;
 	private DateTime toDateTime;
+	private String client;
 
 	public DateTime getFromDateTime() {
 		return fromDateTime;
@@ -33,12 +34,18 @@ public class SapInventoryDashboardRequestTO {
 	public void setPlant(String plant) {
 		this.plant = plant;
 	}
+	public void setClient(String client) {
+		this.client = client;
+	}
+	public String getClient() {
+		return client;
+	}
 	
 	@Override
 	public String toString() {
 		return "SapInventoryDashboardRequestTO [article=" + article
 				+ ", plant=" + plant + ", fromDateTime=" + fromDateTime
-				+ ", toDateTime=" + toDateTime + "]";
+				+ ", toDateTime=" + toDateTime + ", client=" + client + "]";
 	}
 	
 }

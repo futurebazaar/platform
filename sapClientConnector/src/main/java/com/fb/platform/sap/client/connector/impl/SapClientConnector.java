@@ -7,6 +7,8 @@ import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.fb.platform.sap.client.commons.SapUtils;
+import com.fb.platform.sap.client.commons.TinlaClient;
 import com.fb.platform.sap.client.connector.PlatformClientConnector;
 import com.sap.conn.idoc.IDocDocumentList;
 import com.sap.conn.idoc.IDocFactory;
@@ -28,13 +30,14 @@ public class SapClientConnector implements PlatformClientConnector {
     private class SapDestinationDataProvider implements DestinationDataProvider {
     	 
         private DestinationDataEventListener eL;
+        private Properties destinationProperty;
+        
+        public void setDestinationProperty(Properties destinationProperty) {
+        	this.destinationProperty = destinationProperty;
+        }
         
         public Properties getDestinationProperties(String environment) {
-        	try {
-				return SapClientConnector.getDestinationPropertiesFromEnvironment();
-			} catch (IOException e) {
-				return null;
-			}
+        	return destinationProperty;
          }
         
         public void setDestinationDataEventListener(DestinationDataEventListener eventListener) {
@@ -50,17 +53,22 @@ public class SapClientConnector implements PlatformClientConnector {
         }
     } 
     
-    private static Properties getDestinationPropertiesFromEnvironment() throws IOException {
-    	InputStream inStream = SapClientConnector.class.getClassLoader().getResourceAsStream("bapi.jcoDestination");
+    private static Properties getDestinationPropertiesFromEnvironment(TinlaClient client) throws IOException {
+    	InputStream inStream = null;
+    	
+    	if (SapUtils.isBigBazaar(client)) inStream = SapClientConnector.class.getClassLoader().getResourceAsStream("bbBapi.jcoDestination");
+    	else inStream = SapClientConnector.class.getClassLoader().getResourceAsStream("bapi.jcoDestination");
+    	
     	Properties connectProperties = new Properties();
     	connectProperties.load(inStream);
         return connectProperties;
     }
     
     @Override
-    public JCoDestination connectSap() throws IOException, JCoException {
+    public JCoDestination connectSap(TinlaClient client) throws IOException, JCoException {
         SapDestinationDataProvider sapProvider = new SapDestinationDataProvider();
-        Properties bapiProperties = getDestinationPropertiesFromEnvironment();
+        Properties bapiProperties = getDestinationPropertiesFromEnvironment(client);
+        sapProvider.setDestinationProperty(bapiProperties);
         try {
             com.sap.conn.jco.ext.Environment.registerDestinationDataProvider(sapProvider);
         } catch(IllegalStateException providerAlreadyRegisteredException) {
@@ -73,7 +81,7 @@ public class SapClientConnector implements PlatformClientConnector {
     
     @Override
     public void sendIdoc(String xml) throws JCoException, IOException, IDocParseException{  
-    	JCoDestination destination = connectSap();  
+    	JCoDestination destination = connectSap(TinlaClient.FUTUREBAZAAR);  
     	JCoContext.begin(destination);
         IDocRepository iDocRepository = JCoIDoc.getIDocRepository(destination);
         String transactionID = destination.createTID();

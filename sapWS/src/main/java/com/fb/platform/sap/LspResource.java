@@ -62,6 +62,7 @@ private static Log logger = LogFactory.getLog(LspResource.class);
 			lspAwbUpdateRequestTO.setAwb(awbUpdateRequest.getAwb());
 			lspAwbUpdateRequestTO.setDeliveryNumber(awbUpdateRequest.getDeliveryNumber());
 			lspAwbUpdateRequestTO.setLspCode(awbUpdateRequest.getLspCode());
+			lspAwbUpdateRequestTO.setClient(awbUpdateRequest.getClient());
 			SapLspAwbUpdateResponseTO lspAwbUpdateResponseTO = sapClientHandler.processLspAwbUpdate(lspAwbUpdateRequestTO);
 			AwbUpdateResponse awbUpdateResponse = new AwbUpdateResponse();
 			awbUpdateResponse.setMessage(lspAwbUpdateResponseTO.getMessage());

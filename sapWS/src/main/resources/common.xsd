@@ -7,6 +7,7 @@
 				<xs:element ref="sap:plant"/>
 	      		<xs:element ref="sap:material"/>
 	      		<xs:element ref="sap:storageLocation"/>
+	      		<xs:element ref="sap:client"/>
 	      	</xs:sequence>
 	    </xs:complexType>
 	</xs:element>
@@ -30,6 +31,7 @@
       			<xs:element ref="sap:article"/>
       			<xs:element ref="sap:fromDateTime"/>
       			<xs:element ref="sap:toDateTime"/>
+      			<xs:element ref="sap:client"/>
       		</xs:sequence>
     	</xs:complexType>
   	</xs:element>
@@ -71,6 +73,7 @@
       			<xs:element ref="sap:deliveryNumber"/>
       			<xs:element ref="sap:lspCode"/>
       			<xs:element ref="sap:awb"/>
+      			<xs:element ref="sap:client"/>
       		</xs:sequence>
     	</xs:complexType>
   	</xs:element>
@@ -143,5 +146,6 @@
   	<xs:element name="transactionTimestamp" type="xs:dateTime"/>
   	<xs:element name="orderId" type="xs:string"/>
   	<xs:element name="type" type="xs:string"/>
+  	<xs:element name="client" type="xs:string"/>
   	
 </xs:schema>

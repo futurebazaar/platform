@@ -60,8 +60,8 @@ public class SapClientHandler implements PlatformClientHandler {
 		TinlaClient client = TinlaClient.valueOf(orderRequestTO.getOrderHeaderTO().getClient());
     	try {
     		BapiOrderTemplate template = PlatformBapiHandlerFactory.getTemplate(orderType, orderRequestTO.getOrderHeaderTO().getClient());
-			logger.info("Connected Bapi template : " + template + "for : " + orderType + " " + orderRequestTO.getOrderHeaderTO().getReferenceID());
-			JCoDestination destination = sapClientConnector.connectSap();
+			logger.info("Connecting Bapi template : " + template + "for : " + orderType + " " + orderRequestTO.getOrderHeaderTO().getReferenceID());
+			JCoDestination destination = sapClientConnector.connectSap(client);
 			JCoFunction bapiFunction = destination.getRepository().getFunctionTemplate(template.toString()).getFunction(); 
 			if (orderType.equals(TinlaOrderType.RET_ORDER)) {
 				HeaderMapper.setReturnDetails(bapiFunction,  orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType, client);
@@ -69,8 +69,7 @@ public class SapClientHandler implements PlatformClientHandler {
 			} else {
 				HeaderMapper.setDetails(bapiFunction, orderRequestTO, orderRequestTO.getOrderHeaderTO(), orderType);
 				//Below condition is not used now
-				//HeaderConditionsMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderType);
-				ItemMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
+				//HeaderConditionsMappernFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
 				ItemScheduleMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
 				if (!(orderType.equals(TinlaOrderType.MOD_ORDER) && SapUtils.isBigBazaar(client))) {
 					ItemPartnerMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
@@ -84,10 +83,10 @@ public class SapClientHandler implements PlatformClientHandler {
 			ItemConditionsMapper.setDetails(bapiFunction, orderRequestTO.getOrderHeaderTO(), orderRequestTO.getLineItemTO(), orderType);
 			orderResponseTO = OrderResponseMapper.getDetails(bapiFunction, destination);
 		} catch (JCoException e) {
-			logger.error("Failed to connet Order Bapi  for " + orderType + " " + orderRequestTO.getOrderHeaderTO().getReferenceID(), e);
+			logger.error("Failed to connect Order Bapi  for " + orderType + " " + orderRequestTO.getOrderHeaderTO().getReferenceID(), e);
 			orderResponseTO.setSapMessage(e.getMessage());
 		} catch (IOException e) {
-			logger.error("Failed to connet Order Bapi  for " + orderType + " " + orderRequestTO.getOrderHeaderTO().getReferenceID(), e);
+			logger.error("Failed to connect Order Bapi  for " + orderType + " " + orderRequestTO.getOrderHeaderTO().getReferenceID(), e);
 			orderResponseTO.setSapMessage(e.getMessage());
 		}
     	orderResponseTO.setOrderId(orderRequestTO.getOrderHeaderTO().getReferenceID());
@@ -102,7 +101,7 @@ public class SapClientHandler implements PlatformClientHandler {
 		logger.info("Inventory Dashboard Request : " + inventoryDashboardRequestTO);
 		List<SapInventoryDashboardResponseTO> inventoryDashboardResponseTO = new ArrayList<SapInventoryDashboardResponseTO>();
 		try {
-			JCoDestination destination = sapClientConnector.connectSap();
+			JCoDestination destination = sapClientConnector.connectSap(TinlaClient.valueOf(inventoryDashboardRequestTO.getClient()));
 			JCoFunction bapiFunction = destination.getRepository().getFunctionTemplate(BapiInventoryTemplate.ZFB_INVCHECK.toString()).getFunction();
 			DashboardTimeMapper.setDetails(bapiFunction, inventoryDashboardRequestTO);
 			TabArticleMapper.setDetails(bapiFunction, inventoryDashboardRequestTO);
@@ -110,9 +109,9 @@ public class SapClientHandler implements PlatformClientHandler {
 			inventoryDashboardResponseTO = TabResponseMapper.getDetails(bapiFunction, destination);
 			logger.info("Inventory Dashboard response : " + inventoryDashboardResponseTO + " for inventory Dashboard request :" + inventoryDashboardRequestTO);
 		} catch (JCoException e) {
-			logger.error("Failed to connet Bapi Dashboard for request " + inventoryDashboardRequestTO, e);
+			logger.error("Failed to connect Bapi Dashboard for request " + inventoryDashboardRequestTO, e);
 		} catch (IOException e) {
-			logger.error("Failed to connet Bapi Dashboard for request " + inventoryDashboardRequestTO, e);
+			logger.error("Failed to connect Bapi Dashboard for request " + inventoryDashboardRequestTO, e);
 		}
 		return inventoryDashboardResponseTO;
 	}
@@ -122,15 +121,15 @@ public class SapClientHandler implements PlatformClientHandler {
 		logger.info("Inventory Level Request : " + inventoryLevelRequestTO);
 		SapInventoryLevelResponseTO inventoryLevelResponseTO = new SapInventoryLevelResponseTO();
 		try {
-			JCoDestination destination = sapClientConnector.connectSap();
+			JCoDestination destination = sapClientConnector.connectSap(TinlaClient.valueOf(inventoryLevelRequestTO.getClient()));
 			JCoFunction bapiFunction = destination.getRepository().getFunctionTemplate(BapiInventoryTemplate.ZBAPI_FM_TINLASTKQTY.toString()).getFunction();
 			InventoryStockMapper.setDetails(bapiFunction, inventoryLevelRequestTO);
 			inventoryLevelResponseTO = InventoryStockResponseMapper.getDetails(bapiFunction, destination);
 			logger.info("Inventory Level response : " + inventoryLevelResponseTO + " for inventory level request :" + inventoryLevelRequestTO);
 		} catch (JCoException e) {
-			logger.error("Failed to connet Bapi Inventory Stock for request: " + inventoryLevelRequestTO, e);
+			logger.error("Failed to connect Bapi Inventory Stock for request: " + inventoryLevelRequestTO, e);
 		} catch (IOException e) {
-			logger.error("Failed to connet Bapi Inventory Stock for request: " + inventoryLevelRequestTO, e);
+			logger.error("Failed to connect Bapi Inventory Stock for request: " + inventoryLevelRequestTO, e);
 		}
 		return inventoryLevelResponseTO;
 	}
@@ -140,15 +139,15 @@ public class SapClientHandler implements PlatformClientHandler {
 		logger.info("Awb Update Request : " + lspAwbUpdateRequestTO);
 		SapLspAwbUpdateResponseTO lspAwbUpdateResponseTO = new SapLspAwbUpdateResponseTO();
 		try {
-			JCoDestination destination = sapClientConnector.connectSap();
+			JCoDestination destination = sapClientConnector.connectSap(TinlaClient.valueOf(lspAwbUpdateRequestTO.getClient()));
 			JCoFunction bapiFunction = destination.getRepository().getFunctionTemplate(BapiLspTemplate.ZFB_DELV_UPDT_AWB.toString()).getFunction();
 			LspAwbUpdateMapper.setDetails(bapiFunction, lspAwbUpdateRequestTO);
 			lspAwbUpdateResponseTO = LspAwbResponseMapper.getDetails(bapiFunction, destination);
 			logger.info("Lsp Awb Update response : " + lspAwbUpdateResponseTO + " for lsp awb update request :" + lspAwbUpdateRequestTO);
 		} catch (JCoException e) {
-			logger.error("Failed to connet Bapi Awb Update for request: " + lspAwbUpdateRequestTO, e);
+			logger.error("Failed to connect Bapi Awb Update for request: " + lspAwbUpdateRequestTO, e);
 		} catch (IOException e) {
-			logger.error("Failed to connet Bapi Awb Update for request  " + lspAwbUpdateRequestTO, e);
+			logger.error("Failed to connect Bapi Awb Update for request  " + lspAwbUpdateRequestTO, e);
 		}
 		return lspAwbUpdateResponseTO;
 	}

@@ -25,7 +25,7 @@ public class TestBigBazaarOrder extends BaseTestCase {
 	
 	private SapOrderRequestTO getBapiTO() {
 		SapOrderRequestTO bapiTO = new SapOrderRequestTO();
-		bapiTO.setOrderType(TinlaOrderType.RET_ORDER);
+		bapiTO.setOrderType(TinlaOrderType.NEW_ORDER);
 		bapiTO.setOrderHeaderTO(getOrderTO());
 		bapiTO.setLineItemTO(getLineItemTO());
 		bapiTO.setBillingAddressTO(getAddressTO());
@@ -43,11 +43,11 @@ public class TestBigBazaarOrder extends BaseTestCase {
 		orderHeaderTO.setSalesChannel("true");
 		orderHeaderTO.setSubmittedOn(DateTime.now());
 		orderHeaderTO.setThirdPartyOrder("AKASH SELLER");
-		//orderHeaderTO.setSalesDocType("ZFGB");
-		//orderHeaderTO.setReferenceID("I000003021");
-		orderHeaderTO.setSalesDocType("ZRER");
-		orderHeaderTO.setReferenceID("0155000291");
-		orderHeaderTO.setReturnOrderID("6800001002");
+		orderHeaderTO.setSalesDocType("ZFGB");
+		orderHeaderTO.setReferenceID("I000003021");
+		//orderHeaderTO.setSalesDocType("ZRER");
+		//orderHeaderTO.setReferenceID("0155000291");
+		//orderHeaderTO.setReturnOrderID("6800001002");
 		orderHeaderTO.setLoyaltyCardNumber("1234123412341234");
 		orderHeaderTO.setPricingTO(getPricingTO());
 		

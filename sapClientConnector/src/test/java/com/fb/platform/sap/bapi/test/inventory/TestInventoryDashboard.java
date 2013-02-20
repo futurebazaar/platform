@@ -22,6 +22,7 @@ public class TestInventoryDashboard extends BaseTestCase{
 		inventoryDashboardRequestTO.setFromDateTime(new DateTime(2012, 9, 1, 0, 0, 0));
 		inventoryDashboardRequestTO.setToDateTime(DateTime.now());
 		inventoryDashboardRequestTO.setPlant("");
+		inventoryDashboardRequestTO.setClient("BIGBAZAAR");
 		return inventoryDashboardRequestTO;
 	}
 	

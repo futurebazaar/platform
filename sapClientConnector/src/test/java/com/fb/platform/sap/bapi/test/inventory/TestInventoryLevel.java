@@ -18,6 +18,7 @@ public class TestInventoryLevel extends BaseTestCase {
 		inventoryLevelRequestTO.setMaterial("300000560");
 		inventoryLevelRequestTO.setStorageLocation(10);
 		inventoryLevelRequestTO.setPlant("2786");
+		inventoryLevelRequestTO.setClient("BIGBAZAAR");
 		return inventoryLevelRequestTO;
 	}
 	

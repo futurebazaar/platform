@@ -5,6 +5,7 @@ public class SapLspAwbUpdateRequestTO {
 	private String deliveryNumber;
 	private String lspCode;
 	private String awb;
+	private String client;
 	
 	public String getDeliveryNumber() {
 		return deliveryNumber;
@@ -24,11 +25,17 @@ public class SapLspAwbUpdateRequestTO {
 	public void setAwb(String awb) {
 		this.awb = awb;
 	}
+	public void setClient(String client) {
+		this.client = client;
+	}
+	public String getClient() {
+		return client;
+	}
 	
 	@Override
 	public String toString() {
 		return "SapLspAwbUpdateRequestTO [deliveryNumber=" + deliveryNumber
-				+ ", lspCode=" + lspCode + ", awb=" + awb + "]";
+				+ ", lspCode=" + lspCode + ", awb=" + awb + ", client=" + client + "]";
 	}
-
+	
 }

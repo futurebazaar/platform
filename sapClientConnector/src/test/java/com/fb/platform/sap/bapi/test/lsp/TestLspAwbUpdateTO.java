@@ -7,7 +7,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.fb.commons.test.BaseTestCase;
-import com.fb.platform.sap.bapi.to.SapInventoryLevelResponseTO;
 import com.fb.platform.sap.bapi.to.SapLspAwbUpdateRequestTO;
 import com.fb.platform.sap.bapi.to.SapLspAwbUpdateResponseTO;
 import com.fb.platform.sap.client.handler.PlatformClientHandler;
@@ -19,6 +18,7 @@ public class TestLspAwbUpdateTO extends BaseTestCase {
 		lspAwbUpdateRequestTO.setAwb("1234");
 		lspAwbUpdateRequestTO.setDeliveryNumber("8000018246");
 		lspAwbUpdateRequestTO.setLspCode("1234");
+		lspAwbUpdateRequestTO.setClient("BIGBAZAAR");
 		return lspAwbUpdateRequestTO;
 	}
 	

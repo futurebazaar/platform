@@ -5,6 +5,7 @@ public class SapInventoryLevelRequestTO {
 	private String plant;
 	private String material;
 	private int storageLocation;
+	private String client;
 
 	public String getPlant() {
 		return plant;
@@ -24,11 +25,17 @@ public class SapInventoryLevelRequestTO {
 	public void setStorageLocation(int storageLocation) {
 		this.storageLocation = storageLocation;
 	}
-	
+	public void setClient(String client) {
+		this.client = client;
+	}
+	public String getClient() {
+		return client;
+	}
+
 	@Override
 	public String toString() {
 		return "SapInventoryLevelRequestTO [plant=" + plant + ", material="
-				+ material + ", storageLocation=" + storageLocation + "]";
+				+ material + ", storageLocation=" + storageLocation + ", client=" + client + "]";
 	}
-
+	
 }
