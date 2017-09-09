@@ -74,6 +74,12 @@ public class PointsRuleFactory {
 					rule.setPointsUtil(pointsUtil);
 					rule.init(ruleConfig);
 					break;
+
+				case EARN_X_POINTS_ON_Y_CATEGORY_FOR_Z_PAYMENT_MODE:
+					rule = new EarnXPointsOnYCategoryForZPaymentMode();
+					rule.setPointsUtil(pointsUtil);
+					rule.init(ruleConfig);
+					break;
 					
 				default:
 					throw new IllegalArgumentException("Unkown RulesEnum object found : " + ruleName);

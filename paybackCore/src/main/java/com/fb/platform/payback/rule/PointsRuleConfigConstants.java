@@ -23,5 +23,9 @@ public class PointsRuleConfigConstants {
 	public static final String BURN_RATIO = "BURN_RATIO";
 
 	public static final String PAYMENT_MODE = "PAYMENT_MODE";
+	
+	public static final String CATEGORY_POINTS_FACTOR_MAP = "CATEGORY_POINTS_FACTOR_MAP";
+	
+	public static final String CATEGORY_PAYMENT_MODE_MAP = "CATEGORY_PAYMENT_MODE_MAP";
 
 }
